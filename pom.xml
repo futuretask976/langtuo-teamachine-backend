@@ -10,11 +10,11 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gx</groupId>
-    <artifactId>gx-springboot2-demo</artifactId>
+    <artifactId>gx-langtuo-backend</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>gx-springboot2-demo</name>
-    <description>gx-springboot2-demo</description>
+    <name>gx-langtuo-backend</name>
+    <description>gx-langtuo-backend</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -26,11 +26,11 @@
     </properties>
 
     <modules>
-        <module>demo-web</module>
-        <module>demo-dao</module>
-        <module>demo-api</module>
-        <module>demo-gtmf</module>
-        <module>demo-biz</module>
+        <module>backend-web</module>
+        <module>backend-dao</module>
+        <module>backend-api</module>
+        <module>backend-gtmf</module>
+        <module>backend-biz</module>
     </modules>
 
     <dependencyManagement>

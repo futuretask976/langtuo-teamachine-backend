@@ -5,12 +5,12 @@
 
     <parent>
         <groupId>com.gx</groupId>
-        <artifactId>gx-springboot2-demo</artifactId>
+        <artifactId>gx-langtuo-backend</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>demo-biz</artifactId>
+    <artifactId>backend-biz</artifactId>
 
     <properties>
         <java.version>1.8</java.version>
@@ -24,17 +24,17 @@
         <!-- internal start -->
         <dependency>
             <groupId>com.gx</groupId>
-            <artifactId>demo-api</artifactId>
+            <artifactId>backend-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.gx</groupId>
-            <artifactId>demo-dao</artifactId>
+            <artifactId>backend-dao</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.gx</groupId>
-            <artifactId>demo-gtmf</artifactId>
+            <artifactId>backend-gtmf</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <!-- internal end -->

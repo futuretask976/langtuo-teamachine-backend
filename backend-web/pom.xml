@@ -5,12 +5,12 @@
 
     <parent>
         <groupId>com.gx</groupId>
-        <artifactId>gx-springboot2-demo</artifactId>
+        <artifactId>gx-langtuo-backend</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>demo-web</artifactId>
+    <artifactId>backend-web</artifactId>
     <!-- 如果是springboot直接启动，注释掉下面的war，改为默认的jar形式 -->
     <packaging>war</packaging>
 
@@ -21,7 +21,7 @@
         <!-- internal start -->
         <dependency>
             <groupId>com.gx</groupId>
-            <artifactId>demo-biz</artifactId>
+            <artifactId>backend-biz</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <!-- internal end -->
