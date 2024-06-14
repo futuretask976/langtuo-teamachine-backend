@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.AdminRoleMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.AdminRolePO" id="adminRolePOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="adminRoleCode" column="admin_role_code"/>
+        <result property="adminRoleName" column="admin_role_name"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectOne" resultMap="adminRolePOMap">
+        SELECT * FROM admin_role
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and admin_role_code = #{adminRoleCode}
+    </select>
+
+    <select id="selectList" resultMap="adminRolePOMap">
+        SELECT * FROM admin_role LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.AdminRolePO">
+        INSERT INTO `admin_role` (
+            `gmt_created`
+            , `gmt_modified`
+            , `admin_role_code`
+            , `admin_role_name`
+            , `tenant_code`
+            , `extra_info`
+        ) VALUES (
+            now()
+            , now()
+            , #{adminRoleCode}
+            , #{adminRoleName}
+            , #{tenantCode}
+            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminRolePO">
+        UPDATE admin_role SET
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and admin_role_code = #{adminRoleCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM admin_role
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and admin_role_code = #{adminRoleCode}
+    </delete>
+</mapper>
