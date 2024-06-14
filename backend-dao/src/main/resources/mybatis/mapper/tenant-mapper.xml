@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.TenantMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.TenantPO" id="tenantPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="tenantName" column="tenant_name"/>
+        <result property="contactPerson" column="contact_person"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="imgLink" column="img_link"/>
+        <result property="comment" column="comment"/>
+        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectOne" resultMap="tenantPOMap">
+        SELECT * FROM tenant WHERE tenant_code = #{tenantCode}
+    </select>
+
+    <select id="selectList" resultMap="tenantPOMap">
+        SELECT * FROM tenant LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TenantPO">
+        INSERT INTO `machine_model` (
+            `gmt_created`
+            , `gmt_modified`
+            , `model_code`
+            , `flow_all_support`
+            , `extra_info`
+        ) VALUES (
+            now()
+            , now()
+            , #{modelCode}
+            , #{flowAllSupport}
+            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TenantPO">
+        UPDATE tenant SET
+            tenant_name = #{tenantName}
+            , contact_person = #{contactPerson}
+            , contact_phone = #{contactPhone}
+            , img_link = #{imgLink}
+            , comment = #{comment}
+            , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        WHERE tenant_code = #{tenantCode};
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tenant WHERE tenant_code = #{tenantCode}
+    </delete>
+</mapper>

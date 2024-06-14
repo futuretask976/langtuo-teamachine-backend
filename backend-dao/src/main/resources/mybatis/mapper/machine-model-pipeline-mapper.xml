@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.MachineModelPipelineMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.MachineModelPO" id="machineModelPipelinePOMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.MachineModelPipelinePO" id="machineModelPipelinePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -24,7 +24,7 @@
         SELECT * FROM machine_model_pipeline LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MachineModelPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MachineModelPipelinePO">
         INSERT INTO `machine_model_pipeline` (
             `gmt_created`
             , `gmt_modified`
@@ -44,7 +44,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.MachineModelPO">
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.MachineModelPipelinePO">
         UPDATE machine_model_pipeline SET
              warm_support = #{warmSupport}
             , freeze_support = #{freezeSupport}
