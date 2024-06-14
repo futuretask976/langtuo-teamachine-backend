@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: gx-springboot3-demo
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  profiles:
+    active: gxdev #默认为开发环境
+  servlet:
+    multipart:
+      enabled: true #开启文件上传
+      max-file-size: 10MB #限制文件上传大小为10M
+  security:
+    user:
+      name: root
+      password: root
+      role: admin
+  thymeleaf:
+    content-type: text/html
+    cache: false
+    mode: HTML
+
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  secret: mall-admin-secret #JWT加解密使用的密钥
+  expiration: 604800 #JWT的超期限时间(60*60*24*7)
+  tokenHead: 'Bearer '  #JWT负载中拿到开头
+
+mybatis:
+  mapper-locations:
+    - classpath:dao/*.xml
+    - classpath*:com/**/mapper/*.xml
+
+secure:
+  ignored:
+    urls: #安全路径白名单，不包含 tomcat 中 context 的 path（从之后开始算）
+      - /swagger-ui/
+      - /swagger-resources/**
+      - /**/*.html
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png
+      - /**/*.map
+      - /favicon.ico
+      - /actuator/**
+      - /druid/**
+      - /test001
+      - /bye
+
+server:
+  servlet:
+    context-path: /gxsp3demo
+  port: 8080
+

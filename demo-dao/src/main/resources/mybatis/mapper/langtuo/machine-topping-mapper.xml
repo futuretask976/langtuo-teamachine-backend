@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.gx.sp3.demo.dao.mapper.langtuo.MachineToppingMapper">
+    <resultMap type="com.gx.sp3.demo.dao.pojo.langtuo.MachineToppingPojo" id="machineToppingPojoMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="machineCode" column="machine_code"/>
+        <result property="toppingCode" column="topping_code"/>
+        <result property="toppingName" column="topping_name"/>
+        <result property="toppingImgLink" column="topping_img_link"/>
+        <result property="extraInfo" column="extra_info"/>
+    </resultMap>
+
+    <!-- 查询一个用户 -->
+    <select id="get" resultMap="machineToppingPojoMap">
+        SELECT * FROM machine_topping WHERE machine_code = #{machineCode} AND topping_code = #{toppingCode}
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="list" resultMap="machineToppingPojoMap">
+        SELECT * FROM machine_topping LIMIT 100
+    </select>
+
+    <!-- 添加一个用户 -->
+    <insert id="insert" parameterType="com.gx.sp3.demo.dao.pojo.langtuo.MachineToppingPojo">
+        INSERT INTO `machine_topping` (
+            `gmt_created`
+            , `gmt_modified`
+            , `machine_code`
+            , `topping_code`
+            , `topping_name`
+            , `topping_img_link`
+        ) VALUES (
+            now()
+            , now()
+            , #{machineCode}
+            , #{toppingCode}
+            , #{toppingName}
+            , #{toppingImgLink}
+        )
+    </insert>
+
+    <!-- 修改一个用户 -->
+    <update id="update" parameterType="com.gx.sp3.demo.dao.pojo.langtuo.MachineToppingPojo">
+        UPDATE machine_topping SET topping_name = #{topping_name} WHERE topping_code = #{toppingCode};
+    </update>
+
+    <!-- 删除一个用户 -->
+    <delete id="delete">
+        DELETE FROM machine_topping WHERE topping_code = #{toppingCode}
+    </delete>
+</mapper>

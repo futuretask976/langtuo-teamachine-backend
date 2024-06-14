@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.gx.sp3.demo.dao.mapper.langtuo.SequenceDemoMapper">
+    <!-- 查询序列的下一个值 -->
+    <select id="getNextSequenceValue" resultType="long">
+        SELECT gx_mysql_sequence_demo.NEXTVAL FROM DUAL
+    </select>
+</mapper>

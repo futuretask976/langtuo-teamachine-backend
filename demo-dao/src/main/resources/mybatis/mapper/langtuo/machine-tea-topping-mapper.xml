@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.gx.sp3.demo.dao.mapper.langtuo.MachineTeaToppingMapper">
+    <resultMap type="com.gx.sp3.demo.dao.pojo.langtuo.MachineTeaToppingPojo" id="machineTeaToppingPojoMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="machineCode" column="machine_code"/>
+        <result property="teaCode" column="tea_code"/>
+        <result property="toppingCode" column="topping_code"/>
+        <result property="extraInfo" column="extra_info"/>
+    </resultMap>
+
+    <!-- 查询一个用户 -->
+    <select id="get" resultMap="machineTeaToppingPojoMap">
+        SELECT * FROM machine_tea_topping WHERE machine_code = #{machineCode} AND topping_code = #{toppingCode}
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="list" resultMap="machineTeaToppingPojoMap">
+        SELECT * FROM machine_tea_topping LIMIT 100
+    </select>
+
+    <!-- 添加一个用户 -->
+    <insert id="insert" parameterType="com.gx.sp3.demo.dao.pojo.langtuo.MachineTeaToppingPojo">
+        INSERT INTO `machine_tea_topping` (
+            `gmt_created`
+            , `gmt_modified`
+            , `machine_code`
+            , `tea_code`
+            , `topping_code`
+        ) VALUES (
+        now()
+            , now()
+            , #{machineCode}
+            , #{teaCode}
+            , #{toppingCode}
+        )
+    </insert>
+
+    <!-- 修改一个用户 -->
+    <update id="update" parameterType="com.gx.sp3.demo.dao.pojo.langtuo.MachineTeaToppingPojo">
+        UPDATE machine_tea_topping SET tea_code = #{teaCode} WHERE topping_code = #{toppingCode}
+    </update>
+
+    <!-- 删除一个用户 -->
+    <delete id="delete">
+        DELETE FROM machine_tea_topping WHERE topping_code = #{toppingCode}
+    </delete>
+</mapper>

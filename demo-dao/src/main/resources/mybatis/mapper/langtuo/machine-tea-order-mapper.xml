@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.gx.sp3.demo.dao.mapper.langtuo.MachineTeaOrderMapper">
+    <resultMap type="com.gx.sp3.demo.dao.pojo.langtuo.MachineTeaOrderPojo" id="machineTeaOrderPojoMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="orderId" column="order_id"/>
+        <result property="machineCode" column="machine_code"/>
+        <result property="teaCode" column="tea_code"/>
+        <result property="extraInfo" column="extra_info"/>
+    </resultMap>
+
+    <!-- 查询一个用户 -->
+    <select id="get" resultMap="machineTeaOrderPojoMap">
+        SELECT * FROM machine_tea_order WHERE order_id = #{orderId}
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="list" resultMap="machineTeaOrderPojoMap">
+        SELECT * FROM machine_tea_order LIMIT 100
+    </select>
+
+    <!-- 添加一个用户 -->
+    <insert id="insert" parameterType="com.gx.sp3.demo.dao.pojo.langtuo.MachineTeaOrderPojo">
+        INSERT INTO `machine_tea_order` (
+            `gmt_created`
+            , `gmt_modified`
+            , `order_id`
+            , `machine_code`
+            , `tea_code`
+        ) VALUES (
+            now()
+            , now()
+            , #{orderId}
+            , #{machineCode}
+            , #{teaCode}
+        )
+    </insert>
+
+    <!-- 修改一个用户 -->
+    <update id="update" parameterType="com.gx.sp3.demo.dao.pojo.langtuo.MachineTeaOrderPojo">
+        UPDATE machine_tea_order SET tea_code = #{teaCode} WHERE order_id = #{orderId};
+    </update>
+
+    <!-- 删除一个用户 -->
+    <delete id="delete">
+        DELETE FROM machine_tea_order WHERE order_id = #{orderId}
+    </delete>
+</mapper>

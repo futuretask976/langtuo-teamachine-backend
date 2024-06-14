@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.gx.sp3.demo.dao.mapper.HotelGuestMapper">
+    <resultMap type="com.gx.sp3.demo.dao.pojo.HotelGuestPojo" id="hotelGuestPojoMap">
+        <result property="newId" column="newid"/>
+        <result property="name" column="name"/>
+        <result property="cardNo" column="cardno"/>
+        <result property="descriot" column="descriot"/>
+        <result property="ctfTp" column="ctftp"/>
+        <result property="ctfId" column="ctfid"/>
+        <result property="gender" column="gender"/>
+        <result property="birthday" column="birthday"/>
+        <result property="address" column="address"/>
+        <result property="zip" column="zip"/>
+        <result property="district1" column="district1"/>
+        <result property="district2" column="district2"/>
+        <result property="district3" column="district3"/>
+        <result property="district4" column="district4"/>
+        <result property="district5" column="district5"/>
+        <result property="district6" column="district6"/>
+        <result property="firstNm" column="firstnm"/>
+        <result property="lastNm" column="lastnm"/>
+        <result property="duty" column="duty"/>
+        <result property="mobile" column="mobile"/>
+        <result property="tel" column="tel"/>
+        <result property="fax" column="fax"/>
+        <result property="email" column="email"/>
+        <result property="nation" column="nation"/>
+        <result property="taste" column="taste"/>
+        <result property="education" column="education"/>
+        <result property="company" column="company"/>
+        <result property="cTel" column="ctel"/>
+        <result property="cAddress" column="caddress"/>
+        <result property="cZip" column="czip"/>
+        <result property="family" column="family"/>
+        <result property="version" column="version"/>
+        <result property="id" column="id"/>
+    </resultMap>
+
+    <!-- 查询一个用户 -->
+    <select id="get" resultMap="hotelGuestPojoMap">
+        SELECT * FROM hotel_2000w WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="list" resultMap="hotelGuestPojoMap">
+        SELECT * FROM hotel_2000w LIMIT 100
+    </select>
+
+    <!-- 添加一个用户 -->
+    <insert id="insert" parameterType="com.gx.sp3.demo.dao.pojo.HotelGuestPojo">
+        INSERT INTO  hotel_2000w (
+            `name`,
+            `cardno`,
+            `descriot`,
+            `ctftp`,
+            `ctfid`,
+            `gender`,
+            `birthday`,
+            `address`,
+            `zip`,
+            `district1`,
+            `district2`,
+            `district3`,
+            `district4`,
+            `district5`,
+            `district6`,
+            `firstnm`,
+            `lastnm`,
+            `duty`,
+            `mobile`,
+            `tel`,
+            `fax`,
+            `email`,
+            `nation`,
+            `taste`,
+            `education`,
+            `company`,
+            `ctel`,
+            `caddress`,
+            `czip`,
+            `family`,
+            `version`,
+            `id`
+        ) values (
+            #{name},
+            #{cardNo},
+            #{descriot},
+            #{ctfTp},
+            #{ctfId},
+            #{gender},
+            #{birthday},
+            #{address},
+            #{zip},
+            #{district1},
+            #{district2},
+            #{district3},
+            #{district4},
+            #{district5},
+            #{district6},
+            #{firstNm},
+            #{lastNm},
+            #{duty},
+            #{mobile},
+            #{tel},
+            #{fax},
+            #{email},
+            #{nation},
+            #{taste},
+            #{education},
+            #{company},
+            #{cTel},
+            #{cAddress},
+            #{cZip},
+            #{family},
+            #{version},
+            #{id}
+        )
+    </insert>
+
+    <!-- 修改一个用户 -->
+    <update id="update" parameterType="com.gx.sp3.demo.dao.pojo.HotelGuestPojo">
+        UPDATE hotel_2000w SET balance = #{balance} WHERE id = #{id};
+    </update>
+
+    <!-- 删除一个用户 -->
+    <delete id="delete">
+        DELETE FROM hotel_2000w WHERE id = #{id}
+    </delete>
+</mapper>
