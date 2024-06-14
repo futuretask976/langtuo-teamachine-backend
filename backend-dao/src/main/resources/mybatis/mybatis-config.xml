@@ -3,10 +3,18 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <typeAliases>
+        <typeAlias type="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" alias="MapStringTypeHandler"/>
+    </typeAliases>
+    <typeHandlers>
+        <typeHandler handler="MapStringTypeHandler" jdbcType="VARCHAR" javaType="java.util.Map"/>
+    </typeHandlers>
+
     <plugins>
-        <plugin interceptor="com.gx.sp3.demo.dao.interceptor.GxTableShardInterceptor">
+        <plugin interceptor="com.langtuo.teamachine.dao.interceptor.GxTableShardInterceptor">
         </plugin>
     </plugins>
+
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -18,14 +26,9 @@
             </dataSource>
         </environment>
     </environments>
+
     <mappers>
         <!-- 每一个Mapper.xml都要在Mybatis核心配置文件中注册！ -->
-        <mapper resource="mybatis/mapper/hotelguest-mapper.xml"/>
-        <mapper resource="mybatis/mapper/langtuo/machine-mapper.xml"/>
-        <mapper resource="mybatis/mapper/langtuo/machine-tea-mapper.xml"/>
-        <mapper resource="mybatis/mapper/langtuo/machine-tea-order-mapper.xml"/>
-        <mapper resource="mybatis/mapper/langtuo/machine-tea-topping-mapper.xml"/>
-        <mapper resource="mybatis/mapper/langtuo/machine-topping-mapper.xml"/>
-        <mapper resource="mybatis/mapper/langtuo/sequence-demo-mapper.xml"/>
+        <mapper resource="mybatis/mapper/machine-model-mapper.xml"/>
     </mappers>
 </configuration>

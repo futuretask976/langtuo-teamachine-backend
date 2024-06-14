@@ -3,8 +3,7 @@ package com.gx.sp3.demo.biz.service.impl.langtuo;
 import com.gx.sp3.demo.api.model.langtuo.MachineTeaToppingDTO;
 import com.gx.sp3.demo.api.result.GxResult;
 import com.gx.sp3.demo.api.service.langtuo.MachineTeaToppingService;
-import com.gx.sp3.demo.dao.accessor.langtuo.MachineTeaToppingMapperAccessor;
-import com.gx.sp3.demo.dao.pojo.langtuo.MachineTeaToppingPojo;
+import com.langtuo.teamachine.dao.accessor.MachineTeaToppingMapperAccessor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

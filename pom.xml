@@ -9,12 +9,12 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.gx</groupId>
-    <artifactId>gx-langtuo-backend</artifactId>
+    <groupId>com.langtuo</groupId>
+    <artifactId>langtuo-teamachine-backend</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>gx-langtuo-backend</name>
-    <description>gx-langtuo-backend</description>
+    <name>langtuo-teamachine-backend</name>
+    <description>langtuo-teamachine-backend</description>
 
     <properties>
         <java.version>1.8</java.version>
