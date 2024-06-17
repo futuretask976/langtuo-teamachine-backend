@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.CleanRuleMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.CleanRulePO" id="cleanRulePOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="cleanRuleCode" column="clean_rule_code"/>
+        <result property="cleanRuleName" column="clean_rule_name"/>
+        <result property="permitRemind" column="permit_remind"/>
+        <result property="permitBatch" column="permit_batch"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="comment" column="comment"/>
+        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectOne" resultMap="adminPOMap">
+        SELECT * FROM clean_rule
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and clean_rule_code = #{cleanRuleCode}
+    </select>
+
+    <select id="selectList" resultMap="adminPOMap">
+        SELECT * FROM clean_rule LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
+        INSERT INTO `clean_rule` (
+            `gmt_created`
+            , `gmt_modified`
+            , `clean_rule_code`
+            , `clean_rule_name`
+            , `permit_remind`
+            , `permit_batch`
+            , `tenant_code`
+            , `comment`
+            , `extra_info`
+        ) VALUES (
+            now()
+            , now()
+            , #{cleanRuleCode}
+            , #{cleanRuleName}
+            , #{permitRemind}
+            , #{permitBatch}
+            , #{tenantCode}
+            , #{comment}
+            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
+        UPDATE clean_rule SET
+        clean_rule_name = #{cleanRuleName}
+        , permit_remind = #{permitRemind}
+        , permit_batch = #{}
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and admin_login_name = #{adminLoginName}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM admin
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and admin_login_name = #{adminLoginName}
+    </delete>
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.CleanRuleDispatchMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.CleanRuleDispatchPO" id="cleanRuleDispatchPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="cleanRuleCode" column="clean_rule_code"/>
+        <result property="shopCode" column="shop_code"/>
+        <result property="tenantCode" column="tenant_code"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="cleanRuleDispatchPOMap">
+        SELECT * FROM clean_rule_dispatch
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and clean_rule_code = #{cleanRuleCode}
+    </select>
+
+    <select id="selectList" resultMap="cleanRuleDispatchPOMap">
+        SELECT * FROM clean_rule_dispatch LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.CleanRuleDispatchPO">
+        INSERT INTO `clean_rule_dispatch` (
+            `gmt_created`
+            , `gmt_modified`
+            , `menu_code`
+            , `shop_code`
+            , `tenant_code`
+        ) VALUES (
+            now()
+            , now()
+            , #{menuCode}
+            , #{shopCode}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.CleanRuleDispatchPO">
+        UPDATE clean_rule_dispatch SET
+            menu_code = #{menuCode}
+            , shop_code = #{shopCode}
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and clean_rule_code = #{cleanRuleCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM clean_rule_dispatch
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and clean_rule_code = #{cleanRuleCode}
+    </delete>
+</mapper>
