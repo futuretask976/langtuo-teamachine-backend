@@ -4,36 +4,36 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaSpecMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.TeaSepcPO" id="teaSpecPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaTypeMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.TeaToppingPO" id="teaTypePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
-        <result property="specCode" column="topping_spec_code"/>
-        <result property="specName" column="topping_spec_name"/>
+        <result property="teaTypeCode" column="tea_type_code"/>
+        <result property="teaTypeName" column="tea_type_name"/>
         <result property="state" column="state"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectOne" resultMap="teaSpecPOMap">
-        SELECT * FROM tea_spec
+    <select id="selectOne" resultMap="teaToppingTypePOMap">
+        SELECT * FROM tea_type
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and spec_code = #{specCode}
+            and tea_type_code = #{teaTypeCode}
     </select>
 
-    <select id="selectList" resultMap="teaSpecPOMap">
-        SELECT * FROM tea_spec LIMIT 100
+    <select id="selectList" resultMap="teaToppingTypePOMap">
+        SELECT * FROM tea_type LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaSpecPO">
-        INSERT INTO `tea_spec` (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaToppingTypePO">
+        INSERT INTO `tea_type` (
             `gmt_created`
             , `gmt_modified`
-            , `spec_code`
-            , `spec_name`
+            , `tea_type_code`
+            , `tea_type_name`
             , `state`
             , `tenant_code`
             , `comment`
@@ -41,8 +41,8 @@
         ) VALUES (
             now()
             , now()
-            , #{specCode}
-            , #{specName}
+            , #{teaTypeCode}
+            , #{teaTypeName}
             , #{state}
             , #{tenantCode}
             , #{comment}
@@ -50,17 +50,17 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaSpecPO">
-        UPDATE tea_spec SET
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
+        UPDATE tea_topping_type SET
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and spec_code = #{specCode}
+            and tea_type_code = #{teaTypeCode}
     </update>
 
     <delete id="delete">
-        DELETE FROM tea_spec
+        DELETE FROM tea_topping_type
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and topping_spec_code = #{toppingSpecCode}
+            and tea_type_code = #{teaTypeCode}
     </delete>
 </mapper>

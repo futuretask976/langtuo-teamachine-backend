@@ -4,24 +4,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaSpecMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.TeaSepcPO" id="teaSpecPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaSpecSubMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.TeaSepcSubPO" id="teaSpecSubPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
-        <result property="specCode" column="topping_spec_code"/>
-        <result property="specName" column="topping_spec_name"/>
-        <result property="state" column="state"/>
+        <result property="specCode" column="spec_code"/>
+        <result property="specSubCode" column="spec_sub_code"/>
+        <result property="specSubName" column="spec_sub_name"/>
+        <result property="outerSpecCode" column="outer_spec_code"/>
         <result property="tenantCode" column="tenant_code"/>
-        <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="selectOne" resultMap="teaSpecPOMap">
-        SELECT * FROM tea_spec
+        SELECT * FROM tea_spec_sub
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and spec_code = #{specCode}
+            and spec_sub_code = #{specSubCode}
     </select>
 
     <select id="selectList" resultMap="teaSpecPOMap">
@@ -33,19 +33,19 @@
             `gmt_created`
             , `gmt_modified`
             , `spec_code`
-            , `spec_name`
-            , `state`
+            , `spec_sub_code`
+            , `spec_sub_name`
+            , `outer_spec_sub_code`
             , `tenant_code`
-            , `comment`
             , `extra_info`
         ) VALUES (
             now()
             , now()
             , #{specCode}
-            , #{specName}
-            , #{state}
+            , #{specSubCode}
+            , #{specSubName}
+            , #{outerSpecSubCode}
             , #{tenantCode}
-            , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
@@ -54,13 +54,13 @@
         UPDATE tea_spec SET
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and spec_code = #{specCode}
+            and spec_sub_code = #{specSubCode}
     </update>
 
     <delete id="delete">
         DELETE FROM tea_spec
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and topping_spec_code = #{toppingSpecCode}
+            and spec_sub_code = #{specSubCode}
     </delete>
 </mapper>
