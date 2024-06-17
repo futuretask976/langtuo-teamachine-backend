@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaSpecRelMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.TeaSpecRelPO" id="teaSpecRelPO">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="teaUnitCode" column="tea_unit_code"/>
+        <result property="teaCode" column="tea_code"/>
+        <result property="toppingCode" column="topping_code"/>
+        <result property="adjustWeight" column="adjust_weight"/>
+        <result property="tenantCode" column="tenant_code"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="teaSpecRelPO">
+        SELECT * FROM adjust_tea_topping_rule
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and teaUnitCode = #{adminRoleCode}
+    </select>
+
+    <select id="selectList" resultMap="teaSpecRelPO">
+        SELECT * FROM adjust_tea_topping_rule LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rolePermRelPO">
+        INSERT INTO `adjust_tea_topping_rule` (
+            `gmt_created`
+            , `gmt_modified`
+            , `tea_unit_code`
+            , `tea_code`
+            , `topping_code`
+            , `adjust_weight`
+            , `tenant_code`
+        ) VALUES (
+            now()
+            , now()
+            , #{teaUnitCode}
+            , #{teaCode}
+            , #{toppingCode}
+            , #{adjustWeight}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.rolePermRelPO">
+        UPDATE adjust_tea_topping_rule SET
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and teaUnitCode = #{adminRoleCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM adjust_tea_topping_rule
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and teaUnitCode = #{adminRoleCode}
+    </delete>
+</mapper>

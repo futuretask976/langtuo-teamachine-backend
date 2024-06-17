@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaSpecRelMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.TeaSpecRelPO" id="teaSpecRelPO">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="teaUnitCode" column="tea_unit_code"/>
+        <result property="teaCode" column="tea_code"/>
+        <result property="specSubCode" column="spec_sub_code"/>
+        <result property="tenantCode" column="tenant_code"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="teaSpecRelPO">
+        SELECT * FROM tea_spec_rel
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and teaUnitCode = #{adminRoleCode}
+    </select>
+
+    <select id="selectList" resultMap="teaSpecRelPO">
+        SELECT * FROM tea_spec_rel LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rolePermRelPO">
+        INSERT INTO `tea_spec_rel` (
+            `gmt_created`
+            , `gmt_modified`
+            , `tea_unit_code`
+            , `tea_code`
+            , `spec_sub_code`
+            , `tenant_code`
+        ) VALUES (
+            now()
+            , now()
+            , #{teaUnitCode}
+            , #{teaCode}
+            , #{specSubCode}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.rolePermRelPO">
+        UPDATE tea_spec_rel SET
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and teaUnitCode = #{adminRoleCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tea_spec_rel
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and teaUnitCode = #{adminRoleCode}
+    </delete>
+</mapper>
