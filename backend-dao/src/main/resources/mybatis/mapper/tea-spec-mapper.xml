@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaSpecMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.TeaSepcPO" id="teaSpecPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="toppingSpecCode" column="topping_spec_code"/>
+        <result property="toppingSpecName" column="topping_spec_name"/>
+        <result property="state" column="state"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="comment" column="comment"/>
+        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectOne" resultMap="teaSpecPOMap">
+        SELECT * FROM tea_spec
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and topping_spec_code = #{toppingSpecCode}
+    </select>
+
+    <select id="selectList" resultMap="teaSpecPOMap">
+        SELECT * FROM tea_spec LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaSpecPO">
+        INSERT INTO `tea_spec` (
+            `gmt_created`
+            , `gmt_modified`
+            , `topping_spec_code`
+            , `topping_spec_name`
+            , `state`
+            , `tenant_code`
+            , `comment`
+            , `extra_info`
+        ) VALUES (
+            now()
+            , now()
+            , #{toppingSpecCode}
+            , #{toppingSpecName}
+            , #{state}
+            , #{tenantCode}
+            , #{comment}
+            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaSpecPO">
+        UPDATE tea_spec SET
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and topping_spec_code = #{toppingSpecCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tea_spec
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and topping_spec_code = #{toppingSpecCode}
+    </delete>
+</mapper>
