@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.MenuSeriesRelMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.MenuSeriesRelPO" id="menuSeriesRelPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="menuCode" column="menuCode"/>
+        <result property="seriesCode" column="series_code"/>
+        <result property="tenantCode" column="tenant_code"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="seriesTeaRelPOMap">
+        SELECT * FROM menu_series_rel
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and series_code = #{seriesCode}
+            and tea_code = #{teaCode}
+    </select>
+
+    <select id="selectList" resultMap="seriesTeaRelPOMap">
+        SELECT * FROM menu_series_rel LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SeriesTeaRelPO">
+        INSERT INTO `menu_series_rel` (
+            `gmt_created`
+            , `gmt_modified`
+            , `menu_code`
+            , `series_code`
+            , `tenant_code`
+        ) VALUES (
+            now()
+            , now()
+            , #{menuCode}
+            , #{seriesCode}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.SeriesTeaRelPO">
+        UPDATE menu_series_rel SET
+            menu_code = #{menuCode}
+            series_code = #{seriesCode}
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and menu_code = #{menuCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM menu_series_rel
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and series_code = #{seriesCode}
+    </delete>
+</mapper>

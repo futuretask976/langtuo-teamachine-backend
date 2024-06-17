@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.SeriesMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.SeriesPO" id="seriesPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="menuCode" column="menu_code"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="imgLink" column="img_link"/>
+        <result property="validFrom" column="valid_from"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="comment" column="comment"/>
+        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectOne" resultMap="seriesPOMap">
+        SELECT * FROM menu
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and menu_code = #{menuCode}
+    </select>
+
+    <select id="selectList" resultMap="seriesPOMap">
+        SELECT * FROM menu LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
+        INSERT INTO `menu` (
+            `gmt_created`
+            , `gmt_modified`
+            , `menu_code`
+            , `menu_name`
+            , `img_link`
+            , `valid_from`
+            , `tenant_code`
+            , `comment`
+            , `extra_info`
+        ) VALUES (
+            now()
+            , now()
+            , #{menuCode}
+            , #{menuName}
+            , #{imgLink}
+            , #{validFrom}
+            , #{tenantCode}
+            , #{comment}
+            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
+        UPDATE series SET
+            series_name = #{seriesName}
+            , img_link = #{imgLink}
+            , tenant_code = #{tenantCode}
+            , comment = #{comment}
+            , extra_info = #{extraInfo}
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and series_code = #{seriesCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM menu
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and menu_code = #{menuCode}
+    </delete>
+</mapper>
