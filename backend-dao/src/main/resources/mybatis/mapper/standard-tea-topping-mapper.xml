@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.StandardTeaToppingMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.StandardTeaToppingPO" id="standardTeaToppingPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="teaCode" column="tea_code"/>
+        <result property="toppingCode" column="topping_code"/>
+        <result property="weight" column="weight"/>
+        <result property="tenantCode" column="tenant_code"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="standardTeaToppingPOMap">
+        SELECT * FROM standard_tea_topping
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and tea_code = #{teaCode}
+            and topping_code = #{toppingCode}
+    </select>
+
+    <select id="selectList" resultMap="standardTeaToppingPOMap">
+        SELECT * FROM standard_tea_topping LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.StandardTeaToppingPO">
+        INSERT INTO `standard_tea_topping` (
+            `gmt_created`
+            , `gmt_modified`
+            , `tea_code`
+            , `topping_code`
+            , `weight`
+            , `tenant_code`
+        ) VALUES (
+            now()
+            , now()
+            , #{teaCode}
+            , #{toppingCode}
+            , #{weight}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.StandardTeaToppingPO">
+        UPDATE standard_tea_topping SET
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and tea_code = #{teaCode}
+            and topping_code = #{toppingCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM standard_tea_topping
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and tea_code = #{teaCode}
+            and topping_code = #{toppingCode}
+    </delete>
+</mapper>
