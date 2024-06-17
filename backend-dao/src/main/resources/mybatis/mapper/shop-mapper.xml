@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.ShopMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.ShopPO" id="shopPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="shopCode" column="shop_code"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="shopType" column="shop_type"/>
+        <result property="shopGroupCode" column="shop_group_code"/>
+        <result property="orgName" column="org_name"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="comment" column="comment"/>
+        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectOne" resultMap="shopPOMap">
+        SELECT * FROM shop
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and shop_code = #{shopCode}
+    </select>
+
+    <select id="selectList" resultMap="adminPOMap">
+        SELECT * FROM shop LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ShopPO">
+        INSERT INTO `shop` (
+            `gmt_created`
+            , `gmt_modified`
+            , `shop_code`
+            , `shop_name`
+            , `shop_type`
+            , `shop_group_code`
+            , `org_name`
+            , `tenant_code`
+            , `comment`
+            , `extra_info`
+        ) VALUES (
+            now()
+            , now()
+            , #{shopCode}
+            , #{shopName}
+            , #{shopType}
+            , #{shopGroupCode}
+            , #{orgName}
+            , #{tenantCode}
+            , #{comment}
+            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.ShopPO">
+        UPDATE shop SET
+            `shop_name` = #{shopName}
+            `shop_type` = #{shopType}
+            `shop_group_code` = #{shopGroupCode}
+            `org_name` = #{orgName}
+            `tenant_code` = #{tenantCode}
+            `comment` = #{comment}
+            `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and shop_code = #{shopCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM shop
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and shop_code = #{shopCode}
+    </delete>
+</mapper>
