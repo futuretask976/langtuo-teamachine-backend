@@ -5,51 +5,58 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.PermActMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.permActPO" id="permActPOMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.PermActPO" id="permActPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="permActCode" column="perm_act_code"/>
         <result property="permActName" column="perm_act_name"/>
         <result property="permActGroupCode" column="perm_act_group_code"/>
-        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="selectOne" resultMap="permActPOMap">
-        SELECT * FROM perm_act WHERE perm_act_code = #{permActCode}
+        SELECT * FROM perm_act
+        WHERE 1 = 1
+            AND perm_act_code = #{permActCode}
     </select>
 
     <select id="selectList" resultMap="permActPOMap">
         SELECT * FROM perm_act LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.permActPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.PermActPO">
         INSERT INTO `perm_act` (
             `gmt_created`
             , `gmt_modified`
             , `perm_act_code`
             , `perm_act_name`
             , `perm_act_group_code`
-            , `extra_info`
         ) VALUES (
             now()
             , now()
             , #{permActCode}
             , #{permActName}
             , #{permActGroupCode}
-            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TenantPO">
-        UPDATE perm_act SET
-            perm_act_name = #{permActName}
-            , perm_act_group_code = #{permActGroupCode}
-            , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
-        WHERE perm_act_code = #{permActCode};
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.PermActPO">
+        UPDATE perm_act
+        SET
+            gmt_modified = now()
+            <if test="permActName != null">
+                , perm_act_name = #{permActName}
+            </if>
+            <if test="permActGroupCode != null">
+                , perm_act_group_code = #{permActGroupCode}
+            </if>
+        WHERE 1 = 1
+            AND perm_act_code = #{permActCode};
     </update>
 
     <delete id="delete">
-        DELETE FROM perm_act WHERE perm_act_code = #{permActCode}
+        DELETE FROM perm_act
+        WHERE 1 = 1
+            AND perm_act_code = #{permActCode}
     </delete>
 </mapper>
