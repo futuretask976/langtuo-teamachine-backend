@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.TeaTypeMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.TeaToppingPO" id="teaTypePOMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.TeaTypePO" id="teaTypePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -17,18 +17,18 @@
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectOne" resultMap="teaToppingTypePOMap">
+    <select id="selectOne" resultMap="teaTypePOMap">
         SELECT * FROM tea_type
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and tea_type_code = #{teaTypeCode}
     </select>
 
-    <select id="selectList" resultMap="teaToppingTypePOMap">
+    <select id="selectList" resultMap="teaTypePOMap">
         SELECT * FROM tea_type LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaToppingTypePO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaTypePO">
         INSERT INTO `tea_type` (
             `gmt_created`
             , `gmt_modified`
@@ -50,15 +50,29 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
-        UPDATE tea_topping_type SET
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaTypePO">
+        UPDATE tea_type
+        SET
+            gmt_modified = now()
+            <if test="teaTypeName != null">
+                , tea_type_name = #{teaTypeName}
+            </if>
+            <if test="state != null">
+                , state = #{state}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and tea_type_code = #{teaTypeCode}
     </update>
 
     <delete id="delete">
-        DELETE FROM tea_topping_type
+        DELETE FROM tea_type
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and tea_type_code = #{teaTypeCode}
