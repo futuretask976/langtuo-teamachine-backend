@@ -11,13 +11,16 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="modelCode" column="model_code"/>
         <result property="pipelineNum" column="pipeline_num"/>
-        <result property="warmSupport" column="warm_support"/>
-        <result property="freezeSupport" column="freeze_support"/>
+        <result property="enableWarm" column="enable_warm"/>
+        <result property="enableFreeze" column="enable_freeze"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="selectOne" resultMap="machineModelPipelinePOMap">
-        SELECT * FROM machine_model_pipeline WHERE model_code = #{modelCode}
+        SELECT * FROM machine_model_pipeline
+        WHERE 1 = 1
+            AND model_code = #{modelCode}
+            AND pipeline_num = #{pipelineNum}
     </select>
 
     <select id="selectList" resultMap="machineModelPipelinePOMap">
@@ -30,30 +33,41 @@
             , `gmt_modified`
             , `model_code`
             , `pipeline_num`
-            , `warm_support`
-            , `freeze_support`
+            , `enable_warm`
+            , `enable_freeze`
             , `extra_info`
         ) VALUES (
             now()
             , now()
             , #{modelCode}
             , #{pipelineNum}
-            , #{warmSupport}
-            , #{freezeSupport}
+            , #{enableWarm}
+            , #{enableFreeze}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.MachineModelPipelinePO">
-        UPDATE machine_model_pipeline SET
-             warm_support = #{warmSupport}
-            , freeze_support = #{freezeSupport}
-            , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        UPDATE machine_model_pipeline
+        SET
+            gmt_modified = now()
+            <if test="enableWarm != null">
+                , enable_warm = #{enableWarm}
+            </if>
+            <if test="enableFreeze != null">
+                , enable_freeze = #{enableFreeze}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE model_code = #{modelCode}
-            and pipeline_num = #{pipelineNum}
+            AND pipeline_num = #{pipelineNum}
     </update>
 
     <delete id="delete">
-        DELETE FROM machine_model_pipeline WHERE model_code = #{model_code} and pipeline_num = #{pipelineNum}
+        DELETE FROM machine_model_pipeline
+        WHERE 1 = 1
+            AND model_code = #{modelCode}
+            AND pipeline_num = #{pipelineNum}
     </delete>
 </mapper>

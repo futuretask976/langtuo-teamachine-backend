@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class MachineModelMapperAccessor {
+public class MachineModelAccessor {
     @Resource
     private MachineModelMapper mapper;
 

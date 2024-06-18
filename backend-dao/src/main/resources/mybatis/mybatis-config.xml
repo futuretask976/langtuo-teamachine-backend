@@ -30,5 +30,6 @@
     <mappers>
         <!-- 每一个Mapper.xml都要在Mybatis核心配置文件中注册！ -->
         <mapper resource="mybatis/mapper/machine-model-mapper.xml"/>
+        <mapper resource="mybatis/mapper/machine-model-pipeline-mapper.xml"/>
     </mappers>
 </configuration>
