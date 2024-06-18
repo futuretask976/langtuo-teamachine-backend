@@ -42,5 +42,6 @@
         <mapper resource="mybatis/mapper/tea-topping-type-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-topping-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-spec-mapper.xml"/>
+        <mapper resource="mybatis/mapper/tea-spec-sub-mapper.xml"/>
     </mappers>
 </configuration>
