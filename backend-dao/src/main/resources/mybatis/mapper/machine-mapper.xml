@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.MacineMapper">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.MachineMapper">
     <resultMap type="com.langtuo.teamachine.dao.po.MachinePO" id="machinePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
@@ -28,14 +28,15 @@
             and machine_code = #{machineCode}
     </select>
 
-    <select id="selectList" resultMap="adminPOMap">
+    <select id="selectList" resultMap="machinePOMap">
         SELECT * FROM machine LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ShopPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MachinePO">
         INSERT INTO `machine` (
             `gmt_created`
             , `gmt_modified`
+            , `machine_code`
             , `screen_code`
             , `elec_board_code`
             , `model_code`
@@ -44,11 +45,11 @@
             , `valid_until`
             , `maintain_until`
             , `tenant_code`
-            , `comment`
             , `extra_info`
         ) VALUES (
             now()
             , now()
+            , #{machineCode}
             , #{screenCode}
             , #{elecBoardCode}
             , #{modelCode}
@@ -57,23 +58,41 @@
             , #{validUntil}
             , #{maintainUntil}
             , #{tenantCode}
-            , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
-    <update id="machine" parameterType="com.langtuo.teamachine.dao.po.ShopPO">
-        UPDATE machine SET
-            `screen_code` = #{screenCode}
-            `elec_board_code` = #{elecBoardCode}
-            `model_code` = #{modelCode}
-            `machine_name` = #{machineName}
-            `state` = #{state}
-            `valid_until` = #{validUntil}
-            `maintain_until` = #{maintainUntil}
-            `tenant_code` = #{tenantCode}
-            `comment` = #{comment}
-            `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.MachinePO">
+        UPDATE machine
+        SET
+            gmt_modified = now()
+            <if test="screenCode != null">
+                ,`screen_code` = #{screenCode}
+            </if>
+            <if test="elecBoardCode != null">
+                , `elec_board_code` = #{elecBoardCode}
+            </if>
+            <if test="modelCode != null">
+                , `model_code` = #{modelCode}
+            </if>
+            <if test="machineName != null">
+                , `machine_name` = #{machineName}
+            </if>
+            <if test="state != null">
+                , `state` = #{state}
+            </if>
+            <if test="validUntil != null">
+                , `valid_until` = #{validUntil}
+            </if>
+            <if test="maintainUntil != null">
+                , `maintain_until` = #{maintainUntil}
+            </if>
+            <if test="tenantCode != null">
+                , `tenant_code` = #{tenantCode}
+            </if>
+            <if test="extraInfo != null">
+                , `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and machine_code = #{machineCode}

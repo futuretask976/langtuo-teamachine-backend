@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.MacineDeployMapper">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.MachineDeployMapper">
     <resultMap type="com.langtuo.teamachine.dao.po.MachineDeployPO" id="machineDeployPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
@@ -21,61 +21,66 @@
         SELECT * FROM machine_deploy
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and deployCode = #{machineCode}
+            and deploy_code = #{deployCode}
     </select>
 
     <select id="selectList" resultMap="machineDeployPOMap">
         SELECT * FROM machine_deploy LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ShopPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MachineDeployPO">
         INSERT INTO `machine_deploy` (
             `gmt_created`
             , `gmt_modified`
-            , `screen_code`
-            , `elec_board_code`
+            , `deploy_code`
             , `model_code`
-            , `machine_name`
-            , `state`
-            , `valid_until`
-            , `maintain_until`
+            , `machine_code`
+            , `shop_code`
             , `tenant_code`
-            , `comment`
             , `extra_info`
         ) VALUES (
             now()
             , now()
-            , #{screenCode}
-            , #{elecBoardCode}
+            , #{deployCode}
             , #{modelCode}
-            , #{machineName}
-            , #{state}
-            , #{validUntil}
-            , #{maintainUntil}
+            , #{machineCode}
+            , #{shopCode}
             , #{tenantCode}
-            , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.ShopPO">
-        UPDATE machine_deploy SET
-            `deploy_code` = #{deployCode}
-            `model_code` = #{modelCode}
-            `machine_code` = #{machineCode}
-            `shop_code` = #{shopCode}
-            `tenant_code` = #{tenantCode}
-            `comment` = #{comment}
-            `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.MachineDeployPO">
+        UPDATE machine_deploy
+        SET
+            gmt_modified = now()
+            <if test="deployCode != null">
+                , `deploy_code` = #{deployCode}
+            </if>
+            <if test="modelCode != null">
+                , `model_code` = #{modelCode}
+            </if>
+            <if test="machineCode != null">
+                , `machine_code` = #{machineCode}
+            </if>
+            <if test="shopCode != null">
+                , `shop_code` = #{shopCode}
+            </if>
+            <if test="tenantCode != null">
+                , `tenant_code` = #{tenantCode}
+            </if>
+            <if test="extraInfo != null">
+                , `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and machine_code = #{machineCode}
+            and deploy_code = #{deployCode}
     </update>
 
     <delete id="delete">
         DELETE FROM machine_deploy
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and machine_code = #{machineCode}
+            and deploy_code = #{deployCode}
     </delete>
 </mapper>

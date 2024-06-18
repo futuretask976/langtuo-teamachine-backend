@@ -37,5 +37,7 @@
         <mapper resource="mybatis/mapper/org-struc-mapper.xml"/>
         <mapper resource="mybatis/mapper/shop-group-mapper.xml"/>
         <mapper resource="mybatis/mapper/shop-mapper.xml"/>
+        <mapper resource="mybatis/mapper/machine-mapper.xml"/>
+        <mapper resource="mybatis/mapper/machine-deploy-mapper.xml"/>
     </mappers>
 </configuration>
