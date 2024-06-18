@@ -5,15 +5,14 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.TeaSpecMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.TeaSepcPO" id="teaSpecPOMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.TeaSpecPO" id="teaSpecPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
-        <result property="specCode" column="topping_spec_code"/>
-        <result property="specName" column="topping_spec_name"/>
+        <result property="specCode" column="spec_code"/>
+        <result property="specName" column="spec_name"/>
         <result property="state" column="state"/>
         <result property="tenantCode" column="tenant_code"/>
-        <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
@@ -36,7 +35,6 @@
             , `spec_name`
             , `state`
             , `tenant_code`
-            , `comment`
             , `extra_info`
         ) VALUES (
             now()
@@ -45,13 +43,23 @@
             , #{specName}
             , #{state}
             , #{tenantCode}
-            , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaSpecPO">
-        UPDATE tea_spec SET
+        UPDATE tea_spec
+        SET
+            gmt_modified = now()
+            <if test="specName != null">
+                , spec_name = #{specName}
+            </if>
+            <if test="state != null">
+                , state = #{state}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and spec_code = #{specCode}
@@ -61,6 +69,6 @@
         DELETE FROM tea_spec
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and topping_spec_code = #{toppingSpecCode}
+            and spec_code = #{specCode}
     </delete>
 </mapper>
