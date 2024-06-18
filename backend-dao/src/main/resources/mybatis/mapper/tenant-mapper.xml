@@ -19,7 +19,9 @@
     </resultMap>
 
     <select id="selectOne" resultMap="tenantPOMap">
-        SELECT * FROM tenant WHERE tenant_code = #{tenantCode}
+        SELECT * FROM tenant
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
     </select>
 
     <select id="selectList" resultMap="tenantPOMap">
@@ -27,30 +29,52 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TenantPO">
-        INSERT INTO `machine_model` (
+        INSERT INTO `tenant` (
             `gmt_created`
             , `gmt_modified`
-            , `model_code`
-            , `flow_all_support`
+            , `tenant_code`
+            , `tenant_name`
+            , `contact_person`
+            , `contact_phone`
+            , `img_link`
+            , `comment`
             , `extra_info`
         ) VALUES (
             now()
             , now()
-            , #{modelCode}
-            , #{flowAllSupport}
+            , #{tenantCode}
+            , #{tenantName}
+            , #{contactPerson}
+            , #{contactPhone}
+            , #{imgLink}
+            , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.TenantPO">
         UPDATE tenant SET
-            tenant_name = #{tenantName}
-            , contact_person = #{contactPerson}
-            , contact_phone = #{contactPhone}
-            , img_link = #{imgLink}
-            , comment = #{comment}
-            , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
-        WHERE tenant_code = #{tenantCode};
+            gmt_modified = now()
+            <if test="tenantName != null">
+                , tenant_name = #{tenantName}
+            </if>
+            <if test="contactPerson != null">
+                , contact_person = #{contactPerson}
+            </if>
+            <if test="contactPhone != null">
+                , contact_phone = #{contactPhone}
+            </if>
+            <if test="imgLink != null">
+                , img_link = #{imgLink}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode};
     </update>
 
     <delete id="delete">
