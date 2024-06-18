@@ -27,8 +27,8 @@
         SELECT * FROM shop_group LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ShopPO">
-        INSERT INTO `shopGroupPOMap` (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ShopGroupPO">
+        INSERT INTO `shop_group` (
             `gmt_created`
             , `gmt_modified`
             , `shop_group_code`
@@ -48,11 +48,18 @@
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.ShopGroupPO">
-        UPDATE shop_group SET
-            `shop_group_name` = #{shopName}
-            `tenant_code` = #{tenantCode}
-            `comment` = #{comment}
-            `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        UPDATE shop_group
+        SET
+            gmt_modified = now()
+            <if test="shopGroupName != null">
+                , `shop_group_name` = #{shopGroupName}
+            </if>
+            <if test="comment != null">
+                , `comment` = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and shop_group_code = #{shopGroupCode}

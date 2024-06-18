@@ -26,7 +26,7 @@
             and shop_code = #{shopCode}
     </select>
 
-    <select id="selectList" resultMap="adminPOMap">
+    <select id="selectList" resultMap="shopPOMap">
         SELECT * FROM shop LIMIT 100
     </select>
 
@@ -57,14 +57,27 @@
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.ShopPO">
-        UPDATE shop SET
-            `shop_name` = #{shopName}
-            `shop_type` = #{shopType}
-            `shop_group_code` = #{shopGroupCode}
-            `org_name` = #{orgName}
-            `tenant_code` = #{tenantCode}
-            `comment` = #{comment}
-            `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        UPDATE shop
+        SET
+            gmt_modified = now()
+            <if test="shopName != null">
+                , `shop_name` = #{shopName}
+            </if>
+            <if test="shopType != null">
+                , `shop_type` = #{shopType}
+            </if>
+            <if test="shopGroupCode != null">
+                , `shop_group_code` = #{shopGroupCode}
+            </if>
+            <if test="orgName != null">
+                , `org_name` = #{orgName}
+            </if>
+            <if test="comment != null">
+                , `comment` = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and shop_code = #{shopCode}
