@@ -4,37 +4,37 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaSpecRelMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.TeaSpecRelPO" id="teaSpecRelPO">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaToppingAdjustMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.TeaToppingAdjustPO" id="teaToppingAdjustPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="teaUnitCode" column="tea_unit_code"/>
         <result property="teaCode" column="tea_code"/>
         <result property="toppingCode" column="topping_code"/>
-        <result property="adjustWeight" column="adjust_weight"/>
+        <result property="adjustAmount" column="adjust_amount"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="teaSpecRelPO">
-        SELECT * FROM adjust_tea_topping_rule
+    <select id="selectOne" resultMap="teaToppingAdjustPOMap">
+        SELECT * FROM tea_topping_adjust
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and teaUnitCode = #{adminRoleCode}
+            and tea_unit_code = #{teaUnitCode}
     </select>
 
-    <select id="selectList" resultMap="teaSpecRelPO">
-        SELECT * FROM adjust_tea_topping_rule LIMIT 100
+    <select id="selectList" resultMap="teaToppingAdjustPOMap">
+        SELECT * FROM tea_topping_adjust LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rolePermRelPO">
-        INSERT INTO `adjust_tea_topping_rule` (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaToppingAdjustPO">
+        INSERT INTO `tea_topping_adjust` (
             `gmt_created`
             , `gmt_modified`
             , `tea_unit_code`
             , `tea_code`
             , `topping_code`
-            , `adjust_weight`
+            , `adjust_amount`
             , `tenant_code`
         ) VALUES (
             now()
@@ -42,22 +42,33 @@
             , #{teaUnitCode}
             , #{teaCode}
             , #{toppingCode}
-            , #{adjustWeight}
+            , #{adjustAmount}
             , #{tenantCode}
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.rolePermRelPO">
-        UPDATE adjust_tea_topping_rule SET
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaToppingAdjustPO">
+        UPDATE tea_topping_adjust
+        SET
+            gmt_modified = now()
+            <if test="teaCode">
+                , tea_code = #{teaCode}
+            </if>
+            <if test="toppingCode">
+                , topping_code = #{toppingCode}
+            </if>
+            <if test="adjustAmount">
+                , adjust_amount = #{adjustAmount}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and teaUnitCode = #{adminRoleCode}
+            and tea_unit_code = #{teaUnitCode}
     </update>
 
     <delete id="delete">
-        DELETE FROM adjust_tea_topping_rule
+        DELETE FROM tea_topping_adjust
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and teaUnitCode = #{adminRoleCode}
+            and tea_unit_code = #{teaUnitCode}
     </delete>
 </mapper>

@@ -19,14 +19,14 @@
         SELECT * FROM tea_spec_rel
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and teaUnitCode = #{adminRoleCode}
+            and tea_unit_code = #{teaUnitCode}
     </select>
 
     <select id="selectList" resultMap="teaSpecRelPO">
         SELECT * FROM tea_spec_rel LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rolePermRelPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaSpecRelPO">
         INSERT INTO `tea_spec_rel` (
             `gmt_created`
             , `gmt_modified`
@@ -44,17 +44,25 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.rolePermRelPO">
-        UPDATE tea_spec_rel SET
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaSpecRelPO">
+        UPDATE tea_spec_rel
+        SET
+            gmt_modified = now()
+            <if test="teaCode != null">
+                , tea_code = #{teaCode}
+            </if>
+            <if test="specSubCode != null">
+                , spec_sub_code = #{specSubCode}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and teaUnitCode = #{adminRoleCode}
+            and tea_unit_code = #{teaUnitCode}
     </update>
 
     <delete id="delete">
         DELETE FROM tea_spec_rel
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and teaUnitCode = #{adminRoleCode}
+            and tea_unit_code = #{teaUnitCode}
     </delete>
 </mapper>
