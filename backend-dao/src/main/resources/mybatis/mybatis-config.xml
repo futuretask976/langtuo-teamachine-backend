@@ -34,5 +34,6 @@
         <mapper resource="mybatis/mapper/tenant-mapper.xml"/>
         <mapper resource="mybatis/mapper/perm-act-mapper.xml"/>
         <mapper resource="mybatis/mapper/perm-act-group-mapper.xml"/>
+        <mapper resource="mybatis/mapper/org-struc-mapper.xml"/>
     </mappers>
 </configuration>

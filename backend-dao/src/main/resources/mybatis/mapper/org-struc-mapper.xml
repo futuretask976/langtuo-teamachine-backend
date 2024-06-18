@@ -12,14 +12,13 @@
         <result property="orgName" column="org_name"/>
         <result property="parentOrgName" column="parent_org_name"/>
         <result property="tenantCode" column="tenant_code"/>
-        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="selectOne" resultMap="orgStrucMap">
         SELECT * FROM org_struc
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and orgName = #{orgName}
+            and org_name = #{orgName}
     </select>
 
     <select id="selectList" resultMap="orgStrucMap">
@@ -33,19 +32,22 @@
             , `org_name`
             , `parent_org_name`
             , `tenant_code`
-            , `extra_info`
         ) VALUES (
             now()
             , now()
             , #{orgName}
             , #{parentOrgName}
             , #{tenantCode}
-            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.OrgStrucPO">
-        UPDATE org_struc SET
+        UPDATE org_struc
+        SET
+            gmt_modified = now()
+            <if test="parentOrgName != null">
+                , parent_org_name = #{parentOrgName}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and org_name = #{orgName}
