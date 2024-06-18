@@ -30,18 +30,18 @@
             and topping_code = #{toppingCode}
     </select>
 
-    <select id="selectList" resultMap="adminPOMap">
+    <select id="selectList" resultMap="teaToppingPOMap">
         SELECT * FROM tea_topping LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaToppingPO">
         INSERT INTO `tea_topping` (
             `gmt_created`
             , `gmt_modified`
             , `topping_code`
             , `topping_name`
             , `topping_type_code`
-            , `weight_unit`
+            , `measure_unit`
             , `state`
             , `valid_hour_period`
             , `clean_hour_period`
@@ -56,7 +56,7 @@
             , #{toppingCode}
             , #{toppingName}
             , #{toppingTypeCode}
-            , #{weightUnit}
+            , #{measureUnit}
             , #{state}
             , #{validHourPeriod}
             , #{cleanHourPeriod}
@@ -68,8 +68,40 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
-        UPDATE tea_topping SET
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaToppingPO">
+        UPDATE tea_topping
+        SET
+            gmt_modified = now()
+            <if test="toppingName != null">
+                , topping_name = #{toppingName}
+            </if>
+            <if test="toppingTypeCode != null">
+                , topping_type_code = #{toppingTypeCode}
+            </if>
+            <if test="measureUnit != null">
+                , measure_unit = #{measureUnit}
+            </if>
+            <if test="state != null">
+                , state = #{state}
+            </if>
+            <if test="validHourPeriod != null">
+                , valid_hour_period = #{validHourPeriod}
+            </if>
+            <if test="cleanHourPeriod != null">
+                , clean_hour_period = #{cleanHourPeriod}
+            </if>
+            <if test="convertCoefficient != null">
+                , convert_coefficient = #{convertCoefficient}
+            </if>
+            <if test="flowSpeed != null">
+                , flowSpeed = #{flowSpeed}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and topping_code = #{toppingCode}

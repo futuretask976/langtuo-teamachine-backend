@@ -40,5 +40,6 @@
         <mapper resource="mybatis/mapper/machine-mapper.xml"/>
         <mapper resource="mybatis/mapper/machine-deploy-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-topping-type-mapper.xml"/>
+        <mapper resource="mybatis/mapper/tea-topping-mapper.xml"/>
     </mappers>
 </configuration>
