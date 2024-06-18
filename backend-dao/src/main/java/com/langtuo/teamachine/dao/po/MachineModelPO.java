@@ -25,15 +25,15 @@ public class MachineModelPO {
     /**
      * 型号编码
      */
-    private String machineCode;
+    private String modelCode;
 
     /**
      * 是否支持同时出料，0：不支持，1：支持
      */
-    private Integer flowAllSupport;
+    private Integer enableFlowAll;
 
     /**
      * 额外信息，格式：a:b;c:d
      */
-    private Map<String, String> extraInfoMap;
+    private Map<String, String> extraInfo;
 }

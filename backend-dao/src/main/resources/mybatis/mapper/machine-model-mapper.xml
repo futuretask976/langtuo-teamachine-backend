@@ -10,7 +10,7 @@
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="modelCode" column="model_code"/>
-        <result property="flowAllSupport" column="flow_all_support"/>
+        <result property="enableFlowAll" column="enable_flow_all"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
@@ -27,25 +27,34 @@
             `gmt_created`
             , `gmt_modified`
             , `model_code`
-            , `flow_all_support`
+            , `enable_flow_all`
             , `extra_info`
         ) VALUES (
             now()
             , now()
             , #{modelCode}
-            , #{flowAllSupport}
+            , #{enableFlowAll}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.MachineModelPO">
-        UPDATE machine_model SET
-            flow_all_support = #{flowAllSupport}
-            , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
-        WHERE model_code = #{model_code};
+        UPDATE machine_model
+        SET
+            gmt_modified = now()
+            <if test="enableFlowAll != null">
+                , enable_flow_all = #{enableFlowAll}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
+        WHERE 1 = 1
+            AND model_code = #{modelCode};
     </update>
 
     <delete id="delete">
-        DELETE FROM machine_model WHERE model_code = #{model_code}
+        DELETE FROM machine_model
+        WHERE 1 = 1
+            AND model_code = #{model_code}
     </delete>
 </mapper>
