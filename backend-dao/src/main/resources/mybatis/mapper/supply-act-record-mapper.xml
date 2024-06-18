@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.InvalidActRecordMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.InvalidActRecordPO" id="invalidActRecordPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="machineCode" column="machine_code"/>
+        <result property="shopCode" column="shop_code"/>
+        <result property="supplyTime" column="supply_time"/>
+        <result property="toppingCode" column="topping_code"/>
+        <result property="pipelineNum" column="pipeline_num"/>
+        <result property="supplyAmount" column="supply_amount"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectOne" resultMap="invalidActRecordPOMap">
+        SELECT * FROM supply_act_record
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and series_code = #{seriesCode}
+    </select>
+
+    <select id="selectList" resultMap="invalidActRecordPOMap">
+        SELECT * FROM supply_act_record LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
+        INSERT INTO `supply_act_record` (
+            `gmt_created`
+            , `gmt_modified`
+            , `machine_code`
+            , `shop_code`
+            , `supply_time`
+            , `topping_code`
+            , `pipeline_num`
+            , `supply_amount`
+            , `tenant_code`
+            , `extra_info`
+        ) VALUES (
+            now()
+            , now()
+            , #{machineCode}
+            , #{shopCode}
+            , #{supplyTime}
+            , #{toppingCode}
+            , #{pipelineNum}
+            , #{supplyAmount}
+            , #{tenantCode}
+            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        )
+    </insert>
+
+<!--    <update id="update" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">-->
+<!--        UPDATE invalid_act_record SET-->
+<!--        WHERE 1 = 1-->
+<!--            and tenant_code = #{tenantCode}-->
+<!--            and machine_code = #{machineCode}-->
+<!--            and shop_code = #{shopCode}-->
+<!--    </update>-->
+
+    <delete id="delete">
+        DELETE FROM supply_act_record
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and machine_code = #{machineCode}
+            and shop_code = #{shopCode}
+    </delete>
+</mapper>
