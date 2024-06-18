@@ -30,7 +30,7 @@
         SELECT * FROM tea LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaPO">
         INSERT INTO `tea` (
             `gmt_created`
             , `gmt_modified`
@@ -56,15 +56,38 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
-        UPDATE tea SET
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaPO">
+        UPDATE tea
+        SET
+            gmt_modified = now()
+            <if test="teaName != null">
+                , teaName = #{teaName}
+            </if>
+            <if test="outerTeaCode != null">
+                , outer_tea_code = #{outerTeaCode}
+            </if>
+            <if test="state != null">
+                , state = #{state}
+            </if>
+            <if test="teaTypeCode != null">
+                , tea_type_code = #{teaTypeCode}
+            </if>
+            <if test="tenantCode != null">
+                , tenant_code = #{tenantCode}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and tea_code = #{teaCode}
     </update>
 
     <delete id="delete">
-        DELETE FROM admin
+        DELETE FROM tea
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and tea_code = #{teaCode}
