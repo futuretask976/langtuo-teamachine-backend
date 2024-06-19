@@ -20,31 +20,31 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityBeanConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
-        System.out.printf("!!! SecurityBaseConfig#passwordEncoder entering\n");
+        System.out.printf("$$$$$$$$$$ SecurityBaseConfig#passwordEncoder entering\n");
         return new MD5PasswordEncoder();
     }
 
     @Bean
     public UserDetailsService gxUserDetailService() {
-        System.out.printf("!!! SecurityBaseConfig#userDetailsService entering\n");
+        System.out.printf("$$$$$$$$$$ SecurityBaseConfig#userDetailsService entering\n");
         return new GxUserDetailService();
     }
 
     @Bean
     public AccessDeniedHandler restfulAccessDeniedHandler() {
-        System.out.printf("!!! SecurityBaseConfig#restfulAccessDeniedHandler entering\n");
+        System.out.printf("$$$$$$$$$$ SecurityBaseConfig#restfulAccessDeniedHandler entering\n");
         return new GxAccessDeniedHandler();
     }
 
     @Bean
     public AuthenticationEntryPoint restfulAuthenticationEntryPoint() {
-        System.out.printf("!!! SecurityBaseConfig#restAuthenticationEntryPoint entering\n");
+        System.out.printf("$$$$$$$$$$ SecurityBaseConfig#restAuthenticationEntryPoint entering\n");
         return new GxAuthenticationEntryPoint();
     }
 
     @Bean
     public IgnoreUrlsConfig ignoreUrlsConfig() {
-        System.out.printf("!!! SecurityBaseConfig#ignoreUrlsConfig entering\n");
+        System.out.printf("$$$$$$$$$$ SecurityBaseConfig#ignoreUrlsConfig entering\n");
         return new IgnoreUrlsConfig();
     }
 
@@ -89,19 +89,19 @@ public class SecurityBeanConfig {
 
 //    @Bean
 //    public JwtTokenHelper jwtTokenUtil() {
-//        System.out.printf("!!! SecurityBaseConfig#jwtTokenUtil entering\n");
+//        System.out.printf("$$$$$$$$$$ SecurityBaseConfig#jwtTokenUtil entering\n");
 //        return new JwtTokenHelper();
 //    }
 
 //    @Bean
 //    public GxAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
-//        System.out.printf("!!! SecurityBaseConfig#jwtAuthenticationTokenFilter entering\n");
+//        System.out.printf("$$$$$$$$$$ SecurityBaseConfig#jwtAuthenticationTokenFilter entering\n");
 //        return new GxAuthenticationTokenFilter();
 //    }
 
 //    @Bean
 //    public AuthenticationProvider authenticationProvider() {
-//        System.out.printf("!!! SecurityBaseConfig#authenticationProvider entering\n");
+//        System.out.printf("$$$$$$$$$$ SecurityBaseConfig#authenticationProvider entering\n");
 //        return new GxAuthenticationProvider();
 //    }
 }
