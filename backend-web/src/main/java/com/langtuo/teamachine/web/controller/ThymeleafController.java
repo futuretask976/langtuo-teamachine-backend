@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ThymeleafController {
     /**
-     * Access this method by http://localhost:8080/gxsp3demo/
+     * Access: http://localhost:8080/gxsp3demo/
      * @return
      */
     @GetMapping(value = "/")
     public String index(Model model) {
         try {
-            System.out.println("!!! ThymeleafController#index entering");
+            System.out.println("$$$$$$$$$$ ThymeleafController#index entering");
             model.addAttribute("msg","Thymeleaf入门案例...");
             return "index";
         } catch (Exception e) {
@@ -25,7 +25,7 @@ public class ThymeleafController {
     }
 
     /**
-     * Access this method by http://localhost:8080/gxsp3demo/login
+     * Access: http://localhost:8080/gxsp3demo/login
      * @return
      */
     @GetMapping("/login")
@@ -36,14 +36,14 @@ public class ThymeleafController {
 
     @GetMapping("/welcome")
     public String welcome() {
-        System.out.printf("!!! ThymeleafController#welcome entering\n");
+        System.out.printf("$$$$$$$$$$ ThymeleafController#welcome entering\n");
         // 处理登录逻辑
         return "welcome"; // 登录成功后跳转的页面
     }
 
     @GetMapping("/bye")
     public String bye(Model model) {
-        System.out.printf("!!! ThymeleafController#bye entering\n");
+        System.out.printf("$$$$$$$$$$ ThymeleafController#bye entering\n");
         model.addAttribute("msg", "see you next");
         return "bye"; // 登录成功后跳转的页面
     }
