@@ -26,10 +26,11 @@
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and clean_rule_code = #{cleanRuleCode}
+            and step_num = #{stepNum}
     </select>
 
     <select id="selectList" resultMap="cleanStepPOMap">
-        SELECT * FROM clean_rule LIMIT 100
+        SELECT * FROM clean_step LIMIT 100
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.CleanStepPO">
@@ -63,19 +64,41 @@
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.CleanStepPO">
-        UPDATE clean_rule SET
-        clean_rule_name = #{cleanRuleName}
-        , permit_remind = #{permitRemind}
-        , permit_batch = #{}
+        UPDATE clean_step
+        SET
+            gmt_modified = now()
+            <if test="cleanContent != null">
+                , clean_content = #{cleanContent}
+            </if>
+            <if test="washTime != null">
+                , wash_time = #{washTime}
+            </if>
+            <if test="soakTime != null">
+                , soak_time = #{soakTime}
+            </if>
+            <if test="soakWashInterval != null">
+                , soak_wash_interval = #{soakWashInterval}
+            </if>
+            <if test="soakWashTime != null">
+                , soak_wash_time = #{soakWashTime}
+            </if>
+            <if test="remindTitle != null">
+                , remind_title = #{remindTitle}
+            </if>
+            <if test="remindContent != null">
+                , remind_content = #{remindContent}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and clean_rule_code = #{cleanRuleCode}
+            and step_num = #{stepNum}
     </update>
 
     <delete id="delete">
-        DELETE FROM admin
+        DELETE FROM clean_step
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and clean_rule_code = #{cleanRuleCode}
+            and step_num = #{stepNum}
     </delete>
 </mapper>

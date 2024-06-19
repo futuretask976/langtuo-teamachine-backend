@@ -55,5 +55,6 @@
         <mapper resource="mybatis/mapper/menu-dispatch-mapper.xml"/>
         <mapper resource="mybatis/mapper/clean-rule-mapper.xml"/>
         <mapper resource="mybatis/mapper/clean-except-rule-mapper.xml"/>
+        <mapper resource="mybatis/mapper/clean-step-mapper.xml"/>
     </mappers>
 </configuration>
