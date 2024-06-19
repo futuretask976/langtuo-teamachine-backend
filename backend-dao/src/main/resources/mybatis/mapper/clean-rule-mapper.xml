@@ -18,18 +18,18 @@
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectOne" resultMap="adminPOMap">
+    <select id="selectOne" resultMap="cleanRulePOMap">
         SELECT * FROM clean_rule
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and clean_rule_code = #{cleanRuleCode}
     </select>
 
-    <select id="selectList" resultMap="adminPOMap">
+    <select id="selectList" resultMap="cleanRulePOMap">
         SELECT * FROM clean_rule LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.CleanRulePO">
         INSERT INTO `clean_rule` (
             `gmt_created`
             , `gmt_modified`
@@ -53,20 +53,28 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
-        UPDATE clean_rule SET
-        clean_rule_name = #{cleanRuleName}
-        , permit_remind = #{permitRemind}
-        , permit_batch = #{}
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.CleanRulePO">
+        UPDATE clean_rule
+        SET
+            gmt_modified = now()
+            <if test="cleanRuleName != null">
+                , clean_rule_name = #{cleanRuleName}
+            </if>
+            <if test="permitRemind != null">
+                , permit_remind = #{permitRemind}
+            </if>
+            <if test="permitBatch != null">
+                , permit_batch = #{permitBatch}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and admin_login_name = #{adminLoginName}
+            and clean_rule_code = #{cleanRuleCode}
     </update>
 
     <delete id="delete">
-        DELETE FROM admin
+        DELETE FROM clean_rule
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and admin_login_name = #{adminLoginName}
+            and clean_rule_code = #{cleanRuleCode}
     </delete>
 </mapper>
