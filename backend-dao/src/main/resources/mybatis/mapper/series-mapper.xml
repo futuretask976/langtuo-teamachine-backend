@@ -51,19 +51,31 @@
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
-        UPDATE series SET
-            series_name = #{seriesName}
-            , img_link = #{imgLink}
-            , tenant_code = #{tenantCode}
-            , comment = #{comment}
-            , extra_info = #{extraInfo}
+        UPDATE series
+        SET
+            gmt_modified = now()
+            <if test="seriesName != null">
+                , series_name = #{seriesName}
+            </if>
+            <if test="imgLink != null">
+                , img_link = #{imgLink}
+            </if>
+            <if test="tenantCode != null">
+                , tenant_code = #{tenantCode}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and series_code = #{seriesCode}
     </update>
 
     <delete id="delete">
-        DELETE FROM admin
+        DELETE FROM series
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and series_code = #{seriesCode}

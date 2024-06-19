@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.SeriesMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.SeriesPO" id="seriesPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.MenuMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.MenuPO" id="menuPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -18,18 +18,18 @@
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectOne" resultMap="seriesPOMap">
+    <select id="selectOne" resultMap="menuPOMap">
         SELECT * FROM menu
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and menu_code = #{menuCode}
     </select>
 
-    <select id="selectList" resultMap="seriesPOMap">
+    <select id="selectList" resultMap="menuPOMap">
         SELECT * FROM menu LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MenuPO">
         INSERT INTO `menu` (
             `gmt_created`
             , `gmt_modified`
@@ -53,16 +53,30 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
-        UPDATE series SET
-            series_name = #{seriesName}
-            , img_link = #{imgLink}
-            , tenant_code = #{tenantCode}
-            , comment = #{comment}
-            , extra_info = #{extraInfo}
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.MenuPO">
+        UPDATE menu SET
+            gmt_modified = now()
+            <if test="menuName != null">
+                , menu_name = #{menuName}
+            </if>
+            <if test="imgLink != null">
+                , img_link = #{imgLink}
+            </if>
+            <if test="validFrom != null">
+                , valid_from = #{validFrom}
+            </if>
+            <if test="tenantCode != null">
+                , tenant_code = #{tenantCode}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and series_code = #{seriesCode}
+            and menu_code = #{menuCode}
     </update>
 
     <delete id="delete">
