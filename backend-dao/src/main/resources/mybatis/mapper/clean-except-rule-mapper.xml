@@ -14,14 +14,15 @@
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="adminPOMap">
+    <select id="selectOne" resultMap="cleanExceptRulePOMap">
         SELECT * FROM clean_except_rule
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and clean_rule_code = #{cleanRuleCode}
+            and except_topping_code = #{exceptToppingCode}
     </select>
 
-    <select id="selectList" resultMap="adminPOMap">
+    <select id="selectList" resultMap="cleanExceptRulePOMap">
         SELECT * FROM clean_except_rule LIMIT 100
     </select>
 
@@ -41,19 +42,11 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.CleanExceptRulePO">
-        UPDATE clean_except_rule SET
-            clean_rule_code = #{cleanRuleCode}
-            , except_topping_code = #{exceptToppingCode}
-        WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
-    </update>
-
     <delete id="delete">
         DELETE FROM clean_except_rule
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and clean_rule_code = #{cleanRuleCode}
+            and except_topping_code = #{exceptToppingCode}
     </delete>
 </mapper>
