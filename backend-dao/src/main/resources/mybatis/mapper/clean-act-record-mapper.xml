@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.InvalidActRecordMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.InvalidActRecordPO" id="invalidActRecordPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.CleanActRecordMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.CleanActRecordPO" id="cleanActRecordPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -15,24 +15,28 @@
         <result property="cleanEndTime" column="clean_end_time"/>
         <result property="cleanType" column="clean_type"/>
         <result property="cleanContent" column="clean_content"/>
+        <result property="toppingCode" column="topping_code"/>
         <result property="pipelineNum" column="pipeline_num"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectOne" resultMap="invalidActRecordPOMap">
+    <select id="selectOne" resultMap="cleanActRecordPOMap">
         SELECT * FROM clean_act_record
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and machine_code = #{machineCode}
             and shop_code = #{shopCode}
+            and clean_start_time = #{cleanStartTime}
+            and topping_code = #{toppingCode}
+            and pipeline_num = #{pipelineNum}
     </select>
 
-    <select id="selectList" resultMap="invalidActRecordPOMap">
+    <select id="selectList" resultMap="cleanActRecordPOMap">
         SELECT * FROM clean_act_record LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.CleanActRecordPO">
         INSERT INTO `clean_act_record` (
             `gmt_created`
             , `gmt_modified`
@@ -42,6 +46,7 @@
             , `clean_end_time`
             , `clean_type`
             , `clean_content`
+            , `topping_code`
             , `pipeline_num`
             , `tenant_code`
             , `extra_info`
@@ -54,19 +59,12 @@
             , #{cleanEndTime}
             , #{cleanType}
             , #{cleanContent}
+            , #{toppingCode}
             , #{pipelineNum}
             , #{tenantCode}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
-
-<!--    <update id="update" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">-->
-<!--        UPDATE invalid_act_record SET-->
-<!--        WHERE 1 = 1-->
-<!--            and tenant_code = #{tenantCode}-->
-<!--            and machine_code = #{machineCode}-->
-<!--            and shop_code = #{shopCode}-->
-<!--    </update>-->
 
     <delete id="delete">
         DELETE FROM clean_act_record
@@ -74,5 +72,8 @@
             and tenant_code = #{tenantCode}
             and machine_code = #{machineCode}
             and shop_code = #{shopCode}
+            and clean_start_time = #{cleanStartTime}
+            and topping_code = #{toppingCode}
+            and pipeline_num = #{pipelineNum}
     </delete>
 </mapper>
