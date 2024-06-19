@@ -19,6 +19,7 @@
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and menu_code = #{menuCode}
+            and shop_code = #{shopCode}
     </select>
 
     <select id="selectList" resultMap="menuDispatchPOMap">
@@ -26,7 +27,7 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MenuDispatchPO">
-        INSERT INTO `menu` (
+        INSERT INTO `menu_dispatch` (
             `gmt_created`
             , `gmt_modified`
             , `menu_code`
@@ -41,19 +42,11 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.MenuDispatchPO">
-        UPDATE menu_dispatch SET
-            menu_code = #{menuCode}
-            , shop_code = #{shopCode}
-        WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and menu_code = #{menuCode}
-    </update>
-
     <delete id="delete">
         DELETE FROM menu_dispatch
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and menu_code = #{menuCode}
+            and shop_code = #{shopCode}
     </delete>
 </mapper>

@@ -52,5 +52,6 @@
         <mapper resource="mybatis/mapper/menu-mapper.xml"/>
         <mapper resource="mybatis/mapper/series-tea-rel-mapper.xml"/>
         <mapper resource="mybatis/mapper/menu-series-rel-mapper.xml"/>
+        <mapper resource="mybatis/mapper/menu-dispatch-mapper.xml"/>
     </mappers>
 </configuration>
