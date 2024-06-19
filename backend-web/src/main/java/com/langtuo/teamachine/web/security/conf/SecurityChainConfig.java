@@ -77,8 +77,9 @@ public class SecurityChainConfig {
                 .antMatchers(HttpMethod.OPTIONS).permitAll();
 
         // 不需要保护的资源路径允许访问
-        for (String url : ignoreUrlsConfig.getUrls()) {
-            httpSecurity.authorizeRequests().antMatchers(url).permitAll();
+        for (String ignoreUrl : ignoreUrlsConfig.getUrls()) {
+            System.out.printf("$$$$$$$$$$ SecurityChainConfig#filterChain ignoreUrl=%s\n", ignoreUrl);
+            httpSecurity.authorizeRequests().antMatchers(ignoreUrl).permitAll();
         }
 
         // token简单验证

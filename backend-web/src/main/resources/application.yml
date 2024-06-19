@@ -1,11 +1,11 @@
 spring:
   application:
-    name: gx-springboot3-demo
+    name: langtuo-teamachine-backend
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   profiles:
-    active: gxdev #默认为开发环境
+    active: langtuo-dev #默认为开发环境
   servlet:
     multipart:
       enabled: true #开启文件上传
@@ -44,11 +44,14 @@ secure:
       - /favicon.ico
       - /actuator/**
       - /druid/**
+      - /**
+      - /machine/**
+      - /machine/model/**
       - /test001
       - /bye
 
 server:
   servlet:
-    context-path: /gxsp3demo
+    context-path: /teamachine
   port: 8080
 

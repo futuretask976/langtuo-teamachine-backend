@@ -5,9 +5,7 @@ import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.MachineModelDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineModelMgtService;
-import netscape.javascript.JSObject;
 import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.util.Maps;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -23,7 +21,7 @@ public class MachineModelController {
     private MachineModelMgtService machineModelMgtService;
 
     /**
-     * Access: http://localhost:8080/gxsp3demo/machine/model/get
+     * Access: http://localhost:8080/teamachine/machine/model/get
      * @return
      */
     @GetMapping(value = "/get")
@@ -33,7 +31,7 @@ public class MachineModelController {
     }
 
     /**
-     * Access: http://localhost:8080/gxsp3demo/machine/model/list
+     * Access: http://localhost:8080/teamachine/machine/model/list
      * @return
      */
     @GetMapping(value = "/list")
@@ -43,7 +41,7 @@ public class MachineModelController {
     }
 
     /**
-     * Access: http://localhost:8080/gxsp3demo/machine/get
+     * Access: http://localhost:8080/teamachine/machine/get
      * @return
      */
     @PutMapping(value = "/put")

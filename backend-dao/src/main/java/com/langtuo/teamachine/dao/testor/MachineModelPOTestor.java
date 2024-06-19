@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MachineModelPOTestor {
     public static void main(String args[]) {
-        update();
+        insert();
     }
 
     public static void insert() {
