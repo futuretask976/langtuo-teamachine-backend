@@ -23,14 +23,18 @@
         SELECT * FROM invalid_act_record
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and series_code = #{seriesCode}
+            and machine_code = #{machineCode}
+            and shop_code = #{shopCode}
+            and invalid_time = #{invalidTime}
+            and topping_code = #{toppingCode}
+            and pipeline_num = #{pipelineNum}
     </select>
 
     <select id="selectList" resultMap="invalidActRecordPOMap">
         SELECT * FROM invalid_act_record LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.InvalidActRecordPO">
         INSERT INTO `invalid_act_record` (
             `gmt_created`
             , `gmt_modified`
@@ -56,19 +60,14 @@
         )
     </insert>
 
-<!--    <update id="update" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">-->
-<!--        UPDATE invalid_act_record SET-->
-<!--        WHERE 1 = 1-->
-<!--            and tenant_code = #{tenantCode}-->
-<!--            and machine_code = #{machineCode}-->
-<!--            and shop_code = #{shopCode}-->
-<!--    </update>-->
-
     <delete id="delete">
         DELETE FROM invalid_act_record
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and machine_code = #{machineCode}
             and shop_code = #{shopCode}
+            and invalid_time = #{invalidTime}
+            and topping_code = #{toppingCode}
+            and pipeline_num = #{pipelineNum}
     </delete>
 </mapper>

@@ -58,5 +58,6 @@
         <mapper resource="mybatis/mapper/clean-step-mapper.xml"/>
         <mapper resource="mybatis/mapper/clean-rule-dispatch-mapper.xml"/>
         <mapper resource="mybatis/mapper/warning-rule-mapper.xml"/>
+        <mapper resource="mybatis/mapper/invalid-act-record-mapper.xml"/>
     </mappers>
 </configuration>
