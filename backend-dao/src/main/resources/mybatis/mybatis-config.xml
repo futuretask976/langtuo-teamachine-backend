@@ -61,5 +61,6 @@
         <mapper resource="mybatis/mapper/invalid-act-record-mapper.xml"/>
         <mapper resource="mybatis/mapper/supply-act-record-mapper.xml"/>
         <mapper resource="mybatis/mapper/clean-act-record-mapper.xml"/>
+        <mapper resource="mybatis/mapper/order-act-record-mapper.xml"/>
     </mappers>
 </configuration>

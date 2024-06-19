@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.InvalidActRecordMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.InvalidActRecordPO" id="invalidActRecordPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.OrderActRecordMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.OrderActRecordPO" id="orderActRecordPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -18,19 +18,20 @@
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectOne" resultMap="invalidActRecordPOMap">
+    <select id="selectOne" resultMap="orderActRecordPOMap">
         SELECT * FROM order_act_record
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and machine_code = #{machineCode}
             and shop_code = #{shopCode}
+            and order_gmt_created = #{orderGmtCreated}
     </select>
 
-    <select id="selectList" resultMap="invalidActRecordPOMap">
+    <select id="selectList" resultMap="orderActRecordPOMap">
         SELECT * FROM order_act_record LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.OrderActRecordPO">
         INSERT INTO `order_act_record` (
             `gmt_created`
             , `gmt_modified`
@@ -54,19 +55,12 @@
         )
     </insert>
 
-<!--    <update id="update" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">-->
-<!--        UPDATE invalid_act_record SET-->
-<!--        WHERE 1 = 1-->
-<!--            and tenant_code = #{tenantCode}-->
-<!--            and machine_code = #{machineCode}-->
-<!--            and shop_code = #{shopCode}-->
-<!--    </update>-->
-
     <delete id="delete">
         DELETE FROM order_act_record
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and machine_code = #{machineCode}
             and shop_code = #{shopCode}
+            and order_gmt_created = #{orderGmtCreated}
     </delete>
 </mapper>
