@@ -19,6 +19,7 @@
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and clean_rule_code = #{cleanRuleCode}
+            and shop_code = #{shopCode}
     </select>
 
     <select id="selectList" resultMap="cleanRuleDispatchPOMap">
@@ -29,31 +30,23 @@
         INSERT INTO `clean_rule_dispatch` (
             `gmt_created`
             , `gmt_modified`
-            , `menu_code`
+            , `clean_rule_code`
             , `shop_code`
             , `tenant_code`
         ) VALUES (
             now()
             , now()
-            , #{menuCode}
+            , #{cleanRuleCode}
             , #{shopCode}
             , #{tenantCode}
         )
     </insert>
-
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.CleanRuleDispatchPO">
-        UPDATE clean_rule_dispatch SET
-            menu_code = #{menuCode}
-            , shop_code = #{shopCode}
-        WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
-    </update>
 
     <delete id="delete">
         DELETE FROM clean_rule_dispatch
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and clean_rule_code = #{cleanRuleCode}
+            and shop_code = #{shopCode}
     </delete>
 </mapper>

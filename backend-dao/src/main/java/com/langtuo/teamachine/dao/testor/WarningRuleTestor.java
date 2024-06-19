@@ -1,55 +1,50 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.MachineMapper;
-import com.langtuo.teamachine.dao.po.MachinePO;
+import com.langtuo.teamachine.dao.mapper.WarningRuleMapper;
+import com.langtuo.teamachine.dao.po.WarningRulePO;
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class MachinePOTestor {
+public class WarningRuleTestor {
     public static void main(String args[]) {
 //        insert();
 //        select();
-//        update();
+        update();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineMapper mapper = sqlSession.getMapper(MachineMapper.class);
+        WarningRuleMapper mapper = sqlSession.getMapper(WarningRuleMapper.class);
 
-        MachinePO po = null;
+        WarningRulePO po = null;
 
-        po = new MachinePO();
+        po = new WarningRulePO();
         po.setTenantCode("tenant_001");
-        po.setMachineCode("machine_001");
-        po.setMachineName("machineName_001");
-        po.setScreenCode("screen_001");
-        po.setElecBoardCode("elec_001");
-        po.setModelCode("model_001");
-        po.setState(1);
-        po.setValidUntil(new Date());
-        po.setMaintainUntil(new Date());
-        po.setTenantCode("tenant_001");
+        po.setWarningRuleCode("warning_001");
+        po.setWarningRuleName("预警规则001");
+        po.setWarningType(0);
+        po.setWarningContent("这里是预警");
+        po.setThresholdType(0);
+        po.setThreshold(20);
+        po.setComment("松江的门店");
         po.setExtraInfo(new HashMap<String, String>(){{
             put("k1", "v1");
             put("k2", "v2");
         }});
         mapper.insert(po);
 
-        po = new MachinePO();
-        po.setTenantCode("tenant_002");
-        po.setMachineCode("machine_002");
-        po.setMachineName("machineName_002");
-        po.setScreenCode("screen_002");
-        po.setElecBoardCode("elec_002");
-        po.setModelCode("model_002");
-        po.setState(1);
-        po.setValidUntil(new Date());
-        po.setMaintainUntil(new Date());
-        po.setTenantCode("tenant_002");
+        po = new WarningRulePO();
+        po.setTenantCode("tenant_001");
+        po.setWarningRuleCode("warning_003");
+        po.setWarningRuleName("预警规则003");
+        po.setWarningType(3);
+        po.setWarningContent("这里是预警");
+        po.setThresholdType(4);
+        po.setThreshold(50);
+        po.setComment("松江的门店3333");
         po.setExtraInfo(new HashMap<String, String>(){{
             put("k1", "v1");
             put("k2", "v2");
@@ -62,15 +57,15 @@ public class MachinePOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineMapper mapper = sqlSession.getMapper(MachineMapper.class);
+        WarningRuleMapper mapper = sqlSession.getMapper(WarningRuleMapper.class);
 
-        List<MachinePO> list = mapper.selectList();
-        for (MachinePO po : list) {
-            System.out.printf("list->po: %s\n", po);
+        List<WarningRulePO> list = mapper.selectList();
+        for (WarningRulePO po : list) {
+            System.out.printf("$$$$$$$$$$ list->po: %s\n", po);
         }
 
-        MachinePO po = mapper.selectOne("tenant_001", "shopGroup_001");
-        System.out.printf("po: %s\n", po);
+        WarningRulePO po = mapper.selectOne("tenant_001", "warning_003");
+        System.out.printf("$$$$$$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();
@@ -78,12 +73,21 @@ public class MachinePOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineMapper mapper = sqlSession.getMapper(MachineMapper.class);
+        WarningRuleMapper mapper = sqlSession.getMapper(WarningRuleMapper.class);
 
-        MachinePO po = new MachinePO();
-        po.setTenantCode("tenant_002");
-        po.setMachineCode("machine_002");
-        po.setMachineName("machineName_0022222");
+        WarningRulePO po = new WarningRulePO();
+        po.setTenantCode("tenant_001");
+        po.setWarningRuleCode("warning_003");
+        po.setWarningRuleName("预警规则003444444");
+        po.setWarningType(7777);
+        po.setWarningContent("这里是预警44444");
+        po.setThresholdType(555);
+        po.setThreshold(99999);
+        po.setComment("松江的门店333355555");
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k1", "v1555");
+            put("k2", "v25555");
+        }});
         mapper.update(po);
 
         sqlSession.commit();

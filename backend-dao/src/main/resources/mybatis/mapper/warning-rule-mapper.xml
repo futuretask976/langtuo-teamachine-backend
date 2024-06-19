@@ -31,13 +31,13 @@
         SELECT * FROM warning_rule LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.WarningRulePO">
         INSERT INTO `warning_rule` (
             `gmt_created`
             , `gmt_modified`
             , `warning_rule_code`
             , `warning_rule_name`
-            , `warning_rule_type`
+            , `warning_type`
             , `warning_content`
             , `threshold_type`
             , `threshold`
@@ -49,7 +49,7 @@
             , now()
             , #{warningRuleCode}
             , #{warningRuleName}
-            , #{warningRuleType}
+            , #{warningType}
             , #{warningContent}
             , #{thresholdType}
             , #{threshold}
@@ -59,20 +59,41 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
-        UPDATE warning_rule SET
-            warning_rule_name = #{warningRuleName}
-            , warning_rule_type = #{warningRuleType}
-            , warning_content = #{warningContent}
-            , threshold_type = #{thresholdType}
-            , threshold = #{threshold}
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.WarningRulePO">
+        UPDATE warning_rule
+        SET
+            gmt_modified = now()
+            <if test="warningRuleName != null">
+                , warning_rule_name = #{warningRuleName}
+            </if>
+            <if test="warningType != null">
+                , warning_type = #{warningType}
+            </if>
+            <if test="warningContent != null">
+                , warning_content = #{warningContent}
+            </if>
+            <if test="thresholdType != null">
+                , threshold_type = #{thresholdType}
+            </if>
+            <if test="threshold != null">
+                , threshold = #{threshold}
+            </if>
+            <if test="tenantCode != null">
+                , tenant_code = #{tenantCode}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and warning_rule_code = #{warningRuleCode}
     </update>
 
     <delete id="delete">
-        DELETE FROM admin
+        DELETE FROM warning_rule
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and warning_rule_code = #{warningRuleCode}

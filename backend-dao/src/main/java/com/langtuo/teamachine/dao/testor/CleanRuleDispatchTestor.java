@@ -1,59 +1,35 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.MachineMapper;
-import com.langtuo.teamachine.dao.po.MachinePO;
+import com.langtuo.teamachine.dao.mapper.CleanRuleDispatchMapper;
+import com.langtuo.teamachine.dao.po.CleanRuleDispatchPO;
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-public class MachinePOTestor {
+public class CleanRuleDispatchTestor {
     public static void main(String args[]) {
 //        insert();
 //        select();
-//        update();
+        delete();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineMapper mapper = sqlSession.getMapper(MachineMapper.class);
+        CleanRuleDispatchMapper mapper = sqlSession.getMapper(CleanRuleDispatchMapper.class);
 
-        MachinePO po = null;
+        CleanRuleDispatchPO po = null;
 
-        po = new MachinePO();
+        po = new CleanRuleDispatchPO();
         po.setTenantCode("tenant_001");
-        po.setMachineCode("machine_001");
-        po.setMachineName("machineName_001");
-        po.setScreenCode("screen_001");
-        po.setElecBoardCode("elec_001");
-        po.setModelCode("model_001");
-        po.setState(1);
-        po.setValidUntil(new Date());
-        po.setMaintainUntil(new Date());
-        po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{
-            put("k1", "v1");
-            put("k2", "v2");
-        }});
+        po.setCleanRuleCode("clean_001");
+        po.setShopCode("shop_001");
         mapper.insert(po);
 
-        po = new MachinePO();
+        po = new CleanRuleDispatchPO();
         po.setTenantCode("tenant_002");
-        po.setMachineCode("machine_002");
-        po.setMachineName("machineName_002");
-        po.setScreenCode("screen_002");
-        po.setElecBoardCode("elec_002");
-        po.setModelCode("model_002");
-        po.setState(1);
-        po.setValidUntil(new Date());
-        po.setMaintainUntil(new Date());
-        po.setTenantCode("tenant_002");
-        po.setExtraInfo(new HashMap<String, String>(){{
-            put("k1", "v1");
-            put("k2", "v2");
-        }});
+        po.setCleanRuleCode("clean_002");
+        po.setShopCode("shop_002");
         mapper.insert(po);
 
         sqlSession.commit();
@@ -62,29 +38,25 @@ public class MachinePOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineMapper mapper = sqlSession.getMapper(MachineMapper.class);
+        CleanRuleDispatchMapper mapper = sqlSession.getMapper(CleanRuleDispatchMapper.class);
 
-        List<MachinePO> list = mapper.selectList();
-        for (MachinePO po : list) {
-            System.out.printf("list->po: %s\n", po);
+        List<CleanRuleDispatchPO> list = mapper.selectList();
+        for (CleanRuleDispatchPO po : list) {
+            System.out.printf("$$$$$$$$$$ list->po: %s\n", po);
         }
 
-        MachinePO po = mapper.selectOne("tenant_001", "shopGroup_001");
-        System.out.printf("po: %s\n", po);
+        CleanRuleDispatchPO po = mapper.selectOne("tenant_002", "clean_002", "shop_002");
+        System.out.printf("$$$$$$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();
     }
 
-    public static void update() {
+    public static void delete() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineMapper mapper = sqlSession.getMapper(MachineMapper.class);
+        CleanRuleDispatchMapper mapper = sqlSession.getMapper(CleanRuleDispatchMapper.class);
 
-        MachinePO po = new MachinePO();
-        po.setTenantCode("tenant_002");
-        po.setMachineCode("machine_002");
-        po.setMachineName("machineName_0022222");
-        mapper.update(po);
+        mapper.delete("tenant_001", "clean_001", "shop_001");
 
         sqlSession.commit();
         sqlSession.close();
