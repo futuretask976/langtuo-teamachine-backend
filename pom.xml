@@ -29,7 +29,6 @@
         <module>backend-web</module>
         <module>backend-dao</module>
         <module>backend-api</module>
-        <module>backend-gtmf</module>
         <module>backend-biz</module>
     </modules>
 

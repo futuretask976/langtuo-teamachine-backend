@@ -12,11 +12,19 @@ public class MachineModelAccessor {
     @Resource
     private MachineModelMapper mapper;
 
-    public MachineModelPO selectOne(String machineModelCode) {
-        return mapper.selectOne(machineModelCode);
+    public MachineModelPO selectOne(String modelCode) {
+        return mapper.selectOne(modelCode);
     }
 
     public List<MachineModelPO> selectList() {
         return mapper.selectList();
+    }
+
+    public int insert(MachineModelPO machineModelPO) {
+        return mapper.insert(machineModelPO);
+    }
+
+    public int delete(String modelCode) {
+        return mapper.delete(modelCode);
     }
 }
