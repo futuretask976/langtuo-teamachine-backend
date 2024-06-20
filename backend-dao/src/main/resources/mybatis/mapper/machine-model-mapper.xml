@@ -19,7 +19,8 @@
     </select>
 
     <select id="selectList" resultMap="machineModelPOMap">
-        SELECT * FROM machine_model LIMIT 100
+        SELECT *
+        FROM machine_model
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MachineModelPO">

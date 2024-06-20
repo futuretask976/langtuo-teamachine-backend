@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.source;
 
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
-import com.langtuo.teamachine.dao.interceptor.GxTableShardInterceptor;
+import com.langtuo.teamachine.dao.interceptor.LangTuoTableShardInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -68,7 +68,7 @@ public class SQLSourceConfig {
 
     @Bean(name = INTERCEPTOR_NAME)
     public Interceptor gxTableShardInterceptor() {
-        return new GxTableShardInterceptor();
+        return new LangTuoTableShardInterceptor();
     }
 }
 

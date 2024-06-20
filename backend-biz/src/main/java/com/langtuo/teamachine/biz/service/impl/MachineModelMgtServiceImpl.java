@@ -1,9 +1,12 @@
 package com.langtuo.teamachine.biz.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.model.MachineModelDTO;
+import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineModelMgtService;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.accessor.MachineModelAccessor;
 import com.langtuo.teamachine.dao.po.MachineModelPO;
 import org.apache.commons.lang3.StringUtils;
@@ -15,22 +18,32 @@ import java.util.stream.Collectors;
 
 @Component
 public class MachineModelMgtServiceImpl implements MachineModelMgtService {
-    private static int DB_INSERT_RESULT_OK = 1;
-    private static int DB_DELETE_RESULT_OK = 1;
-
     @Resource
     private MachineModelAccessor accessor;
 
     @Override
-    public LangTuoResult<List<MachineModelDTO>> list() {
-        LangTuoResult<List<MachineModelDTO>> langTuoResult = null;
+    public LangTuoResult<PageDTO<MachineModelDTO>> list(int pageNum, int pageSize) {
+        if (pageNum <= 0) {
+            pageNum = 1;
+        }
+        if (pageSize <= 0) {
+            pageSize = 2;
+        }
+
+        LangTuoResult<PageDTO<MachineModelDTO>> langTuoResult = null;
         try {
-            List<MachineModelPO> list = accessor.selectList();
-            List<MachineModelDTO> dtoList = list.stream()
+            PageInfo<MachineModelPO> pageInfo = accessor.selectList(pageNum, pageSize);
+            List<MachineModelDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            langTuoResult = LangTuoResult.success(dtoList);
+            PageDTO<MachineModelDTO> pageDTO = new PageDTO<>();
+            pageDTO.setList(dtoList);
+            pageDTO.setPageNum(pageNum);
+            pageDTO.setPageSize(pageSize);
+            pageDTO.setTotal(pageInfo.getTotal());
+
+            langTuoResult = LangTuoResult.success(pageDTO);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
@@ -58,7 +71,7 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             int rtn = accessor.insert(convert(machineModelDTO));
-            if (rtn == DB_INSERT_RESULT_OK) {
+            if (rtn == DBOpeConts.DB_OPE_INSERT_RESULT_OK) {
                 langTuoResult = LangTuoResult.success();
             } else {
                 langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
@@ -78,7 +91,7 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             int rtn = accessor.delete(modelCode);
-            if (rtn == DB_DELETE_RESULT_OK) {
+            if (rtn == DBOpeConts.DB_OPE_DELETE_RESULT_OK) {
                 langTuoResult = LangTuoResult.success();
             } else {
                 langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);

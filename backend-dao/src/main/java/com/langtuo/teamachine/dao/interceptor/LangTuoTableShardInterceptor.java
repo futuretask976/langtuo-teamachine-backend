@@ -23,7 +23,7 @@ import java.util.Properties;
         method = "prepare",
         args = {Connection.class, Integer.class}
 )})
-public class GxTableShardInterceptor implements Interceptor {
+public class LangTuoTableShardInterceptor implements Interceptor {
     /**
      *
      */

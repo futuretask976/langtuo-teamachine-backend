@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.service;
 
 import com.langtuo.teamachine.api.model.MachineModelDTO;
+import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface MachineModelMgtService {
      *
      * @return
      */
-    LangTuoResult<List<MachineModelDTO>> list();
+    LangTuoResult<PageDTO<MachineModelDTO>> list(int pageNum, int pageSize);
 
     /**
      *

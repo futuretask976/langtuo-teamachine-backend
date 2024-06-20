@@ -5,6 +5,7 @@ import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.MachineModelPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

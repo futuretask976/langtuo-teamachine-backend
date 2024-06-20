@@ -11,8 +11,8 @@
     </typeHandlers>
 
     <plugins>
-        <plugin interceptor="com.langtuo.teamachine.dao.interceptor.GxTableShardInterceptor">
-        </plugin>
+        <plugin interceptor="com.langtuo.teamachine.dao.interceptor.LangTuoTableShardInterceptor" />
+        <plugin interceptor="com.github.pagehelper.PageInterceptor" />
     </plugins>
 
     <environments default="development">

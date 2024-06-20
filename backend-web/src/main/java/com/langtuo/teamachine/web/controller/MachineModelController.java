@@ -3,6 +3,7 @@ package com.langtuo.teamachine.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.MachineModelDTO;
+import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineModelMgtService;
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,12 +31,13 @@ public class MachineModelController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/machine/model/list
+     * Access: http://localhost:8080/teamachine/machine/model/list?pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<MachineModelDTO>> list() {
-        LangTuoResult<List<MachineModelDTO>> rtn = machineModelMgtService.list();
+    public LangTuoResult<PageDTO<MachineModelDTO>> list(@RequestParam("pageNum") int pageNum,
+            @RequestParam("pageSize") int pageSize) {
+        LangTuoResult<PageDTO<MachineModelDTO>> rtn = machineModelMgtService.list(pageNum, pageSize);
         return rtn;
     }
 
