@@ -99,6 +99,246 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
+        po = new MachineModelPO();
+        po.setModelCode("model_011");
+        po.setEnableFlowAll(0);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k1", "v1");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_012");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k2", "v2");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_013");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k3", "v3");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_014");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k4", "v4");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_015");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k5", "v5");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_016");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k6", "v6");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_017");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k7", "v7");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_018");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k8", "v8");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_019");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k9", "v9");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_020");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k10", "v20");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_021");
+        po.setEnableFlowAll(0);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k1", "v1");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_022");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k2", "v2");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_023");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k3", "v3");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_024");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k4", "v4");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_025");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k5", "v5");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_026");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k6", "v6");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_027");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k7", "v7");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_028");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k8", "v8");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_029");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k9", "v9");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_030");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k10", "v10");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_031");
+        po.setEnableFlowAll(0);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k1", "v1");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_032");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k2", "v2");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_033");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k3", "v3");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_034");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k4", "v4");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_035");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k5", "v5");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_036");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k6", "v6");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_037");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k7", "v7");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_038");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k8", "v8");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_039");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k9", "v9");
+        }});
+        mapper.insert(po);
+
+        po = new MachineModelPO();
+        po.setModelCode("model_040");
+        po.setEnableFlowAll(1);
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("k10", "v10");
+        }});
+        mapper.insert(po);
+
         sqlSession.commit();
         sqlSession.close();
     }
