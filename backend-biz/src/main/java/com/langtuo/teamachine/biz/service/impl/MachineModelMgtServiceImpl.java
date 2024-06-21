@@ -23,16 +23,38 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
 
     @Override
     public LangTuoResult<PageDTO<MachineModelDTO>> list(int pageNum, int pageSize) {
-        if (pageNum <= 0) {
-            pageNum = 1;
-        }
-        if (pageSize <= 0) {
-            pageSize = 2;
-        }
+        pageNum = pageNum <= 0 ? 1 : pageNum;
+        pageSize = pageSize <=0 ? 20 : pageSize;
 
         LangTuoResult<PageDTO<MachineModelDTO>> langTuoResult = null;
         try {
             PageInfo<MachineModelPO> pageInfo = accessor.selectList(pageNum, pageSize);
+            List<MachineModelDTO> dtoList = pageInfo.getList().stream()
+                    .map(po -> convert(po))
+                    .collect(Collectors.toList());
+
+            PageDTO<MachineModelDTO> pageDTO = new PageDTO<>();
+            pageDTO.setList(dtoList);
+            pageDTO.setPageNum(pageNum);
+            pageDTO.setPageSize(pageSize);
+            pageDTO.setTotal(pageInfo.getTotal());
+
+            langTuoResult = LangTuoResult.success(pageDTO);
+        } catch (Exception e) {
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<PageDTO<MachineModelDTO>> search(String modelCode,
+            int pageNum, int pageSize) {
+        pageNum = pageNum <= 0 ? 1 : pageNum;
+        pageSize = pageSize <=0 ? 20 : pageSize;
+
+        LangTuoResult<PageDTO<MachineModelDTO>> langTuoResult = null;
+        try {
+            PageInfo<MachineModelPO> pageInfo = accessor.search(modelCode, pageNum, pageSize);
             List<MachineModelDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
@@ -108,6 +130,8 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         }
 
         MachineModelDTO dto = new MachineModelDTO();
+        dto.setGmtCreated(po.getGmtCreated());
+        dto.setGmtModified(po.getGmtModified());
         dto.setModelCode(po.getModelCode());
         dto.setEnableFlowAll(po.getEnableFlowAll());
         dto.setExtraInfo(po.getExtraInfo());

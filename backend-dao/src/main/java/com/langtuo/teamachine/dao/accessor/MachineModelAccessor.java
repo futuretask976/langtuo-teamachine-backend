@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.mapper.MachineModelMapper;
 import com.langtuo.teamachine.dao.po.MachineModelPO;
+import com.langtuo.teamachine.dao.query.MachineModelQuery;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,7 +21,19 @@ public class MachineModelAccessor {
 
     public PageInfo<MachineModelPO> selectList(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
+
         List<MachineModelPO> list = mapper.selectList();
+
+        PageInfo<MachineModelPO> pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
+    public PageInfo<MachineModelPO> search(String modelCode, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        MachineModelQuery machineModelQuery = new MachineModelQuery();
+        machineModelQuery.setModelCode(modelCode);
+        List<MachineModelPO> list = mapper.search(machineModelQuery);
 
         PageInfo<MachineModelPO> pageInfo = new PageInfo(list);
         return pageInfo;

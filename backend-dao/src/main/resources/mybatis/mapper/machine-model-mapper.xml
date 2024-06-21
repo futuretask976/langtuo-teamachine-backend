@@ -23,6 +23,15 @@
         FROM machine_model
     </select>
 
+    <select id="search" parameterType="com.langtuo.teamachine.dao.query.MachineModelQuery" resultMap="machineModelPOMap">
+        SELECT *
+        FROM machine_model
+        WHERE 1 = 1
+            <if test="modelCode != null">
+                AND modelCode = #{modelCode}
+            </if>
+    </select>
+
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MachineModelPO">
         INSERT INTO `machine_model` (
             `gmt_created`

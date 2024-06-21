@@ -18,6 +18,14 @@ public interface MachineModelMgtService {
      *
      * @return
      */
+    LangTuoResult<PageDTO<MachineModelDTO>> search(String modelCode, int pageNum, int pageSize);
+
+    /**
+     *
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     LangTuoResult<PageDTO<MachineModelDTO>> list(int pageNum, int pageSize);
 
     /**

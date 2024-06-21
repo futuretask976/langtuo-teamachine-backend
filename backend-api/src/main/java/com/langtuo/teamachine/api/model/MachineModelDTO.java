@@ -6,6 +6,21 @@ import java.util.Map;
 
 public class MachineModelDTO {
     /**
+     * 数据表id
+     */
+    private long id;
+
+    /**
+     * 数据表记录插入时间
+     */
+    private Date gmtCreated;
+
+    /**
+     * 数据表记录最近修改时间
+     */
+    private Date gmtModified;
+
+    /**
      * 型号编码
      */
     private String modelCode;
@@ -48,5 +63,21 @@ public class MachineModelDTO {
             this.extraInfo = new HashMap<>();
         }
         this.extraInfo.putAll(extraInfo);
+    }
+
+    public Date getGmtCreated() {
+        return gmtCreated;
+    }
+
+    public void setGmtCreated(Date gmtCreated) {
+        this.gmtCreated = gmtCreated;
+    }
+
+    public Date getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
     }
 }

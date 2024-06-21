@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.mapper;
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.MachineModelPO;
+import com.langtuo.teamachine.dao.query.MachineModelQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
@@ -26,6 +27,12 @@ public interface MachineModelMapper {
      * @return
      */
     List<MachineModelPO> selectList();
+
+    /**
+     *
+     * @return
+     */
+    List<MachineModelPO> search(MachineModelQuery machineModelQuery);
 
     /**
      *
