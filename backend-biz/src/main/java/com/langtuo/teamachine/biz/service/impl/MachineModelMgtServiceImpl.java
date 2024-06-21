@@ -67,6 +67,7 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
 
             langTuoResult = LangTuoResult.success(pageDTO);
         } catch (Exception e) {
+            e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;

@@ -42,13 +42,13 @@ public class MachineModelController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/machine/model/list?pageNum=1&pageSize=2
+     * Access: http://localhost:8080/teamachine/machine/model/search?modelCode=model_001&pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<MachineModelDTO>> list(@RequestParam("modelCode") String modelCode,
+    public LangTuoResult<PageDTO<MachineModelDTO>> search(@RequestParam("modelCode") String modelCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<MachineModelDTO>> rtn = machineModelMgtService.list(pageNum, pageSize);
+        LangTuoResult<PageDTO<MachineModelDTO>> rtn = machineModelMgtService.search(modelCode, pageNum, pageSize);
         return rtn;
     }
 

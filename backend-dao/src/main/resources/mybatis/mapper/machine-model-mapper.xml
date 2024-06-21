@@ -28,7 +28,7 @@
         FROM machine_model
         WHERE 1 = 1
             <if test="modelCode != null">
-                AND modelCode = #{modelCode}
+                AND model_code = #{modelCode}
             </if>
     </select>
 
