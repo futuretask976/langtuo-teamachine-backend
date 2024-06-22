@@ -3,6 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <settings>
+        <!-- 关闭日志 -->
+        <setting name="logImpl" value="org.apache.ibatis.logging.nologging.NoLoggingImpl"/>
+    </settings>
+
     <typeAliases>
         <typeAlias type="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" alias="MapStringTypeHandler"/>
     </typeAliases>

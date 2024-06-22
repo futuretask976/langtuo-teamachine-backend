@@ -61,11 +61,11 @@ public class WarningRuleTestor {
 
         List<WarningRulePO> list = mapper.selectList();
         for (WarningRulePO po : list) {
-            System.out.printf("$$$$$$$$$$ list->po: %s\n", po);
+            System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
         WarningRulePO po = mapper.selectOne("tenant_001", "warning_003");
-        System.out.printf("$$$$$$$$$$ po: %s\n", po);
+        System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();

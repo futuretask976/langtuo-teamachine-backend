@@ -42,11 +42,11 @@ public class CleanRuleDispatchTestor {
 
         List<CleanRuleDispatchPO> list = mapper.selectList();
         for (CleanRuleDispatchPO po : list) {
-            System.out.printf("$$$$$$$$$$ list->po: %s\n", po);
+            System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
         CleanRuleDispatchPO po = mapper.selectOne("tenant_002", "clean_002", "shop_002");
-        System.out.printf("$$$$$$$$$$ po: %s\n", po);
+        System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();

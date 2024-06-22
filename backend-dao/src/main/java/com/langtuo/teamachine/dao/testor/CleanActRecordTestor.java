@@ -65,12 +65,12 @@ public class CleanActRecordTestor {
 
         List<CleanActRecordPO> list = mapper.selectList();
         for (CleanActRecordPO po : list) {
-            System.out.printf("$$$$$$$$$$ list->po: %s\n", po);
+            System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
         CleanActRecordPO po = mapper.selectOne("tenant_002", "machine_002",
                 "shop_002", "2025-07-05 20:02:00", "topping_002", 2);
-        System.out.printf("$$$$$$$$$$ po: %s\n", po);
+        System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();

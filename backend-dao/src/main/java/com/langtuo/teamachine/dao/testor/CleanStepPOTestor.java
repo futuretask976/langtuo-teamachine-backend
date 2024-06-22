@@ -57,11 +57,11 @@ public class CleanStepPOTestor {
 
         List<CleanStepPO> list = mapper.selectList();
         for (CleanStepPO po : list) {
-            System.out.printf("$$$$$$$$$$ list->po: %s\n", po);
+            System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
         CleanStepPO po = mapper.selectOne("tenant_001", "clean_rule_001", 1);
-        System.out.printf("$$$$$$$$$$ po: %s\n", po);
+        System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();

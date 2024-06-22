@@ -2,7 +2,8 @@ package com.langtuo.teamachine.api.constant;
 
 public enum ErrorEnum {
     // 业务逻辑错误
-    BIZ_ERR_ILLEGAL_ARGUMENT("BIZ_ERR_ILLEGAL_ARGUMENT", "输入参数错误")
+    BIZ_ERR_ONLY_TEST("BIZ_ERR_ONLY_TEST", "测试返回")
+    , BIZ_ERR_ILLEGAL_ARGUMENT("BIZ_ERR_ILLEGAL_ARGUMENT", "输入参数错误")
 
     // 数据库错误
     , DB_ERR_QUERY_FAIL("DB_ERR_QUERY_FAIL", "数据查询失败")

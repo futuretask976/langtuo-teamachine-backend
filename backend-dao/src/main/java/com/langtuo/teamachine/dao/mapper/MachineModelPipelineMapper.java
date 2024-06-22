@@ -46,8 +46,7 @@ public interface MachineModelPipelineMapper {
     /**
      *
      * @param modelCode
-     * @param pipelineNum
      * @return
      */
-    int delete(@Param("modelCode") String modelCode, @Param("pipelineNum") String pipelineNum);
+    int delete(@Param("modelCode") String modelCode);
 }

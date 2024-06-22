@@ -61,12 +61,12 @@ public class InvalidActRecordTestor {
 
         List<InvalidActRecordPO> list = mapper.selectList();
         for (InvalidActRecordPO po : list) {
-            System.out.printf("$$$$$$$$$$ list->po: %s\n", po);
+            System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
         InvalidActRecordPO po = mapper.selectOne("tenant_002", "machine_002",
                 "shop_002", "2025-05-05 20:02:00", "topping_002", 2);
-        System.out.printf("$$$$$$$$$$ po: %s\n", po);
+        System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();

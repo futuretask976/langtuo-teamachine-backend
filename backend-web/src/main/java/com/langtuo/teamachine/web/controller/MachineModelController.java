@@ -4,12 +4,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.MachineModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.request.MachineModelPipelineRequest;
+import com.langtuo.teamachine.api.request.MachineModelRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineModelMgtService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -53,40 +58,22 @@ public class MachineModelController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/machine/get
+     * Access: http://localhost:8080/teamachine/machine/model/put
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestParam("modelCode") String modelCode,
-            @RequestParam("enableFlowAll") String enableFlowAll, @RequestParam("extraInfo") String extraInfo) {
-        if (StringUtils.isBlank(modelCode) || !StringUtils.isNumeric(enableFlowAll)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
-        }
-
-        LangTuoResult<Void> rtn = machineModelMgtService.put(buildMachineModelDTO(modelCode, enableFlowAll,
-                extraInfo));
+    public LangTuoResult<Void> put(@RequestBody MachineModelRequest machineModelRequest) {
+        LangTuoResult<Void> rtn = machineModelMgtService.put(machineModelRequest);
         return rtn;
     }
 
-    private MachineModelDTO buildMachineModelDTO(String modelCode, String enableFlowAll, String extraInfo) {
-        MachineModelDTO machineModelDTO = new MachineModelDTO();
-        machineModelDTO.setModelCode(modelCode);
-        machineModelDTO.setEnableFlowAll(Integer.valueOf(enableFlowAll));
-
-        try {
-            JSONObject extraInfoJSON = JSONObject.parseObject(extraInfo);
-            Set<Map.Entry<String, Object>> entrySet = extraInfoJSON.entrySet();
-
-            Map<String, String> extraInfoMap = new HashMap<>();
-            for (Map.Entry<String, Object> entry : entrySet) {
-                String key = entry.getKey();
-                String val = String.valueOf(entry.getValue());
-                extraInfoMap.put(key, val);
-            }
-            machineModelDTO.setExtraInfo(extraInfoMap);
-        } catch(Exception e) {
-            // Do nothing
-        }
-        return machineModelDTO;
+    /**
+     * Access: http://localhost:8080/teamachine/machine/model/put
+     * @return
+     */
+    @DeleteMapping(value = "/{modelcode}/delete")
+    public LangTuoResult<Void> delete(@PathVariable(name = "modelcode") String modelCode) {
+        LangTuoResult<Void> rtn = machineModelMgtService.delete(modelCode);
+        return rtn;
     }
 }

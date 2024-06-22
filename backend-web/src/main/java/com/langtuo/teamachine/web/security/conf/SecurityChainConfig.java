@@ -78,7 +78,7 @@ public class SecurityChainConfig {
 
         // 不需要保护的资源路径允许访问
         for (String ignoreUrl : ignoreUrlsConfig.getUrls()) {
-            System.out.printf("$$$$$$$$$$ SecurityChainConfig#filterChain ignoreUrl=%s\n", ignoreUrl);
+            System.out.printf("$$$$$ SecurityChainConfig#filterChain ignoreUrl=%s\n", ignoreUrl);
             httpSecurity.authorizeRequests().antMatchers(ignoreUrl).permitAll();
         }
 

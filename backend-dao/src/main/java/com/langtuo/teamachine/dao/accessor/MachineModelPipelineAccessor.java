@@ -19,4 +19,12 @@ public class MachineModelPipelineAccessor {
     public List<MachineModelPipelinePO> selectList() {
         return mapper.selectList();
     }
+
+    public int insert(MachineModelPipelinePO po) {
+        return mapper.insert(po);
+    }
+
+    public int delete(String modelCode) {
+        return mapper.delete(modelCode);
+    }
 }

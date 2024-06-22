@@ -61,12 +61,12 @@ public class SupplyActRecordTestor {
 
         List<SupplyActRecordPO> list = mapper.selectList();
         for (SupplyActRecordPO po : list) {
-            System.out.printf("$$$$$$$$$$ list->po: %s\n", po);
+            System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
         SupplyActRecordPO po = mapper.selectOne("tenant_002", "machine_002",
                 "shop_002", "2025-05-05 20:02:00", "topping_002", 2);
-        System.out.printf("$$$$$$$$$$ po: %s\n", po);
+        System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();

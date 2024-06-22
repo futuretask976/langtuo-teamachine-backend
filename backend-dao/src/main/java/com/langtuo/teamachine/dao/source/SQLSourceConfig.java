@@ -38,7 +38,7 @@ public class SQLSourceConfig {
     @Bean(name = DATA_SOURCE_NAME)
     @Primary
     public DataSource gxSQLDatasource() {
-        System.out.println("$$$$$$$$$$ GxSQLSourceConfig#gxSQLDatasource entering");
+        System.out.println("$$$$$ GxSQLSourceConfig#gxSQLDatasource entering");
         return DataSourceBuilder.create()
                 .url("jdbc:mysql://rm-cn-28t3ppz9e0001yho.rwlb.rds.aliyuncs.com:3306/gx_mysql_demo?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true")
                 .username("miya")
@@ -50,7 +50,7 @@ public class SQLSourceConfig {
     @Primary
     public SqlSessionFactory gxSQLSessionFactory(@Qualifier(DATA_SOURCE_NAME) DataSource mysqlDataSource)
             throws Exception {
-        System.out.println("$$$$$$$$$$ GxSQLSourceConfig#gxSQLSessionFactory entering");
+        System.out.println("$$$$$ GxSQLSourceConfig#gxSQLSessionFactory entering");
         SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
         factory.setDataSource(mysqlDataSource);
         factory.setVfs(SpringBootVFS.class);
@@ -62,7 +62,7 @@ public class SQLSourceConfig {
 
     @Bean(name = JDBC_TEMPLATE_NAME)
     public JdbcTemplate gxSQLJdbcTemplate(@Qualifier(DATA_SOURCE_NAME) DataSource mysqlDataSource) {
-        System.out.println("$$$$$$$$$$ GxSQLSourceConfig#gxSQLJdbcTemplate entering");
+        System.out.println("$$$$$ GxSQLSourceConfig#gxSQLJdbcTemplate entering");
         return new JdbcTemplate(mysqlDataSource);
     }
 

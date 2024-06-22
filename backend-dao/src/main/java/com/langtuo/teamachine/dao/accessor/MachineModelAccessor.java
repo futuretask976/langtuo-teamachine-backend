@@ -32,7 +32,7 @@ public class MachineModelAccessor {
     public PageInfo<MachineModelPO> search(String modelCode, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
-        System.out.printf("$$$$$$$$$$ MachineModelAccessor#search modelCode=%s\n", modelCode);
+        System.out.printf("$$$$$ MachineModelAccessor#search modelCode=%s\n", modelCode);
         MachineModelQuery machineModelQuery = new MachineModelQuery();
         machineModelQuery.setModelCode(StringUtils.isBlank(modelCode) ? null : modelCode);
         List<MachineModelPO> list = mapper.search(machineModelQuery);
@@ -43,6 +43,10 @@ public class MachineModelAccessor {
 
     public int insert(MachineModelPO machineModelPO) {
         return mapper.insert(machineModelPO);
+    }
+
+    public int update(MachineModelPO machineModelPO) {
+        return mapper.update(machineModelPO);
     }
 
     public int delete(String modelCode) {

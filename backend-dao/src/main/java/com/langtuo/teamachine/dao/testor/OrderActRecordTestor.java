@@ -59,12 +59,12 @@ public class OrderActRecordTestor {
 
         List<OrderActRecordPO> list = mapper.selectList();
         for (OrderActRecordPO po : list) {
-            System.out.printf("$$$$$$$$$$ list->po: %s\n", po);
+            System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
         OrderActRecordPO po = mapper.selectOne("tenant_002", "machine_002",
                 "shop_002", "2023-05-05 20:02:00");
-        System.out.printf("$$$$$$$$$$ po: %s\n", po);
+        System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();
