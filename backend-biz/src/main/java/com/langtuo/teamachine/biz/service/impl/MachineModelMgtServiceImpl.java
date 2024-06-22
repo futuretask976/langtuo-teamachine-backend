@@ -2,6 +2,7 @@ package com.langtuo.teamachine.biz.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.model.MachineModelDTO;
+import com.langtuo.teamachine.api.model.MachineModelPipelineDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.MachineModelPipelineRequest;
 import com.langtuo.teamachine.api.request.MachineModelRequest;
@@ -85,8 +86,14 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
     public LangTuoResult<MachineModelDTO> get(String modelCode) {
         LangTuoResult<MachineModelDTO> langTuoResult = null;
         try {
-            MachineModelPO po = machineModelAccessor.selectOne(modelCode);
-            langTuoResult = LangTuoResult.success(po);
+            MachineModelPO machineModelPO = machineModelAccessor.selectOne(modelCode);
+            MachineModelDTO machineModelDTO = convert(machineModelPO);
+
+            List<MachineModelPipelinePO> pipelinePOList = machineModelPipelineAccessor.selectList(modelCode);
+            if (!CollectionUtils.isEmpty(pipelinePOList)) {
+                machineModelDTO.setPipelineList(convert(pipelinePOList));
+            }
+            langTuoResult = LangTuoResult.success(machineModelDTO);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
@@ -184,9 +191,29 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         List<MachineModelPipelinePO> resultList = requestList.stream().map(request -> {
             MachineModelPipelinePO po = new MachineModelPipelinePO();
             po.setModelCode(modelCode);
+            po.setPipelineNum(request.getPipelineNum());
             po.setEnableFreeze(request.getEnableFreeze());
             po.setEnableWarm(request.getEnableWarm());
             return po;
+        }).collect(Collectors.toList());
+        return resultList;
+    }
+
+    private List<MachineModelPipelineDTO> convert(List<MachineModelPipelinePO> pipelinePOList) {
+        if (CollectionUtils.isEmpty(pipelinePOList)) {
+            return null;
+        }
+
+        List<MachineModelPipelineDTO> resultList = pipelinePOList.stream().map(po -> {
+            MachineModelPipelineDTO dto = new MachineModelPipelineDTO();
+            dto.setId(po.getId());
+            dto.setGmtCreated(po.getGmtCreated());
+            dto.setGmtModified(po.getGmtModified());
+            dto.setModelCode(po.getModelCode());
+            dto.setPipelineNum(po.getPipelineNum());
+            dto.setEnableFreeze(po.getEnableFreeze());
+            dto.setEnableWarm(po.getEnableWarm());
+            return dto;
         }).collect(Collectors.toList());
         return resultList;
     }

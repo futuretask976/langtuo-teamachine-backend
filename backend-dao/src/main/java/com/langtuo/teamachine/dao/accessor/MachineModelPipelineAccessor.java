@@ -16,8 +16,8 @@ public class MachineModelPipelineAccessor {
         return mapper.selectOne(modelCode, pipelineNum);
     }
 
-    public List<MachineModelPipelinePO> selectList() {
-        return mapper.selectList();
+    public List<MachineModelPipelinePO> selectList(String modeCode) {
+        return mapper.selectList(modeCode);
     }
 
     public int insert(MachineModelPipelinePO po) {

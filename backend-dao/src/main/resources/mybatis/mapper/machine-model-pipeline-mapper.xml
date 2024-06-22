@@ -24,7 +24,11 @@
     </select>
 
     <select id="selectList" resultMap="machineModelPipelinePOMap">
-        SELECT * FROM machine_model_pipeline LIMIT 100
+        SELECT *
+        FROM machine_model_pipeline
+        WHERE 1 = 1
+            AND model_code = #{modelCode}
+        LIMIT 100
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MachineModelPipelinePO">

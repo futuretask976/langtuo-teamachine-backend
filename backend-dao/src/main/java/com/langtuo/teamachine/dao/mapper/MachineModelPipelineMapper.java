@@ -26,7 +26,7 @@ public interface MachineModelPipelineMapper {
      *
      * @return
      */
-    List<MachineModelPipelinePO> selectList();
+    List<MachineModelPipelinePO> selectList(String modelCode);
 
     /**
      *

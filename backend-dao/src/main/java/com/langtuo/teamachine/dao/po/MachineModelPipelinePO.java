@@ -30,7 +30,7 @@ public class MachineModelPipelinePO {
     /**
      * 管道号
      */
-    private String pipelineNum;
+    private Integer pipelineNum;
 
     /**
      * 是否支持加热，0：不支持，1：支持

@@ -2,6 +2,7 @@ package com.langtuo.teamachine.api.model;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MachineModelDTO {
@@ -34,6 +35,11 @@ public class MachineModelDTO {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    /**
+     * 管道列表
+     */
+    private List<MachineModelPipelineDTO> pipelineList;
 
     public String getModelCode() {
         return modelCode;
@@ -79,5 +85,21 @@ public class MachineModelDTO {
 
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public List<MachineModelPipelineDTO> getPipelineList() {
+        return pipelineList;
+    }
+
+    public void setPipelineList(List<MachineModelPipelineDTO> pipelineList) {
+        this.pipelineList = pipelineList;
     }
 }

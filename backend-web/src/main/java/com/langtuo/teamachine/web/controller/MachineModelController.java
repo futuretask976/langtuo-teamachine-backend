@@ -1,23 +1,13 @@
 package com.langtuo.teamachine.web.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.MachineModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.MachineModelPipelineRequest;
 import com.langtuo.teamachine.api.request.MachineModelRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineModelMgtService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/machine/model")
@@ -29,8 +19,8 @@ public class MachineModelController {
      * Access: http://localhost:8080/teamachine/machine/model/get
      * @return
      */
-    @GetMapping(value = "/get")
-    public LangTuoResult<MachineModelDTO> get(@RequestParam("modelCode") String modelCode) {
+    @GetMapping(value = "/{modelcode}/get")
+    public LangTuoResult<MachineModelDTO> get(@PathVariable(name = "modelcode") String modelCode) {
         LangTuoResult<MachineModelDTO> rtn = machineModelMgtService.get(modelCode);
         return rtn;
     }
