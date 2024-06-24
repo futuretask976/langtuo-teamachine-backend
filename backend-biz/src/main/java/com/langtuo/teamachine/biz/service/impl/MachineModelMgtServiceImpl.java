@@ -9,7 +9,6 @@ import com.langtuo.teamachine.api.request.MachineModelRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineModelMgtService;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.biz.service.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.accessor.MachineModelAccessor;
 import com.langtuo.teamachine.dao.accessor.MachineModelPipelineAccessor;
 import com.langtuo.teamachine.dao.po.MachineModelPO;

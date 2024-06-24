@@ -28,6 +28,18 @@
         SELECT * FROM tenant LIMIT 100
     </select>
 
+    <select id="search" parameterType="com.langtuo.teamachine.dao.query.TenantQuery" resultMap="tenantPOMap">
+        SELECT *
+        FROM tenant
+        WHERE 1 = 1
+        <if test="tenantName != null">
+            AND tenant_name = #{tenantName}
+        </if>
+        <if test="contactPerson != null">
+            AND contact_person = #{contactPerson}
+        </if>
+    </select>
+
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TenantPO">
         INSERT INTO `tenant` (
             `gmt_created`

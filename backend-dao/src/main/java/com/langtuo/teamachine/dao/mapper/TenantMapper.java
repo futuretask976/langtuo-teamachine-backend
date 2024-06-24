@@ -2,8 +2,8 @@ package com.langtuo.teamachine.dao.mapper;
 
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
-import com.langtuo.teamachine.dao.po.MachineModelPO;
 import com.langtuo.teamachine.dao.po.TenantPO;
+import com.langtuo.teamachine.dao.query.TenantQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -26,6 +26,12 @@ public interface TenantMapper {
      * @return
      */
     List<TenantPO> selectList();
+
+    /**
+     *
+     * @return
+     */
+    List<TenantPO> search(TenantQuery tenantQuery);
 
     /**
      *
