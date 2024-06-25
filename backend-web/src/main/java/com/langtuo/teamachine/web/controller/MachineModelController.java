@@ -2,7 +2,7 @@ package com.langtuo.teamachine.web.controller;
 
 import com.langtuo.teamachine.api.model.MachineModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.MachineModelRequest;
+import com.langtuo.teamachine.api.request.MachineModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineModelMgtService;
 import org.springframework.web.bind.annotation.*;
@@ -52,8 +52,8 @@ public class MachineModelController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody MachineModelRequest machineModelRequest) {
-        LangTuoResult<Void> rtn = machineModelMgtService.put(machineModelRequest);
+    public LangTuoResult<Void> put(@RequestBody MachineModelPutRequest machineModelPutRequest) {
+        LangTuoResult<Void> rtn = machineModelMgtService.put(machineModelPutRequest);
         return rtn;
     }
 

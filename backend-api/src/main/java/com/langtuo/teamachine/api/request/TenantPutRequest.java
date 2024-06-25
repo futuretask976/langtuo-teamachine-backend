@@ -1,10 +1,8 @@
 package com.langtuo.teamachine.api.request;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
-public class TenantRequest {
+public class TenantPutRequest {
     /**
      * 租户编码
      */

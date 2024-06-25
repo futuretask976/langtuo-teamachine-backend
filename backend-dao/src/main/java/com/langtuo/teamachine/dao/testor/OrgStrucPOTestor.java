@@ -45,7 +45,7 @@ public class OrgStrucPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         OrgStrucMapper mapper = sqlSession.getMapper(OrgStrucMapper.class);
 
-        List<OrgStrucPO> list = mapper.selectList();
+        List<OrgStrucPO> list = mapper.selectList("tenant_001");
         for (OrgStrucPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }

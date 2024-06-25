@@ -2,7 +2,7 @@ package com.langtuo.teamachine.web.controller;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.TenantDTO;
-import com.langtuo.teamachine.api.request.TenantRequest;
+import com.langtuo.teamachine.api.request.TenantPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.TenantMgtService;
 import org.springframework.web.bind.annotation.*;
@@ -53,8 +53,8 @@ public class TenantController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody TenantRequest tenantRequest) {
-        LangTuoResult<Void> rtn = tenantMgtService.put(tenantRequest);
+    public LangTuoResult<Void> put(@RequestBody TenantPutRequest tenantPutRequest) {
+        LangTuoResult<Void> rtn = tenantMgtService.put(tenantPutRequest);
         return rtn;
     }
 

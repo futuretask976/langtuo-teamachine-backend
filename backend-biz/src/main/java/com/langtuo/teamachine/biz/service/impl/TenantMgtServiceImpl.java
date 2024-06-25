@@ -4,7 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.TenantDTO;
-import com.langtuo.teamachine.api.request.TenantRequest;
+import com.langtuo.teamachine.api.request.TenantPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.TenantMgtService;
 import com.langtuo.teamachine.dao.accessor.TenantAccessor;
@@ -89,18 +89,18 @@ public class TenantMgtServiceImpl implements TenantMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(TenantRequest tenantRequest) {
-        if (tenantRequest == null
-                || StringUtils.isBlank(tenantRequest.getTenantCode())
-                || StringUtils.isBlank(tenantRequest.getTenantName())
-                || StringUtils.isBlank(tenantRequest.getContactPerson())
-                || StringUtils.isBlank(tenantRequest.getContactPhone())
-                || StringUtils.isBlank(tenantRequest.getImgLink())) {
+    public LangTuoResult<Void> put(TenantPutRequest tenantPutRequest) {
+        if (tenantPutRequest == null
+                || StringUtils.isBlank(tenantPutRequest.getTenantCode())
+                || StringUtils.isBlank(tenantPutRequest.getTenantName())
+                || StringUtils.isBlank(tenantPutRequest.getContactPerson())
+                || StringUtils.isBlank(tenantPutRequest.getContactPhone())
+                || StringUtils.isBlank(tenantPutRequest.getImgLink())) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        String tenantCode = tenantRequest.getTenantCode();
-        TenantPO tenantPO = convert(tenantRequest);
+        String tenantCode = tenantPutRequest.getTenantCode();
+        TenantPO tenantPO = convert(tenantPutRequest);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
@@ -156,7 +156,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         return dto;
     }
 
-    private TenantPO convert(TenantRequest request) {
+    private TenantPO convert(TenantPutRequest request) {
         if (request == null) {
             return null;
         }

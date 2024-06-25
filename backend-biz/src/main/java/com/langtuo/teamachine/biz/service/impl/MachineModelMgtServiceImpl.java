@@ -4,8 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.model.MachineModelDTO;
 import com.langtuo.teamachine.api.model.MachineModelPipelineDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.MachineModelPipelineRequest;
-import com.langtuo.teamachine.api.request.MachineModelRequest;
+import com.langtuo.teamachine.api.request.MachineModelPipelinePutRequest;
+import com.langtuo.teamachine.api.request.MachineModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineModelMgtService;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
@@ -100,17 +100,17 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(MachineModelRequest machineModelRequest) {
-        if (machineModelRequest == null
-                || StringUtils.isBlank(machineModelRequest.getModelCode())
-                || machineModelRequest.getEnableFlowAll() == null
-                || CollectionUtils.isEmpty(machineModelRequest.getPipelineList())) {
+    public LangTuoResult<Void> put(MachineModelPutRequest machineModelPutRequest) {
+        if (machineModelPutRequest == null
+                || StringUtils.isBlank(machineModelPutRequest.getModelCode())
+                || machineModelPutRequest.getEnableFlowAll() == null
+                || CollectionUtils.isEmpty(machineModelPutRequest.getPipelineList())) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        String modelCode = machineModelRequest.getModelCode();
-        MachineModelPO machineModelPO = convert(machineModelRequest);
-        List<MachineModelPipelinePO> machineModelPipelinePOList = convert(modelCode, machineModelRequest.getPipelineList());
+        String modelCode = machineModelPutRequest.getModelCode();
+        MachineModelPO machineModelPO = convert(machineModelPutRequest);
+        List<MachineModelPipelinePO> machineModelPipelinePOList = convert(modelCode, machineModelPutRequest.getPipelineList());
 
         LangTuoResult<Void> langTuoResult = null;
         try {
@@ -170,7 +170,7 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         return dto;
     }
 
-    private MachineModelPO convert(MachineModelRequest request) {
+    private MachineModelPO convert(MachineModelPutRequest request) {
         if (request == null) {
             return null;
         }
@@ -182,7 +182,7 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         return po;
     }
 
-    private List<MachineModelPipelinePO> convert(String modelCode, List<MachineModelPipelineRequest> requestList) {
+    private List<MachineModelPipelinePO> convert(String modelCode, List<MachineModelPipelinePutRequest> requestList) {
         if (CollectionUtils.isEmpty(requestList)) {
             return null;
         }

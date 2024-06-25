@@ -4,6 +4,8 @@ import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.OrgStrucPO;
 import com.langtuo.teamachine.dao.po.TenantPO;
+import com.langtuo.teamachine.dao.query.OrgStrucQuery;
+import com.langtuo.teamachine.dao.query.TenantQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -26,7 +28,13 @@ public interface OrgStrucMapper {
      *
      * @return
      */
-    List<OrgStrucPO> selectList();
+    List<OrgStrucPO> selectList(@Param("tenantCode") String tenantCode);
+
+    /**
+     *
+     * @return
+     */
+    List<OrgStrucPO> search(OrgStrucQuery orgStrucQuery);
 
     /**
      *

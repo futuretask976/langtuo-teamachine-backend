@@ -2,10 +2,8 @@ package com.langtuo.teamachine.api.service;
 
 import com.langtuo.teamachine.api.model.MachineModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.MachineModelRequest;
+import com.langtuo.teamachine.api.request.MachineModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-
-import java.util.List;
 
 public interface MachineModelMgtService {
     /**
@@ -31,10 +29,10 @@ public interface MachineModelMgtService {
 
     /**
      *
-     * @param machineModelRequest
+     * @param machineModelPutRequest
      * @return
      */
-    LangTuoResult<Void> put(MachineModelRequest machineModelRequest);
+    LangTuoResult<Void> put(MachineModelPutRequest machineModelPutRequest);
 
     /**
      *

@@ -1,10 +1,8 @@
 package com.langtuo.teamachine.api.service;
 
-import com.langtuo.teamachine.api.model.MachineModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.TenantDTO;
-import com.langtuo.teamachine.api.request.MachineModelRequest;
-import com.langtuo.teamachine.api.request.TenantRequest;
+import com.langtuo.teamachine.api.request.TenantPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
 public interface TenantMgtService {
@@ -31,10 +29,10 @@ public interface TenantMgtService {
 
     /**
      *
-     * @param tenantRequest
+     * @param tenantPutRequest
      * @return
      */
-    LangTuoResult<Void> put(TenantRequest tenantRequest);
+    LangTuoResult<Void> put(TenantPutRequest tenantPutRequest);
 
     /**
      *

@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.request;
 import java.util.List;
 import java.util.Map;
 
-public class MachineModelRequest {
+public class MachineModelPutRequest {
     /**
      * 同MachineModelDTO
      */
@@ -17,7 +17,7 @@ public class MachineModelRequest {
     /**
      * 同MachineModelDTO
      */
-    private List<MachineModelPipelineRequest> pipelineList;
+    private List<MachineModelPipelinePutRequest> pipelineList;
 
     /**
      * 同MachineModelDTO
@@ -40,11 +40,11 @@ public class MachineModelRequest {
         this.enableFlowAll = enableFlowAll;
     }
 
-    public List<MachineModelPipelineRequest> getPipelineList() {
+    public List<MachineModelPipelinePutRequest> getPipelineList() {
         return pipelineList;
     }
 
-    public void setPipelineList(List<MachineModelPipelineRequest> pipelineList) {
+    public void setPipelineList(List<MachineModelPipelinePutRequest> pipelineList) {
         this.pipelineList = pipelineList;
     }
 

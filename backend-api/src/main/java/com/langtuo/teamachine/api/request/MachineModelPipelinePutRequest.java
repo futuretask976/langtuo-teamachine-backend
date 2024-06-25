@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.api.request;
 
-public class MachineModelPipelineRequest {
+public class MachineModelPipelinePutRequest {
     /**
      * 同MachineModelPipelineDTO
      */

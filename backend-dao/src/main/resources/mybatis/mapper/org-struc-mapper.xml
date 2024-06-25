@@ -22,7 +22,19 @@
     </select>
 
     <select id="selectList" resultMap="orgStrucMap">
-        SELECT * FROM org_struc LIMIT 100
+        SELECT * FROM org_struc
+    </select>
+
+    <select id="search" parameterType="com.langtuo.teamachine.dao.query.OrgStrucQuery" resultMap="orgStrucMap">
+        SELECT *
+        FROM org_struc
+        WHERE 1 = 1
+        <if test="tenantCode != null">
+            AND tenant_code = #{tenantCode}
+        </if>
+        <if test="orgName != null">
+            AND org_name = #{orgName}
+        </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.OrgStrucPO">
