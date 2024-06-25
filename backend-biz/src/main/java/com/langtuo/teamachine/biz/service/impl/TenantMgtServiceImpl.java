@@ -41,6 +41,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
             langTuoResult = LangTuoResult.success(pageDTO);
         } catch (Exception e) {
+            e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -142,6 +143,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         }
 
         TenantDTO dto = new TenantDTO();
+        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTenantCode(po.getTenantCode());

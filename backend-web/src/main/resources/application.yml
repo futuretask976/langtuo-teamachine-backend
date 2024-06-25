@@ -47,6 +47,7 @@ secure:
       - /**
       - /machine/**
       - /machine/model/**
+      - /user/tenant/**
       - /test001
       - /bye
 

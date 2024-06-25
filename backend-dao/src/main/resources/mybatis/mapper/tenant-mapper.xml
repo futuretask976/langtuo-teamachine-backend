@@ -25,7 +25,7 @@
     </select>
 
     <select id="selectList" resultMap="tenantPOMap">
-        SELECT * FROM tenant LIMIT 100
+        SELECT * FROM tenant
     </select>
 
     <select id="search" parameterType="com.langtuo.teamachine.dao.query.TenantQuery" resultMap="tenantPOMap">

@@ -7,6 +7,11 @@ import java.util.Map;
 
 public class TenantDTO {
     /**
+     * 数据表id
+     */
+    private long id;
+
+    /**
      * 数据表记录插入时间
      */
     private Date gmtCreated;
@@ -121,5 +126,13 @@ public class TenantDTO {
 
     public void setExtraInfo(Map<String, String> extraInfo) {
         this.extraInfo = extraInfo;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
