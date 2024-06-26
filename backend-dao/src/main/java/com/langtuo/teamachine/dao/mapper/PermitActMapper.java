@@ -2,8 +2,7 @@ package com.langtuo.teamachine.dao.mapper;
 
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
-import com.langtuo.teamachine.dao.po.PermActGroupPO;
-import com.langtuo.teamachine.dao.po.PermActPO;
+import com.langtuo.teamachine.dao.po.PermitActPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,34 +12,34 @@ import java.util.List;
 @Mapper
 @MySQLScan
 @Repository
-public interface PermActGroupMapper {
+public interface PermitActMapper {
     /**
      *
      * @param permActGroupCode
      * @return
      */
-    PermActGroupPO selectOne(@Param("permActGroupCode") String permActGroupCode);
+    PermitActPO selectOne(@Param("permActGroupCode") String permActGroupCode);
 
     /**
      *
      * @return
      */
-    List<PermActGroupPO> selectList();
+    List<PermitActPO> selectList();
 
     /**
      *
-     * @param permActGroupPO
+     * @param permitActPO
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(PermActGroupPO permActGroupPO);
+    int insert(PermitActPO permitActPO);
 
     /**
      *
-     * @param permActGroupPO
+     * @param permitActPO
      * @return
      */
-    int update(PermActGroupPO permActGroupPO);
+    int update(PermitActPO permitActPO);
 
     /**
      *

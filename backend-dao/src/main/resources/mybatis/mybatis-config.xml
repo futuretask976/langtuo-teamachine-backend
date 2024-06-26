@@ -37,8 +37,8 @@
         <mapper resource="mybatis/mapper/machine-model-mapper.xml"/>
         <mapper resource="mybatis/mapper/machine-model-pipeline-mapper.xml"/>
         <mapper resource="mybatis/mapper/tenant-mapper.xml"/>
-        <mapper resource="mybatis/mapper/perm-act-mapper.xml"/>
-        <mapper resource="mybatis/mapper/perm-act-group-mapper.xml"/>
+        <mapper resource="mybatis/mapper/permit-act-mapper.xml"/>
+        <mapper resource="mybatis/mapper/permit-act-group-mapper.xml"/>
         <mapper resource="mybatis/mapper/org-struc-mapper.xml"/>
         <mapper resource="mybatis/mapper/shop-group-mapper.xml"/>
         <mapper resource="mybatis/mapper/shop-mapper.xml"/>

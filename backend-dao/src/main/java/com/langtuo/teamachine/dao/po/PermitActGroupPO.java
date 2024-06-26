@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class PermActGroupPO {
+public class PermitActGroupPO {
     /**
      * 数据表id
      */
@@ -24,10 +24,10 @@ public class PermActGroupPO {
     /**
      * 租户编码
      */
-    private String permActGroupCode;
+    private String permitActGroupCode;
 
     /**
      * 租户名称
      */
-    private String permActGroupName;
+    private String permitActGroupName;
 }

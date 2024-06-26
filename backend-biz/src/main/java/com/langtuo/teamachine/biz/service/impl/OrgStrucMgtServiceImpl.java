@@ -70,7 +70,7 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
     public LangTuoResult<OrgStrucDTO> get(String tenantCode, String orgName) {
         LangTuoResult<OrgStrucDTO> langTuoResult = null;
         try {
-            OrgStrucPO orgStrucPO = orgStrucAccessor.selectOne(tenantCode, decodedOrgName);
+            OrgStrucPO orgStrucPO = orgStrucAccessor.selectOne(tenantCode, orgName);
             OrgStrucDTO orgStrucDTO = convert(orgStrucPO);
 
             langTuoResult = LangTuoResult.success(orgStrucDTO);

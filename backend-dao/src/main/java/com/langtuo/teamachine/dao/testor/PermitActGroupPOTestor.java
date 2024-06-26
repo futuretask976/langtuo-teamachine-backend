@@ -1,56 +1,56 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.PermActGroupMapper;
-import com.langtuo.teamachine.dao.po.PermActGroupPO;
+import com.langtuo.teamachine.dao.mapper.PermitActGroupMapper;
+import com.langtuo.teamachine.dao.po.PermitActGroupPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
 
-public class PermActGroupPOTestor {
+public class PermitActGroupPOTestor {
     public static void main(String args[]) {
-        update();
+        insert();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        PermActGroupMapper mapper = sqlSession.getMapper(PermActGroupMapper.class);
+        PermitActGroupMapper mapper = sqlSession.getMapper(PermitActGroupMapper.class);
 
-        PermActGroupPO po = null;
+        PermitActGroupPO po = null;
 
-        po = new PermActGroupPO();
-        po.setPermActGroupCode("perm_act_group_user");
-        po.setPermActGroupName("用户");
+        po = new PermitActGroupPO();
+        po.setPermitActGroupCode("permit_act_group_user");
+        po.setPermitActGroupName("用户");
         mapper.insert(po);
 
-        po = new PermActGroupPO();
-        po.setPermActGroupCode("perm_act_group_shop");
-        po.setPermActGroupName("店铺");
+        po = new PermitActGroupPO();
+        po.setPermitActGroupCode("permit_act_group_shop");
+        po.setPermitActGroupName("店铺");
         mapper.insert(po);
 
-        po = new PermActGroupPO();
-        po.setPermActGroupCode("perm_act_group_machine");
-        po.setPermActGroupName("设备");
+        po = new PermitActGroupPO();
+        po.setPermitActGroupCode("permit_act_group_machine");
+        po.setPermitActGroupName("设备");
         mapper.insert(po);
 
-        po = new PermActGroupPO();
-        po.setPermActGroupCode("perm_act_group_tea");
-        po.setPermActGroupName("饮品");
+        po = new PermitActGroupPO();
+        po.setPermitActGroupCode("permit_act_group_tea");
+        po.setPermitActGroupName("饮品");
         mapper.insert(po);
 
-        po = new PermActGroupPO();
-        po.setPermActGroupCode("perm_act_group_menu");
-        po.setPermActGroupName("菜单");
+        po = new PermitActGroupPO();
+        po.setPermitActGroupCode("permit_act_group_menu");
+        po.setPermitActGroupName("菜单");
         mapper.insert(po);
 
-        po = new PermActGroupPO();
-        po.setPermActGroupCode("perm_act_group_food_safe_rule");
-        po.setPermActGroupName("食安规则");
+        po = new PermitActGroupPO();
+        po.setPermitActGroupCode("permit_act_group_food_safe_rule");
+        po.setPermitActGroupName("食安规则");
         mapper.insert(po);
 
-        po = new PermActGroupPO();
-        po.setPermActGroupCode("perm_act_group_statistics");
-        po.setPermActGroupName("日常报表");
+        po = new PermitActGroupPO();
+        po.setPermitActGroupCode("permit_act_group_statistics");
+        po.setPermitActGroupName("日常报表");
         mapper.insert(po);
 
         sqlSession.commit();
@@ -59,14 +59,14 @@ public class PermActGroupPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        PermActGroupMapper mapper = sqlSession.getMapper(PermActGroupMapper.class);
+        PermitActGroupMapper mapper = sqlSession.getMapper(PermitActGroupMapper.class);
 
-        List<PermActGroupPO> list = mapper.selectList();
-        for (PermActGroupPO po : list) {
+        List<PermitActGroupPO> list = mapper.selectList();
+        for (PermitActGroupPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        PermActGroupPO po = mapper.selectOne("100001");
+        PermitActGroupPO po = mapper.selectOne("100001");
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
@@ -75,11 +75,11 @@ public class PermActGroupPOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        PermActGroupMapper mapper = sqlSession.getMapper(PermActGroupMapper.class);
+        PermitActGroupMapper mapper = sqlSession.getMapper(PermitActGroupMapper.class);
 
-        PermActGroupPO po = new PermActGroupPO();
-        po.setPermActGroupCode("perm_act_group_user");
-        po.setPermActGroupName("用户3333");
+        PermitActGroupPO po = new PermitActGroupPO();
+        po.setPermitActGroupCode("permit_act_group_user");
+        po.setPermitActGroupName("用户3333");
         mapper.update(po);
 
         sqlSession.commit();

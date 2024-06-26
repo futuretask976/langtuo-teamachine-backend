@@ -3,10 +3,9 @@ package com.langtuo.teamachine.dao.po;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.Map;
 
 @Data
-public class PermActPO {
+public class PermitActPO {
     /**
      * 数据表id
      */
@@ -25,15 +24,15 @@ public class PermActPO {
     /**
      * 租户编码
      */
-    private String permActCode;
+    private String permitActCode;
 
     /**
      * 租户名称
      */
-    private String permActName;
+    private String permitActName;
 
     /**
      * 联系人
      */
-    private String permActGroupCode;
+    private String permitActGroupCode;
 }
