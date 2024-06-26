@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request;
 
+import java.util.List;
 import java.util.Map;
 
 public class AdminRolePutRequest {
@@ -27,6 +28,19 @@ public class AdminRolePutRequest {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    /**
+     * 选中关联的权限点列表
+     */
+    private List<String> permitActCodeList;
+
+    public List<String> getPermitActCodeList() {
+        return permitActCodeList;
+    }
+
+    public void setPermitActCodeList(List<String> permitActCodeList) {
+        this.permitActCodeList = permitActCodeList;
+    }
 
     public String getRoleCode() {
         return roleCode;

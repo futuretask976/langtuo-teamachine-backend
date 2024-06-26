@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class AdminRoleDTO {
@@ -43,6 +44,11 @@ public class AdminRoleDTO {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    /**
+     * 关联的权限点列表
+     */
+    private List<PermitActDTO> permitActList;
 
     public long getId() {
         return id;
