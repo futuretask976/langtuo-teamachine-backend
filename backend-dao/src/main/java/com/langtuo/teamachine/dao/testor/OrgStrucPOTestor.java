@@ -10,7 +10,7 @@ import java.util.List;
 
 public class OrgStrucPOTestor {
     public static void main(String args[]) {
-        update();
+        insert();
     }
 
     public static void insert() {
@@ -35,6 +35,12 @@ public class OrgStrucPOTestor {
         po.setTenantCode("tenant_001");
         po.setOrgName("南京分公司");
         po.setParentOrgName("江苏分公司");
+        mapper.insert(po);
+
+        po = new OrgStrucPO();
+        po.setTenantCode("tenant_001");
+        po.setOrgName("北京分公司");
+        po.setParentOrgName("总公司");
         mapper.insert(po);
 
         sqlSession.commit();

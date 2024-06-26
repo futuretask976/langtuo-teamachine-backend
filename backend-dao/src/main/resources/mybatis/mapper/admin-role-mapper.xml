@@ -9,9 +9,10 @@
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
-        <result property="adminRoleCode" column="admin_role_code"/>
-        <result property="adminRoleName" column="admin_role_name"/>
+        <result property="roleCode" column="role_code"/>
+        <result property="roleName" column="role_name"/>
         <result property="tenantCode" column="tenant_code"/>
+        <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
@@ -19,42 +20,68 @@
         SELECT * FROM admin_role
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and admin_role_code = #{adminRoleCode}
+            and role_code = #{roleCode}
     </select>
 
     <select id="selectList" resultMap="adminRolePOMap">
-        SELECT * FROM admin_role LIMIT 100
+        SELECT *
+        FROM admin_role
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" parameterType="com.langtuo.teamachine.dao.query.AdminRoleQuery" resultMap="adminRolePOMap">
+        SELECT *
+        FROM admin_role
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            <if test="roleName != null">
+                AND role_name = #{roleName}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.AdminRolePO">
         INSERT INTO `admin_role` (
             `gmt_created`
             , `gmt_modified`
-            , `admin_role_code`
-            , `admin_role_name`
+            , `role_code`
+            , `role_name`
             , `tenant_code`
+            , `comment`
             , `extra_info`
         ) VALUES (
             now()
             , now()
-            , #{adminRoleCode}
-            , #{adminRoleName}
+            , #{roleCode}
+            , #{roleName}
             , #{tenantCode}
+            , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminRolePO">
-        UPDATE admin_role SET
+        UPDATE admin_role
+        SET
+            gmt_modified = now()
+            <if test="roleName != null">
+                , role_name = #{roleName}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and admin_role_code = #{adminRoleCode}
+            and role_code = #{roleCode}
     </update>
 
     <delete id="delete">
         DELETE FROM admin_role
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and admin_role_code = #{adminRoleCode}
+            and role_code = #{roleCode}
     </delete>
 </mapper>

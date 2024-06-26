@@ -1,10 +1,9 @@
 package com.langtuo.teamachine.api.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
-public class OrgStrucDTO {
+public class AdminRoleDTO {
     /**
      * 数据表id
      */
@@ -21,32 +20,29 @@ public class OrgStrucDTO {
     private Date gmtModified;
 
     /**
+     * 菜单编码
+     */
+    private String roleCode;
+
+    /**
+     * 菜单名称
+     */
+    private String roleName;
+
+    /**
      * 租户编码
      */
     private String tenantCode;
 
     /**
-     * 组织名称
+     * 备注
      */
-    private String orgName;
+    private String comment;
 
     /**
-     * 父组织名称
+     * 额外信息，格式：a:b;c:d
      */
-    private String parentOrgName;
-
-    /**
-     * 子组织列表
-     */
-    private List<OrgStrucDTO> childOrgNameList;
-
-    public List<OrgStrucDTO> getChildOrgNameList() {
-        return childOrgNameList;
-    }
-
-    public void setChildOrgNameList(List<OrgStrucDTO> childOrgNameList) {
-        this.childOrgNameList = childOrgNameList;
-    }
+    private Map<String, String> extraInfo;
 
     public long getId() {
         return id;
@@ -72,6 +68,22 @@ public class OrgStrucDTO {
         this.gmtModified = gmtModified;
     }
 
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
     public String getTenantCode() {
         return tenantCode;
     }
@@ -80,19 +92,19 @@ public class OrgStrucDTO {
         this.tenantCode = tenantCode;
     }
 
-    public String getOrgName() {
-        return orgName;
+    public String getComment() {
+        return comment;
     }
 
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public String getParentOrgName() {
-        return parentOrgName;
+    public Map<String, String> getExtraInfo() {
+        return extraInfo;
     }
 
-    public void setParentOrgName(String parentOrgName) {
-        this.parentOrgName = parentOrgName;
+    public void setExtraInfo(Map<String, String> extraInfo) {
+        this.extraInfo = extraInfo;
     }
 }

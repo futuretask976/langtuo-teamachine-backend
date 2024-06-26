@@ -11,9 +11,9 @@ import com.langtuo.teamachine.dao.accessor.OrgStrucAccessor;
 import com.langtuo.teamachine.dao.po.OrgStrucPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +21,30 @@ import java.util.stream.Collectors;
 public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
     @Resource
     private OrgStrucAccessor orgStrucAccessor;
+
+    @Override
+    public LangTuoResult<OrgStrucDTO> listByDepth(String tenantCode) {
+        LangTuoResult<OrgStrucDTO> langTuoResult = null;
+        try {
+            List<OrgStrucPO> poList = orgStrucAccessor.selectList(tenantCode);
+            List<OrgStrucDTO> dtoList = poList.stream()
+                    .map(po -> convert(po))
+                    .collect(Collectors.toList());
+
+            dtoList.forEach(item -> {
+                List<OrgStrucDTO> children = findOrgStrucPOByParent(item.getOrgName(), dtoList);
+                if (!CollectionUtils.isEmpty(children)) {
+                    item.setChildOrgNameList(children);
+                }
+            });
+
+            langTuoResult = LangTuoResult.success(findTopOrgStrucPO(dtoList));
+        } catch (Exception e) {
+            e.printStackTrace();
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
 
     @Override
     public LangTuoResult<List<OrgStrucDTO>> list(String tenantCode) {
@@ -153,5 +177,28 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
         po.setOrgName(request.getOrgName());
         po.setParentOrgName(request.getParentOrgName());
         return po;
+    }
+
+    private List<OrgStrucDTO> findOrgStrucPOByParent(String parentOrgName, List<OrgStrucDTO> orgStrucDTOList) {
+        if (StringUtils.isBlank(parentOrgName) || CollectionUtils.isEmpty(orgStrucDTOList)) {
+            return null;
+        }
+
+        return orgStrucDTOList.stream()
+                .filter(item -> item.getParentOrgName() != null && item.getParentOrgName().equals(parentOrgName))
+                .collect(Collectors.toList());
+    }
+
+    private OrgStrucDTO findTopOrgStrucPO(List<OrgStrucDTO> orgStrucDTOList) {
+        if (CollectionUtils.isEmpty(orgStrucDTOList)) {
+            return null;
+        }
+
+        for (OrgStrucDTO item : orgStrucDTOList) {
+            if("总公司".equals(item.getOrgName())) {
+                return item;
+            }
+        }
+        return null;
     }
 }

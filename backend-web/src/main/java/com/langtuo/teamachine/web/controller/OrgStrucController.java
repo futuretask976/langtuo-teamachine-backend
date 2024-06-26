@@ -28,6 +28,16 @@ public class OrgStrucController {
     }
 
     /**
+     * Access: http://localhost:8080/teamachine/orgstruc/listbydepth?tenantCode=tenant_001
+     * @return
+     */
+    @GetMapping(value = "/listbydepth")
+    public LangTuoResult<OrgStrucDTO> listByDepth(@RequestParam(name = "tenantCode") String tenantCode) {
+        LangTuoResult<OrgStrucDTO> rtn = orgStrucMgtService.listByDepth(tenantCode);
+        return rtn;
+    }
+
+    /**
      * Access: http://localhost:8080/teamachine/orgstruc/list?tenantCode=tenant_001&pageNum=1&pageSize=2
      * @return
      */
