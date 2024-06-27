@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class AdminRolePermitActRelPO {
+public class AdminRoleActRelPO {
     /**
      * 数据表id
      */
@@ -23,14 +23,9 @@ public class AdminRolePermitActRelPO {
     private Date gmtModified;
 
     /**
-     * 菜单编码
+     * 角色编码
      */
     private String roleCode;
-
-    /**
-     * 菜单名称
-     */
-    private String roleName;
 
     /**
      * 租户编码
@@ -38,12 +33,7 @@ public class AdminRolePermitActRelPO {
     private String tenantCode;
 
     /**
-     * 备注
+     * 权限点
      */
-    private String comment;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
+    private String permitActCode;
 }

@@ -40,6 +40,7 @@
         <mapper resource="mybatis/mapper/permit-act-mapper.xml"/>
         <mapper resource="mybatis/mapper/permit-act-group-mapper.xml"/>
         <mapper resource="mybatis/mapper/admin-role-mapper.xml"/>
+        <mapper resource="mybatis/mapper/admin-role-act-rel-mapper.xml"/>
         <mapper resource="mybatis/mapper/org-struc-mapper.xml"/>
         <mapper resource="mybatis/mapper/shop-group-mapper.xml"/>
         <mapper resource="mybatis/mapper/shop-mapper.xml"/>

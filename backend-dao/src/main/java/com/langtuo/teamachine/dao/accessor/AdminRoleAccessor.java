@@ -29,10 +29,11 @@ public class AdminRoleAccessor {
         return pageInfo;
     }
 
-    public PageInfo<AdminRolePO> search(String roleName, int pageNum, int pageSize) {
+    public PageInfo<AdminRolePO> search(String tenantCode, String roleName, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         AdminRoleQuery adminRoleQuery = new AdminRoleQuery();
+        adminRoleQuery.setTenantCode(tenantCode);
         adminRoleQuery.setRoleName(StringUtils.isBlank(roleName) ? null : roleName);
         List<AdminRolePO> list = adminRoleMapper.search(adminRoleQuery);
 

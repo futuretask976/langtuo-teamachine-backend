@@ -4,32 +4,37 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.AdminRolePermitActRelMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.AdminRolePermitActRelPO" id="adminRolePermitActRelPO">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.AdminRoleActRelMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.AdminRoleActRelPO" id="adminRoleActRelPO">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
-        <result property="adminRoleCode" column="admin_role_code"/>
-        <result property="permActCode" column="perm_act_code"/>
+        <result property="roleCode" column="role_code"/>
+        <result property="permitActCode" column="permit_act_code"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="adminRolePermitActRelPO">
-        SELECT * FROM admin_role_permit_act_rel
+    <select id="selectOne" resultMap="adminRoleActRelPO">
+        SELECT * FROM admin_role_act_rel
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND role_code = #{roleCode}
             AND permit_act_code = #{permitActCode}
     </select>
 
-    <select id="selectList" resultMap="adminRolePermitActRelPO">
-        SELECT * FROM admin_role_permit_act_rel
+    <select id="selectList" resultMap="adminRoleActRelPO">
+        SELECT * FROM admin_role_act_rel
         WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
+            <if test="tenantCode != null">
+                AND tenant_code = #{tenantCode}
+            </if>
+            <if test="roleCode != null">
+                AND role_code = #{roleCode}
+            </if>
     </select>
 
-    <select id="search" parameterType="com.langtuo.teamachine.dao.query.AdminRolePermitActRelQuery" resultMap="adminRolePermitActRelPO">
-        SELECT * FROM admin_role_permit_act_rel
+    <select id="search" parameterType="com.langtuo.teamachine.dao.query.AdminRoleActRelQuery" resultMap="adminRoleActRelPO">
+        SELECT * FROM admin_role_act_rel
         WHERE 1 = 1
             <if test="tenantCode != null">
                 AND tenant_code = #{tenantCode}
@@ -42,8 +47,8 @@
             </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rolePermRelPO">
-        INSERT INTO admin_role_permit_act_rel (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.AdminRoleActRelPO">
+        INSERT INTO admin_role_act_rel (
             `gmt_created`
             , `gmt_modified`
             , `role_code`
@@ -59,7 +64,7 @@
     </insert>
 
     <delete id="delete">
-        DELETE FROM admin_role_permit_act_rel
+        DELETE FROM admin_role_act_rel
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and role_code = #{roleCode}

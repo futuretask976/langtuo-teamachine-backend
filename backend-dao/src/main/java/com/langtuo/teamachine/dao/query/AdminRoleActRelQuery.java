@@ -3,7 +3,7 @@ package com.langtuo.teamachine.dao.query;
 import lombok.Data;
 
 @Data
-public class AdminRolePermitActRelQuery {
+public class AdminRoleActRelQuery {
     /**
      * 角色编码
      */

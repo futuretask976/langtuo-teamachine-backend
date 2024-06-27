@@ -21,11 +21,12 @@ public interface AdminRoleMgtService {
 
     /**
      *
+     * @param tenantCode
      * @param pageNum
      * @param pageSize
      * @return
      */
-    LangTuoResult<PageDTO<AdminRoleDTO>> list(int pageNum, int pageSize);
+    LangTuoResult<PageDTO<AdminRoleDTO>> list(String tenantCode, int pageNum, int pageSize);
 
     /**
      *

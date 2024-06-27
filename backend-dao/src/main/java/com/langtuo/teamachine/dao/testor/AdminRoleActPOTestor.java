@@ -1,14 +1,14 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.AdminRoleMapper;
-import com.langtuo.teamachine.dao.po.AdminRolePO;
+import com.langtuo.teamachine.dao.mapper.AdminRoleActRelMapper;
+import com.langtuo.teamachine.dao.po.AdminRoleActRelPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class AdminRolePOTestor {
+public class AdminRoleActPOTestor {
     public static void main(String args[]) {
         insert();
 //        select();
@@ -17,40 +17,44 @@ public class AdminRolePOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        AdminRoleMapper mapper = sqlSession.getMapper(AdminRoleMapper.class);
+        AdminRoleActRelMapper mapper = sqlSession.getMapper(AdminRoleActRelMapper.class);
 
-        AdminRolePO po = null;
+        AdminRoleActRelPO po = null;
 
-        po = new AdminRolePO();
+        po = new AdminRoleActRelPO();
+        po.setTenantCode("tenant_001");
         po.setRoleCode("role_sys_super_admin");
-        po.setRoleName("系统超级管理员");
-        po.setComment("系统超级管理员");
-        po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{}});
+        po.setPermitActCode("permit_act_tenant_mgt");
         mapper.insert(po);
 
-        po = new AdminRolePO();
-        po.setRoleCode("role_sys_admin");
-        po.setRoleName("系统管理员");
-        po.setComment("系统管理员");
+        po = new AdminRoleActRelPO();
         po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{}});
+        po.setRoleCode("role_sys_super_admin");
+        po.setPermitActCode("permit_act_org_struc_mgt");
         mapper.insert(po);
 
-        po = new AdminRolePO();
-        po.setRoleCode("role_tenant_super_admin");
-        po.setRoleName("租户超级管理员");
-        po.setComment("租户超级管理员");
+        po = new AdminRoleActRelPO();
         po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{}});
+        po.setRoleCode("role_sys_super_admin");
+        po.setPermitActCode("permit_act_shop_mgt");
         mapper.insert(po);
 
-        po = new AdminRolePO();
+        po = new AdminRoleActRelPO();
+        po.setTenantCode("tenant_001");
         po.setRoleCode("role_tenant_admin");
-        po.setRoleName("租户管理员");
-        po.setComment("租户管理员");
+        po.setPermitActCode("permit_act_machine_deploy_mgt");
+        mapper.insert(po);
+
+        po = new AdminRoleActRelPO();
         po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{}});
+        po.setRoleCode("role_tenant_admin");
+        po.setPermitActCode("permit_act_machine_detail_mgt");
+        mapper.insert(po);
+
+        po = new AdminRoleActRelPO();
+        po.setTenantCode("tenant_001");
+        po.setRoleCode("role_tenant_admin");
+        po.setPermitActCode("permit_act_spec_mgt");
         mapper.insert(po);
 
         sqlSession.commit();
@@ -59,31 +63,25 @@ public class AdminRolePOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        AdminRoleMapper mapper = sqlSession.getMapper(AdminRoleMapper.class);
+        AdminRoleActRelMapper mapper = sqlSession.getMapper(AdminRoleActRelMapper.class);
 
-        List<AdminRolePO> list = mapper.selectList("tenant_001");
-        for (AdminRolePO po : list) {
+        List<AdminRoleActRelPO> list = mapper.selectList("tenant_001", "role_001");
+        for (AdminRoleActRelPO po : list) {
             System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
-        AdminRolePO po = mapper.selectOne("tenant_001", "role_tenant_admin");
+        AdminRoleActRelPO po = mapper.selectOne("tenant_001", "role_001", "act_001");
         System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();
     }
 
-    public static void update() {
+    public static void delete() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        AdminRoleMapper mapper = sqlSession.getMapper(AdminRoleMapper.class);
+        AdminRoleActRelMapper mapper = sqlSession.getMapper(AdminRoleActRelMapper.class);
 
-        AdminRolePO po = new AdminRolePO();
-        po.setRoleCode("role_tenant_admin");
-        po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{
-            put("aaa", "bbb");
-        }});
-        mapper.update(po);
+        mapper.delete("tenant_001", "role_001");
 
         sqlSession.commit();
         sqlSession.close();
@@ -92,10 +90,10 @@ public class AdminRolePOTestor {
 //    public static void testBySpring() {
 //        ApplicationContext context = startBySpring();
 //
-//        AdminRoleMapper mapper =
-//                (AdminRoleMapper) context.getBean(AdminRoleMapper.class);
-//        AdminRolePOjo AdminRolePOjo = mapper.getOne("machine_001");
-//        System.out.printf("DaoDemo#testBySpring hotelGuestPojo=%s\n", AdminRolePOjo);
+//        AdminRoleActRelMapper mapper =
+//                (AdminRoleActRelMapper) context.getBean(AdminRoleActRelMapper.class);
+//        AdminRoleActRelPOjo AdminRoleActRelPOjo = mapper.getOne("machine_001");
+//        System.out.printf("DaoDemo#testBySpring hotelGuestPojo=%s\n", AdminRoleActRelPOjo);
 //
 //        stopBySpring(context);
 //    }

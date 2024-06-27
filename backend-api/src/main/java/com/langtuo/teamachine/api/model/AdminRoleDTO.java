@@ -48,7 +48,15 @@ public class AdminRoleDTO {
     /**
      * 关联的权限点列表
      */
-    private List<PermitActDTO> permitActList;
+    private List<String> permitActCodeList;
+
+    public List<String> getPermitActCodeList() {
+        return permitActCodeList;
+    }
+
+    public void setPermitActCodeList(List<String> permitActCodeList) {
+        this.permitActCodeList = permitActCodeList;
+    }
 
     public long getId() {
         return id;
