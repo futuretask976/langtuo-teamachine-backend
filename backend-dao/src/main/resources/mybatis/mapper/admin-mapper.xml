@@ -9,9 +9,9 @@
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
-        <result property="adminLoginName" column="admin_login_name"/>
-        <result property="adminLoginPass" column="admin_login_pass"/>
-        <result property="adminRoleCode" column="admin_role_code"/>
+        <result property="loginName" column="login_name"/>
+        <result property="loginPass" column="login_pass"/>
+        <result property="roleCode" column="role_code"/>
         <result property="orgName" column="org_name"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
@@ -21,21 +21,39 @@
     <select id="selectOne" resultMap="adminPOMap">
         SELECT * FROM admin
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and admin_login_name = #{adminLoginName}
+            <if test="tenantCode != null">
+                AND tenant_code = #{tenantCode}
+            </if>
+            <if test="loginName != null">
+                AND login_name = #{loginName}
+            </if>
     </select>
 
     <select id="selectList" resultMap="adminPOMap">
-        SELECT * FROM admin LIMIT 100
+        SELECT * FROM admin
+    </select>
+
+    <select id="search" resultMap="adminPOMap">
+        SELECT * FROM admin
+        WHERE 1 = 1
+            <if test="tenantCode != null">
+                AND tenant_code = #{tenantCode}
+            </if>
+            <if test="loginName != null">
+                AND login_name = #{loginName}
+            </if>
+            <if test="roleCode != null">
+                AND role_code = #{roleCode}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
         INSERT INTO `admin` (
             `gmt_created`
             , `gmt_modified`
-            , `admin_login_name`
-            , `admin_login_pass`
-            , `admin_role_code`
+            , `login_name`
+            , `login_pass`
+            , `role_code`
             , `org_name`
             , `tenant_code`
             , `comment`
@@ -43,9 +61,9 @@
         ) VALUES (
             now()
             , now()
-            , #{adminLoginName}
-            , #{adminLoginPass}
-            , #{adminRoleCode}
+            , #{loginName}
+            , #{loginPass}
+            , #{roleCode}
             , #{orgName}
             , #{tenantCode}
             , #{comment}
@@ -54,16 +72,37 @@
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.AdminPO">
-        UPDATE admin SET
+        UPDATE admin
+        SET
+            gmt_modified = now()
+            <if test="loginPass != null">
+                , loginPass = #{loginPass}
+            </if>
+            <if test="roleCode != null">
+                , role_code = #{roleCode}
+            </if>
+            <if test="orgName != null">
+                , org_name = #{orgName}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and admin_login_name = #{adminLoginName}
+            and login_name = #{loginName}
     </update>
 
     <delete id="delete">
         DELETE FROM admin
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and admin_login_name = #{adminLoginName}
+            <if test="tenantCode != null">
+                AND tenant_code = #{tenantCode}
+            </if>
+            <if test="loginName != null">
+                AND login_name = #{loginName}
+            </if>
     </delete>
 </mapper>

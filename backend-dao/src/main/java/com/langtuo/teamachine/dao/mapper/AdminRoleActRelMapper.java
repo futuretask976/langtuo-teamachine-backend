@@ -3,7 +3,6 @@ package com.langtuo.teamachine.dao.mapper;
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.AdminRoleActRelPO;
-import com.langtuo.teamachine.dao.po.AdminRolePO;
 import com.langtuo.teamachine.dao.query.AdminRoleActRelQuery;
 import com.langtuo.teamachine.dao.query.AdminRoleQuery;
 import org.apache.ibatis.annotations.Mapper;
