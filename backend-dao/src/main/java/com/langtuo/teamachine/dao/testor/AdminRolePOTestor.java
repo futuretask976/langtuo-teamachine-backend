@@ -10,8 +10,8 @@ import java.util.List;
 
 public class AdminRolePOTestor {
     public static void main(String args[]) {
-        insert();
-//        select();
+//        insert();
+        select();
 //        update();
     }
 

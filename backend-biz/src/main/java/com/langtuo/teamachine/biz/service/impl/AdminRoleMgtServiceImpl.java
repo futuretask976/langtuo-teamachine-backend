@@ -53,6 +53,7 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
             List<AdminRoleDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
+            System.out.printf("$$$$$ AdminRoleMgtServiceImpl#search dtoList=%s\n", dtoList.size());
 
             dtoList.stream().forEach(item -> {
                 List<AdminRoleActRelPO> adminRoleActRelPOList = adminRoleActRelAccessor.selectList(tenantCode,
@@ -63,6 +64,7 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
                     }).collect(Collectors.toList()));
                 }
             });
+            System.out.printf("$$$$$ AdminRoleMgtServiceImpl#search begin to convert\n");
 
             PageDTO<AdminRoleDTO> pageDTO = new PageDTO<>();
             pageDTO.setList(dtoList);
@@ -70,7 +72,9 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
             pageDTO.setPageSize(pageSize);
             pageDTO.setTotal(pageInfo.getTotal());
 
+            langTuoResult = LangTuoResult.success(pageDTO);
         } catch (Exception e) {
+            e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -138,6 +142,7 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
                 int inserted4RoleActRel = adminRoleActRelAccessor.insert(item);
                 System.out.printf("$$$$$ AdminRoleMgtServiceImpl#put inserted4RoleActRel=%s\n", inserted4RoleActRel);
             });
+            langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }

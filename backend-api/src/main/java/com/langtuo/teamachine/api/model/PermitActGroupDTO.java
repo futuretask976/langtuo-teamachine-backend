@@ -33,7 +33,7 @@ public class PermitActGroupDTO {
     /**
      * 归属当前权限点组下的权限点列表
      */
-    private List<PermitActDTO> permitActDTOList;
+    private List<PermitActDTO> permitActList;
 
     public long getId() {
         return id;
@@ -75,18 +75,18 @@ public class PermitActGroupDTO {
         this.permitActGroupName = permitActGroupName;
     }
 
-    public List<PermitActDTO> getPermitActDTOList() {
-        return permitActDTOList;
+    public List<PermitActDTO> getPermitActList() {
+        return permitActList;
     }
 
-    public void setPermitActDTOList(List<PermitActDTO> permitActDTOList) {
-        this.permitActDTOList = permitActDTOList;
+    public void setPermitActList(List<PermitActDTO> permitActList) {
+        this.permitActList = permitActList;
     }
 
     public void addPermitActDTO(PermitActDTO dto) {
-        if (this.permitActDTOList == null) {
-            this.permitActDTOList = new ArrayList<>();
+        if (this.permitActList == null) {
+            this.permitActList = new ArrayList<>();
         }
-        this.permitActDTOList.add(dto);
+        this.permitActList.add(dto);
     }
 }

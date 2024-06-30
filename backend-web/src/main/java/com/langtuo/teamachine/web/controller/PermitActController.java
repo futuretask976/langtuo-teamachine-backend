@@ -19,10 +19,10 @@ public class PermitActController {
     private PermitActMgtService permitActMgtService;
 
     /**
-     * Access: http://localhost:8080/teamachine/permitact/group/list
+     * Access: http://localhost:8080/teamachine/permitact/list
      * @return
      */
-    @GetMapping(value = "/group/list")
+    @GetMapping(value = "/list")
     public LangTuoResult<List<PermitActGroupDTO>> list() {
         LangTuoResult<List<PermitActGroupDTO>> rtn = permitActMgtService.list();
         return rtn;
