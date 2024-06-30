@@ -30,9 +30,8 @@ public class MachineModelController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<PageDTO<MachineModelDTO>> list(@RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<MachineModelDTO>> rtn = machineModelMgtService.list(pageNum, pageSize);
+    public LangTuoResult<PageDTO<MachineModelDTO>> list() {
+        LangTuoResult<PageDTO<MachineModelDTO>> rtn = machineModelMgtService.list();
         return rtn;
     }
 

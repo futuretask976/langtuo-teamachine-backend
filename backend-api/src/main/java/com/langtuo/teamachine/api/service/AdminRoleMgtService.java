@@ -5,6 +5,8 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.AdminRolePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
+import java.util.List;
+
 public interface AdminRoleMgtService {
     /**
      *
@@ -22,11 +24,18 @@ public interface AdminRoleMgtService {
     /**
      *
      * @param tenantCode
+     * @return
+     */
+    LangTuoResult<List<AdminRoleDTO>> list(String tenantCode);
+
+    /**
+     *
+     * @param tenantCode
      * @param pageNum
      * @param pageSize
      * @return
      */
-    LangTuoResult<PageDTO<AdminRoleDTO>> list(String tenantCode, int pageNum, int pageSize);
+    LangTuoResult<PageDTO<AdminRoleDTO>> page(String tenantCode, int pageNum, int pageSize);
 
     /**
      *

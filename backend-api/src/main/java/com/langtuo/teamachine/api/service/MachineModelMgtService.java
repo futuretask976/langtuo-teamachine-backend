@@ -21,11 +21,9 @@ public interface MachineModelMgtService {
 
     /**
      *
-     * @param pageNum
-     * @param pageSize
      * @return
      */
-    LangTuoResult<PageDTO<MachineModelDTO>> list(int pageNum, int pageSize);
+    LangTuoResult<PageDTO<MachineModelDTO>> list();
 
     /**
      *

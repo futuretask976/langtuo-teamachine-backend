@@ -27,17 +27,6 @@ public class AdminController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/list?tenantCode=tenant_001&pageNum=1&pageSize=10
-     * @return
-     */
-    @GetMapping(value = "/list")
-    public LangTuoResult<PageDTO<AdminDTO>> list(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<AdminDTO>> rtn = adminMgtService.list(tenantCode, pageNum, pageSize);
-        return rtn;
-    }
-
-    /**
      * Access: http://localhost:8080/teamachine/admin/list?tenantCode=tenant_001&roleName=系统超级管理员&pageNum=1&pageSize=10
      * @return
      */

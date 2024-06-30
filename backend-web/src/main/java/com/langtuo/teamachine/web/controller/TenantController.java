@@ -8,6 +8,7 @@ import com.langtuo.teamachine.api.service.TenantMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tenant")
@@ -30,9 +31,8 @@ public class TenantController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<PageDTO<TenantDTO>> list(@RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<TenantDTO>> rtn = tenantMgtService.list(pageNum, pageSize);
+    public LangTuoResult<List<TenantDTO>> list() {
+        LangTuoResult<List<TenantDTO>> rtn = tenantMgtService.list();
         return rtn;
     }
 

@@ -30,24 +30,15 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
     private MachineModelPipelineAccessor machineModelPipelineAccessor;
 
     @Override
-    public LangTuoResult<PageDTO<MachineModelDTO>> list(int pageNum, int pageSize) {
-        pageNum = pageNum <= 0 ? 1 : pageNum;
-        pageSize = pageSize <=0 ? 20 : pageSize;
-
+    public LangTuoResult<PageDTO<MachineModelDTO>> list() {
         LangTuoResult<PageDTO<MachineModelDTO>> langTuoResult = null;
         try {
-            PageInfo<MachineModelPO> pageInfo = machineModelAccessor.selectList(pageNum, pageSize);
-            List<MachineModelDTO> dtoList = pageInfo.getList().stream()
+            List<MachineModelPO> list = machineModelAccessor.selectList();
+            List<MachineModelDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            PageDTO<MachineModelDTO> pageDTO = new PageDTO<>();
-            pageDTO.setList(dtoList);
-            pageDTO.setPageNum(pageNum);
-            pageDTO.setPageSize(pageSize);
-            pageDTO.setTotal(pageInfo.getTotal());
-
-            langTuoResult = LangTuoResult.success(pageDTO);
+            langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }

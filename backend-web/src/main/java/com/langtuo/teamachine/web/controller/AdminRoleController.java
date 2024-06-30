@@ -8,6 +8,7 @@ import com.langtuo.teamachine.api.service.AdminRoleMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/role")
@@ -27,13 +28,12 @@ public class AdminRoleController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/role/list?tenantCode=tenant_001&pageNum=1&pageSize=10
+     * Access: http://localhost:8080/teamachine/admin/role/list?tenantCode=tenant_001
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<PageDTO<AdminRoleDTO>> list(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<AdminRoleDTO>> rtn = adminRoleMgtService.list(tenantCode, pageNum, pageSize);
+    public LangTuoResult<List<AdminRoleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        LangTuoResult<List<AdminRoleDTO>> rtn = adminRoleMgtService.list(tenantCode);
         return rtn;
     }
 

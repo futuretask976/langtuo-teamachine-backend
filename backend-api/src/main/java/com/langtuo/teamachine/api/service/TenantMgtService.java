@@ -5,6 +5,8 @@ import com.langtuo.teamachine.api.model.TenantDTO;
 import com.langtuo.teamachine.api.request.TenantPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
+import java.util.List;
+
 public interface TenantMgtService {
     /**
      *
@@ -21,11 +23,9 @@ public interface TenantMgtService {
 
     /**
      *
-     * @param pageNum
-     * @param pageSize
      * @return
      */
-    LangTuoResult<PageDTO<TenantDTO>> list(int pageNum, int pageSize);
+    LangTuoResult<List<TenantDTO>> list();
 
     /**
      *

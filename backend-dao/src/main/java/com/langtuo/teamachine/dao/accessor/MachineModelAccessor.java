@@ -20,6 +20,12 @@ public class MachineModelAccessor {
         return mapper.selectOne(modelCode);
     }
 
+    public List<MachineModelPO> selectList() {
+        List<MachineModelPO> list = mapper.selectList();
+
+        return list;
+    }
+
     public PageInfo<MachineModelPO> selectList(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 

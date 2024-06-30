@@ -20,6 +20,12 @@ public class TenantAccessor {
         return mapper.selectOne(tenantCode);
     }
 
+    public List<TenantPO> selectList() {
+        List<TenantPO> list = mapper.selectList();
+
+        return list;
+    }
+
     public PageInfo<TenantPO> selectList(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 

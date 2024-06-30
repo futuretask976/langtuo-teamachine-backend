@@ -22,24 +22,15 @@ public class TenantMgtServiceImpl implements TenantMgtService {
     private TenantAccessor tenantAccessor;
 
     @Override
-    public LangTuoResult<PageDTO<TenantDTO>> list(int pageNum, int pageSize) {
-        pageNum = pageNum <= 0 ? 1 : pageNum;
-        pageSize = pageSize <=0 ? 20 : pageSize;
-
-        LangTuoResult<PageDTO<TenantDTO>> langTuoResult = null;
+    public LangTuoResult<List<TenantDTO>> list() {
+        LangTuoResult<List<TenantDTO>> langTuoResult = null;
         try {
-            PageInfo<TenantPO> pageInfo = tenantAccessor.selectList(pageNum, pageSize);
-            List<TenantDTO> dtoList = pageInfo.getList().stream()
+            List<TenantPO> list = tenantAccessor.selectList();
+            List<TenantDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            PageDTO<TenantDTO> pageDTO = new PageDTO<>();
-            pageDTO.setList(dtoList);
-            pageDTO.setPageNum(pageNum);
-            pageDTO.setPageSize(pageSize);
-            pageDTO.setTotal(pageInfo.getTotal());
-
-            langTuoResult = LangTuoResult.success(pageDTO);
+            langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);

@@ -81,7 +81,7 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<AdminRoleDTO>> list(String tenantCode, int pageNum, int pageSize) {
+    public LangTuoResult<PageDTO<AdminRoleDTO>> page(String tenantCode, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
@@ -108,6 +108,33 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
             pageDTO.setPageSize(pageSize);
             pageDTO.setTotal(pageInfo.getTotal());
             langTuoResult = LangTuoResult.success(pageDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<List<AdminRoleDTO>> list(String tenantCode) {
+        LangTuoResult<List<AdminRoleDTO>> langTuoResult = null;
+        try {
+            List<AdminRolePO> list = adminRoleAccessor.selectList(tenantCode);
+            List<AdminRoleDTO> dtoList = list.stream()
+                    .map(po -> convert(po))
+                    .collect(Collectors.toList());
+
+            dtoList.stream().forEach(item -> {
+                List<AdminRoleActRelPO> adminRoleActRelPOList = adminRoleActRelAccessor.selectList(tenantCode,
+                        item.getRoleCode());
+                if (!CollectionUtils.isEmpty(adminRoleActRelPOList)) {
+                    item.setPermitActCodeList(adminRoleActRelPOList.stream().map(ele -> {
+                        return ele.getPermitActCode();
+                    }).collect(Collectors.toList()));
+                }
+            });
+
+            langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);

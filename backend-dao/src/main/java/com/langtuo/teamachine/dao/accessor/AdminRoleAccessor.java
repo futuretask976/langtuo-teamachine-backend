@@ -20,6 +20,12 @@ public class AdminRoleAccessor {
         return adminRoleMapper.selectOne(tenantCode, roleCode);
     }
 
+    public List<AdminRolePO> selectList(String tenantCode) {
+        List<AdminRolePO> list = adminRoleMapper.selectList(tenantCode);
+
+        return list;
+    }
+
     public PageInfo<AdminRolePO> selectList(String tenantCode, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
