@@ -4,6 +4,7 @@ import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.TenantPO;
+import com.langtuo.teamachine.dao.query.ShopGroupQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,14 @@ public interface ShopGroupMapper {
      *
      * @return
      */
-    List<ShopGroupPO> selectList();
+    List<ShopGroupPO> selectList(String tenantCode);
+
+    /**
+     *
+     * @param query
+     * @return
+     */
+    List<ShopGroupPO> search(ShopGroupQuery query);
 
     /**
      *

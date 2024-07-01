@@ -22,13 +22,10 @@ public class AdminAccessor {
         return adminMapper.selectOne(tenantCode, loginName);
     }
 
-    public PageInfo<AdminPO> selectList(String tenantCode, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-
+    public List<AdminPO> selectList(String tenantCode) {
         List<AdminPO> list = adminMapper.selectList(tenantCode);
 
-        PageInfo<AdminPO> pageInfo = new PageInfo(list);
-        return pageInfo;
+        return list;
     }
 
     public PageInfo<AdminPO> search(String tenantCode, String loginName, String roleCode, int pageNum, int pageSize) {

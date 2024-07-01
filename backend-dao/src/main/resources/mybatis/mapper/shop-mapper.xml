@@ -22,12 +22,28 @@
     <select id="selectOne" resultMap="shopPOMap">
         SELECT * FROM shop
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and shop_code = #{shopCode}
+            AND tenant_code = #{tenantCode}
+            AND shop_code = #{shopCode}
     </select>
 
     <select id="selectList" resultMap="shopPOMap">
-        SELECT * FROM shop LIMIT 100
+        SELECT * FROM shop
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="shopPOMap">
+        SELECT * FROM shop
+        WHERE 1 = 1
+            <if test="shopName != null">
+                AND `shop_name` = #{shopName}
+            </if>
+            <if test="shopGroupName != null">
+                AND `shop_group_name` = #{shopGroupName}
+            </if>
+            <if test="tenantCode != null">
+                AND `tenant_code` = #{tenantCode}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ShopPO">

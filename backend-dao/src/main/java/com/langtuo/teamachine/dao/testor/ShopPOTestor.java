@@ -57,7 +57,7 @@ public class ShopPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         ShopMapper mapper = sqlSession.getMapper(ShopMapper.class);
 
-        List<ShopPO> list = mapper.selectList();
+        List<ShopPO> list = mapper.selectList("tenant_001");
         for (ShopPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }

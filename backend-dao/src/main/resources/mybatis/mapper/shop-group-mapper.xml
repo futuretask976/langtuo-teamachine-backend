@@ -24,7 +24,21 @@
     </select>
 
     <select id="selectList" resultMap="shopGroupPOMap">
-        SELECT * FROM shop_group LIMIT 100
+        SELECT * FROM shop_group
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="shopGroupPOMap">
+        SELECT *
+        FROM shop_group
+        WHERE 1 = 1
+            <if test="shopGroupName != null">
+                AND `shop_group_name` = #{shopGroupName}
+            </if>
+            <if test="tenantCode != null">
+                AND `tenant_code` = #{tenantCode}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ShopGroupPO">

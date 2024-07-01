@@ -82,26 +82,18 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<AdminDTO>> list(String tenantCode, int pageNum, int pageSize) {
-        pageNum = pageNum <= 0 ? 1 : pageNum;
-        pageSize = pageSize <=0 ? 20 : pageSize;
-
-        LangTuoResult<PageDTO<AdminDTO>> langTuoResult = null;
+    public LangTuoResult<List<AdminDTO>> list(String tenantCode) {
+        LangTuoResult<List<AdminDTO>> langTuoResult = null;
         try {
-            PageInfo<AdminPO> pageInfo = adminAccessor.selectList(tenantCode, pageNum, pageSize);
-            List<AdminDTO> dtoList = pageInfo.getList().stream()
+            List<AdminPO> list = adminAccessor.selectList(tenantCode);
+            List<AdminDTO> dtoList = list.stream()
                     .map(adminPO -> {
                         AdminRolePO adminRolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
                         return convert(adminPO, adminRolePO);
                     })
                     .collect(Collectors.toList());
 
-            PageDTO<AdminDTO> pageDTO = new PageDTO<>();
-            pageDTO.setList(dtoList);
-            pageDTO.setPageNum(pageNum);
-            pageDTO.setPageSize(pageSize);
-            pageDTO.setTotal(pageInfo.getTotal());
-            langTuoResult = LangTuoResult.success(pageDTO);
+            langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
