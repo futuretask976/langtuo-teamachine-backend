@@ -19,7 +19,7 @@ public interface ShopMgtService {
      *
      * @return
      */
-    LangTuoResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, int pageNum, int pageSize);
+    LangTuoResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, String shopGroupName, int pageNum, int pageSize);
 
     /**
      *

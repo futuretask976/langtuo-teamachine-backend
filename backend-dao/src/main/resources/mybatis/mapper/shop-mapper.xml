@@ -38,8 +38,8 @@
             <if test="shopName != null">
                 AND `shop_name` = #{shopName}
             </if>
-            <if test="shopGroupName != null">
-                AND `shop_group_name` = #{shopGroupName}
+            <if test="shopGroupCode != null">
+                AND `shop_group_code` = #{shopGroupCode}
             </if>
             <if test="tenantCode != null">
                 AND `tenant_code` = #{tenantCode}

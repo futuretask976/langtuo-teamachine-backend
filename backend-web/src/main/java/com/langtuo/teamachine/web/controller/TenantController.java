@@ -17,7 +17,7 @@ public class TenantController {
     private TenantMgtService tenantMgtService;
 
     /**
-     * Access: http://localhost:8080/teamachine/tenant/{tenantcode}/get
+     * url: http://localhost:8080/teamachine/tenant/{tenantcode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/get")
@@ -27,7 +27,7 @@ public class TenantController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/tenant/list?pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/tenant/list?pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/list")
@@ -37,7 +37,7 @@ public class TenantController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/tenant/search?tenantName=&contactPerson=&pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/tenant/search?tenantName=&contactPerson=&pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/search")
@@ -49,7 +49,7 @@ public class TenantController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/tenant/put
+     * url: http://localhost:8080/teamachine/tenant/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -59,7 +59,7 @@ public class TenantController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/tenant/{tenantcode}/delete
+     * url: http://localhost:8080/teamachine/tenant/{tenantcode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/delete")

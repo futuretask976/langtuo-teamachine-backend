@@ -16,7 +16,7 @@ public class MachineModelController {
     private MachineModelMgtService machineModelMgtService;
 
     /**
-     * Access: http://localhost:8080/teamachine/machine/model/get
+     * url: http://localhost:8080/teamachine/machine/model/get
      * @return
      */
     @GetMapping(value = "/{modelcode}/get")
@@ -26,7 +26,7 @@ public class MachineModelController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/machine/model/list?pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/machine/model/list?pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/list")
@@ -36,7 +36,7 @@ public class MachineModelController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/machine/model/search?modelCode=model_001&pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/machine/model/search?modelCode=model_001&pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/search")
@@ -47,7 +47,7 @@ public class MachineModelController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/machine/model/put
+     * url: http://localhost:8080/teamachine/machine/model/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -57,7 +57,7 @@ public class MachineModelController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/machine/model/put
+     * url: http://localhost:8080/teamachine/machine/model/put
      * @return
      */
     @DeleteMapping(value = "/{modelcode}/delete")

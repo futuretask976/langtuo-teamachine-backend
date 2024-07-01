@@ -17,7 +17,7 @@ public class AdminRoleController {
     private AdminRoleMgtService adminRoleMgtService;
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/role/tenant_001/{rolecode}/get
+     * url: http://localhost:8080/teamachine/admin/role/tenant_001/{rolecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{rolecode}/get")
@@ -28,7 +28,7 @@ public class AdminRoleController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/role/list?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/admin/role/list?tenantCode=tenant_001
      * @return
      */
     @GetMapping(value = "/list")
@@ -38,7 +38,7 @@ public class AdminRoleController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/role/list?tenantCode=tenant_001&roleName=系统超级管理员&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/admin/role/list?tenantCode=tenant_001&roleName=系统超级管理员&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -50,7 +50,7 @@ public class AdminRoleController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/role/put
+     * url: http://localhost:8080/teamachine/admin/role/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -60,7 +60,7 @@ public class AdminRoleController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/role/delete
+     * url: http://localhost:8080/teamachine/admin/role/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{rolecode}/delete")

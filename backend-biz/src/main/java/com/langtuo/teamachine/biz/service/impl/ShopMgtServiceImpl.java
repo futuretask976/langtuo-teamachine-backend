@@ -2,24 +2,32 @@ package com.langtuo.teamachine.biz.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.api.model.AdminDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.ShopDTO;
 import com.langtuo.teamachine.api.request.ShopPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.ShopMgtService;
 import com.langtuo.teamachine.dao.accessor.ShopAccessor;
+import com.langtuo.teamachine.dao.accessor.ShopGroupAccessor;
+import com.langtuo.teamachine.dao.po.AdminRolePO;
+import com.langtuo.teamachine.dao.po.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.ShopPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 public class ShopMgtServiceImpl implements ShopMgtService {
     @Resource
     private ShopAccessor shopAccessor;
+
+    @Resource
+    private ShopGroupAccessor shopGroupAccessor;
 
     @Override
     public LangTuoResult<ShopDTO> get(String tenantCode, String loginName) {
@@ -30,14 +38,31 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<ShopDTO>> search(String tenantCode, String shopGroupName,
+    public LangTuoResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, String shopGroupName,
             int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
         LangTuoResult<PageDTO<ShopDTO>> langTuoResult = null;
         try {
-            PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopGroupName,
+            String shopGroupCode = null;
+            if (StringUtils.isNotBlank(shopGroupName)) {
+                Optional<ShopGroupPO> opt = shopGroupAccessor.selectList(tenantCode).stream()
+                        .filter(item -> item.getShopGroupName().equals(shopGroupName))
+                        .findFirst();
+                if (opt.isPresent()) {
+                    shopGroupCode = opt.get().getShopGroupCode();
+                } else {
+                    PageDTO<AdminDTO> pageDTO = new PageDTO<>();
+                    pageDTO.setList(null);
+                    pageDTO.setPageNum(pageNum);
+                    pageDTO.setPageSize(pageSize);
+                    pageDTO.setTotal(0);
+                    return LangTuoResult.success(pageDTO);
+                }
+            }
+
+            PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCode,
                     pageNum, pageSize);
             List<ShopDTO> dtoList = pageInfo.getList().stream()
                     .map(shopPO -> {

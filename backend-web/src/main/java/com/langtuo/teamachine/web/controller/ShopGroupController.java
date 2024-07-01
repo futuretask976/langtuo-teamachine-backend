@@ -33,13 +33,13 @@ public class ShopGroupController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<ShopGroupDTO>> search(@RequestParam("tenantCode") String tenantCode) {
+    public LangTuoResult<List<ShopGroupDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         LangTuoResult<List<ShopGroupDTO>> rtn = shopGroupMgtService.list(tenantCode);
         return rtn;
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/list?tenantCode=tenant_001&roleName=系统超级管理员&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/shop/group/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -51,7 +51,7 @@ public class ShopGroupController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/role/put
+     * url: http://localhost:8080/teamachine/shop/group/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -61,7 +61,7 @@ public class ShopGroupController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/admin/role/delete
+     * url: http://localhost:8080/teamachine/shop/group/{tenantcode}/{shopgroupcode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{shopgroupcode}/delete")

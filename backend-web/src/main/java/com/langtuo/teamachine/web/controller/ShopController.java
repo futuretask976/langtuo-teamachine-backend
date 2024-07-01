@@ -32,20 +32,20 @@ public class ShopController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<ShopDTO>> search(@RequestParam("tenantCode") String tenantCode) {
+    public LangTuoResult<List<ShopDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         LangTuoResult<List<ShopDTO>> rtn = shopMgtService.list(tenantCode);
         return rtn;
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/list?tenantCode=tenant_001&shopName=系统超级管理员&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/shop/search?tenantCode=tenant_001&shopName=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
     public LangTuoResult<PageDTO<ShopDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopName") String shopName, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<ShopDTO>> rtn = shopMgtService.search(tenantCode, shopName, pageNum, pageSize);
+            @RequestParam("shopName") String shopName, @RequestParam("shopGroupName") String shopGroupName,
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        LangTuoResult<PageDTO<ShopDTO>> rtn = shopMgtService.search(tenantCode, shopName, shopGroupName, pageNum, pageSize);
         return rtn;
     }
 

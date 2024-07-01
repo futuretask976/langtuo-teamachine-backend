@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ThymeleafController {
     /**
-     * Access: http://localhost:8080/gxsp3demo/
+     * url: http://localhost:8080/gxsp3demo/
      * @return
      */
     @GetMapping(value = "/")
@@ -25,7 +25,7 @@ public class ThymeleafController {
     }
 
     /**
-     * Access: http://localhost:8080/gxsp3demo/login
+     * url: http://localhost:8080/gxsp3demo/login
      * @return
      */
     @GetMapping("/login")

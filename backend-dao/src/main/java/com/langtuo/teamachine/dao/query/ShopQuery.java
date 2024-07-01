@@ -10,6 +10,11 @@ public class ShopQuery {
     private String shopName;
 
     /**
+     * 店铺组编码
+     */
+    private String shopGroupCode;
+
+    /**
      * 租户编码
      */
     private String tenantCode;

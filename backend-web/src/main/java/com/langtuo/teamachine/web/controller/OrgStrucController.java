@@ -17,7 +17,7 @@ public class OrgStrucController {
     private OrgStrucMgtService orgStrucMgtService;
 
     /**
-     * Access: http://localhost:8080/teamachine/orgstruc/tenant_001/{orgname}/get
+     * url: http://localhost:8080/teamachine/orgstruc/tenant_001/{orgname}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{orgname}/get")
@@ -28,7 +28,7 @@ public class OrgStrucController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/orgstruc/listbydepth?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/orgstruc/listbydepth?tenantCode=tenant_001
      * @return
      */
     @GetMapping(value = "/listbydepth")
@@ -38,7 +38,7 @@ public class OrgStrucController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/orgstruc/list?tenantCode=tenant_001&pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/orgstruc/list?tenantCode=tenant_001&pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/list")
@@ -48,7 +48,7 @@ public class OrgStrucController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/orgstruc/search?tenantCode=tenant_001&orgName=江苏分公司&pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/orgstruc/search?tenantCode=tenant_001&orgName=江苏分公司&pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/search")
@@ -60,7 +60,7 @@ public class OrgStrucController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/tenant/put
+     * url: http://localhost:8080/teamachine/tenant/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -70,7 +70,7 @@ public class OrgStrucController {
     }
 
     /**
-     * Access: http://localhost:8080/teamachine/tenant/{tenantcode}/delete
+     * url: http://localhost:8080/teamachine/tenant/{tenantcode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{orgname}/delete")

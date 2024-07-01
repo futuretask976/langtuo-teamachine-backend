@@ -19,7 +19,7 @@ public class PermitActController {
     private PermitActMgtService permitActMgtService;
 
     /**
-     * Access: http://localhost:8080/teamachine/permitact/list
+     * url: http://localhost:8080/teamachine/permitact/list
      * @return
      */
     @GetMapping(value = "/list")

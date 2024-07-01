@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,18 +44,21 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
         LangTuoResult<PageDTO<AdminDTO>> langTuoResult = null;
         try {
-            AdminRolePO adminRolePO = adminRoleAccessor.selectOne(tenantCode, roleName);
-            if (adminRolePO == null && !StringUtils.isBlank(roleName)) {
-                PageDTO<AdminDTO> pageDTO = new PageDTO<>();
-                pageDTO.setList(null);
-                pageDTO.setPageNum(pageNum);
-                pageDTO.setPageSize(pageSize);
-                pageDTO.setTotal(0);
-                return LangTuoResult.success(pageDTO);
-            }
             String roleCode = null;
-            if (adminRolePO != null) {
-                roleCode = adminRolePO.getRoleCode();
+            if (StringUtils.isNotBlank(roleName)) {
+                Optional<AdminRolePO> opt = adminRoleAccessor.selectList(tenantCode).stream()
+                        .filter(item -> item.getRoleName().equals(roleName))
+                        .findFirst();
+                if (opt.isPresent()) {
+                    roleCode = opt.get().getRoleCode();
+                } else {
+                    PageDTO<AdminDTO> pageDTO = new PageDTO<>();
+                    pageDTO.setList(null);
+                    pageDTO.setPageNum(pageNum);
+                    pageDTO.setPageSize(pageSize);
+                    pageDTO.setTotal(0);
+                    return LangTuoResult.success(pageDTO);
+                }
             }
 
             PageInfo<AdminPO> pageInfo = adminAccessor.search(tenantCode, loginName, roleCode,
@@ -65,7 +69,6 @@ public class AdminMgtServiceImpl implements AdminMgtService {
                         return convert(adminPO, rolePO);
                     })
                     .collect(Collectors.toList());
-            System.out.printf("$$$$$ AdminMgtServiceImpl#search dtoList=%s\n", dtoList.size());
 
             PageDTO<AdminDTO> pageDTO = new PageDTO<>();
             pageDTO.setList(dtoList);
