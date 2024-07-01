@@ -44,11 +44,20 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         LangTuoResult<PageDTO<AdminDTO>> langTuoResult = null;
         try {
             AdminRolePO adminRolePO = adminRoleAccessor.selectOne(tenantCode, roleName);
-            if (adminRolePO == null) {
-                return LangTuoResult.success(new PageDTO<>());
+            if (adminRolePO == null && !StringUtils.isBlank(roleName)) {
+                PageDTO<AdminDTO> pageDTO = new PageDTO<>();
+                pageDTO.setList(null);
+                pageDTO.setPageNum(pageNum);
+                pageDTO.setPageSize(pageSize);
+                pageDTO.setTotal(0);
+                return LangTuoResult.success(pageDTO);
+            }
+            String roleCode = null;
+            if (adminRolePO != null) {
+                roleCode = adminRolePO.getRoleCode();
             }
 
-            PageInfo<AdminPO> pageInfo = adminAccessor.search(tenantCode, loginName, adminRolePO.getRoleCode(),
+            PageInfo<AdminPO> pageInfo = adminAccessor.search(tenantCode, loginName, roleCode,
                     pageNum, pageSize);
             List<AdminDTO> dtoList = pageInfo.getList().stream()
                     .map(adminPO -> {

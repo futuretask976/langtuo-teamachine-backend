@@ -76,7 +76,7 @@
         SET
             gmt_modified = now()
             <if test="loginPass != null">
-                , loginPass = #{loginPass}
+                , login_pass = #{loginPass}
             </if>
             <if test="roleCode != null">
                 , role_code = #{roleCode}
