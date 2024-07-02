@@ -60,7 +60,7 @@ public class ShopController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/admin/role/delete
+     * url: http://localhost:8080/teamachine/shop//{tenantcode}/{shopcode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{shopcode}/delete")
