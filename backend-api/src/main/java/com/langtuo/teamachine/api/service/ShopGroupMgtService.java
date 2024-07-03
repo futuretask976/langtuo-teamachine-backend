@@ -30,10 +30,10 @@ public interface ShopGroupMgtService {
 
     /**
      *
-     * @param shopGroupPutRequest
+     * @param request
      * @return
      */
-    LangTuoResult<Void> put(ShopGroupPutRequest shopGroupPutRequest);
+    LangTuoResult<Void> put(ShopGroupPutRequest request);
 
     /**
      *

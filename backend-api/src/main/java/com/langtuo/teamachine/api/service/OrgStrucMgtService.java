@@ -37,10 +37,10 @@ public interface OrgStrucMgtService {
 
     /**
      *
-     * @param orgStrucPutRequest
+     * @param request
      * @return
      */
-    LangTuoResult<Void> put(OrgStrucPutRequest orgStrucPutRequest);
+    LangTuoResult<Void> put(OrgStrucPutRequest request);
 
     /**
      *

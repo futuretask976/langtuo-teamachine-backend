@@ -26,19 +26,9 @@ public class MachineModelAccessor {
         return list;
     }
 
-    public PageInfo<MachineModelPO> selectList(int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-
-        List<MachineModelPO> list = mapper.selectList();
-
-        PageInfo<MachineModelPO> pageInfo = new PageInfo(list);
-        return pageInfo;
-    }
-
     public PageInfo<MachineModelPO> search(String modelCode, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
-        System.out.printf("$$$$$ MachineModelAccessor#search modelCode=%s\n", modelCode);
         MachineModelQuery machineModelQuery = new MachineModelQuery();
         machineModelQuery.setModelCode(StringUtils.isBlank(modelCode) ? null : modelCode);
         List<MachineModelPO> list = mapper.search(machineModelQuery);

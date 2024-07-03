@@ -43,6 +43,11 @@ public class MachineDeployPO {
     private String shopCode;
 
     /**
+     * 部署状态，0：未部署，1：已部署
+     */
+    private Integer state;
+
+    /**
      * 租户编码
      */
     private String tenantCode;

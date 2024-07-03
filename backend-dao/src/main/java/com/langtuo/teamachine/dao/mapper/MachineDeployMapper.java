@@ -5,6 +5,7 @@ import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.MachineDeployPO;
 import com.langtuo.teamachine.dao.po.MachinePO;
 import com.langtuo.teamachine.dao.po.ShopPO;
+import com.langtuo.teamachine.dao.query.MachineDeployQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,13 @@ public interface MachineDeployMapper {
      *
      * @return
      */
-    List<MachineDeployPO> selectList();
+    List<MachineDeployPO> selectList(@Param("tenantCode") String tenantCode);
+
+    /**
+     *
+     * @return
+     */
+    List<MachineDeployPO> search(MachineDeployQuery query);
 
     /**
      *

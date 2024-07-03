@@ -33,7 +33,7 @@ public interface ShopMgtService {
      * @param shopPutRequest
      * @return
      */
-    LangTuoResult<Void> put(ShopPutRequest shopPutRequest);
+    LangTuoResult<Void> put(ShopPutRequest request);
 
     /**
      *

@@ -32,7 +32,7 @@ public interface TenantMgtService {
      * @param tenantPutRequest
      * @return
      */
-    LangTuoResult<Void> put(TenantPutRequest tenantPutRequest);
+    LangTuoResult<Void> put(TenantPutRequest request);
 
     /**
      *

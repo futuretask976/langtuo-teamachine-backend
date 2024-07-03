@@ -39,10 +39,10 @@ public interface AdminRoleMgtService {
 
     /**
      *
-     * @param adminRolePutRequest
+     * @param request
      * @return
      */
-    LangTuoResult<Void> put(AdminRolePutRequest adminRolePutRequest);
+    LangTuoResult<Void> put(AdminRolePutRequest request);
 
     /**
      *

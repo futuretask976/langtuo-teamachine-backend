@@ -27,10 +27,10 @@ public interface MachineModelMgtService {
 
     /**
      *
-     * @param machineModelPutRequest
+     * @param request
      * @return
      */
-    LangTuoResult<Void> put(MachineModelPutRequest machineModelPutRequest);
+    LangTuoResult<Void> put(MachineModelPutRequest request);
 
     /**
      *

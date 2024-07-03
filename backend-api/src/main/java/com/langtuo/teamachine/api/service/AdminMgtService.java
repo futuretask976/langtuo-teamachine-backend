@@ -19,7 +19,8 @@ public interface AdminMgtService {
      *
      * @return
      */
-    LangTuoResult<PageDTO<AdminDTO>> search(String tenantCode, String loginName, String roleName, int pageNum, int pageSize);
+    LangTuoResult<PageDTO<AdminDTO>> search(String tenantCode, String loginName, String roleName,
+            int pageNum, int pageSize);
 
     /**
      *
@@ -30,10 +31,10 @@ public interface AdminMgtService {
 
     /**
      *
-     * @param adminPutRequest
+     * @param request
      * @return
      */
-    LangTuoResult<Void> put(AdminPutRequest adminPutRequest);
+    LangTuoResult<Void> put(AdminPutRequest request);
 
     /**
      *
