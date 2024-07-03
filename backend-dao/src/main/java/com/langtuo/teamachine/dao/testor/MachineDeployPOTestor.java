@@ -54,7 +54,7 @@ public class MachineDeployPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineDeployMapper mapper = sqlSession.getMapper(MachineDeployMapper.class);
 
-        List<MachineDeployPO> list = mapper.selectList();
+        List<MachineDeployPO> list = mapper.selectList("tenant_001");
         for (MachineDeployPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }

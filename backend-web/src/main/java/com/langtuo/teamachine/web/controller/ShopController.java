@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/shop")
 public class ShopController {
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/shop/tenant_001/shop_001/get
@@ -23,7 +23,7 @@ public class ShopController {
     @GetMapping(value = "/{tenantcode}/{shopcode}/get")
     public LangTuoResult<ShopDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "shopcode") String shopCode) {
-        LangTuoResult<ShopDTO> rtn = shopMgtService.get(tenantCode, shopCode);
+        LangTuoResult<ShopDTO> rtn = service.get(tenantCode, shopCode);
         return rtn;
     }
 
@@ -33,7 +33,7 @@ public class ShopController {
      */
     @GetMapping(value = "/list")
     public LangTuoResult<List<ShopDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<ShopDTO>> rtn = shopMgtService.list(tenantCode);
+        LangTuoResult<List<ShopDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -45,7 +45,7 @@ public class ShopController {
     public LangTuoResult<PageDTO<ShopDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopName") String shopName, @RequestParam("shopGroupName") String shopGroupName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<ShopDTO>> rtn = shopMgtService.search(tenantCode, shopName, shopGroupName, pageNum, pageSize);
+        LangTuoResult<PageDTO<ShopDTO>> rtn = service.search(tenantCode, shopName, shopGroupName, pageNum, pageSize);
         return rtn;
     }
 
@@ -55,7 +55,7 @@ public class ShopController {
      */
     @PutMapping(value = "/put")
     public LangTuoResult<Void> put(@RequestBody ShopPutRequest shopPutRequest) {
-        LangTuoResult<Void> rtn = shopMgtService.put(shopPutRequest);
+        LangTuoResult<Void> rtn = service.put(shopPutRequest);
         return rtn;
     }
 
@@ -66,7 +66,7 @@ public class ShopController {
     @DeleteMapping(value = "/{tenantcode}/{shopcode}/delete")
     public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "shopcode") String shopCode) {
-        LangTuoResult<Void> rtn = shopMgtService.delete(tenantCode, shopCode);
+        LangTuoResult<Void> rtn = service.delete(tenantCode, shopCode);
         return rtn;
     }
 }

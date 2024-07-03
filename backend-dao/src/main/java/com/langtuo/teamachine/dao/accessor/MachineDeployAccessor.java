@@ -35,7 +35,7 @@ public class MachineDeployAccessor {
 
         MachineDeployQuery machineDeployQuery = new MachineDeployQuery();
         machineDeployQuery.setTenantCode(tenantCode);
-        machineDeployQuery.setDeplyCode(StringUtils.isBlank(deployCode) ? null : deployCode);
+        machineDeployQuery.setDeployCode(StringUtils.isBlank(deployCode) ? null : deployCode);
         machineDeployQuery.setShopCode(StringUtils.isBlank(shopCode) ? null : shopCode);
         machineDeployQuery.setState(state);
         List<MachineDeployPO> list = mapper.search(machineDeployQuery);

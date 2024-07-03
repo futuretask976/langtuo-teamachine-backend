@@ -22,53 +22,46 @@ public class MachineDeployDTO {
     private Date gmtModified;
 
     /**
+     * 部署编码
+     */
+    private String deployCode;
+
+    /**
      * 型号编码
      */
     private String modelCode;
 
     /**
-     * 是否支持同时出料，0：不支持，1：支持
+     * 机器编码
      */
-    private Integer enableFlowAll;
+    private String machineCode;
+
+    /**
+     * 店铺编码
+     */
+    private String shopCode;
+
+    /**
+     * 部署状态，0：未部署，1：已部署
+     */
+    private Integer state;
+
+    /**
+     * 租户编码
+     */
+    private String tenantCode;
 
     /**
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
 
-    /**
-     * 管道列表
-     */
-    private List<MachineModelPipelineDTO> pipelineList;
-
-    public String getModelCode() {
-        return modelCode;
+    public long getId() {
+        return id;
     }
 
-    public void setModelCode(String modelCode) {
-        this.modelCode = modelCode;
-    }
-
-    public Integer getEnableFlowAll() {
-        return enableFlowAll;
-    }
-
-    public void setEnableFlowAll(Integer enableFlowAll) {
-        this.enableFlowAll = enableFlowAll;
-    }
-
-    public Map<String, String> getExtraInfo() {
-        return extraInfo;
-    }
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        if (extraInfo == null) {
-            return;
-        }
-        if (this.extraInfo == null) {
-            this.extraInfo = new HashMap<>();
-        }
-        this.extraInfo.putAll(extraInfo);
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Date getGmtCreated() {
@@ -87,19 +80,59 @@ public class MachineDeployDTO {
         this.gmtModified = gmtModified;
     }
 
-    public long getId() {
-        return id;
+    public String getDeployCode() {
+        return deployCode;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setDeployCode(String deployCode) {
+        this.deployCode = deployCode;
     }
 
-    public List<MachineModelPipelineDTO> getPipelineList() {
-        return pipelineList;
+    public String getModelCode() {
+        return modelCode;
     }
 
-    public void setPipelineList(List<MachineModelPipelineDTO> pipelineList) {
-        this.pipelineList = pipelineList;
+    public void setModelCode(String modelCode) {
+        this.modelCode = modelCode;
+    }
+
+    public String getMachineCode() {
+        return machineCode;
+    }
+
+    public void setMachineCode(String machineCode) {
+        this.machineCode = machineCode;
+    }
+
+    public String getShopCode() {
+        return shopCode;
+    }
+
+    public void setShopCode(String shopCode) {
+        this.shopCode = shopCode;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public String getTenantCode() {
+        return tenantCode;
+    }
+
+    public void setTenantCode(String tenantCode) {
+        this.tenantCode = tenantCode;
+    }
+
+    public Map<String, String> getExtraInfo() {
+        return extraInfo;
+    }
+
+    public void setExtraInfo(Map<String, String> extraInfo) {
+        this.extraInfo = extraInfo;
     }
 }

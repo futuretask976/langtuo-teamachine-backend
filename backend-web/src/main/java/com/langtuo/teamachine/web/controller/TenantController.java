@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/tenant")
 public class TenantController {
     @Resource
-    private TenantMgtService tenantMgtService;
+    private TenantMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/tenant/{tenantcode}/get
@@ -22,7 +22,7 @@ public class TenantController {
      */
     @GetMapping(value = "/{tenantcode}/get")
     public LangTuoResult<TenantDTO> get(@PathVariable(name = "tenantcode") String tenantCode) {
-        LangTuoResult<TenantDTO> rtn = tenantMgtService.get(tenantCode);
+        LangTuoResult<TenantDTO> rtn = service.get(tenantCode);
         return rtn;
     }
 
@@ -32,7 +32,7 @@ public class TenantController {
      */
     @GetMapping(value = "/list")
     public LangTuoResult<List<TenantDTO>> list() {
-        LangTuoResult<List<TenantDTO>> rtn = tenantMgtService.list();
+        LangTuoResult<List<TenantDTO>> rtn = service.list();
         return rtn;
     }
 
@@ -44,7 +44,7 @@ public class TenantController {
     public LangTuoResult<PageDTO<TenantDTO>> search(@RequestParam("tenantName") String tenantName,
             @RequestParam("contactPerson") String contactPerson, @RequestParam("pageNum") int pageNum,
             @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<TenantDTO>> rtn = tenantMgtService.search(tenantName, contactPerson, pageNum, pageSize);
+        LangTuoResult<PageDTO<TenantDTO>> rtn = service.search(tenantName, contactPerson, pageNum, pageSize);
         return rtn;
     }
 
@@ -54,7 +54,7 @@ public class TenantController {
      */
     @PutMapping(value = "/put")
     public LangTuoResult<Void> put(@RequestBody TenantPutRequest tenantPutRequest) {
-        LangTuoResult<Void> rtn = tenantMgtService.put(tenantPutRequest);
+        LangTuoResult<Void> rtn = service.put(tenantPutRequest);
         return rtn;
     }
 
@@ -64,7 +64,7 @@ public class TenantController {
      */
     @DeleteMapping(value = "/{tenantcode}/delete")
     public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode) {
-        LangTuoResult<Void> rtn = tenantMgtService.delete(tenantCode);
+        LangTuoResult<Void> rtn = service.delete(tenantCode);
         return rtn;
     }
 }

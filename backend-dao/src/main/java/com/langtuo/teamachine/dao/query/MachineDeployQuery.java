@@ -7,7 +7,7 @@ public class MachineDeployQuery {
     /**
      * 部署编码
      */
-    private String deplyCode;
+    private String deployCode;
 
     /**
      * 店铺编码

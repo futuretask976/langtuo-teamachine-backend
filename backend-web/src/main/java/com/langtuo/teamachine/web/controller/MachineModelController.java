@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 @RequestMapping("/machine/model")
 public class MachineModelController {
     @Resource
-    private MachineModelMgtService machineModelMgtService;
+    private MachineModelMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/machine/model/get
@@ -21,7 +21,7 @@ public class MachineModelController {
      */
     @GetMapping(value = "/{modelcode}/get")
     public LangTuoResult<MachineModelDTO> get(@PathVariable(name = "modelcode") String modelCode) {
-        LangTuoResult<MachineModelDTO> rtn = machineModelMgtService.get(modelCode);
+        LangTuoResult<MachineModelDTO> rtn = service.get(modelCode);
         return rtn;
     }
 
@@ -31,7 +31,7 @@ public class MachineModelController {
      */
     @GetMapping(value = "/list")
     public LangTuoResult<PageDTO<MachineModelDTO>> list() {
-        LangTuoResult<PageDTO<MachineModelDTO>> rtn = machineModelMgtService.list();
+        LangTuoResult<PageDTO<MachineModelDTO>> rtn = service.list();
         return rtn;
     }
 
@@ -42,7 +42,7 @@ public class MachineModelController {
     @GetMapping(value = "/search")
     public LangTuoResult<PageDTO<MachineModelDTO>> search(@RequestParam("modelCode") String modelCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<MachineModelDTO>> rtn = machineModelMgtService.search(modelCode, pageNum, pageSize);
+        LangTuoResult<PageDTO<MachineModelDTO>> rtn = service.search(modelCode, pageNum, pageSize);
         return rtn;
     }
 
@@ -52,7 +52,7 @@ public class MachineModelController {
      */
     @PutMapping(value = "/put")
     public LangTuoResult<Void> put(@RequestBody MachineModelPutRequest machineModelPutRequest) {
-        LangTuoResult<Void> rtn = machineModelMgtService.put(machineModelPutRequest);
+        LangTuoResult<Void> rtn = service.put(machineModelPutRequest);
         return rtn;
     }
 
@@ -62,7 +62,7 @@ public class MachineModelController {
      */
     @DeleteMapping(value = "/{modelcode}/delete")
     public LangTuoResult<Void> delete(@PathVariable(name = "modelcode") String modelCode) {
-        LangTuoResult<Void> rtn = machineModelMgtService.delete(modelCode);
+        LangTuoResult<Void> rtn = service.delete(modelCode);
         return rtn;
     }
 }

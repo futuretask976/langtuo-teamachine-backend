@@ -1,10 +1,8 @@
 package com.langtuo.teamachine.api.service;
 
 import com.langtuo.teamachine.api.model.MachineDeployDTO;
-import com.langtuo.teamachine.api.model.MachineModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.MachineDeployPutRequest;
-import com.langtuo.teamachine.api.request.MachineModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
 public interface MachineDeployMgtService {
@@ -20,14 +18,14 @@ public interface MachineDeployMgtService {
      *
      * @return
      */
-    LangTuoResult<PageDTO<MachineDeployDTO>> search(String tenantCode, String deployCode, String shopName, String state,
-            int pageNum, int pageSize);
+    LangTuoResult<PageDTO<MachineDeployDTO>> search(String tenantCode, String deployCode, String shopName,
+            Integer state, int pageNum, int pageSize);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<MachineDeployDTO>> list();
+    LangTuoResult<PageDTO<MachineDeployDTO>> list(String tenantCode);
 
     /**
      *
@@ -43,4 +41,10 @@ public interface MachineDeployMgtService {
      * @return
      */
     LangTuoResult<Void> delete(String tenantCode, String deployCode);
+
+    /**
+     *
+     * @return
+     */
+    LangTuoResult<String> genRandomStr();
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/orgstruc")
 public class OrgStrucController {
     @Resource
-    private OrgStrucMgtService orgStrucMgtService;
+    private OrgStrucMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/orgstruc/tenant_001/{orgname}/get
@@ -23,7 +23,7 @@ public class OrgStrucController {
     @GetMapping(value = "/{tenantcode}/{orgname}/get")
     public LangTuoResult<OrgStrucDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "orgname") String orgName) {
-        LangTuoResult<OrgStrucDTO> rtn = orgStrucMgtService.get(tenantCode, orgName);
+        LangTuoResult<OrgStrucDTO> rtn = service.get(tenantCode, orgName);
         return rtn;
     }
 
@@ -33,7 +33,7 @@ public class OrgStrucController {
      */
     @GetMapping(value = "/listbydepth")
     public LangTuoResult<OrgStrucDTO> listByDepth(@RequestParam(name = "tenantCode") String tenantCode) {
-        LangTuoResult<OrgStrucDTO> rtn = orgStrucMgtService.listByDepth(tenantCode);
+        LangTuoResult<OrgStrucDTO> rtn = service.listByDepth(tenantCode);
         return rtn;
     }
 
@@ -43,7 +43,7 @@ public class OrgStrucController {
      */
     @GetMapping(value = "/list")
     public LangTuoResult<List<OrgStrucDTO>> list(@RequestParam(name = "tenantCode") String tenantCode) {
-        LangTuoResult<List<OrgStrucDTO>> rtn = orgStrucMgtService.list(tenantCode);
+        LangTuoResult<List<OrgStrucDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -55,7 +55,7 @@ public class OrgStrucController {
     public LangTuoResult<PageDTO<OrgStrucDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("orgName") String orgName, @RequestParam("pageNum") int pageNum,
             @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<OrgStrucDTO>> rtn = orgStrucMgtService.search(tenantCode, orgName, pageNum, pageSize);
+        LangTuoResult<PageDTO<OrgStrucDTO>> rtn = service.search(tenantCode, orgName, pageNum, pageSize);
         return rtn;
     }
 
@@ -65,7 +65,7 @@ public class OrgStrucController {
      */
     @PutMapping(value = "/put")
     public LangTuoResult<Void> put(@RequestBody OrgStrucPutRequest orgStrucPutRequest) {
-        LangTuoResult<Void> rtn = orgStrucMgtService.put(orgStrucPutRequest);
+        LangTuoResult<Void> rtn = service.put(orgStrucPutRequest);
         return rtn;
     }
 
@@ -76,7 +76,7 @@ public class OrgStrucController {
     @DeleteMapping(value = "/{tenantcode}/{orgname}/delete")
     public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "orgname") String orgName) {
-        LangTuoResult<Void> rtn = orgStrucMgtService.delete(tenantCode, orgName);
+        LangTuoResult<Void> rtn = service.delete(tenantCode, orgName);
         return rtn;
     }
 }

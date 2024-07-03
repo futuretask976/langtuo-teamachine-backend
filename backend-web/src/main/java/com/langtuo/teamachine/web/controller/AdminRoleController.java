@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/admin/role")
 public class AdminRoleController {
     @Resource
-    private AdminRoleMgtService adminRoleMgtService;
+    private AdminRoleMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/admin/role/tenant_001/{rolecode}/get
@@ -23,7 +23,7 @@ public class AdminRoleController {
     @GetMapping(value = "/{tenantcode}/{rolecode}/get")
     public LangTuoResult<AdminRoleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "rolecode") String roleCode) {
-        LangTuoResult<AdminRoleDTO> rtn = adminRoleMgtService.get(tenantCode, roleCode);
+        LangTuoResult<AdminRoleDTO> rtn = service.get(tenantCode, roleCode);
         return rtn;
     }
 
@@ -33,7 +33,7 @@ public class AdminRoleController {
      */
     @GetMapping(value = "/list")
     public LangTuoResult<List<AdminRoleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<AdminRoleDTO>> rtn = adminRoleMgtService.list(tenantCode);
+        LangTuoResult<List<AdminRoleDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -45,7 +45,7 @@ public class AdminRoleController {
     public LangTuoResult<PageDTO<AdminRoleDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("roleName") String roleName, @RequestParam("pageNum") int pageNum,
             @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<AdminRoleDTO>> rtn = adminRoleMgtService.search(tenantCode, roleName, pageNum, pageSize);
+        LangTuoResult<PageDTO<AdminRoleDTO>> rtn = service.search(tenantCode, roleName, pageNum, pageSize);
         return rtn;
     }
 
@@ -55,7 +55,7 @@ public class AdminRoleController {
      */
     @PutMapping(value = "/put")
     public LangTuoResult<Void> put(@RequestBody AdminRolePutRequest adminRolePutRequest) {
-        LangTuoResult<Void> rtn = adminRoleMgtService.put(adminRolePutRequest);
+        LangTuoResult<Void> rtn = service.put(adminRolePutRequest);
         return rtn;
     }
 
@@ -66,7 +66,7 @@ public class AdminRoleController {
     @DeleteMapping(value = "/{tenantcode}/{rolecode}/delete")
     public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "rolecode") String roleCode) {
-        LangTuoResult<Void> rtn = adminRoleMgtService.delete(tenantCode, roleCode);
+        LangTuoResult<Void> rtn = service.delete(tenantCode, roleCode);
         return rtn;
     }
 }

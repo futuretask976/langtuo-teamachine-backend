@@ -2,7 +2,7 @@ package com.langtuo.teamachine.biz.service.util;
 
 import java.security.SecureRandom;
 
-public class StringUtils {
+public class DeployUtils {
     public static String genRandomStr(int length) {
         String charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom random = new SecureRandom();

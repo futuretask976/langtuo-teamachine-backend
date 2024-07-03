@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 @RequestMapping("/admin")
 public class AdminController {
     @Resource
-    private AdminMgtService adminMgtService;
+    private AdminMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/admin/tenant_001/jiaqing001/get
@@ -22,7 +22,7 @@ public class AdminController {
     @GetMapping(value = "/{tenantcode}/{loginname}/get")
     public LangTuoResult<AdminDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "loginname") String loginName) {
-        LangTuoResult<AdminDTO> rtn = adminMgtService.get(tenantCode, loginName);
+        LangTuoResult<AdminDTO> rtn = service.get(tenantCode, loginName);
         return rtn;
     }
 
@@ -34,7 +34,7 @@ public class AdminController {
     public LangTuoResult<PageDTO<AdminDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("loginName") String loginName, @RequestParam("roleName") String roleName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<AdminDTO>> rtn = adminMgtService.search(tenantCode, loginName, roleName, pageNum, pageSize);
+        LangTuoResult<PageDTO<AdminDTO>> rtn = service.search(tenantCode, loginName, roleName, pageNum, pageSize);
         return rtn;
     }
 
@@ -44,7 +44,7 @@ public class AdminController {
      */
     @PutMapping(value = "/put")
     public LangTuoResult<Void> put(@RequestBody AdminPutRequest adminPutRequest) {
-        LangTuoResult<Void> rtn = adminMgtService.put(adminPutRequest);
+        LangTuoResult<Void> rtn = service.put(adminPutRequest);
         return rtn;
     }
 
@@ -55,7 +55,7 @@ public class AdminController {
     @DeleteMapping(value = "/{tenantcode}/{loginname}/delete")
     public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "loginname") String loginName) {
-        LangTuoResult<Void> rtn = adminMgtService.delete(tenantCode, loginName);
+        LangTuoResult<Void> rtn = service.delete(tenantCode, loginName);
         return rtn;
     }
 }
