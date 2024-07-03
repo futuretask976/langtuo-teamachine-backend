@@ -42,6 +42,11 @@ public class MachineDeployDTO {
     private String shopCode;
 
     /**
+     * 店铺名称
+     */
+    private String shopName;
+
+    /**
      * 部署状态，0：未部署，1：已部署
      */
     private Integer state;
@@ -55,6 +60,14 @@ public class MachineDeployDTO {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
 
     public long getId() {
         return id;

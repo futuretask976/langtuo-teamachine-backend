@@ -9,7 +9,9 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineDeployMgtService;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import com.langtuo.teamachine.dao.accessor.MachineDeployAccessor;
+import com.langtuo.teamachine.dao.accessor.ShopAccessor;
 import com.langtuo.teamachine.dao.po.MachineDeployPO;
+import com.langtuo.teamachine.dao.po.ShopPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,9 @@ import java.util.stream.Collectors;
 public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     @Resource
     private MachineDeployAccessor machineDeployAccessor;
+
+    @Resource
+    private ShopAccessor shopAccessor;
 
     @Override
     public LangTuoResult<PageDTO<MachineDeployDTO>> list(String tenantCode) {
@@ -152,10 +157,16 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
         dto.setDeployCode(po.getDeployCode());
         dto.setModelCode(po.getModelCode());
         dto.setMachineCode(po.getMachineCode());
-        dto.setShopCode(po.getShopCode());
         dto.setState(po.getState());
         dto.setTenantCode(po.getTenantCode());
         dto.setExtraInfo(po.getExtraInfo());
+
+        ShopPO shopPO = shopAccessor.selectOne(po.getTenantCode(), po.getShopCode(), null);
+        if (shopPO != null) {
+            dto.setShopCode(shopPO.getShopCode());
+            dto.setShopName(shopPO.getShopName());
+        }
+
         return dto;
     }
 }
