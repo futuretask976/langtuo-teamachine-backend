@@ -14,14 +14,14 @@ import java.util.List;
 @Component
 public class AdminRoleAccessor {
     @Resource
-    private AdminRoleMapper adminRoleMapper;
+    private AdminRoleMapper mapper;
 
     public AdminRolePO selectOne(String tenantCode, String roleCode) {
-        return adminRoleMapper.selectOne(tenantCode, roleCode);
+        return mapper.selectOne(tenantCode, roleCode);
     }
 
     public List<AdminRolePO> selectList(String tenantCode) {
-        List<AdminRolePO> list = adminRoleMapper.selectList(tenantCode);
+        List<AdminRolePO> list = mapper.selectList(tenantCode);
 
         return list;
     }
@@ -29,7 +29,7 @@ public class AdminRoleAccessor {
     public PageInfo<AdminRolePO> selectList(String tenantCode, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
-        List<AdminRolePO> list = adminRoleMapper.selectList(tenantCode);
+        List<AdminRolePO> list = mapper.selectList(tenantCode);
 
         PageInfo<AdminRolePO> pageInfo = new PageInfo(list);
         return pageInfo;
@@ -41,21 +41,21 @@ public class AdminRoleAccessor {
         AdminRoleQuery adminRoleQuery = new AdminRoleQuery();
         adminRoleQuery.setTenantCode(tenantCode);
         adminRoleQuery.setRoleName(StringUtils.isBlank(roleName) ? null : roleName);
-        List<AdminRolePO> list = adminRoleMapper.search(adminRoleQuery);
+        List<AdminRolePO> list = mapper.search(adminRoleQuery);
 
         PageInfo<AdminRolePO> pageInfo = new PageInfo(list);
         return pageInfo;
     }
 
     public int insert(AdminRolePO adminRolePO) {
-        return adminRoleMapper.insert(adminRolePO);
+        return mapper.insert(adminRolePO);
     }
 
     public int update(AdminRolePO adminRolePO) {
-        return adminRoleMapper.update(adminRolePO);
+        return mapper.update(adminRolePO);
     }
 
     public int delete(String tenantCode, String roleCode) {
-        return adminRoleMapper.delete(tenantCode, roleCode);
+        return mapper.delete(tenantCode, roleCode);
     }
 }

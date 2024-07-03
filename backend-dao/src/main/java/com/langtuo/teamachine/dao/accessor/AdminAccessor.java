@@ -3,9 +3,7 @@ package com.langtuo.teamachine.dao.accessor;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.mapper.AdminMapper;
-import com.langtuo.teamachine.dao.mapper.AdminRoleMapper;
 import com.langtuo.teamachine.dao.po.AdminPO;
-import com.langtuo.teamachine.dao.po.AdminRolePO;
 import com.langtuo.teamachine.dao.query.AdminQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -16,14 +14,14 @@ import java.util.List;
 @Component
 public class AdminAccessor {
     @Resource
-    private AdminMapper adminMapper;
+    private AdminMapper mapper;
 
     public AdminPO selectOne(String tenantCode, String loginName) {
-        return adminMapper.selectOne(tenantCode, loginName);
+        return mapper.selectOne(tenantCode, loginName);
     }
 
     public List<AdminPO> selectList(String tenantCode) {
-        List<AdminPO> list = adminMapper.selectList(tenantCode);
+        List<AdminPO> list = mapper.selectList(tenantCode);
 
         return list;
     }
@@ -35,21 +33,21 @@ public class AdminAccessor {
         adminQuery.setTenantCode(tenantCode);
         adminQuery.setLoginName(StringUtils.isBlank(loginName) ? null : loginName);
         adminQuery.setRoleCode(StringUtils.isBlank(roleCode) ? null : roleCode);
-        List<AdminPO> list = adminMapper.search(adminQuery);
+        List<AdminPO> list = mapper.search(adminQuery);
 
         PageInfo<AdminPO> pageInfo = new PageInfo(list);
         return pageInfo;
     }
 
     public int insert(AdminPO adminPO) {
-        return adminMapper.insert(adminPO);
+        return mapper.insert(adminPO);
     }
 
     public int update(AdminPO adminPO) {
-        return adminMapper.update(adminPO);
+        return mapper.update(adminPO);
     }
 
     public int delete(String tenantCode, String loginName) {
-        return adminMapper.delete(tenantCode, loginName);
+        return mapper.delete(tenantCode, loginName);
     }
 }

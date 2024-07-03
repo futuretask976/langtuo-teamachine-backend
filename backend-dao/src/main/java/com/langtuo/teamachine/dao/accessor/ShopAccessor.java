@@ -14,14 +14,14 @@ import java.util.List;
 @Component
 public class ShopAccessor {
     @Resource
-    private ShopMapper shopMapper;
+    private ShopMapper mapper;
 
-    public ShopPO selectOne(String tenantCode, String shopCode) {
-        return shopMapper.selectOne(tenantCode, shopCode);
+    public ShopPO selectOne(String tenantCode, String shopCode, String shopName) {
+        return mapper.selectOne(tenantCode, shopCode, shopName);
     }
 
     public List<ShopPO> selectList(String tenantCode) {
-        List<ShopPO> list = shopMapper.selectList(tenantCode);
+        List<ShopPO> list = mapper.selectList(tenantCode);
 
         return list;
     }
@@ -33,21 +33,21 @@ public class ShopAccessor {
         shopQuery.setTenantCode(tenantCode);
         shopQuery.setShopName(StringUtils.isBlank(shopName) ? null : shopName);
         shopQuery.setShopGroupCode(StringUtils.isBlank(shopGroupCode) ? null : shopGroupCode);
-        List<ShopPO> list = shopMapper.search(shopQuery);
+        List<ShopPO> list = mapper.search(shopQuery);
 
         PageInfo<ShopPO> pageInfo = new PageInfo(list);
         return pageInfo;
     }
 
     public int insert(ShopPO shopPO) {
-        return shopMapper.insert(shopPO);
+        return mapper.insert(shopPO);
     }
 
     public int update(ShopPO shopPO) {
-        return shopMapper.update(shopPO);
+        return mapper.update(shopPO);
     }
 
     public int delete(String tenantCode, String shopGroupCode) {
-        return shopMapper.delete(tenantCode, shopGroupCode);
+        return mapper.delete(tenantCode, shopGroupCode);
     }
 }

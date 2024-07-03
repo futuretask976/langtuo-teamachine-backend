@@ -13,7 +13,7 @@ public interface ShopMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<ShopDTO> get(String tenantCode, String shopCode);
+    LangTuoResult<ShopDTO> get(String tenantCode, String shopCode, String shopName);
 
     /**
      *
@@ -30,7 +30,7 @@ public interface ShopMgtService {
 
     /**
      *
-     * @param shopPutRequest
+     * @param request
      * @return
      */
     LangTuoResult<Void> put(ShopPutRequest request);

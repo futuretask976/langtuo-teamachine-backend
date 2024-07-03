@@ -10,7 +10,6 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.ShopMgtService;
 import com.langtuo.teamachine.dao.accessor.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.ShopGroupAccessor;
-import com.langtuo.teamachine.dao.po.AdminRolePO;
 import com.langtuo.teamachine.dao.po.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.ShopPO;
 import org.apache.commons.lang3.StringUtils;
@@ -30,8 +29,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     private ShopGroupAccessor shopGroupAccessor;
 
     @Override
-    public LangTuoResult<ShopDTO> get(String tenantCode, String loginName) {
-        ShopPO shopPO = shopAccessor.selectOne(tenantCode, loginName);
+    public LangTuoResult<ShopDTO> get(String tenantCode, String shopCode, String shopName) {
+        ShopPO shopPO = shopAccessor.selectOne(tenantCode, shopCode, shopName);
 
         ShopDTO shopDTO = convert(shopPO);
         return LangTuoResult.success(shopDTO);
@@ -113,7 +112,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            ShopPO exist = shopAccessor.selectOne(request.getTenantCode(), request.getShopGroupCode());
+            ShopPO exist = shopAccessor.selectOne(request.getTenantCode(), request.getShopCode(),
+                    request.getShopName());
             if (exist != null) {
                 int updated = shopAccessor.update(shopPO);
             } else {
