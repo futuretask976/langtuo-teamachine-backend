@@ -53,7 +53,6 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
             List<AdminRoleDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
-            System.out.printf("$$$$$ AdminRoleMgtServiceImpl#search dtoList=%s\n", dtoList.size());
 
             dtoList.stream().forEach(item -> {
                 List<AdminRoleActRelPO> adminRoleActRelPOList = adminRoleActRelAccessor.selectList(tenantCode,
@@ -64,15 +63,8 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
                     }).collect(Collectors.toList()));
                 }
             });
-            System.out.printf("$$$$$ AdminRoleMgtServiceImpl#search begin to convert\n");
 
-            PageDTO<AdminRoleDTO> pageDTO = new PageDTO<>();
-            pageDTO.setList(dtoList);
-            pageDTO.setPageNum(pageNum);
-            pageDTO.setPageSize(pageSize);
-            pageDTO.setTotal(pageInfo.getTotal());
-
-            langTuoResult = LangTuoResult.success(pageDTO);
+            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -102,12 +94,7 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
                 }
             });
 
-            PageDTO<AdminRoleDTO> pageDTO = new PageDTO<>();
-            pageDTO.setList(dtoList);
-            pageDTO.setPageNum(pageNum);
-            pageDTO.setPageSize(pageSize);
-            pageDTO.setTotal(pageInfo.getTotal());
-            langTuoResult = LangTuoResult.success(pageDTO);
+            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);

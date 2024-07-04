@@ -63,6 +63,11 @@ public class MachinePO {
     private Date maintainUntil;
 
     /**
+     *　店铺编码
+     */
+    private String shopCode;
+
+    /**
      * 租户编码
      */
     private String tenantCode;

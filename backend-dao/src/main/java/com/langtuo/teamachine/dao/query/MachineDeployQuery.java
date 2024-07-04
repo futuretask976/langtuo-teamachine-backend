@@ -15,6 +15,11 @@ public class MachineDeployQuery {
     private String shopCode;
 
     /**
+     * 机器编码
+     */
+    private String machineCode;
+
+    /**
      * 部署状态
      */
     private Integer state;

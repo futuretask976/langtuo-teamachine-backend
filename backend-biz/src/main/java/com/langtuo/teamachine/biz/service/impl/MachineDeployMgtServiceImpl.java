@@ -28,8 +28,8 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     private ShopAccessor shopAccessor;
 
     @Override
-    public LangTuoResult<PageDTO<MachineDeployDTO>> list(String tenantCode) {
-        LangTuoResult<PageDTO<MachineDeployDTO>> langTuoResult = null;
+    public LangTuoResult<List<MachineDeployDTO>> list(String tenantCode) {
+        LangTuoResult<List<MachineDeployDTO>> langTuoResult = null;
         try {
             List<MachineDeployPO> list = machineDeployAccessor.selectList(tenantCode);
             List<MachineDeployDTO> dtoList = list.stream()
@@ -44,26 +44,20 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<MachineDeployDTO>> search(String tenantCode, String deployCode, String shopName,
-            Integer state, int pageNum, int pageSize) {
+    public LangTuoResult<PageDTO<MachineDeployDTO>> search(String tenantCode, String deployCode, String machineCode,
+            String shopName, Integer state, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
         LangTuoResult<PageDTO<MachineDeployDTO>> langTuoResult = null;
         try {
-            PageInfo<MachineDeployPO> pageInfo = machineDeployAccessor.search(tenantCode, deployCode, shopName, state,
-                    pageNum, pageSize);
+            PageInfo<MachineDeployPO> pageInfo = machineDeployAccessor.search(tenantCode, deployCode, machineCode,
+                    shopName, state, pageNum, pageSize);
             List<MachineDeployDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            PageDTO<MachineDeployDTO> pageDTO = new PageDTO<>();
-            pageDTO.setList(dtoList);
-            pageDTO.setPageNum(pageNum);
-            pageDTO.setPageSize(pageSize);
-            pageDTO.setTotal(pageInfo.getTotal());
-
-            langTuoResult = LangTuoResult.success(pageDTO);
+            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);

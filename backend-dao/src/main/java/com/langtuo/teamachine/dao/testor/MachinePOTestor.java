@@ -64,12 +64,12 @@ public class MachinePOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineMapper mapper = sqlSession.getMapper(MachineMapper.class);
 
-        List<MachinePO> list = mapper.selectList();
+        List<MachinePO> list = mapper.selectList("tenant_001");
         for (MachinePO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        MachinePO po = mapper.selectOne("tenant_001", "shopGroup_001");
+        MachinePO po = mapper.selectOne("tenant_001", "mahcine_001", null);
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();

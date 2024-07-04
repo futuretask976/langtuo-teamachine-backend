@@ -3,7 +3,7 @@ package com.langtuo.teamachine.dao.mapper;
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.MachinePO;
-import com.langtuo.teamachine.dao.po.ShopPO;
+import com.langtuo.teamachine.dao.query.MachineQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -20,13 +20,20 @@ public interface MachineMapper {
      * @param machineCode
      * @return
      */
-    MachinePO selectOne(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode);
+    MachinePO selectOne(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode, @Param("machineName") String machineName);
 
     /**
      *
      * @return
      */
-    List<MachinePO> selectList();
+    List<MachinePO> selectList(@Param("tenantCode") String tenantCode);
+
+    /**
+     *
+     * @param query
+     * @return
+     */
+    List<MachinePO> search(MachineQuery query);
 
     /**
      *

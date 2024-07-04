@@ -52,12 +52,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
                 if (opt.isPresent()) {
                     roleCode = opt.get().getRoleCode();
                 } else {
-                    PageDTO<AdminDTO> pageDTO = new PageDTO<>();
-                    pageDTO.setList(null);
-                    pageDTO.setPageNum(pageNum);
-                    pageDTO.setPageSize(pageSize);
-                    pageDTO.setTotal(0);
-                    return LangTuoResult.success(pageDTO);
+                    return LangTuoResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
                 }
             }
 
@@ -70,13 +65,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
                     })
                     .collect(Collectors.toList());
 
-            PageDTO<AdminDTO> pageDTO = new PageDTO<>();
-            pageDTO.setList(dtoList);
-            pageDTO.setPageNum(pageNum);
-            pageDTO.setPageSize(pageSize);
-            pageDTO.setTotal(pageInfo.getTotal());
-
-            langTuoResult = LangTuoResult.success(pageDTO);
+            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);

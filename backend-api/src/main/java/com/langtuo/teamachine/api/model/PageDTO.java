@@ -23,6 +23,13 @@ public class PageDTO<T> {
      */
     private long total;
 
+    public PageDTO(List<T> list, long total, int pageNum, int pageSize) {
+        this.list = list;
+        this.total = total;
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
+    }
+
     public int getPageSize() {
         return pageSize;
     }

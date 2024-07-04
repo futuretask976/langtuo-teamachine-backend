@@ -29,8 +29,8 @@ public class MachineDeployAccessor {
         return list;
     }
 
-    public PageInfo<MachineDeployPO> search(String tenantCode, String deployCode, String shopCode, Integer state,
-            int pageNum, int pageSize) {
+    public PageInfo<MachineDeployPO> search(String tenantCode, String deployCode, String machineCode, String shopCode,
+            Integer state, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         MachineDeployQuery machineDeployQuery = new MachineDeployQuery();

@@ -1,0 +1,85 @@
+package com.langtuo.teamachine.web.controller;
+
+import com.langtuo.teamachine.api.model.MachineDTO;
+import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.request.MachineActivatePutRequest;
+import com.langtuo.teamachine.api.request.MachineUpdatePutRequest;
+import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.service.MachineMgtService;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+@RestController
+@RequestMapping("/machine")
+public class MachineController {
+    @Resource
+    private MachineMgtService service;
+
+    /**
+     * url: http://localhost:8080/teamachine/machine/tenant_001/machine_001/get
+     * @return
+     */
+    @GetMapping(value = "/{tenantcode}/{machinecode}/get")
+    public LangTuoResult<MachineDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+            @PathVariable(name = "machinecode") String machineCode) {
+        LangTuoResult<MachineDTO> rtn = service.get(tenantCode, machineCode);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/machine/list?tenantCode=tenant_001&pageNum=1&pageSize=10
+     * @return
+     */
+    @GetMapping(value = "/list")
+    public LangTuoResult<List<MachineDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        LangTuoResult<List<MachineDTO>> rtn = service.list(tenantCode);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/machine/search?tenantCode=tenant_001&screenCode=&elecBoardCode=&modelCode=&shopName=&pageNum=1&pageSize=10
+     * @return
+     */
+    @GetMapping(value = "/search")
+    public LangTuoResult<PageDTO<MachineDTO>> search(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("screenCode") String screenCode, @RequestParam("elecBoardCode") String elecBoardCode,
+            @RequestParam("modelCode") String modelCode, @RequestParam("shopName") String shopName,
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        LangTuoResult<PageDTO<MachineDTO>> rtn = service.search(tenantCode, screenCode, elecBoardCode, modelCode,
+                shopName, pageNum, pageSize);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/machine/activate
+     * @return
+     */
+    @PutMapping(value = "/activate")
+    public LangTuoResult<Void> activate(@RequestBody MachineActivatePutRequest request) {
+        LangTuoResult<Void> rtn = service.activate(request);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/machine/deploy/put
+     * @return
+     */
+    @PutMapping(value = "/update")
+    public LangTuoResult<Void> update(@RequestBody MachineUpdatePutRequest request) {
+        LangTuoResult<Void> rtn = service.update(request);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/machine/tenant_001/123456/delete
+     * @return
+     */
+    @DeleteMapping(value = "/{tenantcode}/{machinecode}/delete")
+    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+            @PathVariable(name = "machinecode") String machineCode) {
+        LangTuoResult<Void> rtn = service.delete(tenantCode, machineCode);
+        return rtn;
+    }
+}

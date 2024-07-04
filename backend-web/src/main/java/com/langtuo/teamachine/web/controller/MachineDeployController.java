@@ -5,9 +5,11 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.MachineDeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.MachineDeployMgtService;
+import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/machine/deploy")
@@ -31,8 +33,8 @@ public class MachineDeployController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<PageDTO<MachineDeployDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<PageDTO<MachineDeployDTO>> rtn = service.list(tenantCode);
+    public LangTuoResult<List<MachineDeployDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        LangTuoResult<List<MachineDeployDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -42,11 +44,10 @@ public class MachineDeployController {
      */
     @GetMapping(value = "/search")
     public LangTuoResult<PageDTO<MachineDeployDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("deployCode") String deployCode, @RequestParam("shopName") String shopName,
-            @RequestParam(required = false, name = "state") Integer state, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
-        System.out.println("state=" + state);
-        LangTuoResult<PageDTO<MachineDeployDTO>> rtn = service.search(tenantCode, deployCode, shopName, state,
+            @RequestParam("deployCode") String deployCode, @RequestParam("machineCode") String machineCode,
+            @RequestParam("shopName") String shopName, @RequestParam(required = false, name = "state") Integer state,
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        LangTuoResult<PageDTO<MachineDeployDTO>> rtn = service.search(tenantCode, deployCode, machineCode, shopName, state,
                 pageNum, pageSize);
         return rtn;
     }
@@ -69,6 +70,12 @@ public class MachineDeployController {
     public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "deploycode") String deployCode) {
         LangTuoResult<Void> rtn = service.delete(tenantCode, deployCode);
+        return rtn;
+    }
+
+    @GetMapping(value = "/generate")
+    public LangTuoResult<String> generateDeployCode(@RequestParam(name = "tenantCode") String tenantCode) {
+        LangTuoResult<String> rtn = LangTuoResult.success(DeployUtils.genRandomStr(20));
         return rtn;
     }
 }
