@@ -40,6 +40,11 @@ public class ShopDTO {
     private String shopGroupCode;
 
     /**
+     * 店铺组名称
+     */
+    private String shopGroupName;
+
+    /**
      * 归属的组织架构
      */
     private String orgName;
@@ -58,6 +63,14 @@ public class ShopDTO {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    public String getShopGroupName() {
+        return shopGroupName;
+    }
+
+    public void setShopGroupName(String shopGroupName) {
+        this.shopGroupName = shopGroupName;
+    }
 
     public long getId() {
         return id;

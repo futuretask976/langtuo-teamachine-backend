@@ -2,7 +2,6 @@ package com.langtuo.teamachine.biz.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.api.model.AdminDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.ShopDTO;
 import com.langtuo.teamachine.api.request.ShopPutRequest;
@@ -143,10 +142,15 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         dto.setShopCode(shopPO.getShopCode());
         dto.setShopName(shopPO.getShopName());
         dto.setShopType(shopPO.getShopType());
-        dto.setShopGroupCode(shopPO.getShopGroupCode());
         dto.setComment(shopPO.getComment());
         dto.setTenantCode(shopPO.getTenantCode());
         dto.setExtraInfo(shopPO.getExtraInfo());
+
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(shopPO.getTenantCode(), shopPO.getShopGroupCode());
+        if (shopGroupPO != null) {
+            dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
+            dto.setShopGroupName(shopGroupPO.getShopGroupName());
+        }
 
         return dto;
     }
