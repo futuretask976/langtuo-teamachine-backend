@@ -58,7 +58,7 @@ public class ToppingTypePOTestor {
             System.out.printf("list->po: %s\n", po);
         }
 
-        ToppingTypePO po = mapper.selectOneByCode("tenant_001", "deploy_001");
+        ToppingTypePO po = mapper.selectOne("tenant_001", "deploy_001", null);
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();

@@ -17,11 +17,11 @@ public class ToppingTypeAccessor {
     private ToppingTypeMapper mapper;
 
     public ToppingTypePO selectOneByCode(String tenantCode, String toppingTypeCode) {
-        return mapper.selectOneByCode(tenantCode, toppingTypeCode);
+        return mapper.selectOne(tenantCode, toppingTypeCode, null);
     }
 
     public ToppingTypePO selectOneByName(String tenantCode, String toppingTypeName) {
-        return mapper.selectOneByName(tenantCode, toppingTypeName);
+        return mapper.selectOne(tenantCode, null, toppingTypeName);
     }
 
     public List<ToppingTypePO> selectList(String tenantCode) {

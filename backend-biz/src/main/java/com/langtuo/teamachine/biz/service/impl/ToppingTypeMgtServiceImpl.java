@@ -73,6 +73,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
+            e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -87,6 +88,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
+            e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -146,6 +148,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         dto.setGmtModified(po.getGmtModified());
         dto.setToppingTypeCode(po.getToppingTypeCode());
         dto.setToppingTypeName(po.getToppingTypeName());
+        dto.setState(po.getState());
         dto.setTenantCode(po.getTenantCode());
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
