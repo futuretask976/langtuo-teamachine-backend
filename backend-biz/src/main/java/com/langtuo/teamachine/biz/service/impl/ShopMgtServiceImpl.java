@@ -28,8 +28,16 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     private ShopGroupAccessor shopGroupAccessor;
 
     @Override
-    public LangTuoResult<ShopDTO> get(String tenantCode, String shopCode, String shopName) {
-        ShopPO shopPO = shopAccessor.selectOne(tenantCode, shopCode, shopName);
+    public LangTuoResult<ShopDTO> getByCode(String tenantCode, String shopCode) {
+        ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, shopCode);
+
+        ShopDTO shopDTO = convert(shopPO);
+        return LangTuoResult.success(shopDTO);
+    }
+
+    @Override
+    public LangTuoResult<ShopDTO> getByName(String tenantCode, String shopName) {
+        ShopPO shopPO = shopAccessor.selectOneByName(tenantCode, shopName);
 
         ShopDTO shopDTO = convert(shopPO);
         return LangTuoResult.success(shopDTO);
@@ -100,8 +108,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            ShopPO exist = shopAccessor.selectOne(request.getTenantCode(), request.getShopCode(),
-                    request.getShopName());
+            ShopPO exist = shopAccessor.selectOneByCode(request.getTenantCode(), request.getShopCode());
             if (exist != null) {
                 int updated = shopAccessor.update(shopPO);
             } else {

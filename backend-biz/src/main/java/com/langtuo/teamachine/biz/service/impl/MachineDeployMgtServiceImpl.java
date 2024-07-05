@@ -155,7 +155,7 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
         dto.setTenantCode(po.getTenantCode());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopPO shopPO = shopAccessor.selectOne(po.getTenantCode(), po.getShopCode(), null);
+        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
         if (shopPO != null) {
             dto.setShopCode(shopPO.getShopCode());
             dto.setShopName(shopPO.getShopName());

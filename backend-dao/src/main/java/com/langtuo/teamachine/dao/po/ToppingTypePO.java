@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class TeaToppingTypePO {
+public class ToppingTypePO {
     /**
      * 数据表id
      */

@@ -16,8 +16,12 @@ public class ShopAccessor {
     @Resource
     private ShopMapper mapper;
 
-    public ShopPO selectOne(String tenantCode, String shopCode, String shopName) {
-        return mapper.selectOne(tenantCode, shopCode, shopName);
+    public ShopPO selectOneByCode(String tenantCode, String shopCode) {
+        return mapper.selectOneByCode(tenantCode, shopCode);
+    }
+
+    public ShopPO selectOneByName(String tenantCode, String shopName) {
+        return mapper.selectOneByName(tenantCode, shopName);
     }
 
     public List<ShopPO> selectList(String tenantCode) {

@@ -1,14 +1,14 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.TeaToppingTypeMapper;
-import com.langtuo.teamachine.dao.po.TeaToppingTypePO;
+import com.langtuo.teamachine.dao.mapper.ToppingTypeMapper;
+import com.langtuo.teamachine.dao.po.ToppingTypePO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class TeaToppingTypePOTestor {
+public class ToppingTypePOTestor {
     public static void main(String args[]) {
 //        insert();
 //        select();
@@ -17,11 +17,11 @@ public class TeaToppingTypePOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingTypeMapper mapper = sqlSession.getMapper(TeaToppingTypeMapper.class);
+        ToppingTypeMapper mapper = sqlSession.getMapper(ToppingTypeMapper.class);
 
-        TeaToppingTypePO po = null;
+        ToppingTypePO po = null;
 
-        po = new TeaToppingTypePO();
+        po = new ToppingTypePO();
         po.setTenantCode("tenant_001");
         po.setToppingTypeCode("topping_type_001");
         po.setToppingTypeName("topping_name_001");
@@ -33,7 +33,7 @@ public class TeaToppingTypePOTestor {
         }});
         mapper.insert(po);
 
-        po = new TeaToppingTypePO();
+        po = new ToppingTypePO();
         po.setTenantCode("tenant_002");
         po.setToppingTypeCode("topping_type_002");
         po.setToppingTypeName("topping_name_002");
@@ -51,14 +51,14 @@ public class TeaToppingTypePOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingTypeMapper mapper = sqlSession.getMapper(TeaToppingTypeMapper.class);
+        ToppingTypeMapper mapper = sqlSession.getMapper(ToppingTypeMapper.class);
 
-        List<TeaToppingTypePO> list = mapper.selectList();
-        for (TeaToppingTypePO po : list) {
+        List<ToppingTypePO> list = mapper.selectList("tenant_001");
+        for (ToppingTypePO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        TeaToppingTypePO po = mapper.selectOne("tenant_001", "deploy_001");
+        ToppingTypePO po = mapper.selectOneByCode("tenant_001", "deploy_001");
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
@@ -67,9 +67,9 @@ public class TeaToppingTypePOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingTypeMapper mapper = sqlSession.getMapper(TeaToppingTypeMapper.class);
+        ToppingTypeMapper mapper = sqlSession.getMapper(ToppingTypeMapper.class);
 
-        TeaToppingTypePO po = new TeaToppingTypePO();
+        ToppingTypePO po = new ToppingTypePO();
         po.setTenantCode("tenant_002");
         po.setToppingTypeCode("topping_type_002");
         po.setToppingTypeName("topping_name_002666666666");

@@ -20,8 +20,14 @@ public interface ShopMapper {
      * @param tenantCode
      * @return
      */
-    ShopPO selectOne(@Param("tenantCode") String tenantCode, @Param("shopCode") String shopCode,
-            @Param("shopName") String shopName);
+    ShopPO selectOneByCode(@Param("tenantCode") String tenantCode, @Param("shopCode") String shopCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    ShopPO selectOneByName(@Param("tenantCode") String tenantCode, @Param("shopName") String shopName);
 
     /**
      *

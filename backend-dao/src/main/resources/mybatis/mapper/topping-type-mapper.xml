@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaToppingTypeMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.TeaToppingTypePO" id="teaToppingTypePOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.ToppingTypeMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.ToppingTypePO" id="toppingTypePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -17,19 +17,38 @@
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectOne" resultMap="teaToppingTypePOMap">
-        SELECT * FROM tea_topping_type
+    <select id="selectOne" resultMap="toppingTypePOMap">
+        SELECT * FROM topping_type
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and topping_type_code = #{toppingTypeCode}
+            AND tenant_code = #{tenantCode}
+            <if test="toppingTypeName != null">
+                AND topping_type_name = #{toppingTypeName}
+            </if>
+            <if test="toppingTypeCode != null">
+                AND topping_type_code = #{toppingTypeCode}
+            </if>
     </select>
 
-    <select id="selectList" resultMap="teaToppingTypePOMap">
-        SELECT * FROM tea_topping_type LIMIT 100
+    <select id="selectList" resultMap="toppingTypePOMap">
+        SELECT * FROM topping_type
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaToppingTypePO">
-        INSERT INTO `tea_topping_type` (
+    <select id="search" resultMap="toppingTypePOMap">
+        SELECT * FROM topping_type
+        WHERE 1 = 1
+        AND tenant_code = #{tenantCode}
+            <if test="toppingTypeName != null">
+                AND topping_type_name = #{toppingTypeName}
+            </if>
+            <if test="toppingTypeCode != null">
+                AND topping_type_code = #{toppingTypeCode}
+            </if>
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ToppingTypePO">
+        INSERT INTO `topping_type` (
             `gmt_created`
             , `gmt_modified`
             , `topping_type_code`
@@ -50,8 +69,8 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaToppingTypePO">
-        UPDATE tea_topping_type
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.ToppingTypePO">
+        UPDATE topping_type
         SET
             gmt_modified = now()
             <if test="toppingTypeName != null">
@@ -72,7 +91,7 @@
     </update>
 
     <delete id="delete">
-        DELETE FROM tea_topping_type
+        DELETE FROM topping_type
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and topping_type_code = #{toppingTypeCode}
