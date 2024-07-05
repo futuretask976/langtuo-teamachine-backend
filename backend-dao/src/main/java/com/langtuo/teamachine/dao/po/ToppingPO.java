@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class TeaToppingPO {
+public class ToppingPO {
     /**
      * 数据表id
      */
@@ -38,7 +38,7 @@ public class TeaToppingPO {
     private String toppingTypeCode;
 
     /**
-     * 计量单位
+     * 计量单位，0：克，1：毫升
      */
     private Integer measureUnit;
 

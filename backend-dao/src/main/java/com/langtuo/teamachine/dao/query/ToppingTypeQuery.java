@@ -3,14 +3,14 @@ package com.langtuo.teamachine.dao.query;
 import lombok.Data;
 
 @Data
-public class TeaToppingTypeQuery {
+public class ToppingTypeQuery {
     /**
-     * 物料类型
+     * 物料类型编码
      */
     private String toppingTypeCode;
 
     /**
-     * 物料名称
+     * 物料类型名称
      */
     private String toppingTypeName;
 

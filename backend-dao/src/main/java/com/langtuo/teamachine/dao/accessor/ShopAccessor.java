@@ -17,11 +17,11 @@ public class ShopAccessor {
     private ShopMapper mapper;
 
     public ShopPO selectOneByCode(String tenantCode, String shopCode) {
-        return mapper.selectOneByCode(tenantCode, shopCode);
+        return mapper.selectOne(tenantCode, shopCode, null);
     }
 
     public ShopPO selectOneByName(String tenantCode, String shopName) {
-        return mapper.selectOneByName(tenantCode, shopName);
+        return mapper.selectOne(tenantCode, null, shopName);
     }
 
     public List<ShopPO> selectList(String tenantCode) {

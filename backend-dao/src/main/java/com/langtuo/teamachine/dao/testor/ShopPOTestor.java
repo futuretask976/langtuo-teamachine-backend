@@ -62,7 +62,7 @@ public class ShopPOTestor {
             System.out.printf("list->po: %s\n", po);
         }
 
-        ShopPO po = mapper.selectOneByCode("tenant_001", "shop_001");
+        ShopPO po = mapper.selectOne("tenant_001", "shop_001", null);
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();

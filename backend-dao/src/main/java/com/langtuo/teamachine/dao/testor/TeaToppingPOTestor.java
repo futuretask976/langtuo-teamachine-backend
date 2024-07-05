@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.TeaToppingMapper;
-import com.langtuo.teamachine.dao.po.TeaToppingPO;
+import com.langtuo.teamachine.dao.mapper.ToppingMapper;
+import com.langtuo.teamachine.dao.po.ToppingPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -17,11 +17,11 @@ public class TeaToppingPOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingMapper mapper = sqlSession.getMapper(TeaToppingMapper.class);
+        ToppingMapper mapper = sqlSession.getMapper(ToppingMapper.class);
 
-        TeaToppingPO po = null;
+        ToppingPO po = null;
 
-        po = new TeaToppingPO();
+        po = new ToppingPO();
         po.setTenantCode("tenant_001");
         po.setToppingCode("topping_001");
         po.setToppingName("topping_name_001");
@@ -39,7 +39,7 @@ public class TeaToppingPOTestor {
         }});
         mapper.insert(po);
 
-        po = new TeaToppingPO();
+        po = new ToppingPO();
         po.setTenantCode("tenant_002");
         po.setToppingCode("topping_002");
         po.setToppingName("topping_name_002");
@@ -63,14 +63,14 @@ public class TeaToppingPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingMapper mapper = sqlSession.getMapper(TeaToppingMapper.class);
+        ToppingMapper mapper = sqlSession.getMapper(ToppingMapper.class);
 
-        List<TeaToppingPO> list = mapper.selectList();
-        for (TeaToppingPO po : list) {
+        List<ToppingPO> list = mapper.selectList("tenant_001");
+        for (ToppingPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        TeaToppingPO po = mapper.selectOne("tenant_001", "deploy_001");
+        ToppingPO po = mapper.selectOne("tenant_001", "deploy_001", null);
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
@@ -79,9 +79,9 @@ public class TeaToppingPOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingMapper mapper = sqlSession.getMapper(TeaToppingMapper.class);
+        ToppingMapper mapper = sqlSession.getMapper(ToppingMapper.class);
 
-        TeaToppingPO po = new TeaToppingPO();
+        ToppingPO po = new ToppingPO();
         po.setTenantCode("tenant_002");
         po.setToppingCode("topping_002");
         po.setMeasureUnit(99);

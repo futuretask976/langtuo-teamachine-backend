@@ -38,7 +38,7 @@
     <select id="search" resultMap="toppingTypePOMap">
         SELECT * FROM topping_type
         WHERE 1 = 1
-        AND tenant_code = #{tenantCode}
+            AND tenant_code = #{tenantCode}
             <if test="toppingTypeName != null">
                 AND topping_type_name = #{toppingTypeName}
             </if>

@@ -2,7 +2,8 @@ package com.langtuo.teamachine.dao.mapper;
 
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
-import com.langtuo.teamachine.dao.po.TeaToppingPO;
+import com.langtuo.teamachine.dao.po.ToppingPO;
+import com.langtuo.teamachine.dao.query.ToppingQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,35 +13,42 @@ import java.util.List;
 @Mapper
 @MySQLScan
 @Repository
-public interface TeaToppingMapper {
+public interface ToppingMapper {
     /**
      *
      * @param tenantCode
      * @param toppingCode
      * @return
      */
-    TeaToppingPO selectOne(@Param("tenantCode") String tenantCode, @Param("toppingCode") String toppingCode);
+    ToppingPO selectOne(@Param("tenantCode") String tenantCode, @Param("toppingCode") String toppingCode,
+            @Param("toppingName") String toppingName);
 
     /**
      *
      * @return
      */
-    List<TeaToppingPO> selectList();
+    List<ToppingPO> selectList(@Param("tenantCode") String tenantCode);
 
     /**
      *
-     * @param teaToppingPO
+     * @return
+     */
+    List<ToppingPO> search(ToppingQuery query);
+
+    /**
+     *
+     * @param toppingPO
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(TeaToppingPO teaToppingPO);
+    int insert(ToppingPO toppingPO);
 
     /**
      *
-     * @param teaToppingPO
+     * @param toppingPO
      * @return
      */
-    int update(TeaToppingPO teaToppingPO);
+    int update(ToppingPO toppingPO);
 
     /**
      *

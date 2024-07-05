@@ -4,38 +4,57 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaToppingMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.TeaToppingPO" id="teaToppingPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.ToppingMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.ToppingPO" id="toppingPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="toppingCode" column="topping_code"/>
         <result property="toppingName" column="topping_name"/>
         <result property="toppingTypeCode" column="topping_type_code"/>
-        <result property="weightUnit" column="weight_unit"/>
+        <result property="measureUnit" column="measure_unit"/>
         <result property="state" column="state"/>
         <result property="validHourPeriod" column="valid_hour_period"/>
-        <result property="validHourPeriod" column="clean_hour_period"/>
-        <result property="validHourPeriod" column="convert_coefficient"/>
+        <result property="cleanHourPeriod" column="clean_hour_period"/>
+        <result property="convertCoefficient" column="convert_coefficient"/>
         <result property="flowSpeed" column="flow_speed"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectOne" resultMap="teaToppingPOMap">
-        SELECT * FROM tea_topping
+    <select id="selectOne" resultMap="toppingPOMap">
+        SELECT * FROM topping
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            and topping_code = #{toppingCode}
+            <if test="toppingName != null">
+                AND topping_name = #{toppingName}
+            </if>
+            <if test="toppingCode != null">
+                AND topping_code = #{toppingCode}
+            </if>
     </select>
 
-    <select id="selectList" resultMap="teaToppingPOMap">
-        SELECT * FROM tea_topping LIMIT 100
+    <select id="selectList" resultMap="toppingPOMap">
+        SELECT * FROM topping
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaToppingPO">
-        INSERT INTO `tea_topping` (
+    <select id="search" resultMap="toppingPOMap">
+        SELECT * FROM topping
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="toppingName != null">
+                AND topping_name = #{toppingName}
+            </if>
+            <if test="toppingCode != null">
+                AND topping_code = #{toppingCode}
+            </if>
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ToppingPO">
+        INSERT INTO `topping` (
             `gmt_created`
             , `gmt_modified`
             , `topping_code`
@@ -68,8 +87,8 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaToppingPO">
-        UPDATE tea_topping
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.ToppingPO">
+        UPDATE topping
         SET
             gmt_modified = now()
             <if test="toppingName != null">
@@ -94,7 +113,7 @@
                 , convert_coefficient = #{convertCoefficient}
             </if>
             <if test="flowSpeed != null">
-                , flowSpeed = #{flowSpeed}
+                , flow_speed = #{flowSpeed}
             </if>
             <if test="comment != null">
                 , comment = #{comment}
@@ -108,7 +127,7 @@
     </update>
 
     <delete id="delete">
-        DELETE FROM tea_topping
+        DELETE FROM topping
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and topping_code = #{toppingCode}

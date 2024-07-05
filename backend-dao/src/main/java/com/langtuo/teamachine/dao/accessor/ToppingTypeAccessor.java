@@ -4,7 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.mapper.ToppingTypeMapper;
 import com.langtuo.teamachine.dao.po.ToppingTypePO;
-import com.langtuo.teamachine.dao.query.TeaToppingTypeQuery;
+import com.langtuo.teamachine.dao.query.ToppingTypeQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,7 @@ public class ToppingTypeAccessor {
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
-        TeaToppingTypeQuery query = new TeaToppingTypeQuery();
+        ToppingTypeQuery query = new ToppingTypeQuery();
         query.setTenantCode(tenantCode);
         query.setToppingTypeName(StringUtils.isBlank(toppingTypeName) ? null : toppingTypeName);
         query.setToppingTypeCode(StringUtils.isBlank(toppingTypeCode) ? null : toppingTypeCode);

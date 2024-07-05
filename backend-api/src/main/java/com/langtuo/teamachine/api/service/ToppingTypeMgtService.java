@@ -48,8 +48,8 @@ public interface ToppingTypeMgtService {
     /**
      *
      * @param tenantCode
-     * @param shopGroupCode
+     * @param toppingTypeCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String shopGroupCode);
+    LangTuoResult<Void> delete(String tenantCode, String toppingTypeCode);
 }
