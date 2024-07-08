@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.TeaSpecSubMapper;
-import com.langtuo.teamachine.dao.po.TeaSpecSubPO;
+import com.langtuo.teamachine.dao.mapper.SpecSubMapper;
+import com.langtuo.teamachine.dao.po.SpecSubPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -17,32 +17,24 @@ public class TeaSpecSubPOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaSpecSubMapper mapper = sqlSession.getMapper(TeaSpecSubMapper.class);
+        SpecSubMapper mapper = sqlSession.getMapper(SpecSubMapper.class);
 
-        TeaSpecSubPO po = null;
+        SpecSubPO po = null;
 
-        po = new TeaSpecSubPO();
+        po = new SpecSubPO();
         po.setTenantCode("tenant_001");
         po.setSpecCode("spec_001");
         po.setSpecSubCode("spec_sub_code_001");
         po.setSpecSubName("spec_sub_name_001");
         po.setOuterSpecSubCode("outer_spec_sub_code_001");
-        po.setExtraInfo(new HashMap<String, String>(){{
-            put("k1", "v1");
-            put("k2", "v2");
-        }});
         mapper.insert(po);
 
-        po = new TeaSpecSubPO();
+        po = new SpecSubPO();
         po.setTenantCode("tenant_002");
         po.setSpecCode("spec_002");
         po.setSpecSubCode("spec_sub_code_002");
         po.setSpecSubName("spec_sub_name_002");
         po.setOuterSpecSubCode("outer_spec_sub_code_002");
-        po.setExtraInfo(new HashMap<String, String>(){{
-            put("k11", "v1");
-            put("k22", "v2");
-        }});
         mapper.insert(po);
 
         sqlSession.commit();
@@ -51,14 +43,14 @@ public class TeaSpecSubPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaSpecSubMapper mapper = sqlSession.getMapper(TeaSpecSubMapper.class);
+        SpecSubMapper mapper = sqlSession.getMapper(SpecSubMapper.class);
 
-        List<TeaSpecSubPO> list = mapper.selectList();
-        for (TeaSpecSubPO po : list) {
+        List<SpecSubPO> list = mapper.selectList("tenant_001", "spec_001");
+        for (SpecSubPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        TeaSpecSubPO po = mapper.selectOne("tenant_001", "spec_sub_code_001");
+        SpecSubPO po = mapper.selectOne("tenant_001", "spec_sub_code_001", null);
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
@@ -67,9 +59,9 @@ public class TeaSpecSubPOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaSpecSubMapper mapper = sqlSession.getMapper(TeaSpecSubMapper.class);
+        SpecSubMapper mapper = sqlSession.getMapper(SpecSubMapper.class);
 
-        TeaSpecSubPO po = new TeaSpecSubPO();
+        SpecSubPO po = new SpecSubPO();
         po.setTenantCode("tenant_002");
         po.setSpecSubCode("spec_sub_code_002");
         po.setOuterSpecSubCode("outer_spec_sub_code_00277777");

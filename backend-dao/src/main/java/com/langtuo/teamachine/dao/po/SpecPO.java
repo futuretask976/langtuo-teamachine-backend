@@ -3,10 +3,11 @@ package com.langtuo.teamachine.dao.po;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Data
-public class TeaSpecPO {
+public class SpecPO {
     /**
      * 数据表id
      */
@@ -41,6 +42,11 @@ public class TeaSpecPO {
      * 租户编码
      */
     private String tenantCode;
+
+    /**
+     * 备注
+     */
+    private String comment;
 
     /**
      * 额外信息，格式：a:b;c:d

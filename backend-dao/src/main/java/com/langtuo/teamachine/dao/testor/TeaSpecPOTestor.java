@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.TeaSpecMapper;
-import com.langtuo.teamachine.dao.po.TeaSpecPO;
+import com.langtuo.teamachine.dao.mapper.SpecMapper;
+import com.langtuo.teamachine.dao.po.SpecPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -17,11 +17,11 @@ public class TeaSpecPOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaSpecMapper mapper = sqlSession.getMapper(TeaSpecMapper.class);
+        SpecMapper mapper = sqlSession.getMapper(SpecMapper.class);
 
-        TeaSpecPO po = null;
+        SpecPO po = null;
 
-        po = new TeaSpecPO();
+        po = new SpecPO();
         po.setTenantCode("tenant_001");
         po.setSpecCode("spec_001");
         po.setSpecName("spec_name_001");
@@ -32,7 +32,7 @@ public class TeaSpecPOTestor {
         }});
         mapper.insert(po);
 
-        po = new TeaSpecPO();
+        po = new SpecPO();
         po.setTenantCode("tenant_002");
         po.setSpecCode("spec_002");
         po.setSpecName("spec_name_002");
@@ -49,14 +49,14 @@ public class TeaSpecPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaSpecMapper mapper = sqlSession.getMapper(TeaSpecMapper.class);
+        SpecMapper mapper = sqlSession.getMapper(SpecMapper.class);
 
-        List<TeaSpecPO> list = mapper.selectList();
-        for (TeaSpecPO po : list) {
+        List<SpecPO> list = mapper.selectList("tenant_001");
+        for (SpecPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        TeaSpecPO po = mapper.selectOne("tenant_001", "deploy_001");
+        SpecPO po = mapper.selectOne("tenant_001", "deploy_001", null);
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
@@ -65,9 +65,9 @@ public class TeaSpecPOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaSpecMapper mapper = sqlSession.getMapper(TeaSpecMapper.class);
+        SpecMapper mapper = sqlSession.getMapper(SpecMapper.class);
 
-        TeaSpecPO po = new TeaSpecPO();
+        SpecPO po = new SpecPO();
         po.setTenantCode("tenant_002");
         po.setSpecCode("spec_002");
         po.setExtraInfo(new HashMap<String, String>(){{

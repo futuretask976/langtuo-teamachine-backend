@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.SpecSubMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.SpecSubPO" id="specSubPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="specCode" column="spec_code"/>
+        <result property="specSubCode" column="spec_sub_code"/>
+        <result property="specSubName" column="spec_sub_name"/>
+        <result property="outerSpecSubCode" column="outer_spec_sub_code"/>
+        <result property="tenantCode" column="tenant_code"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="specSubPOMap">
+        SELECT * FROM spec_sub
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="specSubCode != null">
+                AND spec_sub_code = #{specSubCode}
+            </if>
+            <if test="specSubName != null">
+                AND spec_sub_name = #{specSubName}
+            </if>
+    </select>
+
+    <select id="selectList" resultMap="specSubPOMap">
+        SELECT * FROM spec_sub
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="specCode != null">
+                AND spec_code = #{specCode}
+            </if>
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SpecSubPO">
+        INSERT INTO spec_sub (
+            gmt_created
+            , gmt_modified
+            , spec_code
+            , spec_sub_code
+            , spec_sub_name
+            , outer_spec_sub_code
+            , tenant_code
+        ) VALUES (
+            now()
+            , now()
+            , #{specCode}
+            , #{specSubCode}
+            , #{specSubName}
+            , #{outerSpecSubCode}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.SpecSubPO">
+        UPDATE spec_sub
+        SET
+            gmt_modified = now()
+        <if test="specCode != null">
+            , spec_code = #{specCode}
+        </if>
+        <if test="specSubName != null">
+            , spec_sub_name = #{specSubName}
+        </if>
+        <if test="outerSpecSubCode != null">
+            , outer_spec_sub_code = #{outerSpecSubCode}
+        </if>
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND spec_sub_code = #{specSubCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM spec_sub
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="specCode != null">
+                AND spec_code = #{specCode}
+            </if>
+            <if test="specSubCode != null">
+                AND spec_sub_code = #{specSubCode}
+            </if>
+    </delete>
+</mapper>

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class TeaSpecSubPO {
+public class SpecSubPO {
     /**
      * 数据表id
      */
@@ -46,9 +46,4 @@ public class TeaSpecSubPO {
      * 租户编码
      */
     private String tenantCode;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
 }

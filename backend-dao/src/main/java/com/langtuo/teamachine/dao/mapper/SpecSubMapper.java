@@ -2,8 +2,7 @@ package com.langtuo.teamachine.dao.mapper;
 
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
-import com.langtuo.teamachine.dao.po.TeaSpecPO;
-import com.langtuo.teamachine.dao.po.TeaSpecSubPO;
+import com.langtuo.teamachine.dao.po.SpecSubPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,35 +12,36 @@ import java.util.List;
 @Mapper
 @MySQLScan
 @Repository
-public interface TeaSpecSubMapper {
+public interface SpecSubMapper {
     /**
      *
      * @param tenantCode
      * @param specSubCode
      * @return
      */
-    TeaSpecSubPO selectOne(@Param("tenantCode") String tenantCode, @Param("specSubCode") String specSubCode);
+    SpecSubPO selectOne(@Param("tenantCode") String tenantCode, @Param("specSubCode") String specSubCode,
+            @Param("specSubName") String specSubName);
 
     /**
      *
      * @return
      */
-    List<TeaSpecSubPO> selectList();
+    List<SpecSubPO> selectList(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode);
 
     /**
      *
-     * @param teaSpecSubPO
+     * @param specSubPO
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(TeaSpecSubPO teaSpecSubPO);
+    int insert(SpecSubPO specSubPO);
 
     /**
      *
-     * @param teaSpecSubPO
+     * @param specSubPO
      * @return
      */
-    int update(TeaSpecSubPO teaSpecSubPO);
+    int update(SpecSubPO specSubPO);
 
     /**
      *
@@ -49,5 +49,6 @@ public interface TeaSpecSubMapper {
      * @param specSubCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("specSubCode") String specSubCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode,
+            @Param("specSubCode") String specSubCode);
 }
