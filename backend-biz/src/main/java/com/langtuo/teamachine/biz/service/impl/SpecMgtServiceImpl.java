@@ -199,6 +199,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         po.setSpecName(request.getSpecName());
         po.setState(request.getState());
         po.setComment(request.getComment());
+        po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
         return po;
     }
@@ -208,18 +209,17 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             return null;
         }
 
-        List<SpecSubPO> specSubPOList = Lists.newArrayList();
-        specPutRequest.getSpecSubList().stream().map(item -> {
-            SpecSubPO po = new SpecSubPO();
-            po.setSpecCode(specPutRequest.getSpecCode());
-            po.setTenantCode(specPutRequest.getTenantCode());
-            po.setSpecCode(specPutRequest.getSpecCode());
-            po.setSpecSubCode(item.getSpecSubCode());
-            po.setSpecSubName(item.getSpecSubName());
-            return po;
-        }).forEach(item -> {
-            specSubPOList.add(item);
-        });
+        List<SpecSubPO> specSubPOList = specPutRequest.getSpecSubList().stream()
+                .map(item -> {
+                    SpecSubPO po = new SpecSubPO();
+                    po.setSpecCode(specPutRequest.getSpecCode());
+                    po.setTenantCode(specPutRequest.getTenantCode());
+                    po.setSpecCode(specPutRequest.getSpecCode());
+                    po.setSpecSubCode(item.getSpecSubCode());
+                    po.setSpecSubName(item.getSpecSubName());
+                    po.setOuterSpecSubCode(item.getOuterSpecSubCode());
+                    return po;
+                }).collect(Collectors.toList());
         return specSubPOList;
     }
 }

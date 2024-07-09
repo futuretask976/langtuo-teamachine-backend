@@ -36,6 +36,11 @@ public class SpecPutRequest {
      */
     private Map<String, String> extraInfo;
 
+    /**
+     *
+     */
+    private List<SpecSubPutRequest> specSubList;
+
     public String getComment() {
         return comment;
     }
@@ -43,11 +48,6 @@ public class SpecPutRequest {
     public void setComment(String comment) {
         this.comment = comment;
     }
-
-    /**
-     *
-     */
-    private List<SpecSubPutRequest> specSubList;
 
     public String getSpecCode() {
         return specCode;

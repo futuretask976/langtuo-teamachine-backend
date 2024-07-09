@@ -80,7 +80,7 @@
                 , state = #{state}
             </if>
             <if test="comment != null">
-                , state = #{comment}
+                , comment = #{comment}
             </if>
             <if test="extraInfo != null">
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
