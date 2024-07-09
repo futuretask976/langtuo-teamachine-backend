@@ -64,8 +64,8 @@ public class OrgStrucController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody OrgStrucPutRequest orgStrucPutRequest) {
-        LangTuoResult<Void> rtn = service.put(orgStrucPutRequest);
+    public LangTuoResult<Void> put(@RequestBody OrgStrucPutRequest request) {
+        LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }
 

@@ -60,8 +60,8 @@ public class SpecController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody SpecPutRequest specPutRequest) {
-        LangTuoResult<Void> rtn = service.put(specPutRequest);
+    public LangTuoResult<Void> put(@RequestBody SpecPutRequest request) {
+        LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }
 

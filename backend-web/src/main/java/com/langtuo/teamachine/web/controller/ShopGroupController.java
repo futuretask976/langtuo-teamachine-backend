@@ -55,8 +55,8 @@ public class ShopGroupController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody ShopGroupPutRequest shopGroupPutRequest) {
-        LangTuoResult<Void> rtn = service.put(shopGroupPutRequest);
+    public LangTuoResult<Void> put(@RequestBody ShopGroupPutRequest request) {
+        LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }
 

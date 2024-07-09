@@ -43,8 +43,8 @@ public class AdminController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody AdminPutRequest adminPutRequest) {
-        LangTuoResult<Void> rtn = service.put(adminPutRequest);
+    public LangTuoResult<Void> put(@RequestBody AdminPutRequest request) {
+        LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }
 

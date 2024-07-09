@@ -51,8 +51,8 @@ public class MachineModelController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody MachineModelPutRequest machineModelPutRequest) {
-        LangTuoResult<Void> rtn = service.put(machineModelPutRequest);
+    public LangTuoResult<Void> put(@RequestBody MachineModelPutRequest request) {
+        LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }
 

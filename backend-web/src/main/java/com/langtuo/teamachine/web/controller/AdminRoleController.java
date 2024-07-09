@@ -54,8 +54,8 @@ public class AdminRoleController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody AdminRolePutRequest adminRolePutRequest) {
-        LangTuoResult<Void> rtn = service.put(adminRolePutRequest);
+    public LangTuoResult<Void> put(@RequestBody AdminRolePutRequest request) {
+        LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }
 

@@ -60,8 +60,8 @@ public class ToppingTypeController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody ToppingTypePutRequest toppingTypePutRequest) {
-        LangTuoResult<Void> rtn = service.put(toppingTypePutRequest);
+    public LangTuoResult<Void> put(@RequestBody ToppingTypePutRequest request) {
+        LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }
 

@@ -53,8 +53,8 @@ public class TenantController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody TenantPutRequest tenantPutRequest) {
-        LangTuoResult<Void> rtn = service.put(tenantPutRequest);
+    public LangTuoResult<Void> put(@RequestBody TenantPutRequest request) {
+        LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }
 

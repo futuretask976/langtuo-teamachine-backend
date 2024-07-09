@@ -54,8 +54,8 @@ public class ShopController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody ShopPutRequest shopPutRequest) {
-        LangTuoResult<Void> rtn = service.put(shopPutRequest);
+    public LangTuoResult<Void> put(@RequestBody ShopPutRequest request) {
+        LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }
 

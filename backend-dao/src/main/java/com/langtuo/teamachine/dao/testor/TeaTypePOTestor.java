@@ -53,12 +53,12 @@ public class TeaTypePOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         TeaTypeMapper mapper = sqlSession.getMapper(TeaTypeMapper.class);
 
-        List<TeaTypePO> list = mapper.selectList();
+        List<TeaTypePO> list = mapper.selectList("tenant_001");
         for (TeaTypePO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        TeaTypePO po = mapper.selectOne("tenant_001", "tea_type_001");
+        TeaTypePO po = mapper.selectOne("tenant_001", "tea_type_001", null);
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
