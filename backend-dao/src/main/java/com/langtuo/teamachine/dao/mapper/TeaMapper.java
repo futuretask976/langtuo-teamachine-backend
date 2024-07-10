@@ -4,6 +4,7 @@ import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.TeaPO;
 import com.langtuo.teamachine.dao.po.TeaTypePO;
+import com.langtuo.teamachine.dao.query.TeaQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -20,13 +21,20 @@ public interface TeaMapper {
      * @param teaCode
      * @return
      */
-    TeaPO selectOne(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
+    TeaPO selectOne(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
+            @Param("teaName") String teaName);
 
     /**
      *
      * @return
      */
-    List<TeaPO> selectList();
+    List<TeaPO> selectList(@Param("tenantCode") String tenantCode);
+
+    /**
+     *
+     * @return
+     */
+    List<TeaPO> search(TeaQuery query);
 
     /**
      *

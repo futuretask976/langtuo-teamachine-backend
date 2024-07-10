@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class TeaToppingNormalPO {
+public class TeaToppingRelPO {
     /**
      * 数据表id
      */

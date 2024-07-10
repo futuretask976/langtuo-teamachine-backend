@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.TeaToppingRelMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.TeaToppingRelPO" id="teaToppingRelPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="teaCode" column="tea_code"/>
+        <result property="toppingCode" column="topping_code"/>
+        <result property="amount" column="amount"/>
+        <result property="tenantCode" column="tenant_code"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="teaToppingRelPOMap">
+        SELECT * FROM tea_topping_rel
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND tea_code = #{teaCode}
+            AND topping_code = #{toppingCode}
+    </select>
+
+    <select id="selectList" resultMap="teaToppingRelPOMap">
+        SELECT * FROM tea_topping_rel
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="teaCode != null">
+                AND tea_code = #{teaCode}
+            </if>
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaToppingRelPO">
+        INSERT INTO tea_topping_rel (
+            gmt_created
+            , gmt_modified
+            , tea_code
+            , topping_code
+            , amount
+            , tenant_code
+        ) VALUES (
+            now()
+            , now()
+            , #{teaCode}
+            , #{toppingCode}
+            , #{amount}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaToppingRelPO">
+        UPDATE tea_topping_rel
+        SET
+            gmt_modified = now()
+            <if test="amount">
+                , amount = #{amount}
+            </if>
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND tea_code = #{teaCode}
+            AND topping_code = #{toppingCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tea_topping_rel
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="teaCode != null">
+                AND tea_code = #{teaCode}
+            </if>
+            <if test="toppingCode != null">
+                AND topping_code = #{toppingCode}
+            </if>
+    </delete>
+</mapper>

@@ -3,7 +3,6 @@ package com.langtuo.teamachine.dao.mapper;
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.TeaToppingAdjustPO;
-import com.langtuo.teamachine.dao.po.TeaToppingNormalPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

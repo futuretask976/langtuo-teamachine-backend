@@ -22,12 +22,31 @@
     <select id="selectOne" resultMap="teaPOMap">
         SELECT * FROM tea
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and tea_code = #{teaCode}
+            AND tenant_code = #{tenantCode}
+            <if test="teaCode != null">
+                AND tea_code = #{teaCode}
+            </if>
+            <if test="teaName != null">
+                AND tea_name = #{teaName}
+            </if>
     </select>
 
     <select id="selectList" resultMap="teaPOMap">
-        SELECT * FROM tea LIMIT 100
+        SELECT * FROM tea
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="teaPOMap">
+        SELECT * FROM tea
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="teaCode != null">
+                AND tea_code = #{teaCode}
+            </if>
+            <if test="teaName != null">
+                AND tea_name = #{teaName}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.TeaPO">
@@ -82,14 +101,14 @@
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
             </if>
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and tea_code = #{teaCode}
+            AND tenant_code = #{tenantCode}
+            AND tea_code = #{teaCode}
     </update>
 
     <delete id="delete">
         DELETE FROM tea
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and tea_code = #{teaCode}
+            AND tenant_code = #{tenantCode}
+            AND tea_code = #{teaCode}
     </delete>
 </mapper>

@@ -53,7 +53,7 @@
         <mapper resource="mybatis/mapper/spec-sub-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-type-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-mapper.xml"/>
-        <mapper resource="mybatis/mapper/tea-topping-normal-mapper.xml"/>
+        <mapper resource="mybatis/mapper/tea-topping-rel-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-spec-rel-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-topping-adjust-mapper.xml"/>
         <mapper resource="mybatis/mapper/series-mapper.xml"/>
