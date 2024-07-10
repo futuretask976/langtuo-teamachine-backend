@@ -28,7 +28,7 @@ public class TeaController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/tea/type/list?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/drinkset/tea/list?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */

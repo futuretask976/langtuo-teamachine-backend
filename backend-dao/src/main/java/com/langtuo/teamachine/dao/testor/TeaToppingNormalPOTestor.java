@@ -42,7 +42,7 @@ public class TeaToppingNormalPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         TeaToppingRelMapper mapper = sqlSession.getMapper(TeaToppingRelMapper.class);
 
-        List<TeaToppingRelPO> list = mapper.selectList();
+        List<TeaToppingRelPO> list = mapper.selectList("tenant_002", "tea_002");
         for (TeaToppingRelPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
