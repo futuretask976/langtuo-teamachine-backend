@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper;
 
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
-import com.langtuo.teamachine.dao.po.SpecSubPO;
+import com.langtuo.teamachine.dao.po.SpecItemPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,43 +12,43 @@ import java.util.List;
 @Mapper
 @MySQLScan
 @Repository
-public interface SpecSubMapper {
+public interface SpecItemMapper {
     /**
      *
      * @param tenantCode
-     * @param specSubCode
+     * @param specItemCode
      * @return
      */
-    SpecSubPO selectOne(@Param("tenantCode") String tenantCode, @Param("specSubCode") String specSubCode,
-            @Param("specSubName") String specSubName);
+    SpecItemPO selectOne(@Param("tenantCode") String tenantCode, @Param("specItemCode") String specItemCode,
+            @Param("specItemName") String specItemName);
 
     /**
      *
      * @return
      */
-    List<SpecSubPO> selectList(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode);
+    List<SpecItemPO> selectList(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode);
 
     /**
      *
-     * @param specSubPO
+     * @param specItemPO
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(SpecSubPO specSubPO);
+    int insert(SpecItemPO specItemPO);
 
     /**
      *
-     * @param specSubPO
+     * @param specItemPO
      * @return
      */
-    int update(SpecSubPO specSubPO);
+    int update(SpecItemPO specItemPO);
 
     /**
      *
      * @param tenantCode
-     * @param specSubCode
+     * @param specItemCode
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode,
-            @Param("specSubCode") String specSubCode);
+            @Param("specItemCode") String specItemCode);
 }

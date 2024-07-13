@@ -11,6 +11,7 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="teaCode" column="tea_code"/>
         <result property="toppingCode" column="topping_code"/>
+        <result property="stepIdx" column="step_idx"/>
         <result property="amount" column="amount"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
@@ -38,6 +39,7 @@
             , gmt_modified
             , tea_code
             , topping_code
+            , step_idx
             , amount
             , tenant_code
         ) VALUES (
@@ -45,23 +47,11 @@
             , now()
             , #{teaCode}
             , #{toppingCode}
+            , #{stepIdx}
             , #{amount}
             , #{tenantCode}
         )
     </insert>
-
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.TeaToppingRelPO">
-        UPDATE tea_topping_rel
-        SET
-            gmt_modified = now()
-            <if test="amount">
-                , amount = #{amount}
-            </if>
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
-            AND tea_code = #{teaCode}
-            AND topping_code = #{toppingCode}
-    </update>
 
     <delete id="delete">
         DELETE FROM tea_topping_rel

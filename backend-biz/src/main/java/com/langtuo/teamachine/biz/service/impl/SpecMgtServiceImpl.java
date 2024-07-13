@@ -4,16 +4,15 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.SpecDTO;
-import com.langtuo.teamachine.api.model.SpecSubDTO;
+import com.langtuo.teamachine.api.model.SpecItemDTO;
 import com.langtuo.teamachine.api.request.SpecPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.SpecMgtService;
 import com.langtuo.teamachine.dao.accessor.SpecAccessor;
-import com.langtuo.teamachine.dao.accessor.SpecSubAccessor;
+import com.langtuo.teamachine.dao.accessor.SpecItemAccessor;
 import com.langtuo.teamachine.dao.po.SpecPO;
-import com.langtuo.teamachine.dao.po.SpecSubPO;
+import com.langtuo.teamachine.dao.po.SpecItemPO;
 import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -27,7 +26,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     private SpecAccessor specAccessor;
 
     @Resource
-    private SpecSubAccessor specSubAccessor;
+    private SpecItemAccessor specItemAccessor;
 
     @Override
     public LangTuoResult<List<SpecDTO>> list(String tenantCode) {
@@ -106,7 +105,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         }
 
         SpecPO specPO = convertToSpecPO(specPutRequest);
-        List<SpecSubPO> SpecSubPOList = convertToSpecSubPO(specPutRequest);
+        List<SpecItemPO> specItemPOList = convertToSpecSubPO(specPutRequest);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
@@ -117,10 +116,10 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                 int inserted = specAccessor.insert(specPO);
             }
 
-            int deleted4SpecSub = specSubAccessor.deleteBySpecCode(specPO.getTenantCode(), specPO.getSpecCode());
-            if (!CollectionUtils.isEmpty(SpecSubPOList)) {
-                SpecSubPOList.stream().forEach(item -> {
-                    specSubAccessor.insert(item);
+            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(specPO.getTenantCode(), specPO.getSpecCode());
+            if (!CollectionUtils.isEmpty(specItemPOList)) {
+                specItemPOList.stream().forEach(item -> {
+                    specItemAccessor.insert(item);
                 });
             }
 
@@ -140,7 +139,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             int deleted4Spec = specAccessor.delete(tenantCode, specCode);
-            int deleted4SpecSub = specSubAccessor.deleteBySpecCode(tenantCode, specCode);
+            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -165,26 +164,26 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        List<SpecSubPO> poList = specSubAccessor.selectList(po.getTenantCode(), po.getSpecCode());
+        List<SpecItemPO> poList = specItemAccessor.selectList(po.getTenantCode(), po.getSpecCode());
         if (!CollectionUtils.isEmpty(poList)) {
             dto.setSpecSubList(poList.stream().map(item -> convertToSpecPO(item)).collect(Collectors.toList()));
         }
         return dto;
     }
 
-    private SpecSubDTO convertToSpecPO(SpecSubPO po) {
+    private SpecItemDTO convertToSpecPO(SpecItemPO po) {
         if (po == null) {
             return null;
         }
 
-        SpecSubDTO dto = new SpecSubDTO();
+        SpecItemDTO dto = new SpecItemDTO();
         dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setSpecCode(po.getSpecCode());
-        dto.setSpecSubCode(po.getSpecSubCode());
-        dto.setSpecSubName(po.getSpecSubName());
-        dto.setOuterSpecSubCode(po.getOuterSpecSubCode());
+        dto.setSpecItemCode(po.getSpecItemCode());
+        dto.setSpecItemName(po.getSpecItemName());
+        dto.setOuterSpecItemCode(po.getOuterSpecItemCode());
         dto.setTenantCode(po.getTenantCode());
         return dto;
     }
@@ -204,22 +203,22 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         return po;
     }
 
-    private List<SpecSubPO> convertToSpecSubPO(SpecPutRequest specPutRequest) {
-        if (specPutRequest == null || CollectionUtils.isEmpty(specPutRequest.getSpecSubList())) {
+    private List<SpecItemPO> convertToSpecSubPO(SpecPutRequest specPutRequest) {
+        if (specPutRequest == null || CollectionUtils.isEmpty(specPutRequest.getSpecItemList())) {
             return null;
         }
 
-        List<SpecSubPO> specSubPOList = specPutRequest.getSpecSubList().stream()
+        List<SpecItemPO> specItemPOList = specPutRequest.getSpecItemList().stream()
                 .map(item -> {
-                    SpecSubPO po = new SpecSubPO();
+                    SpecItemPO po = new SpecItemPO();
                     po.setSpecCode(specPutRequest.getSpecCode());
                     po.setTenantCode(specPutRequest.getTenantCode());
                     po.setSpecCode(specPutRequest.getSpecCode());
-                    po.setSpecSubCode(item.getSpecSubCode());
-                    po.setSpecSubName(item.getSpecSubName());
-                    po.setOuterSpecSubCode(item.getOuterSpecSubCode());
+                    po.setSpecItemCode(item.getSpecItemCode());
+                    po.setSpecItemName(item.getSpecItemName());
+                    po.setOuterSpecItemCode(item.getOuterSpecItemCode());
                     return po;
                 }).collect(Collectors.toList());
-        return specSubPOList;
+        return specItemPOList;
     }
 }

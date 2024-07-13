@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class SpecSubPO {
+public class SpecItemPO {
     /**
      * 数据表id
      */
@@ -28,19 +28,19 @@ public class SpecSubPO {
     private String specCode;
 
     /**
-     * 子规格编码
+     * 规格项编码
      */
-    private String specSubCode;
+    private String specItemCode;
 
     /**
-     * 子规格名称
+     * 规格项名称
      */
-    private String specSubName;
+    private String specItemName;
 
     /**
-     * 外部子规格编码
+     * 外部规格项编码
      */
-    private String outerSpecSubCode;
+    private String outerSpecItemCode;
 
     /**
      * 租户编码

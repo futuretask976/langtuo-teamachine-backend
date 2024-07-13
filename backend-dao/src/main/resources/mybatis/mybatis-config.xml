@@ -50,7 +50,7 @@
         <mapper resource="mybatis/mapper/topping-type-mapper.xml"/>
         <mapper resource="mybatis/mapper/topping-mapper.xml"/>
         <mapper resource="mybatis/mapper/spec-mapper.xml"/>
-        <mapper resource="mybatis/mapper/spec-sub-mapper.xml"/>
+        <mapper resource="mybatis/mapper/spec-item-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-type-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-topping-rel-mapper.xml"/>

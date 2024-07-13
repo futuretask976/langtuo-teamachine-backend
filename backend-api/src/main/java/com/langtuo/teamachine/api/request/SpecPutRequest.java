@@ -1,7 +1,5 @@
 package com.langtuo.teamachine.api.request;
 
-import com.langtuo.teamachine.api.model.SpecSubDTO;
-
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +37,7 @@ public class SpecPutRequest {
     /**
      *
      */
-    private List<SpecSubPutRequest> specSubList;
+    private List<SpecItemPutRequest> specItemList;
 
     public String getComment() {
         return comment;
@@ -89,11 +87,11 @@ public class SpecPutRequest {
         this.extraInfo = extraInfo;
     }
 
-    public List<SpecSubPutRequest> getSpecSubList() {
-        return specSubList;
+    public List<SpecItemPutRequest> getSpecItemList() {
+        return specItemList;
     }
 
-    public void setSpecSubList(List<SpecSubPutRequest> specSubList) {
-        this.specSubList = specSubList;
+    public void setSpecItemList(List<SpecItemPutRequest> specItemList) {
+        this.specItemList = specItemList;
     }
 }

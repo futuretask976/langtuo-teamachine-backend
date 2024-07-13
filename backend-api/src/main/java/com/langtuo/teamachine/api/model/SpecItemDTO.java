@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.model;
 import java.util.Date;
 import java.util.Map;
 
-public class SpecSubDTO {
+public class SpecItemDTO {
     /**
      * 数据表id
      */
@@ -25,24 +25,48 @@ public class SpecSubDTO {
     private String specCode;
 
     /**
-     * 子规格编码
+     * 规格项编码
      */
-    private String specSubCode;
+    private String specItemCode;
 
     /**
-     * 子规格名称
+     * 规格项名称
      */
-    private String specSubName;
+    private String specItemName;
 
     /**
-     * 外部子规格编码
+     * 外部规格项编码
      */
-    private String outerSpecSubCode;
+    private String outerSpecItemCode;
 
     /**
      * 租户编码
      */
     private String tenantCode;
+
+    public String getSpecItemCode() {
+        return specItemCode;
+    }
+
+    public void setSpecItemCode(String specItemCode) {
+        this.specItemCode = specItemCode;
+    }
+
+    public String getSpecItemName() {
+        return specItemName;
+    }
+
+    public void setSpecItemName(String specItemName) {
+        this.specItemName = specItemName;
+    }
+
+    public String getOuterSpecItemCode() {
+        return outerSpecItemCode;
+    }
+
+    public void setOuterSpecItemCode(String outerSpecItemCode) {
+        this.outerSpecItemCode = outerSpecItemCode;
+    }
 
     public long getId() {
         return id;
@@ -74,30 +98,6 @@ public class SpecSubDTO {
 
     public void setSpecCode(String specCode) {
         this.specCode = specCode;
-    }
-
-    public String getSpecSubCode() {
-        return specSubCode;
-    }
-
-    public void setSpecSubCode(String specSubCode) {
-        this.specSubCode = specSubCode;
-    }
-
-    public String getSpecSubName() {
-        return specSubName;
-    }
-
-    public void setSpecSubName(String specSubName) {
-        this.specSubName = specSubName;
-    }
-
-    public String getOuterSpecSubCode() {
-        return outerSpecSubCode;
-    }
-
-    public void setOuterSpecSubCode(String outerSpecSubCode) {
-        this.outerSpecSubCode = outerSpecSubCode;
     }
 
     public String getTenantCode() {

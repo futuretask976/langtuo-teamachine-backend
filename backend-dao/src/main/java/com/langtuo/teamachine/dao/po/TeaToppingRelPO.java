@@ -32,6 +32,11 @@ public class TeaToppingRelPO {
     private String toppingCode;
 
     /**
+     * 步骤序号
+     */
+    private int stepIdx;
+
+    /**
      * 数量
      */
     private Integer amount;

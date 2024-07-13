@@ -7,11 +7,10 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
 
-public class TeaToppingNormalPOTestor {
+public class TeaToppingRelPOTestor {
     public static void main(String args[]) {
 //        insert();
-//        select();
-        update();
+        select();
     }
 
     public static void insert() {
@@ -49,21 +48,6 @@ public class TeaToppingNormalPOTestor {
 
         TeaToppingRelPO po = mapper.selectOne("tenant_002", "tea_002", "topping_002");
         System.out.printf("po: %s\n", po);
-
-        sqlSession.commit();
-        sqlSession.close();
-    }
-
-    public static void update() {
-        SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingRelMapper mapper = sqlSession.getMapper(TeaToppingRelMapper.class);
-
-        TeaToppingRelPO po = new TeaToppingRelPO();
-        po.setTenantCode("tenant_002");
-        po.setToppingCode("topping_002");
-        po.setTeaCode("tea_002");
-        po.setAmount(333333333);
-        mapper.update(po);
 
         sqlSession.commit();
         sqlSession.close();

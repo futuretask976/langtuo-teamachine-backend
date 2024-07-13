@@ -3,8 +3,6 @@ package com.langtuo.teamachine.dao.accessor;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.mapper.SpecMapper;
-import com.langtuo.teamachine.dao.mapper.SpecSubMapper;
-import com.langtuo.teamachine.dao.mapper.ToppingMapper;
 import com.langtuo.teamachine.dao.po.SpecPO;
 import com.langtuo.teamachine.dao.query.SpecQuery;
 import org.apache.commons.lang3.StringUtils;

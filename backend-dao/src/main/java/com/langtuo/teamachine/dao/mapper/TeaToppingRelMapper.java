@@ -39,13 +39,6 @@ public interface TeaToppingRelMapper {
 
     /**
      *
-     * @param teaToppingRelPO
-     * @return
-     */
-    int update(TeaToppingRelPO teaToppingRelPO);
-
-    /**
-     *
      * @param tenantCode
      * @param teaCode
      * @param toppingCode

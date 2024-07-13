@@ -25,10 +25,6 @@ public class TeaToppingRelAccessor {
         return mapper.insert(toppingTypePO);
     }
 
-    public int update(TeaToppingRelPO toppingTypePO) {
-        return mapper.update(toppingTypePO);
-    }
-
     public int deleteByTeaCode(String tenantCode, String teaCode) {
         return mapper.delete(tenantCode, teaCode, null);
     }
