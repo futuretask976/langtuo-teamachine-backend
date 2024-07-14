@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper;
 
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
-import com.langtuo.teamachine.dao.po.TeaToppingRelPO;
+import com.langtuo.teamachine.dao.po.ToppingAdjustRulePO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,38 +12,36 @@ import java.util.List;
 @Mapper
 @MySQLScan
 @Repository
-public interface TeaToppingRelMapper {
+public interface ToppingAdjustRuleMapper {
     /**
      *
      * @param tenantCode
-     * @param teaCode
-     * @param toppingCode
+     * @param teaUnitCode
      * @return
      */
-    TeaToppingRelPO selectOne(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
-            @Param("toppingCode") String toppingCode);
+    ToppingAdjustRulePO selectOne(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
+            @Param("teaUnitCode") String teaUnitCode, @Param("toppingCode") String toppingCode);
 
     /**
      *
      * @return
      */
-    List<TeaToppingRelPO> selectList(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
+    List<ToppingAdjustRulePO> selectList(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
+            @Param("teaUnitCode") String teaUnitCode);
 
     /**
      *
-     * @param teaToppingRelPO
+     * @param toppingAdjustRulePO
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(TeaToppingRelPO teaToppingRelPO);
+    int insert(ToppingAdjustRulePO toppingAdjustRulePO);
 
     /**
      *
      * @param tenantCode
      * @param teaCode
-     * @param toppingCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
-            @Param("toppingCode") String toppingCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
 }

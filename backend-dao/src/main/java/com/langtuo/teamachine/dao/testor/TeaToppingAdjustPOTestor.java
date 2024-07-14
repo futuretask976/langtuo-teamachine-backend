@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.TeaToppingAdjustMapper;
-import com.langtuo.teamachine.dao.po.TeaToppingAdjustPO;
+import com.langtuo.teamachine.dao.mapper.ToppingAdjustRuleMapper;
+import com.langtuo.teamachine.dao.po.ToppingAdjustRulePO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -11,16 +11,15 @@ public class TeaToppingAdjustPOTestor {
     public static void main(String args[]) {
 //        insert();
 //        select();
-        update();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingAdjustMapper mapper = sqlSession.getMapper(TeaToppingAdjustMapper.class);
+        ToppingAdjustRuleMapper mapper = sqlSession.getMapper(ToppingAdjustRuleMapper.class);
 
-        TeaToppingAdjustPO po = null;
+        ToppingAdjustRulePO po = null;
 
-        po = new TeaToppingAdjustPO();
+        po = new ToppingAdjustRulePO();
         po.setTenantCode("tenant_001");
         po.setTeaUnitCode("unit_001");
         po.setToppingCode("topping_001");
@@ -28,7 +27,7 @@ public class TeaToppingAdjustPOTestor {
         po.setAdjustAmount(222);
         mapper.insert(po);
 
-        po = new TeaToppingAdjustPO();
+        po = new ToppingAdjustRulePO();
         po.setTenantCode("tenant_002");
         po.setTeaUnitCode("unit_002");
         po.setToppingCode("topping_002");
@@ -42,31 +41,16 @@ public class TeaToppingAdjustPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingAdjustMapper mapper = sqlSession.getMapper(TeaToppingAdjustMapper.class);
+        ToppingAdjustRuleMapper mapper = sqlSession.getMapper(ToppingAdjustRuleMapper.class);
 
-        List<TeaToppingAdjustPO> list = mapper.selectList();
-        for (TeaToppingAdjustPO po : list) {
+        List<ToppingAdjustRulePO> list = mapper.selectList("tenant_002", null,"unit_002");
+        for (ToppingAdjustRulePO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        TeaToppingAdjustPO po = mapper.selectOne("tenant_002", "unit_002");
+        ToppingAdjustRulePO po = mapper.selectOne("tenant_002", null,"unit_002",
+                null);
         System.out.printf("po: %s\n", po);
-
-        sqlSession.commit();
-        sqlSession.close();
-    }
-
-    public static void update() {
-        SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        TeaToppingAdjustMapper mapper = sqlSession.getMapper(TeaToppingAdjustMapper.class);
-
-        TeaToppingAdjustPO po = new TeaToppingAdjustPO();
-        po.setTenantCode("tenant_002");
-        po.setTeaUnitCode("unit_002");
-        po.setToppingCode("topping_002222222");
-        po.setTeaCode("tea_00222222");
-        po.setAdjustAmount(99999);
-        mapper.update(po);
 
         sqlSession.commit();
         sqlSession.close();

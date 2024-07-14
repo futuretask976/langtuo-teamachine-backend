@@ -53,7 +53,7 @@ public class SpecDTO {
     /**
      *
      */
-    private List<SpecItemDTO> specSubList;
+    private List<SpecItemDTO> specItemList;
 
     public String getComment() {
         return comment;
@@ -127,11 +127,11 @@ public class SpecDTO {
         this.extraInfo = extraInfo;
     }
 
-    public List<SpecItemDTO> getSpecSubList() {
-        return specSubList;
+    public List<SpecItemDTO> getSpecItemList() {
+        return specItemList;
     }
 
-    public void setSpecSubList(List<SpecItemDTO> specSubList) {
-        this.specSubList = specSubList;
+    public void setSpecItemList(List<SpecItemDTO> specItemList) {
+        this.specItemList = specItemList;
     }
 }

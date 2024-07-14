@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class TeaToppingAdjustPO {
+public class ToppingAdjustRulePO {
     /**
      * 数据表id
      */
@@ -22,9 +22,9 @@ public class TeaToppingAdjustPO {
     private Date gmtModified;
 
     /**
-     * 茶饮PDU编码
+     * 租户编码
      */
-    private String teaUnitCode;
+    private String tenantCode;
 
     /**
      * 茶饮编码
@@ -32,17 +32,42 @@ public class TeaToppingAdjustPO {
     private String teaCode;
 
     /**
-     * 物料编码
+     * 茶饮PDU编码
+     */
+    private String teaUnitCode;
+
+    /**
+     *
+     */
+    private int stepIndex;
+
+    /**
+     *
      */
     private String toppingCode;
 
     /**
-     * 调整数量
+     *
      */
-    private Integer adjustAmount;
+    private int baseAmount;
 
     /**
-     * 租户编码
+     *
      */
-    private String tenantCode;
+    private String adjustMode;
+
+    /**
+     *
+     */
+    private String adjustUnit;
+
+    /**
+     *
+     */
+    private int adjustAmount;
+
+    /**
+     *
+     */
+    private int actualAmount;
 }

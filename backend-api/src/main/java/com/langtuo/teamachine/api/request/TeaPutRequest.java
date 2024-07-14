@@ -1,7 +1,5 @@
 package com.langtuo.teamachine.api.request;
 
-import com.langtuo.teamachine.api.model.TeaToppingRelDTO;
-
 import java.util.List;
 import java.util.Map;
 
@@ -49,14 +47,14 @@ public class TeaPutRequest {
     /**
      * 茶-物料关系列表
      */
-    private List<TeaToppingRelPutRequest> teaToppingRelList;
+    private List<TeaUnitPutRequest> teaUnitList;
 
-    public List<TeaToppingRelPutRequest> getTeaToppingRelList() {
-        return teaToppingRelList;
+    public List<TeaUnitPutRequest> getTeaUnitList() {
+        return teaUnitList;
     }
 
-    public void setTeaToppingRelList(List<TeaToppingRelPutRequest> teaToppingRelList) {
-        this.teaToppingRelList = teaToppingRelList;
+    public void setTeaUnitList(List<TeaUnitPutRequest> teaUnitList) {
+        this.teaUnitList = teaUnitList;
     }
 
     public String getTeaCode() {

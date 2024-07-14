@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class TeaSpecRelPO {
+public class TeaUnitPO {
     /**
      * 数据表id
      */
@@ -28,6 +28,11 @@ public class TeaSpecRelPO {
     private String teaUnitCode;
 
     /**
+     *
+     */
+    private String teaUnitName;
+
+    /**
      * 茶编码
      */
     private String teaCode;
@@ -35,7 +40,7 @@ public class TeaSpecRelPO {
     /**
      * 规格子项编码
      */
-    private String specSubCode;
+    private String specItemCode;
 
     /**
      * 租户编码

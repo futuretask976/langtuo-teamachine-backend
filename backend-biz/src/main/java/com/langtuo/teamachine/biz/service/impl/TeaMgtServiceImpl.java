@@ -4,15 +4,20 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.TeaDTO;
-import com.langtuo.teamachine.api.model.TeaToppingRelDTO;
+import com.langtuo.teamachine.api.request.SpecItemRulePutRequest;
 import com.langtuo.teamachine.api.request.TeaPutRequest;
+import com.langtuo.teamachine.api.request.TeaUnitPutRequest;
+import com.langtuo.teamachine.api.request.ToppingAdjustRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.TeaMgtService;
 import com.langtuo.teamachine.dao.accessor.TeaAccessor;
-import com.langtuo.teamachine.dao.accessor.TeaToppingRelAccessor;
+import com.langtuo.teamachine.dao.accessor.TeaUnitAccessor;
+import com.langtuo.teamachine.dao.accessor.ToppingAdjustRuleAccessor;
 import com.langtuo.teamachine.dao.po.TeaPO;
-import com.langtuo.teamachine.dao.po.TeaToppingRelPO;
+import com.langtuo.teamachine.dao.po.TeaUnitPO;
+import com.langtuo.teamachine.dao.po.ToppingAdjustRulePO;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -26,7 +31,10 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     private TeaAccessor teaAccessor;
 
     @Resource
-    private TeaToppingRelAccessor teaToppingRelAccessor;
+    private TeaUnitAccessor teaUnitAccessor;
+
+    @Resource
+    private ToppingAdjustRuleAccessor toppingAdjustRuleAccessor;
 
     @Override
     public LangTuoResult<TeaDTO> getByCode(String tenantCode, String teaCode) {
@@ -65,13 +73,13 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             List<TeaDTO> teaDTOList = teaPOList.stream()
                     .map(po -> {
                         TeaDTO dto = convert(po);
-                        List<TeaToppingRelPO> relPOList = teaToppingRelAccessor.selectList(
-                                dto.getTenantCode(), dto.getTeaCode());
-                        if (!CollectionUtils.isEmpty(relPOList)) {
-                            dto.setTeaToppingRelList(relPOList.stream()
-                                    .map(relPO -> convert(relPO))
-                                    .collect(Collectors.toList()));
-                        }
+//                        List<TeaToppingRelPO> relPOList = teaToppingRelAccessor.selectList(
+//                                dto.getTenantCode(), dto.getTeaCode());
+//                        if (!CollectionUtils.isEmpty(relPOList)) {
+//                            dto.setTeaToppingRelList(relPOList.stream()
+//                                    .map(relPO -> convert(relPO))
+//                                    .collect(Collectors.toList()));
+//                        }
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -96,13 +104,13 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             List<TeaDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> {
                         TeaDTO dto = convert(po);
-                        List<TeaToppingRelPO> relPOList = teaToppingRelAccessor.selectList(
-                                dto.getTenantCode(), dto.getTeaCode());
-                        if (!CollectionUtils.isEmpty(relPOList)) {
-                            dto.setTeaToppingRelList(relPOList.stream()
-                                    .map(relPO -> convert(relPO))
-                                    .collect(Collectors.toList()));
-                        }
+//                        List<TeaToppingRelPO> relPOList = teaToppingRelAccessor.selectList(
+//                                dto.getTenantCode(), dto.getTeaCode());
+//                        if (!CollectionUtils.isEmpty(relPOList)) {
+//                            dto.setTeaToppingRelList(relPOList.stream()
+//                                    .map(relPO -> convert(relPO))
+//                                    .collect(Collectors.toList()));
+//                        }
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -122,7 +130,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         }
 
         TeaPO teaPO = convertToTeaPO(request);
-        List<TeaToppingRelPO> teaToppingRelPOList = convertToTeaToppingRelPO(request);
+        List<TeaUnitPO> teaUnitPOList = convertToTeaUnitPO(request);
+        List<ToppingAdjustRulePO> toppingAdjustRulePOList = convertToToppingAdjustRulePO(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
@@ -133,10 +142,14 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 int inserted = teaAccessor.insert(teaPO);
             }
 
-            int deleted4TeaToppingRel = teaToppingRelAccessor.deleteByTeaCode(
-                    teaPO.getTenantCode(), teaPO.getTeaCode());
-            teaToppingRelPOList.forEach(item -> {
-                int inserted4TeaToppingRel = teaToppingRelAccessor.insert(item);
+            int deleted4TeaUnit = teaUnitAccessor.delete(teaPO.getTenantCode(), teaPO.getTeaCode());
+            teaUnitPOList.forEach(item -> {
+                int inserted4TeaUnit = teaUnitAccessor.insert(item);
+            });
+
+            int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.delete(teaPO.getTenantCode(), teaPO.getTeaCode());
+            toppingAdjustRulePOList.forEach(item -> {
+                int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(item);
             });
 
             langTuoResult = LangTuoResult.success();
@@ -181,22 +194,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         return dto;
     }
 
-    private TeaToppingRelDTO convert(TeaToppingRelPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        TeaToppingRelDTO dto = new TeaToppingRelDTO();
-        dto.setId(po.getId());
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setTeaCode(po.getTeaCode());
-        dto.setToppingCode(po.getToppingCode());
-        dto.setAmount(po.getAmount());
-        dto.setTenantCode(po.getTenantCode());
-        return dto;
-    }
-
     private TeaPO convertToTeaPO(TeaPutRequest request) {
         if (request == null) {
             return null;
@@ -214,19 +211,52 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         return po;
     }
 
-    private List<TeaToppingRelPO> convertToTeaToppingRelPO(TeaPutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getTeaToppingRelList())) {
+    private List<TeaUnitPO> convertToTeaUnitPO(TeaPutRequest request) {
+        if (request == null || CollectionUtils.isEmpty(request.getTeaUnitList())) {
             return null;
         }
 
-        List<TeaToppingRelPO> TeaToppingRelList = request.getTeaToppingRelList().stream()
-                .map(item -> {
-                    TeaToppingRelPO po = new TeaToppingRelPO();
-                    po.setTeaCode(request.getTeaCode());
-                    po.setToppingCode(item.getToppingCode());
-                    po.setAmount(item.getAmount());
-                    return po;
-                }).collect(Collectors.toList());
-        return TeaToppingRelList;
+        List<TeaUnitPO> teaUnitPOList = Lists.newArrayList();
+        List<TeaUnitPutRequest> teaUnitPutRequestList = request.getTeaUnitList();
+        for (TeaUnitPutRequest teaUnitPutRequest : teaUnitPutRequestList) {
+            List<SpecItemRulePutRequest> specItemRulePutRequestList = teaUnitPutRequest.getSpecItemRuleList();
+            for (SpecItemRulePutRequest specItemRulePutRequest : specItemRulePutRequestList) {
+                TeaUnitPO po = new TeaUnitPO();
+                po.setTenantCode(request.getTenantCode());
+                po.setTeaCode(request.getTeaCode());
+                po.setTeaUnitCode(teaUnitPutRequest.getTeaUnitCode());
+                po.setTeaUnitName(teaUnitPutRequest.getTeaUnitName());
+                po.setSpecItemCode(specItemRulePutRequest.getSpecItemCode());
+                teaUnitPOList.add(po);
+            }
+        }
+        return teaUnitPOList;
+    }
+
+    private List<ToppingAdjustRulePO> convertToToppingAdjustRulePO(TeaPutRequest request) {
+        if (request == null || CollectionUtils.isEmpty(request.getTeaUnitList())) {
+            return null;
+        }
+
+        List<ToppingAdjustRulePO> toppingAdjustRulePOList = Lists.newArrayList();
+        List<TeaUnitPutRequest> teaUnitPutRequestList = request.getTeaUnitList();
+        for (TeaUnitPutRequest teaUnitPutRequest : teaUnitPutRequestList) {
+            List<ToppingAdjustRulePutRequest> toppingAdjustRuleList = teaUnitPutRequest.getToppingAdjustRuleList();
+            for (ToppingAdjustRulePutRequest toppingAdjustRulePutRequest : toppingAdjustRuleList) {
+                ToppingAdjustRulePO po = new ToppingAdjustRulePO();
+                po.setTenantCode(request.getTenantCode());
+                po.setTeaCode(request.getTeaCode());
+                po.setTeaUnitCode(teaUnitPutRequest.getTeaUnitCode());
+                po.setStepIndex(toppingAdjustRulePutRequest.getStepIndex());
+                po.setToppingCode(toppingAdjustRulePutRequest.getToppingCode());
+                po.setBaseAmount(toppingAdjustRulePutRequest.getBaseAmount());
+                po.setAdjustMode(toppingAdjustRulePutRequest.getAdjustMode());
+                po.setAdjustUnit(toppingAdjustRulePutRequest.getAdjustUnit());
+                po.setAdjustAmount(toppingAdjustRulePutRequest.getAdjustAmount());
+                po.setActualAmount(toppingAdjustRulePutRequest.getActualAmount());
+                toppingAdjustRulePOList.add(po);
+            }
+        }
+        return toppingAdjustRulePOList;
     }
 }

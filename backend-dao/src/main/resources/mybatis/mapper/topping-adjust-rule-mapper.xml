@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.ToppingAdjustRuleMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.ToppingAdjustRulePO" id="toppingAdjustPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="teaCode" column="tea_code"/>
+        <result property="teaUnitCode" column="tea_unit_code"/>
+        <result property="stepIndex" column="step_index"/>
+        <result property="toppingCode" column="topping_code"/>
+        <result property="baseAmount" column="base_amount"/>
+        <result property="adjustMode" column="adjust_mode"/>
+        <result property="adjustUnit" column="adjust_unit"/>
+        <result property="adjustAmount" column="adjust_amount"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="toppingAdjustPOMap">
+        SELECT * FROM topping_adjust_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="teaCode != null">
+                AND tea_code = #{teaCode}
+            </if>
+            <if test="teaUnitCode != null">
+                AND tea_unit_code = #{teaUnitCode}
+            </if>
+            <if test="toppingCode != null">
+                AND topping_code = #{toppingCode}
+            </if>
+    </select>
+
+    <select id="selectList" resultMap="toppingAdjustPOMap">
+        SELECT * FROM topping_adjust_rule
+        WHERE 1 = 1
+        AND tenant_code = #{tenantCode}
+            <if test="teaCode != null">
+                AND tea_code = #{teaCode}
+            </if>
+            <if test="teaUnitCode != null">
+                AND tea_unit_code = #{teaUnitCode}
+            </if>
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ToppingAdjustRulePO">
+        INSERT INTO topping_adjust_rule (
+            gmt_created
+            , gmt_modified
+            , tea_code
+            , tea_unit_code
+            , step_index
+            , topping_code
+            , base_amount
+            , adjust_mode
+            , adjust_unit
+            , adjust_amount
+            , tenant_code
+        ) VALUES (
+            now()
+            , now()
+            , #{teaCode}
+            , #{teaUnitCode}
+            , #{stepIndex}
+            , #{toppingCode}
+            , #{baseAmount}
+            , #{adjustMode}
+            , #{adjustUnit}
+            , #{adjustAmount}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM topping_adjust_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND tea_code = #{teaCode}
+    </delete>
+</mapper>

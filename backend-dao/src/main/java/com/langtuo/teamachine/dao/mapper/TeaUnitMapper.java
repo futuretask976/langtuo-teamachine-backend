@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper;
 
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
-import com.langtuo.teamachine.dao.po.TeaToppingAdjustPO;
+import com.langtuo.teamachine.dao.po.TeaUnitPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,41 +12,42 @@ import java.util.List;
 @Mapper
 @MySQLScan
 @Repository
-public interface TeaToppingAdjustMapper {
+public interface TeaUnitMapper {
     /**
      *
      * @param tenantCode
      * @param teaUnitCode
      * @return
      */
-    TeaToppingAdjustPO selectOne(@Param("tenantCode") String tenantCode, @Param("teaUnitCode") String teaUnitCode);
+    TeaUnitPO selectOne(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
+            @Param("teaUnitCode") String teaUnitCode, @Param("teaUnitName") String teaUnitName);
 
     /**
      *
      * @return
      */
-    List<TeaToppingAdjustPO> selectList();
+    List<TeaUnitPO> selectList(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
 
     /**
      *
-     * @param teaToppingAdjustPO
+     * @param teaUnitPO
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(TeaToppingAdjustPO teaToppingAdjustPO);
+    int insert(TeaUnitPO teaUnitPO);
 
     /**
      *
-     * @param teaToppingAdjustPO
+     * @param teaUnitPO
      * @return
      */
-    int update(TeaToppingAdjustPO teaToppingAdjustPO);
+    int update(TeaUnitPO teaUnitPO);
 
     /**
      *
      * @param tenantCode
-     * @param teaUnitCode
+     * @param teaCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("teaUnitCode") String teaUnitCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
 }

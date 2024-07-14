@@ -166,7 +166,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
         List<SpecItemPO> poList = specItemAccessor.selectList(po.getTenantCode(), po.getSpecCode());
         if (!CollectionUtils.isEmpty(poList)) {
-            dto.setSpecSubList(poList.stream().map(item -> convertToSpecPO(item)).collect(Collectors.toList()));
+            dto.setSpecItemList(poList.stream().map(item -> convertToSpecPO(item)).collect(Collectors.toList()));
         }
         return dto;
     }
