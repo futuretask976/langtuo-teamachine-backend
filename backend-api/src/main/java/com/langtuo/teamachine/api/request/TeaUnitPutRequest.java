@@ -4,11 +4,6 @@ import java.util.List;
 
 public class TeaUnitPutRequest {
     /**
-     * 步骤序号
-     */
-    private int stepIndex;
-
-    /**
      * 茶品单位编码
      */
     private String teaUnitCode;
@@ -58,13 +53,5 @@ public class TeaUnitPutRequest {
 
     public void setTeaUnitName(String teaUnitName) {
         this.teaUnitName = teaUnitName;
-    }
-
-    public int getStepIndex() {
-        return stepIndex;
-    }
-
-    public void setStepIndex(int stepIndex) {
-        this.stepIndex = stepIndex;
     }
 }

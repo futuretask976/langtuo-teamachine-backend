@@ -19,7 +19,7 @@ public class SpecItemRulePutRequest {
     /**
      * 是否选中
      */
-    private Integer selected;
+    private int selected;
 
     public Integer getSelected() {
         return selected;

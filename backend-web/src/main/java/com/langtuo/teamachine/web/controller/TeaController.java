@@ -18,7 +18,7 @@ public class TeaController {
     private TeaMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/tea/tenant_001/shopGroup_001/get
+     * url: http://localhost:8080/teamachine/drinkset/tea/tenant_001/TEA_01/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{teacode}/get")

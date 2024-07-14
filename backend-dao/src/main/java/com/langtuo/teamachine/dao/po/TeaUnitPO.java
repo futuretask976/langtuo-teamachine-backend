@@ -23,6 +23,16 @@ public class TeaUnitPO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 茶编码
+     */
+    private String teaCode;
+
+    /**
      * 茶饮PDU编码
      */
     private String teaUnitCode;
@@ -33,17 +43,7 @@ public class TeaUnitPO {
     private String teaUnitName;
 
     /**
-     * 茶编码
-     */
-    private String teaCode;
-
-    /**
      * 规格子项编码
      */
     private String specItemCode;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
 }
