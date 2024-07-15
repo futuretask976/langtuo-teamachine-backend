@@ -80,7 +80,7 @@
         SET
             gmt_modified = now()
             <if test="teaName != null">
-                , teaName = #{teaName}
+                , tea_name = #{teaName}
             </if>
             <if test="outerTeaCode != null">
                 , outer_tea_code = #{outerTeaCode}

@@ -175,6 +175,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             int deleted = teaAccessor.delete(tenantCode, teaCode);
+            int deleted4TeaUnit = teaUnitAccessor.delete(tenantCode, teaCode);
+            int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.delete(tenantCode, teaCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
