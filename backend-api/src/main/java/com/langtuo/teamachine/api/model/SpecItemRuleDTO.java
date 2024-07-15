@@ -38,9 +38,22 @@ public class SpecItemRuleDTO {
     private String outerSpecItemCode;
 
     /**
+     *
+     */
+    private String tenantCode;
+
+    /**
      * 是否选中
      */
     private int selected;
+
+    public String getTenantCode() {
+        return tenantCode;
+    }
+
+    public void setTenantCode(String tenantCode) {
+        this.tenantCode = tenantCode;
+    }
 
     public long getId() {
         return id;

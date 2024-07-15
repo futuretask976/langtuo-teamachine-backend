@@ -67,6 +67,32 @@ public class TeaDTO {
      */
     private List<TeaUnitDTO> teaUnitList;
 
+    /**
+     *
+     */
+    private List<ActStepDTO> actStepList;
+
+    /**
+     *
+     */
+    private List<SpecRuleDTO> specRuleList;
+
+    public List<SpecRuleDTO> getSpecRuleList() {
+        return specRuleList;
+    }
+
+    public void setSpecRuleList(List<SpecRuleDTO> specRuleList) {
+        this.specRuleList = specRuleList;
+    }
+
+    public List<ActStepDTO> getActStepList() {
+        return actStepList;
+    }
+
+    public void setActStepList(List<ActStepDTO> actStepList) {
+        this.actStepList = actStepList;
+    }
+
     public List<TeaUnitDTO> getTeaUnitList() {
         return teaUnitList;
     }
