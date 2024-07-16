@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.web.controller;
+package com.langtuo.teamachine.web.controller.userset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.TenantDTO;

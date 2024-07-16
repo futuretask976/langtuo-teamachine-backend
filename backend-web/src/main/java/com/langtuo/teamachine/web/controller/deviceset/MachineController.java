@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.web.controller;
+package com.langtuo.teamachine.web.controller.deviceset;
 
 import com.langtuo.teamachine.api.model.MachineDTO;
 import com.langtuo.teamachine.api.model.PageDTO;

@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.web.controller;
+package com.langtuo.teamachine.web.controller.drinkset;
 
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;

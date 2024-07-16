@@ -55,6 +55,7 @@
         <mapper resource="mybatis/mapper/tea-mapper.xml"/>
         <mapper resource="mybatis/mapper/tea-unit-mapper.xml"/>
         <mapper resource="mybatis/mapper/topping-adjust-rule-mapper.xml"/>
+        <mapper resource="mybatis/mapper/topping-accuracy-template-mapper.xml"/>
         <mapper resource="mybatis/mapper/series-mapper.xml"/>
         <mapper resource="mybatis/mapper/menu-mapper.xml"/>
         <mapper resource="mybatis/mapper/series-tea-rel-mapper.xml"/>
