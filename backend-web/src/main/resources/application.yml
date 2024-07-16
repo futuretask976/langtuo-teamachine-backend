@@ -27,6 +27,8 @@ jwt:
   tokenHead: 'Bearer '  #JWT负载中拿到开头
 
 mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
   mapper-locations:
     - classpath:dao/*.xml
     - classpath*:com/**/mapper/*.xml

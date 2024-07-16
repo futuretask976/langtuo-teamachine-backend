@@ -48,7 +48,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
         String originalSql = statementHandler.getBoundSql().getSql();
-        System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql=%s\n", originalSql);
+        // System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql=%s\n", originalSql);
 
         // 获取mapper元信息
         MetaObject metaObject = MetaObject.forObject(statementHandler,
@@ -59,7 +59,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
         MappedStatement mappedStatement = (MappedStatement) metaObject.getValue(DELEGATE_MAPPER_STATEMENT);
         // 获取SQL元数据
         BoundSql boundSql = (BoundSql) metaObject.getValue(DELEGATE_BOUND_SQL);
-        System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept boundSql=%s\n", boundSql.getSql());
+        // System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept boundSql=%s\n", boundSql.getSql());
 
         // 拦截分表逻辑，获取注解
         GxTableShard annotation = getAnnotation(mappedStatement);
@@ -79,7 +79,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
 
         String tableName = "your_table_" + computeTableSuffix(columnValueMap); // 根据实际逻辑计算表后缀
         String modifiedSql = originalSql.replaceAll("your_table", tableName);
-        System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql2=%s\n", originalSql);
+        // System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql2=%s\n", originalSql);
 
         // 拦截并替换sql
         metaObject.setValue(DELEGATE_BOUND_SQL_SQL, modifiedSql);
@@ -87,7 +87,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
     }
 
     private String computeTableSuffix(Map<String, String> columnValueMap) {
-        System.out.printf("$$$$$ LangTuoTableShardInterceptor#computeTableSuffix columnValues=%s\n", columnValueMap);
+        // System.out.printf("$$$$$ LangTuoTableShardInterceptor#computeTableSuffix columnValues=%s\n", columnValueMap);
         // 实现分表逻辑，如通过用户ID取模等
         return "01"; // 示例返回值
     }
