@@ -17,22 +17,29 @@
     <select id="selectOne" resultMap="seriesTeaRelPOMap">
         SELECT * FROM series_tea_rel
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and series_code = #{seriesCode}
-            and tea_code = #{teaCode}
+            AND tenant_code = #{tenantCode}
+            <if test="seriesCode != null">
+                AND series_code = #{seriesCode}
+            </if>
+            <if test="teaCode != null">
+                AND tea_code = #{teaCode}
+            </if>
     </select>
 
     <select id="selectList" resultMap="seriesTeaRelPOMap">
-        SELECT * FROM series_tea_rel LIMIT 100
+        SELECT * FROM series_tea_rel
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND series_code = #{seriesCode}
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SeriesTeaRelPO">
-        INSERT INTO `series_tea_rel` (
-            `gmt_created`
-            , `gmt_modified`
-            , `series_code`
-            , `tea_code`
-            , `tenant_code`
+        INSERT INTO series_tea_rel (
+            gmt_created
+            , gmt_modified
+            , series_code
+            , tea_code
+            , tenant_code
         ) VALUES (
             now()
             , now()
@@ -45,8 +52,7 @@
     <delete id="delete">
         DELETE FROM series_tea_rel
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and series_code = #{seriesCode}
-            and tea_code = #{teaCode}
+            AND tenant_code = #{tenantCode}
+            AND series_code = #{seriesCode}
     </delete>
 </mapper>

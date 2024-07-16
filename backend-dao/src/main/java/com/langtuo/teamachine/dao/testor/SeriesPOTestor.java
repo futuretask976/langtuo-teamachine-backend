@@ -53,12 +53,12 @@ public class SeriesPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         SeriesMapper mapper = sqlSession.getMapper(SeriesMapper.class);
 
-        List<SeriesPO> list = mapper.selectList();
+        List<SeriesPO> list = mapper.selectList("tenant_002");
         for (SeriesPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        SeriesPO po = mapper.selectOne("tenant_002", "series_code_002");
+        SeriesPO po = mapper.selectOne("tenant_002", "series_code_002", null);
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();

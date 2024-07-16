@@ -16,6 +16,12 @@
     </properties>
 
     <dependencies>
+        <!-- others start -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- others end -->
     </dependencies>
 
 </project>

@@ -1,11 +1,11 @@
-package com.langtuo.teamachine.dao.po;
+package com.langtuo.teamachine.api.model;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class SeriesTeaRelPO {
+public class SeriesTeaRelDTO {
     /**
      * 数据表id
      */
@@ -20,11 +20,6 @@ public class SeriesTeaRelPO {
      * 数据表记录最近修改时间
      */
     private Date gmtModified;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
 
     /**
      * 系列编码

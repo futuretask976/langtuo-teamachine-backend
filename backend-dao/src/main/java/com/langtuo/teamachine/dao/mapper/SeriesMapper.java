@@ -4,6 +4,7 @@ import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.SeriesPO;
 import com.langtuo.teamachine.dao.po.TenantPO;
+import com.langtuo.teamachine.dao.query.SeriesQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -19,13 +20,20 @@ public interface SeriesMapper {
      * @param tenantCode
      * @return
      */
-    SeriesPO selectOne(@Param("tenantCode") String tenantCode, @Param("seriesCode") String seriesCode);
+    SeriesPO selectOne(@Param("tenantCode") String tenantCode, @Param("seriesCode") String seriesCode,
+            @Param("seriesName") String seriesName);
 
     /**
      *
      * @return
      */
-    List<SeriesPO> selectList();
+    List<SeriesPO> selectList(@Param("tenantCode") String tenantCode);
+
+    /**
+     *
+     * @return
+     */
+    List<SeriesPO> search(SeriesQuery query);
 
     /**
      *

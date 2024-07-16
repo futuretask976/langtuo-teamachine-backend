@@ -20,24 +20,43 @@
     <select id="selectOne" resultMap="seriesPOMap">
         SELECT * FROM series
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and series_code = #{seriesCode}
+            AND tenant_code = #{tenantCode}
+            <if test="seriesCode != null">
+                AND series_code = #{seriesCode}
+            </if>
+            <if test="seriesName != null">
+                AND series_name = #{seriesName}
+            </if>
     </select>
 
     <select id="selectList" resultMap="seriesPOMap">
-        SELECT * FROM series LIMIT 100
+        SELECT * FROM series
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="seriesPOMap">
+        SELECT * FROM series
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="seriesCode != null">
+                AND series_code = #{seriesCode}
+            </if>
+            <if test="seriesName != null">
+                AND series_name = #{seriesName}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.SeriesPO">
-        INSERT INTO `series` (
-            `gmt_created`
-            , `gmt_modified`
-            , `series_code`
-            , `series_name`
-            , `img_link`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO series (
+            gmt_created
+            , gmt_modified
+            , series_code
+            , series_name
+            , img_link
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
@@ -70,14 +89,14 @@
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
             </if>
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and series_code = #{seriesCode}
+            AND tenant_code = #{tenantCode}
+            AND series_code = #{seriesCode}
     </update>
 
     <delete id="delete">
         DELETE FROM series
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and series_code = #{seriesCode}
+            AND tenant_code = #{tenantCode}
+            AND series_code = #{seriesCode}
     </delete>
 </mapper>

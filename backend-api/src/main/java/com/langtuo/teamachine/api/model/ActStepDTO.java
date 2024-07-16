@@ -1,8 +1,10 @@
 package com.langtuo.teamachine.api.model;
 
-import java.util.Date;
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class ActStepDTO {
     /**
      *
@@ -13,20 +15,4 @@ public class ActStepDTO {
      *
      */
     private List<ToppingBaseRuleDTO> toppingBaseRuleList;
-
-    public long getStepIndex() {
-        return stepIndex;
-    }
-
-    public void setStepIndex(long stepIndex) {
-        this.stepIndex = stepIndex;
-    }
-
-    public List<ToppingBaseRuleDTO> getToppingBaseRuleList() {
-        return toppingBaseRuleList;
-    }
-
-    public void setToppingBaseRuleList(List<ToppingBaseRuleDTO> toppingBaseRuleList) {
-        this.toppingBaseRuleList = toppingBaseRuleList;
-    }
 }

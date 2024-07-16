@@ -41,7 +41,7 @@ public class SeriesTeaRelPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         SeriesTeaRelMapper mapper = sqlSession.getMapper(SeriesTeaRelMapper.class);
 
-        List<SeriesTeaRelPO> list = mapper.selectList();
+        List<SeriesTeaRelPO> list = mapper.selectList("tenant_002", "series_002");
         for (SeriesTeaRelPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
@@ -57,7 +57,7 @@ public class SeriesTeaRelPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         SeriesTeaRelMapper mapper = sqlSession.getMapper(SeriesTeaRelMapper.class);
 
-        mapper.delete("tenant_001", "tea_001", "series_001");
+        mapper.delete("tenant_001", "series_001");
 
         sqlSession.commit();
         sqlSession.close();

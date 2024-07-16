@@ -1,27 +1,12 @@
-package com.langtuo.teamachine.dao.po;
+package com.langtuo.teamachine.api.request;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Data
-public class SeriesPO {
-    /**
-     * 数据表id
-     */
-    private long id;
-
-    /**
-     * 数据表记录插入时间
-     */
-    private Date gmtCreated;
-
-    /**
-     * 数据表记录最近修改时间
-     */
-    private Date gmtModified;
-
+public class SeriesPutRequest {
     /**
      * 租户编码
      */
@@ -51,4 +36,9 @@ public class SeriesPO {
      * 图片链接
      */
     private String imgLink;
+
+    /**
+     * 系列-茶品关系
+     */
+    private List<SeriesTeaRelPutRequest> seriesTeaRelList;
 }
