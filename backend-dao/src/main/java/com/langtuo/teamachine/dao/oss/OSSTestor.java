@@ -20,22 +20,15 @@ public class OSSTestor {
     }
 
     public static void createBucket() {
-        // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
-        String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
-        // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
+        // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
                 OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
-        // 填写Bucket名称，例如examplebucket。Bucket名称在OSS范围内必须全局唯一。
-        String bucketName = "miya-bucket";
-
-        // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT, credentialsProvider);
 
         try {
-            // 创建存储空间。
-            Bucket bucket = ossClient.createBucket(bucketName);
+            // 创建存储空间
+            Bucket bucket = ossClient.createBucket(OSSConfig.OSS_BUCKET_NAME);
             System.out.println("bucket created=" + bucket);
-
         } catch (OSSException oe) {
             System.out.println("Caught an OSSException, which means your request made it to OSS, "
                     + "but was rejected with an error response for some reason.");
@@ -59,25 +52,16 @@ public class OSSTestor {
         File file = new File("backend-dao/src/main/resources/naicha_01.jpg");
         System.out.println(file.getAbsolutePath() + "=" + file.exists());
 
-        // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
-        String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
-        // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
-        CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
-        // 填写Bucket名称，例如examplebucket。
-        String bucketName = "miya-bucket2";
-        // 填写Object完整路径，例如exampledir/exampleobject.txt。Object完整路径中不能包含Bucket名称。
+        // 填写Object完整路径，例如exampledir/exampleobject.txt。Object完整路径中不能包含Bucket名称
         String objectName = "osstestor/osstest01.jpg";
 
-        // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
+        // 创建OSSClient实例
+        CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
+                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT, credentialsProvider);
 
         try {
-            // String content = "Hello OSS";
-            // ossClient.putObject(bucketName, objectName, new ByteArrayInputStream(content.getBytes()));
-            byte[] imageByteArr = readImgFile();
-            System.out.println("$$$$$ imageByteArr=" + imageByteArr.length);
-            PutObjectResult result = ossClient.putObject(bucketName, objectName,
+            PutObjectResult result = ossClient.putObject(OSSConfig.OSS_BUCKET_NAME, objectName,
                     new ByteArrayInputStream(readImgFile()));
             System.out.println(result);
         } catch (OSSException oe) {
@@ -101,8 +85,9 @@ public class OSSTestor {
 
     public static byte[] readImgFile() {
         File file = new File("backend-dao/src/main/resources/naicha_01.jpg");
+        FileInputStream fileInputStream = null;
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream = new FileInputStream(file);
             // Create a byte array the size of the file
             byte[] imageBytes = new byte[(int) file.length()];
             // Read in the entire file
@@ -110,28 +95,31 @@ public class OSSTestor {
             return imageBytes;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
+        return null;
     }
 
     public static void genAccessFileURL() {
-        // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
-        String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
-        // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
-        CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
         // 填写Bucket名称，例如examplebucket。
         String bucketName = "miya-bucket2";
         // 填写Object完整路径，例如exampledir/exampleobject.txt。Object完整路径中不能包含Bucket名称。
         String objectName = "osstestor/osstest01.jpg";
 
-        // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
+        // 创建OSSClient实例
+        CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
+                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT, credentialsProvider);
 
         try {
-            // String content = "Hello OSS";
-            // ossClient.putObject(bucketName, objectName, new ByteArrayInputStream(content.getBytes()));
-            Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000);
+            Date expiration = new Date(System.currentTimeMillis() + OSSConfig.OSS_ACCESS_EXPIRATION_TIME);
             URL result = ossClient.generatePresignedUrl(bucketName, objectName, expiration);
             System.out.println(result);
         } catch (OSSException oe) {
