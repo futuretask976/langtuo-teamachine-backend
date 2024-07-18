@@ -1,13 +1,10 @@
 package com.langtuo.teamachine.web.controller.drinkset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.ShopGroupDTO;
-import com.langtuo.teamachine.api.model.ToppingTypeDTO;
-import com.langtuo.teamachine.api.request.ShopGroupPutRequest;
-import com.langtuo.teamachine.api.request.ToppingTypePutRequest;
+import com.langtuo.teamachine.api.model.drinkset.ToppingTypeDTO;
+import com.langtuo.teamachine.api.request.drinkset.ToppingTypePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.ShopGroupMgtService;
-import com.langtuo.teamachine.api.service.ToppingTypeMgtService;
+import com.langtuo.teamachine.api.service.drinkset.ToppingTypeMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

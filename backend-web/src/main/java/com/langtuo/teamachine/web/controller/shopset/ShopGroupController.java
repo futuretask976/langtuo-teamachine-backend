@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.shopset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.ShopGroupDTO;
-import com.langtuo.teamachine.api.request.ShopGroupPutRequest;
+import com.langtuo.teamachine.api.model.shopset.ShopGroupDTO;
+import com.langtuo.teamachine.api.request.shopset.ShopGroupPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.ShopGroupMgtService;
+import com.langtuo.teamachine.api.service.shopset.ShopGroupMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

@@ -1,11 +1,10 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.OrgStrucMapper;
-import com.langtuo.teamachine.dao.po.OrgStrucPO;
+import com.langtuo.teamachine.dao.mapper.userset.OrgStrucMapper;
+import com.langtuo.teamachine.dao.po.userset.OrgStrucPO;
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class OrgStrucPOTestor {

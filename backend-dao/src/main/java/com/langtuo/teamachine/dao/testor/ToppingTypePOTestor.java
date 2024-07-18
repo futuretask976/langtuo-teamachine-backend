@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.ToppingTypeMapper;
-import com.langtuo.teamachine.dao.po.ToppingTypePO;
+import com.langtuo.teamachine.dao.mapper.drinkset.ToppingTypeMapper;
+import com.langtuo.teamachine.dao.po.drinkset.ToppingTypePO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;

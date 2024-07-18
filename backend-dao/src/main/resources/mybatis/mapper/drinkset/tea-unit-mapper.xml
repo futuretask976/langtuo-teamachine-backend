@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.drinkset.TeaUnitMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.drinkset.TeaUnitPO" id="teaUnitPO">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="teaUnitCode" column="tea_unit_code"/>
+        <result property="teaUnitName" column="tea_unit_Name"/>
+        <result property="teaCode" column="tea_code"/>
+        <result property="specItemCode" column="spec_item_code"/>
+        <result property="tenantCode" column="tenant_code"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="teaUnitPO">
+        SELECT * FROM tea_unit
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="teaCode != null">
+                AND tea_code = #{teaCode}
+            </if>
+            <if test="teaUnitCode != null">
+                AND tea_unit_code = #{teaUnitCode}
+            </if>
+            <if test="teaUnitName != null">
+                AND tea_unit_name = #{teaUnitName}
+            </if>
+    </select>
+
+    <select id="selectList" resultMap="teaUnitPO">
+        SELECT * FROM tea_unit
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND tea_code = #{teaCode}
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drinkset.TeaUnitPO">
+        INSERT INTO tea_unit (
+            gmt_created
+            , gmt_modified
+            , tea_unit_code
+            , tea_unit_name
+            , tea_code
+            , spec_item_code
+            , tenant_code
+        ) VALUES (
+            now()
+            , now()
+            , #{teaUnitCode}
+            , #{teaUnitName}
+            , #{teaCode}
+            , #{specItemCode}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.drinkset.TeaUnitPO">
+        UPDATE tea_unit
+        SET
+            gmt_modified = now()
+            <if test="teaUnitCode != null">
+                , tea_unit_code = #{teaUnitCode}
+            </if>
+            <if test="teaUnitName != null">
+                , tea_unit_name = #{teaUnitName}
+            </if>
+            <if test="teaCode != null">
+                , tea_code = #{teaCode}
+            </if>
+            <if test="specItemCode != null">
+                , spec_item_code = #{specItemCode}
+            </if>
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND tea_code = #{teaCode}
+            AND tea_unit_code = #{teaUnitCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tea_unit
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND tea_code = #{teaCode}
+    </delete>
+</mapper>

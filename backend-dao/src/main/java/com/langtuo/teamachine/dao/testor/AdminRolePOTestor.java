@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.AdminRoleMapper;
-import com.langtuo.teamachine.dao.po.AdminRolePO;
+import com.langtuo.teamachine.dao.mapper.userset.AdminRoleMapper;
+import com.langtuo.teamachine.dao.po.userset.AdminRolePO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;

@@ -1,11 +1,10 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.CleanExceptRuleMapper;
-import com.langtuo.teamachine.dao.po.CleanExceptRulePO;
+import com.langtuo.teamachine.dao.mapper.ruleset.CleanExceptRuleMapper;
+import com.langtuo.teamachine.dao.po.ruleset.CleanExceptRulePO;
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class CleanExceptRulePOTestor {

@@ -1,11 +1,10 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.CleanStepMapper;
-import com.langtuo.teamachine.dao.po.CleanStepPO;
+import com.langtuo.teamachine.dao.mapper.ruleset.CleanStepMapper;
+import com.langtuo.teamachine.dao.po.ruleset.CleanStepPO;
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class CleanStepPOTestor {

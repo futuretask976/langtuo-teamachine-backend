@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.MenuDispatchMapper;
-import com.langtuo.teamachine.dao.po.MenuDispatchPO;
+import com.langtuo.teamachine.dao.mapper.menuset.MenuDispatchMapper;
+import com.langtuo.teamachine.dao.po.menuset.MenuDispatchPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;

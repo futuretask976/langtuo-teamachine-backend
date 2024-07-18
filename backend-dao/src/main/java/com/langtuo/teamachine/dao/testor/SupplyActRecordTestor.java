@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.SupplyActRecordMapper;
-import com.langtuo.teamachine.dao.po.SupplyActRecordPO;
+import com.langtuo.teamachine.dao.mapper.reportset.SupplyActRecordMapper;
+import com.langtuo.teamachine.dao.po.reportset.SupplyActRecordPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.Calendar;

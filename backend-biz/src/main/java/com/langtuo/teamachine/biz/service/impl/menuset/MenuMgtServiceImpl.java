@@ -1,0 +1,218 @@
+package com.langtuo.teamachine.biz.service.impl.menuset;
+
+import com.github.pagehelper.PageInfo;
+import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.model.menuset.MenuDTO;
+import com.langtuo.teamachine.api.model.menuset.MenuSeriesRelDTO;
+import com.langtuo.teamachine.api.request.menuset.MenuPutRequest;
+import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.service.menuset.MenuMgtService;
+import com.langtuo.teamachine.dao.accessor.menuset.MenuAccessor;
+import com.langtuo.teamachine.dao.accessor.menuset.MenuSeriesRelAccessor;
+import com.langtuo.teamachine.dao.po.menuset.MenuPO;
+import com.langtuo.teamachine.dao.po.menuset.MenuSeriesRelPO;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+public class MenuMgtServiceImpl implements MenuMgtService {
+    @Resource
+    private MenuAccessor menuAccessor;
+
+    @Resource
+    private MenuSeriesRelAccessor menuSeriesRelAccessor;
+
+    @Override
+    public LangTuoResult<List<MenuDTO>> list(String tenantCode) {
+        LangTuoResult<List<MenuDTO>> langTuoResult = null;
+        try {
+            List<MenuPO> list = menuAccessor.selectList(tenantCode);
+            List<MenuDTO> dtoList = list.stream()
+                    .map(po -> convert(po))
+                    .collect(Collectors.toList());
+
+            langTuoResult = LangTuoResult.success(dtoList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<PageDTO<MenuDTO>> search(String tenantName, String seriesCode, String seriesName,
+            int pageNum, int pageSize) {
+        pageNum = pageNum <= 0 ? 1 : pageNum;
+        pageSize = pageSize <=0 ? 20 : pageSize;
+
+        LangTuoResult<PageDTO<MenuDTO>> langTuoResult = null;
+        try {
+            PageInfo<MenuPO> pageInfo = menuAccessor.search(tenantName, seriesCode, seriesName,
+                    pageNum, pageSize);
+            List<MenuDTO> dtoList = pageInfo.getList().stream()
+                    .map(po -> convert(po))
+                    .collect(Collectors.toList());
+
+            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+                    pageNum, pageSize));
+        } catch (Exception e) {
+            e.printStackTrace();
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<MenuDTO> getByCode(String tenantCode, String seriesCode) {
+        LangTuoResult<MenuDTO> langTuoResult = null;
+        try {
+            MenuPO toppingTypePO = menuAccessor.selectOneByCode(tenantCode, seriesCode);
+            MenuDTO seriesDTO = convert(toppingTypePO);
+            langTuoResult = LangTuoResult.success(seriesDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<MenuDTO> getByName(String tenantCode, String seriesName) {
+        LangTuoResult<MenuDTO> langTuoResult = null;
+        try {
+            MenuPO toppingTypePO = menuAccessor.selectOneByName(tenantCode, seriesName);
+            MenuDTO tenantDTO = convert(toppingTypePO);
+            langTuoResult = LangTuoResult.success(tenantDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<Void> put(MenuPutRequest request) {
+        if (request == null
+                || StringUtils.isBlank(request.getTenantCode())) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        MenuPO seriesPO = convertMenuPO(request);
+        List<MenuSeriesRelPO> menuSeriesRelPOList = convertToMenuSeriesRelPO(request);
+
+        LangTuoResult<Void> langTuoResult = null;
+        try {
+            MenuPO exist = menuAccessor.selectOneByCode(seriesPO.getTenantCode(),
+                    seriesPO.getMenuCode());
+            if (exist != null) {
+                int updated = menuAccessor.update(seriesPO);
+            } else {
+                int inserted = menuAccessor.insert(seriesPO);
+            }
+
+            int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(seriesPO.getTenantCode(), seriesPO.getMenuCode());
+            if (!CollectionUtils.isEmpty(menuSeriesRelPOList)) {
+                menuSeriesRelPOList.forEach(seriesTeaRelPO -> {
+                    menuSeriesRelAccessor.insert(seriesTeaRelPO);
+                });
+            }
+
+            langTuoResult = LangTuoResult.success();
+        } catch (Exception e) {
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<Void> delete(String tenantCode, String seriesCode) {
+        if (StringUtils.isEmpty(tenantCode)) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        LangTuoResult<Void> langTuoResult = null;
+        try {
+            int deleted4Series = menuAccessor.delete(tenantCode, seriesCode);
+            int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(tenantCode, seriesCode);
+            langTuoResult = LangTuoResult.success();
+        } catch (Exception e) {
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    private MenuDTO convert(MenuPO po) {
+        if (po == null) {
+            return null;
+        }
+
+        MenuDTO dto = new MenuDTO();
+        dto.setId(po.getId());
+        dto.setGmtCreated(po.getGmtCreated());
+        dto.setGmtModified(po.getGmtModified());
+        dto.setComment(po.getComment());
+        dto.setExtraInfo(po.getExtraInfo());
+        dto.setMenuCode(po.getMenuCode());
+        dto.setMenuName(po.getMenuName());
+        dto.setImgLink(po.getImgLink());
+        dto.setValidFrom(po.getValidFrom());
+
+        List<MenuSeriesRelPO> seriesTeaRelPOList = menuSeriesRelAccessor.selectList(
+                po.getTenantCode(), po.getMenuCode());
+        dto.setMenuSeriesRelList(convert(seriesTeaRelPOList));
+        return dto;
+    }
+
+    private MenuPO convertMenuPO(MenuPutRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        MenuPO po = new MenuPO();
+        po.setTenantCode(request.getTenantCode());
+        po.setComment(request.getComment());
+        po.setExtraInfo(request.getExtraInfo());
+        po.setMenuCode(request.getMenuCode());
+        po.setMenuName(request.getMenuName());
+        po.setImgLink(request.getImgLink());
+        po.setValidFrom(request.getValidFrom());
+        return po;
+    }
+
+    private List<MenuSeriesRelDTO> convert(List<MenuSeriesRelPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        return poList.stream().map(po -> {
+            MenuSeriesRelDTO dto = new MenuSeriesRelDTO();
+            dto.setId(po.getId());
+            dto.setGmtCreated(po.getGmtCreated());
+            dto.setGmtModified(po.getGmtModified());
+            dto.setSeriesCode(po.getSeriesCode());
+            dto.setMenuCode(po.getMenuCode());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    private List<MenuSeriesRelPO> convertToMenuSeriesRelPO(MenuPutRequest request) {
+        if (request == null || CollectionUtils.isEmpty(request.getMenuSeriesRelList())) {
+            return null;
+        }
+
+        return request.getMenuSeriesRelList().stream()
+                .map(menuSeriesRelPutRequest -> {
+                    MenuSeriesRelPO po = new MenuSeriesRelPO();
+                    po.setTenantCode(request.getTenantCode());
+                    po.setSeriesCode(menuSeriesRelPutRequest.getSeriesCode());
+                    po.setMenuCode(menuSeriesRelPutRequest.getMenuCode());
+                    return po;
+                }).collect(Collectors.toList());
+    }
+}

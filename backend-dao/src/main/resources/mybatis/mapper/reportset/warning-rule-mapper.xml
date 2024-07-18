@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.ruleset.WarningRuleMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.ruleset.WarningRulePO" id="warningRulePOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="warningRuleCode" column="warning_rule_code"/>
+        <result property="warningRuleName" column="warning_rule_name"/>
+        <result property="warningType" column="warning_type"/>
+        <result property="warningContent" column="warning_content"/>
+        <result property="thresholdType" column="threshold_type"/>
+        <result property="threshold" column="threshold"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="comment" column="comment"/>
+        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectOne" resultMap="warningRulePOMap">
+        SELECT * FROM warning_rule
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and warning_rule_code = #{warningRuleCode}
+    </select>
+
+    <select id="selectList" resultMap="warningRulePOMap">
+        SELECT * FROM warning_rule LIMIT 100
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.WarningRulePO">
+        INSERT INTO `warning_rule` (
+            `gmt_created`
+            , `gmt_modified`
+            , `warning_rule_code`
+            , `warning_rule_name`
+            , `warning_type`
+            , `warning_content`
+            , `threshold_type`
+            , `threshold`
+            , `tenant_code`
+            , `comment`
+            , `extra_info`
+        ) VALUES (
+            now()
+            , now()
+            , #{warningRuleCode}
+            , #{warningRuleName}
+            , #{warningType}
+            , #{warningContent}
+            , #{thresholdType}
+            , #{threshold}
+            , #{tenantCode}
+            , #{comment}
+            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.ruleset.WarningRulePO">
+        UPDATE warning_rule
+        SET
+            gmt_modified = now()
+            <if test="warningRuleName != null">
+                , warning_rule_name = #{warningRuleName}
+            </if>
+            <if test="warningType != null">
+                , warning_type = #{warningType}
+            </if>
+            <if test="warningContent != null">
+                , warning_content = #{warningContent}
+            </if>
+            <if test="thresholdType != null">
+                , threshold_type = #{thresholdType}
+            </if>
+            <if test="threshold != null">
+                , threshold = #{threshold}
+            </if>
+            <if test="tenantCode != null">
+                , tenant_code = #{tenantCode}
+            </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and warning_rule_code = #{warningRuleCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM warning_rule
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and warning_rule_code = #{warningRuleCode}
+    </delete>
+</mapper>

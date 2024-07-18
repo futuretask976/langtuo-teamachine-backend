@@ -1,11 +1,10 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.SeriesTeaRelMapper;
-import com.langtuo.teamachine.dao.po.SeriesTeaRelPO;
+import com.langtuo.teamachine.dao.mapper.menuset.SeriesTeaRelMapper;
+import com.langtuo.teamachine.dao.po.menuset.SeriesTeaRelPO;
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class SeriesTeaRelPOTestor {

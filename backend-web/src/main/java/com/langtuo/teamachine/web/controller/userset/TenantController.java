@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.userset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.TenantDTO;
-import com.langtuo.teamachine.api.request.TenantPutRequest;
+import com.langtuo.teamachine.api.model.userset.TenantDTO;
+import com.langtuo.teamachine.api.request.userset.TenantPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.TenantMgtService;
+import com.langtuo.teamachine.api.service.userset.TenantMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.drinkset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.TeaTypeDTO;
-import com.langtuo.teamachine.api.request.TeaTypePutRequest;
+import com.langtuo.teamachine.api.model.drinkset.TeaTypeDTO;
+import com.langtuo.teamachine.api.request.drinkset.TeaTypePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.TeaTypeMgtService;
+import com.langtuo.teamachine.api.service.drinkset.TeaTypeMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

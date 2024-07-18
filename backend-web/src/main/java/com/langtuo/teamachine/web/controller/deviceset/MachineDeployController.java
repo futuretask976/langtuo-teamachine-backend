@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.deviceset;
 
-import com.langtuo.teamachine.api.model.MachineDeployDTO;
+import com.langtuo.teamachine.api.model.deviceset.MachineDeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.MachineDeployPutRequest;
+import com.langtuo.teamachine.api.request.deviceset.MachineDeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.MachineDeployMgtService;
+import com.langtuo.teamachine.api.service.deviceset.MachineDeployMgtService;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import org.springframework.web.bind.annotation.*;
 

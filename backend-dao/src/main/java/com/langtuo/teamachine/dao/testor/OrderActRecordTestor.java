@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.OrderActRecordMapper;
-import com.langtuo.teamachine.dao.po.OrderActRecordPO;
+import com.langtuo.teamachine.dao.mapper.reportset.OrderActRecordMapper;
+import com.langtuo.teamachine.dao.po.reportset.OrderActRecordPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.Calendar;

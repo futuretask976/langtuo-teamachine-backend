@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.menuset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.MenuDTO;
-import com.langtuo.teamachine.api.request.MenuPutRequest;
+import com.langtuo.teamachine.api.model.menuset.MenuDTO;
+import com.langtuo.teamachine.api.request.menuset.MenuPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.MenuMgtService;
+import com.langtuo.teamachine.api.service.menuset.MenuMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

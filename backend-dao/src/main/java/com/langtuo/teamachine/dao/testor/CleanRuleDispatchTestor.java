@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.CleanRuleDispatchMapper;
-import com.langtuo.teamachine.dao.po.CleanRuleDispatchPO;
+import com.langtuo.teamachine.dao.mapper.ruleset.CleanRuleDispatchMapper;
+import com.langtuo.teamachine.dao.po.ruleset.CleanRuleDispatchPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
