@@ -23,13 +23,13 @@ public class MenuDispatchTestor {
         po = new MenuDispatchPO();
         po.setTenantCode("tenant_001");
         po.setMenuCode("menu_001");
-        po.setShopCode("shop_001");
+        po.setShopGroupCode("shop_001");
         mapper.insert(po);
 
         po = new MenuDispatchPO();
         po.setTenantCode("tenant_002");
         po.setMenuCode("menu_002");
-        po.setShopCode("shop_002");
+        po.setShopGroupCode("shop_002");
         mapper.insert(po);
 
         sqlSession.commit();
@@ -40,7 +40,7 @@ public class MenuDispatchTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MenuDispatchMapper mapper = sqlSession.getMapper(MenuDispatchMapper.class);
 
-        List<MenuDispatchPO> list = mapper.selectList();
+        List<MenuDispatchPO> list = mapper.selectList("tenant_002", "menu_002");
         for (MenuDispatchPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
@@ -56,7 +56,7 @@ public class MenuDispatchTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MenuDispatchMapper mapper = sqlSession.getMapper(MenuDispatchMapper.class);
 
-        mapper.delete("tenant_001", "menu_001", "shop_001");
+        mapper.delete("tenant_001", "menu_001");
 
         sqlSession.commit();
         sqlSession.close();

@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/shop")
+@RequestMapping("/shopset/shop")
 public class ShopController {
     @Resource
     private ShopMgtService service;

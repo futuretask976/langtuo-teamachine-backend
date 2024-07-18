@@ -27,7 +27,7 @@ public interface MenuDispatchMapper {
      *
      * @return
      */
-    List<MenuDispatchPO> selectList(@Param("tenantCode") String tenantCode);
+    List<MenuDispatchPO> selectList(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode);
 
     /**
      *

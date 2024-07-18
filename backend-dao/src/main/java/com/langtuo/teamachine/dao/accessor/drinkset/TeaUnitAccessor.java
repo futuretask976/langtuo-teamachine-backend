@@ -30,7 +30,7 @@ public class TeaUnitAccessor {
     }
 
     public int update(TeaUnitPO po) {
-        return mapper.update(teaUnitPO);
+        return mapper.update(po);
     }
 
     public int delete(String tenantCode, String teaCode) {

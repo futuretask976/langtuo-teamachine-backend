@@ -2,6 +2,8 @@ package com.langtuo.teamachine.api.service.menuset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.menuset.MenuDTO;
+import com.langtuo.teamachine.api.model.menuset.MenuDispatchDTO;
+import com.langtuo.teamachine.api.request.menuset.MenuDispatchPutRequest;
 import com.langtuo.teamachine.api.request.menuset.MenuPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
@@ -45,9 +47,23 @@ public interface MenuMgtService {
 
     /**
      *
+     * @param request
+     * @return
+     */
+    LangTuoResult<Void> putDispatch(MenuDispatchPutRequest request);
+
+    /**
+     *
      * @param tenantCode
      * @param menuCode
      * @return
      */
     LangTuoResult<Void> delete(String tenantCode, String menuCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<MenuDispatchDTO> getDispatchByMenuCode(String tenantCode, String menuCode);
 }

@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/shop/group")
+@RequestMapping("/shopset/shop/group")
 public class ShopGroupController {
     @Resource
     private ShopGroupMgtService service;

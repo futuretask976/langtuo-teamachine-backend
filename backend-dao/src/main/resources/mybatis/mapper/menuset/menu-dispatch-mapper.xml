@@ -33,9 +33,6 @@
             <if test="menuCode != null">
                 AND menu_code = #{menuCode}
             </if>
-            <if test="shopGroupCode != null">
-                AND shop_group_code = #{shopGroupCode}
-            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.menuset.MenuDispatchPO">

@@ -2,6 +2,8 @@ package com.langtuo.teamachine.web.controller.menuset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.menuset.MenuDTO;
+import com.langtuo.teamachine.api.model.menuset.MenuDispatchDTO;
+import com.langtuo.teamachine.api.request.menuset.MenuDispatchPutRequest;
 import com.langtuo.teamachine.api.request.menuset.MenuPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.menuset.MenuMgtService;
@@ -69,6 +71,28 @@ public class MenuController {
     public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "menucode") String menuCode) {
         LangTuoResult<Void> rtn = service.delete(tenantCode, menuCode);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/menuset/menu/put
+     * @return
+     */
+    @PutMapping(value = "/dispatch/put")
+    public LangTuoResult<Void> putDispatch(@RequestBody MenuDispatchPutRequest request) {
+        LangTuoResult<Void> rtn = service.putDispatch(request);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/menuset/menu/list?tenantCode=tenant_001
+     * @param tenantCode
+     * @return
+     */
+    @GetMapping(value = "/dispatch/{tenantcode}/{menucode}/get")
+    public LangTuoResult<MenuDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
+            @PathVariable(name = "menucode") String menuCode) {
+        LangTuoResult<MenuDispatchDTO> rtn = service.getDispatchByMenuCode(tenantCode, menuCode);
         return rtn;
     }
 }

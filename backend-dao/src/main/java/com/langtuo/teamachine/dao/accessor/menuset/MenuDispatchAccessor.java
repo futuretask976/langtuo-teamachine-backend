@@ -24,8 +24,8 @@ public class MenuDispatchAccessor {
         return mapper.selectOne(tenantCode, null, menuName);
     }
 
-    public List<MenuDispatchPO> selectList(String tenantCode) {
-        List<MenuDispatchPO> list = mapper.selectList(tenantCode);
+    public List<MenuDispatchPO> selectList(String tenantCode, String menuCode) {
+        List<MenuDispatchPO> list = mapper.selectList(tenantCode, menuCode);
         return list;
     }
 

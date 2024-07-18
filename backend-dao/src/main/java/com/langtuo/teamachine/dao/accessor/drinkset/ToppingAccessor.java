@@ -48,7 +48,7 @@ public class ToppingAccessor {
     }
 
     public int update(ToppingPO po) {
-        return mapper.update(toppingTypePO);
+        return mapper.update(po);
     }
 
     public int delete(String tenantCode, String toppingCode) {

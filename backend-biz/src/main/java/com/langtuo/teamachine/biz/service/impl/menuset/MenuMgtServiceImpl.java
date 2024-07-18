@@ -4,12 +4,16 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.menuset.MenuDTO;
+import com.langtuo.teamachine.api.model.menuset.MenuDispatchDTO;
 import com.langtuo.teamachine.api.model.menuset.MenuSeriesRelDTO;
+import com.langtuo.teamachine.api.request.menuset.MenuDispatchPutRequest;
 import com.langtuo.teamachine.api.request.menuset.MenuPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.menuset.MenuMgtService;
 import com.langtuo.teamachine.dao.accessor.menuset.MenuAccessor;
+import com.langtuo.teamachine.dao.accessor.menuset.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.menuset.MenuSeriesRelAccessor;
+import com.langtuo.teamachine.dao.po.menuset.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menuset.MenuPO;
 import com.langtuo.teamachine.dao.po.menuset.MenuSeriesRelPO;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +31,9 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Resource
     private MenuSeriesRelAccessor menuSeriesRelAccessor;
+
+    @Resource
+    private MenuDispatchAccessor menuDispatchAccessor;
 
     @Override
     public LangTuoResult<List<MenuDTO>> list(String tenantCode) {
@@ -131,6 +138,29 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     }
 
     @Override
+    public LangTuoResult<Void> putDispatch(MenuDispatchPutRequest request) {
+        if (request == null) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        List<MenuDispatchPO> poList = convertToMenuDispatchPO(request);
+
+        LangTuoResult<Void> langTuoResult = null;
+        try {
+            int deleted = menuDispatchAccessor.delete(poList.get(0).getTenantCode(),
+                    poList.get(0).getMenuCode());
+            poList.forEach(po -> {
+                menuDispatchAccessor.insert(po);
+            });
+
+            langTuoResult = LangTuoResult.success();
+        } catch (Exception e) {
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
     public LangTuoResult<Void> delete(String tenantCode, String seriesCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
@@ -143,6 +173,28 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<MenuDispatchDTO> getDispatchByMenuCode(String tenantCode, String menuCode) {
+        LangTuoResult<MenuDispatchDTO> langTuoResult = null;
+        try {
+            MenuDispatchDTO dto = new MenuDispatchDTO();
+            dto.setMenuCode(menuCode);
+
+            List<MenuDispatchPO> poList = menuDispatchAccessor.selectList(tenantCode, menuCode);
+            if (!CollectionUtils.isEmpty(poList)) {
+                dto.setShopGroupCodeList(poList.stream()
+                        .map(po -> po.getShopGroupCode())
+                        .collect(Collectors.toList()));
+            }
+
+            langTuoResult = LangTuoResult.success(dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
     }
@@ -212,6 +264,20 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                     po.setTenantCode(request.getTenantCode());
                     po.setSeriesCode(menuSeriesRelPutRequest.getSeriesCode());
                     po.setMenuCode(menuSeriesRelPutRequest.getMenuCode());
+                    return po;
+                }).collect(Collectors.toList());
+    }
+
+    private List<MenuDispatchPO> convertToMenuDispatchPO(MenuDispatchPutRequest request) {
+        String tenantCode = request.getTenantCode();
+        String menuCode = request.getMenuCode();
+
+        return request.getShopGroupCodeList().stream()
+                .map(shopGroupCode -> {
+                    MenuDispatchPO po = new MenuDispatchPO();
+                    po.setTenantCode(tenantCode);
+                    po.setMenuCode(menuCode);
+                    po.setShopGroupCode(shopGroupCode);
                     return po;
                 }).collect(Collectors.toList());
     }
