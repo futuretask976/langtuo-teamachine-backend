@@ -1,8 +1,11 @@
 package com.langtuo.teamachine.api.request;
 
+import lombok.Data;
+
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class TeaPutRequest {
     /**
      * 茶编码
@@ -48,76 +51,4 @@ public class TeaPutRequest {
      * 茶-物料关系列表
      */
     private List<TeaUnitPutRequest> teaUnitList;
-
-    public List<TeaUnitPutRequest> getTeaUnitList() {
-        return teaUnitList;
-    }
-
-    public void setTeaUnitList(List<TeaUnitPutRequest> teaUnitList) {
-        this.teaUnitList = teaUnitList;
-    }
-
-    public String getTeaCode() {
-        return teaCode;
-    }
-
-    public void setTeaCode(String teaCode) {
-        this.teaCode = teaCode;
-    }
-
-    public String getTeaName() {
-        return teaName;
-    }
-
-    public void setTeaName(String teaName) {
-        this.teaName = teaName;
-    }
-
-    public String getOuterTeaCode() {
-        return outerTeaCode;
-    }
-
-    public void setOuterTeaCode(String outerTeaCode) {
-        this.outerTeaCode = outerTeaCode;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public String getTeaTypeCode() {
-        return teaTypeCode;
-    }
-
-    public void setTeaTypeCode(String teaTypeCode) {
-        this.teaTypeCode = teaTypeCode;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Map<String, String> getExtraInfo() {
-        return extraInfo;
-    }
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        this.extraInfo = extraInfo;
-    }
 }

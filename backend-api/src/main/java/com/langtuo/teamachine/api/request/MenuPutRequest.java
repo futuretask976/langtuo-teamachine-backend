@@ -6,17 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class AdminRolePutRequest {
-    /**
-     * 菜单编码
-     */
-    private String roleCode;
-
-    /**
-     * 菜单名称
-     */
-    private String roleName;
-
+public class MenuPutRequest {
     /**
      * 租户编码
      */
@@ -33,7 +23,22 @@ public class AdminRolePutRequest {
     private Map<String, String> extraInfo;
 
     /**
-     * 选中关联的权限点列表
+     * 菜单编码
      */
-    private List<String> permitActCodeList;
+    private String menuCode;
+
+    /**
+     * 菜单名称
+     */
+    private String menuName;
+
+    /**
+     * 图片链接
+     */
+    private String imgLink;
+
+    /**
+     * 菜单-系列关系
+     */
+    private List<MenuSeriesRelPutRequest> menuSeriesRelList;
 }

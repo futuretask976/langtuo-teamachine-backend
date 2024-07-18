@@ -142,7 +142,6 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         dto.setTeaTypeCode(po.getTeaTypeCode());
         dto.setTeaTypeName(po.getTeaTypeName());
         dto.setState(po.getState());
-        dto.setTenantCode(po.getTenantCode());
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
         return dto;

@@ -149,7 +149,6 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         dto.setToppingTypeCode(po.getToppingTypeCode());
         dto.setToppingTypeName(po.getToppingTypeName());
         dto.setState(po.getState());
-        dto.setTenantCode(po.getTenantCode());
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
         return dto;

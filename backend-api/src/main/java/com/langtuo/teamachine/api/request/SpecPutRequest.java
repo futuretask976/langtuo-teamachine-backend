@@ -1,8 +1,11 @@
 package com.langtuo.teamachine.api.request;
 
+import lombok.Data;
+
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class SpecPutRequest {
     /**
      * 规格编码
@@ -38,60 +41,4 @@ public class SpecPutRequest {
      *
      */
     private List<SpecItemPutRequest> specItemList;
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getSpecCode() {
-        return specCode;
-    }
-
-    public void setSpecCode(String specCode) {
-        this.specCode = specCode;
-    }
-
-    public String getSpecName() {
-        return specName;
-    }
-
-    public void setSpecName(String specName) {
-        this.specName = specName;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
-
-    public Map<String, String> getExtraInfo() {
-        return extraInfo;
-    }
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        this.extraInfo = extraInfo;
-    }
-
-    public List<SpecItemPutRequest> getSpecItemList() {
-        return specItemList;
-    }
-
-    public void setSpecItemList(List<SpecItemPutRequest> specItemList) {
-        this.specItemList = specItemList;
-    }
 }

@@ -1,7 +1,10 @@
 package com.langtuo.teamachine.api.model;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class ToppingBaseRuleDTO {
     /**
      * 数据表id
@@ -52,84 +55,4 @@ public class ToppingBaseRuleDTO {
      * 状态，0：禁用，1：启用
      */
     private Integer state;
-
-    public String getToppingName() {
-        return toppingName;
-    }
-
-    public void setToppingName(String toppingName) {
-        this.toppingName = toppingName;
-    }
-
-    public String getToppingTypeCode() {
-        return toppingTypeCode;
-    }
-
-    public void setToppingTypeCode(String toppingTypeCode) {
-        this.toppingTypeCode = toppingTypeCode;
-    }
-
-    public Integer getMeasureUnit() {
-        return measureUnit;
-    }
-
-    public void setMeasureUnit(Integer measureUnit) {
-        this.measureUnit = measureUnit;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getGmtCreated() {
-        return gmtCreated;
-    }
-
-    public void setGmtCreated(Date gmtCreated) {
-        this.gmtCreated = gmtCreated;
-    }
-
-    public Date getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
-    public int getStepIndex() {
-        return stepIndex;
-    }
-
-    public void setStepIndex(int stepIndex) {
-        this.stepIndex = stepIndex;
-    }
-
-    public String getToppingCode() {
-        return toppingCode;
-    }
-
-    public void setToppingCode(String toppingCode) {
-        this.toppingCode = toppingCode;
-    }
-
-    public int getBaseAmount() {
-        return baseAmount;
-    }
-
-    public void setBaseAmount(int baseAmount) {
-        this.baseAmount = baseAmount;
-    }
 }

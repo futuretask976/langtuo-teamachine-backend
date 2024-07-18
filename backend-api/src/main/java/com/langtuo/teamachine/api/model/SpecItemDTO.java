@@ -1,8 +1,11 @@
 package com.langtuo.teamachine.api.model;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.Map;
 
+@Data
 public class SpecItemDTO {
     /**
      * 数据表id
@@ -38,73 +41,4 @@ public class SpecItemDTO {
      * 外部规格项编码
      */
     private String outerSpecItemCode;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    public String getSpecItemCode() {
-        return specItemCode;
-    }
-
-    public void setSpecItemCode(String specItemCode) {
-        this.specItemCode = specItemCode;
-    }
-
-    public String getSpecItemName() {
-        return specItemName;
-    }
-
-    public void setSpecItemName(String specItemName) {
-        this.specItemName = specItemName;
-    }
-
-    public String getOuterSpecItemCode() {
-        return outerSpecItemCode;
-    }
-
-    public void setOuterSpecItemCode(String outerSpecItemCode) {
-        this.outerSpecItemCode = outerSpecItemCode;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getGmtCreated() {
-        return gmtCreated;
-    }
-
-    public void setGmtCreated(Date gmtCreated) {
-        this.gmtCreated = gmtCreated;
-    }
-
-    public Date getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
-    public String getSpecCode() {
-        return specCode;
-    }
-
-    public void setSpecCode(String specCode) {
-        this.specCode = specCode;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
 }

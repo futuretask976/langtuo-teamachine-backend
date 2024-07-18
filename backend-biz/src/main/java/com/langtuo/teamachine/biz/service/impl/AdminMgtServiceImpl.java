@@ -149,7 +149,6 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         dto.setLoginPass(adminPO.getLoginPass());
         dto.setOrgName(adminPO.getOrgName());
         dto.setComment(adminPO.getComment());
-        dto.setTenantCode(adminPO.getTenantCode());
         dto.setExtraInfo(adminPO.getExtraInfo());
 
         dto.setRoleCode(adminRolePO.getRoleCode());

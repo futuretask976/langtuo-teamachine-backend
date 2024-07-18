@@ -1,5 +1,8 @@
 package com.langtuo.teamachine.api.request;
 
+import lombok.Data;
+
+@Data
 public class SpecItemPutRequest {
     /**
      * 规格项编码
@@ -15,28 +18,4 @@ public class SpecItemPutRequest {
      * 外部规格项编码
      */
     private String outerSpecItemCode;
-
-    public String getSpecItemCode() {
-        return specItemCode;
-    }
-
-    public void setSpecItemCode(String specItemCode) {
-        this.specItemCode = specItemCode;
-    }
-
-    public String getSpecItemName() {
-        return specItemName;
-    }
-
-    public void setSpecItemName(String specItemName) {
-        this.specItemName = specItemName;
-    }
-
-    public String getOuterSpecItemCode() {
-        return outerSpecItemCode;
-    }
-
-    public void setOuterSpecItemCode(String outerSpecItemCode) {
-        this.outerSpecItemCode = outerSpecItemCode;
-    }
 }

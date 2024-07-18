@@ -3,11 +3,9 @@ package com.langtuo.teamachine.api.model;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 @Data
-public class OrgStrucDTO {
+public class MenuSeriesRelDTO {
     /**
      * 数据表id
      */
@@ -24,17 +22,12 @@ public class OrgStrucDTO {
     private Date gmtModified;
 
     /**
-     * 组织名称
+     * 菜单编码
      */
-    private String orgName;
+    private String menuCode;
 
     /**
-     * 父组织名称
+     * 系列编码
      */
-    private String parentOrgName;
-
-    /**
-     * 子组织列表
-     */
-    private List<OrgStrucDTO> childOrgNameList;
+    private String seriesCode;
 }

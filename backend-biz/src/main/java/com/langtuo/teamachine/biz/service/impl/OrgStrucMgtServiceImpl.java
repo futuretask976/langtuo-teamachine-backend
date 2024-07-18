@@ -155,7 +155,6 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
         dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
-        dto.setTenantCode(po.getTenantCode());
         dto.setOrgName(po.getOrgName());
         dto.setParentOrgName(po.getParentOrgName());
         return dto;

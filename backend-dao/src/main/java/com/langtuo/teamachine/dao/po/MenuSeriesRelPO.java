@@ -22,6 +22,11 @@ public class MenuSeriesRelPO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
      * 菜单编码
      */
     private String menuCode;
@@ -31,8 +36,5 @@ public class MenuSeriesRelPO {
      */
     private String seriesCode;
 
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
+
 }

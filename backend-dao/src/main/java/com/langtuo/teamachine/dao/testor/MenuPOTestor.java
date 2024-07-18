@@ -56,12 +56,12 @@ public class MenuPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MenuMapper mapper = sqlSession.getMapper(MenuMapper.class);
 
-        List<MenuPO> list = mapper.selectList();
+        List<MenuPO> list = mapper.selectList("tenant_002");
         for (MenuPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        MenuPO po = mapper.selectOne("tenant_002", "menu_code_002");
+        MenuPO po = mapper.selectOne("tenant_002", "menu_code_002", null);
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();

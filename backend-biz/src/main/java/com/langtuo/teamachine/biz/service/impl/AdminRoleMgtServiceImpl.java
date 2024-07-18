@@ -194,7 +194,6 @@ public class AdminRoleMgtServiceImpl implements AdminRoleMgtService {
         dto.setRoleCode(po.getRoleCode());
         dto.setRoleName(po.getRoleName());
         dto.setComment(po.getComment());
-        dto.setTenantCode(po.getTenantCode());
         dto.setExtraInfo(po.getExtraInfo());
 
         return dto;

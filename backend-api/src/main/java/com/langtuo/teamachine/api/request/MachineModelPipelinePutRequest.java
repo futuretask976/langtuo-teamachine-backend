@@ -1,5 +1,8 @@
 package com.langtuo.teamachine.api.request;
 
+import lombok.Data;
+
+@Data
 public class MachineModelPipelinePutRequest {
     /**
      * 同MachineModelPipelineDTO
@@ -15,28 +18,4 @@ public class MachineModelPipelinePutRequest {
      * 同MachineModelPipelineDTO
      */
     private Integer enableWarm;
-
-    public Integer getPipelineNum() {
-        return pipelineNum;
-    }
-
-    public void setPipelineNum(Integer pipelineNum) {
-        this.pipelineNum = pipelineNum;
-    }
-
-    public Integer getEnableFreeze() {
-        return enableFreeze;
-    }
-
-    public void setEnableFreeze(Integer enableFreeze) {
-        this.enableFreeze = enableFreeze;
-    }
-
-    public Integer getEnableWarm() {
-        return enableWarm;
-    }
-
-    public void setEnableWarm(Integer enableWarm) {
-        this.enableWarm = enableWarm;
-    }
 }

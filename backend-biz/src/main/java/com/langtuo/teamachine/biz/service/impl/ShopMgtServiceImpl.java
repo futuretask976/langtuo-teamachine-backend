@@ -150,7 +150,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         dto.setShopName(shopPO.getShopName());
         dto.setShopType(shopPO.getShopType());
         dto.setComment(shopPO.getComment());
-        dto.setTenantCode(shopPO.getTenantCode());
         dto.setExtraInfo(shopPO.getExtraInfo());
 
         ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(shopPO.getTenantCode(), shopPO.getShopGroupCode());

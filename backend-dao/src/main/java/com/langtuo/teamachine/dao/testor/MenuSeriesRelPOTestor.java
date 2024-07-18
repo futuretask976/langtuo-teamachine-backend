@@ -40,7 +40,7 @@ public class MenuSeriesRelPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MenuSeriesRelMapper mapper = sqlSession.getMapper(MenuSeriesRelMapper.class);
 
-        List<MenuSeriesRelPO> list = mapper.selectList();
+        List<MenuSeriesRelPO> list = mapper.selectList("tenant_002", "menu_002");
         for (MenuSeriesRelPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
@@ -56,7 +56,7 @@ public class MenuSeriesRelPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MenuSeriesRelMapper mapper = sqlSession.getMapper(MenuSeriesRelMapper.class);
 
-        mapper.delete("tenant_001", "series_001", "menu_001");
+        mapper.delete("tenant_001", "menu_001");
 
         sqlSession.commit();
         sqlSession.close();

@@ -23,6 +23,21 @@ public class MenuPO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 备注
+     */
+    private String comment;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 菜单编码
      */
     private String menuCode;
@@ -41,19 +56,4 @@ public class MenuPO {
      * 生效时间
      */
     private Date validFrom;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 备注
-     */
-    private String comment;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
 }

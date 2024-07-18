@@ -3,10 +3,12 @@ package com.langtuo.teamachine.dao.mapper;
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.SeriesTeaRelPO;
+import com.langtuo.teamachine.dao.po.SeriesTeaRelPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.awt.*;
 import java.util.List;
 
 @Mapper
@@ -31,11 +33,11 @@ public interface SeriesTeaRelMapper {
 
     /**
      *
-     * @param seriesTeaRelPO
+     * @param menuSeriesRelPO
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(SeriesTeaRelPO seriesTeaRelPO);
+    int insert(SeriesTeaRelPO menuSeriesRelPO);
 
     /**
      *

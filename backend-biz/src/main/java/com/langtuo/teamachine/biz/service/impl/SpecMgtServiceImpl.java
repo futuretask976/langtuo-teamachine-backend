@@ -160,7 +160,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         dto.setSpecCode(po.getSpecCode());
         dto.setSpecName(po.getSpecName());
         dto.setState(po.getState());
-        dto.setTenantCode(po.getTenantCode());
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
@@ -184,7 +183,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         dto.setSpecItemCode(po.getSpecItemCode());
         dto.setSpecItemName(po.getSpecItemName());
         dto.setOuterSpecItemCode(po.getOuterSpecItemCode());
-        dto.setTenantCode(po.getTenantCode());
         return dto;
     }
 

@@ -1,7 +1,10 @@
 package com.langtuo.teamachine.api.request;
 
+import lombok.Data;
+
 import java.util.Map;
 
+@Data
 public class TeaTypePutRequest {
     /**
      * 茶类型编码
@@ -32,52 +35,4 @@ public class TeaTypePutRequest {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
-
-    public String getTeaTypeCode() {
-        return teaTypeCode;
-    }
-
-    public void setTeaTypeCode(String teaTypeCode) {
-        this.teaTypeCode = teaTypeCode;
-    }
-
-    public String getTeaTypeName() {
-        return teaTypeName;
-    }
-
-    public void setTeaTypeName(String teaTypeName) {
-        this.teaTypeName = teaTypeName;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Map<String, String> getExtraInfo() {
-        return extraInfo;
-    }
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        this.extraInfo = extraInfo;
-    }
 }

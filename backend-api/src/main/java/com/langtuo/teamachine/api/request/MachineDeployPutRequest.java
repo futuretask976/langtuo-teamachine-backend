@@ -1,9 +1,12 @@
 package com.langtuo.teamachine.api.request;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class MachineDeployPutRequest {
     /**
      * 部署编码
@@ -39,60 +42,4 @@ public class MachineDeployPutRequest {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
-
-    public String getDeployCode() {
-        return deployCode;
-    }
-
-    public void setDeployCode(String deployCode) {
-        this.deployCode = deployCode;
-    }
-
-    public String getModelCode() {
-        return modelCode;
-    }
-
-    public void setModelCode(String modelCode) {
-        this.modelCode = modelCode;
-    }
-
-    public String getMachineCode() {
-        return machineCode;
-    }
-
-    public void setMachineCode(String machineCode) {
-        this.machineCode = machineCode;
-    }
-
-    public String getShopCode() {
-        return shopCode;
-    }
-
-    public void setShopCode(String shopCode) {
-        this.shopCode = shopCode;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
-
-    public Map<String, String> getExtraInfo() {
-        return extraInfo;
-    }
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        this.extraInfo = extraInfo;
-    }
 }

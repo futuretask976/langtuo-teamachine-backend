@@ -3,15 +3,15 @@ package com.langtuo.teamachine.biz.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.SeriesDTO;
-import com.langtuo.teamachine.api.model.SeriesTeaRelDTO;
-import com.langtuo.teamachine.api.request.SeriesPutRequest;
+import com.langtuo.teamachine.api.model.MenuDTO;
+import com.langtuo.teamachine.api.model.MenuSeriesRelDTO;
+import com.langtuo.teamachine.api.request.MenuPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.SeriesMgtService;
-import com.langtuo.teamachine.dao.accessor.SeriesAccessor;
-import com.langtuo.teamachine.dao.accessor.SeriesTeaRelAccessor;
-import com.langtuo.teamachine.dao.po.SeriesPO;
-import com.langtuo.teamachine.dao.po.SeriesTeaRelPO;
+import com.langtuo.teamachine.api.service.MenuMgtService;
+import com.langtuo.teamachine.dao.accessor.MenuAccessor;
+import com.langtuo.teamachine.dao.accessor.MenuSeriesRelAccessor;
+import com.langtuo.teamachine.dao.po.MenuPO;
+import com.langtuo.teamachine.dao.po.MenuSeriesRelPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -21,19 +21,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class SeriesMgtServiceImpl implements SeriesMgtService {
+public class MenuMgtServiceImpl implements MenuMgtService {
     @Resource
-    private SeriesAccessor seriesAccessor;
+    private MenuAccessor menuAccessor;
 
     @Resource
-    private SeriesTeaRelAccessor seriesTeaRelAccessor;
+    private MenuSeriesRelAccessor menuSeriesRelAccessor;
 
     @Override
-    public LangTuoResult<List<SeriesDTO>> list(String tenantCode) {
-        LangTuoResult<List<SeriesDTO>> langTuoResult = null;
+    public LangTuoResult<List<MenuDTO>> list(String tenantCode) {
+        LangTuoResult<List<MenuDTO>> langTuoResult = null;
         try {
-            List<SeriesPO> list = seriesAccessor.selectList(tenantCode);
-            List<SeriesDTO> dtoList = list.stream()
+            List<MenuPO> list = menuAccessor.selectList(tenantCode);
+            List<MenuDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
@@ -46,16 +46,16 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<SeriesDTO>> search(String tenantName, String seriesCode, String seriesName,
+    public LangTuoResult<PageDTO<MenuDTO>> search(String tenantName, String seriesCode, String seriesName,
             int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
-        LangTuoResult<PageDTO<SeriesDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<MenuDTO>> langTuoResult = null;
         try {
-            PageInfo<SeriesPO> pageInfo = seriesAccessor.search(tenantName, seriesCode, seriesName,
+            PageInfo<MenuPO> pageInfo = menuAccessor.search(tenantName, seriesCode, seriesName,
                     pageNum, pageSize);
-            List<SeriesDTO> dtoList = pageInfo.getList().stream()
+            List<MenuDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
@@ -69,11 +69,11 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     }
 
     @Override
-    public LangTuoResult<SeriesDTO> getByCode(String tenantCode, String seriesCode) {
-        LangTuoResult<SeriesDTO> langTuoResult = null;
+    public LangTuoResult<MenuDTO> getByCode(String tenantCode, String seriesCode) {
+        LangTuoResult<MenuDTO> langTuoResult = null;
         try {
-            SeriesPO toppingTypePO = seriesAccessor.selectOneByCode(tenantCode, seriesCode);
-            SeriesDTO seriesDTO = convert(toppingTypePO);
+            MenuPO toppingTypePO = menuAccessor.selectOneByCode(tenantCode, seriesCode);
+            MenuDTO seriesDTO = convert(toppingTypePO);
             langTuoResult = LangTuoResult.success(seriesDTO);
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,11 +83,11 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     }
 
     @Override
-    public LangTuoResult<SeriesDTO> getByName(String tenantCode, String seriesName) {
-        LangTuoResult<SeriesDTO> langTuoResult = null;
+    public LangTuoResult<MenuDTO> getByName(String tenantCode, String seriesName) {
+        LangTuoResult<MenuDTO> langTuoResult = null;
         try {
-            SeriesPO toppingTypePO = seriesAccessor.selectOneByName(tenantCode, seriesName);
-            SeriesDTO tenantDTO = convert(toppingTypePO);
+            MenuPO toppingTypePO = menuAccessor.selectOneByName(tenantCode, seriesName);
+            MenuDTO tenantDTO = convert(toppingTypePO);
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,29 +97,29 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(SeriesPutRequest request) {
+    public LangTuoResult<Void> put(MenuPutRequest request) {
         if (request == null
                 || StringUtils.isBlank(request.getTenantCode())) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        SeriesPO seriesPO = convertSeriesPO(request);
-        List<SeriesTeaRelPO> seriesTeaRelPOList = convertToSeriesTeaRelPO(request);
+        MenuPO seriesPO = convertMenuPO(request);
+        List<MenuSeriesRelPO> menuSeriesRelPOList = convertToMenuSeriesRelPO(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            SeriesPO exist = seriesAccessor.selectOneByCode(seriesPO.getTenantCode(),
-                    seriesPO.getSeriesCode());
+            MenuPO exist = menuAccessor.selectOneByCode(seriesPO.getTenantCode(),
+                    seriesPO.getMenuCode());
             if (exist != null) {
-                int updated = seriesAccessor.update(seriesPO);
+                int updated = menuAccessor.update(seriesPO);
             } else {
-                int inserted = seriesAccessor.insert(seriesPO);
+                int inserted = menuAccessor.insert(seriesPO);
             }
 
-            int deleted4SeriesTeaRel = seriesTeaRelAccessor.delete(seriesPO.getTenantCode(), seriesPO.getSeriesCode());
-            if (!CollectionUtils.isEmpty(seriesTeaRelPOList)) {
-                seriesTeaRelPOList.forEach(seriesTeaRelPO -> {
-                    seriesTeaRelAccessor.insert(seriesTeaRelPO);
+            int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(seriesPO.getTenantCode(), seriesPO.getMenuCode());
+            if (!CollectionUtils.isEmpty(menuSeriesRelPOList)) {
+                menuSeriesRelPOList.forEach(seriesTeaRelPO -> {
+                    menuSeriesRelAccessor.insert(seriesTeaRelPO);
                 });
             }
 
@@ -138,8 +138,8 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            int deleted4Series = seriesAccessor.delete(tenantCode, seriesCode);
-            int deleted4SeriesTeaRel = seriesTeaRelAccessor.delete(tenantCode, seriesCode);
+            int deleted4Series = menuAccessor.delete(tenantCode, seriesCode);
+            int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(tenantCode, seriesCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
@@ -147,69 +147,69 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         return langTuoResult;
     }
 
-    private SeriesDTO convert(SeriesPO po) {
+    private MenuDTO convert(MenuPO po) {
         if (po == null) {
             return null;
         }
 
-        SeriesDTO dto = new SeriesDTO();
+        MenuDTO dto = new MenuDTO();
         dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
-        dto.setSeriesCode(po.getSeriesCode());
-        dto.setSeriesName(po.getSeriesName());
+        dto.setMenuCode(po.getMenuCode());
+        dto.setMenuName(po.getMenuName());
         dto.setImgLink(po.getImgLink());
 
-        List<SeriesTeaRelPO> seriesTeaRelPOList = seriesTeaRelAccessor.selectList(
-                po.getTenantCode(), po.getSeriesCode());
-        dto.setSeriesTeaRelList(convert(seriesTeaRelPOList));
+        List<MenuSeriesRelPO> seriesTeaRelPOList = menuSeriesRelAccessor.selectList(
+                po.getTenantCode(), po.getMenuCode());
+        dto.setMenuSeriesRelList(convert(seriesTeaRelPOList));
         return dto;
     }
 
-    private SeriesPO convertSeriesPO(SeriesPutRequest request) {
+    private MenuPO convertMenuPO(MenuPutRequest request) {
         if (request == null) {
             return null;
         }
 
-        SeriesPO po = new SeriesPO();
+        MenuPO po = new MenuPO();
         po.setTenantCode(request.getTenantCode());
         po.setComment(request.getComment());
         po.setExtraInfo(request.getExtraInfo());
-        po.setSeriesCode(request.getSeriesCode());
-        po.setSeriesName(request.getSeriesName());
+        po.setMenuCode(request.getMenuCode());
+        po.setMenuName(request.getMenuName());
         po.setImgLink(request.getImgLink());
         return po;
     }
 
-    private List<SeriesTeaRelDTO> convert(List<SeriesTeaRelPO> poList) {
+    private List<MenuSeriesRelDTO> convert(List<MenuSeriesRelPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         return poList.stream().map(po -> {
-            SeriesTeaRelDTO dto = new SeriesTeaRelDTO();
+            MenuSeriesRelDTO dto = new MenuSeriesRelDTO();
             dto.setId(po.getId());
             dto.setGmtCreated(po.getGmtCreated());
             dto.setGmtModified(po.getGmtModified());
             dto.setSeriesCode(po.getSeriesCode());
-            dto.setTeaCode(po.getTeaCode());
+            dto.setMenuCode(po.getMenuCode());
             return dto;
         }).collect(Collectors.toList());
     }
 
-    private List<SeriesTeaRelPO> convertToSeriesTeaRelPO(SeriesPutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getSeriesTeaRelList())) {
+    private List<MenuSeriesRelPO> convertToMenuSeriesRelPO(MenuPutRequest request) {
+        if (request == null || CollectionUtils.isEmpty(request.getMenuSeriesRelList())) {
             return null;
         }
 
-        return request.getSeriesTeaRelList().stream()
-                .map(seriesTeaRelPutRequest -> {
-                    SeriesTeaRelPO po = new SeriesTeaRelPO();
+        return request.getMenuSeriesRelList().stream()
+                .map(menuSeriesRelPutRequest -> {
+                    MenuSeriesRelPO po = new MenuSeriesRelPO();
                     po.setTenantCode(request.getTenantCode());
-                    po.setSeriesCode(seriesTeaRelPutRequest.getSeriesCode());
-                    po.setTeaCode(seriesTeaRelPutRequest.getTeaCode());
+                    po.setSeriesCode(menuSeriesRelPutRequest.getSeriesCode());
+                    po.setMenuCode(menuSeriesRelPutRequest.getMenuCode());
                     return po;
                 }).collect(Collectors.toList());
     }

@@ -175,7 +175,6 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         dto.setMaintainUntil(po.getMaintainUntil());
         dto.setValidUntil(po.getValidUntil());
         dto.setState(po.getState());
-        dto.setTenantCode(po.getTenantCode());
         dto.setExtraInfo(po.getExtraInfo());
 
         ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());

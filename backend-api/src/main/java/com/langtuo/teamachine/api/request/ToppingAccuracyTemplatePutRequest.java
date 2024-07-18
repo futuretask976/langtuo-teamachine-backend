@@ -1,7 +1,10 @@
 package com.langtuo.teamachine.api.request;
 
+import lombok.Data;
+
 import java.util.Map;
 
+@Data
 public class ToppingAccuracyTemplatePutRequest {
     /**
      * 租户编码
@@ -57,92 +60,4 @@ public class ToppingAccuracyTemplatePutRequest {
      * 备注
      */
     private String comment;
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
-
-    public Map<String, String> getExtraInfo() {
-        return extraInfo;
-    }
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        this.extraInfo = extraInfo;
-    }
-
-    public String getTemplateCode() {
-        return templateCode;
-    }
-
-    public void setTemplateCode(String templateCode) {
-        this.templateCode = templateCode;
-    }
-
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
-
-    public int getOverUnit() {
-        return overUnit;
-    }
-
-    public void setOverUnit(int overUnit) {
-        this.overUnit = overUnit;
-    }
-
-    public int getOverAmount() {
-        return overAmount;
-    }
-
-    public void setOverAmount(int overAmount) {
-        this.overAmount = overAmount;
-    }
-
-    public int getUnderUnit() {
-        return underUnit;
-    }
-
-    public void setUnderUnit(int underUnit) {
-        this.underUnit = underUnit;
-    }
-
-    public int getUnderAmount() {
-        return underAmount;
-    }
-
-    public void setUnderAmount(int underAmount) {
-        this.underAmount = underAmount;
-    }
-
-    public String getToppingCode() {
-        return toppingCode;
-    }
-
-    public void setToppingCode(String toppingCode) {
-        this.toppingCode = toppingCode;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
 }

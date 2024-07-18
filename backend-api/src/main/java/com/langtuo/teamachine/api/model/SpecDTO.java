@@ -1,9 +1,12 @@
 package com.langtuo.teamachine.api.model;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class SpecDTO {
     /**
      * 数据表id
@@ -21,6 +24,16 @@ public class SpecDTO {
     private Date gmtModified;
 
     /**
+     * 备注
+     */
+    private String comment;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 规格编码
      */
     private String specCode;
@@ -36,102 +49,7 @@ public class SpecDTO {
     private Integer state;
 
     /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 备注
-     */
-    private String comment;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
-
-    /**
      *
      */
     private List<SpecItemDTO> specItemList;
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getGmtCreated() {
-        return gmtCreated;
-    }
-
-    public void setGmtCreated(Date gmtCreated) {
-        this.gmtCreated = gmtCreated;
-    }
-
-    public Date getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
-    public String getSpecCode() {
-        return specCode;
-    }
-
-    public void setSpecCode(String specCode) {
-        this.specCode = specCode;
-    }
-
-    public String getSpecName() {
-        return specName;
-    }
-
-    public void setSpecName(String specName) {
-        this.specName = specName;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
-
-    public Map<String, String> getExtraInfo() {
-        return extraInfo;
-    }
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        this.extraInfo = extraInfo;
-    }
-
-    public List<SpecItemDTO> getSpecItemList() {
-        return specItemList;
-    }
-
-    public void setSpecItemList(List<SpecItemDTO> specItemList) {
-        this.specItemList = specItemList;
-    }
 }

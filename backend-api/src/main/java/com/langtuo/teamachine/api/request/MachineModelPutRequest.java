@@ -1,8 +1,11 @@
 package com.langtuo.teamachine.api.request;
 
+import lombok.Data;
+
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class MachineModelPutRequest {
     /**
      * 同MachineModelDTO
@@ -23,36 +26,4 @@ public class MachineModelPutRequest {
      * 同MachineModelDTO
      */
     private Map<String, String> extraInfo;
-
-    public String getModelCode() {
-        return modelCode;
-    }
-
-    public void setModelCode(String modelCode) {
-        this.modelCode = modelCode;
-    }
-
-    public Integer getEnableFlowAll() {
-        return enableFlowAll;
-    }
-
-    public void setEnableFlowAll(Integer enableFlowAll) {
-        this.enableFlowAll = enableFlowAll;
-    }
-
-    public List<MachineModelPipelinePutRequest> getPipelineList() {
-        return pipelineList;
-    }
-
-    public void setPipelineList(List<MachineModelPipelinePutRequest> pipelineList) {
-        this.pipelineList = pipelineList;
-    }
-
-    public Map<String, String> getExtraInfo() {
-        return extraInfo;
-    }
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        this.extraInfo = extraInfo;
-    }
 }

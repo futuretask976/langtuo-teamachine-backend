@@ -3,7 +3,7 @@ package com.langtuo.teamachine.dao.mapper;
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.MenuPO;
-import com.langtuo.teamachine.dao.po.SeriesPO;
+import com.langtuo.teamachine.dao.query.MenuQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -19,13 +19,20 @@ public interface MenuMapper {
      * @param tenantCode
      * @return
      */
-    MenuPO selectOne(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode);
+    MenuPO selectOne(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode,
+            @Param("menuName") String menuName);
 
     /**
      *
      * @return
      */
-    List<MenuPO> selectList();
+    List<MenuPO> selectList(@Param("tenantCode") String tenantCode);
+
+    /**
+     *
+     * @return
+     */
+    List<MenuPO> search(MenuQuery query);
 
     /**
      *

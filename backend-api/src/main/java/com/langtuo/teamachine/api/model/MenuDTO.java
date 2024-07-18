@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class OrgStrucDTO {
+public class MenuDTO {
     /**
      * 数据表id
      */
@@ -24,17 +24,32 @@ public class OrgStrucDTO {
     private Date gmtModified;
 
     /**
-     * 组织名称
+     * 备注
      */
-    private String orgName;
+    private String comment;
 
     /**
-     * 父组织名称
+     * 额外信息，格式：a:b;c:d
      */
-    private String parentOrgName;
+    private Map<String, String> extraInfo;
 
     /**
-     * 子组织列表
+     * 系列编码
      */
-    private List<OrgStrucDTO> childOrgNameList;
+    private String menuCode;
+
+    /**
+     * 系列名称
+     */
+    private String menuName;
+
+    /**
+     * 图片链接
+     */
+    private String imgLink;
+
+    /**
+     *
+     */
+    private List<MenuSeriesRelDTO> menuSeriesRelList;
 }

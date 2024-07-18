@@ -1,9 +1,12 @@
 package com.langtuo.teamachine.api.model;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Data
 public class PermitActGroupDTO {
     /**
      * 数据表id
@@ -34,54 +37,6 @@ public class PermitActGroupDTO {
      * 归属当前权限点组下的权限点列表
      */
     private List<PermitActDTO> permitActList;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getGmtCreated() {
-        return gmtCreated;
-    }
-
-    public void setGmtCreated(Date gmtCreated) {
-        this.gmtCreated = gmtCreated;
-    }
-
-    public Date getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
-    public String getPermitActGroupCode() {
-        return permitActGroupCode;
-    }
-
-    public void setPermitActGroupCode(String permitActGroupCode) {
-        this.permitActGroupCode = permitActGroupCode;
-    }
-
-    public String getPermitActGroupName() {
-        return permitActGroupName;
-    }
-
-    public void setPermitActGroupName(String permitActGroupName) {
-        this.permitActGroupName = permitActGroupName;
-    }
-
-    public List<PermitActDTO> getPermitActList() {
-        return permitActList;
-    }
-
-    public void setPermitActList(List<PermitActDTO> permitActList) {
-        this.permitActList = permitActList;
-    }
 
     public void addPermitActDTO(PermitActDTO dto) {
         if (this.permitActList == null) {

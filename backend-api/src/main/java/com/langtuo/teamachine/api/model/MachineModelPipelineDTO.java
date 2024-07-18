@@ -1,9 +1,12 @@
 package com.langtuo.teamachine.api.model;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
 public class MachineModelPipelineDTO {
     /**
      * 数据表id
@@ -39,60 +42,4 @@ public class MachineModelPipelineDTO {
      * 是否支持加热，0：不支持，1：支持
      */
     private Integer enableWarm;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getGmtCreated() {
-        return gmtCreated;
-    }
-
-    public void setGmtCreated(Date gmtCreated) {
-        this.gmtCreated = gmtCreated;
-    }
-
-    public Date getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
-    public String getModelCode() {
-        return modelCode;
-    }
-
-    public void setModelCode(String modelCode) {
-        this.modelCode = modelCode;
-    }
-
-    public Integer getPipelineNum() {
-        return pipelineNum;
-    }
-
-    public void setPipelineNum(Integer pipelineNum) {
-        this.pipelineNum = pipelineNum;
-    }
-
-    public Integer getEnableFreeze() {
-        return enableFreeze;
-    }
-
-    public void setEnableFreeze(Integer enableFreeze) {
-        this.enableFreeze = enableFreeze;
-    }
-
-    public Integer getEnableWarm() {
-        return enableWarm;
-    }
-
-    public void setEnableWarm(Integer enableWarm) {
-        this.enableWarm = enableWarm;
-    }
 }

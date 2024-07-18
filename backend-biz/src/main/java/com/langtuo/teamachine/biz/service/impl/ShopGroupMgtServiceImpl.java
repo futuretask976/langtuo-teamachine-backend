@@ -123,7 +123,6 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
         dto.setShopGroupName(shopGroupPO.getShopGroupName());
         dto.setComment(shopGroupPO.getComment());
-        dto.setTenantCode(shopGroupPO.getTenantCode());
         dto.setExtraInfo(shopGroupPO.getExtraInfo());
 
         return dto;

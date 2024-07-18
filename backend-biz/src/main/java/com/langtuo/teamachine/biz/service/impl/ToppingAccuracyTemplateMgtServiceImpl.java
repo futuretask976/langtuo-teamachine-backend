@@ -134,7 +134,6 @@ public class ToppingAccuracyTemplateMgtServiceImpl implements ToppingAccuracyTem
         dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
-        dto.setTenantCode(po.getTenantCode());
         dto.setExtraInfo(po.getExtraInfo());
         dto.setTemplateCode(po.getTemplateCode());
         dto.setTemplateName(po.getTemplateName());

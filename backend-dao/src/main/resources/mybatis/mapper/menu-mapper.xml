@@ -21,25 +21,44 @@
     <select id="selectOne" resultMap="menuPOMap">
         SELECT * FROM menu
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and menu_code = #{menuCode}
+            AND tenant_code = #{tenantCode}
+            <if test="menuCode != null">
+                AND menu_code = #{menuCode}
+            </if>
+            <if test="menuName != null">
+                AND menu_name = #{menuName}
+            </if>
     </select>
 
     <select id="selectList" resultMap="menuPOMap">
-        SELECT * FROM menu LIMIT 100
+        SELECT * FROM menu
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="menuPOMap">
+        SELECT * FROM menu
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="menuCode != null">
+                AND menu_code = #{menuCode}
+            </if>
+            <if test="menuName != null">
+                AND menu_name = #{menuName}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.MenuPO">
-        INSERT INTO `menu` (
-            `gmt_created`
-            , `gmt_modified`
-            , `menu_code`
-            , `menu_name`
-            , `img_link`
-            , `valid_from`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO menu (
+            gmt_created
+            , gmt_modified
+            , menu_code
+            , menu_name
+            , img_link
+            , valid_from
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
@@ -75,14 +94,14 @@
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
             </if>
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and menu_code = #{menuCode}
+            AND tenant_code = #{tenantCode}
+            AND menu_code = #{menuCode}
     </update>
 
     <delete id="delete">
         DELETE FROM menu
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and menu_code = #{menuCode}
+            AND tenant_code = #{tenantCode}
+            AND menu_code = #{menuCode}
     </delete>
 </mapper>

@@ -3,7 +3,6 @@ package com.langtuo.teamachine.dao.mapper;
 import com.langtuo.teamachine.dao.annotation.GxTableShard;
 import com.langtuo.teamachine.dao.annotation.MySQLScan;
 import com.langtuo.teamachine.dao.po.MenuSeriesRelPO;
-import com.langtuo.teamachine.dao.po.SeriesTeaRelPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -21,13 +20,14 @@ public interface MenuSeriesRelMapper {
      * @param menuCode
      * @return
      */
-    MenuSeriesRelPO selectOne(@Param("tenantCode") String tenantCode, @Param("seriesCode") String seriesCode, @Param("menuCode") String menuCode);
+    MenuSeriesRelPO selectOne(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode,
+            @Param("seriesCode") String seriesCode);
 
     /**
      *
      * @return
      */
-    List<MenuSeriesRelPO> selectList();
+    List<MenuSeriesRelPO> selectList(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode);
 
     /**
      *
@@ -47,9 +47,8 @@ public interface MenuSeriesRelMapper {
     /**
      *
      * @param tenantCode
-     * @param seriesCode
      * @param menuCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("seriesCode") String seriesCode, @Param("menuCode") String menuCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode);
 }

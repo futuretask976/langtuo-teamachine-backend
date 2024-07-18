@@ -1,9 +1,12 @@
 package com.langtuo.teamachine.api.model;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class SeriesDTO {
     /**
      * 数据表id
@@ -21,9 +24,9 @@ public class SeriesDTO {
     private Date gmtModified;
 
     /**
-     * 租户编码
+     * 备注
      */
-    private String tenantCode;
+    private String comment;
 
     /**
      * 额外信息，格式：a:b;c:d
@@ -46,92 +49,7 @@ public class SeriesDTO {
     private String imgLink;
 
     /**
-     * 备注
-     */
-    private String comment;
-
-    /**
      *
      */
     private List<SeriesTeaRelDTO> seriesTeaRelList;
-
-    public List<SeriesTeaRelDTO> getSeriesTeaRelList() {
-        return seriesTeaRelList;
-    }
-
-    public void setSeriesTeaRelList(List<SeriesTeaRelDTO> seriesTeaRelList) {
-        this.seriesTeaRelList = seriesTeaRelList;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getGmtCreated() {
-        return gmtCreated;
-    }
-
-    public void setGmtCreated(Date gmtCreated) {
-        this.gmtCreated = gmtCreated;
-    }
-
-    public Date getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
-
-    public Map<String, String> getExtraInfo() {
-        return extraInfo;
-    }
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        this.extraInfo = extraInfo;
-    }
-
-    public String getSeriesCode() {
-        return seriesCode;
-    }
-
-    public void setSeriesCode(String seriesCode) {
-        this.seriesCode = seriesCode;
-    }
-
-    public String getSeriesName() {
-        return seriesName;
-    }
-
-    public void setSeriesName(String seriesName) {
-        this.seriesName = seriesName;
-    }
-
-    public String getImgLink() {
-        return imgLink;
-    }
-
-    public void setImgLink(String imgLink) {
-        this.imgLink = imgLink;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
 }

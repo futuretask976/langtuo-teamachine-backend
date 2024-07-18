@@ -1,7 +1,10 @@
 package com.langtuo.teamachine.api.model;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class PermitActDTO {
     /**
      * 数据表id
@@ -32,52 +35,4 @@ public class PermitActDTO {
      * 联系人
      */
     private String permitActGroupCode;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getGmtCreated() {
-        return gmtCreated;
-    }
-
-    public void setGmtCreated(Date gmtCreated) {
-        this.gmtCreated = gmtCreated;
-    }
-
-    public Date getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
-    public String getPermitActCode() {
-        return permitActCode;
-    }
-
-    public void setPermitActCode(String permitActCode) {
-        this.permitActCode = permitActCode;
-    }
-
-    public String getPermitActName() {
-        return permitActName;
-    }
-
-    public void setPermitActName(String permitActName) {
-        this.permitActName = permitActName;
-    }
-
-    public String getPermitActGroupCode() {
-        return permitActGroupCode;
-    }
-
-    public void setPermitActGroupCode(String permitActGroupCode) {
-        this.permitActGroupCode = permitActGroupCode;
-    }
 }

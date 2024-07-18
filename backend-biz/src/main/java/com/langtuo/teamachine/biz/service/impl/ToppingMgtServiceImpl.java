@@ -152,7 +152,6 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         dto.setMeasureUnit(po.getMeasureUnit());
         dto.setConvertCoefficient(po.getConvertCoefficient());
         dto.setFlowSpeed(po.getFlowSpeed());
-        dto.setTenantCode(po.getTenantCode());
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
         return dto;
