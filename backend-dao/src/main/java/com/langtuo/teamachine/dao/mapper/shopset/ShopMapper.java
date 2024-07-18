@@ -37,18 +37,18 @@ public interface ShopMapper {
 
     /**
      *
-     * @param shopPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(ShopPO shopPO);
+    int insert(ShopPO po);
 
     /**
      *
-     * @param shopPO
+     * @param po
      * @return
      */
-    int update(ShopPO shopPO);
+    int update(ShopPO po);
 
     /**
      *

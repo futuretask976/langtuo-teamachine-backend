@@ -35,18 +35,18 @@ public interface InvalidActRecordMapper {
 
     /**
      *
-     * @param invalidActRecordPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(InvalidActRecordPO invalidActRecordPO);
+    int insert(InvalidActRecordPO po);
 
     /**
      *
-     * @param invalidActRecordPO
+     * @param po
      * @return
      */
-    int update(InvalidActRecordPO invalidActRecordPO);
+    int update(InvalidActRecordPO po);
 
     /**
      *

@@ -17,16 +17,17 @@ public interface MenuDispatchMapper {
      *
      * @param tenantCode
      * @param menuCode
-     * @param shopCode
+     * @param shopGroupCode
      * @return
      */
-    MenuDispatchPO selectOne(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode, @Param("shopCode") String shopCode);
+    MenuDispatchPO selectOne(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode,
+            @Param("shopGroupCode") String shopGroupCode);
 
     /**
      *
      * @return
      */
-    List<MenuDispatchPO> selectList();
+    List<MenuDispatchPO> selectList(@Param("tenantCode") String tenantCode);
 
     /**
      *
@@ -47,8 +48,7 @@ public interface MenuDispatchMapper {
      *
      * @param tenantCode
      * @param menuCode
-     * @param shopCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode, @Param("shopCode") String shopCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode);
 }

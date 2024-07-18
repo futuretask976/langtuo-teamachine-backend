@@ -37,18 +37,18 @@ public interface AdminMapper {
 
     /**
      *
-     * @param adminPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(AdminPO adminPO);
+    int insert(AdminPO po);
 
     /**
      *
-     * @param adminPO
+     * @param po
      * @return
      */
-    int update(AdminPO adminPO);
+    int update(AdminPO po);
 
     /**
      *

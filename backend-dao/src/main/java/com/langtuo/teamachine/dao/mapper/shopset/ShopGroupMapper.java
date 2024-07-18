@@ -36,18 +36,18 @@ public interface ShopGroupMapper {
 
     /**
      *
-     * @param shopGroupPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(ShopGroupPO shopGroupPO);
+    int insert(ShopGroupPO po);
 
     /**
      *
-     * @param shopGroupPO
+     * @param po
      * @return
      */
-    int update(ShopGroupPO shopGroupPO);
+    int update(ShopGroupPO po);
 
     /**
      *

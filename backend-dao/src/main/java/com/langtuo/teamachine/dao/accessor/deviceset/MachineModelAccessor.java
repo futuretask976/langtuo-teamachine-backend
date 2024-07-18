@@ -37,12 +37,12 @@ public class MachineModelAccessor {
         return pageInfo;
     }
 
-    public int insert(MachineModelPO machineModelPO) {
-        return mapper.insert(machineModelPO);
+    public int insert(MachineModelPO po) {
+        return mapper.insert(po);
     }
 
-    public int update(MachineModelPO machineModelPO) {
-        return mapper.update(machineModelPO);
+    public int update(MachineModelPO po) {
+        return mapper.update(po);
     }
 
     public int delete(String modelCode) {

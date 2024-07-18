@@ -22,8 +22,8 @@ public class ToppingAdjustRuleAccessor {
         return list;
     }
 
-    public int insert(ToppingAdjustRulePO teaUnitPO) {
-        return mapper.insert(teaUnitPO);
+    public int insert(ToppingAdjustRulePO po) {
+        return mapper.insert(po);
     }
 
     public int delete(String tenantCode, String teaCode) {

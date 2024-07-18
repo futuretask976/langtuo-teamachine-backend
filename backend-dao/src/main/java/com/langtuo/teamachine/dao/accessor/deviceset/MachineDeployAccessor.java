@@ -41,12 +41,12 @@ public class MachineDeployAccessor {
         return pageInfo;
     }
 
-    public int insert(MachineDeployPO machineDeployPO) {
-        return mapper.insert(machineDeployPO);
+    public int insert(MachineDeployPO po) {
+        return mapper.insert(po);
     }
 
-    public int update(MachineDeployPO machineDeployPO) {
-        return mapper.update(machineDeployPO);
+    public int update(MachineDeployPO po) {
+        return mapper.update(po);
     }
 
     public int delete(String tenantCode, String deployCode) {

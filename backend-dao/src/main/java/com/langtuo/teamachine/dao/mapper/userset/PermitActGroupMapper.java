@@ -28,18 +28,18 @@ public interface PermitActGroupMapper {
 
     /**
      *
-     * @param permitActGroupPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(PermitActGroupPO permitActGroupPO);
+    int insert(PermitActGroupPO po);
 
     /**
      *
-     * @param permitActGroupPO
+     * @param po
      * @return
      */
-    int update(PermitActGroupPO permitActGroupPO);
+    int update(PermitActGroupPO po);
 
     /**
      *

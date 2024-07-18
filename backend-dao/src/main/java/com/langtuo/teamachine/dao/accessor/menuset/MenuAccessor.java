@@ -43,12 +43,12 @@ public class MenuAccessor {
         return pageInfo;
     }
 
-    public int insert(MenuPO seriesPO) {
-        return mapper.insert(seriesPO);
+    public int insert(MenuPO po) {
+        return mapper.insert(po);
     }
 
-    public int update(MenuPO seriesPO) {
-        return mapper.update(seriesPO);
+    public int update(MenuPO po) {
+        return mapper.update(po);
     }
 
     public int delete(String tenantCode, String menuCode) {

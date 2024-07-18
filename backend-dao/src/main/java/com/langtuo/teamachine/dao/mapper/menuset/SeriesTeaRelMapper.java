@@ -31,11 +31,11 @@ public interface SeriesTeaRelMapper {
 
     /**
      *
-     * @param menuSeriesRelPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(SeriesTeaRelPO menuSeriesRelPO);
+    int insert(SeriesTeaRelPO po);
 
     /**
      *

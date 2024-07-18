@@ -34,14 +34,14 @@ public interface AdminRoleActRelMapper {
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(AdminRoleActRelPO adminRoleActRelPO);
+    int insert(AdminRoleActRelPO po);
 
     /**
      *
      * @param adminRoleActRelPO
      * @return
      */
-    int update(AdminRoleActRelPO adminRoleActRelPO);
+    int update(AdminRoleActRelPO po);
 
     /**
      *

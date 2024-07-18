@@ -31,18 +31,18 @@ public interface MenuSeriesRelMapper {
 
     /**
      *
-     * @param menuSeriesRelPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(MenuSeriesRelPO menuSeriesRelPO);
+    int insert(MenuSeriesRelPO po);
 
     /**
      *
-     * @param menuSeriesRelPO
+     * @param po
      * @return
      */
-    int update(MenuSeriesRelPO menuSeriesRelPO);
+    int update(MenuSeriesRelPO po);
 
     /**
      *

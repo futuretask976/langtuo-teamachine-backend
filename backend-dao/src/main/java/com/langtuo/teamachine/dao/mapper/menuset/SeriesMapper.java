@@ -36,18 +36,18 @@ public interface SeriesMapper {
 
     /**
      *
-     * @param seriesPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(SeriesPO seriesPO);
+    int insert(SeriesPO po);
 
     /**
      *
-     * @param seriesPO
+     * @param po
      * @return
      */
-    int update(SeriesPO seriesPO);
+    int update(SeriesPO po);
 
     /**
      *

@@ -32,11 +32,11 @@ public interface OrderActRecordMapper {
 
     /**
      *
-     * @param orderActRecordPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(OrderActRecordPO orderActRecordPO);
+    int insert(OrderActRecordPO po);
 
     /**
      *

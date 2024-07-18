@@ -42,12 +42,12 @@ public class MachineAccessor {
         return pageInfo;
     }
 
-    public int insert(MachinePO MachinePO) {
-        return mapper.insert(MachinePO);
+    public int insert(MachinePO po) {
+        return mapper.insert(po);
     }
 
-    public int update(MachinePO MachinePO) {
-        return mapper.update(MachinePO);
+    public int update(MachinePO po) {
+        return mapper.update(po);
     }
 
     public int delete(String tenantCode, String machineCode) {

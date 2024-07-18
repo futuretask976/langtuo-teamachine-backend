@@ -35,18 +35,18 @@ public interface TenantMapper {
 
     /**
      *
-     * @param tenantPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(TenantPO tenantPO);
+    int insert(TenantPO po);
 
     /**
      *
-     * @param tenantPO
+     * @param po
      * @return
      */
-    int update(TenantPO tenantPO);
+    int update(TenantPO po);
 
     /**
      *

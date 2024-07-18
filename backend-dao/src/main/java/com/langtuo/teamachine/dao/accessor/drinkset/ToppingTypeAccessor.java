@@ -44,12 +44,12 @@ public class ToppingTypeAccessor {
         return pageInfo;
     }
 
-    public int insert(ToppingTypePO toppingTypePO) {
-        return mapper.insert(toppingTypePO);
+    public int insert(ToppingTypePO po) {
+        return mapper.insert(po);
     }
 
-    public int update(ToppingTypePO toppingTypePO) {
-        return mapper.update(toppingTypePO);
+    public int update(ToppingTypePO po) {
+        return mapper.update(po);
     }
 
     public int delete(String tenantCode, String toppingTypeCode) {

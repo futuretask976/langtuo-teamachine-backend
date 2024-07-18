@@ -43,12 +43,12 @@ public class ToppingAccuracyTemplateAccessor {
         return pageInfo;
     }
 
-    public int insert(ToppingAccuracyTemplatePO toppingAccuracyTemplatePO) {
-        return mapper.insert(toppingAccuracyTemplatePO);
+    public int insert(ToppingAccuracyTemplatePO po) {
+        return mapper.insert(po);
     }
 
-    public int update(ToppingAccuracyTemplatePO toppingAccuracyTemplatePO) {
-        return mapper.update(toppingAccuracyTemplatePO);
+    public int update(ToppingAccuracyTemplatePO po) {
+        return mapper.update(po);
     }
 
     public int delete(String tenantCode, String toppingCode) {

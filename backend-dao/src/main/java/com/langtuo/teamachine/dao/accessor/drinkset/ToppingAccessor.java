@@ -43,11 +43,11 @@ public class ToppingAccessor {
         return pageInfo;
     }
 
-    public int insert(ToppingPO toppingTypePO) {
-        return mapper.insert(toppingTypePO);
+    public int insert(ToppingPO po) {
+        return mapper.insert(po);
     }
 
-    public int update(ToppingPO toppingTypePO) {
+    public int update(ToppingPO po) {
         return mapper.update(toppingTypePO);
     }
 

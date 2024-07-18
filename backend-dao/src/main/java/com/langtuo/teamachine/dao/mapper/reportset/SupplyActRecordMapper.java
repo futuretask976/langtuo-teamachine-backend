@@ -43,10 +43,10 @@ public interface SupplyActRecordMapper {
 
     /**
      *
-     * @param supplyActRecordPO
+     * @param po
      * @return
      */
-    int update(SupplyActRecordPO supplyActRecordPO);
+    int update(SupplyActRecordPO po);
 
     /**
      *

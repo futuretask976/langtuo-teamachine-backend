@@ -36,18 +36,18 @@ public interface OrgStrucMapper {
 
     /**
      *
-     * @param orgStrucPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(OrgStrucPO orgStrucPO);
+    int insert(OrgStrucPO po);
 
     /**
      *
-     * @param orgStrucPO
+     * @param po
      * @return
      */
-    int update(OrgStrucPO orgStrucPO);
+    int update(OrgStrucPO po);
 
     /**
      *

@@ -25,12 +25,12 @@ public class SpecItemAccessor {
         return list;
     }
 
-    public int insert(SpecItemPO specItemPO) {
-        return mapper.insert(specItemPO);
+    public int insert(SpecItemPO po) {
+        return mapper.insert(po);
     }
 
-    public int update(SpecItemPO specItemPO) {
-        return mapper.update(specItemPO);
+    public int update(SpecItemPO po) {
+        return mapper.update(po);
     }
 
     public int deleteBySpecCode(String tenantCode, String specCode) {

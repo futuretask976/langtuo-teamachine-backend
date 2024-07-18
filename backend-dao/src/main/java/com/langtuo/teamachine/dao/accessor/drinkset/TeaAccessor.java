@@ -44,12 +44,12 @@ public class TeaAccessor {
         return pageInfo;
     }
 
-    public int insert(TeaPO toppingTypePO) {
-        return mapper.insert(toppingTypePO);
+    public int insert(TeaPO po) {
+        return mapper.insert(po);
     }
 
-    public int update(TeaPO toppingTypePO) {
-        return mapper.update(toppingTypePO);
+    public int update(TeaPO po) {
+        return mapper.update(po);
     }
 
     public int delete(String tenantCode, String teaCode) {

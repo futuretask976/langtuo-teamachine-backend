@@ -43,12 +43,12 @@ public class SpecAccessor {
         return pageInfo;
     }
 
-    public int insert(SpecPO toppingTypePO) {
-        return mapper.insert(toppingTypePO);
+    public int insert(SpecPO po) {
+        return mapper.insert(po);
     }
 
-    public int update(SpecPO toppingTypePO) {
-        return mapper.update(toppingTypePO);
+    public int update(SpecPO po) {
+        return mapper.update(po);
     }
 
     public int delete(String tenantCode, String toppingCode) {

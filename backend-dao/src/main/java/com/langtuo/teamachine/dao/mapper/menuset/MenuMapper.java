@@ -36,18 +36,18 @@ public interface MenuMapper {
 
     /**
      *
-     * @param menuPO
+     * @param po
      * @return
      */
     @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(MenuPO menuPO);
+    int insert(MenuPO po);
 
     /**
      *
-     * @param menuPO
+     * @param po
      * @return
      */
-    int update(MenuPO menuPO);
+    int update(MenuPO po);
 
     /**
      *

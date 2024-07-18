@@ -25,11 +25,11 @@ public class TeaUnitAccessor {
         return list;
     }
 
-    public int insert(TeaUnitPO teaUnitPO) {
-        return mapper.insert(teaUnitPO);
+    public int insert(TeaUnitPO po) {
+        return mapper.insert(po);
     }
 
-    public int update(TeaUnitPO teaUnitPO) {
+    public int update(TeaUnitPO po) {
         return mapper.update(teaUnitPO);
     }
 
