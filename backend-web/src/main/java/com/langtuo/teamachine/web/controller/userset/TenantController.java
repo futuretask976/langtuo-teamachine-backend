@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tenant")
+@RequestMapping("/userset/tenant")
 public class TenantController {
     @Resource
     private TenantMgtService service;

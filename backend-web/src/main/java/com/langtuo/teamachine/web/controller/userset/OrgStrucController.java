@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orgstruc")
+@RequestMapping("/userset/orgstruc")
 public class OrgStrucController {
     @Resource
     private OrgStrucMgtService service;

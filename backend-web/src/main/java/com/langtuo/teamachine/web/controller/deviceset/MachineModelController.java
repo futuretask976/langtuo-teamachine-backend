@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/machine/model")
+@RequestMapping("/deviceset/machine/model")
 public class MachineModelController {
     @Resource
     private MachineModelMgtService service;

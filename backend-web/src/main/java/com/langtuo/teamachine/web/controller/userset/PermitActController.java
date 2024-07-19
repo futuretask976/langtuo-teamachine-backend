@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/permitact")
+@RequestMapping("/userset/permitact")
 public class PermitActController {
     @Resource
     private PermitActMgtService service;

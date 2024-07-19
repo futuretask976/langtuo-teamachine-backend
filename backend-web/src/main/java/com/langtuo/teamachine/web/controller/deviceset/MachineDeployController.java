@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/machine/deploy")
+@RequestMapping("/deviceset/machine/deploy")
 public class MachineDeployController {
     @Resource
     private MachineDeployMgtService service;

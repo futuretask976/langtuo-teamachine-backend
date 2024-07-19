@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/role")
+@RequestMapping("/userset/admin/role")
 public class AdminRoleController {
     @Resource
     private AdminRoleMgtService service;

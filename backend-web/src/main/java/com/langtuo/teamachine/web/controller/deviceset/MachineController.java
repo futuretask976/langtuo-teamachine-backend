@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/machine")
+@RequestMapping("/deviceset/machine")
 public class MachineController {
     @Resource
     private MachineMgtService service;
