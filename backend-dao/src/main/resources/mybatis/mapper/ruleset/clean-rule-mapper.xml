@@ -21,25 +21,44 @@
     <select id="selectOne" resultMap="cleanRulePOMap">
         SELECT * FROM clean_rule
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
+            AND tenant_code = #{tenantCode}
+            <if test="cleanRuleCode != null">
+                AND clean_rule_code = #{cleanRuleCode}
+            </if>
+            <if test="cleanRuleName != null">
+                AND clean_rule_name = #{cleanRuleName}
+            </if>
     </select>
 
     <select id="selectList" resultMap="cleanRulePOMap">
-        SELECT * FROM clean_rule LIMIT 100
+        SELECT * FROM clean_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="cleanRulePOMap">
+        SELECT * FROM clean_rule
+        WHERE 1 = 1
+        AND tenant_code = #{tenantCode}
+        <if test="cleanRuleCode != null">
+            AND clean_rule_code = #{cleanRuleCode}
+        </if>
+        <if test="cleanRuleName != null">
+            AND clean_rule_name = #{cleanRuleName}
+        </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanRulePO">
-        INSERT INTO `clean_rule` (
-            `gmt_created`
-            , `gmt_modified`
-            , `clean_rule_code`
-            , `clean_rule_name`
-            , `permit_remind`
-            , `permit_batch`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO clean_rule (
+            gmt_created
+            , gmt_modified
+            , clean_rule_code
+            , clean_rule_name
+            , permit_remind
+            , permit_batch
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
@@ -66,15 +85,21 @@
             <if test="permitBatch != null">
                 , permit_batch = #{permitBatch}
             </if>
+            <if test="comment != null">
+                , comment = #{comment}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
     </update>
 
     <delete id="delete">
         DELETE FROM clean_rule
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
     </delete>
 </mapper>

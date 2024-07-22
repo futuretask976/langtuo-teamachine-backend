@@ -92,7 +92,7 @@ public class MenuController {
     @GetMapping(value = "/dispatch/{tenantcode}/{menucode}/get")
     public LangTuoResult<MenuDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "menucode") String menuCode) {
-        LangTuoResult<MenuDispatchDTO> rtn = service.getDispatchByMenuCode(tenantCode, menuCode);
+        LangTuoResult<MenuDispatchDTO> rtn = service.listDispatchByMenuCode(tenantCode, menuCode);
         return rtn;
     }
 }

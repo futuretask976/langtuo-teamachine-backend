@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface GxTableShard {
+public @interface TeaMachineTableShard {
     // 是否开启建表操作
     boolean tableShardOpen() default false;
 

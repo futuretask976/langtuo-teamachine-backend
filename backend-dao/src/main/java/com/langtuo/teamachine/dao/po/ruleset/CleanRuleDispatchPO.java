@@ -29,7 +29,7 @@ public class CleanRuleDispatchPO {
     /**
      * 店铺编码
      */
-    private String shopCode;
+    private String shopGroupCode;
 
     /**
      * 租户编码

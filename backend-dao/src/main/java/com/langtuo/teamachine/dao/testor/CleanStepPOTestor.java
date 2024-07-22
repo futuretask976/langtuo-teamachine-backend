@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.ruleset.CleanStepMapper;
-import com.langtuo.teamachine.dao.po.ruleset.CleanStepPO;
+import com.langtuo.teamachine.dao.mapper.ruleset.CleanRuleStepMapper;
+import com.langtuo.teamachine.dao.po.ruleset.CleanRuleStepPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -11,19 +11,18 @@ public class CleanStepPOTestor {
     public static void main(String args[]) {
 //        insert();
 //        select();
-        update();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        CleanStepMapper mapper = sqlSession.getMapper(CleanStepMapper.class);
+        CleanRuleStepMapper mapper = sqlSession.getMapper(CleanRuleStepMapper.class);
 
-        CleanStepPO po = null;
+        CleanRuleStepPO po = null;
 
-        po = new CleanStepPO();
+        po = new CleanRuleStepPO();
         po.setTenantCode("tenant_001");
         po.setCleanRuleCode("clean_rule_001");
-        po.setStepNum(1);
+        po.setStepIndex(1);
         po.setCleanContent(0);
         po.setWashTime(10);
         po.setSoakTime(null);
@@ -33,10 +32,10 @@ public class CleanStepPOTestor {
         po.setRemindContent("排除空气进行中");
         mapper.insert(po);
 
-        po = new CleanStepPO();
+        po = new CleanRuleStepPO();
         po.setTenantCode("tenant_001");
         po.setCleanRuleCode("clean_rule_002");
-        po.setStepNum(2);
+        po.setStepIndex(2);
         po.setCleanContent(1);
         po.setWashTime(null);
         po.setSoakTime(100);
@@ -52,36 +51,15 @@ public class CleanStepPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        CleanStepMapper mapper = sqlSession.getMapper(CleanStepMapper.class);
+        CleanRuleStepMapper mapper = sqlSession.getMapper(CleanRuleStepMapper.class);
 
-        List<CleanStepPO> list = mapper.selectList();
-        for (CleanStepPO po : list) {
+        List<CleanRuleStepPO> list = mapper.selectList("tenant_001", "clean_rule_001");
+        for (CleanRuleStepPO po : list) {
             System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
-        CleanStepPO po = mapper.selectOne("tenant_001", "clean_rule_001", 1);
+        CleanRuleStepPO po = mapper.selectOne("tenant_001", "clean_rule_001", 1);
         System.out.printf("$$$$$ po: %s\n", po);
-
-        sqlSession.commit();
-        sqlSession.close();
-    }
-
-    public static void update() {
-        SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        CleanStepMapper mapper = sqlSession.getMapper(CleanStepMapper.class);
-
-        CleanStepPO po = new CleanStepPO();
-        po.setTenantCode("tenant_001");
-        po.setCleanRuleCode("clean_rule_002");
-        po.setStepNum(2);
-        po.setCleanContent(1);
-        po.setWashTime(null);
-        po.setSoakTime(200);
-        po.setSoakWashInterval(20);
-        po.setSoakWashTime(40);
-        po.setRemindTitle("浸泡");
-        po.setRemindContent("浸泡进行中");
-        mapper.update(po);
 
         sqlSession.commit();
         sqlSession.close();

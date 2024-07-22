@@ -4,13 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.ruleset.CleanStepMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.ruleset.CleanStepPO" id="cleanStepPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.ruleset.CleanRuleStepMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.ruleset.CleanRuleStepPO" id="cleanStepPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="cleanRuleCode" column="clean_rule_code"/>
-        <result property="stepNum" column="step_num"/>
+        <result property="stepIndex" column="step_index"/>
         <result property="cleanContent" column="clean_content"/>
         <result property="washTime" column="wash_time"/>
         <result property="soakTime" column="soak_time"/>
@@ -24,34 +24,37 @@
     <select id="selectOne" resultMap="cleanStepPOMap">
         SELECT * FROM clean_step
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
-            and step_num = #{stepNum}
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
+            AND step_index = #{stepIndex}
     </select>
 
     <select id="selectList" resultMap="cleanStepPOMap">
-        SELECT * FROM clean_step LIMIT 100
+        SELECT * FROM clean_step
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanStepPO">
-        INSERT INTO `clean_step` (
-            `gmt_created`
-            , `gmt_modified`
-            , `clean_rule_code`
-            , `step_num`
-            , `clean_content`
-            , `wash_time`
-            , `soak_time`
-            , `soak_wash_interval`
-            , `soak_wash_time`
-            , `remind_title`
-            , `remind_content`
-            , `tenant_code`
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanRuleStepPO">
+        INSERT INTO clean_step (
+            gmt_created
+            , gmt_modified
+            , clean_rule_code
+            , step_index
+            , clean_content
+            , wash_time
+            , soak_time
+            , soak_wash_interval
+            , soak_wash_time
+            , remind_title
+            , remind_content
+            , tenant_code
         ) VALUES (
             now()
             , now()
             , #{cleanRuleCode}
-            , #{stepNum}
+            , #{stepIndex}
             , #{cleanContent}
             , #{washTime}
             , #{soakTime}
@@ -63,7 +66,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanStepPO">
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanRuleStepPO">
         UPDATE clean_step
         SET
             gmt_modified = now()
@@ -91,14 +94,13 @@
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and clean_rule_code = #{cleanRuleCode}
-            and step_num = #{stepNum}
+            and step_index = #{stepIndex}
     </update>
 
     <delete id="delete">
         DELETE FROM clean_step
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
-            and step_num = #{stepNum}
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
     </delete>
 </mapper>

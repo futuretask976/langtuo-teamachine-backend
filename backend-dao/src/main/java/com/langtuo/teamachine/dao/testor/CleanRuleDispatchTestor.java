@@ -23,13 +23,13 @@ public class CleanRuleDispatchTestor {
         po = new CleanRuleDispatchPO();
         po.setTenantCode("tenant_001");
         po.setCleanRuleCode("clean_001");
-        po.setShopCode("shop_001");
+        po.setShopGroupCode("shop_001");
         mapper.insert(po);
 
         po = new CleanRuleDispatchPO();
         po.setTenantCode("tenant_002");
         po.setCleanRuleCode("clean_002");
-        po.setShopCode("shop_002");
+        po.setShopGroupCode("shop_002");
         mapper.insert(po);
 
         sqlSession.commit();
@@ -40,7 +40,7 @@ public class CleanRuleDispatchTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         CleanRuleDispatchMapper mapper = sqlSession.getMapper(CleanRuleDispatchMapper.class);
 
-        List<CleanRuleDispatchPO> list = mapper.selectList();
+        List<CleanRuleDispatchPO> list = mapper.selectList("tenant_002", "clean_002");
         for (CleanRuleDispatchPO po : list) {
             System.out.printf("$$$$$ list->po: %s\n", po);
         }
@@ -56,7 +56,7 @@ public class CleanRuleDispatchTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         CleanRuleDispatchMapper mapper = sqlSession.getMapper(CleanRuleDispatchMapper.class);
 
-        mapper.delete("tenant_001", "clean_001", "shop_001");
+        mapper.delete("tenant_001", "clean_001");
 
         sqlSession.commit();
         sqlSession.close();

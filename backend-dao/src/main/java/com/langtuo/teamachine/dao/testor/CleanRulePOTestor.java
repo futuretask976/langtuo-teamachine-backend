@@ -55,12 +55,12 @@ public class CleanRulePOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         CleanRuleMapper mapper = sqlSession.getMapper(CleanRuleMapper.class);
 
-        List<CleanRulePO> list = mapper.selectList();
+        List<CleanRulePO> list = mapper.selectList("tenant_002");
         for (CleanRulePO po : list) {
             System.out.printf("!!!!!!!!!! list->po: %s\n", po);
         }
 
-        CleanRulePO po = mapper.selectOne("tenant_002", "clean_rule_002");
+        CleanRulePO po = mapper.selectOne("tenant_002", "clean_rule_002", null);
         System.out.printf("!!!!!!!!!! po: %s\n", po);
 
         sqlSession.commit();

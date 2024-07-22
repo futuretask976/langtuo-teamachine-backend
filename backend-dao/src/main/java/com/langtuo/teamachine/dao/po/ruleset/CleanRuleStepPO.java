@@ -3,10 +3,9 @@ package com.langtuo.teamachine.dao.po.ruleset;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.Map;
 
 @Data
-public class CleanStepPO {
+public class CleanRuleStepPO {
     /**
      * 数据表id
      */
@@ -23,6 +22,11 @@ public class CleanStepPO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
      * 清洁规则编码
      */
     private String cleanRuleCode;
@@ -30,7 +34,7 @@ public class CleanStepPO {
     /**
      * 步骤序号
      */
-    private Integer stepNum;
+    private Integer stepIndex;
 
     /**
      * 清洗内容，0：冲洗，1：浸泡
@@ -66,9 +70,4 @@ public class CleanStepPO {
      * 提醒内容
      */
     private String remindContent;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
 }

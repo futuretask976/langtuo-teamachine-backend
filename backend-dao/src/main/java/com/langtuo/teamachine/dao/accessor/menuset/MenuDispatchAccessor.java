@@ -16,14 +16,6 @@ public class MenuDispatchAccessor {
     @Resource
     private MenuDispatchMapper mapper;
 
-    public MenuDispatchPO selectOneByCode(String tenantCode, String menuCode) {
-        return mapper.selectOne(tenantCode, menuCode, null);
-    }
-
-    public MenuDispatchPO selectOneByName(String tenantCode, String menuName) {
-        return mapper.selectOne(tenantCode, null, menuName);
-    }
-
     public List<MenuDispatchPO> selectList(String tenantCode, String menuCode) {
         List<MenuDispatchPO> list = mapper.selectList(tenantCode, menuCode);
         return list;

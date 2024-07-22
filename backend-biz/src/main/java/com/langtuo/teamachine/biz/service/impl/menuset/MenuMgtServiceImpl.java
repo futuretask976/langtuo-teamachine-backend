@@ -138,17 +138,34 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     }
 
     @Override
+    public LangTuoResult<Void> delete(String tenantCode, String menuCode) {
+        if (StringUtils.isEmpty(tenantCode)) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        LangTuoResult<Void> langTuoResult = null;
+        try {
+            int deleted4Series = menuAccessor.delete(tenantCode, menuCode);
+            int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(tenantCode, menuCode);
+            langTuoResult = LangTuoResult.success();
+        } catch (Exception e) {
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
     public LangTuoResult<Void> putDispatch(MenuDispatchPutRequest request) {
         if (request == null) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        List<MenuDispatchPO> poList = convertToMenuDispatchPO(request);
+        List<MenuDispatchPO> poList = convert(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            int deleted = menuDispatchAccessor.delete(poList.get(0).getTenantCode(),
-                    poList.get(0).getMenuCode());
+            int deleted = menuDispatchAccessor.delete(request.getTenantCode(),
+                    request.getMenuCode());
             poList.forEach(po -> {
                 menuDispatchAccessor.insert(po);
             });
@@ -161,24 +178,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String seriesCode) {
-        if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
-        }
-
-        LangTuoResult<Void> langTuoResult = null;
-        try {
-            int deleted4Series = menuAccessor.delete(tenantCode, seriesCode);
-            int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(tenantCode, seriesCode);
-            langTuoResult = LangTuoResult.success();
-        } catch (Exception e) {
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
-        }
-        return langTuoResult;
-    }
-
-    @Override
-    public LangTuoResult<MenuDispatchDTO> getDispatchByMenuCode(String tenantCode, String menuCode) {
+    public LangTuoResult<MenuDispatchDTO> listDispatchByMenuCode(String tenantCode, String menuCode) {
         LangTuoResult<MenuDispatchDTO> langTuoResult = null;
         try {
             MenuDispatchDTO dto = new MenuDispatchDTO();
@@ -268,7 +268,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 }).collect(Collectors.toList());
     }
 
-    private List<MenuDispatchPO> convertToMenuDispatchPO(MenuDispatchPutRequest request) {
+    private List<MenuDispatchPO> convert(MenuDispatchPutRequest request) {
         String tenantCode = request.getTenantCode();
         String menuCode = request.getMenuCode();
 

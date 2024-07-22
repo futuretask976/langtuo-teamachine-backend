@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.source;
 
-import com.langtuo.teamachine.dao.annotation.MySQLScan;
+import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.interceptor.LangTuoTableShardInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.plugin.Interceptor;
@@ -25,7 +25,7 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan(
     basePackages = "com.langtuo.teamachine.dao.mapper", // mapper接口扫描的包
-    annotationClass = MySQLScan.class, // mapper接口扫描的注解
+    annotationClass = TeaMachineSQLScan.class, // mapper接口扫描的注解
     sqlSessionFactoryRef = SQLSourceConfig.SQL_SESSION_FACTORY_NAME// mapper接口使用的session工厂
 )
 @Slf4j

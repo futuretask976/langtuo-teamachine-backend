@@ -47,13 +47,6 @@ public interface MenuMgtService {
 
     /**
      *
-     * @param request
-     * @return
-     */
-    LangTuoResult<Void> putDispatch(MenuDispatchPutRequest request);
-
-    /**
-     *
      * @param tenantCode
      * @param menuCode
      * @return
@@ -62,8 +55,15 @@ public interface MenuMgtService {
 
     /**
      *
+     * @param request
+     * @return
+     */
+    LangTuoResult<Void> putDispatch(MenuDispatchPutRequest request);
+
+    /**
+     *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<MenuDispatchDTO> getDispatchByMenuCode(String tenantCode, String menuCode);
+    LangTuoResult<MenuDispatchDTO> listDispatchByMenuCode(String tenantCode, String menuCode);
 }

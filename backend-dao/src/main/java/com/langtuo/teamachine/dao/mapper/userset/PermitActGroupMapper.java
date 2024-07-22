@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.mapper.userset;
 
-import com.langtuo.teamachine.dao.annotation.GxTableShard;
-import com.langtuo.teamachine.dao.annotation.MySQLScan;
+import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
+import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.po.userset.PermitActGroupPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Mapper
-@MySQLScan
+@TeaMachineSQLScan
 @Repository
 public interface PermitActGroupMapper {
     /**
@@ -31,7 +31,7 @@ public interface PermitActGroupMapper {
      * @param po
      * @return
      */
-    @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
     int insert(PermitActGroupPO po);
 
     /**

@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.mapper.deviceset;
 
-import com.langtuo.teamachine.dao.annotation.GxTableShard;
-import com.langtuo.teamachine.dao.annotation.MySQLScan;
+import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
+import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.po.deviceset.MachineModelPO;
 import com.langtuo.teamachine.dao.query.deviceset.MachineModelQuery;
 import org.apache.ibatis.annotations.Mapper;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Mapper
-@MySQLScan
+@TeaMachineSQLScan
 @Repository
 public interface MachineModelMapper {
     /**
@@ -38,7 +38,7 @@ public interface MachineModelMapper {
      * @param machineModelPO
      * @return
      */
-    @GxTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
     int insert(MachineModelPO machineModelPO);
 
     /**

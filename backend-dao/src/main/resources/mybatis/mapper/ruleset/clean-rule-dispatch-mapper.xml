@@ -10,34 +10,43 @@
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="cleanRuleCode" column="clean_rule_code"/>
-        <result property="shopCode" column="shop_code"/>
+        <result property="shopGroupCode" column="shop_group_code"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
     <select id="selectOne" resultMap="cleanRuleDispatchPOMap">
         SELECT * FROM clean_rule_dispatch
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
-            and shop_code = #{shopCode}
+            AND tenant_code = #{tenantCode}
+            <if test="cleanRuleCode != null">
+                AND clean_rule_code = #{cleanRuleCode}
+            </if>
+            <if test="shopGroupCode != null">
+                AND shop_group_code = #{shopGroupCode}
+            </if>
     </select>
 
     <select id="selectList" resultMap="cleanRuleDispatchPOMap">
-        SELECT * FROM clean_rule_dispatch LIMIT 100
+        SELECT * FROM clean_rule_dispatch
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="cleanRuleCode != null">
+                AND clean_rule_code = #{cleanRuleCode}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanRuleDispatchPO">
-        INSERT INTO `clean_rule_dispatch` (
-            `gmt_created`
-            , `gmt_modified`
-            , `clean_rule_code`
-            , `shop_code`
-            , `tenant_code`
+        INSERT INTO clean_rule_dispatch (
+            gmt_created
+            , gmt_modified
+            , clean_rule_code
+            , shop_group_code
+            , tenant_code
         ) VALUES (
             now()
             , now()
             , #{cleanRuleCode}
-            , #{shopCode}
+            , #{shopGroupCode}
             , #{tenantCode}
         )
     </insert>
@@ -45,8 +54,7 @@
     <delete id="delete">
         DELETE FROM clean_rule_dispatch
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
-            and shop_code = #{shopCode}
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
     </delete>
 </mapper>

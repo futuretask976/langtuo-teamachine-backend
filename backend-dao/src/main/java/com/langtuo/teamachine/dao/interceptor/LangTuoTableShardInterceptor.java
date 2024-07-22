@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.interceptor;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.langtuo.teamachine.dao.annotation.GxTableShard;
+import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -62,7 +62,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
         // System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept boundSql=%s\n", boundSql.getSql());
 
         // 拦截分表逻辑，获取注解
-        GxTableShard annotation = getAnnotation(mappedStatement);
+        TeaMachineTableShard annotation = getAnnotation(mappedStatement);
         // 当前方法不包含注解，走默认
         if (annotation == null || !annotation.tableShardOpen()) {
             return invocation.proceed();
@@ -92,7 +92,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
         return "01"; // 示例返回值
     }
 
-    private GxTableShard getAnnotation(MappedStatement mappedStatement) throws ClassNotFoundException {
+    private TeaMachineTableShard getAnnotation(MappedStatement mappedStatement) throws ClassNotFoundException {
         String id = mappedStatement.getId();
         String className = id.substring(0, id.lastIndexOf("."));
         String methodName = id.substring(id.lastIndexOf(".") + 1);
@@ -104,7 +104,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
         Method[] declaredMethods = aClass.getDeclaredMethods();
         for (Method declaredMethod : declaredMethods) {
             if (declaredMethod.getName().equals(methodName)) {
-                return declaredMethod.getAnnotation(GxTableShard.class);
+                return declaredMethod.getAnnotation(TeaMachineTableShard.class);
             }
         }
         return null;
