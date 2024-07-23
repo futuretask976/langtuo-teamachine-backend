@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class CleanExceptRulePO {
+public class CleanRuleExceptPO {
     /**
      * 数据表id
      */

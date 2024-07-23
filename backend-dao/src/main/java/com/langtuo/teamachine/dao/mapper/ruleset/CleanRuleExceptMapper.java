@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper.ruleset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.ruleset.CleanExceptRulePO;
+import com.langtuo.teamachine.dao.po.ruleset.CleanRuleExceptPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,35 +12,30 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface CleanExceptRuleMapper {
+public interface CleanRuleExceptMapper {
     /**
      *
      * @param tenantCode
      * @param cleanRuleCode
      * @return
      */
-    CleanExceptRulePO selectOne(@Param("tenantCode") String tenantCode, @Param("cleanRuleCode") String cleanRuleCode, @Param("exceptToppingCode") String exceptToppingCode);
+    CleanRuleExceptPO selectOne(@Param("tenantCode") String tenantCode, @Param("cleanRuleCode") String cleanRuleCode,
+            @Param("exceptToppingCode") String exceptToppingCode);
 
     /**
      *
      * @return
      */
-    List<CleanExceptRulePO> selectList();
+    List<CleanRuleExceptPO> selectList(@Param("tenantCode") String tenantCode,
+            @Param("cleanRuleCode") String cleanRuleCode);
 
     /**
      *
-     * @param cleanExceptRulePO
+     * @param cleanRuleExceptPO
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(CleanExceptRulePO cleanExceptRulePO);
-
-    /**
-     *
-     * @param cleanExceptRulePO
-     * @return
-     */
-    int update(CleanExceptRulePO cleanExceptRulePO);
+    int insert(CleanRuleExceptPO cleanRuleExceptPO);
 
     /**
      *
@@ -48,5 +43,5 @@ public interface CleanExceptRuleMapper {
      * @param cleanRuleCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("cleanRuleCode") String cleanRuleCode, @Param("exceptToppingCode") String exceptToppingCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("cleanRuleCode") String cleanRuleCode);
 }

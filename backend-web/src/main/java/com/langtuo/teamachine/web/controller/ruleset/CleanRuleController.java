@@ -62,7 +62,6 @@ public class CleanRuleController {
     public LangTuoResult<Void> put(@RequestBody CleanRulePutRequest request) {
         LangTuoResult<Void> rtn = service.put(request);
         return rtn;
-//        return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
     }
 
     /**

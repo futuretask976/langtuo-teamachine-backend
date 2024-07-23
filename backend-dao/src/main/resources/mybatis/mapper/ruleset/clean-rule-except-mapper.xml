@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.ruleset.CleanRuleExceptMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.ruleset.CleanRuleExceptPO" id="cleanRuleExceptPOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="cleanRuleCode" column="clean_rule_code"/>
+        <result property="exceptToppingCode" column="except_topping_code"/>
+        <result property="tenantCode" column="tenant_code"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="cleanRuleExceptPOMap">
+        SELECT * FROM clean_except_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
+            AND except_topping_code = #{exceptToppingCode}
+    </select>
+
+    <select id="selectList" resultMap="cleanRuleExceptPOMap">
+        SELECT * FROM clean_except_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanRuleExceptPO">
+        INSERT INTO clean_except_rule (
+            gmt_created
+            , gmt_modified
+            , clean_rule_code
+            , except_topping_code
+            , tenant_code
+        ) VALUES (
+            now()
+            , now()
+            , #{cleanRuleCode}
+            , #{exceptToppingCode}
+            , #{tenantCode}
+        )
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM clean_except_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
+    </delete>
+</mapper>

@@ -38,6 +38,11 @@ public class CleanRulePutRequest {
     private Map<String, String> extraInfo;
 
     /**
+     *
+     */
+    private List<String> exceptToppingCodeList;
+
+    /**
      * 
      */
     private List<CleanRuleStepPutRequest> cleanRuleStepList;

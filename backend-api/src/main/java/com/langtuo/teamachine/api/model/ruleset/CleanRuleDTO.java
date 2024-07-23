@@ -56,5 +56,10 @@ public class CleanRuleDTO {
     /**
      *
      */
+    private List<String> exceptToppingCodeList;
+
+    /**
+     *
+     */
     private List<CleanRuleStepDTO> cleanRuleStepList;
 }

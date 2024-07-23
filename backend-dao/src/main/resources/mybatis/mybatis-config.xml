@@ -69,7 +69,7 @@
         <!-- 食安规则 -->
         <mapper resource="mybatis/mapper/ruleset/clean-rule-mapper.xml"/>
         <mapper resource="mybatis/mapper/ruleset/clean-rule-step-mapper.xml"/>
-        <mapper resource="mybatis/mapper/ruleset/clean-except-rule-mapper.xml"/>
+        <mapper resource="mybatis/mapper/ruleset/clean-rule-except-mapper.xml"/>
         <mapper resource="mybatis/mapper/ruleset/clean-rule-dispatch-mapper.xml"/>
         <!-- 日常报表 -->
         <mapper resource="mybatis/mapper/reportset/warning-rule-mapper.xml"/>
