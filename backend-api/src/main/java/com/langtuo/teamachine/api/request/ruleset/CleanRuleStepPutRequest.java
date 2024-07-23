@@ -5,11 +5,6 @@ import lombok.Data;
 @Data
 public class CleanRuleStepPutRequest {
     /**
-     * 清洁规则编码
-     */
-    private String cleanRuleCode;
-
-    /**
      * 步骤序号
      */
     private Integer stepIndex;
@@ -48,4 +43,9 @@ public class CleanRuleStepPutRequest {
      * 提醒内容
      */
     private String remindContent;
+
+    /**
+     *
+     */
+    private int needConfirm;
 }

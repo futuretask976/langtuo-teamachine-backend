@@ -22,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -229,7 +230,6 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTenantCode(po.getTenantCode());
-        dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
         dto.setCleanRuleCode(po.getCleanRuleCode());
         dto.setCleanRuleName(po.getCleanRuleName());
@@ -258,7 +258,9 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     dto.setStepIndex(po.getStepIndex());
                     dto.setSoakWashInterval(po.getSoakWashInterval());
                     dto.setWashTime(po.getWashTime());
+                    dto.setSoakWashTime(po.getSoakWashTime());
                     dto.setStepIndex(po.getStepIndex());
+                    dto.setNeedConfirm(po.getNeedConfirm());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -272,7 +274,6 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
         CleanRulePO po = new CleanRulePO();
         po.setTenantCode(request.getTenantCode());
-        po.setComment(request.getComment());
         po.setExtraInfo(request.getExtraInfo());
         po.setCleanRuleCode(request.getCleanRuleCode());
         po.setCleanRuleName(request.getCleanRuleName());
@@ -287,10 +288,11 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         }
 
         List<CleanRuleStepPO> list = request.getCleanRuleStepList().stream()
+                .filter(Objects::nonNull)
                 .map(cleanRuleStepPutRequest -> {
                     CleanRuleStepPO po = new CleanRuleStepPO();
                     po.setTenantCode(request.getTenantCode());
-                    po.setCleanRuleCode(cleanRuleStepPutRequest.getCleanRuleCode());
+                    po.setCleanRuleCode(request.getCleanRuleCode());
                     po.setCleanContent(cleanRuleStepPutRequest.getCleanContent());
                     po.setRemindContent(cleanRuleStepPutRequest.getRemindContent());
                     po.setRemindTitle(cleanRuleStepPutRequest.getRemindTitle());
@@ -298,7 +300,9 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     po.setStepIndex(cleanRuleStepPutRequest.getStepIndex());
                     po.setSoakWashInterval(cleanRuleStepPutRequest.getSoakWashInterval());
                     po.setWashTime(cleanRuleStepPutRequest.getWashTime());
+                    po.setSoakWashTime(cleanRuleStepPutRequest.getSoakWashTime());
                     po.setStepIndex(cleanRuleStepPutRequest.getStepIndex());
+                    po.setNeedConfirm(cleanRuleStepPutRequest.getNeedConfirm());
                     return po;
                 }).collect(Collectors.toList());
         return list;

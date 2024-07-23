@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.web.controller.ruleset;
 
+import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.ruleset.CleanRuleDTO;
 import com.langtuo.teamachine.api.model.ruleset.CleanRuleDispatchDTO;
@@ -61,6 +62,7 @@ public class CleanRuleController {
     public LangTuoResult<Void> put(@RequestBody CleanRulePutRequest request) {
         LangTuoResult<Void> rtn = service.put(request);
         return rtn;
+//        return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
     }
 
     /**

@@ -27,7 +27,6 @@ public class CleanRulePOTestor {
         po.setCleanRuleName("清洁规则001");
         po.setPermitBatch(0);
         po.setPermitRemind(1);
-        po.setComment("松江的门店");
         po.setExtraInfo(new HashMap<String, String>(){{
             put("k1", "v1");
             put("k2", "v2");
@@ -40,7 +39,6 @@ public class CleanRulePOTestor {
         po.setCleanRuleName("清洁规则002");
         po.setPermitBatch(0);
         po.setPermitRemind(1);
-        po.setComment("松江的门店2");
         po.setExtraInfo(new HashMap<String, String>(){{
             put("k1", "v1");
             put("k2", "v2");

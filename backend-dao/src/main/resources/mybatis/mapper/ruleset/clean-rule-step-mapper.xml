@@ -18,11 +18,12 @@
         <result property="soakWashTime" column="soak_wash_time"/>
         <result property="remindTitle" column="remind_title"/>
         <result property="remindContent" column="remind_content"/>
+        <result property="needConfirm" column="need_confirm"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
     <select id="selectOne" resultMap="cleanStepPOMap">
-        SELECT * FROM clean_step
+        SELECT * FROM clean_rule_step
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND clean_rule_code = #{cleanRuleCode}
@@ -30,14 +31,14 @@
     </select>
 
     <select id="selectList" resultMap="cleanStepPOMap">
-        SELECT * FROM clean_step
+        SELECT * FROM clean_rule_step
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND clean_rule_code = #{cleanRuleCode}
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanRuleStepPO">
-        INSERT INTO clean_step (
+        INSERT INTO clean_rule_step (
             gmt_created
             , gmt_modified
             , clean_rule_code
@@ -49,6 +50,7 @@
             , soak_wash_time
             , remind_title
             , remind_content
+            , need_confirm
             , tenant_code
         ) VALUES (
             now()
@@ -62,12 +64,13 @@
             , #{soakWashTime}
             , #{remindTitle}
             , #{remindContent}
+            , #{needConfirm}
             , #{tenantCode}
         )
     </insert>
 
     <update id="update" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanRuleStepPO">
-        UPDATE clean_step
+        UPDATE clean_rule_step
         SET
             gmt_modified = now()
             <if test="cleanContent != null">
@@ -98,7 +101,7 @@
     </update>
 
     <delete id="delete">
-        DELETE FROM clean_step
+        DELETE FROM clean_rule_step
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND clean_rule_code = #{cleanRuleCode}

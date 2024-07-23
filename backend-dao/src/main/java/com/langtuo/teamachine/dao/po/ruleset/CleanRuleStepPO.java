@@ -70,4 +70,9 @@ public class CleanRuleStepPO {
      * 提醒内容
      */
     private String remindContent;
+
+    /**
+     *
+     */
+    private int needConfirm;
 }

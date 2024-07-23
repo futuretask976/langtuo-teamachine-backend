@@ -33,11 +33,6 @@ public class CleanRulePutRequest {
     private String tenantCode;
 
     /**
-     * 备注
-     */
-    private String comment;
-
-    /**
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;

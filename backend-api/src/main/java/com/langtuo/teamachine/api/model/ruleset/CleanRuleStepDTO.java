@@ -71,4 +71,9 @@ public class CleanRuleStepDTO {
      * 提醒内容
      */
     private String remindContent;
+
+    /**
+     *
+     */
+    private int needConfirm;
 }
