@@ -12,10 +12,6 @@ public class CleanRuleExceptAccessor {
     @Resource
     private CleanRuleExceptMapper mapper;
 
-    public CleanRuleExceptPO selectOne(String tenantCode, String cleanRuleCode, String exceptToppingCode) {
-        return mapper.selectOne(tenantCode, cleanRuleCode, exceptToppingCode);
-    }
-
     public List<CleanRuleExceptPO> selectList(String tenantCode, String cleanRuleCode) {
         List<CleanRuleExceptPO> list = mapper.selectList(tenantCode, cleanRuleCode);
         return list;

@@ -45,9 +45,6 @@ public class CleanExceptRulePOTestor {
             System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
-        CleanRuleExceptPO po = mapper.selectOne("tenant_002", "clean_rule_002", "except_002");
-        System.out.printf("$$$$$ po: %s\n", po);
-
         sqlSession.commit();
         sqlSession.close();
     }
