@@ -13,20 +13,20 @@ public interface OpenRuleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<OpenRuleDTO> getByCode(String tenantCode, String flushAirRuleCode);
+    LangTuoResult<OpenRuleDTO> getByCode(String tenantCode, String openRuleCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<OpenRuleDTO> getByName(String tenantCode, String cleanRuleName);
+    LangTuoResult<OpenRuleDTO> getByName(String tenantCode, String openRuleName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<OpenRuleDTO>> search(String tenantCode, String flushAirRuleCode, String cleanRuleName,
+    LangTuoResult<PageDTO<OpenRuleDTO>> search(String tenantCode, String openRuleCode, String openRuleName,
             int pageNum, int pageSize);
 
     /**
@@ -46,8 +46,8 @@ public interface OpenRuleMgtService {
     /**
      *
      * @param tenantCode
-     * @param flushAirRuleCode
+     * @param openRuleCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String flushAirRuleCode);
+    LangTuoResult<Void> delete(String tenantCode, String openRuleCode);
 }

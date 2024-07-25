@@ -39,13 +39,13 @@
     <select id="search" resultMap="cleanRulePOMap">
         SELECT * FROM clean_rule
         WHERE 1 = 1
-        AND tenant_code = #{tenantCode}
-        <if test="cleanRuleCode != null">
-            AND clean_rule_code = #{cleanRuleCode}
-        </if>
-        <if test="cleanRuleName != null">
-            AND clean_rule_name = #{cleanRuleName}
-        </if>
+            AND tenant_code = #{tenantCode}
+            <if test="cleanRuleCode != null">
+                AND clean_rule_code = #{cleanRuleCode}
+            </if>
+            <if test="cleanRuleName != null">
+                AND clean_rule_name = #{cleanRuleName}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanRulePO">
