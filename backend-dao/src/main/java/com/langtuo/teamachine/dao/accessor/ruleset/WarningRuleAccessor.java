@@ -2,9 +2,9 @@ package com.langtuo.teamachine.dao.accessor.ruleset;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.mapper.ruleset.OpenRuleMapper;
-import com.langtuo.teamachine.dao.po.ruleset.OpenRulePO;
-import com.langtuo.teamachine.dao.query.ruleset.OpenRuleQuery;
+import com.langtuo.teamachine.dao.mapper.ruleset.WarningRuleMapper;
+import com.langtuo.teamachine.dao.po.ruleset.WarningRulePO;
+import com.langtuo.teamachine.dao.query.ruleset.WarningRuleQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -12,46 +12,46 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class OpenRuleAccessor {
+public class WarningRuleAccessor {
     @Resource
-    private OpenRuleMapper mapper;
+    private WarningRuleMapper mapper;
 
-    public OpenRulePO selectOneByCode(String tenantCode, String flushAirRuleCode) {
-        return mapper.selectOne(tenantCode, flushAirRuleCode, null);
+    public WarningRulePO selectOneByCode(String tenantCode, String warningRuleCode) {
+        return mapper.selectOne(tenantCode, warningRuleCode, null);
     }
 
-    public OpenRulePO selectOneByName(String tenantCode, String flushAirRuleName) {
-        return mapper.selectOne(tenantCode, null, flushAirRuleName);
+    public WarningRulePO selectOneByName(String tenantCode, String warningRuleName) {
+        return mapper.selectOne(tenantCode, null, warningRuleName);
     }
 
-    public List<OpenRulePO> selectList(String tenantCode) {
-        List<OpenRulePO> list = mapper.selectList(tenantCode);
+    public List<WarningRulePO> selectList(String tenantCode) {
+        List<WarningRulePO> list = mapper.selectList(tenantCode);
         return list;
     }
 
-    public PageInfo<OpenRulePO> search(String tenantCode, String flushAirRuleCode, String flushAirRuleName,
+    public PageInfo<WarningRulePO> search(String tenantCode, String warningRuleCode, String warningRuleName,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
-        OpenRuleQuery query = new OpenRuleQuery();
+        WarningRuleQuery query = new WarningRuleQuery();
         query.setTenantCode(tenantCode);
-        query.setOpenRuleCode(StringUtils.isBlank(flushAirRuleCode) ? null : flushAirRuleCode);
-        query.setOpenRuleName(StringUtils.isBlank(flushAirRuleName) ? null : flushAirRuleName);
-        List<OpenRulePO> list = mapper.search(query);
+        query.setWarningRuleCode(StringUtils.isBlank(warningRuleCode) ? null : warningRuleCode);
+        query.setWarningRuleName(StringUtils.isBlank(warningRuleName) ? null : warningRuleName);
+        List<WarningRulePO> list = mapper.search(query);
 
-        PageInfo<OpenRulePO> pageInfo = new PageInfo(list);
+        PageInfo<WarningRulePO> pageInfo = new PageInfo(list);
         return pageInfo;
     }
 
-    public int update(OpenRulePO po) {
+    public int update(WarningRulePO po) {
         return mapper.update(po);
     }
 
-    public int insert(OpenRulePO po) {
+    public int insert(WarningRulePO po) {
         return mapper.insert(po);
     }
 
-    public int delete(String tenantCode, String flushAirRuleCode) {
-        return mapper.delete(tenantCode, flushAirRuleCode);
+    public int delete(String tenantCode, String warningRuleCode) {
+        return mapper.delete(tenantCode, warningRuleCode);
     }
 }

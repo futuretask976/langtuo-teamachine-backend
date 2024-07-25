@@ -3,42 +3,31 @@ package com.langtuo.teamachine.biz.service.impl.ruleset;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.ruleset.OpenRuleDTO;
-import com.langtuo.teamachine.api.model.ruleset.OpenRuleToppingDTO;
-import com.langtuo.teamachine.api.request.ruleset.OpenRulePutRequest;
+import com.langtuo.teamachine.api.model.ruleset.WarningRuleDTO;
+import com.langtuo.teamachine.api.request.ruleset.WarningRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.ruleset.OpenRuleMgtService;
-import com.langtuo.teamachine.dao.accessor.drinkset.ToppingAccessor;
-import com.langtuo.teamachine.dao.accessor.ruleset.*;
-import com.langtuo.teamachine.dao.po.drinkset.ToppingPO;
-import com.langtuo.teamachine.dao.po.ruleset.OpenRuleToppingPO;
-import com.langtuo.teamachine.dao.po.ruleset.OpenRulePO;
+import com.langtuo.teamachine.api.service.ruleset.WarningRuleMgtService;
+import com.langtuo.teamachine.dao.accessor.ruleset.WarningRuleAccessor;
+import com.langtuo.teamachine.dao.po.ruleset.WarningRulePO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
-public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
+public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     @Resource
-    private OpenRuleAccessor openRuleAccessor;
-
-    @Resource
-    private OpenRuleToppingAccessor openRuleToppingAccessor;
-
-    @Resource
-    private ToppingAccessor toppingAccessor;
+    private WarningRuleAccessor accessor;
 
     @Override
-    public LangTuoResult<OpenRuleDTO> getByCode(String tenantCode, String openRuleCode) {
-        LangTuoResult<OpenRuleDTO> langTuoResult = null;
+    public LangTuoResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
+        LangTuoResult<WarningRuleDTO> langTuoResult = null;
         try {
-            OpenRulePO po = openRuleAccessor.selectOneByCode(tenantCode, openRuleCode);
-            OpenRuleDTO dto = convert(po);
+            WarningRulePO po = accessor.selectOneByCode(tenantCode, warningRuleCode);
+            WarningRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,11 +37,11 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
     }
 
     @Override
-    public LangTuoResult<OpenRuleDTO> getByName(String tenantCode, String openRuleName) {
-        LangTuoResult<OpenRuleDTO> langTuoResult = null;
+    public LangTuoResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName) {
+        LangTuoResult<WarningRuleDTO> langTuoResult = null;
         try {
-            OpenRulePO po = openRuleAccessor.selectOneByName(tenantCode, openRuleName);
-            OpenRuleDTO dto = convert(po);
+            WarningRulePO po = accessor.selectOneByName(tenantCode, warningRuleName);
+            WarningRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,11 +51,11 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
     }
 
     @Override
-    public LangTuoResult<List<OpenRuleDTO>> list(String tenantCode) {
-        LangTuoResult<List<OpenRuleDTO>> langTuoResult = null;
+    public LangTuoResult<List<WarningRuleDTO>> list(String tenantCode) {
+        LangTuoResult<List<WarningRuleDTO>> langTuoResult = null;
         try {
-            List<OpenRulePO> poList = openRuleAccessor.selectList(tenantCode);
-            List<OpenRuleDTO> dtoList = convertToOpenRuleDTO(poList);
+            List<WarningRulePO> poList = accessor.selectList(tenantCode);
+            List<WarningRuleDTO> dtoList = convert(poList);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,16 +65,16 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<OpenRuleDTO>> search(String tenantCode, String openRuleCode,
-            String openRuleName, int pageNum, int pageSize) {
+    public LangTuoResult<PageDTO<WarningRuleDTO>> search(String tenantCode, String warningRuleCode,
+            String warningRuleName, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
-        LangTuoResult<PageDTO<OpenRuleDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<WarningRuleDTO>> langTuoResult = null;
         try {
-            PageInfo<OpenRulePO> pageInfo = openRuleAccessor.search(tenantCode, openRuleCode,
-                    openRuleName, pageNum, pageSize);
-            List<OpenRuleDTO> dtoList = convertToOpenRuleDTO(pageInfo.getList());
+            PageInfo<WarningRulePO> pageInfo = accessor.search(tenantCode, warningRuleCode,
+                    warningRuleName, pageNum, pageSize);
+            List<WarningRuleDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,30 +84,21 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(OpenRulePutRequest request) {
+    public LangTuoResult<Void> put(WarningRulePutRequest request) {
         if (request == null) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        OpenRulePO openRulePO = convertToOpenRulePO(request);
-        List<OpenRuleToppingPO> openRuleToppingPOList = convertToOpenRuleIncludePO(request);
+        WarningRulePO warningRulePO = convert(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            OpenRulePO exist = openRuleAccessor.selectOneByCode(openRulePO.getTenantCode(),
-                    openRulePO.getOpenRuleCode());
+            WarningRulePO exist = accessor.selectOneByCode(warningRulePO.getTenantCode(),
+                    warningRulePO.getWarningRuleCode());
             if (exist != null) {
-                int updated = openRuleAccessor.update(openRulePO);
+                int updated = accessor.update(warningRulePO);
             } else {
-                int inserted = openRuleAccessor.insert(openRulePO);
-            }
-
-            int deleted4Topping = openRuleToppingAccessor.delete(request.getTenantCode(),
-                    request.getOpenRuleCode());
-            if (!CollectionUtils.isEmpty(openRuleToppingPOList)) {
-                openRuleToppingPOList.forEach(item -> {
-                    int inserted4Topping = openRuleToppingAccessor.insert(item);
-                });
+                int inserted = accessor.insert(warningRulePO);
             }
 
             langTuoResult = LangTuoResult.success();
@@ -129,15 +109,14 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String openRuleCode) {
+    public LangTuoResult<Void> delete(String tenantCode, String warningRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            int deleted = openRuleAccessor.delete(tenantCode, openRuleCode);
-            int deleted4Topping = openRuleToppingAccessor.delete(tenantCode, openRuleCode);
+            int deleted = accessor.delete(tenantCode, warningRuleCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
@@ -145,97 +124,55 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
         return langTuoResult;
     }
 
-    private List<OpenRuleDTO> convertToOpenRuleDTO(List<OpenRulePO> poList) {
+    private List<WarningRuleDTO> convert(List<WarningRulePO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
-        List<OpenRuleDTO> list = poList.stream()
+        List<WarningRuleDTO> list = poList.stream()
                 .map(po -> convert(po))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private OpenRuleDTO convert(OpenRulePO po) {
+    private WarningRuleDTO convert(WarningRulePO po) {
         if (po == null) {
             return null;
         }
 
-        OpenRuleDTO dto = new OpenRuleDTO();
+        WarningRuleDTO dto = new WarningRuleDTO();
         dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTenantCode(po.getTenantCode());
+        dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
-        dto.setOpenRuleCode(po.getOpenRuleCode());
-        dto.setOpenRuleName(po.getOpenRuleName());
-        dto.setDefaultRule(po.getDefaultRule());
-
-        List<OpenRuleToppingPO> poList = openRuleToppingAccessor.selectList(
-                po.getTenantCode(), po.getOpenRuleCode());
-        if (!CollectionUtils.isEmpty(poList)) {
-            dto.setToppingRuleList(convertToOpenRuleToppingDTO(poList));
-        }
+        dto.setWarningRuleCode(po.getWarningRuleCode());
+        dto.setWarningRuleName(po.getWarningRuleName());
+        dto.setWarningContent(po.getWarningContent());
+        dto.setWarningType(po.getWarningType());
+        dto.setThreshold(po.getThreshold());
+        dto.setThresholdType(po.getThresholdType());
+        dto.setComment(po.getComment());
         return dto;
     }
 
-    private List<OpenRuleToppingDTO> convertToOpenRuleToppingDTO(List<OpenRuleToppingPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<OpenRuleToppingDTO> list = poList.stream()
-                .map(po -> {
-                    OpenRuleToppingDTO dto = new OpenRuleToppingDTO();
-                    dto.setId(po.getId());
-                    dto.setGmtCreated(po.getGmtCreated());
-                    dto.setGmtModified(po.getGmtModified());
-                    dto.setTenantCode(po.getTenantCode());
-                    dto.setOpenRuleCode(po.getOpenRuleCode());
-                    dto.setToppingCode(po.getToppingCode());
-                    dto.setFlushTime(po.getFlushTime());
-                    dto.setFlushWeight(po.getFlushWeight());
-
-                    ToppingPO toppingPO = toppingAccessor.selectOneByCode(po.getTenantCode(), po.getToppingCode());
-                    if (toppingPO != null) {
-                        dto.setToppingName(toppingPO.getToppingName());
-                    }
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private OpenRulePO convertToOpenRulePO(OpenRulePutRequest request) {
+    private WarningRulePO convert(WarningRulePutRequest request) {
         if (request == null) {
             return null;
         }
 
-        OpenRulePO po = new OpenRulePO();
+        WarningRulePO po = new WarningRulePO();
         po.setTenantCode(request.getTenantCode());
+        po.setComment(request.getComment());
         po.setExtraInfo(request.getExtraInfo());
-        po.setOpenRuleCode(request.getOpenRuleCode());
-        po.setOpenRuleName(request.getOpenRuleName());
-        po.setDefaultRule(request.getDefaultRule());
+        po.setWarningRuleCode(request.getWarningRuleCode());
+        po.setWarningRuleName(request.getWarningRuleName());
+        po.setWarningContent(request.getWarningContent());
+        po.setWarningType(request.getWarningType());
+        po.setThreshold(request.getThreshold());
+        po.setThresholdType(request.getThresholdType());
+        po.setComment(request.getComment());
         return po;
-    }
-
-    private List<OpenRuleToppingPO> convertToOpenRuleIncludePO(OpenRulePutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getToppingRuleList())) {
-            return null;
-        }
-
-        List<OpenRuleToppingPO> list = request.getToppingRuleList().stream()
-                .filter(Objects::nonNull)
-                .map(openRuleToppingPutRequest -> {
-                    OpenRuleToppingPO po = new OpenRuleToppingPO();
-                    po.setTenantCode(request.getTenantCode());
-                    po.setOpenRuleCode(request.getOpenRuleCode());
-                    po.setToppingCode(openRuleToppingPutRequest.getToppingCode());
-                    po.setFlushTime(openRuleToppingPutRequest.getFlushTime());
-                    po.setFlushWeight(openRuleToppingPutRequest.getFlushWeight());
-                    return po;
-                }).collect(Collectors.toList());
-        return list;
     }
 }

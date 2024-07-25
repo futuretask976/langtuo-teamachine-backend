@@ -3,7 +3,7 @@ package com.langtuo.teamachine.dao.query.ruleset;
 import lombok.Data;
 
 @Data
-public class OpenRuleQuery {
+public class WarningRuleQuery {
     /**
      * 租户编码
      */
@@ -12,10 +12,10 @@ public class OpenRuleQuery {
     /**
      * 菜单编码
      */
-    private String openRuleCode;
+    private String warningRuleCode;
 
     /**
      * 菜单名称
      */
-    private String openRuleName;
+    private String warningRuleName;
 }

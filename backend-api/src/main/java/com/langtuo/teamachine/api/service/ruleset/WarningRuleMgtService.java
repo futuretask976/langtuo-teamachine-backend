@@ -1,32 +1,32 @@
 package com.langtuo.teamachine.api.service.ruleset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.ruleset.OpenRuleDTO;
-import com.langtuo.teamachine.api.request.ruleset.OpenRulePutRequest;
+import com.langtuo.teamachine.api.model.ruleset.WarningRuleDTO;
+import com.langtuo.teamachine.api.request.ruleset.WarningRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
 import java.util.List;
 
-public interface OpenRuleMgtService {
+public interface WarningRuleMgtService {
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<OpenRuleDTO> getByCode(String tenantCode, String openRuleCode);
+    LangTuoResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<OpenRuleDTO> getByName(String tenantCode, String openRuleName);
+    LangTuoResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<OpenRuleDTO>> search(String tenantCode, String openRuleCode, String openRuleName,
+    LangTuoResult<PageDTO<WarningRuleDTO>> search(String tenantCode, String warningRuleCode, String warningRuleName,
             int pageNum, int pageSize);
 
     /**
@@ -34,20 +34,20 @@ public interface OpenRuleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<OpenRuleDTO>> list(String tenantCode);
+    LangTuoResult<List<WarningRuleDTO>> list(String tenantCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(OpenRulePutRequest request);
+    LangTuoResult<Void> put(WarningRulePutRequest request);
 
     /**
      *
      * @param tenantCode
-     * @param openRuleCode
+     * @param warningRuleCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String openRuleCode);
+    LangTuoResult<Void> delete(String tenantCode, String warningRuleCode);
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class OpenRuleDTO {
+public class WarningRuleDTO {
     /**
      * 数据表id
      */
@@ -29,37 +29,42 @@ public class OpenRuleDTO {
     private String tenantCode;
 
     /**
+     * 备注
+     */
+    private String comment;
+
+    /**
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
 
     /**
-     * 清洁规则编码
+     * 预警规则编码
      */
-    private String openRuleCode;
+    private String warningRuleCode;
 
     /**
-     * 清洁规则名称
+     * 预警规则名称
      */
-    private String openRuleName;
+    private String warningRuleName;
 
     /**
-     * 是否允许提醒，0：不允许，1：允许
+     * 预警类型，0：弱提醒，1：强提醒
      */
-    private Integer defaultRule;
+    private Integer warningType;
 
     /**
-     *
+     * 预警内容，0：报废预警，1：清洗预警
      */
-    private int flushTime;
+    private String warningContent;
 
     /**
-     *
+     * 阈值类型，0：绝对值，1：百分比
      */
-    private int flushWeight;
+    private Integer thresholdType;
 
     /**
-     *
+     * 阈值
      */
-    private List<OpenRuleToppingDTO> toppingRuleList;
+    private Integer threshold;
 }

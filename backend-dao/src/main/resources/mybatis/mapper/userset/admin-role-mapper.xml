@@ -19,15 +19,25 @@
     <select id="selectOne" resultMap="adminRolePOMap">
         SELECT * FROM admin_role
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and role_code = #{roleCode}
+            AND tenant_code = #{tenantCode}
+            AND role_code = #{roleCode}
     </select>
 
     <select id="selectList" resultMap="adminRolePOMap">
         SELECT *
         FROM admin_role
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="adminRolePOMap">
+        SELECT *
+        FROM admin_role
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="roleName != null">
+                AND role_name = #{roleName}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.userset.AdminRolePO">

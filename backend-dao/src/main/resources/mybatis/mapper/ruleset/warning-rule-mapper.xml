@@ -23,27 +23,46 @@
     <select id="selectOne" resultMap="warningRulePOMap">
         SELECT * FROM warning_rule
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and warning_rule_code = #{warningRuleCode}
+            AND tenant_code = #{tenantCode}
+            <if test="warningRuleCode !=null">
+                AND warning_rule_code = #{warningRuleCode}
+            </if>
+            <if test="warningRuleName !=null">
+                AND warning_rule_name = #{warningRuleName}
+            </if>
     </select>
 
     <select id="selectList" resultMap="warningRulePOMap">
-        SELECT * FROM warning_rule LIMIT 100
+        SELECT * FROM warning_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="warningRulePOMap">
+        SELECT * FROM warning_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="warningRuleCode !=null">
+                AND warning_rule_code = #{warningRuleCode}
+            </if>
+            <if test="warningRuleName !=null">
+                AND warning_rule_name = #{warningRuleName}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.WarningRulePO">
-        INSERT INTO `warning_rule` (
-            `gmt_created`
-            , `gmt_modified`
-            , `warning_rule_code`
-            , `warning_rule_name`
-            , `warning_type`
-            , `warning_content`
-            , `threshold_type`
-            , `threshold`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO warning_rule (
+            gmt_created
+            , gmt_modified
+            , warning_rule_code
+            , warning_rule_name
+            , warning_type
+            , warning_content
+            , threshold_type
+            , threshold
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
@@ -88,8 +107,8 @@
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
             </if>
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and warning_rule_code = #{warningRuleCode}
+            AND tenant_code = #{tenantCode}
+            AND warning_rule_code = #{warningRuleCode}
     </update>
 
     <delete id="delete">
