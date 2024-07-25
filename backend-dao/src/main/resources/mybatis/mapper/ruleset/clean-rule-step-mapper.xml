@@ -12,10 +12,10 @@
         <result property="cleanRuleCode" column="clean_rule_code"/>
         <result property="stepIndex" column="step_index"/>
         <result property="cleanContent" column="clean_content"/>
-        <result property="washTime" column="wash_time"/>
-        <result property="soakTime" column="soak_time"/>
-        <result property="soakWashInterval" column="soak_wash_interval"/>
-        <result property="soakWashTime" column="soak_wash_time"/>
+        <result property="washSec" column="wash_sec"/>
+        <result property="soakMin" column="soak_min"/>
+        <result property="flushIntervalMin" column="flush_interval_min"/>
+        <result property="flushSec" column="flush_sec"/>
         <result property="remindTitle" column="remind_title"/>
         <result property="remindContent" column="remind_content"/>
         <result property="needConfirm" column="need_confirm"/>
@@ -44,10 +44,10 @@
             , clean_rule_code
             , step_index
             , clean_content
-            , wash_time
-            , soak_time
-            , soak_wash_interval
-            , soak_wash_time
+            , wash_sec
+            , soak_min
+            , flush_interval_min
+            , flush_sec
             , remind_title
             , remind_content
             , need_confirm
@@ -58,10 +58,10 @@
             , #{cleanRuleCode}
             , #{stepIndex}
             , #{cleanContent}
-            , #{washTime}
-            , #{soakTime}
-            , #{soakWashInterval}
-            , #{soakWashTime}
+            , #{washSec}
+            , #{soakMin}
+            , #{flushIntervalMin}
+            , #{flushSec}
             , #{remindTitle}
             , #{remindContent}
             , #{needConfirm}
@@ -76,17 +76,17 @@
             <if test="cleanContent != null">
                 , clean_content = #{cleanContent}
             </if>
-            <if test="washTime != null">
-                , wash_time = #{washTime}
+            <if test="washSec != null">
+                , wash_sec = #{washSec}
             </if>
-            <if test="soakTime != null">
-                , soak_time = #{soakTime}
+            <if test="soakMin != null">
+                , soak_min = #{soakMin}
             </if>
-            <if test="soakWashInterval != null">
-                , soak_wash_interval = #{soakWashInterval}
+            <if test="flushIntervalMin != null">
+                , flush_interval_min = #{flushIntervalMin}
             </if>
-            <if test="soakWashTime != null">
-                , soak_wash_time = #{soakWashTime}
+            <if test="flushSec != null">
+                , flush_sec = #{flushSec}
             </if>
             <if test="remindTitle != null">
                 , remind_title = #{remindTitle}
@@ -95,9 +95,9 @@
                 , remind_content = #{remindContent}
             </if>
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and clean_rule_code = #{cleanRuleCode}
-            and step_index = #{stepIndex}
+            AND tenant_code = #{tenantCode}
+            AND clean_rule_code = #{cleanRuleCode}
+            AND step_index = #{stepIndex}
     </update>
 
     <delete id="delete">

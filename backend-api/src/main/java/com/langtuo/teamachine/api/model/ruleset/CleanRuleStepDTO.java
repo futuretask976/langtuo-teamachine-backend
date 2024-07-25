@@ -45,22 +45,22 @@ public class CleanRuleStepDTO {
     /**
      * 冲洗时间
      */
-    private Integer washTime;
+    private Integer washSec;
 
     /**
      * 浸泡时间
      */
-    private Integer soakTime;
+    private Integer soakMin;
 
     /**
      * 浸泡冲洗间隔时间
      */
-    private Integer soakWashInterval;
+    private Integer flushIntervalMin;
 
     /**
      * 浸泡冲洗时间
      */
-    private Integer soakWashTime;
+    private Integer flushSec;
 
     /**
      * 提醒标题
