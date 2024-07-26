@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.model;
 import lombok.Data;
 
 @Data
-public class JWTTokenDTO {
+public class LoginSuccessDTO {
     /**
      *
      */

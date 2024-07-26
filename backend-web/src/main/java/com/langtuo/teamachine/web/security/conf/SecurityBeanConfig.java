@@ -90,7 +90,7 @@ public class SecurityBeanConfig {
 
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
-        return new GxLogoutSuccessHandler();
+        return new TeaMachineLogoutSuccessHandler();
     }
 
 //    @Bean
