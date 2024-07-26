@@ -7,5 +7,5 @@ public class LoginSuccessDTO {
     /**
      *
      */
-    private String token;
+    private String jwtToken;
 }
