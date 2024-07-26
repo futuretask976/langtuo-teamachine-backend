@@ -3,7 +3,7 @@ package com.langtuo.teamachine.dao.query.drinkset;
 import lombok.Data;
 
 @Data
-public class ToppingAccuracyTemplateQuery {
+public class ToppingAccuracyTplQuery {
     /**
      * 规格编码
      */

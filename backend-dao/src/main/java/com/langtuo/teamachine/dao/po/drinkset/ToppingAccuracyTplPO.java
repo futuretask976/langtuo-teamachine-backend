@@ -1,13 +1,29 @@
-package com.langtuo.teamachine.api.request.drinkset;
+package com.langtuo.teamachine.dao.po.drinkset;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.Map;
 
 @Data
-public class ToppingAccuracyTemplatePutRequest {
+public class ToppingAccuracyTplPO {
     /**
-     * 租户编码
+     * 数据表id
+     */
+    private long id;
+
+    /**
+     * 数据表记录插入时间
+     */
+    private Date gmtCreated;
+
+    /**
+     * 数据表记录最近修改时间
+     */
+    private Date gmtModified;
+
+    /**
+     *
      */
     private String tenantCode;
 
@@ -17,17 +33,17 @@ public class ToppingAccuracyTemplatePutRequest {
     private Map<String, String> extraInfo;
 
     /**
-     * 模板编码
+     *
      */
     private String templateCode;
 
     /**
-     * 模板名称
+     *
      */
     private String templateName;
 
     /**
-     * 状态，0：禁用，1：启用
+     *
      */
     private int state;
 
@@ -57,7 +73,7 @@ public class ToppingAccuracyTemplatePutRequest {
     private String toppingCode;
 
     /**
-     * 备注
+     *
      */
     private String comment;
 }

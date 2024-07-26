@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.langtuo.teamachine.dao.mapper.drinkset.ToppingAccuracyTemplateMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTemplatePO" id="toppingAccuracyTemplatePOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.drinkset.ToppingAccuracyTplMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTplPO" id="toppingAccuracyTemplatePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -51,7 +51,7 @@
             </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTemplatePO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTplPO">
         INSERT INTO topping_accuracy_template (
             gmt_created
             , gmt_modified
@@ -83,7 +83,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTemplatePO">
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTplPO">
         UPDATE topping_accuracy_template
         SET
             gmt_modified = now()

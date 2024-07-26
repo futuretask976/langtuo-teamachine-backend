@@ -2,8 +2,8 @@ package com.langtuo.teamachine.dao.mapper.drinkset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTemplatePO;
-import com.langtuo.teamachine.dao.query.drinkset.ToppingAccuracyTemplateQuery;
+import com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTplPO;
+import com.langtuo.teamachine.dao.query.drinkset.ToppingAccuracyTplQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface ToppingAccuracyTemplateMapper {
+public interface ToppingAccuracyTplMapper {
     /**
      *
      * @param tenantCode
@@ -21,19 +21,19 @@ public interface ToppingAccuracyTemplateMapper {
      * @param templateName
      * @return
      */
-    ToppingAccuracyTemplatePO selectOne(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode, @Param("templateName") String templateName);
+    ToppingAccuracyTplPO selectOne(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode, @Param("templateName") String templateName);
 
     /**
      *
      * @return
      */
-    List<ToppingAccuracyTemplatePO> selectList(@Param("tenantCode") String tenantCode);
+    List<ToppingAccuracyTplPO> selectList(@Param("tenantCode") String tenantCode);
 
     /**
      *
      * @return
      */
-    List<ToppingAccuracyTemplatePO> search(ToppingAccuracyTemplateQuery query);
+    List<ToppingAccuracyTplPO> search(ToppingAccuracyTplQuery query);
 
     /**
      *
@@ -41,14 +41,14 @@ public interface ToppingAccuracyTemplateMapper {
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(ToppingAccuracyTemplatePO specPO);
+    int insert(ToppingAccuracyTplPO specPO);
 
     /**
      *
      * @param specPO
      * @return
      */
-    int update(ToppingAccuracyTemplatePO specPO);
+    int update(ToppingAccuracyTplPO specPO);
 
     /**
      *

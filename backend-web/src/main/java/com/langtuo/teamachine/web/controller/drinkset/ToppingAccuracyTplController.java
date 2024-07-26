@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.drinkset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.drinkset.ToppingAccuracyTemplateDTO;
-import com.langtuo.teamachine.api.request.drinkset.ToppingAccuracyTemplatePutRequest;
+import com.langtuo.teamachine.api.model.drinkset.ToppingAccuracyTplDTO;
+import com.langtuo.teamachine.api.request.drinkset.ToppingAccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.drinkset.ToppingAccuracyTemplateMgtService;
+import com.langtuo.teamachine.api.service.drinkset.ToppingAccuracyTplMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -12,18 +12,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/drinkset/topping/accuracy/template")
-public class ToppingAccuracyTemplateController {
+public class ToppingAccuracyTplController {
     @Resource
-    private ToppingAccuracyTemplateMgtService service;
+    private ToppingAccuracyTplMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/drinkset/topping/accuracy/template/tenant_001/shopGroup_001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{templatecode}/get")
-    public LangTuoResult<ToppingAccuracyTemplateDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public LangTuoResult<ToppingAccuracyTplDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "templatecode") String templateCode) {
-        LangTuoResult<ToppingAccuracyTemplateDTO> rtn = service.getByCode(tenantCode, templateCode);
+        LangTuoResult<ToppingAccuracyTplDTO> rtn = service.getByCode(tenantCode, templateCode);
         return rtn;
     }
 
@@ -33,8 +33,8 @@ public class ToppingAccuracyTemplateController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<ToppingAccuracyTemplateDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<ToppingAccuracyTemplateDTO>> rtn = service.list(tenantCode);
+    public LangTuoResult<List<ToppingAccuracyTplDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        LangTuoResult<List<ToppingAccuracyTplDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -43,10 +43,10 @@ public class ToppingAccuracyTemplateController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<ToppingAccuracyTemplateDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public LangTuoResult<PageDTO<ToppingAccuracyTplDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("templateCode") String templateCode, @RequestParam("templateName") String templateName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<ToppingAccuracyTemplateDTO>> rtn = service.search(tenantCode, templateCode, templateName,
+        LangTuoResult<PageDTO<ToppingAccuracyTplDTO>> rtn = service.search(tenantCode, templateCode, templateName,
                 pageNum, pageSize);
         return rtn;
     }
@@ -56,7 +56,7 @@ public class ToppingAccuracyTemplateController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody ToppingAccuracyTemplatePutRequest request) {
+    public LangTuoResult<Void> put(@RequestBody ToppingAccuracyTplPutRequest request) {
         LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }

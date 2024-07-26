@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class ToppingAccuracyTemplateDTO {
+public class ToppingAccuracyTplDTO {
     /**
      * 数据表id
      */
