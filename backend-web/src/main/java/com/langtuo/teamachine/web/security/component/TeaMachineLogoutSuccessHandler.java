@@ -15,7 +15,6 @@ import java.io.IOException;
 public class TeaMachineLogoutSuccessHandler implements LogoutSuccessHandler {
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        System.out.printf("!!! TeaMachineLogoutSuccessHandler#onLogoutSuccess entering\n");
         // 清除会话
         request.getSession().invalidate();
 

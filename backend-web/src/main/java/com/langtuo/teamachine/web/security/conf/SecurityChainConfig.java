@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.web.security.conf;
 
-import com.langtuo.teamachine.web.security.component.GxJwtAuthenticationTokenFilter;
+import com.langtuo.teamachine.web.security.component.TeaMachineJwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,7 +46,7 @@ public class SecurityChainConfig {
     private IgnoreUrlsConfig ignoreUrlsConfig;
 
     @Autowired
-    private GxJwtAuthenticationTokenFilter teaMachineJwtAuthenticationTokenFilter;
+    private TeaMachineJwtAuthenticationTokenFilter teaMachineJwtAuthenticationTokenFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {

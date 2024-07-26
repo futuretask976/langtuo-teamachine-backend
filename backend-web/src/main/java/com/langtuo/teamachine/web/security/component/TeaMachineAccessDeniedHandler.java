@@ -16,7 +16,7 @@ public class TeaMachineAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException e) throws IOException {
-        System.out.printf("!!! GxAccessDeniedHandler#handle access denied: %s\n", e.toString());
+        System.out.printf("!!! TeaMachineAccessDeniedHandler#handle access denied: %s\n", e.toString());
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Cache-Control","no-cache");

@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.web.security.conf;
 
-import com.langtuo.teamachine.web.helper.GxJwtTokenHelper;
+import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import com.langtuo.teamachine.web.security.component.*;
 import com.langtuo.teamachine.web.security.encoder.MD5PasswordEncoder;
 import com.langtuo.teamachine.web.security.service.TeaMachineDetailService;
@@ -50,13 +50,13 @@ public class SecurityBeanConfig {
     }
 
     @Bean
-    public GxJwtAuthenticationTokenFilter gxJwtAuthenticationTokenFilter() {
-        return new GxJwtAuthenticationTokenFilter();
+    public TeaMachineJwtAuthenticationTokenFilter gxJwtAuthenticationTokenFilter() {
+        return new TeaMachineJwtAuthenticationTokenFilter();
     }
 
     @Bean
-    public GxJwtTokenHelper gxJwtTokenHelper() {
-        return new GxJwtTokenHelper();
+    public JwtTokenHelper gxJwtTokenHelper() {
+        return new JwtTokenHelper();
     }
 
     /**

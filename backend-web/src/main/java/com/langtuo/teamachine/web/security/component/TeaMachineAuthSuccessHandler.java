@@ -2,7 +2,7 @@ package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.web.helper.GxJwtTokenHelper;
+import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import com.langtuo.teamachine.web.model.LoginSuccessDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,12 +17,11 @@ import java.io.IOException;
 
 public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandler {
     @Autowired
-    private GxJwtTokenHelper gxJwtTokenHelper;
+    private JwtTokenHelper jwtTokenHelper;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException {
-        System.out.printf("!!! GxAuthSuccessHandler#onAuthenticationSuccess entering, %s\n", gxJwtTokenHelper);
         HttpSession session = request.getSession();
         UserDetails authUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         session.setAttribute("user", authUser);
@@ -36,7 +35,7 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
 
         // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录成功
         LoginSuccessDTO dto = new LoginSuccessDTO();
-        dto.setJwtToken(gxJwtTokenHelper.generateToken(authUser));
+        dto.setJwtToken(jwtTokenHelper.generateToken(authUser));
         LangTuoResult<LoginSuccessDTO> result = LangTuoResult.success(dto);
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();
