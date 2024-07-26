@@ -2,7 +2,6 @@ package com.langtuo.teamachine.web.security.model;
 
 import org.assertj.core.util.Lists;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -13,7 +12,7 @@ import java.util.List;
  * 不过为了扩展，这里依然使用自定义的GxUserDetails
  * @author miya
  */
-public class GxUserDetails implements UserDetails {
+public class TeaMachineUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> grantedAuthorityList = Lists.newArrayList();

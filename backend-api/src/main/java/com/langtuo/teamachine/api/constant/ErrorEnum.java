@@ -1,8 +1,14 @@
 package com.langtuo.teamachine.api.constant;
 
 public enum ErrorEnum {
+    // 测试
+    TEST_ERR_ONLY_TEST("TEST_ERR_ONLY_TEST", "测试返回")
+
+    // 登录错误
+    , LOGIN_ERR_UNAUTHENTICATED("LOGIN_ERR_UNAUTHENTICATED", "登录错误")
+    , LOGIN_ERR_UNAUTHORIZED("LOGIN_ERR_UNAUTHORIZED", "授权错误")
+
     // 业务逻辑错误
-    BIZ_ERR_ONLY_TEST("BIZ_ERR_ONLY_TEST", "测试返回")
     , BIZ_ERR_ILLEGAL_ARGUMENT("BIZ_ERR_ILLEGAL_ARGUMENT", "输入参数错误")
 
     // 数据库错误

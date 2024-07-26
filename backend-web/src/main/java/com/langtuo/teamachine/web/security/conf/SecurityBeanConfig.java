@@ -3,13 +3,14 @@ package com.langtuo.teamachine.web.security.conf;
 import com.langtuo.teamachine.web.helper.GxJwtTokenHelper;
 import com.langtuo.teamachine.web.security.component.*;
 import com.langtuo.teamachine.web.security.encoder.MD5PasswordEncoder;
-import com.langtuo.teamachine.web.security.service.GxUserDetailService;
+import com.langtuo.teamachine.web.security.service.TeaMachineDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
@@ -27,19 +28,19 @@ public class SecurityBeanConfig {
     @Bean
     public UserDetailsService gxUserDetailService() {
         System.out.printf("$$$$$ SecurityBaseConfig#userDetailsService entering\n");
-        return new GxUserDetailService();
+        return new TeaMachineDetailService();
     }
 
     @Bean
     public AccessDeniedHandler restfulAccessDeniedHandler() {
         System.out.printf("$$$$$ SecurityBaseConfig#restfulAccessDeniedHandler entering\n");
-        return new GxAccessDeniedHandler();
+        return new TeaMachineAccessDeniedHandler();
     }
 
     @Bean
     public AuthenticationEntryPoint restfulAuthenticationEntryPoint() {
         System.out.printf("$$$$$ SecurityBaseConfig#restAuthenticationEntryPoint entering\n");
-        return new GxAuthenticationEntryPoint();
+        return new TeaMachineAuthenticationEntryPoint();
     }
 
     @Bean
@@ -79,7 +80,12 @@ public class SecurityBeanConfig {
 
     @Bean
     public AuthenticationSuccessHandler authSuccessHandler() {
-        return new GxAuthSuccessHandler();
+        return new TeaMachineAuthSuccessHandler();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authFailureHandler() {
+        return new TeaMachineAuthFailureHandler();
     }
 
     @Bean

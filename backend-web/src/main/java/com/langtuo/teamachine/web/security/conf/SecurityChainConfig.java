@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -24,25 +25,28 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @EnableWebSecurity
 public class SecurityChainConfig {
     @Autowired
-    private AccessDeniedHandler gxAccessDeniedHandler;
+    private AccessDeniedHandler teaMachineAccessDeniedHandler;
 
     @Autowired
-    private AuthenticationEntryPoint gxAuthenticationEntryPoint;
+    private AuthenticationEntryPoint teaMachineAuthenticationEntryPoint;
 
     @Autowired
-    private LogoutSuccessHandler gxLogoutSuccessHandler;
+    private LogoutSuccessHandler teaMachineLogoutSuccessHandler;
 
     @Autowired
-    private UserDetailsService gxUserDetailsService;
+    private UserDetailsService teaMachineUserDetailsService;
 
     @Autowired
-    private AuthenticationSuccessHandler gxAuthSuccessHandler;
+    private AuthenticationSuccessHandler teaMachineAuthSuccessHandler;
+
+    @Autowired
+    private AuthenticationFailureHandler teaMachineAuthFailureHandler;
 
     @Autowired
     private IgnoreUrlsConfig ignoreUrlsConfig;
 
     @Autowired
-    private GxJwtAuthenticationTokenFilter gxJwtAuthenticationTokenFilter;
+    private GxJwtAuthenticationTokenFilter teaMachineJwtAuthenticationTokenFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -57,15 +61,16 @@ public class SecurityChainConfig {
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .permitAll() // We re permitting all for login page
-                    .successHandler(gxAuthSuccessHandler) // .defaultSuccessUrl("/welcome") // If the login is successful, user will be redirected to this URL.
-                    .failureUrl("/login?error=true"); // If the user fails to login, application will redirect the user to this endpoint
+                    .successHandler(teaMachineAuthSuccessHandler) // .defaultSuccessUrl("/welcome") // If the login is successful, user will be redirected to this URL.
+                    .failureHandler(teaMachineAuthFailureHandler);
+                    // .failureUrl("/login?error=true"); // If the user fails to login, application will redirect the user to this endpoint
         });
 
         // 登出设置
         httpSecurity.logout(logout ->
                 logout
                         .logoutUrl("/logout")
-                        .logoutSuccessHandler(gxLogoutSuccessHandler)
+                        .logoutSuccessHandler(teaMachineLogoutSuccessHandler)
                         //.logoutSuccessUrl("/bye")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
@@ -83,7 +88,7 @@ public class SecurityChainConfig {
         }
 
         // token简单验证
-        httpSecurity.addFilterBefore(gxJwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(teaMachineJwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         // 配置授权处理，授权管理器可以配置多个
         httpSecurity.authorizeRequests()
@@ -94,8 +99,8 @@ public class SecurityChainConfig {
 
         // 异常处理
         httpSecurity.exceptionHandling()
-                .accessDeniedHandler(gxAccessDeniedHandler)
-                .authenticationEntryPoint(gxAuthenticationEntryPoint);
+                .accessDeniedHandler(teaMachineAccessDeniedHandler)
+                .authenticationEntryPoint(teaMachineAuthenticationEntryPoint);
 
         return httpSecurity.build();
     }
