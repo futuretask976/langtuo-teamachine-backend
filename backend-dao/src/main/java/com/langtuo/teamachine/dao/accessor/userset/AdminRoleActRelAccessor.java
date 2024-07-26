@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.userset;
 
-import com.langtuo.teamachine.dao.mapper.userset.AdminRoleActRelMapper;
+import com.langtuo.teamachine.dao.mapper.userset.RoleActRelMapper;
 import com.langtuo.teamachine.dao.po.userset.AdminRoleActRelPO;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class AdminRoleActRelAccessor {
     @Resource
-    private AdminRoleActRelMapper mapper;
+    private RoleActRelMapper mapper;
 
     public AdminRoleActRelPO selectOne(String tenantCode, String roleCode, String permitActCode) {
         return mapper.selectOne(tenantCode, roleCode, permitActCode);

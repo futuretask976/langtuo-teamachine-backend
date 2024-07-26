@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public class OrgStrucPutRequest {
+public class OrgPutRequest {
     /**
      * 同OrgStrucDTO
      */

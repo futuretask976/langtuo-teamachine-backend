@@ -1,46 +1,46 @@
 package com.langtuo.teamachine.api.service.userset;
 
-import com.langtuo.teamachine.api.model.userset.OrgStrucDTO;
+import com.langtuo.teamachine.api.model.userset.OrgDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.userset.OrgStrucPutRequest;
+import com.langtuo.teamachine.api.request.userset.OrgPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
 import java.util.List;
 
-public interface OrgStrucMgtService {
+public interface OrgMgtService {
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<OrgStrucDTO> get(String tenantCode, String orgName);
+    LangTuoResult<OrgDTO> get(String tenantCode, String orgName);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<OrgStrucDTO> listByDepth(String tenantCode);
+    LangTuoResult<OrgDTO> listByDepth(String tenantCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<OrgStrucDTO>> list(String tenantCode);
+    LangTuoResult<List<OrgDTO>> list(String tenantCode);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<OrgStrucDTO>> search(String tenantCode, String contactPerson, int pageNum, int pageSize);
+    LangTuoResult<PageDTO<OrgDTO>> search(String tenantCode, String contactPerson, int pageNum, int pageSize);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(OrgStrucPutRequest request);
+    LangTuoResult<Void> put(OrgPutRequest request);
 
     /**
      *

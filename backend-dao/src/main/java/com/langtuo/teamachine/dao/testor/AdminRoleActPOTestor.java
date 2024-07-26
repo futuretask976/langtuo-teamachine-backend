@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.userset.AdminRoleActRelMapper;
+import com.langtuo.teamachine.dao.mapper.userset.RoleActRelMapper;
 import com.langtuo.teamachine.dao.po.userset.AdminRoleActRelPO;
 import org.apache.ibatis.session.SqlSession;
 
@@ -16,7 +16,7 @@ public class AdminRoleActPOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        AdminRoleActRelMapper mapper = sqlSession.getMapper(AdminRoleActRelMapper.class);
+        RoleActRelMapper mapper = sqlSession.getMapper(RoleActRelMapper.class);
 
         AdminRoleActRelPO po = null;
 
@@ -62,7 +62,7 @@ public class AdminRoleActPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        AdminRoleActRelMapper mapper = sqlSession.getMapper(AdminRoleActRelMapper.class);
+        RoleActRelMapper mapper = sqlSession.getMapper(RoleActRelMapper.class);
 
         List<AdminRoleActRelPO> list = mapper.selectList("tenant_001", "role_001");
         for (AdminRoleActRelPO po : list) {
@@ -78,7 +78,7 @@ public class AdminRoleActPOTestor {
 
     public static void delete() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        AdminRoleActRelMapper mapper = sqlSession.getMapper(AdminRoleActRelMapper.class);
+        RoleActRelMapper mapper = sqlSession.getMapper(RoleActRelMapper.class);
 
         mapper.delete("tenant_001", "role_001");
 

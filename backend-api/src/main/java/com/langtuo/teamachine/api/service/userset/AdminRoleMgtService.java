@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.api.service.userset;
 
-import com.langtuo.teamachine.api.model.userset.AdminRoleDTO;
+import com.langtuo.teamachine.api.model.userset.RoleDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.userset.AdminRolePutRequest;
+import com.langtuo.teamachine.api.request.userset.RolePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
 import java.util.List;
@@ -13,20 +13,20 @@ public interface AdminRoleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<AdminRoleDTO> get(String tenantCode, String roleCode);
+    LangTuoResult<RoleDTO> get(String tenantCode, String roleCode);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<AdminRoleDTO>> search(String tenantCode, String roleName, int pageNum, int pageSize);
+    LangTuoResult<PageDTO<RoleDTO>> search(String tenantCode, String roleName, int pageNum, int pageSize);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<AdminRoleDTO>> list(String tenantCode);
+    LangTuoResult<List<RoleDTO>> list(String tenantCode);
 
     /**
      *
@@ -35,14 +35,14 @@ public interface AdminRoleMgtService {
      * @param pageSize
      * @return
      */
-    LangTuoResult<PageDTO<AdminRoleDTO>> page(String tenantCode, int pageNum, int pageSize);
+    LangTuoResult<PageDTO<RoleDTO>> page(String tenantCode, int pageNum, int pageSize);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(AdminRolePutRequest request);
+    LangTuoResult<Void> put(RolePutRequest request);
 
     /**
      *

@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.userset.AdminRoleMapper;
-import com.langtuo.teamachine.dao.po.userset.AdminRolePO;
+import com.langtuo.teamachine.dao.mapper.userset.RoleMapper;
+import com.langtuo.teamachine.dao.po.userset.RolePO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -17,11 +17,11 @@ public class AdminRolePOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        AdminRoleMapper mapper = sqlSession.getMapper(AdminRoleMapper.class);
+        RoleMapper mapper = sqlSession.getMapper(RoleMapper.class);
 
-        AdminRolePO po = null;
+        RolePO po = null;
 
-        po = new AdminRolePO();
+        po = new RolePO();
         po.setRoleCode("role_sys_super_admin");
         po.setRoleName("系统超级管理员");
         po.setComment("系统超级管理员");
@@ -29,7 +29,7 @@ public class AdminRolePOTestor {
         po.setExtraInfo(new HashMap<String, String>(){{}});
         mapper.insert(po);
 
-        po = new AdminRolePO();
+        po = new RolePO();
         po.setRoleCode("role_sys_admin");
         po.setRoleName("系统管理员");
         po.setComment("系统管理员");
@@ -37,7 +37,7 @@ public class AdminRolePOTestor {
         po.setExtraInfo(new HashMap<String, String>(){{}});
         mapper.insert(po);
 
-        po = new AdminRolePO();
+        po = new RolePO();
         po.setRoleCode("role_tenant_super_admin");
         po.setRoleName("租户超级管理员");
         po.setComment("租户超级管理员");
@@ -45,7 +45,7 @@ public class AdminRolePOTestor {
         po.setExtraInfo(new HashMap<String, String>(){{}});
         mapper.insert(po);
 
-        po = new AdminRolePO();
+        po = new RolePO();
         po.setRoleCode("role_tenant_admin");
         po.setRoleName("租户管理员");
         po.setComment("租户管理员");
@@ -59,14 +59,14 @@ public class AdminRolePOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        AdminRoleMapper mapper = sqlSession.getMapper(AdminRoleMapper.class);
+        RoleMapper mapper = sqlSession.getMapper(RoleMapper.class);
 
-        List<AdminRolePO> list = mapper.selectList("tenant_001");
-        for (AdminRolePO po : list) {
+        List<RolePO> list = mapper.selectList("tenant_001");
+        for (RolePO po : list) {
             System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
-        AdminRolePO po = mapper.selectOne("tenant_001", "role_tenant_admin");
+        RolePO po = mapper.selectOne("tenant_001", "role_tenant_admin");
         System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
@@ -75,9 +75,9 @@ public class AdminRolePOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        AdminRoleMapper mapper = sqlSession.getMapper(AdminRoleMapper.class);
+        RoleMapper mapper = sqlSession.getMapper(RoleMapper.class);
 
-        AdminRolePO po = new AdminRolePO();
+        RolePO po = new RolePO();
         po.setRoleCode("role_tenant_admin");
         po.setTenantCode("tenant_001");
         po.setExtraInfo(new HashMap<String, String>(){{

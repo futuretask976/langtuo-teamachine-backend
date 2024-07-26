@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.userset.OrgStrucMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.userset.OrgStrucPO" id="orgStrucMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.userset.OrgMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.userset.OrgPO" id="orgStrucMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -15,19 +15,19 @@
     </resultMap>
 
     <select id="selectOne" resultMap="orgStrucMap">
-        SELECT * FROM org_struc
+        SELECT * FROM organization
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and org_name = #{orgName}
     </select>
 
     <select id="selectList" resultMap="orgStrucMap">
-        SELECT * FROM org_struc
+        SELECT * FROM organization
     </select>
 
     <select id="search" parameterType="com.langtuo.teamachine.dao.query.userset.OrgStrucQuery" resultMap="orgStrucMap">
         SELECT *
-        FROM org_struc
+        FROM organization
         WHERE 1 = 1
         <if test="tenantCode != null">
             AND tenant_code = #{tenantCode}
@@ -37,8 +37,8 @@
         </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.userset.OrgStrucPO">
-        INSERT INTO `org_struc` (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.userset.OrgPO">
+        INSERT INTO `organization` (
             `gmt_created`
             , `gmt_modified`
             , `org_name`
@@ -53,8 +53,8 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.userset.OrgStrucPO">
-        UPDATE org_struc
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.userset.OrgPO">
+        UPDATE organization
         SET
             gmt_modified = now()
             <if test="parentOrgName != null">
@@ -66,7 +66,7 @@
     </update>
 
     <delete id="delete">
-        DELETE FROM org_struc
+        DELETE FROM organization
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and org_name = #{orgName}

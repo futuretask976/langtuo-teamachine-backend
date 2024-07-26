@@ -2,8 +2,8 @@ package com.langtuo.teamachine.dao.mapper.userset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.userset.AdminRolePO;
-import com.langtuo.teamachine.dao.query.userset.AdminRoleQuery;
+import com.langtuo.teamachine.dao.po.userset.OrgPO;
+import com.langtuo.teamachine.dao.query.userset.OrgStrucQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,27 +13,26 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface AdminRoleMapper {
+public interface OrgMapper {
     /**
      *
      * @param tenantCode
-     * @param roleCode
+     * @param orgName
      * @return
      */
-    AdminRolePO selectOne(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode);
+    OrgPO selectOne(@Param("tenantCode") String tenantCode, @Param("orgName") String orgName);
 
     /**
      *
      * @return
      */
-    List<AdminRolePO> selectList(@Param("tenantCode") String tenantCode);
+    List<OrgPO> selectList(@Param("tenantCode") String tenantCode);
 
     /**
      *
-     * @param query
      * @return
      */
-    List<AdminRolePO> search(AdminRoleQuery query);
+    List<OrgPO> search(OrgStrucQuery orgStrucQuery);
 
     /**
      *
@@ -41,20 +40,19 @@ public interface AdminRoleMapper {
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(AdminRolePO po);
+    int insert(OrgPO po);
 
     /**
      *
      * @param po
      * @return
      */
-    int update(AdminRolePO po);
+    int update(OrgPO po);
 
     /**
      *
      * @param tenantCode
-     * @param roleCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("orgName") String orgName);
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface AdminRoleActRelMapper {
+public interface RoleActRelMapper {
     /**
      *
      * @param tenantCode

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.userset.AdminRoleActRelMapper">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.userset.RoleActRelMapper">
     <resultMap type="com.langtuo.teamachine.dao.po.userset.AdminRoleActRelPO" id="adminRoleActRelPO">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <select id="selectOne" resultMap="adminRoleActRelPO">
-        SELECT * FROM admin_role_act_rel
+        SELECT * FROM role_act_rel
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND role_code = #{roleCode}
@@ -23,7 +23,7 @@
     </select>
 
     <select id="selectList" resultMap="adminRoleActRelPO">
-        SELECT * FROM admin_role_act_rel
+        SELECT * FROM role_act_rel
         WHERE 1 = 1
             <if test="tenantCode != null">
                 AND tenant_code = #{tenantCode}
@@ -34,12 +34,12 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.userset.AdminRoleActRelPO">
-        INSERT INTO admin_role_act_rel (
-            `gmt_created`
-            , `gmt_modified`
-            , `role_code`
-            , `permit_act_code`
-            , `tenant_code`
+        INSERT INTO role_act_rel (
+            gmt_created
+            , gmt_modified
+            , role_code
+            , permit_act_code
+            , tenant_code
         ) VALUES (
             now()
             , now()
@@ -50,7 +50,7 @@
     </insert>
 
     <delete id="delete">
-        DELETE FROM admin_role_act_rel
+        DELETE FROM role_act_rel
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and role_code = #{roleCode}

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class OrgStrucDTO {
+public class OrgDTO {
     /**
      * 数据表id
      */
@@ -35,5 +35,5 @@ public class OrgStrucDTO {
     /**
      * 子组织列表
      */
-    private List<OrgStrucDTO> childOrgNameList;
+    private List<OrgDTO> childOrgNameList;
 }

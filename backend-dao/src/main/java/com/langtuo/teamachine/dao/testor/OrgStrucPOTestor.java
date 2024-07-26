@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.userset.OrgStrucMapper;
-import com.langtuo.teamachine.dao.po.userset.OrgStrucPO;
+import com.langtuo.teamachine.dao.mapper.userset.OrgMapper;
+import com.langtuo.teamachine.dao.po.userset.OrgPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -14,29 +14,29 @@ public class OrgStrucPOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrgStrucMapper mapper = sqlSession.getMapper(OrgStrucMapper.class);
+        OrgMapper mapper = sqlSession.getMapper(OrgMapper.class);
 
-        OrgStrucPO po = null;
+        OrgPO po = null;
 
-        po = new OrgStrucPO();
+        po = new OrgPO();
         po.setTenantCode("tenant_001");
         po.setOrgName("总公司");
         po.setParentOrgName(null);
         mapper.insert(po);
 
-        po = new OrgStrucPO();
+        po = new OrgPO();
         po.setTenantCode("tenant_001");
         po.setOrgName("江苏分公司");
         po.setParentOrgName("总公司");
         mapper.insert(po);
 
-        po = new OrgStrucPO();
+        po = new OrgPO();
         po.setTenantCode("tenant_001");
         po.setOrgName("南京分公司");
         po.setParentOrgName("江苏分公司");
         mapper.insert(po);
 
-        po = new OrgStrucPO();
+        po = new OrgPO();
         po.setTenantCode("tenant_001");
         po.setOrgName("北京分公司");
         po.setParentOrgName("总公司");
@@ -48,14 +48,14 @@ public class OrgStrucPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrgStrucMapper mapper = sqlSession.getMapper(OrgStrucMapper.class);
+        OrgMapper mapper = sqlSession.getMapper(OrgMapper.class);
 
-        List<OrgStrucPO> list = mapper.selectList("tenant_001");
-        for (OrgStrucPO po : list) {
+        List<OrgPO> list = mapper.selectList("tenant_001");
+        for (OrgPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        OrgStrucPO po = mapper.selectOne("tenant_001", "总公司");
+        OrgPO po = mapper.selectOne("tenant_001", "总公司");
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
@@ -64,9 +64,9 @@ public class OrgStrucPOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrgStrucMapper mapper = sqlSession.getMapper(OrgStrucMapper.class);
+        OrgMapper mapper = sqlSession.getMapper(OrgMapper.class);
 
-        OrgStrucPO po = new OrgStrucPO();
+        OrgPO po = new OrgPO();
         po.setTenantCode("tenant_001");
         po.setOrgName("江苏分公司");
         po.setParentOrgName("总公司222");

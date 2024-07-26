@@ -2,13 +2,13 @@ package com.langtuo.teamachine.biz.service.impl.userset;
 
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.api.model.userset.OrgStrucDTO;
+import com.langtuo.teamachine.api.model.userset.OrgDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.userset.OrgStrucPutRequest;
+import com.langtuo.teamachine.api.request.userset.OrgPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.userset.OrgStrucMgtService;
+import com.langtuo.teamachine.api.service.userset.OrgMgtService;
 import com.langtuo.teamachine.dao.accessor.userset.OrgStrucAccessor;
-import com.langtuo.teamachine.dao.po.userset.OrgStrucPO;
+import com.langtuo.teamachine.dao.po.userset.OrgPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -18,21 +18,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
+public class OrgMgtServiceImpl implements OrgMgtService {
     @Resource
     private OrgStrucAccessor orgStrucAccessor;
 
     @Override
-    public LangTuoResult<OrgStrucDTO> listByDepth(String tenantCode) {
-        LangTuoResult<OrgStrucDTO> langTuoResult = null;
+    public LangTuoResult<OrgDTO> listByDepth(String tenantCode) {
+        LangTuoResult<OrgDTO> langTuoResult = null;
         try {
-            List<OrgStrucPO> poList = orgStrucAccessor.selectList(tenantCode);
-            List<OrgStrucDTO> dtoList = poList.stream()
+            List<OrgPO> poList = orgStrucAccessor.selectList(tenantCode);
+            List<OrgDTO> dtoList = poList.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
             dtoList.forEach(item -> {
-                List<OrgStrucDTO> children = findOrgStrucPOByParent(item.getOrgName(), dtoList);
+                List<OrgDTO> children = findOrgStrucPOByParent(item.getOrgName(), dtoList);
                 if (!CollectionUtils.isEmpty(children)) {
                     item.setChildOrgNameList(children);
                 }
@@ -47,11 +47,11 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
     }
 
     @Override
-    public LangTuoResult<List<OrgStrucDTO>> list(String tenantCode) {
-        LangTuoResult<List<OrgStrucDTO>> langTuoResult = null;
+    public LangTuoResult<List<OrgDTO>> list(String tenantCode) {
+        LangTuoResult<List<OrgDTO>> langTuoResult = null;
         try {
-            List<OrgStrucPO> poList = orgStrucAccessor.selectList(tenantCode);
-            List<OrgStrucDTO> dtoList = poList.stream()
+            List<OrgPO> poList = orgStrucAccessor.selectList(tenantCode);
+            List<OrgDTO> dtoList = poList.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
@@ -64,15 +64,15 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<OrgStrucDTO>> search(String tenantCode, String orgName,
+    public LangTuoResult<PageDTO<OrgDTO>> search(String tenantCode, String orgName,
             int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
-        LangTuoResult<PageDTO<OrgStrucDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<OrgDTO>> langTuoResult = null;
         try {
-            PageInfo<OrgStrucPO> pageInfo = orgStrucAccessor.search(tenantCode, orgName, pageNum, pageSize);
-            List<OrgStrucDTO> dtoList = pageInfo.getList().stream()
+            PageInfo<OrgPO> pageInfo = orgStrucAccessor.search(tenantCode, orgName, pageNum, pageSize);
+            List<OrgDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
@@ -85,13 +85,13 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
     }
 
     @Override
-    public LangTuoResult<OrgStrucDTO> get(String tenantCode, String orgName) {
-        LangTuoResult<OrgStrucDTO> langTuoResult = null;
+    public LangTuoResult<OrgDTO> get(String tenantCode, String orgName) {
+        LangTuoResult<OrgDTO> langTuoResult = null;
         try {
-            OrgStrucPO orgStrucPO = orgStrucAccessor.selectOne(tenantCode, orgName);
-            OrgStrucDTO orgStrucDTO = convert(orgStrucPO);
+            OrgPO orgPO = orgStrucAccessor.selectOne(tenantCode, orgName);
+            OrgDTO orgDTO = convert(orgPO);
 
-            langTuoResult = LangTuoResult.success(orgStrucDTO);
+            langTuoResult = LangTuoResult.success(orgDTO);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
@@ -99,7 +99,7 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(OrgStrucPutRequest request) {
+    public LangTuoResult<Void> put(OrgPutRequest request) {
         if (request == null
                 || StringUtils.isBlank(request.getTenantCode())
                 || StringUtils.isBlank(request.getOrgName())
@@ -109,17 +109,17 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
 
         String tenantCode = request.getTenantCode();
         String orgName = request.getOrgName();
-        OrgStrucPO orgStrucPO = convert(request);
+        OrgPO orgPO = convert(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            OrgStrucPO exist = orgStrucAccessor.selectOne(tenantCode, orgName);
+            OrgPO exist = orgStrucAccessor.selectOne(tenantCode, orgName);
             System.out.printf("$$$$$ OrgStrucMgtServiceImpl#put exist=%s\n", exist);
             if (exist != null) {
-                int updated = orgStrucAccessor.update(orgStrucPO);
+                int updated = orgStrucAccessor.update(orgPO);
                 System.out.printf("$$$$$ OrgStrucMgtServiceImpl#put updated=%s\n", updated);
             } else {
-                int inserted = orgStrucAccessor.insert(orgStrucPO);
+                int inserted = orgStrucAccessor.insert(orgPO);
                 System.out.printf("$$$$$ OrgStrucMgtServiceImpl#put inserted=%s\n", inserted);
             }
             langTuoResult = LangTuoResult.success();
@@ -146,12 +146,12 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
         return langTuoResult;
     }
 
-    private OrgStrucDTO convert(OrgStrucPO po) {
+    private OrgDTO convert(OrgPO po) {
         if (po == null) {
             return null;
         }
 
-        OrgStrucDTO dto = new OrgStrucDTO();
+        OrgDTO dto = new OrgDTO();
         dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
@@ -160,34 +160,34 @@ public class OrgStrucMgtServiceImpl implements OrgStrucMgtService {
         return dto;
     }
 
-    private OrgStrucPO convert(OrgStrucPutRequest request) {
+    private OrgPO convert(OrgPutRequest request) {
         if (request == null) {
             return null;
         }
 
-        OrgStrucPO po = new OrgStrucPO();
+        OrgPO po = new OrgPO();
         po.setTenantCode(request.getTenantCode());
         po.setOrgName(request.getOrgName());
         po.setParentOrgName(request.getParentOrgName());
         return po;
     }
 
-    private List<OrgStrucDTO> findOrgStrucPOByParent(String parentOrgName, List<OrgStrucDTO> orgStrucDTOList) {
-        if (StringUtils.isBlank(parentOrgName) || CollectionUtils.isEmpty(orgStrucDTOList)) {
+    private List<OrgDTO> findOrgStrucPOByParent(String parentOrgName, List<OrgDTO> orgDTOList) {
+        if (StringUtils.isBlank(parentOrgName) || CollectionUtils.isEmpty(orgDTOList)) {
             return null;
         }
 
-        return orgStrucDTOList.stream()
+        return orgDTOList.stream()
                 .filter(item -> item.getParentOrgName() != null && item.getParentOrgName().equals(parentOrgName))
                 .collect(Collectors.toList());
     }
 
-    private OrgStrucDTO findTopOrgStrucPO(List<OrgStrucDTO> orgStrucDTOList) {
-        if (CollectionUtils.isEmpty(orgStrucDTOList)) {
+    private OrgDTO findTopOrgStrucPO(List<OrgDTO> orgDTOList) {
+        if (CollectionUtils.isEmpty(orgDTOList)) {
             return null;
         }
 
-        for (OrgStrucDTO item : orgStrucDTOList) {
+        for (OrgDTO item : orgDTOList) {
             if("总公司".equals(item.getOrgName())) {
                 return item;
             }

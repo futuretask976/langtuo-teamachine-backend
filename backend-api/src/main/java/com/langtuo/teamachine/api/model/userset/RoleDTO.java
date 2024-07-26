@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class AdminRoleDTO {
+public class RoleDTO {
     /**
      * 数据表id
      */

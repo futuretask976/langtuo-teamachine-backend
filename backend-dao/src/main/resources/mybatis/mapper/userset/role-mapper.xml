@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.userset.AdminRoleMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.userset.AdminRolePO" id="adminRolePOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.userset.RoleMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.userset.RolePO" id="adminRolePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -17,7 +17,7 @@
     </resultMap>
 
     <select id="selectOne" resultMap="adminRolePOMap">
-        SELECT * FROM admin_role
+        SELECT * FROM role
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND role_code = #{roleCode}
@@ -25,14 +25,14 @@
 
     <select id="selectList" resultMap="adminRolePOMap">
         SELECT *
-        FROM admin_role
+        FROM role
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
     </select>
 
     <select id="search" resultMap="adminRolePOMap">
         SELECT *
-        FROM admin_role
+        FROM role
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             <if test="roleName != null">
@@ -40,15 +40,15 @@
             </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.userset.AdminRolePO">
-        INSERT INTO `admin_role` (
-            `gmt_created`
-            , `gmt_modified`
-            , `role_code`
-            , `role_name`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.userset.RolePO">
+        INSERT INTO role (
+            gmt_created
+            , gmt_modified
+            , role_code
+            , role_name
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
@@ -60,8 +60,8 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.userset.AdminRolePO">
-        UPDATE admin_role
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.userset.RolePO">
+        UPDATE role
         SET
             gmt_modified = now()
             <if test="roleName != null">
@@ -79,7 +79,7 @@
     </update>
 
     <delete id="delete">
-        DELETE FROM admin_role
+        DELETE FROM role
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and role_code = #{roleCode}

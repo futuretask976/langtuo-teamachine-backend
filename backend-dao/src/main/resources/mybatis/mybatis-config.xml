@@ -44,9 +44,9 @@
         <mapper resource="mybatis/mapper/userset/permit-act-mapper.xml"/>
         <mapper resource="mybatis/mapper/userset/permit-act-group-mapper.xml"/>
         <mapper resource="mybatis/mapper/userset/admin-mapper.xml"/>
-        <mapper resource="mybatis/mapper/userset/admin-role-mapper.xml"/>
-        <mapper resource="mybatis/mapper/userset/admin-role-act-rel-mapper.xml"/>
-        <mapper resource="mybatis/mapper/userset/org-struc-mapper.xml"/>
+        <mapper resource="mybatis/mapper/userset/role-mapper.xml"/>
+        <mapper resource="mybatis/mapper/userset/role-act-rel-mapper.xml"/>
+        <mapper resource="mybatis/mapper/userset/organization-mapper.xml"/>
         <!-- 店铺 -->
         <mapper resource="mybatis/mapper/shopset/shop-group-mapper.xml"/>
         <mapper resource="mybatis/mapper/shopset/shop-mapper.xml"/>

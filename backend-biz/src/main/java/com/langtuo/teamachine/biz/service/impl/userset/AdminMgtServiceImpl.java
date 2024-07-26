@@ -10,7 +10,7 @@ import com.langtuo.teamachine.api.service.userset.AdminMgtService;
 import com.langtuo.teamachine.dao.accessor.userset.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.userset.AdminRoleAccessor;
 import com.langtuo.teamachine.dao.po.userset.AdminPO;
-import com.langtuo.teamachine.dao.po.userset.AdminRolePO;
+import com.langtuo.teamachine.dao.po.userset.RolePO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -30,9 +30,9 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     @Override
     public LangTuoResult<AdminDTO> get(String tenantCode, String loginName) {
         AdminPO adminPO = adminAccessor.selectOne(tenantCode, loginName);
-        AdminRolePO adminRolePO = adminRoleAccessor.selectOne(tenantCode, adminPO.getRoleCode());
+        RolePO rolePO = adminRoleAccessor.selectOne(tenantCode, adminPO.getRoleCode());
 
-        AdminDTO adminRoleDTO = convert(adminPO, adminRolePO);
+        AdminDTO adminRoleDTO = convert(adminPO, rolePO);
         return LangTuoResult.success(adminRoleDTO);
     }
 
@@ -46,7 +46,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         try {
             String roleCode = null;
             if (StringUtils.isNotBlank(roleName)) {
-                Optional<AdminRolePO> opt = adminRoleAccessor.selectList(tenantCode).stream()
+                Optional<RolePO> opt = adminRoleAccessor.selectList(tenantCode).stream()
                         .filter(item -> item.getRoleName().equals(roleName))
                         .findFirst();
                 if (opt.isPresent()) {
@@ -60,7 +60,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
                     pageNum, pageSize);
             List<AdminDTO> dtoList = pageInfo.getList().stream()
                     .map(adminPO -> {
-                        AdminRolePO rolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
+                        RolePO rolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
                         return convert(adminPO, rolePO);
                     })
                     .collect(Collectors.toList());
@@ -80,8 +80,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             List<AdminPO> list = adminAccessor.selectList(tenantCode);
             List<AdminDTO> dtoList = list.stream()
                     .map(adminPO -> {
-                        AdminRolePO adminRolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
-                        return convert(adminPO, adminRolePO);
+                        RolePO rolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
+                        return convert(adminPO, rolePO);
                     })
                     .collect(Collectors.toList());
 
@@ -136,8 +136,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         return langTuoResult;
     }
 
-    private AdminDTO convert(AdminPO adminPO, AdminRolePO adminRolePO) {
-        if (adminPO == null || adminRolePO == null) {
+    private AdminDTO convert(AdminPO adminPO, RolePO rolePO) {
+        if (adminPO == null || rolePO == null) {
             return null;
         }
 
@@ -151,8 +151,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         dto.setComment(adminPO.getComment());
         dto.setExtraInfo(adminPO.getExtraInfo());
 
-        dto.setRoleCode(adminRolePO.getRoleCode());
-        dto.setRoleName(adminRolePO.getRoleName());
+        dto.setRoleCode(rolePO.getRoleCode());
+        dto.setRoleName(rolePO.getRoleName());
 
         return dto;
     }

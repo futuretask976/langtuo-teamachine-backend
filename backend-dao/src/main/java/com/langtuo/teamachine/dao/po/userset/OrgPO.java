@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class OrgStrucPO {
+public class OrgPO {
     /**
      * 数据表id
      */
