@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.deviceset.MachineDeployMapper;
+import com.langtuo.teamachine.dao.mapper.deviceset.DeployMapper;
 import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import org.apache.ibatis.session.SqlSession;
 
@@ -17,7 +17,7 @@ public class MachineDeployPOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineDeployMapper mapper = sqlSession.getMapper(MachineDeployMapper.class);
+        DeployMapper mapper = sqlSession.getMapper(DeployMapper.class);
 
         DeployPO po = null;
 
@@ -51,7 +51,7 @@ public class MachineDeployPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineDeployMapper mapper = sqlSession.getMapper(MachineDeployMapper.class);
+        DeployMapper mapper = sqlSession.getMapper(DeployMapper.class);
 
         List<DeployPO> list = mapper.selectList("tenant_001");
         for (DeployPO po : list) {
@@ -67,7 +67,7 @@ public class MachineDeployPOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineDeployMapper mapper = sqlSession.getMapper(MachineDeployMapper.class);
+        DeployMapper mapper = sqlSession.getMapper(DeployMapper.class);
 
         DeployPO po = new DeployPO();
         po.setTenantCode("tenant_002");

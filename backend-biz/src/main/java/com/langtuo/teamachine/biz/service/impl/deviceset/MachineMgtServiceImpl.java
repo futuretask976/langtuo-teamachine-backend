@@ -9,7 +9,7 @@ import com.langtuo.teamachine.api.request.deviceset.MachineUpdatePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.deviceset.MachineMgtService;
 import com.langtuo.teamachine.dao.accessor.deviceset.MachineAccessor;
-import com.langtuo.teamachine.dao.accessor.deviceset.MachineDeployAccessor;
+import com.langtuo.teamachine.dao.accessor.deviceset.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.shopset.ShopAccessor;
 import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import com.langtuo.teamachine.dao.po.deviceset.MachinePO;
@@ -27,7 +27,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     private MachineAccessor machineAccessor;
 
     @Resource
-    private MachineDeployAccessor machineDeployAccessor;
+    private DeployAccessor deployAccessor;
 
     @Resource
     private ShopAccessor shopAccessor;
@@ -98,12 +98,12 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             DeployPO deployPO = convert(request);
-            DeployPO existDeployPO = machineDeployAccessor.selectOne(request.getTenantCode(),
+            DeployPO existDeployPO = deployAccessor.selectOne(request.getTenantCode(),
                     request.getDeployCode());
             if (existDeployPO != null) {
-                int updated = machineDeployAccessor.update(deployPO);
+                int updated = deployAccessor.update(deployPO);
             } else {
-                int inserted = machineDeployAccessor.insert(deployPO);
+                int inserted = deployAccessor.insert(deployPO);
             }
 
             MachinePO machinePO = convertToMachinePO(request);

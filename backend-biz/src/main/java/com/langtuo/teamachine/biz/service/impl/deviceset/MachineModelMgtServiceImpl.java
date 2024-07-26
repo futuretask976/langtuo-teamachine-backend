@@ -9,8 +9,8 @@ import com.langtuo.teamachine.api.request.deviceset.ModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.deviceset.MachineModelMgtService;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.dao.accessor.deviceset.MachineModelAccessor;
-import com.langtuo.teamachine.dao.accessor.deviceset.MachineModelPipelineAccessor;
+import com.langtuo.teamachine.dao.accessor.deviceset.ModelAccessor;
+import com.langtuo.teamachine.dao.accessor.deviceset.ModelPipelineAccessor;
 import com.langtuo.teamachine.dao.po.deviceset.ModelPO;
 import com.langtuo.teamachine.dao.po.deviceset.ModelPipelinePO;
 import org.apache.commons.lang3.StringUtils;
@@ -24,16 +24,16 @@ import java.util.stream.Collectors;
 @Component
 public class MachineModelMgtServiceImpl implements MachineModelMgtService {
     @Resource
-    private MachineModelAccessor machineModelAccessor;
+    private ModelAccessor modelAccessor;
 
     @Resource
-    private MachineModelPipelineAccessor machineModelPipelineAccessor;
+    private ModelPipelineAccessor modelPipelineAccessor;
 
     @Override
     public LangTuoResult<PageDTO<ModelDTO>> list() {
         LangTuoResult<PageDTO<ModelDTO>> langTuoResult = null;
         try {
-            List<ModelPO> list = machineModelAccessor.selectList();
+            List<ModelPO> list = modelAccessor.selectList();
             List<ModelDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
 
         LangTuoResult<PageDTO<ModelDTO>> langTuoResult = null;
         try {
-            PageInfo<ModelPO> pageInfo = machineModelAccessor.search(modelCode, pageNum, pageSize);
+            PageInfo<ModelPO> pageInfo = modelAccessor.search(modelCode, pageNum, pageSize);
             List<ModelDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
@@ -70,10 +70,10 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
     public LangTuoResult<ModelDTO> get(String modelCode) {
         LangTuoResult<ModelDTO> langTuoResult = null;
         try {
-            ModelPO modelPO = machineModelAccessor.selectOne(modelCode);
+            ModelPO modelPO = modelAccessor.selectOne(modelCode);
             ModelDTO modelDTO = convert(modelPO);
 
-            List<ModelPipelinePO> pipelinePOList = machineModelPipelineAccessor.selectList(modelCode);
+            List<ModelPipelinePO> pipelinePOList = modelPipelineAccessor.selectList(modelCode);
             if (!CollectionUtils.isEmpty(pipelinePOList)) {
                 modelDTO.setPipelineList(convert(pipelinePOList));
             }
@@ -99,20 +99,20 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            ModelPO exist = machineModelAccessor.selectOne(modelCode);
+            ModelPO exist = modelAccessor.selectOne(modelCode);
             System.out.printf("$$$$$ MachineModelMgtServiceImpl#put exist=%s\n", exist);
             if (exist != null) {
-                int updated = machineModelAccessor.update(modelPO);
+                int updated = modelAccessor.update(modelPO);
                 System.out.printf("$$$$$ MachineModelMgtServiceImpl#put updated=%s\n", updated);
             } else {
-                int inserted = machineModelAccessor.insert(modelPO);
+                int inserted = modelAccessor.insert(modelPO);
                 System.out.printf("$$$$$ MachineModelMgtServiceImpl#put inserted=%s\n", inserted);
             }
 
-            int deleted = machineModelPipelineAccessor.delete(modelCode);
+            int deleted = modelPipelineAccessor.delete(modelCode);
             System.out.printf("$$$$$ MachineModelMgtServiceImpl#put deleted4Pipeline=%s\n", deleted);
             modelPipelinePOList.stream().forEach(po -> {
-                int inserted = machineModelPipelineAccessor.insert(po);
+                int inserted = modelPipelineAccessor.insert(po);
                 System.out.printf("$$$$$ MachineModelMgtServiceImpl#put inserted4Pipeline=%s\n", inserted);
             });
             langTuoResult = LangTuoResult.success();
@@ -130,9 +130,9 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            int deleted4ModelCode = machineModelAccessor.delete(modelCode);
+            int deleted4ModelCode = modelAccessor.delete(modelCode);
             System.out.printf("$$$$$ MachineModelMgtServiceImpl#put deleted4ModelCode=%s\n", deleted4ModelCode);
-            int deleted4Pipeline = machineModelPipelineAccessor.delete(modelCode);
+            int deleted4Pipeline = modelPipelineAccessor.delete(modelCode);
             System.out.printf("$$$$$ MachineModelMgtServiceImpl#put deleted4Pipeline=%s\n", deleted4Pipeline);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {

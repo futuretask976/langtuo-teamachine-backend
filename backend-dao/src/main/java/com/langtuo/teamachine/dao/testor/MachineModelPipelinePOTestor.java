@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.deviceset.MachineModelPipelineMapper;
+import com.langtuo.teamachine.dao.mapper.deviceset.ModelPipelineMapper;
 import com.langtuo.teamachine.dao.po.deviceset.ModelPipelinePO;
 import org.apache.ibatis.session.SqlSession;
 
@@ -15,7 +15,7 @@ public class MachineModelPipelinePOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineModelPipelineMapper mapper = sqlSession.getMapper(MachineModelPipelineMapper.class);
+        ModelPipelineMapper mapper = sqlSession.getMapper(ModelPipelineMapper.class);
 
         ModelPipelinePO po = null;
 
@@ -47,7 +47,7 @@ public class MachineModelPipelinePOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineModelPipelineMapper mapper = sqlSession.getMapper(MachineModelPipelineMapper.class);
+        ModelPipelineMapper mapper = sqlSession.getMapper(ModelPipelineMapper.class);
 
         List<ModelPipelinePO> list = mapper.selectList("model_001");
         for (ModelPipelinePO po : list) {
@@ -63,7 +63,7 @@ public class MachineModelPipelinePOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineModelPipelineMapper mapper = sqlSession.getMapper(MachineModelPipelineMapper.class);
+        ModelPipelineMapper mapper = sqlSession.getMapper(ModelPipelineMapper.class);
 
         ModelPipelinePO po = new ModelPipelinePO();
         po.setModelCode("model_001");

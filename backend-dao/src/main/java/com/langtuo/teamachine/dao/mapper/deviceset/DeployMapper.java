@@ -2,8 +2,8 @@ package com.langtuo.teamachine.dao.mapper.deviceset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.deviceset.ModelPO;
-import com.langtuo.teamachine.dao.query.deviceset.MachineModelQuery;
+import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
+import com.langtuo.teamachine.dao.query.deviceset.MachineDeployQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,45 +13,47 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface MachineModelMapper {
+public interface DeployMapper {
     /**
      *
-     * @param modelCode
+     * @param tenantCode
+     * @param deployCode
      * @return
      */
-    ModelPO selectOne(@Param("modelCode") String modelCode);
+    DeployPO selectOne(@Param("tenantCode") String tenantCode, @Param("deployCode") String deployCode);
 
     /**
      *
      * @return
      */
-    List<ModelPO> selectList();
+    List<DeployPO> selectList(@Param("tenantCode") String tenantCode);
 
     /**
      *
      * @return
      */
-    List<ModelPO> search(MachineModelQuery machineModelQuery);
+    List<DeployPO> search(MachineDeployQuery query);
 
     /**
      *
-     * @param modelPO
+     * @param deployPO
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(ModelPO modelPO);
+    int insert(DeployPO deployPO);
 
     /**
      *
-     * @param modelPO
+     * @param deployPO
      * @return
      */
-    int update(ModelPO modelPO);
+    int update(DeployPO deployPO);
 
     /**
-     *
-     * @param machineCode
+     * 
+     * @param tenantCode
+     * @param deployCode
      * @return
      */
-    int delete(String machineCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("deployCode") String deployCode);
 }

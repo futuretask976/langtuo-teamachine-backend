@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface MachineModelPipelineMapper {
+public interface ModelPipelineMapper {
     /**
      *
      * @param modelCode

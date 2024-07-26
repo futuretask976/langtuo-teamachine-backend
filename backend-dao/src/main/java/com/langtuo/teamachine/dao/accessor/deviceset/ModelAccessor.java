@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.deviceset;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.mapper.deviceset.MachineModelMapper;
+import com.langtuo.teamachine.dao.mapper.deviceset.ModelMapper;
 import com.langtuo.teamachine.dao.po.deviceset.ModelPO;
 import com.langtuo.teamachine.dao.query.deviceset.MachineModelQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -12,9 +12,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class MachineModelAccessor {
+public class ModelAccessor {
     @Resource
-    private MachineModelMapper mapper;
+    private ModelMapper mapper;
 
     public ModelPO selectOne(String modelCode) {
         return mapper.selectOne(modelCode);

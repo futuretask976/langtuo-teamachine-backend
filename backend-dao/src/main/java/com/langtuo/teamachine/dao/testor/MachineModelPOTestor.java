@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.deviceset.MachineModelMapper;
+import com.langtuo.teamachine.dao.mapper.deviceset.ModelMapper;
 import com.langtuo.teamachine.dao.po.deviceset.ModelPO;
 import org.apache.ibatis.session.SqlSession;
 
@@ -15,7 +15,7 @@ public class MachineModelPOTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineModelMapper mapper = sqlSession.getMapper(MachineModelMapper.class);
+        ModelMapper mapper = sqlSession.getMapper(ModelMapper.class);
 
         ModelPO po = null;
 
@@ -345,7 +345,7 @@ public class MachineModelPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineModelMapper mapper = sqlSession.getMapper(MachineModelMapper.class);
+        ModelMapper mapper = sqlSession.getMapper(ModelMapper.class);
 
         List<ModelPO> list = mapper.selectList();
         for (ModelPO po : list) {
@@ -361,7 +361,7 @@ public class MachineModelPOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        MachineModelMapper mapper = sqlSession.getMapper(MachineModelMapper.class);
+        ModelMapper mapper = sqlSession.getMapper(ModelMapper.class);
 
         ModelPO po = new ModelPO();
         po.setModelCode("model_001");

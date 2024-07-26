@@ -2,8 +2,8 @@ package com.langtuo.teamachine.dao.mapper.deviceset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
-import com.langtuo.teamachine.dao.query.deviceset.MachineDeployQuery;
+import com.langtuo.teamachine.dao.po.deviceset.ModelPO;
+import com.langtuo.teamachine.dao.query.deviceset.MachineModelQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,47 +13,45 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface MachineDeployMapper {
+public interface ModelMapper {
     /**
      *
-     * @param tenantCode
-     * @param deployCode
+     * @param modelCode
      * @return
      */
-    DeployPO selectOne(@Param("tenantCode") String tenantCode, @Param("deployCode") String deployCode);
+    ModelPO selectOne(@Param("modelCode") String modelCode);
 
     /**
      *
      * @return
      */
-    List<DeployPO> selectList(@Param("tenantCode") String tenantCode);
+    List<ModelPO> selectList();
 
     /**
      *
      * @return
      */
-    List<DeployPO> search(MachineDeployQuery query);
+    List<ModelPO> search(MachineModelQuery machineModelQuery);
 
     /**
      *
-     * @param deployPO
+     * @param modelPO
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(DeployPO deployPO);
+    int insert(ModelPO modelPO);
 
     /**
      *
-     * @param deployPO
+     * @param modelPO
      * @return
      */
-    int update(DeployPO deployPO);
+    int update(ModelPO modelPO);
 
     /**
-     * 
-     * @param tenantCode
-     * @param deployCode
+     *
+     * @param machineCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("deployCode") String deployCode);
+    int delete(String machineCode);
 }

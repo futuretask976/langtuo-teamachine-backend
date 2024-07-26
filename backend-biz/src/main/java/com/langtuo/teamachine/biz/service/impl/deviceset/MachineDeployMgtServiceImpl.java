@@ -8,7 +8,7 @@ import com.langtuo.teamachine.api.request.deviceset.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.deviceset.MachineDeployMgtService;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
-import com.langtuo.teamachine.dao.accessor.deviceset.MachineDeployAccessor;
+import com.langtuo.teamachine.dao.accessor.deviceset.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.shopset.ShopAccessor;
 import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     @Resource
-    private MachineDeployAccessor machineDeployAccessor;
+    private DeployAccessor deployAccessor;
 
     @Resource
     private ShopAccessor shopAccessor;
@@ -31,7 +31,7 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     public LangTuoResult<List<DeployDTO>> list(String tenantCode) {
         LangTuoResult<List<DeployDTO>> langTuoResult = null;
         try {
-            List<DeployPO> list = machineDeployAccessor.selectList(tenantCode);
+            List<DeployPO> list = deployAccessor.selectList(tenantCode);
             List<DeployDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
@@ -51,7 +51,7 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
 
         LangTuoResult<PageDTO<DeployDTO>> langTuoResult = null;
         try {
-            PageInfo<DeployPO> pageInfo = machineDeployAccessor.search(tenantCode, deployCode, machineCode,
+            PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
                     shopName, state, pageNum, pageSize);
             List<DeployDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
@@ -69,7 +69,7 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     public LangTuoResult<DeployDTO> get(String tenantCode, String deployCode) {
         LangTuoResult<DeployDTO> langTuoResult = null;
         try {
-            DeployDTO machineModelDTO = convert(machineDeployAccessor.selectOne(tenantCode, deployCode));
+            DeployDTO machineModelDTO = convert(deployAccessor.selectOne(tenantCode, deployCode));
 
             langTuoResult = LangTuoResult.success(machineModelDTO);
         } catch (Exception e) {
@@ -88,12 +88,12 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            DeployPO exist = machineDeployAccessor.selectOne(deployPO.getTenantCode(),
+            DeployPO exist = deployAccessor.selectOne(deployPO.getTenantCode(),
                     deployPO.getDeployCode());
             if (exist != null) {
-                int updated = machineDeployAccessor.update(deployPO);
+                int updated = deployAccessor.update(deployPO);
             } else {
-                int inserted = machineDeployAccessor.insert(deployPO);
+                int inserted = deployAccessor.insert(deployPO);
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -110,7 +110,7 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            int deleted = machineDeployAccessor.delete(tenantCode, deployCode);
+            int deleted = deployAccessor.delete(tenantCode, deployCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);

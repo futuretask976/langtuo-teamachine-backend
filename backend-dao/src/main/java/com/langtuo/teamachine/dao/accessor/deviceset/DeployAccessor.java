@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.deviceset;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.mapper.deviceset.MachineDeployMapper;
+import com.langtuo.teamachine.dao.mapper.deviceset.DeployMapper;
 import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import com.langtuo.teamachine.dao.query.deviceset.MachineDeployQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -12,9 +12,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class MachineDeployAccessor {
+public class DeployAccessor {
     @Resource
-    private MachineDeployMapper mapper;
+    private DeployMapper mapper;
 
     public DeployPO selectOne(String tenantCode, String deployCode) {
         return mapper.selectOne(tenantCode, deployCode);

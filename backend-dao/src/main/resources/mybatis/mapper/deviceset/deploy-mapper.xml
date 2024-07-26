@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.deviceset.MachineDeployMapper">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.deviceset.DeployMapper">
     <resultMap type="com.langtuo.teamachine.dao.po.deviceset.DeployPO" id="machineDeployPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
