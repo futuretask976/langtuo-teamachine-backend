@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.model.LoginSuccessDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.web.helper.GxJwtTokenHelper;
+import com.langtuo.teamachine.web.model.LoginSuccessDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

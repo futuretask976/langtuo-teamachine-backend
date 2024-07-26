@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.api.model;
+package com.langtuo.teamachine.web.model;
 
 import lombok.Data;
 

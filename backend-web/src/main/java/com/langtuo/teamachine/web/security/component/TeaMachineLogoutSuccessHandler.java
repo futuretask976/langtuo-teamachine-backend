@@ -1,9 +1,8 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.model.LoginSuccessDTO;
-import com.langtuo.teamachine.api.model.LogoutSuccessDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.web.model.LogoutSuccessDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
