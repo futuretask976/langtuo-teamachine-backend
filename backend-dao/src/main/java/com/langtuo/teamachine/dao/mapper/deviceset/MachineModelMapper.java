@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper.deviceset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.deviceset.MachineModelPO;
+import com.langtuo.teamachine.dao.po.deviceset.ModelPO;
 import com.langtuo.teamachine.dao.query.deviceset.MachineModelQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,34 +19,34 @@ public interface MachineModelMapper {
      * @param modelCode
      * @return
      */
-    MachineModelPO selectOne(@Param("modelCode") String modelCode);
+    ModelPO selectOne(@Param("modelCode") String modelCode);
 
     /**
      *
      * @return
      */
-    List<MachineModelPO> selectList();
+    List<ModelPO> selectList();
 
     /**
      *
      * @return
      */
-    List<MachineModelPO> search(MachineModelQuery machineModelQuery);
+    List<ModelPO> search(MachineModelQuery machineModelQuery);
 
     /**
      *
-     * @param machineModelPO
+     * @param modelPO
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(MachineModelPO machineModelPO);
+    int insert(ModelPO modelPO);
 
     /**
      *
-     * @param machineModelPO
+     * @param modelPO
      * @return
      */
-    int update(MachineModelPO machineModelPO);
+    int update(ModelPO modelPO);
 
     /**
      *

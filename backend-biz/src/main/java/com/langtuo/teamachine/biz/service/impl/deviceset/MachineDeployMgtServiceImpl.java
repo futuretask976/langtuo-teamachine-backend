@@ -2,15 +2,15 @@ package com.langtuo.teamachine.biz.service.impl.deviceset;
 
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.api.model.deviceset.MachineDeployDTO;
+import com.langtuo.teamachine.api.model.deviceset.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.deviceset.MachineDeployPutRequest;
+import com.langtuo.teamachine.api.request.deviceset.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.deviceset.MachineDeployMgtService;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import com.langtuo.teamachine.dao.accessor.deviceset.MachineDeployAccessor;
 import com.langtuo.teamachine.dao.accessor.shopset.ShopAccessor;
-import com.langtuo.teamachine.dao.po.deviceset.MachineDeployPO;
+import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -28,11 +28,11 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     private ShopAccessor shopAccessor;
 
     @Override
-    public LangTuoResult<List<MachineDeployDTO>> list(String tenantCode) {
-        LangTuoResult<List<MachineDeployDTO>> langTuoResult = null;
+    public LangTuoResult<List<DeployDTO>> list(String tenantCode) {
+        LangTuoResult<List<DeployDTO>> langTuoResult = null;
         try {
-            List<MachineDeployPO> list = machineDeployAccessor.selectList(tenantCode);
-            List<MachineDeployDTO> dtoList = list.stream()
+            List<DeployPO> list = machineDeployAccessor.selectList(tenantCode);
+            List<DeployDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
@@ -44,16 +44,16 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<MachineDeployDTO>> search(String tenantCode, String deployCode, String machineCode,
+    public LangTuoResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
             String shopName, Integer state, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
-        LangTuoResult<PageDTO<MachineDeployDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<DeployDTO>> langTuoResult = null;
         try {
-            PageInfo<MachineDeployPO> pageInfo = machineDeployAccessor.search(tenantCode, deployCode, machineCode,
+            PageInfo<DeployPO> pageInfo = machineDeployAccessor.search(tenantCode, deployCode, machineCode,
                     shopName, state, pageNum, pageSize);
-            List<MachineDeployDTO> dtoList = pageInfo.getList().stream()
+            List<DeployDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
@@ -66,10 +66,10 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     }
 
     @Override
-    public LangTuoResult<MachineDeployDTO> get(String tenantCode, String deployCode) {
-        LangTuoResult<MachineDeployDTO> langTuoResult = null;
+    public LangTuoResult<DeployDTO> get(String tenantCode, String deployCode) {
+        LangTuoResult<DeployDTO> langTuoResult = null;
         try {
-            MachineDeployDTO machineModelDTO = convert(machineDeployAccessor.selectOne(tenantCode, deployCode));
+            DeployDTO machineModelDTO = convert(machineDeployAccessor.selectOne(tenantCode, deployCode));
 
             langTuoResult = LangTuoResult.success(machineModelDTO);
         } catch (Exception e) {
@@ -79,21 +79,21 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(MachineDeployPutRequest machineDeployPutRequest) {
-        if (machineDeployPutRequest == null) {
+    public LangTuoResult<Void> put(DeployPutRequest deployPutRequest) {
+        if (deployPutRequest == null) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        MachineDeployPO machineDeployPO = convert(machineDeployPutRequest);
+        DeployPO deployPO = convert(deployPutRequest);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            MachineDeployPO exist = machineDeployAccessor.selectOne(machineDeployPO.getTenantCode(),
-                    machineDeployPO.getDeployCode());
+            DeployPO exist = machineDeployAccessor.selectOne(deployPO.getTenantCode(),
+                    deployPO.getDeployCode());
             if (exist != null) {
-                int updated = machineDeployAccessor.update(machineDeployPO);
+                int updated = machineDeployAccessor.update(deployPO);
             } else {
-                int inserted = machineDeployAccessor.insert(machineDeployPO);
+                int inserted = machineDeployAccessor.insert(deployPO);
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -123,12 +123,12 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
         return LangTuoResult.success(randomStr);
     }
 
-    private MachineDeployPO convert(MachineDeployPutRequest request) {
+    private DeployPO convert(DeployPutRequest request) {
         if (request == null) {
             return null;
         }
 
-        MachineDeployPO po = new MachineDeployPO();
+        DeployPO po = new DeployPO();
         po.setDeployCode(request.getDeployCode());
         po.setModelCode(request.getModelCode());
         po.setMachineCode(request.getMachineCode());
@@ -139,12 +139,12 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
         return po;
     }
 
-    private MachineDeployDTO convert(MachineDeployPO po) {
+    private DeployDTO convert(DeployPO po) {
         if (po == null) {
             return null;
         }
 
-        MachineDeployDTO dto = new MachineDeployDTO();
+        DeployDTO dto = new DeployDTO();
         dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());

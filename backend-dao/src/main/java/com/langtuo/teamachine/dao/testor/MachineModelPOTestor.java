@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.deviceset.MachineModelMapper;
-import com.langtuo.teamachine.dao.po.deviceset.MachineModelPO;
+import com.langtuo.teamachine.dao.po.deviceset.ModelPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -17,9 +17,9 @@ public class MachineModelPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineModelMapper mapper = sqlSession.getMapper(MachineModelMapper.class);
 
-        MachineModelPO po = null;
+        ModelPO po = null;
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_001");
         po.setEnableFlowAll(0);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -27,7 +27,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_002");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -35,7 +35,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_003");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -43,7 +43,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_004");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -51,7 +51,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_005");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -59,7 +59,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_006");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -67,7 +67,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_007");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -75,7 +75,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_008");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -83,7 +83,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_009");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -91,7 +91,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_010");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -99,7 +99,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_011");
         po.setEnableFlowAll(0);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -107,7 +107,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_012");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -115,7 +115,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_013");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -123,7 +123,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_014");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -131,7 +131,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_015");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -139,7 +139,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_016");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -147,7 +147,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_017");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -155,7 +155,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_018");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -163,7 +163,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_019");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -171,7 +171,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_020");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -179,7 +179,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_021");
         po.setEnableFlowAll(0);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -187,7 +187,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_022");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -195,7 +195,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_023");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -203,7 +203,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_024");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -211,7 +211,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_025");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -219,7 +219,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_026");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -227,7 +227,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_027");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -235,7 +235,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_028");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -243,7 +243,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_029");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -251,7 +251,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_030");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -259,7 +259,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_031");
         po.setEnableFlowAll(0);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -267,7 +267,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_032");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -275,7 +275,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_033");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -283,7 +283,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_034");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -291,7 +291,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_035");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -299,7 +299,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_036");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -307,7 +307,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_037");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -315,7 +315,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_038");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -323,7 +323,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_039");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -331,7 +331,7 @@ public class MachineModelPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPO();
+        po = new ModelPO();
         po.setModelCode("model_040");
         po.setEnableFlowAll(1);
         po.setExtraInfo(new HashMap<String, String>(){{
@@ -347,12 +347,12 @@ public class MachineModelPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineModelMapper mapper = sqlSession.getMapper(MachineModelMapper.class);
 
-        List<MachineModelPO> list = mapper.selectList();
-        for (MachineModelPO po : list) {
+        List<ModelPO> list = mapper.selectList();
+        for (ModelPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        MachineModelPO po = mapper.selectOne("100001");
+        ModelPO po = mapper.selectOne("100001");
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
@@ -363,7 +363,7 @@ public class MachineModelPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineModelMapper mapper = sqlSession.getMapper(MachineModelMapper.class);
 
-        MachineModelPO po = new MachineModelPO();
+        ModelPO po = new ModelPO();
         po.setModelCode("model_001");
         po.setExtraInfo(new HashMap<String, String>(){{
             put("k11", "v1111");

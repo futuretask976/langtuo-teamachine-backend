@@ -11,7 +11,7 @@ import com.langtuo.teamachine.api.service.deviceset.MachineMgtService;
 import com.langtuo.teamachine.dao.accessor.deviceset.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.deviceset.MachineDeployAccessor;
 import com.langtuo.teamachine.dao.accessor.shopset.ShopAccessor;
-import com.langtuo.teamachine.dao.po.deviceset.MachineDeployPO;
+import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import com.langtuo.teamachine.dao.po.deviceset.MachinePO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
 import org.apache.commons.lang3.StringUtils;
@@ -97,13 +97,13 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            MachineDeployPO machineDeployPO = convert(request);
-            MachineDeployPO existMachineDeployPO = machineDeployAccessor.selectOne(request.getTenantCode(),
+            DeployPO deployPO = convert(request);
+            DeployPO existDeployPO = machineDeployAccessor.selectOne(request.getTenantCode(),
                     request.getDeployCode());
-            if (existMachineDeployPO != null) {
-                int updated = machineDeployAccessor.update(machineDeployPO);
+            if (existDeployPO != null) {
+                int updated = machineDeployAccessor.update(deployPO);
             } else {
-                int inserted = machineDeployAccessor.insert(machineDeployPO);
+                int inserted = machineDeployAccessor.insert(deployPO);
             }
 
             MachinePO machinePO = convertToMachinePO(request);
@@ -187,12 +187,12 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         return dto;
     }
 
-    private MachineDeployPO convert(MachineActivatePutRequest request) {
+    private DeployPO convert(MachineActivatePutRequest request) {
         if (request == null) {
             return null;
         }
 
-        MachineDeployPO po = new MachineDeployPO();
+        DeployPO po = new DeployPO();
         po.setDeployCode(request.getDeployCode());
         po.setModelCode(request.getModelCode());
         po.setMachineCode(request.getMachineCode());

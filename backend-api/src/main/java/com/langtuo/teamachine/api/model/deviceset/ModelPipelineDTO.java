@@ -3,11 +3,11 @@ package com.langtuo.teamachine.api.model.deviceset;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class MachineModelDTO {
+public class ModelPipelineDTO {
     /**
      * 数据表id
      */
@@ -24,22 +24,22 @@ public class MachineModelDTO {
     private Date gmtModified;
 
     /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
-
-    /**
      * 型号编码
      */
     private String modelCode;
 
     /**
-     * 是否支持同时出料，0：不支持，1：支持
+     * 管道号码
      */
-    private Integer enableFlowAll;
+    private Integer pipelineNum;
 
     /**
-     * 管道列表
+     * 是否支持冷藏，0：不支持，1：支持
      */
-    private List<MachineModelPipelineDTO> pipelineList;
+    private Integer enableFreeze;
+
+    /**
+     * 是否支持加热，0：不支持，1：支持
+     */
+    private Integer enableWarm;
 }

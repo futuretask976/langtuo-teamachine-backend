@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.api.service.deviceset;
 
-import com.langtuo.teamachine.api.model.deviceset.MachineModelDTO;
+import com.langtuo.teamachine.api.model.deviceset.ModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.deviceset.MachineModelPutRequest;
+import com.langtuo.teamachine.api.request.deviceset.ModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
 public interface MachineModelMgtService {
@@ -11,26 +11,26 @@ public interface MachineModelMgtService {
      * @param modelCode
      * @return
      */
-    LangTuoResult<MachineModelDTO> get(String modelCode);
+    LangTuoResult<ModelDTO> get(String modelCode);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<MachineModelDTO>> search(String modelCode, int pageNum, int pageSize);
+    LangTuoResult<PageDTO<ModelDTO>> search(String modelCode, int pageNum, int pageSize);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<MachineModelDTO>> list();
+    LangTuoResult<PageDTO<ModelDTO>> list();
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(MachineModelPutRequest request);
+    LangTuoResult<Void> put(ModelPutRequest request);
 
     /**
      *

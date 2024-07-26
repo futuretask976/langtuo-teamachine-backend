@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.web.controller.deviceset;
 
-import com.langtuo.teamachine.api.model.deviceset.MachineDeployDTO;
+import com.langtuo.teamachine.api.model.deviceset.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.deviceset.MachineDeployPutRequest;
+import com.langtuo.teamachine.api.request.deviceset.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.deviceset.MachineDeployMgtService;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
@@ -22,9 +22,9 @@ public class MachineDeployController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{deploycode}/get")
-    public LangTuoResult<MachineDeployDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public LangTuoResult<DeployDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "deploycode") String deployCode) {
-        LangTuoResult<MachineDeployDTO> rtn = service.get(tenantCode, deployCode);
+        LangTuoResult<DeployDTO> rtn = service.get(tenantCode, deployCode);
         return rtn;
     }
 
@@ -33,8 +33,8 @@ public class MachineDeployController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<MachineDeployDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<MachineDeployDTO>> rtn = service.list(tenantCode);
+    public LangTuoResult<List<DeployDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        LangTuoResult<List<DeployDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -43,11 +43,11 @@ public class MachineDeployController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<MachineDeployDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public LangTuoResult<PageDTO<DeployDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("deployCode") String deployCode, @RequestParam("machineCode") String machineCode,
             @RequestParam("shopName") String shopName, @RequestParam(required = false, name = "state") Integer state,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<MachineDeployDTO>> rtn = service.search(tenantCode, deployCode, machineCode, shopName, state,
+        LangTuoResult<PageDTO<DeployDTO>> rtn = service.search(tenantCode, deployCode, machineCode, shopName, state,
                 pageNum, pageSize);
         return rtn;
     }
@@ -57,7 +57,7 @@ public class MachineDeployController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody MachineDeployPutRequest request) {
+    public LangTuoResult<Void> put(@RequestBody DeployPutRequest request) {
         LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }

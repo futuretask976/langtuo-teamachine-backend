@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.request.deviceset;
 import lombok.Data;
 
 @Data
-public class MachineModelPipelinePutRequest {
+public class ModelPipelinePutRequest {
     /**
      * 同MachineModelPipelineDTO
      */

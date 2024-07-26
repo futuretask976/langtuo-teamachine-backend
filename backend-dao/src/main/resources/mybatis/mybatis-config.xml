@@ -35,10 +35,10 @@
     <mappers>
         <!-- 每一个Mapper.xml都要在Mybatis核心配置文件中注册！ -->
         <!-- 设备 -->
-        <mapper resource="mybatis/mapper/deviceset/machine-model-mapper.xml"/>
-        <mapper resource="mybatis/mapper/deviceset/machine-model-pipeline-mapper.xml"/>
+        <mapper resource="mybatis/mapper/deviceset/model-mapper.xml"/>
+        <mapper resource="mybatis/mapper/deviceset/model-pipeline-mapper.xml"/>
         <mapper resource="mybatis/mapper/deviceset/machine-mapper.xml"/>
-        <mapper resource="mybatis/mapper/deviceset/machine-deploy-mapper.xml"/>
+        <mapper resource="mybatis/mapper/deviceset/deploy-mapper.xml"/>
         <!-- 用户 -->
         <mapper resource="mybatis/mapper/userset/tenant-mapper.xml"/>
         <mapper resource="mybatis/mapper/userset/permit-act-mapper.xml"/>

@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper.deviceset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.deviceset.MachineDeployPO;
+import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import com.langtuo.teamachine.dao.query.deviceset.MachineDeployQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,34 +20,34 @@ public interface MachineDeployMapper {
      * @param deployCode
      * @return
      */
-    MachineDeployPO selectOne(@Param("tenantCode") String tenantCode, @Param("deployCode") String deployCode);
+    DeployPO selectOne(@Param("tenantCode") String tenantCode, @Param("deployCode") String deployCode);
 
     /**
      *
      * @return
      */
-    List<MachineDeployPO> selectList(@Param("tenantCode") String tenantCode);
+    List<DeployPO> selectList(@Param("tenantCode") String tenantCode);
 
     /**
      *
      * @return
      */
-    List<MachineDeployPO> search(MachineDeployQuery query);
+    List<DeployPO> search(MachineDeployQuery query);
 
     /**
      *
-     * @param machineDeployPO
+     * @param deployPO
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(MachineDeployPO machineDeployPO);
+    int insert(DeployPO deployPO);
 
     /**
      *
-     * @param machineDeployPO
+     * @param deployPO
      * @return
      */
-    int update(MachineDeployPO machineDeployPO);
+    int update(DeployPO deployPO);
 
     /**
      * 

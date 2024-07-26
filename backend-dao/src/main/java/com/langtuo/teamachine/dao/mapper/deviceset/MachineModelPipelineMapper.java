@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper.deviceset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.deviceset.MachineModelPipelinePO;
+import com.langtuo.teamachine.dao.po.deviceset.ModelPipelinePO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -19,28 +19,28 @@ public interface MachineModelPipelineMapper {
      * @param pipelineNum
      * @return
      */
-    MachineModelPipelinePO selectOne(@Param("modelCode") String modelCode, @Param("pipelineNum") String pipelineNum);
+    ModelPipelinePO selectOne(@Param("modelCode") String modelCode, @Param("pipelineNum") String pipelineNum);
 
     /**
      *
      * @return
      */
-    List<MachineModelPipelinePO> selectList(String modelCode);
+    List<ModelPipelinePO> selectList(String modelCode);
 
     /**
      *
-     * @param machineModelPipelinePO
+     * @param modelPipelinePO
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(MachineModelPipelinePO machineModelPipelinePO);
+    int insert(ModelPipelinePO modelPipelinePO);
 
     /**
      *
-     * @param machineModelPipelinePO
+     * @param modelPipelinePO
      * @return
      */
-    int update(MachineModelPipelinePO machineModelPipelinePO);
+    int update(ModelPipelinePO modelPipelinePO);
 
     /**
      *

@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.deviceset.MachineDeployMapper;
-import com.langtuo.teamachine.dao.po.deviceset.MachineDeployPO;
+import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -19,9 +19,9 @@ public class MachineDeployPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineDeployMapper mapper = sqlSession.getMapper(MachineDeployMapper.class);
 
-        MachineDeployPO po = null;
+        DeployPO po = null;
 
-        po = new MachineDeployPO();
+        po = new DeployPO();
         po.setTenantCode("tenant_001");
         po.setDeployCode("deploy_001");
         po.setModelCode("model_001");
@@ -33,7 +33,7 @@ public class MachineDeployPOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineDeployPO();
+        po = new DeployPO();
         po.setTenantCode("tenant_002");
         po.setDeployCode("deploy_002");
         po.setModelCode("model_002");
@@ -53,12 +53,12 @@ public class MachineDeployPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineDeployMapper mapper = sqlSession.getMapper(MachineDeployMapper.class);
 
-        List<MachineDeployPO> list = mapper.selectList("tenant_001");
-        for (MachineDeployPO po : list) {
+        List<DeployPO> list = mapper.selectList("tenant_001");
+        for (DeployPO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        MachineDeployPO po = mapper.selectOne("tenant_001", "deploy_001");
+        DeployPO po = mapper.selectOne("tenant_001", "deploy_001");
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
@@ -69,7 +69,7 @@ public class MachineDeployPOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineDeployMapper mapper = sqlSession.getMapper(MachineDeployMapper.class);
 
-        MachineDeployPO po = new MachineDeployPO();
+        DeployPO po = new DeployPO();
         po.setTenantCode("tenant_002");
         po.setDeployCode("deploy_002");
         po.setShopCode("shop_002444444");

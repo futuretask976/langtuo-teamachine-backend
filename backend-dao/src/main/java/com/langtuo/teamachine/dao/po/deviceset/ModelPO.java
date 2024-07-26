@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class MachineModelPO {
+public class ModelPO {
     /**
      * 数据表id
      */

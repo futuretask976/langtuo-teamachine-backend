@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class MachineModelPutRequest {
+public class ModelPutRequest {
     /**
      * 同MachineModelDTO
      */
@@ -20,7 +20,7 @@ public class MachineModelPutRequest {
     /**
      * 同MachineModelDTO
      */
-    private List<MachineModelPipelinePutRequest> pipelineList;
+    private List<ModelPipelinePutRequest> pipelineList;
 
     /**
      * 同MachineModelDTO

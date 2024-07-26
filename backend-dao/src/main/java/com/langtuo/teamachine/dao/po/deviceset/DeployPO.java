@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class MachineModelPipelinePO {
+public class DeployPO {
     /**
      * 数据表id
      */
@@ -23,24 +23,34 @@ public class MachineModelPipelinePO {
     private Date gmtModified;
 
     /**
+     * 部署编码
+     */
+    private String deployCode;
+
+    /**
      * 型号编码
      */
     private String modelCode;
 
     /**
-     * 管道号
+     * 机器编码
      */
-    private Integer pipelineNum;
+    private String machineCode;
 
     /**
-     * 是否支持加热，0：不支持，1：支持
+     * 店铺编码
      */
-    private Integer enableWarm;
+    private String shopCode;
 
     /**
-     * 是否支持冷藏，0：不支持，1：支持
+     * 部署状态，0：未部署，1：已部署
      */
-    private Integer enableFreeze;
+    private Integer state;
+
+    /**
+     * 租户编码
+     */
+    private String tenantCode;
 
     /**
      * 额外信息，格式：a:b;c:d

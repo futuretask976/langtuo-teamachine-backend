@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.web.controller.deviceset;
 
-import com.langtuo.teamachine.api.model.deviceset.MachineModelDTO;
+import com.langtuo.teamachine.api.model.deviceset.ModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.deviceset.MachineModelPutRequest;
+import com.langtuo.teamachine.api.request.deviceset.ModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.deviceset.MachineModelMgtService;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,8 @@ public class MachineModelController {
      * @return
      */
     @GetMapping(value = "/{modelcode}/get")
-    public LangTuoResult<MachineModelDTO> get(@PathVariable(name = "modelcode") String modelCode) {
-        LangTuoResult<MachineModelDTO> rtn = service.get(modelCode);
+    public LangTuoResult<ModelDTO> get(@PathVariable(name = "modelcode") String modelCode) {
+        LangTuoResult<ModelDTO> rtn = service.get(modelCode);
         return rtn;
     }
 
@@ -30,8 +30,8 @@ public class MachineModelController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<PageDTO<MachineModelDTO>> list() {
-        LangTuoResult<PageDTO<MachineModelDTO>> rtn = service.list();
+    public LangTuoResult<PageDTO<ModelDTO>> list() {
+        LangTuoResult<PageDTO<ModelDTO>> rtn = service.list();
         return rtn;
     }
 
@@ -40,9 +40,9 @@ public class MachineModelController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<MachineModelDTO>> search(@RequestParam("modelCode") String modelCode,
+    public LangTuoResult<PageDTO<ModelDTO>> search(@RequestParam("modelCode") String modelCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<MachineModelDTO>> rtn = service.search(modelCode, pageNum, pageSize);
+        LangTuoResult<PageDTO<ModelDTO>> rtn = service.search(modelCode, pageNum, pageSize);
         return rtn;
     }
 
@@ -51,7 +51,7 @@ public class MachineModelController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody MachineModelPutRequest request) {
+    public LangTuoResult<Void> put(@RequestBody ModelPutRequest request) {
         LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }

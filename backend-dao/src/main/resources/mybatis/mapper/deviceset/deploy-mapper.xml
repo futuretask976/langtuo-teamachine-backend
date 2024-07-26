@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.deviceset.MachineDeployMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.deviceset.MachineDeployPO" id="machineDeployPOMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.deviceset.DeployPO" id="machineDeployPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -19,19 +19,19 @@
     </resultMap>
 
     <select id="selectOne" resultMap="machineDeployPOMap">
-        SELECT * FROM machine_deploy
+        SELECT * FROM deploy
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and deploy_code = #{deployCode}
     </select>
 
     <select id="selectList" resultMap="machineDeployPOMap">
-        SELECT * FROM machine_deploy
+        SELECT * FROM deploy
     </select>
 
     <select id="search" parameterType="com.langtuo.teamachine.dao.query.deviceset.MachineDeployQuery" resultMap="machineDeployPOMap">
         SELECT *
-        FROM machine_deploy
+        FROM deploy
         WHERE 1 = 1
         <if test="tenantCode != null">
             AND tenant_code = #{tenantCode}
@@ -50,8 +50,8 @@
         </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.deviceset.MachineDeployPO">
-        INSERT INTO `machine_deploy` (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.deviceset.DeployPO">
+        INSERT INTO `deploy` (
             `gmt_created`
             , `gmt_modified`
             , `deploy_code`
@@ -74,8 +74,8 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.deviceset.MachineDeployPO">
-        UPDATE machine_deploy
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.deviceset.DeployPO">
+        UPDATE deploy
         SET
             gmt_modified = now()
             <if test="modelCode != null">
@@ -99,7 +99,7 @@
     </update>
 
     <delete id="delete">
-        DELETE FROM machine_deploy
+        DELETE FROM deploy
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
             and deploy_code = #{deployCode}

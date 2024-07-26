@@ -4,10 +4,11 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Data
-public class MachineModelPipelineDTO {
+public class DeployDTO {
     /**
      * 数据表id
      */
@@ -24,22 +25,37 @@ public class MachineModelPipelineDTO {
     private Date gmtModified;
 
     /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
+     * 部署编码
+     */
+    private String deployCode;
+
+    /**
      * 型号编码
      */
     private String modelCode;
 
     /**
-     * 管道号码
+     * 机器编码
      */
-    private Integer pipelineNum;
+    private String machineCode;
 
     /**
-     * 是否支持冷藏，0：不支持，1：支持
+     * 店铺编码
      */
-    private Integer enableFreeze;
+    private String shopCode;
 
     /**
-     * 是否支持加热，0：不支持，1：支持
+     * 店铺名称
      */
-    private Integer enableWarm;
+    private String shopName;
+
+    /**
+     * 部署状态，0：未部署，1：已部署
+     */
+    private Integer state;
 }

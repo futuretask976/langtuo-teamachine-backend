@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.deviceset;
 
 import com.langtuo.teamachine.dao.mapper.deviceset.MachineModelPipelineMapper;
-import com.langtuo.teamachine.dao.po.deviceset.MachineModelPipelinePO;
+import com.langtuo.teamachine.dao.po.deviceset.ModelPipelinePO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -12,15 +12,15 @@ public class MachineModelPipelineAccessor {
     @Resource
     private MachineModelPipelineMapper mapper;
 
-    public MachineModelPipelinePO selectOne(String modelCode, String pipelineNum) {
+    public ModelPipelinePO selectOne(String modelCode, String pipelineNum) {
         return mapper.selectOne(modelCode, pipelineNum);
     }
 
-    public List<MachineModelPipelinePO> selectList(String modeCode) {
+    public List<ModelPipelinePO> selectList(String modeCode) {
         return mapper.selectList(modeCode);
     }
 
-    public int insert(MachineModelPipelinePO po) {
+    public int insert(ModelPipelinePO po) {
         return mapper.insert(po);
     }
 

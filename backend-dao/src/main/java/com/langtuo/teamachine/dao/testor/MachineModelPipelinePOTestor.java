@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.deviceset.MachineModelPipelineMapper;
-import com.langtuo.teamachine.dao.po.deviceset.MachineModelPipelinePO;
+import com.langtuo.teamachine.dao.po.deviceset.ModelPipelinePO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -17,9 +17,9 @@ public class MachineModelPipelinePOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineModelPipelineMapper mapper = sqlSession.getMapper(MachineModelPipelineMapper.class);
 
-        MachineModelPipelinePO po = null;
+        ModelPipelinePO po = null;
 
-        po = new MachineModelPipelinePO();
+        po = new ModelPipelinePO();
         po.setModelCode("model_001");
         po.setPipelineNum(1);
         po.setEnableWarm(0);
@@ -30,7 +30,7 @@ public class MachineModelPipelinePOTestor {
         }});
         mapper.insert(po);
 
-        po = new MachineModelPipelinePO();
+        po = new ModelPipelinePO();
         po.setModelCode("model_002");
         po.setPipelineNum(2);
         po.setEnableWarm(1);
@@ -49,12 +49,12 @@ public class MachineModelPipelinePOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineModelPipelineMapper mapper = sqlSession.getMapper(MachineModelPipelineMapper.class);
 
-        List<MachineModelPipelinePO> list = mapper.selectList("model_001");
-        for (MachineModelPipelinePO po : list) {
+        List<ModelPipelinePO> list = mapper.selectList("model_001");
+        for (ModelPipelinePO po : list) {
             System.out.printf("list->po: %s\n", po);
         }
 
-        MachineModelPipelinePO po = mapper.selectOne("model_001", "1");
+        ModelPipelinePO po = mapper.selectOne("model_001", "1");
         System.out.printf("po: %s\n", po);
 
         sqlSession.commit();
@@ -65,7 +65,7 @@ public class MachineModelPipelinePOTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         MachineModelPipelineMapper mapper = sqlSession.getMapper(MachineModelPipelineMapper.class);
 
-        MachineModelPipelinePO po = new MachineModelPipelinePO();
+        ModelPipelinePO po = new ModelPipelinePO();
         po.setModelCode("model_001");
         po.setPipelineNum(1);
         po.setEnableWarm(9);

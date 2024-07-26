@@ -3,12 +3,11 @@ package com.langtuo.teamachine.api.model.deviceset;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Data
-public class MachineDeployDTO {
+public class ModelDTO {
     /**
      * 数据表id
      */
@@ -30,32 +29,17 @@ public class MachineDeployDTO {
     private Map<String, String> extraInfo;
 
     /**
-     * 部署编码
-     */
-    private String deployCode;
-
-    /**
      * 型号编码
      */
     private String modelCode;
 
     /**
-     * 机器编码
+     * 是否支持同时出料，0：不支持，1：支持
      */
-    private String machineCode;
+    private Integer enableFlowAll;
 
     /**
-     * 店铺编码
+     * 管道列表
      */
-    private String shopCode;
-
-    /**
-     * 店铺名称
-     */
-    private String shopName;
-
-    /**
-     * 部署状态，0：未部署，1：已部署
-     */
-    private Integer state;
+    private List<ModelPipelineDTO> pipelineList;
 }

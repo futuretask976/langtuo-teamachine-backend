@@ -1,18 +1,18 @@
 package com.langtuo.teamachine.biz.service.impl.deviceset;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.model.deviceset.MachineModelDTO;
-import com.langtuo.teamachine.api.model.deviceset.MachineModelPipelineDTO;
+import com.langtuo.teamachine.api.model.deviceset.ModelDTO;
+import com.langtuo.teamachine.api.model.deviceset.ModelPipelineDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.deviceset.MachineModelPipelinePutRequest;
-import com.langtuo.teamachine.api.request.deviceset.MachineModelPutRequest;
+import com.langtuo.teamachine.api.request.deviceset.ModelPipelinePutRequest;
+import com.langtuo.teamachine.api.request.deviceset.ModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.deviceset.MachineModelMgtService;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.dao.accessor.deviceset.MachineModelAccessor;
 import com.langtuo.teamachine.dao.accessor.deviceset.MachineModelPipelineAccessor;
-import com.langtuo.teamachine.dao.po.deviceset.MachineModelPO;
-import com.langtuo.teamachine.dao.po.deviceset.MachineModelPipelinePO;
+import com.langtuo.teamachine.dao.po.deviceset.ModelPO;
+import com.langtuo.teamachine.dao.po.deviceset.ModelPipelinePO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -30,11 +30,11 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
     private MachineModelPipelineAccessor machineModelPipelineAccessor;
 
     @Override
-    public LangTuoResult<PageDTO<MachineModelDTO>> list() {
-        LangTuoResult<PageDTO<MachineModelDTO>> langTuoResult = null;
+    public LangTuoResult<PageDTO<ModelDTO>> list() {
+        LangTuoResult<PageDTO<ModelDTO>> langTuoResult = null;
         try {
-            List<MachineModelPO> list = machineModelAccessor.selectList();
-            List<MachineModelDTO> dtoList = list.stream()
+            List<ModelPO> list = machineModelAccessor.selectList();
+            List<ModelDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
@@ -46,15 +46,15 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<MachineModelDTO>> search(String modelCode,
+    public LangTuoResult<PageDTO<ModelDTO>> search(String modelCode,
             int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
-        LangTuoResult<PageDTO<MachineModelDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<ModelDTO>> langTuoResult = null;
         try {
-            PageInfo<MachineModelPO> pageInfo = machineModelAccessor.search(modelCode, pageNum, pageSize);
-            List<MachineModelDTO> dtoList = pageInfo.getList().stream()
+            PageInfo<ModelPO> pageInfo = machineModelAccessor.search(modelCode, pageNum, pageSize);
+            List<ModelDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
@@ -67,17 +67,17 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
     }
 
     @Override
-    public LangTuoResult<MachineModelDTO> get(String modelCode) {
-        LangTuoResult<MachineModelDTO> langTuoResult = null;
+    public LangTuoResult<ModelDTO> get(String modelCode) {
+        LangTuoResult<ModelDTO> langTuoResult = null;
         try {
-            MachineModelPO machineModelPO = machineModelAccessor.selectOne(modelCode);
-            MachineModelDTO machineModelDTO = convert(machineModelPO);
+            ModelPO modelPO = machineModelAccessor.selectOne(modelCode);
+            ModelDTO modelDTO = convert(modelPO);
 
-            List<MachineModelPipelinePO> pipelinePOList = machineModelPipelineAccessor.selectList(modelCode);
+            List<ModelPipelinePO> pipelinePOList = machineModelPipelineAccessor.selectList(modelCode);
             if (!CollectionUtils.isEmpty(pipelinePOList)) {
-                machineModelDTO.setPipelineList(convert(pipelinePOList));
+                modelDTO.setPipelineList(convert(pipelinePOList));
             }
-            langTuoResult = LangTuoResult.success(machineModelDTO);
+            langTuoResult = LangTuoResult.success(modelDTO);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
@@ -85,33 +85,33 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(MachineModelPutRequest machineModelPutRequest) {
-        if (machineModelPutRequest == null
-                || StringUtils.isBlank(machineModelPutRequest.getModelCode())
-                || machineModelPutRequest.getEnableFlowAll() == null
-                || CollectionUtils.isEmpty(machineModelPutRequest.getPipelineList())) {
+    public LangTuoResult<Void> put(ModelPutRequest modelPutRequest) {
+        if (modelPutRequest == null
+                || StringUtils.isBlank(modelPutRequest.getModelCode())
+                || modelPutRequest.getEnableFlowAll() == null
+                || CollectionUtils.isEmpty(modelPutRequest.getPipelineList())) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        String modelCode = machineModelPutRequest.getModelCode();
-        MachineModelPO machineModelPO = convert(machineModelPutRequest);
-        List<MachineModelPipelinePO> machineModelPipelinePOList = convert(modelCode, machineModelPutRequest.getPipelineList());
+        String modelCode = modelPutRequest.getModelCode();
+        ModelPO modelPO = convert(modelPutRequest);
+        List<ModelPipelinePO> modelPipelinePOList = convert(modelCode, modelPutRequest.getPipelineList());
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            MachineModelPO exist = machineModelAccessor.selectOne(modelCode);
+            ModelPO exist = machineModelAccessor.selectOne(modelCode);
             System.out.printf("$$$$$ MachineModelMgtServiceImpl#put exist=%s\n", exist);
             if (exist != null) {
-                int updated = machineModelAccessor.update(machineModelPO);
+                int updated = machineModelAccessor.update(modelPO);
                 System.out.printf("$$$$$ MachineModelMgtServiceImpl#put updated=%s\n", updated);
             } else {
-                int inserted = machineModelAccessor.insert(machineModelPO);
+                int inserted = machineModelAccessor.insert(modelPO);
                 System.out.printf("$$$$$ MachineModelMgtServiceImpl#put inserted=%s\n", inserted);
             }
 
             int deleted = machineModelPipelineAccessor.delete(modelCode);
             System.out.printf("$$$$$ MachineModelMgtServiceImpl#put deleted4Pipeline=%s\n", deleted);
-            machineModelPipelinePOList.stream().forEach(po -> {
+            modelPipelinePOList.stream().forEach(po -> {
                 int inserted = machineModelPipelineAccessor.insert(po);
                 System.out.printf("$$$$$ MachineModelMgtServiceImpl#put inserted4Pipeline=%s\n", inserted);
             });
@@ -141,12 +141,12 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         return langTuoResult;
     }
 
-    private MachineModelDTO convert(MachineModelPO po) {
+    private ModelDTO convert(ModelPO po) {
         if (po == null) {
             return null;
         }
 
-        MachineModelDTO dto = new MachineModelDTO();
+        ModelDTO dto = new ModelDTO();
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setModelCode(po.getModelCode());
@@ -155,25 +155,25 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         return dto;
     }
 
-    private MachineModelPO convert(MachineModelPutRequest request) {
+    private ModelPO convert(ModelPutRequest request) {
         if (request == null) {
             return null;
         }
 
-        MachineModelPO po = new MachineModelPO();
+        ModelPO po = new ModelPO();
         po.setModelCode(request.getModelCode());
         po.setEnableFlowAll(request.getEnableFlowAll());
         po.setExtraInfo(po.getExtraInfo());
         return po;
     }
 
-    private List<MachineModelPipelinePO> convert(String modelCode, List<MachineModelPipelinePutRequest> requestList) {
+    private List<ModelPipelinePO> convert(String modelCode, List<ModelPipelinePutRequest> requestList) {
         if (CollectionUtils.isEmpty(requestList)) {
             return null;
         }
 
-        List<MachineModelPipelinePO> resultList = requestList.stream().map(request -> {
-            MachineModelPipelinePO po = new MachineModelPipelinePO();
+        List<ModelPipelinePO> resultList = requestList.stream().map(request -> {
+            ModelPipelinePO po = new ModelPipelinePO();
             po.setModelCode(modelCode);
             po.setPipelineNum(request.getPipelineNum());
             po.setEnableFreeze(request.getEnableFreeze());
@@ -183,13 +183,13 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         return resultList;
     }
 
-    private List<MachineModelPipelineDTO> convert(List<MachineModelPipelinePO> pipelinePOList) {
+    private List<ModelPipelineDTO> convert(List<ModelPipelinePO> pipelinePOList) {
         if (CollectionUtils.isEmpty(pipelinePOList)) {
             return null;
         }
 
-        List<MachineModelPipelineDTO> resultList = pipelinePOList.stream().map(po -> {
-            MachineModelPipelineDTO dto = new MachineModelPipelineDTO();
+        List<ModelPipelineDTO> resultList = pipelinePOList.stream().map(po -> {
+            ModelPipelineDTO dto = new ModelPipelineDTO();
             dto.setId(po.getId());
             dto.setGmtCreated(po.getGmtCreated());
             dto.setGmtModified(po.getGmtModified());
