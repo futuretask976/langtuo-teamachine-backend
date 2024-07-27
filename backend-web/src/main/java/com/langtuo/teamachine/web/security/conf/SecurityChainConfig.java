@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 
 /**
  * SpringSecurity相关配置，仅用于配置SecurityFilterChain
- * Created by macro on 2019/11/5.
  */
 @Configuration
 @EnableWebSecurity
@@ -83,7 +82,6 @@ public class SecurityChainConfig {
 
         // 不需要保护的资源路径允许访问
         for (String ignoreUrl : ignoreUrlsConfig.getUrls()) {
-            System.out.printf("$$$$$ SecurityChainConfig#filterChain ignoreUrl=%s\n", ignoreUrl);
             httpSecurity.authorizeRequests().antMatchers(ignoreUrl).permitAll();
         }
 
