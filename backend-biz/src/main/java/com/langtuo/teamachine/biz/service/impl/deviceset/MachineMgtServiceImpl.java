@@ -16,6 +16,7 @@ import com.langtuo.teamachine.dao.po.deviceset.MachinePO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -158,6 +159,17 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<MachineDTO> convert(List<MachinePO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<MachineDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
     }
 
     private MachineDTO convert(MachinePO po) {

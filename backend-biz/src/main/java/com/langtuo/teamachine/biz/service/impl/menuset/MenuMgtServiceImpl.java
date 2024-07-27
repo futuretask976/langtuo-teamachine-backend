@@ -40,10 +40,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         LangTuoResult<List<MenuDTO>> langTuoResult = null;
         try {
             List<MenuPO> list = menuAccessor.selectList(tenantCode);
-            List<MenuDTO> dtoList = list.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<MenuDTO> dtoList = convertToMenuDTO(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,10 +59,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         try {
             PageInfo<MenuPO> pageInfo = menuAccessor.search(tenantName, seriesCode, seriesName,
                     pageNum, pageSize);
-            List<MenuDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<MenuDTO> dtoList = convertToMenuDTO(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -197,6 +191,17 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<MenuDTO> convertToMenuDTO(List<MenuPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<MenuDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
     }
 
     private MenuDTO convert(MenuPO po) {

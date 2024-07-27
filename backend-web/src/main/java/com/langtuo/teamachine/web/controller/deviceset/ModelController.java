@@ -4,19 +4,19 @@ import com.langtuo.teamachine.api.model.deviceset.ModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.deviceset.ModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.deviceset.MachineModelMgtService;
+import com.langtuo.teamachine.api.service.deviceset.ModelMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/deviceset/machine/model")
-public class MachineModelController {
+@RequestMapping("/deviceset/model")
+public class ModelController {
     @Resource
-    private MachineModelMgtService service;
+    private ModelMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/machine/model/get
+     * url: http://localhost:8080/teamachine/model/get
      * @return
      */
     @GetMapping(value = "/{modelcode}/get")
@@ -26,7 +26,7 @@ public class MachineModelController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/model/list?pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/model/list?pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/list")
@@ -36,7 +36,7 @@ public class MachineModelController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/model/search?modelCode=model_001&pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/model/search?modelCode=model_001&pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/search")
@@ -47,7 +47,7 @@ public class MachineModelController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/model/put
+     * url: http://localhost:8080/teamachine/model/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -57,7 +57,7 @@ public class MachineModelController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/model/put
+     * url: http://localhost:8080/teamachine/model/put
      * @return
      */
     @DeleteMapping(value = "/{modelcode}/delete")

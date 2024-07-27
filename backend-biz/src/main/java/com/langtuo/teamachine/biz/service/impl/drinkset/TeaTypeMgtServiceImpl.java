@@ -11,6 +11,7 @@ import com.langtuo.teamachine.dao.accessor.drinkset.TeaTypeAccessor;
 import com.langtuo.teamachine.dao.po.drinkset.TeaTypePO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,10 +27,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         LangTuoResult<List<TeaTypeDTO>> langTuoResult = null;
         try {
             List<TeaTypePO> list = accessor.selectList(tenantCode);
-            List<TeaTypeDTO> dtoList = list.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<TeaTypeDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,10 +46,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         try {
             PageInfo<TeaTypePO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
-            List<TeaTypeDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<TeaTypeDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -67,7 +62,6 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         try {
             TeaTypePO toppingTypePO = accessor.selectOneByCode(tenantCode, toppingTypeCode);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
-
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +76,6 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         try {
             TeaTypePO toppingTypePO = accessor.selectOneByName(tenantCode, toppingTypeName);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
-
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,6 +121,17 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<TeaTypeDTO> convert(List<TeaTypePO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<TeaTypeDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
     }
 
     private TeaTypeDTO convert(TeaTypePO po) {

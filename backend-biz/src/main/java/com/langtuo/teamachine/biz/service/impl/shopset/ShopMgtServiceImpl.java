@@ -13,6 +13,7 @@ import com.langtuo.teamachine.dao.po.shopset.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -30,7 +31,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     @Override
     public LangTuoResult<ShopDTO> getByCode(String tenantCode, String shopCode) {
         ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, shopCode);
-
         ShopDTO shopDTO = convert(shopPO);
         return LangTuoResult.success(shopDTO);
     }
@@ -38,7 +38,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     @Override
     public LangTuoResult<ShopDTO> getByName(String tenantCode, String shopName) {
         ShopPO shopPO = shopAccessor.selectOneByName(tenantCode, shopName);
-
         ShopDTO shopDTO = convert(shopPO);
         return LangTuoResult.success(shopDTO);
     }
@@ -65,13 +64,9 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
             PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCode,
                     pageNum, pageSize);
-            List<ShopDTO> dtoList = pageInfo.getList().stream()
-                    .map(shopPO -> {
-                        return convert(shopPO);
-                    })
-                    .collect(Collectors.toList());
-
-            langTuoResult = LangTuoResult.success(new PageDTO<ShopDTO>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            List<ShopDTO> dtoList = convert(pageInfo.getList());
+            langTuoResult = LangTuoResult.success(new PageDTO<ShopDTO>(
+                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -84,12 +79,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         LangTuoResult<List<ShopDTO>> langTuoResult = null;
         try {
             List<ShopPO> list = shopAccessor.selectList(tenantCode);
-            List<ShopDTO> dtoList = list.stream()
-                    .map(shopPO -> {
-                        return convert(shopPO);
-                    })
-                    .collect(Collectors.toList());
-
+            List<ShopDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,22 +127,33 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         return langTuoResult;
     }
 
-    private ShopDTO convert(ShopPO shopPO) {
-        if (shopPO == null) {
+    private List<ShopDTO> convert(List<ShopPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<ShopDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
+    }
+
+    private ShopDTO convert(ShopPO po) {
+        if (po == null) {
             return null;
         }
 
         ShopDTO dto = new ShopDTO();
-        dto.setId(shopPO.getId());
-        dto.setGmtCreated(shopPO.getGmtCreated());
-        dto.setGmtModified(shopPO.getGmtModified());
-        dto.setShopCode(shopPO.getShopCode());
-        dto.setShopName(shopPO.getShopName());
-        dto.setShopType(shopPO.getShopType());
-        dto.setComment(shopPO.getComment());
-        dto.setExtraInfo(shopPO.getExtraInfo());
+        dto.setId(po.getId());
+        dto.setGmtCreated(po.getGmtCreated());
+        dto.setGmtModified(po.getGmtModified());
+        dto.setShopCode(po.getShopCode());
+        dto.setShopName(po.getShopName());
+        dto.setShopType(po.getShopType());
+        dto.setComment(po.getComment());
+        dto.setExtraInfo(po.getExtraInfo());
 
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(shopPO.getTenantCode(), shopPO.getShopGroupCode());
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(po.getTenantCode(), po.getShopGroupCode());
         if (shopGroupPO != null) {
             dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
             dto.setShopGroupName(shopGroupPO.getShopGroupName());

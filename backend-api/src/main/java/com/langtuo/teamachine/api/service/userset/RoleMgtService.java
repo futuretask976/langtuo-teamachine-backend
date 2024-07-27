@@ -7,7 +7,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 
 import java.util.List;
 
-public interface AdminRoleMgtService {
+public interface RoleMgtService {
     /**
      *
      * @param tenantCode

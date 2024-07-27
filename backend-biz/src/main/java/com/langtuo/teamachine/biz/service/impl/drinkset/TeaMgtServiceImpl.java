@@ -78,19 +78,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         LangTuoResult<List<TeaDTO>> langTuoResult = null;
         try {
             List<TeaPO> teaPOList = teaAccessor.selectList(tenantCode);
-            List<TeaDTO> teaDTOList = teaPOList.stream()
-                    .map(po -> {
-                        TeaDTO dto = convert(po);
-//                        List<TeaToppingRelPO> relPOList = teaToppingRelAccessor.selectList(
-//                                dto.getTenantCode(), dto.getTeaCode());
-//                        if (!CollectionUtils.isEmpty(relPOList)) {
-//                            dto.setTeaToppingRelList(relPOList.stream()
-//                                    .map(relPO -> convert(relPO))
-//                                    .collect(Collectors.toList()));
-//                        }
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
+            List<TeaDTO> teaDTOList = convert(teaPOList);
             langTuoResult = LangTuoResult.success(teaDTOList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,19 +97,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         try {
             PageInfo<TeaPO> pageInfo = teaAccessor.search(tenantName, teaCode, teaName,
                     pageNum, pageSize);
-            List<TeaDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> {
-                        TeaDTO dto = convert(po);
-//                        List<TeaToppingRelPO> relPOList = teaToppingRelAccessor.selectList(
-//                                dto.getTenantCode(), dto.getTeaCode());
-//                        if (!CollectionUtils.isEmpty(relPOList)) {
-//                            dto.setTeaToppingRelList(relPOList.stream()
-//                                    .map(relPO -> convert(relPO))
-//                                    .collect(Collectors.toList()));
-//                        }
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
+            List<TeaDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -183,6 +159,17 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<TeaDTO> convert(List<TeaPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<TeaDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
     }
 
     private TeaDTO convert(TeaPO po) {

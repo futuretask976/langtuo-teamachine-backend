@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.deviceset.ModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
-public interface MachineModelMgtService {
+public interface ModelMgtService {
     /**
      *
      * @param modelCode

@@ -4,7 +4,7 @@ import com.langtuo.teamachine.api.model.deviceset.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.deviceset.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.deviceset.MachineDeployMgtService;
+import com.langtuo.teamachine.api.service.deviceset.DeployMgtService;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +12,13 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/deviceset/machine/deploy")
-public class MachineDeployController {
+@RequestMapping("/deviceset/deploy")
+public class DeployController {
     @Resource
-    private MachineDeployMgtService service;
+    private DeployMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/machine/deploy/tenant_001/123456/get
+     * url: http://localhost:8080/teamachine/deploy/tenant_001/123456/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{deploycode}/get")
@@ -29,7 +29,7 @@ public class MachineDeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/deploy/list?tenantCode=tenant_001&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/deploy/list?tenantCode=tenant_001&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/list")
@@ -39,7 +39,7 @@ public class MachineDeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/deploy/search?tenantCode=tenant_001&deployCode=&shopName=&state=&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/deploy/search?tenantCode=tenant_001&deployCode=&shopName=&state=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -53,7 +53,7 @@ public class MachineDeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/deploy/put
+     * url: http://localhost:8080/teamachine/deploy/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -63,7 +63,7 @@ public class MachineDeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/deploy/tenant_001/123456/delete
+     * url: http://localhost:8080/teamachine/deploy/tenant_001/123456/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{deploycode}/delete")

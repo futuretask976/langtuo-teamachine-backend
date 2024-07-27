@@ -11,6 +11,7 @@ import com.langtuo.teamachine.dao.accessor.shopset.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.po.shopset.ShopGroupPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,7 +25,6 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     @Override
     public LangTuoResult<ShopGroupDTO> get(String tenantCode, String loginName) {
         ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(tenantCode, loginName);
-
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
         return LangTuoResult.success(shopGroupDTO);
     }
@@ -39,13 +39,9 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         try {
             PageInfo<ShopGroupPO> pageInfo = shopGroupAccessor.search(tenantCode, shopGroupName,
                     pageNum, pageSize);
-            List<ShopGroupDTO> dtoList = pageInfo.getList().stream()
-                    .map(shopGroupPO -> {
-                        return convert(shopGroupPO);
-                    })
-                    .collect(Collectors.toList());
-
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            List<ShopGroupDTO> dtoList = convert(pageInfo.getList());
+            langTuoResult = LangTuoResult.success(new PageDTO<>(
+                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -58,12 +54,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         LangTuoResult<List<ShopGroupDTO>> langTuoResult = null;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.selectList(tenantCode);
-            List<ShopGroupDTO> dtoList = list.stream()
-                    .map(shopGroupPO -> {
-                        return convert(shopGroupPO);
-                    })
-                    .collect(Collectors.toList());
-
+            List<ShopGroupDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,19 +102,30 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         return langTuoResult;
     }
 
-    private ShopGroupDTO convert(ShopGroupPO shopGroupPO) {
-        if (shopGroupPO == null) {
+    private List<ShopGroupDTO> convert(List<ShopGroupPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<ShopGroupDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
+    }
+
+    private ShopGroupDTO convert(ShopGroupPO po) {
+        if (po == null) {
             return null;
         }
 
         ShopGroupDTO dto = new ShopGroupDTO();
-        dto.setId(shopGroupPO.getId());
-        dto.setGmtCreated(shopGroupPO.getGmtCreated());
-        dto.setGmtModified(shopGroupPO.getGmtModified());
-        dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
-        dto.setShopGroupName(shopGroupPO.getShopGroupName());
-        dto.setComment(shopGroupPO.getComment());
-        dto.setExtraInfo(shopGroupPO.getExtraInfo());
+        dto.setId(po.getId());
+        dto.setGmtCreated(po.getGmtCreated());
+        dto.setGmtModified(po.getGmtModified());
+        dto.setShopGroupCode(po.getShopGroupCode());
+        dto.setShopGroupName(po.getShopGroupName());
+        dto.setComment(po.getComment());
+        dto.setExtraInfo(po.getExtraInfo());
 
         return dto;
     }

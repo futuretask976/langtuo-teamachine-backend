@@ -4,7 +4,7 @@ import com.langtuo.teamachine.api.model.userset.RoleDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.userset.RolePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.userset.AdminRoleMgtService;
+import com.langtuo.teamachine.api.service.userset.RoleMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/userset/admin/role")
 public class AdminRoleController {
     @Resource
-    private AdminRoleMgtService service;
+    private RoleMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/admin/role/tenant_001/{rolecode}/get

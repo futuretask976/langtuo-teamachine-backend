@@ -33,10 +33,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         LangTuoResult<List<SpecDTO>> langTuoResult = null;
         try {
             List<SpecPO> list = specAccessor.selectList(tenantCode);
-            List<SpecDTO> dtoList = list.stream()
-                    .map(po -> convertToSpecPO(po))
-                    .collect(Collectors.toList());
-
+            List<SpecDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,10 +52,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         try {
             PageInfo<SpecPO> pageInfo = specAccessor.search(tenantName, specCode, specName,
                     pageNum, pageSize);
-            List<SpecDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convertToSpecPO(po))
-                    .collect(Collectors.toList());
-
+            List<SpecDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -73,8 +67,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         LangTuoResult<SpecDTO> langTuoResult = null;
         try {
             SpecPO po = specAccessor.selectOneByCode(tenantCode, specCode);
-            SpecDTO dto = convertToSpecPO(po);
-
+            SpecDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,8 +81,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         LangTuoResult<SpecDTO> langTuoResult = null;
         try {
             SpecPO po = specAccessor.selectOneByName(tenantCode, specName);
-            SpecDTO dto = convertToSpecPO(po);
-
+            SpecDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,8 +96,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        SpecPO specPO = convertToSpecPO(specPutRequest);
-        List<SpecItemPO> specItemPOList = convertToSpecSubPO(specPutRequest);
+        SpecPO specPO = convert(specPutRequest);
+        List<SpecItemPO> specItemPOList = convertToSpecItemPO(specPutRequest);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
@@ -148,7 +140,18 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         return langTuoResult;
     }
 
-    private SpecDTO convertToSpecPO(SpecPO po) {
+    private List<SpecDTO> convert(List<SpecPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<SpecDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
+    }
+
+    private SpecDTO convert(SpecPO po) {
         if (po == null) {
             return null;
         }
@@ -165,12 +168,12 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
         List<SpecItemPO> poList = specItemAccessor.selectList(po.getTenantCode(), po.getSpecCode());
         if (!CollectionUtils.isEmpty(poList)) {
-            dto.setSpecItemList(poList.stream().map(item -> convertToSpecPO(item)).collect(Collectors.toList()));
+            dto.setSpecItemList(poList.stream().map(item -> convert(item)).collect(Collectors.toList()));
         }
         return dto;
     }
 
-    private SpecItemDTO convertToSpecPO(SpecItemPO po) {
+    private SpecItemDTO convert(SpecItemPO po) {
         if (po == null) {
             return null;
         }
@@ -186,7 +189,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         return dto;
     }
 
-    private SpecPO convertToSpecPO(SpecPutRequest request) {
+    private SpecPO convert(SpecPutRequest request) {
         if (request == null) {
             return null;
         }
@@ -201,7 +204,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         return po;
     }
 
-    private List<SpecItemPO> convertToSpecSubPO(SpecPutRequest specPutRequest) {
+    private List<SpecItemPO> convertToSpecItemPO(SpecPutRequest specPutRequest) {
         if (specPutRequest == null || CollectionUtils.isEmpty(specPutRequest.getSpecItemList())) {
             return null;
         }

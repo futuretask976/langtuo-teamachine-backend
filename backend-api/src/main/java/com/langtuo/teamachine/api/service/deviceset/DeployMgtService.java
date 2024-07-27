@@ -7,7 +7,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 
 import java.util.List;
 
-public interface MachineDeployMgtService {
+public interface DeployMgtService {
     /**
      *
      * @param tenantCode

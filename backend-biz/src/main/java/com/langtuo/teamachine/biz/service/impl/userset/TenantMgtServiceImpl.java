@@ -11,10 +11,10 @@ import com.langtuo.teamachine.dao.accessor.userset.TenantAccessor;
 import com.langtuo.teamachine.dao.po.userset.TenantPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class TenantMgtServiceImpl implements TenantMgtService {
@@ -26,10 +26,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         LangTuoResult<List<TenantDTO>> langTuoResult = null;
         try {
             List<TenantPO> list = tenantAccessor.selectList();
-            List<TenantDTO> dtoList = list.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<TenantDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,10 +44,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         LangTuoResult<PageDTO<TenantDTO>> langTuoResult = null;
         try {
             PageInfo<TenantPO> pageInfo = tenantAccessor.search(tenantName, contactPerson, pageNum, pageSize);
-            List<TenantDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<TenantDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -66,7 +60,6 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         try {
             TenantPO tenantPO = tenantAccessor.selectOne(tenantCode);
             TenantDTO tenantDTO = convert(tenantPO);
-
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -91,13 +84,10 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             TenantPO exist = tenantAccessor.selectOne(tenantCode);
-            System.out.printf("$$$$$ TenantMgtServiceImpl#put exist=%s\n", exist);
             if (exist != null) {
                 int updated = tenantAccessor.update(tenantPO);
-                System.out.printf("$$$$$ TenantMgtServiceImpl#put updated=%s\n", updated);
             } else {
                 int inserted = tenantAccessor.insert(tenantPO);
-                System.out.printf("$$$$$ TenantMgtServiceImpl#put inserted=%s\n", inserted);
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -115,12 +105,20 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             int deleted = tenantAccessor.delete(tenantCode);
-            System.out.printf("$$$$$ TenantMgtServiceImpl#delete deleted=%s\n", deleted);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<TenantDTO> convert(List<TenantPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<TenantDTO> list = convert(poList);
+        return list;
     }
 
     private TenantDTO convert(TenantPO po) {

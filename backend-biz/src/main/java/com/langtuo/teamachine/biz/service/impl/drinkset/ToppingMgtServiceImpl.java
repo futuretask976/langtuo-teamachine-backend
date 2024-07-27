@@ -11,6 +11,7 @@ import com.langtuo.teamachine.dao.accessor.drinkset.ToppingAccessor;
 import com.langtuo.teamachine.dao.po.drinkset.ToppingPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,10 +27,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         LangTuoResult<List<ToppingDTO>> langTuoResult = null;
         try {
             List<ToppingPO> list = accessor.selectList(tenantCode);
-            List<ToppingDTO> dtoList = list.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<ToppingDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,10 +46,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         try {
             PageInfo<ToppingPO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
-            List<ToppingDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<ToppingDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -67,7 +62,6 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         try {
             ToppingPO toppingTypePO = accessor.selectOneByCode(tenantCode, toppingTypeCode);
             ToppingDTO tenantDTO = convert(toppingTypePO);
-
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +76,6 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         try {
             ToppingPO toppingTypePO = accessor.selectOneByName(tenantCode, toppingTypeName);
             ToppingDTO tenantDTO = convert(toppingTypePO);
-
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,6 +125,17 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<ToppingDTO> convert(List<ToppingPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<ToppingDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
     }
 
     private ToppingDTO convert(ToppingPO po) {

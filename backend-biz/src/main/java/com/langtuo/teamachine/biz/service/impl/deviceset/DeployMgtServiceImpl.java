@@ -6,7 +6,7 @@ import com.langtuo.teamachine.api.model.deviceset.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.deviceset.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.deviceset.MachineDeployMgtService;
+import com.langtuo.teamachine.api.service.deviceset.DeployMgtService;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import com.langtuo.teamachine.dao.accessor.deviceset.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.shopset.ShopAccessor;
@@ -14,13 +14,14 @@ import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
+public class DeployMgtServiceImpl implements DeployMgtService {
     @Resource
     private DeployAccessor deployAccessor;
 
@@ -32,10 +33,7 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
         LangTuoResult<List<DeployDTO>> langTuoResult = null;
         try {
             List<DeployPO> list = deployAccessor.selectList(tenantCode);
-            List<DeployDTO> dtoList = list.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<DeployDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -53,11 +51,9 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
         try {
             PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
                     shopName, state, pageNum, pageSize);
-            List<DeployDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            List<DeployDTO> dtoList = convert(pageInfo.getList());
+            langTuoResult = LangTuoResult.success(new PageDTO<>(
+                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -70,7 +66,6 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
         LangTuoResult<DeployDTO> langTuoResult = null;
         try {
             DeployDTO machineModelDTO = convert(deployAccessor.selectOne(tenantCode, deployCode));
-
             langTuoResult = LangTuoResult.success(machineModelDTO);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -139,6 +134,17 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
         return po;
     }
 
+    private List<DeployDTO> convert(List<DeployPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<DeployDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
+    }
+
     private DeployDTO convert(DeployPO po) {
         if (po == null) {
             return null;
@@ -159,7 +165,6 @@ public class MachineDeployMgtServiceImpl implements MachineDeployMgtService {
             dto.setShopCode(shopPO.getShopCode());
             dto.setShopName(shopPO.getShopName());
         }
-
         return dto;
     }
 }

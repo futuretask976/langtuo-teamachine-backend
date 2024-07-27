@@ -51,10 +51,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         LangTuoResult<List<OrgDTO>> langTuoResult = null;
         try {
             List<OrgPO> poList = orgStrucAccessor.selectList(tenantCode);
-            List<OrgDTO> dtoList = poList.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<OrgDTO> dtoList = convert(poList);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,11 +69,9 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         LangTuoResult<PageDTO<OrgDTO>> langTuoResult = null;
         try {
             PageInfo<OrgPO> pageInfo = orgStrucAccessor.search(tenantCode, orgName, pageNum, pageSize);
-            List<OrgDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            List<OrgDTO> dtoList = convert(pageInfo.getList());
+            langTuoResult = LangTuoResult.success(new PageDTO<>(
+                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -90,7 +85,6 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         try {
             OrgPO orgPO = orgStrucAccessor.selectOne(tenantCode, orgName);
             OrgDTO orgDTO = convert(orgPO);
-
             langTuoResult = LangTuoResult.success(orgDTO);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -114,13 +108,10 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             OrgPO exist = orgStrucAccessor.selectOne(tenantCode, orgName);
-            System.out.printf("$$$$$ OrgStrucMgtServiceImpl#put exist=%s\n", exist);
             if (exist != null) {
                 int updated = orgStrucAccessor.update(orgPO);
-                System.out.printf("$$$$$ OrgStrucMgtServiceImpl#put updated=%s\n", updated);
             } else {
                 int inserted = orgStrucAccessor.insert(orgPO);
-                System.out.printf("$$$$$ OrgStrucMgtServiceImpl#put inserted=%s\n", inserted);
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -138,12 +129,22 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             int deleted = orgStrucAccessor.delete(tenantCode, orgName);
-            System.out.printf("$$$$$ OrgStrucMgtServiceImpl#delete deleted=%s\n", deleted);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<OrgDTO> convert(List<OrgPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<OrgDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
     }
 
     private OrgDTO convert(OrgPO po) {

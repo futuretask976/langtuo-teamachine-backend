@@ -104,13 +104,10 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             AdminPO exist = adminAccessor.selectOne(request.getTenantCode(), request.getLoginName());
-            System.out.printf("$$$$$ AdminMgtServiceImpl#put exist=%s\n", exist);
             if (exist != null) {
                 int updated = adminAccessor.update(adminPO);
-                System.out.printf("$$$$$ AdminMgtServiceImpl#put updated=%s\n", updated);
             } else {
                 int inserted = adminAccessor.insert(adminPO);
-                System.out.printf("$$$$$ AdminMgtServiceImpl#put inserted=%s\n", inserted);
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {

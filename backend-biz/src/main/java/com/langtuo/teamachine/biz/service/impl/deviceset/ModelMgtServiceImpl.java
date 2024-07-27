@@ -7,7 +7,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.deviceset.ModelPipelinePutRequest;
 import com.langtuo.teamachine.api.request.deviceset.ModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.deviceset.MachineModelMgtService;
+import com.langtuo.teamachine.api.service.deviceset.ModelMgtService;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.dao.accessor.deviceset.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.deviceset.ModelPipelineAccessor;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class MachineModelMgtServiceImpl implements MachineModelMgtService {
+public class ModelMgtServiceImpl implements ModelMgtService {
     @Resource
     private ModelAccessor modelAccessor;
 
@@ -34,10 +34,7 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         LangTuoResult<PageDTO<ModelDTO>> langTuoResult = null;
         try {
             List<ModelPO> list = modelAccessor.selectList();
-            List<ModelDTO> dtoList = list.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<ModelDTO> dtoList = convertToModelDTO(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -54,11 +51,9 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         LangTuoResult<PageDTO<ModelDTO>> langTuoResult = null;
         try {
             PageInfo<ModelPO> pageInfo = modelAccessor.search(modelCode, pageNum, pageSize);
-            List<ModelDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            List<ModelDTO> dtoList = convertToModelDTO(pageInfo.getList());
+            langTuoResult = LangTuoResult.success(new PageDTO<>(
+                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -100,20 +95,15 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             ModelPO exist = modelAccessor.selectOne(modelCode);
-            System.out.printf("$$$$$ MachineModelMgtServiceImpl#put exist=%s\n", exist);
             if (exist != null) {
                 int updated = modelAccessor.update(modelPO);
-                System.out.printf("$$$$$ MachineModelMgtServiceImpl#put updated=%s\n", updated);
             } else {
                 int inserted = modelAccessor.insert(modelPO);
-                System.out.printf("$$$$$ MachineModelMgtServiceImpl#put inserted=%s\n", inserted);
             }
 
             int deleted = modelPipelineAccessor.delete(modelCode);
-            System.out.printf("$$$$$ MachineModelMgtServiceImpl#put deleted4Pipeline=%s\n", deleted);
             modelPipelinePOList.stream().forEach(po -> {
                 int inserted = modelPipelineAccessor.insert(po);
-                System.out.printf("$$$$$ MachineModelMgtServiceImpl#put inserted4Pipeline=%s\n", inserted);
             });
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -131,14 +121,23 @@ public class MachineModelMgtServiceImpl implements MachineModelMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             int deleted4ModelCode = modelAccessor.delete(modelCode);
-            System.out.printf("$$$$$ MachineModelMgtServiceImpl#put deleted4ModelCode=%s\n", deleted4ModelCode);
             int deleted4Pipeline = modelPipelineAccessor.delete(modelCode);
-            System.out.printf("$$$$$ MachineModelMgtServiceImpl#put deleted4Pipeline=%s\n", deleted4Pipeline);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<ModelDTO> convertToModelDTO(List<ModelPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<ModelDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
     }
 
     private ModelDTO convert(ModelPO po) {

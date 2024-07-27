@@ -47,11 +47,6 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         try {
             CleanRulePO po = cleanRuleAccessor.selectOneByCode(tenantCode, cleanRuleCode);
             CleanRuleDTO dto = convert(po);
-            if (dto != null) {
-                List<CleanRuleStepPO> poList = cleanRuleStepAccessor.selectList(tenantCode, po.getCleanRuleCode());
-                dto.setCleanRuleStepList(convert(poList));
-            }
-
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,11 +61,6 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         try {
             CleanRulePO po = cleanRuleAccessor.selectOneByName(tenantCode, cleanRuleName);
             CleanRuleDTO dto = convert(po);
-            if (dto != null) {
-                List<CleanRuleStepPO> poList = cleanRuleStepAccessor.selectList(tenantCode, po.getCleanRuleCode());
-                dto.setCleanRuleStepList(convert(poList));
-            }
-
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,9 +74,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         LangTuoResult<List<CleanRuleDTO>> langTuoResult = null;
         try {
             List<CleanRulePO> cleanRulePOList = cleanRuleAccessor.selectList(tenantCode);
-            List<CleanRuleDTO> teaDTOList = cleanRulePOList.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
+            List<CleanRuleDTO> teaDTOList = convertToCleanRuleDTO(cleanRulePOList);
             langTuoResult = LangTuoResult.success(teaDTOList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,17 +93,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         try {
             PageInfo<CleanRulePO> pageInfo = cleanRuleAccessor.search(tenantCode, cleanRuleCode, cleanRuleName,
                     pageNum, pageSize);
-            List<CleanRuleDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> {
-                        CleanRuleDTO dto = convert(po);
-                        List<CleanRuleStepPO> cleanRuleStepPOList = cleanRuleStepAccessor.selectList(
-                                tenantCode, cleanRuleCode);
-                        if (!CollectionUtils.isEmpty(cleanRuleStepPOList)) {
-                            dto.setCleanRuleStepList(convert(cleanRuleStepPOList));
-                        }
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
+            List<CleanRuleDTO> dtoList = convertToCleanRuleDTO(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -226,6 +204,17 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<CleanRuleDTO> convertToCleanRuleDTO(List<CleanRulePO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<CleanRuleDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
     }
 
     private CleanRuleDTO convert(CleanRulePO po) {

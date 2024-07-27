@@ -33,10 +33,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         LangTuoResult<List<SeriesDTO>> langTuoResult = null;
         try {
             List<SeriesPO> list = seriesAccessor.selectList(tenantCode);
-            List<SeriesDTO> dtoList = list.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<SeriesDTO> dtoList = convertToSeriesDTO(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,10 +52,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         try {
             PageInfo<SeriesPO> pageInfo = seriesAccessor.search(tenantName, seriesCode, seriesName,
                     pageNum, pageSize);
-            List<SeriesDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
+            List<SeriesDTO> dtoList = convertToSeriesDTO(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -145,6 +139,17 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
+    }
+
+    private List<SeriesDTO> convertToSeriesDTO(List<SeriesPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<SeriesDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
+        return list;
     }
 
     private SeriesDTO convert(SeriesPO po) {
