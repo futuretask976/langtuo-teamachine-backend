@@ -1,45 +1,44 @@
 package com.langtuo.teamachine.dao.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.userset.OrgMapper;
-import com.langtuo.teamachine.dao.po.userset.OrgPO;
+import com.langtuo.teamachine.dao.mapper.userset.AdminMapper;
+import com.langtuo.teamachine.dao.po.userset.AdminPO;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.HashMap;
 import java.util.List;
 
-public class OrgStrucPOTestor {
+public class POTestor {
     public static void main(String args[]) {
-        insert();
+//        insert();
+        select();
+//        update();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrgMapper mapper = sqlSession.getMapper(OrgMapper.class);
+        AdminMapper mapper = sqlSession.getMapper(AdminMapper.class);
 
-        OrgPO po = null;
+        AdminPO po = null;
 
-        po = new OrgPO();
-        po.setTenantCode("tenant_001");
+        po = new AdminPO();
+        po.setLoginName("jiaqing001");
+        po.setLoginPass("pass001");
+        po.setRoleCode("role_sys_super_admin");
         po.setOrgName("总公司");
-        po.setParentOrgName(null);
+        po.setComment("111222");
+        po.setTenantCode("tenant_001");
+        po.setExtraInfo(new HashMap<String, String>(){{}});
         mapper.insert(po);
 
-        po = new OrgPO();
+        po = new AdminPO();
+        po.setLoginName("jiaqing002");
+        po.setLoginPass("pass002");
+        po.setRoleCode("role_sys_super_admin");
+        po.setOrgName("总公司");
+        po.setComment("333444");
         po.setTenantCode("tenant_001");
-        po.setOrgName("江苏分公司");
-        po.setParentOrgName("总公司");
-        mapper.insert(po);
-
-        po = new OrgPO();
-        po.setTenantCode("tenant_001");
-        po.setOrgName("南京分公司");
-        po.setParentOrgName("江苏分公司");
-        mapper.insert(po);
-
-        po = new OrgPO();
-        po.setTenantCode("tenant_001");
-        po.setOrgName("北京分公司");
-        po.setParentOrgName("总公司");
+        po.setExtraInfo(new HashMap<String, String>(){{}});
         mapper.insert(po);
 
         sqlSession.commit();
@@ -48,15 +47,15 @@ public class OrgStrucPOTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrgMapper mapper = sqlSession.getMapper(OrgMapper.class);
+        AdminMapper mapper = sqlSession.getMapper(AdminMapper.class);
 
-        List<OrgPO> list = mapper.selectList("tenant_001");
-        for (OrgPO po : list) {
-            System.out.printf("list->po: %s\n", po);
+        List<AdminPO> list = mapper.selectList("tenant_001");
+        for (AdminPO po : list) {
+            System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
-        OrgPO po = mapper.selectOne("tenant_001", "总公司");
-        System.out.printf("po: %s\n", po);
+        AdminPO po = mapper.selectOne("tenant_001", "role_tenant_admin");
+        System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();
@@ -64,12 +63,14 @@ public class OrgStrucPOTestor {
 
     public static void update() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrgMapper mapper = sqlSession.getMapper(OrgMapper.class);
+        AdminMapper mapper = sqlSession.getMapper(AdminMapper.class);
 
-        OrgPO po = new OrgPO();
+        AdminPO po = new AdminPO();
+        po.setRoleCode("role_tenant_admin");
         po.setTenantCode("tenant_001");
-        po.setOrgName("江苏分公司");
-        po.setParentOrgName("总公司222");
+        po.setExtraInfo(new HashMap<String, String>(){{
+            put("aaa", "bbb");
+        }});
         mapper.update(po);
 
         sqlSession.commit();
@@ -79,10 +80,10 @@ public class OrgStrucPOTestor {
 //    public static void testBySpring() {
 //        ApplicationContext context = startBySpring();
 //
-//        MachineMapper mapper =
-//                (MachineMapper) context.getBean(MachineMapper.class);
-//        MachinePojo machinePojo = mapper.getOne("machine_001");
-//        System.out.printf("DaoDemo#testBySpring hotelGuestPojo=%s\n", machinePojo);
+//        AdminMapper mapper =
+//                (AdminMapper) context.getBean(AdminMapper.class);
+//        AdminPOjo AdminPOjo = mapper.getOne("machine_001");
+//        System.out.printf("DaoDemo#testBySpring hotelGuestPojo=%s\n", AdminPOjo);
 //
 //        stopBySpring(context);
 //    }
