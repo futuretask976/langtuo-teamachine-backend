@@ -5,6 +5,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import com.langtuo.teamachine.web.model.LoginSuccessDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,12 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandler {
+    @Value("${jwt.tokenHead4Admin}")
+    private String tokenHead4Admin;
+
+    @Value("${jwt.tokenHead4Machine}")
+    private String tokenHead4Machine;
+
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
 
@@ -35,7 +42,7 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
 
         // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录成功
         LoginSuccessDTO dto = new LoginSuccessDTO();
-        dto.setJwtToken(jwtTokenHelper.generateToken(authUser));
+        dto.setJwtToken(tokenHead4Admin + jwtTokenHelper.generateToken(authUser));
         LangTuoResult<LoginSuccessDTO> result = LangTuoResult.success(dto);
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();

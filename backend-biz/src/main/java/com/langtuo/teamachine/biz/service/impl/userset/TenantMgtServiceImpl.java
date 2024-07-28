@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TenantMgtServiceImpl implements TenantMgtService {
@@ -117,7 +118,9 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             return null;
         }
 
-        List<TenantDTO> list = convert(poList);
+        List<TenantDTO> list = poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
         return list;
     }
 
