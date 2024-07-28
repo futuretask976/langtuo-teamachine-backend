@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
     <!-- 应用名称：和统一配置中的项目代码保持一致（小写） -->
-    <property name="APP_NAME" value="gx-springboot2-demo"/>
+    <property name="APP_NAME" value="langtuo-teamachine-backend"/>
     <contextName>${APP_NAME}</contextName>
     <!--日志文件保留天数 -->
     <property name="LOG_MAX_HISTORY" value="30"/>
@@ -35,7 +35,7 @@
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--格式化输出：%d表示日期，%c类名，%t表示线程名，%L行， %p日志级别 %msg：日志消息，%n是换行符  -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c][%t][%L][%p] - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c{15}][%t][%L][%p] - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <!-- 此日志文件只记录debug级别的 -->
@@ -56,7 +56,7 @@
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--格式化输出：%d表示日期，%c类名，%t表示线程名，%L行， %p日志级别 %msg：日志消息，%n是换行符  -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c][%t][%L][%p] - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c{15}][%t][%L][%p] - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
 
@@ -78,7 +78,7 @@
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--格式化输出：%d表示日期，%c类名，%t表示线程名，%L行， %p日志级别 %msg：日志消息，%n是换行符  -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c][%t][%L][%p] - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c{15}][%t][%L][%p] - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <!-- 此日志文件只记录error级别的 -->
