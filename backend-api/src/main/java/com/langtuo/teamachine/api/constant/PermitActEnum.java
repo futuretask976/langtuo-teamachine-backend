@@ -2,7 +2,7 @@ package com.langtuo.teamachine.api.constant;
 
 public enum PermitActEnum {
     // 用户
-    TENANT_MGT("tenant_mgt", "租户管理", "user_set"),
+    TENANT_MGT("tenant_mgt", "商户管理", "user_set"),
     ROLE_MGT("role_mgt", "角色管理", "user_set"),
     ORG_MGT("org_mgt", "组织架构管理", "user_set"),
     ADMIN_MGT("admin_mgt", "管理员管理", "user_set"),
@@ -12,16 +12,17 @@ public enum PermitActEnum {
     SHOP_GROUP_MGT("shop_group_mgt", "店铺组管理", "shop_set"),
 
     // 设备
+    MODEL_MGT("model_mgt", "型号管理", "device_set"),
     DEPLOY_MGT("machine_deploy_mgt", "预部署管理", "device_set"),
     MACHINE_MGT("machine_mgt", "设备管理", "device_set"),
-    MACHINE_DETAIL_MGT("machine_detail_mgt", "设备详情管理", "device_set"),
 
     // 饮品生产
     TOPPING_TYPE_MGT("topping_type_mgt", "物料类型管理", "drink_set"),
     TOPPING_MGT("topping_mgt", "物料管理", "drink_set"),
     SPEC_MGT("spec_mgt", "规格管理", "drink_set"),
-    TEA_TYPE_MGT("tea_type_mgt", "茶饮类型管理", "drink_set"),
-    TEA_MGT("tea_mgt", "茶饮管理", "drink_set"),
+    TEA_TYPE_MGT("tea_type_mgt", "茶品类型管理", "drink_set"),
+    TEA_MGT("tea_mgt", "茶品管理", "drink_set"),
+    TOPPING_ACCURACY_TPL_MGT("topping_accuracy_tpl_mgt", "物料精度模板管理", "drink_set"),
 
     // 菜单
     SERIES_MGT("series_mgt", "系列管理", "menu_set"),
@@ -34,8 +35,8 @@ public enum PermitActEnum {
     WARNING_RULE_MGT("warning_rule_mgt", "预警规则管理", "rule_set"),
 
     // 报表
-    INVALID_TOPPING_REC_MGT("invalid_topping_rec_mgt", "废料记录管理", "report_set"),
-    SUPPLY_TOPPING_REC_MGT("supply_topping_rec_mgt", "补料记录管理", "report_set"),
+    INVALID_REC_MGT("invalid_rec_mgt", "废料记录管理", "report_set"),
+    SUPPLY_REC_MGT("supply_rec_mgt", "补料记录管理", "report_set"),
     CLEAN_REC_MGT("clean_rec_mgt", "清洗记录管理", "report_set"),
     ORDER_REC_MGT("order_rec_mgt", "订单记录管理", "report_set"),
     ;
