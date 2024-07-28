@@ -41,9 +41,4 @@ public class ModelPipelinePO {
      * 是否支持冷藏，0：不支持，1：支持
      */
     private Integer enableFreeze;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
 }

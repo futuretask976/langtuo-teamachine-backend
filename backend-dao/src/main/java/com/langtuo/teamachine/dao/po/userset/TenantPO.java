@@ -28,6 +28,16 @@ public class TenantPO {
     private String tenantCode;
 
     /**
+     * 备注
+     */
+    private String comment;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 租户名称
      */
     private String tenantName;
@@ -46,14 +56,4 @@ public class TenantPO {
      * 租户图片
      */
     private String imgLink;
-
-    /**
-     * 备注
-     */
-    private String comment;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
 }

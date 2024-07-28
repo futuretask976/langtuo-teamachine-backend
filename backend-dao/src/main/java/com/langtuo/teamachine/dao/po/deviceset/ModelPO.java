@@ -32,19 +32,4 @@ public class ModelPO {
      * 是否支持同时出料，0：不支持，1：支持
      */
     private Integer enableFlowAll;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
-
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        if (extraInfo == null) {
-            return;
-        }
-        if (this.extraInfo == null) {
-            this.extraInfo = new HashMap<>();
-        }
-        this.extraInfo.putAll(extraInfo);
-    }
 }

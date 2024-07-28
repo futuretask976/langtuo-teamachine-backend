@@ -23,6 +23,16 @@ public class MachinePO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 机器编码
      */
     private String machineCode;
@@ -66,14 +76,4 @@ public class MachinePO {
      *　店铺编码
      */
     private String shopCode;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
 }

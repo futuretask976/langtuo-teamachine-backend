@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class AdminRoleActRelPO {
+public class RoleActRelPO {
     /**
      * 数据表id
      */
@@ -33,7 +33,7 @@ public class AdminRoleActRelPO {
     private String tenantCode;
 
     /**
-     * 权限点
+     * 权限编码
      */
     private String permitActCode;
 }

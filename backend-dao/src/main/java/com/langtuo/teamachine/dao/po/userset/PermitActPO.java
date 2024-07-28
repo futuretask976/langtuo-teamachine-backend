@@ -22,17 +22,17 @@ public class PermitActPO {
     private Date gmtModified;
 
     /**
-     * 租户编码
+     * 权限编码
      */
     private String permitActCode;
 
     /**
-     * 租户名称
+     * 权限名称
      */
     private String permitActName;
 
     /**
-     * 联系人
+     * 权限组编码
      */
     private String permitActGroupCode;
 }

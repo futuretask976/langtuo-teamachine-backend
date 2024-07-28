@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.userset.RoleActRelMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.userset.AdminRoleActRelPO" id="adminRoleActRelPO">
+    <resultMap type="com.langtuo.teamachine.dao.po.userset.RoleActRelPO" id="roleActRelPO">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -14,7 +14,7 @@
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="adminRoleActRelPO">
+    <select id="selectOne" resultMap="roleActRelPO">
         SELECT * FROM role_act_rel
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
@@ -22,7 +22,7 @@
             AND permit_act_code = #{permitActCode}
     </select>
 
-    <select id="selectList" resultMap="adminRoleActRelPO">
+    <select id="selectList" resultMap="roleActRelPO">
         SELECT * FROM role_act_rel
         WHERE 1 = 1
             <if test="tenantCode != null">
@@ -33,7 +33,7 @@
             </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.userset.AdminRoleActRelPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.userset.RoleActRelPO">
         INSERT INTO role_act_rel (
             gmt_created
             , gmt_modified

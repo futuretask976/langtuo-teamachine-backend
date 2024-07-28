@@ -9,7 +9,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.userset.RoleMgtService;
 import com.langtuo.teamachine.dao.accessor.userset.AdminRoleAccessor;
 import com.langtuo.teamachine.dao.accessor.userset.AdminRoleActRelAccessor;
-import com.langtuo.teamachine.dao.po.userset.AdminRoleActRelPO;
+import com.langtuo.teamachine.dao.po.userset.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.userset.RolePO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -91,7 +91,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         }
 
         RolePO rolePO = convert(request);
-        List<AdminRoleActRelPO> adminRoleActRelPOList = convertRoleActRel(request);
+        List<RoleActRelPO> roleActRelPOList = convertRoleActRel(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
@@ -103,7 +103,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             }
 
             int deleted4RoleActRel = adminRoleActRelAccessor.delete(request.getTenantCode(), request.getRoleCode());
-            adminRoleActRelPOList.stream().forEach(item -> {
+            roleActRelPOList.stream().forEach(item -> {
                 int inserted4RoleActRel = adminRoleActRelAccessor.insert(item);
             });
             langTuoResult = LangTuoResult.success();
@@ -155,10 +155,10 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        List<AdminRoleActRelPO> adminRoleActRelPOList = adminRoleActRelAccessor.selectList(
+        List<RoleActRelPO> roleActRelPOList = adminRoleActRelAccessor.selectList(
                 po.getTenantCode(), po.getRoleCode());
-        if (!CollectionUtils.isEmpty(adminRoleActRelPOList)) {
-            dto.setPermitActCodeList(adminRoleActRelPOList.stream()
+        if (!CollectionUtils.isEmpty(roleActRelPOList)) {
+            dto.setPermitActCodeList(roleActRelPOList.stream()
                     .map(item -> item.getPermitActCode())
                     .collect(Collectors.toList()));
         }
@@ -180,13 +180,13 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         return po;
     }
 
-    private List<AdminRoleActRelPO> convertRoleActRel(RolePutRequest request) {
+    private List<RoleActRelPO> convertRoleActRel(RolePutRequest request) {
         if (request == null || CollectionUtils.isEmpty(request.getPermitActCodeList())) {
             return null;
         }
 
         return request.getPermitActCodeList().stream().map(item -> {
-            AdminRoleActRelPO po = new AdminRoleActRelPO();
+            RoleActRelPO po = new RoleActRelPO();
             po.setRoleCode(request.getRoleCode());
             po.setTenantCode(request.getTenantCode());
             po.setPermitActCode(item);

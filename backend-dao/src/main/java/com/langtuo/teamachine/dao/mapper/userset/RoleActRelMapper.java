@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper.userset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.userset.AdminRoleActRelPO;
+import com.langtuo.teamachine.dao.po.userset.RoleActRelPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -19,14 +19,14 @@ public interface RoleActRelMapper {
      * @param roleCode
      * @return
      */
-    AdminRoleActRelPO selectOne(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode,
+    RoleActRelPO selectOne(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode,
             @Param("permitActCode") String permitActCode);
 
     /**
      *
      * @return
      */
-    List<AdminRoleActRelPO> selectList(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode);
+    List<RoleActRelPO> selectList(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode);
 
     /**
      *
@@ -34,14 +34,14 @@ public interface RoleActRelMapper {
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(AdminRoleActRelPO po);
+    int insert(RoleActRelPO po);
 
     /**
      *
      * @param adminRoleActRelPO
      * @return
      */
-    int update(AdminRoleActRelPO po);
+    int update(RoleActRelPO po);
 
     /**
      *
