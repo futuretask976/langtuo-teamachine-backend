@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+@Deprecated
 @Component
 public class PermitActGroupAccessor {
     @Resource

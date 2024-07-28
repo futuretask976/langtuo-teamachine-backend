@@ -38,8 +38,8 @@ public class JwtTokenHelper {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
+    @Value("${jwt.tokenHead4Admin}")
+    private String tokenHead4Admin;
 
     /**
      * 根据负责生成JWT的token
@@ -137,7 +137,7 @@ public class JwtTokenHelper {
         if(StrUtil.isEmpty(oldToken)){
             return null;
         }
-        String token = oldToken.substring(tokenHead.length());
+        String token = oldToken.substring(tokenHead4Admin.length());
         if(StrUtil.isEmpty(token)){
             return null;
         }

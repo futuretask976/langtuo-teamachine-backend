@@ -35,7 +35,7 @@ public enum PermitActGroupEnum {
         this.permitActGroupName = permitActGroupName;
     }
 
-    public PermitActGroupEnum valueOfByCode(String inputCode) {
+    public static PermitActGroupEnum valueOfByCode(String inputCode) {
         for (PermitActGroupEnum permitActGroupEnum : PermitActGroupEnum.values()) {
             if (inputCode.equals(permitActGroupEnum.getPermitActGroupCode())) {
                 return permitActGroupEnum;
@@ -44,7 +44,7 @@ public enum PermitActGroupEnum {
         return null;
     }
 
-    public PermitActGroupEnum valueOfByName(String inputName) {
+    public static PermitActGroupEnum valueOfByName(String inputName) {
         for (PermitActGroupEnum permitActGroupEnum : PermitActGroupEnum.values()) {
             if (inputName.equals(permitActGroupEnum.getPermitActGroupCode())) {
                 return permitActGroupEnum;
