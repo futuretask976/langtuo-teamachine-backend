@@ -150,7 +150,6 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         dto.setGmtModified(po.getGmtModified());
         dto.setModelCode(po.getModelCode());
         dto.setEnableFlowAll(po.getEnableFlowAll());
-        dto.setExtraInfo(po.getExtraInfo());
         return dto;
     }
 
@@ -162,7 +161,6 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         ModelPO po = new ModelPO();
         po.setModelCode(request.getModelCode());
         po.setEnableFlowAll(request.getEnableFlowAll());
-        po.setExtraInfo(po.getExtraInfo());
         return po;
     }
 
