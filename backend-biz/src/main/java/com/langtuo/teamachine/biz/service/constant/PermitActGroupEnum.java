@@ -1,6 +1,4 @@
-package com.langtuo.teamachine.api.constant;
-
-import lombok.Data;
+package com.langtuo.teamachine.biz.service.constant;
 
 public enum PermitActGroupEnum {
     USER_SET("user_set", "用户"),

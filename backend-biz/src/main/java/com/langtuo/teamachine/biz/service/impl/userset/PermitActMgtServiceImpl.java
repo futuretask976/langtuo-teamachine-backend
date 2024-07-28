@@ -1,12 +1,12 @@
 package com.langtuo.teamachine.biz.service.impl.userset;
 
 import com.google.common.collect.Maps;
-import com.langtuo.teamachine.api.constant.PermitActEnum;
-import com.langtuo.teamachine.api.constant.PermitActGroupEnum;
 import com.langtuo.teamachine.api.model.userset.PermitActDTO;
 import com.langtuo.teamachine.api.model.userset.PermitActGroupDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.userset.PermitActMgtService;
+import com.langtuo.teamachine.biz.service.constant.PermitActEnum;
+import com.langtuo.teamachine.biz.service.constant.PermitActGroupEnum;
 import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;

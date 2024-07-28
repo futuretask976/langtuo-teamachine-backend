@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.api.constant;
+package com.langtuo.teamachine.biz.service.constant;
 
 public enum PermitActEnum {
     // 用户
