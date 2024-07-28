@@ -16,7 +16,18 @@
     </properties>
 
     <dependencies>
+        <!-- apache start -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <!-- apache end -->
+
         <!-- others start -->
+        <dependency>
+            <groupId> com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
