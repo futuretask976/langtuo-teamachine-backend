@@ -40,6 +40,7 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String authHeader = request.getHeader(this.tokenHeader); // this.tokenHead + "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE3MTQ5OTAzMDcxMDAsImV4cCI6MTcxNTU5NTEwN30.6TW7lc-CU-6di6n22FzSIrHyO_pbtcKTUs53jXRqYeH99YEBEz69o1-aiyWqgie4JGqkSEYDZP9Jo8xCYqVKvg";
+        System.out.println("$$$$$ TeaMachineJwtAuthenticationTokenFilter#doFilterInternal authHeader=" + authHeader);
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
             String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
             String username = jwtTokenHelper.getUserNameFromToken(authToken);
