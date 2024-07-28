@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.ruleset.WarningRuleMgtService;
 import com.langtuo.teamachine.dao.accessor.ruleset.WarningRuleAccessor;
 import com.langtuo.teamachine.dao.po.ruleset.WarningRulePO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     @Resource
     private WarningRuleAccessor accessor;
@@ -30,7 +32,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             WarningRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -44,7 +46,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             WarningRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByName error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -58,7 +60,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRuleDTO> dtoList = convert(poList);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -77,7 +79,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRuleDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -103,6 +105,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -119,6 +122,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             int deleted = accessor.delete(tenantCode, warningRuleCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

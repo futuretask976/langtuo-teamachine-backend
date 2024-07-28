@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.ruleset.CloseRuleMgtService;
 import com.langtuo.teamachine.dao.accessor.ruleset.CloseRuleAccessor;
 import com.langtuo.teamachine.dao.po.ruleset.CloseRulePO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -19,6 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class CloseRuleMgtServiceImpl implements CloseRuleMgtService {
     @Resource
     private CloseRuleAccessor accessor;
@@ -31,7 +33,7 @@ public class CloseRuleMgtServiceImpl implements CloseRuleMgtService {
             CloseRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -45,7 +47,7 @@ public class CloseRuleMgtServiceImpl implements CloseRuleMgtService {
             CloseRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByName error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -59,7 +61,7 @@ public class CloseRuleMgtServiceImpl implements CloseRuleMgtService {
             List<CloseRuleDTO> dtoList = convertToCloseRuleDTO(poList);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -78,7 +80,7 @@ public class CloseRuleMgtServiceImpl implements CloseRuleMgtService {
             List<CloseRuleDTO> dtoList = convertToCloseRuleDTO(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -104,6 +106,7 @@ public class CloseRuleMgtServiceImpl implements CloseRuleMgtService {
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -120,6 +123,7 @@ public class CloseRuleMgtServiceImpl implements CloseRuleMgtService {
             int deleted = accessor.delete(tenantCode, closeRuleCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

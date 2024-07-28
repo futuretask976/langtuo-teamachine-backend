@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.userset.TenantMgtService;
 import com.langtuo.teamachine.dao.accessor.userset.TenantAccessor;
 import com.langtuo.teamachine.dao.po.userset.TenantPO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class TenantMgtServiceImpl implements TenantMgtService {
     @Resource
     private TenantAccessor tenantAccessor;
@@ -30,7 +32,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             List<TenantDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -49,7 +51,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -63,6 +65,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             TenantDTO tenantDTO = convert(tenantPO);
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
+            log.error("get error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -92,6 +95,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

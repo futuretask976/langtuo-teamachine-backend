@@ -14,6 +14,7 @@ import com.langtuo.teamachine.dao.accessor.shopset.ShopAccessor;
 import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import com.langtuo.teamachine.dao.po.deviceset.MachinePO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class MachineMgtServiceImpl implements MachineMgtService {
     @Resource
     private MachineAccessor machineAccessor;
@@ -65,7 +67,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<MachineDTO>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -84,7 +86,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -116,7 +118,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("activate error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -139,7 +141,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("update error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -156,6 +158,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             int deleted = machineAccessor.delete(tenantCode, machineCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

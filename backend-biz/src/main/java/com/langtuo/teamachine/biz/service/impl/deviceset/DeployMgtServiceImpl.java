@@ -12,6 +12,7 @@ import com.langtuo.teamachine.dao.accessor.deviceset.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.shopset.ShopAccessor;
 import com.langtuo.teamachine.dao.po.deviceset.DeployPO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class DeployMgtServiceImpl implements DeployMgtService {
     @Resource
     private DeployAccessor deployAccessor;
@@ -55,7 +57,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -68,6 +70,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             DeployDTO machineModelDTO = convert(deployAccessor.selectOne(tenantCode, deployCode));
             langTuoResult = LangTuoResult.success(machineModelDTO);
         } catch (Exception e) {
+            log.error("get error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -92,6 +95,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -108,6 +112,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             int deleted = deployAccessor.delete(tenantCode, deployCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

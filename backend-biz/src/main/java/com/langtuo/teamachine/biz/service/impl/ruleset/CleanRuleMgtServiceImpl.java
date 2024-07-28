@@ -18,6 +18,7 @@ import com.langtuo.teamachine.dao.po.ruleset.CleanRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.ruleset.CleanRuleExceptPO;
 import com.langtuo.teamachine.dao.po.ruleset.CleanRulePO;
 import com.langtuo.teamachine.dao.po.ruleset.CleanRuleStepPO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -28,6 +29,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     @Resource
     private CleanRuleAccessor cleanRuleAccessor;
@@ -49,7 +51,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             CleanRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -63,7 +65,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             CleanRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByName error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -77,7 +79,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             List<CleanRuleDTO> teaDTOList = convertToCleanRuleDTO(cleanRulePOList);
             langTuoResult = LangTuoResult.success(teaDTOList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -97,7 +99,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -139,6 +141,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -157,6 +160,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             int deleted4Except = cleanRuleExceptAccessor.delete(tenantCode, cleanRuleCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -179,6 +183,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("putDispatch error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -200,7 +205,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getDispatchByCleanRuleCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;

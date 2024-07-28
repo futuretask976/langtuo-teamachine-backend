@@ -13,6 +13,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drinkset.TeaMgtService;
 import com.langtuo.teamachine.dao.accessor.drinkset.*;
 import com.langtuo.teamachine.dao.po.drinkset.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.assertj.core.util.Sets;
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class TeaMgtServiceImpl implements TeaMgtService {
     @Resource
     private TeaAccessor teaAccessor;
@@ -53,7 +55,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             TeaDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -67,7 +69,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             TeaDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByName error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -81,7 +83,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             List<TeaDTO> teaDTOList = convert(teaPOList);
             langTuoResult = LangTuoResult.success(teaDTOList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -101,7 +103,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -138,6 +140,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -156,6 +159,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.delete(tenantCode, teaCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

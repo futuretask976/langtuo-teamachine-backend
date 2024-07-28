@@ -11,6 +11,7 @@ import com.langtuo.teamachine.dao.accessor.userset.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.userset.AdminRoleAccessor;
 import com.langtuo.teamachine.dao.po.userset.AdminPO;
 import com.langtuo.teamachine.dao.po.userset.RolePO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class AdminMgtServiceImpl implements AdminMgtService {
     @Resource
     private AdminAccessor adminAccessor;
@@ -67,7 +69,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -87,7 +89,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -111,6 +113,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -125,9 +128,9 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             int deleted = adminAccessor.delete(tenantCode, loginName);
-            System.out.printf("$$$$$ AdminMgtServiceImpl#put deleted=%s\n", deleted);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

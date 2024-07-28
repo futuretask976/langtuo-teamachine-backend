@@ -13,6 +13,7 @@ import com.langtuo.teamachine.dao.accessor.ruleset.*;
 import com.langtuo.teamachine.dao.po.drinkset.ToppingPO;
 import com.langtuo.teamachine.dao.po.ruleset.OpenRuleToppingPO;
 import com.langtuo.teamachine.dao.po.ruleset.OpenRulePO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -23,6 +24,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
     @Resource
     private OpenRuleAccessor openRuleAccessor;
@@ -41,7 +43,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
             OpenRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -55,7 +57,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
             OpenRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByName error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -69,7 +71,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
             List<OpenRuleDTO> dtoList = convertToOpenRuleDTO(poList);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -88,7 +90,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
             List<OpenRuleDTO> dtoList = convertToOpenRuleDTO(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -123,6 +125,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -140,6 +143,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
             int deleted4Topping = openRuleToppingAccessor.delete(tenantCode, openRuleCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

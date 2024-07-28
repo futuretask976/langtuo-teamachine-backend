@@ -11,6 +11,7 @@ import com.langtuo.teamachine.dao.accessor.userset.AdminRoleAccessor;
 import com.langtuo.teamachine.dao.accessor.userset.AdminRoleActRelAccessor;
 import com.langtuo.teamachine.dao.po.userset.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.userset.RolePO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class RoleMgtServiceImpl implements RoleMgtService {
     @Resource
     private AdminRoleAccessor adminRoleAccessor;
@@ -46,7 +48,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -64,7 +66,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("page error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -78,7 +80,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             List<RoleDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -108,6 +110,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             });
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -125,6 +128,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             int deleted4Rel = adminRoleActRelAccessor.delete(tenantCode, roleCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

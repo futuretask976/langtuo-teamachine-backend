@@ -13,6 +13,7 @@ import com.langtuo.teamachine.dao.accessor.deviceset.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.deviceset.ModelPipelineAccessor;
 import com.langtuo.teamachine.dao.po.deviceset.ModelPO;
 import com.langtuo.teamachine.dao.po.deviceset.ModelPipelinePO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class ModelMgtServiceImpl implements ModelMgtService {
     @Resource
     private ModelAccessor modelAccessor;
@@ -37,6 +39,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             List<ModelDTO> dtoList = convertToModelDTO(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -55,7 +58,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -74,6 +77,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             }
             langTuoResult = LangTuoResult.success(modelDTO);
         } catch (Exception e) {
+            log.error("get error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -107,6 +111,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             });
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -124,6 +129,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             int deleted4Pipeline = modelPipelineAccessor.delete(modelCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

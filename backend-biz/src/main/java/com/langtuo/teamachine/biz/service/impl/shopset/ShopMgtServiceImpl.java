@@ -11,6 +11,7 @@ import com.langtuo.teamachine.dao.accessor.shopset.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shopset.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.po.shopset.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class ShopMgtServiceImpl implements ShopMgtService {
     @Resource
     private ShopAccessor shopAccessor;
@@ -68,7 +70,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<ShopDTO>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -82,7 +84,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             List<ShopDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -106,6 +108,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -122,6 +125,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             int deleted = shopAccessor.delete(tenantCode, shopGroupCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

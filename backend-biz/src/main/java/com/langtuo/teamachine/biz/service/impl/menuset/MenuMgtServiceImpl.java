@@ -16,6 +16,7 @@ import com.langtuo.teamachine.dao.accessor.menuset.MenuSeriesRelAccessor;
 import com.langtuo.teamachine.dao.po.menuset.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menuset.MenuPO;
 import com.langtuo.teamachine.dao.po.menuset.MenuSeriesRelPO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class MenuMgtServiceImpl implements MenuMgtService {
     @Resource
     private MenuAccessor menuAccessor;
@@ -43,7 +45,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             List<MenuDTO> dtoList = convertToMenuDTO(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -63,7 +65,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -77,7 +79,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             MenuDTO seriesDTO = convert(toppingTypePO);
             langTuoResult = LangTuoResult.success(seriesDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -91,7 +93,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             MenuDTO tenantDTO = convert(toppingTypePO);
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByName error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -126,6 +128,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -143,6 +146,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(tenantCode, menuCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -166,6 +170,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("putDispatch error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -187,7 +192,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("listDispatchByMenuCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;

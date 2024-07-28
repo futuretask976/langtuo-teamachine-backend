@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drinkset.ToppingAccuracyTplMgtService;
 import com.langtuo.teamachine.dao.accessor.drinkset.ToppingAccuracyTplAccessor;
 import com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTplPO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtService {
     @Resource
     private ToppingAccuracyTplAccessor accessor;
@@ -31,7 +33,7 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
                     .collect(Collectors.toList());
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -53,7 +55,7 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -67,7 +69,7 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
             ToppingAccuracyTplDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -81,7 +83,7 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
             ToppingAccuracyTplDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByName error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -104,6 +106,7 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -120,6 +123,7 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
             int deleted = accessor.delete(tenantCode, templateCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

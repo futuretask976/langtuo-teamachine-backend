@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.userset.OrgMgtService;
 import com.langtuo.teamachine.dao.accessor.userset.OrgStrucAccessor;
 import com.langtuo.teamachine.dao.po.userset.OrgPO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class OrgMgtServiceImpl implements OrgMgtService {
     @Resource
     private OrgStrucAccessor orgStrucAccessor;
@@ -40,7 +42,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
             langTuoResult = LangTuoResult.success(findTopOrgStrucPO(dtoList));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("listByDepth error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -54,7 +56,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             List<OrgDTO> dtoList = convert(poList);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -73,7 +75,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -87,6 +89,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             OrgDTO orgDTO = convert(orgPO);
             langTuoResult = LangTuoResult.success(orgDTO);
         } catch (Exception e) {
+            log.error("get error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -115,6 +118,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -131,6 +135,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             int deleted = orgStrucAccessor.delete(tenantCode, orgName);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;

@@ -12,6 +12,7 @@ import com.langtuo.teamachine.dao.accessor.menuset.SeriesAccessor;
 import com.langtuo.teamachine.dao.accessor.menuset.SeriesTeaRelAccessor;
 import com.langtuo.teamachine.dao.po.menuset.SeriesPO;
 import com.langtuo.teamachine.dao.po.menuset.SeriesTeaRelPO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class SeriesMgtServiceImpl implements SeriesMgtService {
     @Resource
     private SeriesAccessor seriesAccessor;
@@ -36,7 +38,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             List<SeriesDTO> dtoList = convertToSeriesDTO(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -56,7 +58,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -70,7 +72,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             SeriesDTO seriesDTO = convert(toppingTypePO);
             langTuoResult = LangTuoResult.success(seriesDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByCode error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -84,7 +86,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             SeriesDTO tenantDTO = convert(toppingTypePO);
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getByName error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
         return langTuoResult;
@@ -119,6 +121,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -136,6 +139,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             int deleted4SeriesTeaRel = seriesTeaRelAccessor.delete(tenantCode, seriesCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
