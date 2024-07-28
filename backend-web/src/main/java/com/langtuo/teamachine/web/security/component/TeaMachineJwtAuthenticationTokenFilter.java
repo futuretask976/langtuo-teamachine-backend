@@ -33,23 +33,29 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
 
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
+    @Value("${jwt.tokenHead4Admin}")
+    private String tokenHead4Admin;
+
+    @Value("${jwt.tokenHead4Machine}")
+    private String tokenHead4Machine;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String authHeader = request.getHeader(this.tokenHeader); // this.tokenHead + "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE3MTQ5OTAzMDcxMDAsImV4cCI6MTcxNTU5NTEwN30.6TW7lc-CU-6di6n22FzSIrHyO_pbtcKTUs53jXRqYeH99YEBEz69o1-aiyWqgie4JGqkSEYDZP9Jo8xCYqVKvg";
+        String authHeader = request.getHeader(this.tokenHeader);
         System.out.println("$$$$$ TeaMachineJwtAuthenticationTokenFilter#doFilterInternal authHeader=" + authHeader);
-        if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
-            String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
-            String username = jwtTokenHelper.getUserNameFromToken(authToken);
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                if (jwtTokenHelper.validateToken(authToken, userDetails)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (authHeader != null) {
+            if (authHeader.startsWith(this.tokenHead4Admin)) {
+                String authToken = authHeader.substring(this.tokenHead4Admin.length()); // The part after "Bearer "
+                String userName = jwtTokenHelper.getUserNameFromToken(authToken);
+                if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
+                    if (jwtTokenHelper.validateToken(authToken, userDetails)) {
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 }
             }
         }
