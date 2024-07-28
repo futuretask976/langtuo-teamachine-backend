@@ -45,12 +45,12 @@ public class CleanActRecordPO {
     /**
      * 清洗方式，0：手动清洗，1：固定清洗
      */
-    private Integer cleanType;
+    private int cleanType;
 
     /**
      * 清洗内容，0：冲洗，1：浸泡
      */
-    private Integer cleanContent;
+    private int cleanContent;
 
     /**
      * 物料名称
@@ -58,9 +58,9 @@ public class CleanActRecordPO {
     private String toppingCode;
 
     /**
-     * 管道序号
+     * 管道号
      */
-    private Integer pipelineNum;
+    private int pipelineNum;
 
     /**
      * 租户编码

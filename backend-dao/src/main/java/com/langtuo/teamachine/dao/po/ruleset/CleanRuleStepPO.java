@@ -32,34 +32,34 @@ public class CleanRuleStepPO {
     private String cleanRuleCode;
 
     /**
-     * 步骤序号
+     * 步骤序号，从1开始
      */
-    private Integer stepIndex;
+    private int stepIndex;
 
     /**
      * 清洗内容，0：冲洗，1：浸泡
      */
-    private Integer cleanContent;
+    private int cleanContent;
 
     /**
-     * 冲洗时间
+     * 清洗时间（单位：秒）
      */
-    private Integer washSec;
+    private int washSec;
 
     /**
-     * 浸泡时间
+     * 浸泡时间（单位：分钟）
      */
-    private Integer soakMin;
+    private int soakMin;
 
     /**
-     * 浸泡冲洗间隔时间
+     * 浸泡期间冲洗间隔（单位：分钟）
      */
-    private Integer flushIntervalMin;
+    private int flushIntervalMin;
 
     /**
-     * 浸泡冲洗时间
+     * 浸泡期间冲洗时间（单位：秒）
      */
-    private Integer flushSec;
+    private int flushSec;
 
     /**
      * 提醒标题
@@ -72,7 +72,7 @@ public class CleanRuleStepPO {
     private String remindContent;
 
     /**
-     *
+     * 是否需要再次确认
      */
     private int needConfirm;
 }

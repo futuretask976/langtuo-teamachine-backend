@@ -23,6 +23,11 @@ public class SpecItemPO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
      * 规格编码
      */
     private String specCode;
@@ -41,9 +46,4 @@ public class SpecItemPO {
      * 外部规格项编码
      */
     private String outerSpecItemCode;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
 }

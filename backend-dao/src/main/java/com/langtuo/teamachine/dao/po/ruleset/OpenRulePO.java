@@ -44,12 +44,12 @@ public class OpenRulePO {
     private String openRuleName;
 
     /**
-     * 是否允许提醒，0：不允许，1：允许
+     * 是否默认规则，0：不是，1：是
      */
     private int defaultRule;
 
     /**
-     *
+     * 清洁物料列表
      */
     private List<OpenRuleToppingPO> toppingRuleList;
 }

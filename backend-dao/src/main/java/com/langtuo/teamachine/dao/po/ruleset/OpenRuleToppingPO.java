@@ -32,17 +32,17 @@ public class OpenRuleToppingPO {
     private String openRuleCode;
 
     /**
-     * 清洁排除物料编码
+     * 清洁物料编码
      */
     private String toppingCode;
 
     /**
-     *
+     * 冲洗时间
      */
     private int flushTime;
 
     /**
-     *
+     * 冲洗重量
      */
     private int flushWeight;
 }

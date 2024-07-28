@@ -28,12 +28,12 @@ public class TeaUnitPO {
     private String tenantCode;
 
     /**
-     * 茶编码
+     * 茶品编码
      */
     private String teaCode;
 
     /**
-     * 茶饮PDU编码
+     * 茶品unit编码
      */
     private String teaUnitCode;
 

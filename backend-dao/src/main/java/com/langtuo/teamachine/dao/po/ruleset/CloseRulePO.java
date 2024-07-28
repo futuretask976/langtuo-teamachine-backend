@@ -23,7 +23,7 @@ public class CloseRulePO {
     private Date gmtModified;
 
     /**
-     *
+     * 租户编码
      */
     private String tenantCode;
 
@@ -43,27 +43,27 @@ public class CloseRulePO {
     private String closeRuleName;
 
     /**
-     * 是否允许提醒，0：不允许，1：允许
+     * 是否默认规则，0：不是，1：是
      */
     private int defaultRule;
 
     /**
-     * 是否允许批量，0：不允许，1：允许
+     * 清洗时间（单位：秒）
      */
     private int washSec;
 
     /**
-     * 租户编码
+     * 浸泡时间（单位：分钟）
      */
     private int soakMin;
 
     /**
-     *
+     * 浸泡期间冲洗间隔（单位：分钟）
      */
     private int flushIntervalMin;
 
     /**
-     *
+     * 浸泡期间冲洗时间（单位：秒）
      */
     private int flushSec;
 }

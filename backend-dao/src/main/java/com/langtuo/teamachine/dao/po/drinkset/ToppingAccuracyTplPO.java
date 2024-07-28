@@ -23,9 +23,14 @@ public class ToppingAccuracyTplPO {
     private Date gmtModified;
 
     /**
-     *
+     * 租户编码
      */
     private String tenantCode;
+
+    /**
+     * 注释
+     */
+    private String comment;
 
     /**
      * 额外信息，格式：a:b;c:d
@@ -33,17 +38,17 @@ public class ToppingAccuracyTplPO {
     private Map<String, String> extraInfo;
 
     /**
-     *
+     * 模板编码
      */
     private String templateCode;
 
     /**
-     *
+     * 模板名称
      */
     private String templateName;
 
     /**
-     *
+     * 状态，0：禁用，1：启用
      */
     private int state;
 
@@ -71,9 +76,4 @@ public class ToppingAccuracyTplPO {
      * 应用物料编码
      */
     private String toppingCode;
-
-    /**
-     *
-     */
-    private String comment;
 }

@@ -35,12 +35,12 @@ public class CleanRulePO {
     /**
      * 是否允许提醒，0：不允许，1：允许
      */
-    private Integer permitRemind;
+    private int permitRemind;
 
     /**
      * 是否允许批量，0：不允许，1：允许
      */
-    private Integer permitBatch;
+    private int permitBatch;
 
     /**
      * 租户编码

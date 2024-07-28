@@ -23,6 +23,21 @@ public class ShopPO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 备注
+     */
+    private String comment;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 店铺编码
      */
     private String shopCode;
@@ -46,19 +61,4 @@ public class ShopPO {
      * 归属的组织架构
      */
     private String orgName;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 备注
-     */
-    private String comment;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
 }

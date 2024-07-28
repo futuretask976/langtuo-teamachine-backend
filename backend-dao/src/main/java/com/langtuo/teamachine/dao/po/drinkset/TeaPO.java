@@ -23,31 +23,6 @@ public class TeaPO {
     private Date gmtModified;
 
     /**
-     * 茶编码
-     */
-    private String teaCode;
-
-    /**
-     * 茶名称
-     */
-    private String teaName;
-
-    /**
-     * 外部茶编码
-     */
-    private String outerTeaCode;
-
-    /**
-     * 状态，0：禁用，1：启用
-     */
-    private Integer state;
-
-    /**
-     * 茶类型编码
-     */
-    private String teaTypeCode;
-
-    /**
      * 租户编码
      */
     private String tenantCode;
@@ -61,4 +36,29 @@ public class TeaPO {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    /**
+     * 茶品编码
+     */
+    private String teaCode;
+
+    /**
+     * 茶品名称
+     */
+    private String teaName;
+
+    /**
+     * 外部茶品编码
+     */
+    private String outerTeaCode;
+
+    /**
+     * 状态，0：禁用，1：启用
+     */
+    private int state;
+
+    /**
+     * 茶品类型编码
+     */
+    private String teaTypeCode;
 }
