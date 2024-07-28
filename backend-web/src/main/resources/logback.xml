@@ -21,7 +21,7 @@
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--格式化输出：%d表示日期，%c类名，%t表示线程名，%L行， %p日志级别 %msg：日志消息，%n是换行符  -->
-            <pattern>%black(%contextName - %d{yyyy-MM-dd HH:mm:ss}) %green([%c][%t][%L]) %highlight(%-5level) - %gray(%msg%n)</pattern>
+            <pattern>%black(%contextName - %d{yyyy-MM-dd HH:mm:ss}) %green([%c{15}][%t][%L]) %highlight(%-5level) - %gray(%msg%n)</pattern>
         </encoder>
     </appender>
 
