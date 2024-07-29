@@ -8,16 +8,6 @@ import java.util.Map;
 @Data
 public class RolePutRequest {
     /**
-     * 菜单编码
-     */
-    private String roleCode;
-
-    /**
-     * 菜单名称
-     */
-    private String roleName;
-
-    /**
      * 租户编码
      */
     private String tenantCode;
@@ -31,6 +21,16 @@ public class RolePutRequest {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    /**
+     * 角色编码
+     */
+    private String roleCode;
+
+    /**
+     * 角色名称
+     */
+    private String roleName;
 
     /**
      * 选中关联的权限点列表

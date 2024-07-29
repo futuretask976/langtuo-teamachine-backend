@@ -7,17 +7,17 @@ import java.util.Map;
 @Data
 public class OrgPutRequest {
     /**
-     * 同OrgStrucDTO
+     * 租户编码
      */
     private String tenantCode;
 
     /**
-     * 同OrgStrucDTO
+     * 组织名称
      */
     private String orgName;
 
     /**
-     * 同OrgStrucDTO
+     * 父组织名称
      */
     private String parentOrgName;
 }

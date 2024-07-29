@@ -23,14 +23,14 @@ public class RoleActRelPO {
     private Date gmtModified;
 
     /**
-     * 角色编码
-     */
-    private String roleCode;
-
-    /**
      * 租户编码
      */
     private String tenantCode;
+
+    /**
+     * 角色编码
+     */
+    private String roleCode;
 
     /**
      * 权限编码

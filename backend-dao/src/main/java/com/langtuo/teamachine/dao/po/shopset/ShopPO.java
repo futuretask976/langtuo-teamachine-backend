@@ -50,7 +50,7 @@ public class ShopPO {
     /**
      * 店铺类型，0：直营，1：加盟
      */
-    private Integer shopType;
+    private int shopType;
 
     /**
      * 店铺组编码

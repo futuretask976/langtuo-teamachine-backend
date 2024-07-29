@@ -7,6 +7,21 @@ import java.util.Map;
 @Data
 public class AdminPutRequest {
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 备注
+     */
+    private String comment;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 管理员登录名
      */
     private String loginName;
@@ -25,19 +40,4 @@ public class AdminPutRequest {
      * 组织名称
      */
     private String orgName;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 备注
-     */
-    private String comment;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
 }

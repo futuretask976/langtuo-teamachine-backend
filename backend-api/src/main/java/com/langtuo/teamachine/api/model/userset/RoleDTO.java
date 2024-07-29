@@ -34,12 +34,12 @@ public class RoleDTO {
     private Map<String, String> extraInfo;
 
     /**
-     * 菜单编码
+     * 角色编码
      */
     private String roleCode;
 
     /**
-     * 菜单名称
+     * 角色名称
      */
     private String roleName;
 
