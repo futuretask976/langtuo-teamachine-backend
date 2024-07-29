@@ -52,22 +52,17 @@ public class ToppingAdjustRulePO {
     private int baseAmount;
 
     /**
-     * 调整模式，fix：固定值，percentage：百分比
+     * 调整类型，0：减少，1：添加
      */
-    private String adjustMode;
+    private int adjustType;
 
     /**
-     * 计量单位，0：克，1：毫升
+     * 调整模式，0：固定值，1：百分比
      */
-    private String adjustUnit;
+    private int adjustMode;
 
     /**
      * 调整用量
      */
     private int adjustAmount;
-
-    /**
-     * 实际用量
-     */
-    private int actualAmount;
 }

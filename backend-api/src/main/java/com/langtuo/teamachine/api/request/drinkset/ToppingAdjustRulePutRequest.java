@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ToppingAdjustRulePutRequest {
     /**
-     *
+     * 步骤，从1开始
      */
     private int stepIndex;
 
@@ -15,27 +15,22 @@ public class ToppingAdjustRulePutRequest {
     private String toppingCode;
 
     /**
-     *
+     * 基础用量
      */
     private int baseAmount;
 
     /**
-     *
+     * 调整类型，0：减少，1：添加
      */
-    private String adjustMode;
+    private int adjustType;
 
     /**
-     *
+     * 调整模式，0：固定值，1：百分比
      */
-    private String adjustUnit;
+    private int adjustMode;
 
     /**
-     *
+     * 调整用量
      */
     private int adjustAmount;
-
-    /**
-     *
-     */
-    private int actualAmount;
 }

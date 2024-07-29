@@ -22,7 +22,22 @@ public class ToppingAdjustRuleDTO {
     private Date gmtModified;
 
     /**
-     *
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 茶饮编码
+     */
+    private String teaCode;
+
+    /**
+     * 茶品unit编码
+     */
+    private String teaUnitCode;
+
+    /**
+     * 步骤，从1开始
      */
     private int stepIndex;
 
@@ -32,29 +47,24 @@ public class ToppingAdjustRuleDTO {
     private String toppingCode;
 
     /**
-     *
+     * 基础用量
      */
     private int baseAmount;
 
     /**
-     *
+     * 调整模式，0：减少，1：添加
      */
-    private String adjustMode;
+    private int adjustType;
 
     /**
-     *
+     * 调整模式，0：固定值，1：百分比
      */
-    private String adjustUnit;
+    private int adjustMode;
 
     /**
-     *
+     * 调整用量
      */
     private int adjustAmount;
-
-    /**
-     *
-     */
-    private int actualAmount;
 
     /**
      * 物料名称
@@ -62,17 +72,7 @@ public class ToppingAdjustRuleDTO {
     private String toppingName;
 
     /**
-     * 物料类型编码
-     */
-    private String toppingTypeCode;
-
-    /**
      * 计量单位，0：克，1：毫升
      */
-    private Integer measureUnit;
-
-    /**
-     * 状态，0：禁用，1：启用
-     */
-    private Integer state;
+    private int measureUnit;
 }

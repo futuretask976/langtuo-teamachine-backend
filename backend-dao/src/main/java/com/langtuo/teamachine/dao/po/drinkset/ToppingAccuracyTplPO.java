@@ -53,7 +53,7 @@ public class ToppingAccuracyTplPO {
     private int state;
 
     /**
-     * 溢出允许单位，0：固定值，1：百分比
+     * 溢出允许模式，0：固定值，1：百分比
      */
     private int overUnit;
 
@@ -63,7 +63,7 @@ public class ToppingAccuracyTplPO {
     private int overAmount;
 
     /**
-     * 不及允许单位，0：固定值，1：百分比
+     * 不及允许模式，0：固定值，1：百分比
      */
     private int underUnit;
 
