@@ -55,7 +55,7 @@ public class InvalidActRecordDTO {
     /**
      * 失效时间
      */
-    private String invalidTime;
+    private Date invalidTime;
 
     /**
      * 物料名称

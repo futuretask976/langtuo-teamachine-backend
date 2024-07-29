@@ -52,6 +52,7 @@
             , gmt_modified
             , machine_code
             , shop_code
+            , shop_group_code
             , invalid_time
             , topping_code
             , pipeline_num
@@ -64,6 +65,7 @@
             , now()
             , #{machineCode}
             , #{shopCode}
+            , #{shopGroupCode}
             , #{invalidTime}
             , #{toppingCode}
             , #{pipelineNum}

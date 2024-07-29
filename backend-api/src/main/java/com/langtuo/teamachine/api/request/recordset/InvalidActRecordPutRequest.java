@@ -2,6 +2,7 @@ package com.langtuo.teamachine.api.request.recordset;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class InvalidActRecordPutRequest {
     /**
      * 失效时间
      */
-    private String invalidTime;
+    private Date invalidTime;
 
     /**
      * 物料名称

@@ -55,7 +55,7 @@ public class InvalidActRecordPO {
     /**
      * 失效时间
      */
-    private String invalidTime;
+    private Date invalidTime;
 
     /**
      * 物料名称
