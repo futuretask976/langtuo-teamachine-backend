@@ -35,6 +35,4 @@ public class MenuSeriesRelPO {
      * 系列编码
      */
     private String seriesCode;
-
-
 }

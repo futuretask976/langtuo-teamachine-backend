@@ -34,12 +34,12 @@ public class OpenRulePO {
     private Map<String, String> extraInfo;
 
     /**
-     * 清洁规则编码
+     * 开业规则编码
      */
     private String openRuleCode;
 
     /**
-     * 清洁规则名称
+     * 开业规则名称
      */
     private String openRuleName;
 
@@ -49,7 +49,7 @@ public class OpenRulePO {
     private int defaultRule;
 
     /**
-     * 清洁物料列表
+     * 包括物料列表
      */
     private List<OpenRuleToppingPO> toppingRuleList;
 }

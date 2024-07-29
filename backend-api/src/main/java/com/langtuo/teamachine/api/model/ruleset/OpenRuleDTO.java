@@ -34,7 +34,7 @@ public class OpenRuleDTO {
     private Map<String, String> extraInfo;
 
     /**
-     * 清洁规则编码
+     * 开业规则编码
      */
     private String openRuleCode;
 
@@ -46,20 +46,20 @@ public class OpenRuleDTO {
     /**
      * 是否允许提醒，0：不允许，1：允许
      */
-    private Integer defaultRule;
+    private int defaultRule;
 
     /**
-     *
+     * 排除时间
      */
     private int flushTime;
 
     /**
-     *
+     * 排出重量
      */
     private int flushWeight;
 
     /**
-     *
+     * 包括物料列表
      */
     private List<OpenRuleToppingDTO> toppingRuleList;
 }

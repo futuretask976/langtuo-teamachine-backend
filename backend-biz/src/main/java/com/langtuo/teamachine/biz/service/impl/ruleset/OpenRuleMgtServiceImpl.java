@@ -197,7 +197,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
                     dto.setTenantCode(po.getTenantCode());
                     dto.setOpenRuleCode(po.getOpenRuleCode());
                     dto.setToppingCode(po.getToppingCode());
-                    dto.setFlushTime(po.getFlushTime());
+                    dto.setFlushSec(po.getFlushSec());
                     dto.setFlushWeight(po.getFlushWeight());
 
                     ToppingPO toppingPO = toppingAccessor.selectOneByCode(po.getTenantCode(), po.getToppingCode());
@@ -236,7 +236,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
                     po.setTenantCode(request.getTenantCode());
                     po.setOpenRuleCode(request.getOpenRuleCode());
                     po.setToppingCode(openRuleToppingPutRequest.getToppingCode());
-                    po.setFlushTime(openRuleToppingPutRequest.getFlushTime());
+                    po.setFlushSec(openRuleToppingPutRequest.getFlushTime());
                     po.setFlushWeight(openRuleToppingPutRequest.getFlushWeight());
                     return po;
                 }).collect(Collectors.toList());

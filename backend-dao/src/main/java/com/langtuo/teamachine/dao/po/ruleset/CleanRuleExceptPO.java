@@ -23,6 +23,11 @@ public class CleanRuleExceptPO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
      * 清洁规则编码
      */
     private String cleanRuleCode;
@@ -31,9 +36,4 @@ public class CleanRuleExceptPO {
      * 清洁排除物料编码
      */
     private String exceptToppingCode;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
 }

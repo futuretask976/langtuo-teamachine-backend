@@ -23,6 +23,16 @@ public class CleanRulePO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 清洁规则编码
      */
     private String cleanRuleCode;
@@ -41,14 +51,4 @@ public class CleanRulePO {
      * 是否允许批量，0：不允许，1：允许
      */
     private int permitBatch;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
 }

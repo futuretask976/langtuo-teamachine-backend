@@ -59,12 +59,12 @@ public class CloseRuleDTO {
     private int soakMin;
 
     /**
-     *
+     *  浸泡期间冲洗间隔（单位：分钟）
      */
     private int flushIntervalMin;
 
     /**
-     *
+     * 浸泡期间冲洗时间（单位：秒）
      */
     private int flushSec;
 }

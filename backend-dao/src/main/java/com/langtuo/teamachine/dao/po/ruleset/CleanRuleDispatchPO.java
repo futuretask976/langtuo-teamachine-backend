@@ -22,17 +22,17 @@ public class CleanRuleDispatchPO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
      * 清洁规则编码
      */
     private String cleanRuleCode;
 
     /**
-     * 店铺编码
+     * 店铺组编码
      */
     private String shopGroupCode;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
 }

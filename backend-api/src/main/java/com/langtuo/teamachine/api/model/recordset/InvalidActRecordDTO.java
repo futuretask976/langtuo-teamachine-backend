@@ -23,11 +23,6 @@ public class InvalidActRecordDTO {
     private Date gmtModified;
 
     /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
      * 额外信息
      */
     private Map<String,String> extraInfo;

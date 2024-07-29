@@ -11,7 +11,7 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="openRuleCode" column="open_rule_code"/>
         <result property="toppingCode" column="topping_code"/>
-        <result property="flushTime" column="flush_time"/>
+        <result property="flushSec" column="flush_sec"/>
         <result property="flushWeight" column="flush_weight"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
@@ -29,7 +29,7 @@
             , gmt_modified
             , open_rule_code
             , topping_code
-            , flush_time
+            , flush_sec
             , flush_weight
             , tenant_code
         ) VALUES (
@@ -37,7 +37,7 @@
             , now()
             , #{openRuleCode}
             , #{toppingCode}
-            , #{flushTime}
+            , #{flushSec}
             , #{flushWeight}
             , #{tenantCode}
         )

@@ -145,7 +145,6 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
         }
 
         SupplyActRecordDTO dto = new SupplyActRecordDTO();
-        dto.setTenantCode(po.getTenantCode());
         dto.setExtraInfo(po.getExtraInfo());
         dto.setIdempotentMark(po.getIdempotentMark());
         dto.setMachineCode(po.getMachineCode());

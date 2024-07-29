@@ -35,32 +35,32 @@ public class CleanRuleStepDTO {
     /**
      * 步骤序号
      */
-    private Integer stepIndex;
+    private int stepIndex;
 
     /**
      * 清洗内容，0：冲洗，1：浸泡
      */
-    private Integer cleanContent;
+    private int cleanContent;
 
     /**
      * 冲洗时间
      */
-    private Integer washSec;
+    private int washSec;
 
     /**
      * 浸泡时间
      */
-    private Integer soakMin;
+    private int soakMin;
 
     /**
      * 浸泡冲洗间隔时间
      */
-    private Integer flushIntervalMin;
+    private int flushIntervalMin;
 
     /**
      * 浸泡冲洗时间
      */
-    private Integer flushSec;
+    private int flushSec;
 
     /**
      * 提醒标题
@@ -73,7 +73,7 @@ public class CleanRuleStepDTO {
     private String remindContent;
 
     /**
-     *
+     * 是否需要再次确认
      */
     private int needConfirm;
 }

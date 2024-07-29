@@ -8,17 +8,17 @@ import java.util.Map;
 @Data
 public class OpenRuleToppingPutRequest {
     /**
-     *
+     * 物料名称
      */
     private String toppingCode;
 
     /**
-     *
+     * 排空时间（单位：秒）
      */
-    private int flushTime;
+    private int flushSec;
 
     /**
-     *
+     * 排空重量
      */
     private int flushWeight;
 }

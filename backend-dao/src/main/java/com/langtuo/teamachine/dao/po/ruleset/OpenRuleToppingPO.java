@@ -37,12 +37,12 @@ public class OpenRuleToppingPO {
     private String toppingCode;
 
     /**
-     * 冲洗时间
+     * 排空时间（单位：秒）
      */
-    private int flushTime;
+    private int flushSec;
 
     /**
-     * 冲洗重量
+     * 排空重量
      */
     private int flushWeight;
 }

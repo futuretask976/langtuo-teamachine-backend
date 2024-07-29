@@ -8,6 +8,16 @@ import java.util.Map;
 @Data
 public class CleanRulePutRequest {
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 清洁规则编码
      */
     private String cleanRuleCode;
@@ -28,22 +38,12 @@ public class CleanRulePutRequest {
     private Integer permitBatch;
 
     /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
-
-    /**
-     *
+     * 排除物料编码列表
      */
     private List<String> exceptToppingCodeList;
 
     /**
-     * 
+     * 清洁步骤列表
      */
     private List<CleanRuleStepPutRequest> cleanRuleStepList;
 }

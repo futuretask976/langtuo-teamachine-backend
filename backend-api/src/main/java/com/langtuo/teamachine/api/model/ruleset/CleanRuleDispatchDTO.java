@@ -7,12 +7,12 @@ import java.util.List;
 @Data
 public class CleanRuleDispatchDTO {
     /**
-     * 菜单编码
+     * 清洁规则编码
      */
     private String cleanRuleCode;
 
     /**
-     * 店铺编码
+     * 店铺组编码列表
      */
     private List<String> shopGroupCodeList;
 }

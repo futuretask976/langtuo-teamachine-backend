@@ -145,7 +145,6 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         }
 
         InvalidActRecordDTO dto = new InvalidActRecordDTO();
-        dto.setTenantCode(po.getTenantCode());
         dto.setExtraInfo(po.getExtraInfo());
         dto.setIdempotentMark(po.getIdempotentMark());
         dto.setMachineCode(po.getMachineCode());

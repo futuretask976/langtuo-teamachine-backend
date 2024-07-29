@@ -18,22 +18,22 @@ public class OpenRulePutRequest {
     private Map<String, String> extraInfo;
 
     /**
-     * 清洁规则编码
+     * 开业规则编码
      */
     private String openRuleCode;
 
     /**
-     * 清洁规则名称
+     * 开业规则名称
      */
     private String openRuleName;
 
     /**
      * 是否允许提醒，0：不允许，1：允许
      */
-    private Integer defaultRule;
+    private int defaultRule;
 
     /**
-     *
+     * 包括物料列表
      */
     private List<OpenRuleToppingPutRequest> toppingRuleList;
 }

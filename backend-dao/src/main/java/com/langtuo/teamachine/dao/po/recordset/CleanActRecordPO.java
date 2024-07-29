@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.dao.po.ruleset;
+package com.langtuo.teamachine.dao.po.recordset;
 
 import lombok.Data;
 
@@ -23,12 +23,12 @@ public class CleanActRecordPO {
     private Date gmtModified;
 
     /**
-     * 清洁规则编码
+     * 机器编码
      */
     private String machineCode;
 
     /**
-     * 清洁排除物料编码
+     * 店铺编码
      */
     private String shopCode;
 

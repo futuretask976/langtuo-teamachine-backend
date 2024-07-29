@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.ruleset.CleanActRecordMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.ruleset.CleanActRecordPO" id="cleanActRecordPOMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.recordset.CleanActRecordPO" id="cleanActRecordPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -36,7 +36,7 @@
         SELECT * FROM clean_act_record LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.ruleset.CleanActRecordPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.recordset.CleanActRecordPO">
         INSERT INTO `clean_act_record` (
             `gmt_created`
             , `gmt_modified`

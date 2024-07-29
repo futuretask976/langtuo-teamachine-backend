@@ -12,12 +12,12 @@ public class CleanRuleDispatchPutRequest {
     private String tenantCode;
 
     /**
-     * 菜单编码
+     * 清洁规则编码
      */
     private String cleanRuleCode;
 
     /**
-     * 店铺编码
+     * 店铺组编码列表
      */
     private List<String> shopGroupCodeList;
 }
