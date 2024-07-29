@@ -13,9 +13,9 @@
         <result property="templateCode" column="template_code"/>
         <result property="templateName" column="template_name"/>
         <result property="state" column="state"/>
-        <result property="overUnit" column="over_unit"/>
+        <result property="overMode" column="over_mode"/>
         <result property="overAmount" column="over_amount"/>
-        <result property="underUnit" column="under_unit"/>
+        <result property="underMode" column="under_mode"/>
         <result property="underAmount" column="under_amount"/>
         <result property="toppingCode" column="topping_code"/>
         <result property="comment" column="comment"/>
@@ -58,9 +58,9 @@
             , template_code
             , template_name
             , state
-            , over_unit
+            , over_mode
             , over_amount
-            , under_unit
+            , under_mode
             , under_amount
             , topping_code
             , tenant_code
@@ -72,9 +72,9 @@
             , #{templateCode}
             , #{templateName}
             , #{state}
-            , #{overUnit}
+            , #{overMode}
             , #{overAmount}
-            , #{underUnit}
+            , #{underMode}
             , #{underAmount}
             , #{toppingCode}
             , #{tenantCode}
@@ -93,14 +93,14 @@
             <if test="state != null">
                 , state = #{state}
             </if>
-            <if test="overUnit != null">
-                , over_unit = #{overUnit}
+            <if test="overMode != null">
+                , over_mode = #{overMode}
             </if>
             <if test="overAmount != null">
                 , over_amount = #{overAmount}
             </if>
-            <if test="underUnit != null">
-                , under_unit = #{underUnit}
+            <if test="underMode != null">
+                , under_mode = #{underMode}
             </if>
             <if test="underAmount != null">
                 , under_amount = #{underAmount}

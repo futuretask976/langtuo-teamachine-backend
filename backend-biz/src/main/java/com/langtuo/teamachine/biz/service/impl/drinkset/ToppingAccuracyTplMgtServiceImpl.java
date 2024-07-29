@@ -142,9 +142,9 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
         dto.setTemplateCode(po.getTemplateCode());
         dto.setTemplateName(po.getTemplateName());
         dto.setState(po.getState());
-        dto.setOverUnit(po.getOverUnit());
+        dto.setOverMode(po.getOverMode());
         dto.setOverAmount(po.getOverAmount());
-        dto.setUnderUnit(po.getUnderUnit());
+        dto.setUnderMode(po.getUnderMode());
         dto.setUnderAmount(po.getUnderAmount());
         dto.setToppingCode(po.getToppingCode());
         dto.setComment(po.getComment());
@@ -162,9 +162,9 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
         po.setTemplateCode(request.getTemplateCode());
         po.setTemplateName(request.getTemplateName());
         po.setState(request.getState());
-        po.setOverUnit(request.getOverUnit());
+        po.setOverMode(request.getOverUnit());
         po.setOverAmount(request.getOverAmount());
-        po.setUnderUnit(request.getUnderUnit());
+        po.setUnderMode(request.getUnderUnit());
         po.setUnderAmount(request.getUnderAmount());
         po.setToppingCode(request.getToppingCode());
         po.setComment(request.getComment());

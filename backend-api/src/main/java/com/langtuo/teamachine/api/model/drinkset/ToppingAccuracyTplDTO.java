@@ -50,7 +50,7 @@ public class ToppingAccuracyTplDTO {
     /**
      * 溢出允许单位，0：固定值，1：百分比
      */
-    private int overUnit;
+    private int overMode;
 
     /**
      * 溢出数值
@@ -60,7 +60,7 @@ public class ToppingAccuracyTplDTO {
     /**
      * 不及允许单位，0：固定值，1：百分比
      */
-    private int underUnit;
+    private int underMode;
 
     /**
      * 不及数值

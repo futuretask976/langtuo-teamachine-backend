@@ -55,7 +55,7 @@ public class ToppingAccuracyTplPO {
     /**
      * 溢出允许模式，0：固定值，1：百分比
      */
-    private int overUnit;
+    private int overMode;
 
     /**
      * 溢出数值
@@ -65,7 +65,7 @@ public class ToppingAccuracyTplPO {
     /**
      * 不及允许模式，0：固定值，1：百分比
      */
-    private int underUnit;
+    private int underMode;
 
     /**
      * 不及数值
