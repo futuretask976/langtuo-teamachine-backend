@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.dao.po.reportset;
+package com.langtuo.teamachine.api.model.recordset;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class InvalidActRecordPO {
+public class InvalidActRecordDTO {
     /**
      * 数据表id
      */
@@ -23,17 +23,37 @@ public class InvalidActRecordPO {
     private Date gmtModified;
 
     /**
-     * 清洁规则编码
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 额外信息
+     */
+    private Map<String,String> extraInfo;
+
+    /**
+     * 幂等标记
+     */
+    private String idempotentMark;
+
+    /**
+     * 机器编码
      */
     private String machineCode;
 
     /**
-     * 清洁排除物料编码
+     * 店铺编码
      */
     private String shopCode;
 
     /**
-     * 失效时间，这里用String的原因是为了做索引幂等
+     * 店铺组编码
+     */
+    private String shopGroupCode;
+
+    /**
+     * 失效时间
      */
     private String invalidTime;
 
@@ -51,14 +71,4 @@ public class InvalidActRecordPO {
      * 失效数量
      */
     private Integer invalidAmount;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 额外信息
-     */
-    private Map<String,String> extraInfo;
 }

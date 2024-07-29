@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.reportset.SupplyActRecordMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.reportset.SupplyActRecordPO" id="supplyActRecordPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.recordset.SupplyActRecordMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.recordset.SupplyActRecordPO" id="supplyActRecordPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -34,7 +34,7 @@
         SELECT * FROM supply_act_record LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.reportset.SupplyActRecordPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.recordset.SupplyActRecordPO">
         INSERT INTO `supply_act_record` (
             `gmt_created`
             , `gmt_modified`

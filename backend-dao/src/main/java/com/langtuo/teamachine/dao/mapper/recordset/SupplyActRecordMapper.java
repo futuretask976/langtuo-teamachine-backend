@@ -1,8 +1,8 @@
-package com.langtuo.teamachine.dao.mapper.reportset;
+package com.langtuo.teamachine.dao.mapper.recordset;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.reportset.InvalidActRecordPO;
+import com.langtuo.teamachine.dao.po.recordset.SupplyActRecordPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,53 +12,53 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface InvalidActRecordMapper {
+public interface SupplyActRecordMapper {
     /**
      *
      * @param tenantCode
      * @param machineCode
      * @param shopCode
-     * @param invalidTime
+     * @param supplyTime
      * @param toppingCode
      * @param pipelineNum
      * @return
      */
-    InvalidActRecordPO selectOne(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode,
-        @Param("shopCode") String shopCode, @Param("invalidTime") String invalidTime,
+    SupplyActRecordPO selectOne(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode,
+        @Param("shopCode") String shopCode, @Param("supplyTime") String supplyTime,
         @Param("toppingCode") String toppingCode, @Param("pipelineNum") int pipelineNum);
 
     /**
      *
      * @return
      */
-    List<InvalidActRecordPO> selectList();
+    List<SupplyActRecordPO> selectList();
 
     /**
      *
-     * @param po
+     * @param supplyActRecordPO
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(InvalidActRecordPO po);
+    int insert(SupplyActRecordPO supplyActRecordPO);
 
     /**
      *
      * @param po
      * @return
      */
-    int update(InvalidActRecordPO po);
+    int update(SupplyActRecordPO po);
 
     /**
      *
      * @param tenantCode
      * @param machineCode
      * @param shopCode
-     * @param invalidTime
+     * @param supplyTime
      * @param toppingCode
      * @param pipelineNum
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode,
-               @Param("shopCode") String shopCode, @Param("invalidTime") String invalidTime,
+               @Param("shopCode") String shopCode, @Param("supplyTime") String supplyTime,
                @Param("toppingCode") String toppingCode, @Param("pipelineNum") int pipelineNum);
 }

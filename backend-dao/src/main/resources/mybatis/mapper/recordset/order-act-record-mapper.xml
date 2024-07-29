@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.reportset.OrderActRecordMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.reportset.OrderActRecordPO" id="orderActRecordPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.recordset.OrderActRecordMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.recordset.OrderActRecordPO" id="orderActRecordPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -31,7 +31,7 @@
         SELECT * FROM order_act_record LIMIT 100
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.reportset.OrderActRecordPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.recordset.OrderActRecordPO">
         INSERT INTO `order_act_record` (
             `gmt_created`
             , `gmt_modified`

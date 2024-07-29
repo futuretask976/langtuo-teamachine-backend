@@ -76,9 +76,9 @@
         <mapper resource="mybatis/mapper/ruleset/close-rule-mapper.xml"/>
         <mapper resource="mybatis/mapper/ruleset/warning-rule-mapper.xml"/>
         <!-- 日常报表 -->
-        <mapper resource="mybatis/mapper/reportset/invalid-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/reportset/supply-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/reportset/clean-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/reportset/order-act-record-mapper.xml"/>
+        <mapper resource="mybatis/mapper/recordset/invalid-act-record-mapper.xml"/>
+        <mapper resource="mybatis/mapper/recordset/supply-act-record-mapper.xml"/>
+        <mapper resource="mybatis/mapper/recordset/clean-act-record-mapper.xml"/>
+        <mapper resource="mybatis/mapper/recordset/order-act-record-mapper.xml"/>
     </mappers>
 </configuration>

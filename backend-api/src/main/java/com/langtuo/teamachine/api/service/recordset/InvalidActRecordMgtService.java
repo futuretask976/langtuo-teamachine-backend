@@ -1,0 +1,48 @@
+package com.langtuo.teamachine.api.service.recordset;
+
+import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.model.recordset.InvalidActRecordDTO;
+import com.langtuo.teamachine.api.request.recordset.InvalidActRecordPutRequest;
+import com.langtuo.teamachine.api.request.ruleset.WarningRulePutRequest;
+import com.langtuo.teamachine.api.result.LangTuoResult;
+
+import java.util.List;
+
+public interface InvalidActRecordMgtService {
+    /**
+     *
+     * @param tenantCode
+     * @param idempotentMark
+     * @return
+     */
+    LangTuoResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark);
+
+    /**
+     *
+     * @return
+     */
+    LangTuoResult<PageDTO<InvalidActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
+            int pageNum, int pageSize);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<List<InvalidActRecordDTO>> list(String tenantCode);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    LangTuoResult<Void> put(InvalidActRecordPutRequest request);
+
+    /**
+     *
+     * @param tenantCode
+     * @param idempotentMark
+     * @return
+     */
+    LangTuoResult<Void> delete(String tenantCode, String idempotentMark);
+}

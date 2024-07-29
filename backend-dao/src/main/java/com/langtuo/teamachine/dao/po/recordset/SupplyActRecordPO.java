@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.dao.po.reportset;
+package com.langtuo.teamachine.dao.po.recordset;
 
 import lombok.Data;
 
