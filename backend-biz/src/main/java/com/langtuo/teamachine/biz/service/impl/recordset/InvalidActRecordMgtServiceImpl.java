@@ -7,8 +7,14 @@ import com.langtuo.teamachine.api.model.recordset.InvalidActRecordDTO;
 import com.langtuo.teamachine.api.request.recordset.InvalidActRecordPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.recordset.InvalidActRecordMgtService;
+import com.langtuo.teamachine.dao.accessor.drinkset.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.recordset.InvalidActRecordAccessor;
+import com.langtuo.teamachine.dao.accessor.shopset.ShopAccessor;
+import com.langtuo.teamachine.dao.accessor.shopset.ShopGroupAccessor;
+import com.langtuo.teamachine.dao.po.drinkset.ToppingPO;
 import com.langtuo.teamachine.dao.po.recordset.InvalidActRecordPO;
+import com.langtuo.teamachine.dao.po.shopset.ShopGroupPO;
+import com.langtuo.teamachine.dao.po.shopset.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -23,6 +29,15 @@ import java.util.stream.Collectors;
 public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtService {
     @Resource
     private InvalidActRecordAccessor accessor;
+
+    @Resource
+    private ToppingAccessor toppingAccessor;
+
+    @Resource
+    private ShopGroupAccessor shopGroupAccessor;
+
+    @Resource
+    private ShopAccessor shopAccessor;
 
     @Override
     public LangTuoResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark) {
@@ -140,6 +155,19 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         dto.setToppingCode(po.getToppingCode());
         dto.setPipelineNum(po.getPipelineNum());
         dto.setInvalidAmount(po.getInvalidAmount());
+
+        ToppingPO toppingPO = toppingAccessor.selectOneByCode(po.getTenantCode(), po.getToppingCode());
+        if (toppingPO != null) {
+            dto.setToppingName(toppingPO.getToppingName());
+        }
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(po.getTenantCode(), po.getShopGroupCode());
+        if (shopGroupPO != null) {
+            dto.setShopGroupName(shopGroupPO.getShopGroupName());
+        }
+        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
+        if (shopPO != null) {
+            dto.setShopName(shopPO.getShopName());
+        }
         return dto;
     }
 

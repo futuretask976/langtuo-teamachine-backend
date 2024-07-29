@@ -48,9 +48,19 @@ public class InvalidActRecordDTO {
     private String shopCode;
 
     /**
+     * 店铺名称
+     */
+    private String shopName;
+
+    /**
      * 店铺组编码
      */
     private String shopGroupCode;
+
+    /**
+     * 店铺组名称
+     */
+    private String shopGroupName;
 
     /**
      * 失效时间
@@ -58,17 +68,22 @@ public class InvalidActRecordDTO {
     private Date invalidTime;
 
     /**
-     * 物料名称
+     * 物料编码
      */
     private String toppingCode;
 
     /**
+     * 物料名称
+     */
+    private String toppingName;
+
+    /**
      * 管道序号
      */
-    private Integer pipelineNum;
+    private int pipelineNum;
 
     /**
      * 失效数量
      */
-    private Integer invalidAmount;
+    private int invalidAmount;
 }

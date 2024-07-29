@@ -65,10 +65,10 @@ public class InvalidActRecordPO {
     /**
      * 管道序号
      */
-    private Integer pipelineNum;
+    private int pipelineNum;
 
     /**
      * 失效数量
      */
-    private Integer invalidAmount;
+    private int invalidAmount;
 }
