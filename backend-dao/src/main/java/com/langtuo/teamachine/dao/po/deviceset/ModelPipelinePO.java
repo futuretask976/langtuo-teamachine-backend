@@ -30,15 +30,15 @@ public class ModelPipelinePO {
     /**
      * 管道号
      */
-    private Integer pipelineNum;
+    private int pipelineNum;
 
     /**
      * 是否支持加热，0：不支持，1：支持
      */
-    private Integer enableWarm;
+    private int enableWarm;
 
     /**
      * 是否支持冷藏，0：不支持，1：支持
      */
-    private Integer enableFreeze;
+    private int enableFreeze;
 }

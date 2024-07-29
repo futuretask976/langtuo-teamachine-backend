@@ -31,5 +31,5 @@ public class ModelPO {
     /**
      * 是否支持同时出料，0：不支持，1：支持
      */
-    private Integer enableFlowAll;
+    private int enableFlowAll;
 }

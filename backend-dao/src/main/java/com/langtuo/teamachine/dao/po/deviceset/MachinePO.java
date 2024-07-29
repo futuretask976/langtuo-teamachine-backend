@@ -60,7 +60,7 @@ public class MachinePO {
     /**
      * 机器状态，0：禁用，1：启用
      */
-    private Integer state;
+    private int state;
 
     /**
      * 有效期

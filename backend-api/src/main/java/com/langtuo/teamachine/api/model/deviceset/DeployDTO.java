@@ -57,5 +57,5 @@ public class DeployDTO {
     /**
      * 部署状态，0：未部署，1：已部署
      */
-    private Integer state;
+    private int state;
 }

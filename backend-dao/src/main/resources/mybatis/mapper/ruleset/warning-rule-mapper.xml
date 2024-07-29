@@ -13,7 +13,7 @@
         <result property="warningRuleName" column="warning_rule_name"/>
         <result property="warningType" column="warning_type"/>
         <result property="warningContent" column="warning_content"/>
-        <result property="thresholdType" column="threshold_type"/>
+        <result property="thresholdMode" column="threshold_mode"/>
         <result property="threshold" column="threshold"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
@@ -58,7 +58,7 @@
             , warning_rule_name
             , warning_type
             , warning_content
-            , threshold_type
+            , threshold_mode
             , threshold
             , tenant_code
             , comment
@@ -70,7 +70,7 @@
             , #{warningRuleName}
             , #{warningType}
             , #{warningContent}
-            , #{thresholdType}
+            , #{thresholdMode}
             , #{threshold}
             , #{tenantCode}
             , #{comment}
@@ -91,8 +91,8 @@
             <if test="warningContent != null">
                 , warning_content = #{warningContent}
             </if>
-            <if test="thresholdType != null">
-                , threshold_type = #{thresholdType}
+            <if test="thresholdMode != null">
+                , threshold_mode = #{thresholdMode}
             </if>
             <if test="threshold != null">
                 , threshold = #{threshold}

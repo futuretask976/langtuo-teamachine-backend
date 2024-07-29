@@ -156,7 +156,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         dto.setWarningContent(po.getWarningContent());
         dto.setWarningType(po.getWarningType());
         dto.setThreshold(po.getThreshold());
-        dto.setThresholdType(po.getThresholdType());
+        dto.setThresholdMode(po.getThresholdMode());
         dto.setComment(po.getComment());
         return dto;
     }
@@ -175,7 +175,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         po.setWarningContent(request.getWarningContent());
         po.setWarningType(request.getWarningType());
         po.setThreshold(request.getThreshold());
-        po.setThresholdType(request.getThresholdType());
+        po.setThresholdMode(request.getThresholdMode());
         po.setComment(request.getComment());
         return po;
     }

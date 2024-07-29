@@ -9,6 +9,16 @@ import java.util.Map;
 @Data
 public class DeployPutRequest {
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 部署编码
      */
     private String deployCode;
@@ -31,15 +41,5 @@ public class DeployPutRequest {
     /**
      * 部署状态，0：未部署，1：已部署
      */
-    private Integer state;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
+    private int state;
 }

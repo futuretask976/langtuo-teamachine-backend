@@ -51,20 +51,20 @@ public class WarningRuleDTO {
     /**
      * 预警类型，0：弱提醒，1：强提醒
      */
-    private Integer warningType;
+    private int warningType;
 
     /**
-     * 预警内容，0：报废预警，1：清洗预警
+     * 预警内容，0：报废预警，1：缺料预警，2：清洗预警
      */
-    private String warningContent;
+    private int warningContent;
 
     /**
      * 阈值类型，0：绝对值，1：百分比
      */
-    private Integer thresholdType;
+    private int thresholdMode;
 
     /**
      * 阈值
      */
-    private Integer threshold;
+    private int threshold;
 }
