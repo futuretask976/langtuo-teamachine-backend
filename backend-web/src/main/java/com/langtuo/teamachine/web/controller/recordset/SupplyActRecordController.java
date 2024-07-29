@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/recordset/invalid")
+@RequestMapping("/recordset/supply")
 public class SupplyActRecordController {
     @Resource
     private SupplyActRecordMgtService service;

@@ -34,7 +34,7 @@
             AND tenant_code = #{tenantCode}
     </select>
 
-    <select id="search" resultMap="invalidActRecordPOMap">
+    <select id="search" resultMap="supplyActRecordPOMap">
         SELECT * FROM supply_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
