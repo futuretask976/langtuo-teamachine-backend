@@ -1,26 +1,26 @@
 package com.langtuo.teamachine.api.service.recordset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.recordset.InvalidActRecordDTO;
-import com.langtuo.teamachine.api.request.recordset.InvalidActRecordPutRequest;
+import com.langtuo.teamachine.api.model.recordset.SupplyActRecordDTO;
+import com.langtuo.teamachine.api.request.recordset.SupplyActRecordPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
 import java.util.List;
 
-public interface InvalidActRecordMgtService {
+public interface SupplyActRecordMgtService {
     /**
      *
      * @param tenantCode
      * @param idempotentMark
      * @return
      */
-    LangTuoResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark);
+    LangTuoResult<SupplyActRecordDTO> get(String tenantCode, String idempotentMark);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<InvalidActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
+    LangTuoResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
             int pageNum, int pageSize);
 
     /**
@@ -28,14 +28,14 @@ public interface InvalidActRecordMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<InvalidActRecordDTO>> list(String tenantCode);
+    LangTuoResult<List<SupplyActRecordDTO>> list(String tenantCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(InvalidActRecordPutRequest request);
+    LangTuoResult<Void> put(SupplyActRecordPutRequest request);
 
     /**
      *

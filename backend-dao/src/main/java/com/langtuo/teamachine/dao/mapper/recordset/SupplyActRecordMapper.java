@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.mapper.recordset;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.po.recordset.SupplyActRecordPO;
+import com.langtuo.teamachine.dao.query.recordset.SupplyActRecordQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -16,22 +17,23 @@ public interface SupplyActRecordMapper {
     /**
      *
      * @param tenantCode
-     * @param machineCode
-     * @param shopCode
-     * @param supplyTime
-     * @param toppingCode
-     * @param pipelineNum
+     * @param idempotentMark
      * @return
      */
-    SupplyActRecordPO selectOne(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode,
-        @Param("shopCode") String shopCode, @Param("supplyTime") String supplyTime,
-        @Param("toppingCode") String toppingCode, @Param("pipelineNum") int pipelineNum);
+    SupplyActRecordPO selectOne(@Param("tenantCode") String tenantCode,
+            @Param("idempotentMark") String idempotentMark);
 
     /**
      *
      * @return
      */
-    List<SupplyActRecordPO> selectList();
+    List<SupplyActRecordPO> selectList(@Param("tenantCode") String tenantCode);
+
+    /**
+     *
+     * @return
+     */
+    List<SupplyActRecordPO> search(SupplyActRecordQuery query);
 
     /**
      *
@@ -51,14 +53,9 @@ public interface SupplyActRecordMapper {
     /**
      *
      * @param tenantCode
-     * @param machineCode
-     * @param shopCode
-     * @param supplyTime
-     * @param toppingCode
-     * @param pipelineNum
+     * @param idempotentMark
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode,
-               @Param("shopCode") String shopCode, @Param("supplyTime") String supplyTime,
-               @Param("toppingCode") String toppingCode, @Param("pipelineNum") int pipelineNum);
+    int delete(@Param("tenantCode") String tenantCode,
+            @Param("idempotentMark") String idempotentMark);
 }

@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.dao.po.recordset;
+package com.langtuo.teamachine.api.request.recordset;
 
 import lombok.Data;
 
@@ -6,22 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class SupplyActRecordPO {
-    /**
-     * 数据表id
-     */
-    private long id;
-
-    /**
-     * 数据表记录插入时间
-     */
-    private Date gmtCreated;
-
-    /**
-     * 数据表记录最近修改时间
-     */
-    private Date gmtModified;
-
+public class SupplyActRecordPutRequest {
     /**
      * 租户编码
      */
@@ -65,10 +50,10 @@ public class SupplyActRecordPO {
     /**
      * 管道序号
      */
-    private int pipelineNum;
+    private Integer pipelineNum;
 
     /**
      * 补充数量
      */
-    private int supplyAmount;
+    private Integer supplyAmount;
 }

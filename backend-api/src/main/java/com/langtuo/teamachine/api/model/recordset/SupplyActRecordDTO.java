@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.dao.po.recordset;
+package com.langtuo.teamachine.api.model.recordset;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class SupplyActRecordPO {
+public class SupplyActRecordDTO {
     /**
      * 数据表id
      */
@@ -48,9 +48,19 @@ public class SupplyActRecordPO {
     private String shopCode;
 
     /**
+     * 店铺名称
+     */
+    private String shopName;
+
+    /**
      * 店铺组编码
      */
     private String shopGroupCode;
+
+    /**
+     * 店铺组名称
+     */
+    private String shopGroupName;
 
     /**
      * 补充时间
@@ -58,9 +68,14 @@ public class SupplyActRecordPO {
     private Date supplyTime;
 
     /**
-     * 物料名称
+     * 物料编码
      */
     private String toppingCode;
+
+    /**
+     * 物料名称
+     */
+    private String toppingName;
 
     /**
      * 管道序号
