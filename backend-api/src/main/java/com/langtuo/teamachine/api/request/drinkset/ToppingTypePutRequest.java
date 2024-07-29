@@ -19,7 +19,7 @@ public class ToppingTypePutRequest {
     /**
      * 店铺类型，0：禁用，1：启用
      */
-    private Integer state;
+    private int state;
 
     /**
      * 租户编码

@@ -25,7 +25,7 @@ public class TeaPutRequest {
     /**
      * 状态，0：禁用，1：启用
      */
-    private Integer state;
+    private int state;
 
     /**
      * 茶类型编码

@@ -29,27 +29,27 @@ public class ToppingPutRequest {
     /**
      * 状态，0：禁用，1：启用
      */
-    private Integer state;
+    private int state;
 
     /**
      * 有效周期
      */
-    private Integer validHourPeriod;
+    private int validHourPeriod;
 
     /**
      * 清洗周期
      */
-    private Integer cleanHourPeriod;
+    private int cleanHourPeriod;
 
     /**
      * 转换系数
      */
-    private Double convertCoefficient;
+    private double convertCoefficient;
 
     /**
      * 流速
      */
-    private Integer flowSpeed;
+    private int flowSpeed;
 
     /**
      * 租户编码

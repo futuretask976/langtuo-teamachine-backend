@@ -55,30 +55,30 @@ public class ToppingDTO {
     /**
      * 计量单位，0：克，1：毫升
      */
-    private Integer measureUnit;
+    private int measureUnit;
 
     /**
      * 状态，0：禁用，1：启用
      */
-    private Integer state;
+    private int state;
 
     /**
      * 有效周期
      */
-    private Integer validHourPeriod;
+    private int validHourPeriod;
 
     /**
      * 清洗周期
      */
-    private Integer cleanHourPeriod;
+    private int cleanHourPeriod;
 
     /**
      * 转换系数
      */
-    private Double convertCoefficient;
+    private double convertCoefficient;
 
     /**
      * 流速
      */
-    private Integer flowSpeed;
+    private int flowSpeed;
 }
