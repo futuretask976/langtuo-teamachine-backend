@@ -13,6 +13,16 @@ import java.util.List;
  * @author miya
  */
 public class TeaMachineUserDetails implements UserDetails {
+    /**
+     *
+     */
+    private String loginName;
+
+    /**
+     *
+     */
+    private String loginPass;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> grantedAuthorityList = Lists.newArrayList();

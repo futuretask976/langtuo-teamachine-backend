@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.dao.po.recordset;
+package com.langtuo.teamachine.api.model.recordset;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class CleanActRecordPO {
+public class CleanActRecordDTO {
     /**
      * 数据表id
      */
@@ -21,11 +21,6 @@ public class CleanActRecordPO {
      * 数据表记录最近修改时间
      */
     private Date gmtModified;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
 
     /**
      * 额外信息
@@ -48,9 +43,19 @@ public class CleanActRecordPO {
     private String shopCode;
 
     /**
+     * 店铺名称
+     */
+    private String shopName;
+
+    /**
      * 店铺组编码
      */
     private String shopGroupCode;
+
+    /**
+     * 店铺组名称
+     */
+    private String shopGroupName;
 
     /**
      * 清洗开始时间
@@ -63,9 +68,14 @@ public class CleanActRecordPO {
     private Date cleanEndTime;
 
     /**
-     * 物料名称
+     * 物料编码
      */
     private String toppingCode;
+
+    /**
+     * 物料名称
+     */
+    private String toppingName;
 
     /**
      * 管道号

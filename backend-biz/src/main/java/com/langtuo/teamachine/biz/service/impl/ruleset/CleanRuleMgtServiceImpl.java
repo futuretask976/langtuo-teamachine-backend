@@ -231,7 +231,6 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
-        dto.setTenantCode(po.getTenantCode());
         dto.setExtraInfo(po.getExtraInfo());
         dto.setCleanRuleCode(po.getCleanRuleCode());
         dto.setCleanRuleName(po.getCleanRuleName());

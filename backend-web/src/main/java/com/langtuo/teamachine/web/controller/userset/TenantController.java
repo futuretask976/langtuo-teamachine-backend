@@ -27,7 +27,7 @@ public class TenantController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/tenant/list?pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/userset/tenant/list
      * @return
      */
     @GetMapping(value = "/list")

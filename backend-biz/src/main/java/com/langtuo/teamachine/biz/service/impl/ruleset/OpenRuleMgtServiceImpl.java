@@ -236,7 +236,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
                     po.setTenantCode(request.getTenantCode());
                     po.setOpenRuleCode(request.getOpenRuleCode());
                     po.setToppingCode(openRuleToppingPutRequest.getToppingCode());
-                    po.setFlushSec(openRuleToppingPutRequest.getFlushTime());
+                    po.setFlushSec(openRuleToppingPutRequest.getFlushSec());
                     po.setFlushWeight(openRuleToppingPutRequest.getFlushWeight());
                     return po;
                 }).collect(Collectors.toList());
