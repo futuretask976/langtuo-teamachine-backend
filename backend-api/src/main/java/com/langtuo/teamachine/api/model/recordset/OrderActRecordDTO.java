@@ -1,12 +1,13 @@
-package com.langtuo.teamachine.dao.po.recordset;
+package com.langtuo.teamachine.api.model.recordset;
 
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Data
-public class OrderActRecordPO {
+public class OrderActRecordDTO {
     /**
      * 数据表id
      */
@@ -21,11 +22,6 @@ public class OrderActRecordPO {
      * 数据表记录最近修改时间
      */
     private Date gmtModified;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
 
     /**
      * 额外信息
@@ -76,4 +72,14 @@ public class OrderActRecordPO {
      * 状态，0：未制作，1：制作中，2：已制作，3：有异常，4：已取消
      */
     private int state;
+
+    /**
+     * 规格项列表
+     */
+    private List<OrderSpecItemActRecordDTO> orderSpecItemActRecordList;
+
+    /**
+     * 物料列表
+     */
+    private List<OrderToppingActRecordDTO> orderToppingActRecordList;
 }

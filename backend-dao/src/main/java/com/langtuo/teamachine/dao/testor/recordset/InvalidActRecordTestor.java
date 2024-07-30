@@ -1,10 +1,8 @@
-package com.langtuo.teamachine.dao.testor;
+package com.langtuo.teamachine.dao.testor.recordset;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.recordset.InvalidActRecordMapper;
-import com.langtuo.teamachine.dao.mapper.userset.AdminMapper;
 import com.langtuo.teamachine.dao.po.recordset.InvalidActRecordPO;
-import com.langtuo.teamachine.dao.po.userset.AdminPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.Date;

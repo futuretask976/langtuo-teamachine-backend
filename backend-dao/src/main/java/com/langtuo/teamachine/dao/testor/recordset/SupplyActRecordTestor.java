@@ -1,17 +1,15 @@
-package com.langtuo.teamachine.dao.testor;
+package com.langtuo.teamachine.dao.testor.recordset;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.recordset.CleanActRecordMapper;
-import com.langtuo.teamachine.dao.mapper.recordset.InvalidActRecordMapper;
-import com.langtuo.teamachine.dao.po.recordset.CleanActRecordPO;
-import com.langtuo.teamachine.dao.po.recordset.InvalidActRecordPO;
+import com.langtuo.teamachine.dao.mapper.recordset.SupplyActRecordMapper;
+import com.langtuo.teamachine.dao.po.recordset.SupplyActRecordPO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class CleanActRecordTestor {
+public class SupplyActRecordTestor {
     public static void main(String args[]) {
         insert();
 //        select();
@@ -19,34 +17,35 @@ public class CleanActRecordTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        CleanActRecordMapper mapper = sqlSession.getMapper(CleanActRecordMapper.class);
+        SupplyActRecordMapper mapper = sqlSession.getMapper(SupplyActRecordMapper.class);
 
-        CleanActRecordPO po = null;
+        SupplyActRecordPO po = null;
 
-        po = new CleanActRecordPO();
+        po = new SupplyActRecordPO();
         po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap(){{
-            put("abc", "def");
-        }});
-        po.setIdempotentMark("1234");
-        po.setMachineCode("abcd");
-        po.setShopCode("shop_001");
+        po.setExtraInfo(new HashMap<String, String>(){{}});
+        po.setIdempotentMark("1111");
+        po.setMachineCode("1234");
         po.setShopGroupCode("shopGroup_02");
-        po.setCleanStartTime(new Date());
-        po.setCleanEndTime(new Date());
+        po.setShopCode("shop_001");
+        po.setSupplyTime(new Date());
         po.setToppingCode("topping_001");
         po.setPipelineNum(1);
-        po.setCleanType(1);
-        po.setCleanRuleCode("123");
-        po.setOpenRuleCode("456");
-        po.setCloseRuleCode("789");
-        po.setCleanContent(1);
-        po.setWashSec(10);
-        po.setSoakMin(20);
-        po.setFlushSec(30);
-        po.setFlushIntervalMin(40);
-        int inserted = mapper.insert(po);
-        System.out.println("inserted=" + inserted);
+        po.setSupplyAmount(10);
+        mapper.insert(po);
+
+        po = new SupplyActRecordPO();
+        po.setTenantCode("tenant_001");
+        po.setExtraInfo(new HashMap<String, String>(){{}});
+        po.setIdempotentMark("2222");
+        po.setMachineCode("1234");
+        po.setShopGroupCode("shopGroup_03");
+        po.setShopCode("shop_001");
+        po.setSupplyTime(new Date());
+        po.setToppingCode("topping_002");
+        po.setPipelineNum(2);
+        po.setSupplyAmount(22);
+        mapper.insert(po);
 
         sqlSession.commit();
         sqlSession.close();
@@ -54,14 +53,14 @@ public class CleanActRecordTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        InvalidActRecordMapper mapper = sqlSession.getMapper(InvalidActRecordMapper.class);
+        SupplyActRecordMapper mapper = sqlSession.getMapper(SupplyActRecordMapper.class);
 
-        List<InvalidActRecordPO> list = mapper.selectList("tenant_001");
-        for (InvalidActRecordPO po : list) {
+        List<SupplyActRecordPO> list = mapper.selectList("tenant_001");
+        for (SupplyActRecordPO po : list) {
             System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
-        InvalidActRecordPO po = mapper.selectOne("tenant_001", "1234567890");
+        SupplyActRecordPO po = mapper.selectOne("tenant_001", "1234567890");
         System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();

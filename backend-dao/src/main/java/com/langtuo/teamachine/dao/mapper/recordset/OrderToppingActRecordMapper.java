@@ -1,9 +1,8 @@
 package com.langtuo.teamachine.dao.mapper.recordset;
 
-import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.recordset.OrderActRecordPO;
-import com.langtuo.teamachine.dao.query.recordset.OrderActRecordQuery;
+import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
+import com.langtuo.teamachine.dao.po.recordset.OrderToppingActRecordPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,26 +12,12 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface OrderActRecordMapper {
-    /**
-     *
-     * @param tenantCode
-     * @param orderId
-     * @return
-     */
-    OrderActRecordPO selectOne(@Param("tenantCode") String tenantCode, @Param("orderId") String orderId);
-
+public interface OrderToppingActRecordMapper {
     /**
      *
      * @return
      */
-    List<OrderActRecordPO> selectList(@Param("tenantCode") String tenantCode);
-
-    /**
-     *
-     * @return
-     */
-    List<OrderActRecordPO> search(OrderActRecordQuery query);
+    List<OrderToppingActRecordPO> selectList(@Param("tenantCode") String tenantCode, @Param("orderId") String orderId);
 
     /**
      *
@@ -40,10 +25,10 @@ public interface OrderActRecordMapper {
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(OrderActRecordPO po);
+    int insert(OrderToppingActRecordPO po);
 
     /**
-     *
+     * 
      * @param tenantCode
      * @param orderId
      * @return
