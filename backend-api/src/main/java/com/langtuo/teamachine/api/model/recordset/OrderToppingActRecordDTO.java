@@ -15,6 +15,11 @@ public class OrderToppingActRecordDTO {
     private String toppingCode;
 
     /**
+     * 设备名称
+     */
+    private String toppingName;
+
+    /**
      * 实际数量
      */
     private int actualAmount;

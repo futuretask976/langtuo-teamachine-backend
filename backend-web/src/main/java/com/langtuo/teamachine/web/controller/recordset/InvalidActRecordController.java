@@ -52,16 +52,6 @@ public class InvalidActRecordController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/warning/put
-     * @return
-     */
-    @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody InvalidActRecordPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
-        return rtn;
-    }
-
-    /**
      * url: http://localhost:8080/teamachine/recordset/warning/{tenantcode}/{cleanrulecode}/delete
      * @return
      */

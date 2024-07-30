@@ -17,10 +17,10 @@ public interface OrderActRecordMapper {
     /**
      *
      * @param tenantCode
-     * @param orderId
+     * @param idempotentMark
      * @return
      */
-    OrderActRecordPO selectOne(@Param("tenantCode") String tenantCode, @Param("orderId") String orderId);
+    OrderActRecordPO selectOne(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
 
     /**
      *
@@ -45,8 +45,8 @@ public interface OrderActRecordMapper {
     /**
      *
      * @param tenantCode
-     * @param orderId
+     * @param idempotentMark
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("orderId") String orderId);
+    int delete(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
 }

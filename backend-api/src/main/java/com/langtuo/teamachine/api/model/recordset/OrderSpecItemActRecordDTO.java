@@ -14,7 +14,17 @@ public class OrderSpecItemActRecordDTO {
     private String specCode;
 
     /**
+     * 规格名称
+     */
+    private String specName;
+
+    /**
      * 规格项编码
      */
     private String specItemCode;
+
+    /**
+     * 规格项名称
+     */
+    private String specItemName;
 }

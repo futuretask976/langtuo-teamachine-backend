@@ -17,7 +17,8 @@ public interface OrderSpecItemActRecordMapper {
      *
      * @return
      */
-    List<OrderSpecItemActRecordPO> selectList(@Param("tenantCode") String tenantCode, @Param("orderId") String orderId);
+    List<OrderSpecItemActRecordPO> selectList(@Param("tenantCode") String tenantCode,
+            @Param("idempotentMark") String idempotentMark);
 
     /**
      *
@@ -30,8 +31,8 @@ public interface OrderSpecItemActRecordMapper {
     /**
      *
      * @param tenantCode
-     * @param orderId
+     * @param idempotentMark
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("orderId") String orderId);
+    int delete(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
 }

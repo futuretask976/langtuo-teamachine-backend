@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.recordset.OrderActRecordMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.recordset.OrderActRecordPO" id="orderActRecordPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.recordset.OrderSpecItemActRecordMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.recordset.OrderSpecItemActRecordPO" id="orderSpecItemActRecordPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -15,14 +15,14 @@
         <result property="specItemCode" column="spec_item_code"/>
     </resultMap>
 
-    <select id="selectList" resultMap="orderActRecordPOMap">
+    <select id="selectList" resultMap="orderSpecItemActRecordPOMap">
         SELECT * FROM order_spec_item_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND idempotent_mark = #{idempotentMark}
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.recordset.OrderActRecordPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.recordset.OrderSpecItemActRecordPO">
         INSERT INTO order_spec_item_act_record (
             gmt_created
             , gmt_modified

@@ -17,7 +17,8 @@ public interface OrderToppingActRecordMapper {
      *
      * @return
      */
-    List<OrderToppingActRecordPO> selectList(@Param("tenantCode") String tenantCode, @Param("orderId") String orderId);
+    List<OrderToppingActRecordPO> selectList(@Param("tenantCode") String tenantCode,
+            @Param("idempotentMark") String idempotentMark);
 
     /**
      *
@@ -33,5 +34,5 @@ public interface OrderToppingActRecordMapper {
      * @param orderId
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("orderId") String orderId);
+    int delete(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
 }

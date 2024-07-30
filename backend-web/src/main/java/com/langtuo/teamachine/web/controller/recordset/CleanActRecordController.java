@@ -52,16 +52,6 @@ public class CleanActRecordController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/clean/put
-     * @return
-     */
-    @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody CleanActRecordPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
-        return rtn;
-    }
-
-    /**
      * url: http://localhost:8080/teamachine/recordset/clean/{tenantcode}/{cleanrulecode}/delete
      * @return
      */

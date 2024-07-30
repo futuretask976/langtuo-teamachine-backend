@@ -32,13 +32,6 @@ public interface OrderActRecordMgtService {
 
     /**
      *
-     * @param request
-     * @return
-     */
-    LangTuoResult<Void> put(CleanActRecordPutRequest request);
-
-    /**
-     *
      * @param tenantCode
      * @param idempotentMark
      * @return

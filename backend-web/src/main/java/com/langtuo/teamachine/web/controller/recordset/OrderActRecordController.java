@@ -1,40 +1,39 @@
 package com.langtuo.teamachine.web.controller.recordset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.recordset.SupplyActRecordDTO;
-import com.langtuo.teamachine.api.request.recordset.SupplyActRecordPutRequest;
+import com.langtuo.teamachine.api.model.recordset.OrderActRecordDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.recordset.SupplyActRecordMgtService;
+import com.langtuo.teamachine.api.service.recordset.OrderActRecordMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/recordset/supply")
-public class SupplyActRecordController {
+@RequestMapping("/recordset/order")
+public class OrderActRecordController {
     @Resource
-    private SupplyActRecordMgtService service;
+    private OrderActRecordMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/recordset/warning/tenant_001/shopGroup_001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{idempotentmark}/get")
-    public LangTuoResult<SupplyActRecordDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public LangTuoResult<OrderActRecordDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "idempotentmark") String idempotentMark) {
-        LangTuoResult<SupplyActRecordDTO> rtn = service.get(tenantCode, idempotentMark);
+        LangTuoResult<OrderActRecordDTO> rtn = service.get(tenantCode, idempotentMark);
         return rtn;
     }
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/warning/list?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/recordset/order/list?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<SupplyActRecordDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<SupplyActRecordDTO>> rtn = service.list(tenantCode);
+    public LangTuoResult<List<OrderActRecordDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        LangTuoResult<List<OrderActRecordDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -43,10 +42,10 @@ public class SupplyActRecordController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<SupplyActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public LangTuoResult<PageDTO<OrderActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopGroupCode") String shopGroupCode, @RequestParam("shopCode") String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<SupplyActRecordDTO>> rtn = service.search(tenantCode, shopGroupCode, shopCode,
+        LangTuoResult<PageDTO<OrderActRecordDTO>> rtn = service.search(tenantCode, shopGroupCode, shopCode,
                 pageNum, pageSize);
         return rtn;
     }
