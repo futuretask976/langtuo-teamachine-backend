@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.ruleset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class CleanRuleStepPutRequest {
@@ -48,4 +49,18 @@ public class CleanRuleStepPutRequest {
      * 是否需要再次确认
      */
     private int needConfirm;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (stepIndex <= 0) {
+            return false;
+        }
+        if (needConfirm == 1 && (StringUtils.isBlank(remindTitle) || StringUtils.isBlank(remindContent))) {
+            return false;
+        }
+        return true;
+    }
 }

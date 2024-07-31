@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.userset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -36,4 +37,25 @@ public class RolePutRequest {
      * 选中关联的权限点列表
      */
     private List<String> permitActCodeList;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(roleCode)
+                || StringUtils.isBlank(roleName)) {
+            return false;
+        }
+        if (permitActCodeList == null || permitActCodeList.size() == 0) {
+            return false;
+        }
+        for (String s : permitActCodeList) {
+            if (StringUtils.isBlank(s)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

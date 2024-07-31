@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.userset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -20,4 +21,17 @@ public class OrgPutRequest {
      * 父组织名称
      */
     private String parentOrgName;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(orgName)
+                || StringUtils.isBlank(parentOrgName)) {
+            return false;
+        }
+        return true;
+    }
 }

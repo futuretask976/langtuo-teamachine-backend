@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.ruleset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -20,4 +21,24 @@ public class CleanRuleDispatchPutRequest {
      * 店铺组编码列表
      */
     private List<String> shopGroupCodeList;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(cleanRuleCode)) {
+            return false;
+        }
+        if (shopGroupCodeList == null || shopGroupCodeList.size() == 0) {
+            return false;
+        }
+        for (String s : shopGroupCodeList) {
+            if (StringUtils.isBlank(s)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

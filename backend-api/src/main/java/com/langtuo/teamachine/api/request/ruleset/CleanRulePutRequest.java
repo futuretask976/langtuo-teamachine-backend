@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.ruleset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -30,12 +31,12 @@ public class CleanRulePutRequest {
     /**
      * 是否允许提醒，0：不允许，1：允许
      */
-    private Integer permitRemind;
+    private int permitRemind;
 
     /**
      * 是否允许批量，0：不允许，1：允许
      */
-    private Integer permitBatch;
+    private int permitBatch;
 
     /**
      * 排除物料编码列表
@@ -46,4 +47,34 @@ public class CleanRulePutRequest {
      * 清洁步骤列表
      */
     private List<CleanRuleStepPutRequest> cleanRuleStepList;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(cleanRuleCode)
+                || StringUtils.isBlank(cleanRuleName)) {
+            return false;
+        }
+        if (exceptToppingCodeList == null || exceptToppingCodeList.size() == 0) {
+            return false;
+        }
+        for (String s : exceptToppingCodeList) {
+            if (StringUtils.isBlank(s)) {
+                return false;
+            }
+        }
+
+        if (cleanRuleStepList == null || cleanRuleStepList.size() == 0) {
+            return false;
+        }
+        for (CleanRuleStepPutRequest c : cleanRuleStepList) {
+            if (!c.isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

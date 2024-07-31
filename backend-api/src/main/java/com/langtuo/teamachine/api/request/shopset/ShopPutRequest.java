@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.shopset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.Map;
@@ -46,4 +47,19 @@ public class ShopPutRequest {
      * 归属的组织架构
      */
     private String orgName;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(shopGroupCode)
+                || StringUtils.isBlank(shopCode)
+                || StringUtils.isBlank(shopName)
+                || StringUtils.isBlank(orgName)) {
+            return false;
+        }
+        return true;
+    }
 }

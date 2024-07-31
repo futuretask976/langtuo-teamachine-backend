@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.ruleset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -36,4 +37,25 @@ public class OpenRulePutRequest {
      * 包括物料列表
      */
     private List<OpenRuleToppingPutRequest> toppingRuleList;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(openRuleCode)
+                || StringUtils.isBlank(openRuleName)) {
+            return false;
+        }
+        if (toppingRuleList == null || toppingRuleList.size() == 0) {
+            return false;
+        }
+        for (OpenRuleToppingPutRequest t : toppingRuleList) {
+            if (!t.isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

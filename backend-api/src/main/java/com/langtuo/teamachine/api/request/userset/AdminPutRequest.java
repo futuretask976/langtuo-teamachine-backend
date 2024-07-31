@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.userset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -40,4 +41,19 @@ public class AdminPutRequest {
      * 组织名称
      */
     private String orgName;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(loginName)
+                || StringUtils.isBlank(loginPass)
+                || StringUtils.isBlank(roleCode)
+                || StringUtils.isBlank(orgName)) {
+            return false;
+        }
+        return true;
+    }
 }

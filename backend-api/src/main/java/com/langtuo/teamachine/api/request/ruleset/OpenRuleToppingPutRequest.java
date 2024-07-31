@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.ruleset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -21,4 +22,17 @@ public class OpenRuleToppingPutRequest {
      * 排空重量
      */
     private int flushWeight;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(toppingCode)
+                || flushSec <= 0
+                || flushWeight <= 0) {
+            return false;
+        }
+        return true;
+    }
 }

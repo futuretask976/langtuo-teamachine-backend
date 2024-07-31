@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.ruleset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -51,4 +52,17 @@ public class CloseRulePutRequest {
      *
      */
     private int flushSec;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(closeRuleCode)
+                || StringUtils.isBlank(closeRuleName)) {
+            return false;
+        }
+        return true;
+    }
 }

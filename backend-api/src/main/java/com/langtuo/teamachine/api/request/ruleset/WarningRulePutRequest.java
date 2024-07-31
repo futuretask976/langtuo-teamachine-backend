@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.ruleset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -51,4 +52,17 @@ public class WarningRulePutRequest {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(warningRuleCode)
+                || StringUtils.isBlank(warningRuleName)) {
+            return false;
+        }
+        return true;
+    }
 }

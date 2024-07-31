@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.userset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -40,4 +41,18 @@ public class TenantPutRequest {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(tenantName)
+                || StringUtils.isBlank(contactPerson)
+                || StringUtils.isBlank(contactPhone)) {
+            return false;
+        }
+        return true;
+    }
 }
