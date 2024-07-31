@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.web.security.model;
 
+import com.langtuo.teamachine.api.model.userset.AdminDTO;
 import org.assertj.core.util.Lists;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,16 +13,11 @@ import java.util.List;
  * 不过为了扩展，这里依然使用自定义的GxUserDetails
  * @author miya
  */
-public class TeaMachineUserDetails implements UserDetails {
+public class AdminDetails implements UserDetails {
     /**
      *
      */
-    private String loginName;
-
-    /**
-     *
-     */
-    private String loginPass;
+    private AdminDTO admin;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -37,12 +33,12 @@ public class TeaMachineUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "root";
+        return admin.getLoginPass();
     }
 
     @Override
     public String getUsername() {
-        return "admin";
+        return admin.getLoginName();
     }
 
     @Override

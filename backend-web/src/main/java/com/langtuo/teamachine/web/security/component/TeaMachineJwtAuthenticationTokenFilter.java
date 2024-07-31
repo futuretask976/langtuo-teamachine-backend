@@ -45,17 +45,20 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
         String authHeader = request.getHeader(this.tokenHeader);
         System.out.println("$$$$$ TeaMachineJwtAuthenticationTokenFilter#doFilterInternal authHeader=" + authHeader);
         if (authHeader != null) {
+            String authToken = null;
             if (authHeader.startsWith(this.tokenHead4Admin)) {
-                String authToken = authHeader.substring(this.tokenHead4Admin.length()); // The part after "Bearer "
-                String userName = jwtTokenHelper.getUserNameFromToken(authToken);
-                if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
-                    if (jwtTokenHelper.validateToken(authToken, userDetails)) {
-                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
-                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                    }
+                authHeader.substring(this.tokenHead4Admin.length()); // The part after "Bearer "
+            } else if (authHeader.startsWith(this.tokenHead4Machine)) {
+                authHeader.substring(this.tokenHead4Machine.length()); // The part after "Bearer "
+            }
+            String userName = jwtTokenHelper.getUserNameFromToken(authToken);
+            if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
+                if (jwtTokenHelper.validateToken(authToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         }
