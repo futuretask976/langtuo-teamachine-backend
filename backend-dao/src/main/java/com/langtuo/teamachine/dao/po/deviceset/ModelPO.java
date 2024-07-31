@@ -24,6 +24,11 @@ public class ModelPO {
     private Date gmtModified;
 
     /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 型号编码
      */
     private String modelCode;
