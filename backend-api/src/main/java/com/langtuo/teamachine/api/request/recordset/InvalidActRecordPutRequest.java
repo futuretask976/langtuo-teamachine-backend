@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.recordset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -51,10 +52,28 @@ public class InvalidActRecordPutRequest {
     /**
      * 管道序号
      */
-    private Integer pipelineNum;
+    private int pipelineNum;
 
     /**
      * 失效数量
      */
-    private Integer invalidAmount;
+    private int invalidAmount;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(idempotentMark)
+                || StringUtils.isBlank(machineCode)
+                || StringUtils.isBlank(shopCode)
+                || StringUtils.isBlank(shopGroupCode)
+                || invalidTime == null
+                || StringUtils.isBlank(toppingCode)
+                || pipelineNum <= 0) {
+            return false;
+        }
+        return true;
+    }
 }

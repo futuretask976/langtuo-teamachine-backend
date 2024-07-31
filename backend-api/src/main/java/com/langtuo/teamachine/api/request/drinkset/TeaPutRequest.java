@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.drinkset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -51,4 +52,27 @@ public class TeaPutRequest {
      * 茶-物料关系列表
      */
     private List<TeaUnitPutRequest> teaUnitList;
+
+    /**
+     * 参数校验
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(teaCode)
+                || StringUtils.isBlank(teaName)
+                || StringUtils.isBlank(outerTeaCode)
+                || StringUtils.isBlank(teaTypeCode)) {
+            return false;
+        }
+        if (teaUnitList == null || teaUnitList.size() == 0) {
+            return false;
+        }
+        for (TeaUnitPutRequest t : teaUnitList) {
+            if (!t.isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

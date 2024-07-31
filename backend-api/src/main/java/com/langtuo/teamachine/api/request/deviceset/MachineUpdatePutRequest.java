@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.deviceset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class MachineUpdatePutRequest {
     /**
      * 机器状态，0：禁用，1：启用
      */
-    private Integer state;
+    private int state;
 
     /**
      * 有效期
@@ -51,4 +52,21 @@ public class MachineUpdatePutRequest {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    /**
+     * 参数校验
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(machineCode)
+                || StringUtils.isBlank(machineName)
+                || StringUtils.isBlank(screenCode)
+                || StringUtils.isBlank(elecBoardCode)
+                || validUntil == null
+                || maintainUntil == null) {
+            return false;
+        }
+        return true;
+    }
 }

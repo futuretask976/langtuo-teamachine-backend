@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.recordset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.Map;
@@ -56,4 +57,22 @@ public class SupplyActRecordPutRequest {
      * 补充数量
      */
     private Integer supplyAmount;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(idempotentMark)
+                || StringUtils.isBlank(machineCode)
+                || StringUtils.isBlank(shopCode)
+                || StringUtils.isBlank(shopGroupCode)
+                || supplyTime == null
+                || StringUtils.isBlank(toppingCode)
+                || pipelineNum <= 0) {
+            return false;
+        }
+        return true;
+    }
 }

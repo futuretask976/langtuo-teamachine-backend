@@ -28,7 +28,7 @@ public class SupplyActRecordPO {
     private String tenantCode;
 
     /**
-     * 额外信息
+     * 额外信息，格式：a:b;c:d
      */
     private Map<String,String> extraInfo;
 
@@ -58,7 +58,7 @@ public class SupplyActRecordPO {
     private Date supplyTime;
 
     /**
-     * 物料名称
+     * 物料编码
      */
     private String toppingCode;
 

@@ -32,7 +32,7 @@ public class SeriesTeaRelPO {
     private String seriesCode;
 
     /**
-     * 茶饮编码
+     * 茶品编码
      */
     private String teaCode;
 }

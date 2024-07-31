@@ -58,7 +58,7 @@ public class MachinePO {
     private String modelCode;
 
     /**
-     * 机器状态，0：禁用，1：启用
+     * 状态，0：禁用，1：启用
      */
     private int state;
 

@@ -38,7 +38,7 @@ public class OrderToppingActRecordPO {
     private int stepIndex;
 
     /**
-     * 设备编码
+     * 物料编码
      */
     private String toppingCode;
 

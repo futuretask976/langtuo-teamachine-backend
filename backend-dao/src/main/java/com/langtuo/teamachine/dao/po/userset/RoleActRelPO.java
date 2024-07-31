@@ -33,7 +33,7 @@ public class RoleActRelPO {
     private String roleCode;
 
     /**
-     * 权限编码
+     * 权限点编码
      */
     private String permitActCode;
 }

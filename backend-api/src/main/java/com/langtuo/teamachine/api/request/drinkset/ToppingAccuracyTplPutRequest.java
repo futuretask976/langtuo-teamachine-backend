@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.drinkset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -60,4 +61,18 @@ public class ToppingAccuracyTplPutRequest {
      * 备注
      */
     private String comment;
+
+    /**
+     * 参数校验
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(templateCode)
+                || StringUtils.isBlank(templateName)
+                || StringUtils.isBlank(toppingCode)) {
+            return false;
+        }
+        return true;
+    }
 }

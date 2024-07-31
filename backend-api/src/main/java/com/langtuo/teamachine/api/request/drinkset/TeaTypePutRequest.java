@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.drinkset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -35,4 +36,17 @@ public class TeaTypePutRequest {
      * 店铺类型，0：禁用，1：启用
      */
     private int state;
+
+    /**
+     * 参数校验
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(teaTypeCode)
+                || StringUtils.isBlank(teaTypeName)) {
+            return false;
+        }
+        return true;
+    }
 }

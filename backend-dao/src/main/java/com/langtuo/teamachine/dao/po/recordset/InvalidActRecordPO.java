@@ -28,7 +28,7 @@ public class InvalidActRecordPO {
     private String tenantCode;
 
     /**
-     * 额外信息
+     * 额外信息，格式：a:b;c:d
      */
     private Map<String,String> extraInfo;
 

@@ -28,7 +28,7 @@ public class OrderActRecordPO {
     private String tenantCode;
 
     /**
-     * 额外信息
+     * 额外信息，格式：a:b;c:d
      */
     private Map<String,String> extraInfo;
 
@@ -38,7 +38,7 @@ public class OrderActRecordPO {
     private String idempotentMark;
 
     /**
-     * 设备编码
+     * 机器编码
      */
     private String machineCode;
 

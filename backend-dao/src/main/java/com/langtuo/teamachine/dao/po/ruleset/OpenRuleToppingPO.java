@@ -27,12 +27,12 @@ public class OpenRuleToppingPO {
     private String tenantCode;
 
     /**
-     * 清洁规则编码
+     * 开业规则编码
      */
     private String openRuleCode;
 
     /**
-     * 清洁物料编码
+     * 物料编码
      */
     private String toppingCode;
 

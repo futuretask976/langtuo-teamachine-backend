@@ -28,7 +28,7 @@ public class CleanActRecordPO {
     private String tenantCode;
 
     /**
-     * 额外信息
+     * 额外信息，格式：a:b;c:d
      */
     private Map<String,String> extraInfo;
 
@@ -68,7 +68,7 @@ public class CleanActRecordPO {
     private String toppingCode;
 
     /**
-     * 管道号
+     * 管道序号
      */
     private int pipelineNum;
 
@@ -83,12 +83,12 @@ public class CleanActRecordPO {
     private String cleanRuleCode;
 
     /**
-     * 开业准备规则
+     * 开业规则编码
      */
     private String openRuleCode;
 
     /**
-     * 打烊准备规则
+     * 打烊规则编码
      */
     private String closeRuleCode;
 

@@ -63,12 +63,12 @@ public class ToppingPO {
     private int state;
 
     /**
-     * 有效周期
+     * 有效周期（单位：小时）
      */
     private int validHourPeriod;
 
     /**
-     * 清洗周期
+     * 清洗周期（单位：小时）
      */
     private int cleanHourPeriod;
 

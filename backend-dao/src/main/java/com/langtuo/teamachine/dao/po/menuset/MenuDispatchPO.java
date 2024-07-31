@@ -33,7 +33,7 @@ public class MenuDispatchPO {
     private String menuCode;
 
     /**
-     * 店铺编码
+     * 店铺组编码
      */
     private String shopGroupCode;
 }

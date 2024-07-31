@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.drinkset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -41,4 +42,25 @@ public class SpecPutRequest {
      *
      */
     private List<SpecItemPutRequest> specItemList;
+
+    /**
+     * 参数校验
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(specCode)
+                || StringUtils.isBlank(specName)) {
+            return false;
+        }
+        if (specItemList == null || specItemList.size() == 0) {
+            return false;
+        }
+        for (SpecItemPutRequest s : specItemList) {
+            if (!s.isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.drinkset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class ToppingAdjustRulePutRequest {
@@ -33,4 +34,16 @@ public class ToppingAdjustRulePutRequest {
      * 调整用量
      */
     private int adjustAmount;
+
+    /**
+     * 参数校验
+     * @return
+     */
+    public boolean isValid() {
+        if (stepIndex <= 0
+                || StringUtils.isBlank(toppingCode)) {
+            return false;
+        }
+        return true;
+    }
 }

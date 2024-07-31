@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.drinkset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class ToppingPutRequest {
     /**
      * 计量单位
      */
-    private Integer measureUnit;
+    private int measureUnit;
 
     /**
      * 状态，0：禁用，1：启用
@@ -65,4 +66,17 @@ public class ToppingPutRequest {
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;
+
+    /**
+     * 参数校验
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(toppingName)
+                || StringUtils.isBlank(toppingTypeCode)) {
+            return false;
+        }
+        return true;
+    }
 }

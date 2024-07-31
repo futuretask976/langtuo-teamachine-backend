@@ -33,12 +33,12 @@ public class CloseRulePO {
     private Map<String, String> extraInfo;
 
     /**
-     * 清洁规则编码
+     * 打烊规则编码
      */
     private String closeRuleCode;
 
     /**
-     * 清洁规则名称
+     * 打烊规则名称
      */
     private String closeRuleName;
 

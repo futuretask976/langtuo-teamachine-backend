@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.recordset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.Map;
@@ -101,4 +102,32 @@ public class CleanActRecordPutRequest {
      * 浸泡期间冲洗时间（单位：秒）
      */
     private int flushSec;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(idempotentMark)
+                || StringUtils.isBlank(machineCode)
+                || StringUtils.isBlank(shopCode)
+                || StringUtils.isBlank(shopGroupCode)
+                || cleanStartTime == null
+                || cleanEndTime == null) {
+            return false;
+        }
+
+        if (cleanType == 0 && StringUtils.isBlank(cleanRuleCode)) {
+            return false;
+        }
+        if (cleanType == 2 && StringUtils.isBlank(openRuleCode)) {
+            return false;
+        }
+        if (cleanType == 3 && StringUtils.isBlank(closeRuleCode)) {
+            return false;
+        }
+
+        return true;
+    }
 }

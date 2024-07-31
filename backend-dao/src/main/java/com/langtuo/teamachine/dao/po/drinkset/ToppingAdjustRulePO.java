@@ -27,7 +27,7 @@ public class ToppingAdjustRulePO {
     private String tenantCode;
 
     /**
-     * 茶饮编码
+     * 茶品编码
      */
     private String teaCode;
 
@@ -37,7 +37,7 @@ public class ToppingAdjustRulePO {
     private String teaUnitCode;
 
     /**
-     * 步骤，从1开始
+     * 步骤序号，从1开始
      */
     private int stepIndex;
 

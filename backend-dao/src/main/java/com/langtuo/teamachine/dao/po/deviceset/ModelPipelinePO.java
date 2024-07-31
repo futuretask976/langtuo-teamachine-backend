@@ -28,7 +28,7 @@ public class ModelPipelinePO {
     private String modelCode;
 
     /**
-     * 管道号
+     * 管道序号
      */
     private int pipelineNum;
 

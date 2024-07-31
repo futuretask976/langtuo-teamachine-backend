@@ -53,7 +53,7 @@ public class TenantPO {
     private String contactPhone;
 
     /**
-     * 租户图片
+     * 图片链接
      */
     private String imgLink;
 }

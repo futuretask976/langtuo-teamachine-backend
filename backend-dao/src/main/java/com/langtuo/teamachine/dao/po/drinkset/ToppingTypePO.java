@@ -48,7 +48,7 @@ public class ToppingTypePO {
     private String toppingTypeName;
 
     /**
-     * 店铺类型，0：禁用，1：启用
+     * 状态，0：禁用，1：启用
      */
     private int state;
 }

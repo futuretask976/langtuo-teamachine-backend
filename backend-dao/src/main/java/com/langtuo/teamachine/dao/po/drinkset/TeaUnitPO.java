@@ -38,12 +38,12 @@ public class TeaUnitPO {
     private String teaUnitCode;
 
     /**
-     *
+     * 茶品unit名称
      */
     private String teaUnitName;
 
     /**
-     * 规格子项编码
+     * 规格项编码
      */
     private String specItemCode;
 }

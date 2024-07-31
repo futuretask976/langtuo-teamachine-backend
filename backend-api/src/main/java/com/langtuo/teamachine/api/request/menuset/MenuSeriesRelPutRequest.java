@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.menuset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class MenuSeriesRelPutRequest {
@@ -13,4 +14,16 @@ public class MenuSeriesRelPutRequest {
      * 系列编码
      */
     private String seriesCode;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(menuCode)
+                || StringUtils.isBlank(seriesCode)) {
+            return false;
+        }
+        return true;
+    }
 }

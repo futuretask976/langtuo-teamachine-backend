@@ -48,7 +48,7 @@ public class TeaTypePO {
     private String teaTypeName;
 
     /**
-     * 店铺类型，0：禁用，1：启用
+     * 状态，0：禁用，1：启用
      */
     private int state;
 }

@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.request.menuset;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -41,4 +42,26 @@ public class SeriesPutRequest {
      * 系列-茶品关系
      */
     private List<SeriesTeaRelPutRequest> seriesTeaRelList;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (StringUtils.isBlank(tenantCode)
+                || StringUtils.isBlank(seriesCode)
+                || StringUtils.isBlank(seriesName)
+                || StringUtils.isBlank(imgLink)) {
+            return false;
+        }
+        if (seriesTeaRelList == null || seriesTeaRelList.size() == 0) {
+            return false;
+        }
+        for (SeriesTeaRelPutRequest s : seriesTeaRelList) {
+            if (!s.isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

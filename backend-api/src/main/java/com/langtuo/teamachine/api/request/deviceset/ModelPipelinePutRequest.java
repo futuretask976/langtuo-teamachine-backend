@@ -7,15 +7,26 @@ public class ModelPipelinePutRequest {
     /**
      * 同MachineModelPipelineDTO
      */
-    private Integer pipelineNum;
+    private int pipelineNum;
 
     /**
      * 同MachineModelPipelineDTO
      */
-    private Integer enableFreeze;
+    private int enableFreeze;
 
     /**
      * 同MachineModelPipelineDTO
      */
-    private Integer enableWarm;
+    private int enableWarm;
+
+    /**
+     * 参数校验
+     * @return
+     */
+    public boolean isValid() {
+        if (pipelineNum == 0) {
+            return false;
+        }
+        return true;
+    }
 }
