@@ -94,8 +94,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
     @Override
     public LangTuoResult<Void> put(SeriesPutRequest request) {
-        if (request == null
-                || StringUtils.isBlank(request.getTenantCode())) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

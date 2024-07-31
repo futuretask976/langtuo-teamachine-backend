@@ -84,17 +84,14 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(ModelPutRequest modelPutRequest) {
-        if (modelPutRequest == null
-                || StringUtils.isBlank(modelPutRequest.getModelCode())
-                || modelPutRequest.getEnableFlowAll() == null
-                || CollectionUtils.isEmpty(modelPutRequest.getPipelineList())) {
+    public LangTuoResult<Void> put(ModelPutRequest request) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        String modelCode = modelPutRequest.getModelCode();
-        ModelPO modelPO = convert(modelPutRequest);
-        List<ModelPipelinePO> modelPipelinePOList = convert(modelCode, modelPutRequest.getPipelineList());
+        String modelCode = request.getModelCode();
+        ModelPO modelPO = convert(request);
+        List<ModelPipelinePO> modelPipelinePOList = convert(modelCode, request.getPipelineList());
 
         LangTuoResult<Void> langTuoResult = null;
         try {

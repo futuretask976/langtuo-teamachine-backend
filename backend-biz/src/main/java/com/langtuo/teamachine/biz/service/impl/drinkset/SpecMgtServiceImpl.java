@@ -93,13 +93,13 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(SpecPutRequest specPutRequest) {
-        if (specPutRequest == null) {
+    public LangTuoResult<Void> put(SpecPutRequest request) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        SpecPO specPO = convert(specPutRequest);
-        List<SpecItemPO> specItemPOList = convertToSpecItemPO(specPutRequest);
+        SpecPO specPO = convert(request);
+        List<SpecItemPO> specItemPOList = convertToSpecItemPO(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {

@@ -92,7 +92,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     @Override
     public LangTuoResult<Void> put(ShopPutRequest request) {
-        if (request == null) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

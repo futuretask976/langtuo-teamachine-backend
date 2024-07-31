@@ -107,7 +107,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
     @Override
     public LangTuoResult<Void> put(CleanRulePutRequest request) {
-        if (request == null) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

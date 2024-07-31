@@ -111,7 +111,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
     @Override
     public LangTuoResult<Void> put(TeaPutRequest request) {
-        if (request == null) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

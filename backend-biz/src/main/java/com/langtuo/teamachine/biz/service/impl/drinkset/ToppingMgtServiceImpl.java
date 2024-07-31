@@ -87,15 +87,12 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(ToppingPutRequest toppingPutRequest) {
-        if (toppingPutRequest == null
-                || StringUtils.isBlank(toppingPutRequest.getTenantCode())
-                || StringUtils.isBlank(toppingPutRequest.getToppingCode())
-                || StringUtils.isBlank(toppingPutRequest.getToppingName())) {
+    public LangTuoResult<Void> put(ToppingPutRequest request) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        ToppingPO toppingTypePO = convert(toppingPutRequest);
+        ToppingPO toppingTypePO = convert(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {

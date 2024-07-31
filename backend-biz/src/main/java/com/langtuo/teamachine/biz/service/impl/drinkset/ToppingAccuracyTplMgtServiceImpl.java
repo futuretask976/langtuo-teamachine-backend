@@ -91,7 +91,7 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
 
     @Override
     public LangTuoResult<Void> put(ToppingAccuracyTplPutRequest request) {
-        if (request == null) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
         ToppingAccuracyTplPO po = convert(request);

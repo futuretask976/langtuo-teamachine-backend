@@ -97,10 +97,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
     @Override
     public LangTuoResult<Void> put(OrgPutRequest request) {
-        if (request == null
-                || StringUtils.isBlank(request.getTenantCode())
-                || StringUtils.isBlank(request.getOrgName())
-                || StringUtils.isBlank(request.getParentOrgName())) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

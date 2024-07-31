@@ -77,12 +77,12 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(DeployPutRequest deployPutRequest) {
-        if (deployPutRequest == null) {
+    public LangTuoResult<Void> put(DeployPutRequest request) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        DeployPO deployPO = convert(deployPutRequest);
+        DeployPO deployPO = convert(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {

@@ -98,7 +98,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
 
     @Override
     public LangTuoResult<Void> put(OpenRulePutRequest request) {
-        if (request == null) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

@@ -88,7 +88,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
 
     @Override
     public LangTuoResult<Void> put(CleanActRecordPutRequest request) {
-        if (request == null) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

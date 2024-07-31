@@ -101,8 +101,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Override
     public LangTuoResult<Void> put(MenuPutRequest request) {
-        if (request == null
-                || StringUtils.isBlank(request.getTenantCode())) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

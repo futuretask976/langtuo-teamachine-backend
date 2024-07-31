@@ -94,7 +94,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Override
     public LangTuoResult<Void> activate(MachineActivatePutRequest request) {
-        if (request == null) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

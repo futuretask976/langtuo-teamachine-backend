@@ -88,7 +88,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
 
     @Override
     public LangTuoResult<Void> put(SupplyActRecordPutRequest request) {
-        if (request == null) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 

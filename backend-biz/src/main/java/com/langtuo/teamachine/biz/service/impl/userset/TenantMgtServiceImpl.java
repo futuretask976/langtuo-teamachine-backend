@@ -72,18 +72,13 @@ public class TenantMgtServiceImpl implements TenantMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(TenantPutRequest tenantPutRequest) {
-        if (tenantPutRequest == null
-                || StringUtils.isBlank(tenantPutRequest.getTenantCode())
-                || StringUtils.isBlank(tenantPutRequest.getTenantName())
-                || StringUtils.isBlank(tenantPutRequest.getContactPerson())
-                || StringUtils.isBlank(tenantPutRequest.getContactPhone())
-                || StringUtils.isBlank(tenantPutRequest.getImgLink())) {
+    public LangTuoResult<Void> put(TenantPutRequest request) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        String tenantCode = tenantPutRequest.getTenantCode();
-        TenantPO tenantPO = convert(tenantPutRequest);
+        String tenantCode = request.getTenantCode();
+        TenantPO tenantPO = convert(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {

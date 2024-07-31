@@ -87,7 +87,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
     @Override
     public LangTuoResult<Void> put(WarningRulePutRequest request) {
-        if (request == null) {
+        if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
