@@ -23,7 +23,7 @@ spring:
 jwt:
   tokenHeader: Authorization #JWT存储的请求头
   secret: teamachine-secret #JWT加解密使用的密钥
-  expiration: 604800 #JWT的超期限时间(60*60*24*7)
+  expiration: 604800 #JWT的超期限时间，单位分钟(60*60*24*7)
   tokenHead4Admin: 'AdminBearer '  #JWT负载中拿到开头
   tokenHead4Machine: 'MachineBearer '  #JWT负载中拿到开头
 
@@ -47,12 +47,9 @@ secure:
       - /favicon.ico
       - /actuator/**
       - /druid/**
-      - /**
-      - /machine/**
-      - /machine/model/**
-      - /user/tenant/**
-      - /test001
-      - /bye
+      - /login/**
+      - /logout/**
+      - /userset/tenant/list/**
 
 server:
   servlet:

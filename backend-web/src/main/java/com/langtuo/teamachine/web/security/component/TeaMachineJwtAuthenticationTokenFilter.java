@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,8 @@ import java.io.IOException;
 /**
  * JWT登录授权过滤器
  */
+@Slf4j
 public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TeaMachineJwtAuthenticationTokenFilter.class);
-
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -43,13 +43,13 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String authHeader = request.getHeader(this.tokenHeader);
-        System.out.println("$$$$$ TeaMachineJwtAuthenticationTokenFilter#doFilterInternal authHeader=" + authHeader);
+        log.info("$$$$$ authHeader=" + authHeader + ", url=" + request.getRequestURL());
         if (authHeader != null) {
             String authToken = null;
             if (authHeader.startsWith(this.tokenHead4Admin)) {
-                authHeader.substring(this.tokenHead4Admin.length()); // The part after "Bearer "
+                authToken = authHeader.substring(this.tokenHead4Admin.length()); // The part after "Bearer "
             } else if (authHeader.startsWith(this.tokenHead4Machine)) {
-                authHeader.substring(this.tokenHead4Machine.length()); // The part after "Bearer "
+                authToken = authHeader.substring(this.tokenHead4Machine.length()); // The part after "Bearer "
             }
             String userName = jwtTokenHelper.getUserNameFromToken(authToken);
             if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {

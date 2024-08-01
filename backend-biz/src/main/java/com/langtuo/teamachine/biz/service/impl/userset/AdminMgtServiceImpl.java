@@ -7,6 +7,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.userset.AdminPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.userset.AdminMgtService;
+import com.langtuo.teamachine.api.service.userset.RoleMgtService;
 import com.langtuo.teamachine.dao.accessor.userset.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.userset.AdminRoleAccessor;
 import com.langtuo.teamachine.dao.po.userset.AdminPO;
@@ -17,12 +18,16 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class AdminMgtServiceImpl implements AdminMgtService {
+    @Resource
+    private RoleMgtService roleMgtService;
+
     @Resource
     private AdminAccessor adminAccessor;
 
@@ -31,10 +36,14 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
     @Override
     public LangTuoResult<AdminDTO> get(String tenantCode, String loginName) {
-        AdminPO adminPO = adminAccessor.selectOne(tenantCode, loginName);
-        RolePO rolePO = adminRoleAccessor.selectOne(tenantCode, adminPO.getRoleCode());
+        // 超级管理员特殊逻辑
+        AdminDTO superAdmin = getSysSuperAdmin(loginName);
+        if (superAdmin != null) {
+            return LangTuoResult.success(superAdmin);
+        }
 
-        AdminDTO adminRoleDTO = convert(adminPO, rolePO);
+        AdminPO adminPO = adminAccessor.selectOne(tenantCode, loginName);
+        AdminDTO adminRoleDTO = convert(adminPO);
         return LangTuoResult.success(adminRoleDTO);
     }
 
@@ -61,10 +70,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             PageInfo<AdminPO> pageInfo = adminAccessor.search(tenantCode, loginName, roleCode,
                     pageNum, pageSize);
             List<AdminDTO> dtoList = pageInfo.getList().stream()
-                    .map(adminPO -> {
-                        RolePO rolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
-                        return convert(adminPO, rolePO);
-                    })
+                    .map(adminPO -> convert(adminPO))
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
@@ -81,10 +88,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         try {
             List<AdminPO> list = adminAccessor.selectList(tenantCode);
             List<AdminDTO> dtoList = list.stream()
-                    .map(adminPO -> {
-                        RolePO rolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
-                        return convert(adminPO, rolePO);
-                    })
+                    .map(adminPO -> convert(adminPO))
                     .collect(Collectors.toList());
 
             langTuoResult = LangTuoResult.success(dtoList);
@@ -136,8 +140,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         return langTuoResult;
     }
 
-    private AdminDTO convert(AdminPO adminPO, RolePO rolePO) {
-        if (adminPO == null || rolePO == null) {
+    private AdminDTO convert(AdminPO adminPO) {
+        if (adminPO == null) {
             return null;
         }
 
@@ -151,6 +155,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         dto.setComment(adminPO.getComment());
         dto.setExtraInfo(adminPO.getExtraInfo());
 
+        RolePO rolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
         dto.setRoleCode(rolePO.getRoleCode());
         dto.setRoleName(rolePO.getRoleName());
 
@@ -172,5 +177,23 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         po.setExtraInfo(request.getExtraInfo());
 
         return po;
+    }
+
+    /**
+     * 此方法返回系统超级管理员，不存储在数据库（因为如果存储数据库，必须指定tenant，而系统超级管理员不归属任何teanant）
+     * @return
+     */
+    public AdminDTO getSysSuperAdmin(String loginName) {
+        if (!"SYS_SUPER_ADMIN".equals(loginName)) {
+            return null;
+        }
+
+        AdminDTO dto = new AdminDTO();
+        dto.setLoginName("SYS_SUPER_ADMIN");
+        dto.setLoginPass("SYS_SUPER_ADMIN");
+        dto.setOrgName("总公司");
+        dto.setRoleCode("SYS_SUPER_ROLE");
+        dto.setRoleName("SYS_SUPER_ROLE");
+        return dto;
     }
 }

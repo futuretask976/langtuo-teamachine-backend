@@ -11,13 +11,13 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/drinkset/topping/accuracy/template")
-public class ToppingAccuracyTplController {
+@RequestMapping("/drinkset/accuracy")
+public class AccuracyController {
     @Resource
     private ToppingAccuracyTplMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/accuracy/template/tenant_001/shopGroup_001/get
+     * url: http://localhost:8080/teamachine/drinkset/accuracy/tenant_001/shopGroup_001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{templatecode}/get")
@@ -28,7 +28,7 @@ public class ToppingAccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/accuracy/template/list?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/drinkset/accuracy/list?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */
@@ -39,7 +39,7 @@ public class ToppingAccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/accuracy/template/search?tenantCode=tenant_001&specName=&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/drinkset/accuracy/search?tenantCode=tenant_001&specName=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -52,7 +52,7 @@ public class ToppingAccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/accuracy/template/put
+     * url: http://localhost:8080/teamachine/drinkset/accuracy/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -62,7 +62,7 @@ public class ToppingAccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/accuracy/template/{tenantcode}/{shopgroupcode}/delete
+     * url: http://localhost:8080/teamachine/drinkset/accuracy/{tenantcode}/{shopgroupcode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{templatecode}/delete")

@@ -2,17 +2,25 @@ package com.langtuo.teamachine.biz.service.impl.userset;
 
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.api.model.userset.AdminDTO;
+import com.langtuo.teamachine.api.model.userset.PermitActDTO;
+import com.langtuo.teamachine.api.model.userset.PermitActGroupDTO;
 import com.langtuo.teamachine.api.model.userset.RoleDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.userset.RolePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.service.userset.PermitActMgtService;
 import com.langtuo.teamachine.api.service.userset.RoleMgtService;
 import com.langtuo.teamachine.dao.accessor.userset.AdminRoleAccessor;
 import com.langtuo.teamachine.dao.accessor.userset.AdminRoleActRelAccessor;
+import com.langtuo.teamachine.dao.accessor.userset.PermitActAccessor;
+import com.langtuo.teamachine.dao.po.userset.PermitActGroupPO;
+import com.langtuo.teamachine.dao.po.userset.PermitActPO;
 import com.langtuo.teamachine.dao.po.userset.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.userset.RolePO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -29,8 +37,17 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     @Resource
     private AdminRoleActRelAccessor adminRoleActRelAccessor;
 
+    @Resource
+    private PermitActAccessor permitActAccessor;
+
     @Override
     public LangTuoResult<RoleDTO> get(String tenantCode, String roleCode) {
+        // 超级管理角色特殊逻辑
+        RoleDTO superRole = getSysSuperRole(roleCode);
+        if (superRole != null) {
+            return LangTuoResult.success(superRole);
+        }
+
         RolePO rolePO = adminRoleAccessor.selectOne(tenantCode, roleCode);
         RoleDTO roleDTO = convert(rolePO);
         return LangTuoResult.success(roleDTO);
@@ -156,6 +173,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         dto.setGmtModified(po.getGmtModified());
         dto.setRoleCode(po.getRoleCode());
         dto.setRoleName(po.getRoleName());
+        dto.setSysReserved(po.getSysReserved());
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
@@ -177,10 +195,10 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         RolePO po = new RolePO();
         po.setRoleCode(request.getRoleCode());
         po.setRoleName(request.getRoleName());
+        po.setSysReserved(request.getSysReserved());
         po.setComment(request.getComment());
         po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
-
         return po;
     }
 
@@ -196,5 +214,34 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             po.setPermitActCode(item);
             return po;
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * 此方法返回系统超级角色，不存储在数据库（因为如果存储数据库，必须指定tenant，而系统超级角色不归属任何teanant）
+     * @return
+     */
+    public RoleDTO getSysSuperRole(String roleCode) {
+        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
+            return null;
+        }
+
+        RoleDTO dto = new RoleDTO();
+        dto.setRoleCode("SYS_SUPER_ROLE");
+        dto.setRoleName("SYS_SUPER_ROLE");
+        dto.setSysReserved(1);
+
+        List<String> permitActCodeList = Lists.newArrayList();
+        List<PermitActGroupPO> permitActGroupList = permitActAccessor.selectPermitActGroupList();
+        for (PermitActGroupPO po : permitActGroupList) {
+            List<PermitActPO> permitActList = permitActAccessor.selectPermitActList(po.getPermitActGroupCode());
+            for (PermitActPO permitAct : permitActList) {
+                permitActCodeList.add(permitAct.getPermitActCode());
+            }
+        }
+        // 这个权限点通过代码增加无法在页面授予
+        permitActCodeList.add("tenant_mgt");
+        dto.setPermitActCodeList(permitActCodeList);
+
+        return dto;
     }
 }

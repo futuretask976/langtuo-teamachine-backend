@@ -21,9 +21,7 @@
     <select id="selectOne" resultMap="adminPOMap">
         SELECT * FROM admin
         WHERE 1 = 1
-            <if test="tenantCode != null">
-                AND tenant_code = #{tenantCode}
-            </if>
+            AND tenant_code = #{tenantCode}
             <if test="loginName != null">
                 AND login_name = #{loginName}
             </if>
@@ -31,19 +29,28 @@
 
     <select id="selectList" resultMap="adminPOMap">
         SELECT * FROM admin
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
     </select>
 
     <select id="search" resultMap="adminPOMap">
         SELECT * FROM admin
         WHERE 1 = 1
-            <if test="tenantCode != null">
-                AND tenant_code = #{tenantCode}
-            </if>
+            AND tenant_code = #{tenantCode}
             <if test="loginName != null">
                 AND login_name = #{loginName}
             </if>
             <if test="roleCode != null">
                 AND role_code = #{roleCode}
+            </if>
+    </select>
+
+    <select id="countByRole" resultType="int">
+        SELECT COUNT(1) FROM admin
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="roleCode != null">
+                AND role_Code = #{roleCode}
             </if>
     </select>
 

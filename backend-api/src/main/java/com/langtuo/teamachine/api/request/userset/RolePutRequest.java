@@ -34,6 +34,11 @@ public class RolePutRequest {
     private String roleName;
 
     /**
+     * 系统预留，0：不是，1：是
+     */
+    private int sysReserved;
+
+    /**
      * 选中关联的权限点列表
      */
     private List<String> permitActCodeList;

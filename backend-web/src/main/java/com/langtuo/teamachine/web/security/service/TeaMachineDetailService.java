@@ -2,10 +2,13 @@ package com.langtuo.teamachine.web.security.service;
 
 import com.langtuo.teamachine.api.model.deviceset.MachineDTO;
 import com.langtuo.teamachine.api.model.userset.AdminDTO;
+import com.langtuo.teamachine.api.model.userset.RoleDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.deviceset.MachineMgtService;
 import com.langtuo.teamachine.api.service.userset.AdminMgtService;
+import com.langtuo.teamachine.api.service.userset.RoleMgtService;
 import com.langtuo.teamachine.web.security.model.AdminDetails;
+import com.langtuo.teamachine.web.security.model.MachineDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +23,13 @@ public class TeaMachineDetailService implements UserDetailsService {
     @Autowired
     private HttpServletRequest request;
 
-    @Resource
+    @Autowired
     private AdminMgtService adminMgtService;
 
-    @Resource
+    @Autowired
+    private RoleMgtService roleMgtService;
+
+    @Autowired
     private MachineMgtService machineMgtService;
 
     @Override
@@ -49,38 +55,27 @@ public class TeaMachineDetailService implements UserDetailsService {
         }
         MachineDTO machineDTO = result.getModel();
 
-        AdminDetails adminDetails = new AdminDetails();
+        MachineDetails adminDetails = new MachineDetails(machineDTO);
         return adminDetails;
     }
 
     private UserDetails getAdminUserDetails(String userName) {
         String tenantCode = request.getParameter("tenantCode");
 
-        LangTuoResult<AdminDTO> result = adminMgtService.get(tenantCode, userName);
-        if (result == null && !result.isSuccess() || result.getModel() == null) {
+        LangTuoResult<AdminDTO> adminResult = adminMgtService.get(tenantCode, userName);
+        if (adminResult == null && !adminResult.isSuccess() || adminResult.getModel() == null) {
             return null;
         }
-        AdminDTO adminDTO = result.getModel();
+        AdminDTO adminDTO = adminResult.getModel();
 
-        AdminDetails adminDetails = new AdminDetails();
+        LangTuoResult<RoleDTO> roleResult = roleMgtService.get(tenantCode, adminDTO.getRoleCode());
+        if (roleResult == null && !roleResult.isSuccess() || roleResult.getModel() == null) {
+            return null;
+        }
+        RoleDTO roleDTO = roleResult.getModel();
+
+
+        AdminDetails adminDetails = new AdminDetails(adminDTO, roleDTO);
         return adminDetails;
-    }
-
-    private AdminDetails convert(AdminDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        AdminDetails userDetails = new AdminDetails();
-        return null;
-    }
-
-    private AdminDetails convert(MachineDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        AdminDetails userDetails = new AdminDetails();
-        return null;
     }
 }

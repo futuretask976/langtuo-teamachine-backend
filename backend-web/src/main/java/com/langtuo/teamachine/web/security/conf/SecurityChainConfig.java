@@ -90,9 +90,39 @@ public class SecurityChainConfig {
 
         // 配置授权处理，授权管理器可以配置多个
         httpSecurity.authorizeRequests()
-                .antMatchers("/test002").hasRole("USER")
-                .antMatchers("/test003").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/test004").hasAnyRole("ADMIN")
+                // 设备
+                .antMatchers("/deviceset/model/**").hasAnyRole("model_mgt")
+                .antMatchers("/deviceset/deploy/**").hasAnyRole("deploy_mgt")
+                .antMatchers("/deviceset/machine/**").hasAnyRole("machine_mgt")
+                // 用户
+                .antMatchers("/userset/tenant/**").hasAnyRole("tenant_mgt")
+                .antMatchers("/userset/org/**").hasAnyRole("org_mgt")
+                .antMatchers("/userset/permitact/**").hasAnyRole("role_mgt")
+                .antMatchers("/userset/role/**").hasAnyRole("role_mgt")
+                .antMatchers("/userset/admin/**").hasAnyRole("admin_mgt")
+                // 店铺
+                .antMatchers("/shopset/group/**").hasAnyRole("shop_group_mgt")
+                .antMatchers("/shopset/shop/**").hasAnyRole("shop_mgt")
+                // 饮品生产
+                .antMatchers("/drinkset/topping/type/**").hasAnyRole("topping_mgt")
+                .antMatchers("/drinkset/topping/**").hasAnyRole("topping_mgt")
+                .antMatchers("/drinkset/spec/**").hasAnyRole("spec_mgt")
+                .antMatchers("/drinkset/tea/**").hasAnyRole("tea_mgt")
+                .antMatchers("/drinkset/tea/type/**").hasAnyRole("tea_mgt")
+                .antMatchers("/drinkset/accuracy/**").hasAnyRole("accuracy_mgt")
+                // 菜单
+                .antMatchers("/menuset/series/**").hasAnyRole("series_mgt")
+                .antMatchers("/menuset/menu/**").hasAnyRole("menu_mgt")
+                // 食安规则
+                .antMatchers("/ruleset/open/**").hasAnyRole("open_rule_mgt")
+                .antMatchers("/ruleset/close/**").hasAnyRole("close_rule_mgt")
+                .antMatchers("/ruleset/clean/**").hasAnyRole("clean_rule_mgt")
+                .antMatchers("/ruleset/warning/**").hasAnyRole("warning_rule_mgt")
+                // 日常记录
+                .antMatchers("/recordset/clean/**").hasAnyRole("clean_rec_mgt")
+                .antMatchers("/recordset/invalid/**").hasAnyRole("invalid_rec_mgt")
+                .antMatchers("/recordset/order/**").hasAnyRole("order_rec_mgt")
+                .antMatchers("/recordset/supply/**").hasAnyRole("supply_rec_mgt")
                 .anyRequest().authenticated();
 
         // 异常处理

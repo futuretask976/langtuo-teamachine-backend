@@ -1,7 +1,6 @@
 package com.langtuo.teamachine.web.security.model;
 
 import com.langtuo.teamachine.api.model.deviceset.MachineDTO;
-import com.langtuo.teamachine.api.model.userset.AdminDTO;
 import org.assertj.core.util.Lists;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +17,11 @@ public class MachineDetails implements UserDetails {
     /**
      *
      */
-    private MachineDTO machine;
+    private MachineDTO machineDTO;
+
+    public MachineDetails(MachineDTO machineDTO) {
+        this.machineDTO = machineDTO;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -34,12 +37,12 @@ public class MachineDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return machine.getElecBoardCode();
+        return machineDTO.getElecBoardCode();
     }
 
     @Override
     public String getUsername() {
-        return machine.getMachineName();
+        return machineDTO.getMachineName();
     }
 
     @Override

@@ -46,4 +46,9 @@ public class RolePO {
      * 角色名称
      */
     private String roleName;
+
+    /**
+     * 系统预留，0：不是，1：是
+     */
+    private int sysReserved;
 }

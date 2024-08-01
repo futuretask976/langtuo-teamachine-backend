@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.web.security.model;
 
 import com.langtuo.teamachine.api.model.userset.AdminDTO;
+import com.langtuo.teamachine.api.model.userset.RoleDTO;
 import org.assertj.core.util.Lists;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,28 +18,40 @@ public class AdminDetails implements UserDetails {
     /**
      *
      */
-    private AdminDTO admin;
+    private AdminDTO adminDTO;
+
+    /**
+     *
+     */
+    private RoleDTO roleDTO;
+
+    public AdminDetails(AdminDTO adminDTO, RoleDTO roleDTO) {
+        this.adminDTO = adminDTO;
+        this.roleDTO = roleDTO;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> grantedAuthorityList = Lists.newArrayList();
-        grantedAuthorityList.add(new GrantedAuthority() {
-            public String getAuthority() {
-                // 系统在外面比较时，会加上ROLE_前缀，所以这里返回时需要加上
-                return "ROLE_ADMIN";
-            }
-        });
+        for (String permitActCode : roleDTO.getPermitActCodeList()) {
+            grantedAuthorityList.add(new GrantedAuthority() {
+                public String getAuthority() {
+                    // 系统在外面比较时，会加上ROLE_前缀，所以这里返回时需要加上
+                    return "ROLE_" + permitActCode;
+                }
+            });
+        }
         return grantedAuthorityList;
     }
 
     @Override
     public String getPassword() {
-        return admin.getLoginPass();
+        return adminDTO.getLoginPass();
     }
 
     @Override
     public String getUsername() {
-        return admin.getLoginName();
+        return adminDTO.getLoginName();
     }
 
     @Override

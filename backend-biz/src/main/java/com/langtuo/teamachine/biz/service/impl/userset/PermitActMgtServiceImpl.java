@@ -1,72 +1,60 @@
 package com.langtuo.teamachine.biz.service.impl.userset;
 
-import com.google.common.collect.Maps;
 import com.langtuo.teamachine.api.model.userset.PermitActDTO;
 import com.langtuo.teamachine.api.model.userset.PermitActGroupDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.userset.PermitActMgtService;
-import com.langtuo.teamachine.biz.service.constant.PermitActEnum;
-import com.langtuo.teamachine.biz.service.constant.PermitActGroupEnum;
+import com.langtuo.teamachine.dao.accessor.userset.PermitActAccessor;
+import com.langtuo.teamachine.dao.po.userset.PermitActGroupPO;
+import com.langtuo.teamachine.dao.po.userset.PermitActPO;
 import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class PermitActMgtServiceImpl implements PermitActMgtService {
-    private static Map<PermitActGroupEnum, List<PermitActEnum>> permitActGroupMap = Maps.newHashMap();
-    static {
-        for (PermitActEnum permitActEnum : PermitActEnum.values()) {
-            String permitActGroupCode = permitActEnum.getPermitActGroupCode();
-            PermitActGroupEnum permitActGroupEnum = PermitActGroupEnum.valueOfByCode(permitActGroupCode);
-            if (!permitActGroupMap.containsKey(permitActGroupEnum)) {
-                permitActGroupMap.put(permitActGroupEnum, com.google.common.collect.Lists.newArrayList());
-            }
-            permitActGroupMap.get(permitActGroupEnum).add(permitActEnum);
-        }
-    }
+    @Resource
+    private PermitActAccessor permitActAccessor;
 
     @Override
     public LangTuoResult<List<PermitActGroupDTO>> list() {
-        List<PermitActGroupDTO> resultModel = Lists.newArrayList();
-        Set<Map.Entry<PermitActGroupEnum, List<PermitActEnum>>> entrySet = permitActGroupMap.entrySet();
-        for (Map.Entry<PermitActGroupEnum, List<PermitActEnum>> entry : entrySet) {
-            PermitActGroupEnum permitActGroupEnum = entry.getKey();
-            List<PermitActEnum> permitActEnumList = entry.getValue();
-            PermitActGroupDTO permitActGroupDTO = convert(permitActGroupEnum);
-            List<PermitActDTO> PermitActDTOList = convert(permitActEnumList);
-            permitActGroupDTO.setPermitActList(PermitActDTOList);
-            resultModel.add(permitActGroupDTO);
+        List<PermitActGroupDTO> PermitActGroupList = Lists.newArrayList();
+        for (PermitActGroupPO po : permitActAccessor.selectPermitActGroupList()) {
+            PermitActGroupDTO permitActGroup = convert(po);
+            List<PermitActDTO> permitActList = convert(permitActAccessor.selectPermitActList(
+                    po.getPermitActGroupCode()));
+            permitActGroup.setPermitActList(permitActList);
+            PermitActGroupList.add(permitActGroup);
         }
-        return LangTuoResult.success(resultModel);
+        return LangTuoResult.success(PermitActGroupList);
     }
 
-    private PermitActGroupDTO convert(PermitActGroupEnum permitActGroupEnum) {
-        if (permitActGroupEnum == null) {
+    private PermitActGroupDTO convert(PermitActGroupPO permitActGroupPO) {
+        if (permitActGroupPO == null) {
             return null;
         }
 
         PermitActGroupDTO dto = new PermitActGroupDTO();
-        dto.setPermitActGroupCode(permitActGroupEnum.getPermitActGroupCode());
-        dto.setPermitActGroupName(permitActGroupEnum.getPermitActGroupName());
+        dto.setPermitActGroupCode(permitActGroupPO.getPermitActGroupCode());
+        dto.setPermitActGroupName(permitActGroupPO.getPermitActGroupName());
         return dto;
     }
 
-    private List<PermitActDTO> convert(List<PermitActEnum> permitActEnumList) {
-        if (CollectionUtils.isEmpty(permitActEnumList)) {
+    private List<PermitActDTO> convert(List<PermitActPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
-        List<PermitActDTO> list = permitActEnumList.stream()
-                .map(permitActEnum -> {
+        List<PermitActDTO> list = poList.stream()
+                .map(po -> {
                     PermitActDTO dto = new PermitActDTO();
-                    dto.setPermitActCode(permitActEnum.getPermitActCode());
-                    dto.setPermitActName(permitActEnum.getPermitActName());
-                    dto.setPermitActGroupCode(permitActEnum.getPermitActGroupCode());
+                    dto.setPermitActCode(po.getPermitActCode());
+                    dto.setPermitActName(po.getPermitActName());
+                    dto.setPermitActGroupCode(po.getPermitActGroupCode());
                     return dto;
                 })
                 .collect(Collectors.toList());

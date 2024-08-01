@@ -1,17 +1,19 @@
 package com.langtuo.teamachine.web.security.encoder;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@Slf4j
 public class MD5PasswordEncoder implements PasswordEncoder {
     private static final String SALT = "LANGTUO_GX";
 
     @Override
     public String encode(CharSequence rawPassword) {
-        System.out.printf("!!! MD5PasswordEncoder#encode rawPassword=%s\n", rawPassword);
+        log.info("rawPassword=" + rawPassword);
         try {
             // 使用JDK自带的MD5加密
             MessageDigest md5 = MessageDigest.getInstance("MD5");
@@ -20,7 +22,7 @@ public class MD5PasswordEncoder implements PasswordEncoder {
 
             return new String(bytes, StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error("digest error=" + e.getMessage(), e);
         }
         return null;
     }

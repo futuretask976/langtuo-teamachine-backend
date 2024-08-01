@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.biz.service.constant;
+package com.langtuo.teamachine.dao.constant;
 
 public enum PermitActGroupEnum {
     USER_SET("user_set", "用户"),
