@@ -37,7 +37,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     @Override
     public LangTuoResult<AdminDTO> get(String tenantCode, String loginName) {
         // 超级管理员特殊逻辑
-        AdminDTO superAdmin = getSysSuperAdmin(loginName);
+        AdminDTO superAdmin = getSysSuperAdmin(tenantCode, loginName);
         if (superAdmin != null) {
             return LangTuoResult.success(superAdmin);
         }
@@ -149,16 +149,18 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         dto.setId(adminPO.getId());
         dto.setGmtCreated(adminPO.getGmtCreated());
         dto.setGmtModified(adminPO.getGmtModified());
+        dto.setTenantCode(adminPO.getTenantCode());
+        dto.setComment(adminPO.getComment());
+        dto.setExtraInfo(adminPO.getExtraInfo());
         dto.setLoginName(adminPO.getLoginName());
         dto.setLoginPass(adminPO.getLoginPass());
         dto.setOrgName(adminPO.getOrgName());
-        dto.setComment(adminPO.getComment());
-        dto.setExtraInfo(adminPO.getExtraInfo());
 
         RolePO rolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
-        dto.setRoleCode(rolePO.getRoleCode());
-        dto.setRoleName(rolePO.getRoleName());
-
+        if (rolePO != null) {
+            dto.setRoleCode(rolePO.getRoleCode());
+            dto.setRoleName(rolePO.getRoleName());
+        }
         return dto;
     }
 
@@ -183,12 +185,13 @@ public class AdminMgtServiceImpl implements AdminMgtService {
      * 此方法返回系统超级管理员，不存储在数据库（因为如果存储数据库，必须指定tenant，而系统超级管理员不归属任何teanant）
      * @return
      */
-    public AdminDTO getSysSuperAdmin(String loginName) {
+    public AdminDTO getSysSuperAdmin(String tenantCode, String loginName) {
         if (!"SYS_SUPER_ADMIN".equals(loginName)) {
             return null;
         }
 
         AdminDTO dto = new AdminDTO();
+        dto.setTenantCode(tenantCode);
         dto.setLoginName("SYS_SUPER_ADMIN");
         dto.setLoginPass("SYS_SUPER_ADMIN");
         dto.setOrgName("总公司");

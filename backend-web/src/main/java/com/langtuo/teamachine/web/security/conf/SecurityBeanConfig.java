@@ -3,10 +3,9 @@ package com.langtuo.teamachine.web.security.conf;
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import com.langtuo.teamachine.web.security.component.*;
 import com.langtuo.teamachine.web.security.encoder.MD5PasswordEncoder;
-import com.langtuo.teamachine.web.security.service.TeaMachineDetailService;
+import com.langtuo.teamachine.web.security.service.TeaMachineUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -21,31 +20,26 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityBeanConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
-        System.out.printf("$$$$$ SecurityBaseConfig#passwordEncoder entering\n");
         return new MD5PasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService gxUserDetailService() {
-        System.out.printf("$$$$$ SecurityBaseConfig#userDetailsService entering\n");
-        return new TeaMachineDetailService();
+    public TeaMachineUserDetailService gxTeaMachineUserDetailService() {
+        return new TeaMachineUserDetailService();
     }
 
     @Bean
     public AccessDeniedHandler restfulAccessDeniedHandler() {
-        System.out.printf("$$$$$ SecurityBaseConfig#restfulAccessDeniedHandler entering\n");
         return new TeaMachineAccessDeniedHandler();
     }
 
     @Bean
     public AuthenticationEntryPoint restfulAuthenticationEntryPoint() {
-        System.out.printf("$$$$$ SecurityBaseConfig#restAuthenticationEntryPoint entering\n");
         return new TeaMachineAuthenticationEntryPoint();
     }
 
     @Bean
     public IgnoreUrlsConfig ignoreUrlsConfig() {
-        System.out.printf("$$$$$ SecurityBaseConfig#ignoreUrlsConfig entering\n");
         return new IgnoreUrlsConfig();
     }
 

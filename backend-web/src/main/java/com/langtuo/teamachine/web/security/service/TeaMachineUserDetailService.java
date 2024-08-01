@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.service.userset.RoleMgtService;
 import com.langtuo.teamachine.web.security.model.AdminDetails;
 import com.langtuo.teamachine.web.security.model.MachineDetails;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
-public class TeaMachineDetailService implements UserDetailsService {
+public class TeaMachineUserDetailService implements UserDetailsService {
     @Autowired
     private HttpServletRequest request;
 
@@ -34,21 +35,20 @@ public class TeaMachineDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        String from = request.getParameter("from");
-
-        UserDetails userDetails = null;
-        if ("MACHINE".equals(from)) {
-            userDetails = getMachineUserDetails(userName);
-        } else {
-            userDetails = getAdminUserDetails(userName);
+        // 会调用这里的是登录页面，或者没有经过认证，所以可以特殊处理
+        String tenantCode = request.getParameter("tenantCode");
+        if (StringUtils.isBlank(tenantCode)) {
+            throw new IllegalArgumentException("tenantCode is blank");
         }
-        return userDetails;
+        String from = request.getParameter("from");
+        if ("MACHINE".equals(from)) {
+            return loadMachineUserDetails(tenantCode, userName);
+        } else {
+            return loadAdminUserDetails(tenantCode, userName);
+        }
     }
 
-    private UserDetails getMachineUserDetails(String userName) {
-        String tenantCode = request.getParameter("tenantCode");
-        String machineCode = userName;
-
+    public UserDetails loadMachineUserDetails(String tenantCode, String machineCode) {
         LangTuoResult<MachineDTO> result = machineMgtService.get(tenantCode, machineCode);
         if (result == null && !result.isSuccess() || result.getModel() == null) {
             return null;
@@ -59,10 +59,8 @@ public class TeaMachineDetailService implements UserDetailsService {
         return adminDetails;
     }
 
-    private UserDetails getAdminUserDetails(String userName) {
-        String tenantCode = request.getParameter("tenantCode");
-
-        LangTuoResult<AdminDTO> adminResult = adminMgtService.get(tenantCode, userName);
+    public UserDetails loadAdminUserDetails(String tenantCode, String loginName) {
+        LangTuoResult<AdminDTO> adminResult = adminMgtService.get(tenantCode, loginName);
         if (adminResult == null && !adminResult.isSuccess() || adminResult.getModel() == null) {
             return null;
         }

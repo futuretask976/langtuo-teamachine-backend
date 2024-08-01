@@ -64,4 +64,12 @@ public class MachineDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    /**
+     *
+     * @return
+     */
+    public String getTenantCode() {
+        return machineDTO.getTenantCode();
+    }
 }

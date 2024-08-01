@@ -23,6 +23,11 @@ public class AdminDTO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
      * 备注
      */
     private String comment;

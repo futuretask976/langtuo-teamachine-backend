@@ -2,11 +2,12 @@ package com.langtuo.teamachine.web.helper;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.langtuo.teamachine.web.security.model.AdminDetails;
+import com.langtuo.teamachine.web.security.model.MachineDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -25,12 +26,14 @@ import java.util.Map;
  * HMACSHA512(base64UrlEncode(header) + "." +base64UrlEncode(payload),secret)
  * Created by macro on 2018/4/26.
  */
+@Slf4j
 public class JwtTokenHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenHelper.class);
-
-    private static final String CLAIM_KEY_USERNAME = "sub";
-
-    private static final String CLAIM_KEY_CREATED = "created";
+    /**
+     *
+     */
+    private static final String CLAIM_KEY_USER_NAME = "sub";
+    private static final String CLAIM_KEY_TENANT_CODE = "aud";
+    private static final String CLAIM_KEY_GMT_CREATED = "created";
 
     @Value("${jwt.secret}")
     private String secret;
@@ -45,8 +48,6 @@ public class JwtTokenHelper {
      * 根据负责生成JWT的token
      */
     private String generateToken(Map<String, Object> claims) {
-        System.out.printf("!!! GxJwtTokenHelper#generateToken HS512=%s, secret=%s\n", SignatureAlgorithm.HS512, secret);
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
@@ -65,7 +66,7 @@ public class JwtTokenHelper {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-            LOGGER.info("JWT格式验证失败:{}", token);
+            log.error("jwt format verify error: " + token, e);
         }
         return claims;
     }
@@ -89,6 +90,20 @@ public class JwtTokenHelper {
             username = null;
         }
         return username;
+    }
+
+    /**
+     * 从token中获取登录租户编码
+     */
+    public String getTenantCodeFromToken(String token) {
+        String tenantCode;
+        try {
+            Claims claims = getClaimsFromToken(token);
+            tenantCode = claims.getAudience();
+        } catch (Exception e) {
+            tenantCode = null;
+        }
+        return tenantCode;
     }
 
     /**
@@ -123,8 +138,13 @@ public class JwtTokenHelper {
      */
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
-        claims.put(CLAIM_KEY_CREATED, new Date());
+        claims.put(CLAIM_KEY_USER_NAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_GMT_CREATED, new Date());
+        if (userDetails instanceof AdminDetails) {
+            claims.put(CLAIM_KEY_TENANT_CODE, ((AdminDetails) userDetails).getTenantCode());
+        } else if (userDetails instanceof MachineDetails) {
+            claims.put(CLAIM_KEY_TENANT_CODE, ((MachineDetails) userDetails).getTenantCode());
+        }
         return generateToken(claims);
     }
 
@@ -134,27 +154,27 @@ public class JwtTokenHelper {
      * @param oldToken 带tokenHead的token
      */
     public String refreshHeadToken(String oldToken) {
-        if(StrUtil.isEmpty(oldToken)){
+        if (StrUtil.isEmpty(oldToken)) {
             return null;
         }
         String token = oldToken.substring(tokenHead4Admin.length());
-        if(StrUtil.isEmpty(token)){
+        if (StrUtil.isEmpty(token)) {
             return null;
         }
         // token校验不通过
         Claims claims = getClaimsFromToken(token);
-        if(claims==null){
+        if (claims == null) {
             return null;
         }
         // 如果token已经过期，不支持刷新
-        if(isTokenExpired(token)){
+        if (isTokenExpired(token)) {
             return null;
         }
         // 如果token在30分钟之内刚刷新过，返回原token
-        if(tokenRefreshJustBefore(token,30*60)){
+        if (tokenRefreshJustBefore(token, 30 * 60)) {
             return token;
-        }else{
-            claims.put(CLAIM_KEY_CREATED, new Date());
+        } else {
+            claims.put(CLAIM_KEY_GMT_CREATED, new Date());
             return generateToken(claims);
         }
     }
@@ -166,7 +186,7 @@ public class JwtTokenHelper {
      */
     private boolean tokenRefreshJustBefore(String token, int time) {
         Claims claims = getClaimsFromToken(token);
-        Date created = claims.get(CLAIM_KEY_CREATED, Date.class);
+        Date created = claims.get(CLAIM_KEY_GMT_CREATED, Date.class);
         Date refreshDate = new Date();
         //刷新时间在创建时间的指定时间内
         if(refreshDate.after(created)&&refreshDate.before(DateUtil.offsetSecond(created,time))){

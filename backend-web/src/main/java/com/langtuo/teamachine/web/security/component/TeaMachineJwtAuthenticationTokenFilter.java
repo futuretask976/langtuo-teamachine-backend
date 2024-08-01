@@ -1,15 +1,13 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
+import com.langtuo.teamachine.web.security.service.TeaMachineUserDetailService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,7 +23,7 @@ import java.io.IOException;
 @Slf4j
 public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
-    private UserDetailsService userDetailsService;
+    private TeaMachineUserDetailService teaMachineUserDetailService;
 
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
@@ -44,22 +42,25 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
             throws ServletException, IOException {
         String authHeader = request.getHeader(this.tokenHeader);
         log.info("$$$$$ authHeader=" + authHeader + ", url=" + request.getRequestURL());
-        if (authHeader != null) {
-            String authToken = null;
+        if (authHeader != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            boolean isAdminToken = false;
             if (authHeader.startsWith(this.tokenHead4Admin)) {
-                authToken = authHeader.substring(this.tokenHead4Admin.length()); // The part after "Bearer "
-            } else if (authHeader.startsWith(this.tokenHead4Machine)) {
-                authToken = authHeader.substring(this.tokenHead4Machine.length()); // The part after "Bearer "
+                isAdminToken = true;
             }
+
+            String authToken = isAdminToken ? authHeader.substring(this.tokenHead4Admin.length())
+                    : authHeader.substring(this.tokenHead4Machine.length());
+            String tenantCode = jwtTokenHelper.getTenantCodeFromToken(authToken);
             String userName = jwtTokenHelper.getUserNameFromToken(authToken);
-            if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
-                if (jwtTokenHelper.validateToken(authToken, userDetails)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+            UserDetails userDetails = isAdminToken
+                    ? this.teaMachineUserDetailService.loadAdminUserDetails(tenantCode, userName)
+                            : this.teaMachineUserDetailService.loadMachineUserDetails(tenantCode, userName);
+
+            if (jwtTokenHelper.validateToken(authToken, userDetails)) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
         chain.doFilter(request, response);

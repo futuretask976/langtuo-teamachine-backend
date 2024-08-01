@@ -59,9 +59,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             PageInfo<MachinePO> pageInfo = machineAccessor.search(tenantCode, screenCode, elecBoardCode, modelCode,
                     shopCode, pageNum, pageSize);
             List<MachineDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> {
-                        return convert(po);
-                    })
+                    .map(po -> convert(po))
                     .collect(Collectors.toList());
 
             langTuoResult = LangTuoResult.success(new PageDTO<MachineDTO>(dtoList, pageInfo.getTotal(),
@@ -79,9 +77,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         try {
             List<MachinePO> list = machineAccessor.selectList(tenantCode);
             List<MachineDTO> dtoList = list.stream()
-                    .map(po -> {
-                        return convert(po);
-                    })
+                    .map(po -> convert(po))
                     .collect(Collectors.toList());
 
             langTuoResult = LangTuoResult.success(dtoList);
@@ -184,6 +180,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
+        dto.setTenantCode(po.getTenantCode());
         dto.setMachineCode(po.getMachineCode());
         dto.setElecBoardCode(po.getElecBoardCode());
         dto.setScreenCode(po.getScreenCode());

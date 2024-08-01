@@ -23,6 +23,11 @@ public class MachineDTO {
     private Date gmtModified;
 
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
      * 额外信息，格式：a:b;c:d
      */
     private Map<String, String> extraInfo;

@@ -73,4 +73,12 @@ public class AdminDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    /**
+     * 
+     * @return
+     */
+    public String getTenantCode() {
+        return adminDTO.getTenantCode();
+    }
 }
