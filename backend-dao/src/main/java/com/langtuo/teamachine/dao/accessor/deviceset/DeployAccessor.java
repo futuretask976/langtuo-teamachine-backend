@@ -22,7 +22,7 @@ public class DeployAccessor {
 
     public DeployPO selectOne(String tenantCode, String deployCode) {
         // 首先访问缓存
-        DeployPO cached = getCachedDeploy(tenantCode, deployCode);
+        DeployPO cached = getCache(tenantCode, deployCode);
         if (cached != null) {
             return cached;
         }
@@ -30,13 +30,13 @@ public class DeployAccessor {
         DeployPO po = mapper.selectOne(tenantCode, deployCode);
 
         // 设置缓存
-        setCachedDeploy(tenantCode, deployCode, po);
+        setCache(tenantCode, deployCode, po);
         return po;
     }
 
     public List<DeployPO> selectList(String tenantCode) {
         // 首先访问缓存
-        List<DeployPO> cachedList = getCachedDeployList(tenantCode);
+        List<DeployPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
             return cachedList;
         }
@@ -44,7 +44,7 @@ public class DeployAccessor {
         List<DeployPO> list = mapper.selectList(tenantCode);
 
         // 设置缓存
-        setCachedDeployList(tenantCode, list);
+        setCacheList(tenantCode, list);
         return list;
     }
 
@@ -70,7 +70,7 @@ public class DeployAccessor {
     public int update(DeployPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCachedDeploy(po.getTenantCode(), po.getDeployCode());
+            deleteCacheAll(po.getTenantCode(), po.getDeployCode());
         }
         return updated;
     }
@@ -78,7 +78,7 @@ public class DeployAccessor {
     public int delete(String tenantCode, String deployCode) {
         int deleted = mapper.delete(tenantCode, deployCode);
         if (deleted == 1) {
-            deleteCachedDeploy(tenantCode, deployCode);
+            deleteCacheAll(tenantCode, deployCode);
         }
         return deleted;
     }
@@ -87,36 +87,36 @@ public class DeployAccessor {
         return "deploy_acc_" + tenantCode + "-" + deployCode;
     }
 
-    private String getCacheKey(String tenantCode) {
+    private String getCacheListKey(String tenantCode) {
         return "deploy_acc_" + tenantCode;
     }
 
-    private DeployPO getCachedDeploy(String tenantCode, String deployCode) {
+    private DeployPO getCache(String tenantCode, String deployCode) {
         String key = getCacheKey(tenantCode, deployCode);
         Object cached = redisManager.getValue(key);
         DeployPO po = (DeployPO) cached;
         return po;
     }
 
-    private List<DeployPO> getCachedDeployList(String tenantCode) {
-        String key = getCacheKey(tenantCode);
+    private List<DeployPO> getCacheList(String tenantCode) {
+        String key = getCacheListKey(tenantCode);
         Object cached = redisManager.getValue(key);
         List<DeployPO> poList = (List<DeployPO>) cached;
         return poList;
     }
 
-    private void setCachedDeployList(String tenantCode, List<DeployPO> poList) {
-        String key = getCacheKey(tenantCode);
+    private void setCacheList(String tenantCode, List<DeployPO> poList) {
+        String key = getCacheListKey(tenantCode);
         redisManager.setValue(key, poList);
     }
 
-    private void setCachedDeploy(String tenantCode, String deployCode, DeployPO po) {
+    private void setCache(String tenantCode, String deployCode, DeployPO po) {
         String key = getCacheKey(tenantCode, deployCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCachedDeploy(String tenantCode, String deployCode) {
+    private void deleteCacheAll(String tenantCode, String deployCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, deployCode));
-        redisManager.deleteKey(getCacheKey(tenantCode));
+        redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

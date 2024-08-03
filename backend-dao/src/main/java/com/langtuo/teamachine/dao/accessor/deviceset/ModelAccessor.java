@@ -22,7 +22,7 @@ public class ModelAccessor {
 
     public ModelPO selectOne(String modelCode) {
         // 首先访问缓存
-        ModelPO cached = getCachedModel(modelCode);
+        ModelPO cached = getCache(modelCode);
         if (cached != null) {
             return cached;
         }
@@ -30,13 +30,13 @@ public class ModelAccessor {
         ModelPO po = mapper.selectOne(modelCode);
 
         // 设置缓存
-        setCachedModel(modelCode, po);
+        setCache(modelCode, po);
         return po;
     }
 
     public List<ModelPO> selectList() {
         // 首先访问缓存
-        List<ModelPO> cachedList = getCachedModelList();
+        List<ModelPO> cachedList = getCacheList();
         if (cachedList != null) {
             return cachedList;
         }
@@ -44,7 +44,7 @@ public class ModelAccessor {
         List<ModelPO> list = mapper.selectList();
 
         // 设置缓存
-        setCachedModelList(list);
+        setCacheList(list);
         return list;
     }
 
@@ -70,7 +70,7 @@ public class ModelAccessor {
     public int delete(String modelCode) {
         int deleted = mapper.delete(modelCode);
         if (deleted == 1) {
-            deleteCachedModel(modelCode);
+            deleteCacheAll(modelCode);
         }
         return deleted;
     }
@@ -79,36 +79,36 @@ public class ModelAccessor {
         return "model_acc_" + modelCode;
     }
 
-    private String getCacheKey() {
+    private String getCacheListKey() {
         return "model_acc";
     }
 
-    private ModelPO getCachedModel(String modelCode) {
+    private ModelPO getCache(String modelCode) {
         String key = getCacheKey(modelCode);
         Object cached = redisManager.getValue(key);
         ModelPO po = (ModelPO) cached;
         return po;
     }
 
-    private List<ModelPO> getCachedModelList() {
-        String key = getCacheKey();
+    private List<ModelPO> getCacheList() {
+        String key = getCacheListKey();
         Object cached = redisManager.getValue(key);
         List<ModelPO> poList = (List<ModelPO>) cached;
         return poList;
     }
 
-    private void setCachedModelList(List<ModelPO> poList) {
-        String key = getCacheKey();
+    private void setCacheList(List<ModelPO> poList) {
+        String key = getCacheListKey();
         redisManager.setValue(key, poList);
     }
 
-    private void setCachedModel(String modelCode, ModelPO po) {
+    private void setCache(String modelCode, ModelPO po) {
         String key = getCacheKey(modelCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCachedModel(String modelCode) {
+    private void deleteCacheAll(String modelCode) {
         redisManager.deleteKey(getCacheKey(modelCode));
-        redisManager.deleteKey(getCacheKey());
+        redisManager.deleteKey(getCacheListKey());
     }
 }

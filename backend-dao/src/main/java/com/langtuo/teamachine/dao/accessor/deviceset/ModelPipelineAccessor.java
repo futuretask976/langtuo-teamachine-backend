@@ -18,7 +18,7 @@ public class ModelPipelineAccessor {
 
     public List<ModelPipelinePO> selectList(String modeCode) {
         // 首先访问缓存
-        List<ModelPipelinePO> cachedList = getCachedModelPipelineList(modeCode);
+        List<ModelPipelinePO> cachedList = getCacheList(modeCode);
         if (cachedList != null) {
             return cachedList;
         }
@@ -26,7 +26,7 @@ public class ModelPipelineAccessor {
         List<ModelPipelinePO> list = mapper.selectList(modeCode);
 
         // 设置缓存
-        setCachedModelPipelineList(list);
+        setCacheList(list);
         return list;
     }
 
@@ -37,7 +37,7 @@ public class ModelPipelineAccessor {
     public int delete(String modelCode) {
         int deleted = mapper.delete(modelCode);
         if (deleted == 1) {
-            deleteCachedModel(modelCode);
+            deleteCacheAll(modelCode);
         }
         return deleted;
     }
@@ -46,24 +46,24 @@ public class ModelPipelineAccessor {
         return "model_pipeline_acc_" + modelCode;
     }
 
-    private String getCacheKey() {
+    private String getCacheListKey() {
         return "model_pipeline_acc";
     }
 
-    private List<ModelPipelinePO> getCachedModelPipelineList(String modelCode) {
+    private List<ModelPipelinePO> getCacheList(String modelCode) {
         String key = getCacheKey(modelCode);
         Object cached = redisManager.getValue(key);
         List<ModelPipelinePO> poList = (List<ModelPipelinePO>) cached;
         return poList;
     }
 
-    private void setCachedModelPipelineList(List<ModelPipelinePO> poList) {
-        String key = getCacheKey();
+    private void setCacheList(List<ModelPipelinePO> poList) {
+        String key = getCacheListKey();
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCachedModel(String modelCode) {
+    private void deleteCacheAll(String modelCode) {
         redisManager.deleteKey(getCacheKey(modelCode));
-        redisManager.deleteKey(getCacheKey());
+        redisManager.deleteKey(getCacheListKey());
     }
 }

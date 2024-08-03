@@ -57,6 +57,7 @@ public class TeaTypeAccessor {
 
         List<TeaTypePO> list = mapper.selectList(tenantCode);
 
+        setCachedTeaList(tenantCode, list);
         return list;
     }
 

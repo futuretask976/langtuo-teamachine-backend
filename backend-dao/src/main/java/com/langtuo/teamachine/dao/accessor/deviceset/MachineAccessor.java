@@ -22,7 +22,7 @@ public class MachineAccessor {
 
     public MachinePO selectOne(String tenantCode, String machineCode) {
         // 首先访问缓存
-        MachinePO cached = getCachedMachine(tenantCode, machineCode);
+        MachinePO cached = getCache(tenantCode, machineCode);
         if (cached != null) {
             return cached;
         }
@@ -30,13 +30,13 @@ public class MachineAccessor {
         MachinePO po = mapper.selectOne(tenantCode, machineCode, null);
 
         // 设置缓存
-        setCachedMachine(tenantCode, machineCode, po);
+        setCache(tenantCode, machineCode, po);
         return po;
     }
 
     public List<MachinePO> selectList(String tenantCode) {
         // 首先访问缓存
-        List<MachinePO> cachedList = getCachedMachineList(tenantCode);
+        List<MachinePO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
             return cachedList;
         }
@@ -44,7 +44,7 @@ public class MachineAccessor {
         List<MachinePO> list = mapper.selectList(tenantCode);
 
         // 设置缓存
-        setCachedMachineList(tenantCode, list);
+        setCacheList(tenantCode, list);
         return list;
     }
 
@@ -71,7 +71,7 @@ public class MachineAccessor {
     public int update(MachinePO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCachedMachine(po.getTenantCode(), po.getMachineCode());
+            deleteCacheAll(po.getTenantCode(), po.getMachineCode());
         }
         return updated;
     }
@@ -79,7 +79,7 @@ public class MachineAccessor {
     public int delete(String tenantCode, String machineCode) {
         int deleted = mapper.delete(tenantCode, machineCode);
         if (deleted == 1) {
-            deleteCachedMachine(tenantCode, machineCode);
+            deleteCacheAll(tenantCode, machineCode);
         }
         return deleted;
     }
@@ -88,36 +88,36 @@ public class MachineAccessor {
         return "machine_acc_" + tenantCode + "-" + machineCode;
     }
 
-    private String getCacheKey(String tenantCode) {
+    private String getCacheListKey(String tenantCode) {
         return "machine_acc_" + tenantCode;
     }
 
-    private MachinePO getCachedMachine(String tenantCode, String machineCode) {
+    private MachinePO getCache(String tenantCode, String machineCode) {
         String key = getCacheKey(tenantCode, machineCode);
         Object cached = redisManager.getValue(key);
         MachinePO po = (MachinePO) cached;
         return po;
     }
 
-    private List<MachinePO> getCachedMachineList(String tenantCode) {
-        String key = getCacheKey(tenantCode);
+    private List<MachinePO> getCacheList(String tenantCode) {
+        String key = getCacheListKey(tenantCode);
         Object cached = redisManager.getValue(key);
         List<MachinePO> poList = (List<MachinePO>) cached;
         return poList;
     }
 
-    private void setCachedMachineList(String tenantCode, List<MachinePO> poList) {
-        String key = getCacheKey(tenantCode);
+    private void setCacheList(String tenantCode, List<MachinePO> poList) {
+        String key = getCacheListKey(tenantCode);
         redisManager.setValue(key, poList);
     }
 
-    private void setCachedMachine(String tenantCode, String machineCode, MachinePO po) {
+    private void setCache(String tenantCode, String machineCode, MachinePO po) {
         String key = getCacheKey(tenantCode, machineCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCachedMachine(String tenantCode, String machineCode) {
+    private void deleteCacheAll(String tenantCode, String machineCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, machineCode));
-        redisManager.deleteKey(getCacheKey(tenantCode));
+        redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }
