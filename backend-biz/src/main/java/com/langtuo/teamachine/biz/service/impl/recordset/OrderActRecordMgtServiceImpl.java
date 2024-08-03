@@ -192,7 +192,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
 
         SpecPO specPO = specAccessor.selectOneByCode(po.getTenantCode(), po.getSpecCode());
         dto.setSpecName(specPO.getSpecName());
-        SpecItemPO specItemPO = specItemAccessor.selectOneByCode(po.getTenantCode(), po.getSpecItemCode());
+        SpecItemPO specItemPO = specItemAccessor.selectOne(po.getTenantCode(), po.getSpecItemCode());
         dto.setSpecItemName(specItemPO.getSpecItemName());
         return dto;
     }

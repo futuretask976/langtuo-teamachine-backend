@@ -110,7 +110,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                 int inserted = specAccessor.insert(specPO);
             }
 
-            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(specPO.getTenantCode(), specPO.getSpecCode());
+            int deleted4SpecSub = specItemAccessor.delete(specPO.getTenantCode(), specPO.getSpecCode());
             if (!CollectionUtils.isEmpty(specItemPOList)) {
                 specItemPOList.stream().forEach(item -> {
                     specItemAccessor.insert(item);
@@ -134,7 +134,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         LangTuoResult<Void> langTuoResult = null;
         try {
             int deleted4Spec = specAccessor.delete(tenantCode, specCode);
-            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
+            int deleted4SpecSub = specItemAccessor.delete(tenantCode, specCode);
 
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {

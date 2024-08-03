@@ -277,7 +277,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             specItemRuleDTO.setGmtCreated(teaUnitPO.getGmtCreated());
             specItemRuleDTO.setGmtModified(teaUnitPO.getGmtModified());
             specItemRuleDTO.setSpecItemCode(teaUnitPO.getSpecItemCode());
-            SpecItemPO specItemPO = specItemAccessor.selectOneByCode(teaUnitPO.getTenantCode(),
+            SpecItemPO specItemPO = specItemAccessor.selectOne(teaUnitPO.getTenantCode(),
                     teaUnitPO.getSpecItemCode());
             if (specItemPO != null) {
                 specItemRuleDTO.setSpecItemName(specItemPO.getSpecItemName());

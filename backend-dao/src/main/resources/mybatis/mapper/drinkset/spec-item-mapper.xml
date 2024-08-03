@@ -23,9 +23,6 @@
             <if test="specItemCode != null">
                 AND spec_item_code = #{specItemCode}
             </if>
-            <if test="specItemName != null">
-                AND spec_item_name = #{specItemName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="specSubPOMap">
@@ -81,9 +78,6 @@
             AND tenant_code = #{tenantCode}
             <if test="specCode != null">
                 AND spec_code = #{specCode}
-            </if>
-            <if test="specItemCode != null">
-                AND spec_item_code = #{specItemCode}
             </if>
     </delete>
 </mapper>

@@ -90,10 +90,11 @@ public class SeriesAccessor {
     }
 
     public int delete(String tenantCode, String seriesCode) {
+        SeriesPO po = selectOneByCode(tenantCode, seriesCode);
         int deleted = mapper.delete(tenantCode, seriesCode);
         if (deleted == 1) {
             // TODO 需要想办法删除用name缓存的对象
-            deleteCachedSeries(tenantCode, seriesCode, null);
+            deleteCachedSeries(tenantCode, seriesCode, po.getSeriesName());
         }
         return deleted;
     }
@@ -131,7 +132,8 @@ public class SeriesAccessor {
     }
 
     private void deleteCachedSeries(String tenantCode, String seriesCode, String seriesName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, seriesCode, seriesName));
+        redisManager.deleteKey(getCacheKey(tenantCode, seriesCode, null));
+        redisManager.deleteKey(getCacheKey(tenantCode, null, seriesName));
         redisManager.deleteKey(getCacheKey(tenantCode));
     }
 }

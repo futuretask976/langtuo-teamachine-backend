@@ -90,10 +90,11 @@ public class MenuAccessor {
     }
 
     public int delete(String tenantCode, String menuCode) {
+        MenuPO po = selectOneByCode(tenantCode, menuCode);
         int deleted = mapper.delete(tenantCode, menuCode);
         if (deleted == 1) {
             // TODO 需要想办法删除用name缓存的对象
-            deleteCachedMenu(tenantCode, menuCode, null);
+            deleteCachedMenu(tenantCode, menuCode, po.getMenuName());
         }
         return deleted;
     }
@@ -131,7 +132,8 @@ public class MenuAccessor {
     }
 
     private void deleteCachedMenu(String tenantCode, String menuCode, String menuName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, menuCode, menuName));
+        redisManager.deleteKey(getCacheKey(tenantCode, menuCode, null));
+        redisManager.deleteKey(getCacheKey(tenantCode, null, menuName));
         redisManager.deleteKey(getCacheKey(tenantCode));
     }
 }

@@ -36,8 +36,7 @@ public class SeriesTeaRelAccessor {
 
     public int delete(String tenantCode, String seriesCode) {
         int deleted = mapper.delete(tenantCode, seriesCode);
-        if (deleted == 1) {
-            // TODO 需要想办法删除用name缓存的对象
+        if (deleted > 0) {
             deleteCachedSeries(tenantCode, seriesCode);
         }
         return deleted;

@@ -76,24 +76,25 @@ public class ShopAccessor {
         return pageInfo;
     }
 
-    public int insert(ShopPO shopPO) {
-        return mapper.insert(shopPO);
+    public int insert(ShopPO po) {
+        return mapper.insert(po);
     }
 
-    public int update(ShopPO shopPO) {
-        int updated = mapper.update(shopPO);
+    public int update(ShopPO po) {
+        int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCachedShop(shopPO.getTenantCode(), shopPO.getShopCode(), null);
-            deleteCachedShop(shopPO.getTenantCode(), null, shopPO.getShopName());
+            deleteCachedShop(po.getTenantCode(), po.getShopCode(), null);
+            deleteCachedShop(po.getTenantCode(), null, po.getShopName());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String shopCode) {
+        ShopPO po = selectOneByCode(tenantCode, shopCode);
         int deleted = mapper.delete(tenantCode, shopCode);
         if (deleted == 1) {
             // TODO 需要想办法删除用name缓存的对象
-            deleteCachedShop(tenantCode, shopCode, null);
+            deleteCachedShop(tenantCode, shopCode, po.getShopName());
         }
         return deleted;
     }
@@ -131,7 +132,8 @@ public class ShopAccessor {
     }
 
     private void deleteCachedShop(String tenantCode, String shopCode, String shopName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, shopCode, shopName));
+        redisManager.deleteKey(getCacheKey(tenantCode, shopCode, null));
+        redisManager.deleteKey(getCacheKey(tenantCode, null, shopName));
         redisManager.deleteKey(getCacheKey(tenantCode));
     }
 }

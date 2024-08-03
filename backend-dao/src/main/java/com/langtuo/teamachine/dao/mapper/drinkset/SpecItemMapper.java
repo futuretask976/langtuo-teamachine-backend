@@ -19,8 +19,8 @@ public interface SpecItemMapper {
      * @param specItemCode
      * @return
      */
-    SpecItemPO selectOne(@Param("tenantCode") String tenantCode, @Param("specItemCode") String specItemCode,
-            @Param("specItemName") String specItemName);
+    SpecItemPO selectOne(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode,
+            @Param("specItemCode") String specItemCode);
 
     /**
      *
@@ -46,9 +46,7 @@ public interface SpecItemMapper {
     /**
      *
      * @param tenantCode
-     * @param specItemCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode,
-            @Param("specItemCode") String specItemCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode);
 }
