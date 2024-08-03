@@ -1,13 +1,12 @@
 package com.langtuo.teamachine.web.controller.ruleset;
 
-import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.ruleset.CleanRuleDTO;
-import com.langtuo.teamachine.api.model.ruleset.CleanRuleDispatchDTO;
-import com.langtuo.teamachine.api.request.ruleset.CleanRuleDispatchPutRequest;
-import com.langtuo.teamachine.api.request.ruleset.CleanRulePutRequest;
+import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
+import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
+import com.langtuo.teamachine.api.request.rule.CleanRuleDispatchPutRequest;
+import com.langtuo.teamachine.api.request.rule.CleanRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.ruleset.CleanRuleMgtService;
+import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

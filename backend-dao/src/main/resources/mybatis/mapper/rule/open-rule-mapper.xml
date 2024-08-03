@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.rule.OpenRuleMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.rule.OpenRulePO" id="openRulePOMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="openRuleCode" column="open_rule_code"/>
+        <result property="openRuleName" column="open_rule_name"/>
+        <result property="defaultRule" column="default_rule"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectOne" resultMap="openRulePOMap">
+        SELECT * FROM open_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="openRuleCode != null">
+                AND open_rule_code = #{openRuleCode}
+            </if>
+            <if test="openRuleName != null">
+                AND open_rule_name = #{openRuleName}
+            </if>
+    </select>
+
+    <select id="selectList" resultMap="openRulePOMap">
+        SELECT * FROM open_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="openRulePOMap">
+        SELECT * FROM open_rule
+        WHERE 1 = 1
+        AND tenant_code = #{tenantCode}
+        <if test="openRuleCode != null">
+            AND open_rule_code = #{openRuleCode}
+        </if>
+        <if test="openRuleName != null">
+            AND open_rule_name = #{openRuleName}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.OpenRulePO">
+        INSERT INTO open_rule (
+            gmt_created
+            , gmt_modified
+            , open_rule_code
+            , open_rule_name
+            , default_rule
+            , tenant_code
+            , extra_info
+        ) VALUES (
+            now()
+            , now()
+            , #{openRuleCode}
+            , #{openRuleName}
+            , #{defaultRule}
+            , #{tenantCode}
+            , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.rule.OpenRulePO">
+        UPDATE open_rule
+        SET
+            gmt_modified = now()
+            <if test="openRuleName != null">
+                , open_rule_name = #{openRuleName}
+            </if>
+            <if test="defaultRule != null">
+                , default_rule = #{defaultRule}
+            </if>
+            <if test="extraInfo != null">
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND open_rule_code = #{openRuleCode}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM open_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND open_rule_code = #{openRuleCode}
+    </delete>
+</mapper>

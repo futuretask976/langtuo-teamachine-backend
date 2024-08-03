@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.web.controller.recordset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.recordset.OrderActRecordDTO;
+import com.langtuo.teamachine.api.model.record.OrderActRecordDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.recordset.OrderActRecordMgtService;
+import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

@@ -1,12 +1,12 @@
 package com.langtuo.teamachine.web.security.service;
 
-import com.langtuo.teamachine.api.model.deviceset.MachineDTO;
-import com.langtuo.teamachine.api.model.userset.AdminDTO;
-import com.langtuo.teamachine.api.model.userset.RoleDTO;
+import com.langtuo.teamachine.api.model.device.MachineDTO;
+import com.langtuo.teamachine.api.model.user.AdminDTO;
+import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.deviceset.MachineMgtService;
-import com.langtuo.teamachine.api.service.userset.AdminMgtService;
-import com.langtuo.teamachine.api.service.userset.RoleMgtService;
+import com.langtuo.teamachine.api.service.device.MachineMgtService;
+import com.langtuo.teamachine.api.service.user.AdminMgtService;
+import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.web.security.model.AdminDetails;
 import com.langtuo.teamachine.web.security.model.MachineDetails;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j

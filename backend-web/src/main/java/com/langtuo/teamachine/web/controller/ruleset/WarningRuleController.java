@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.ruleset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.ruleset.WarningRuleDTO;
-import com.langtuo.teamachine.api.request.ruleset.WarningRulePutRequest;
+import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
+import com.langtuo.teamachine.api.request.rule.WarningRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.ruleset.WarningRuleMgtService;
+import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

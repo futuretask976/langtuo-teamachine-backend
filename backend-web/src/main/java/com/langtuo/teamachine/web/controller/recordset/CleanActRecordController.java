@@ -1,10 +1,9 @@
 package com.langtuo.teamachine.web.controller.recordset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.recordset.CleanActRecordDTO;
-import com.langtuo.teamachine.api.request.recordset.CleanActRecordPutRequest;
+import com.langtuo.teamachine.api.model.record.CleanActRecordDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.recordset.CleanActRecordMgtService;
+import com.langtuo.teamachine.api.service.record.CleanActRecordMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

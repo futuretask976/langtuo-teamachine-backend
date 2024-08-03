@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.userset;
 
-import com.langtuo.teamachine.api.model.userset.AdminDTO;
+import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.userset.AdminPutRequest;
+import com.langtuo.teamachine.api.request.user.AdminPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.userset.AdminMgtService;
+import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

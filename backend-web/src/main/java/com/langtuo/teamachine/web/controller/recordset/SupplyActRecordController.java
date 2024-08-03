@@ -1,10 +1,9 @@
 package com.langtuo.teamachine.web.controller.recordset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.recordset.SupplyActRecordDTO;
-import com.langtuo.teamachine.api.request.recordset.SupplyActRecordPutRequest;
+import com.langtuo.teamachine.api.model.record.SupplyActRecordDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.recordset.SupplyActRecordMgtService;
+import com.langtuo.teamachine.api.service.record.SupplyActRecordMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

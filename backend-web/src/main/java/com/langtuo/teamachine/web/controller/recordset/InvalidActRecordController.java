@@ -1,10 +1,9 @@
 package com.langtuo.teamachine.web.controller.recordset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.recordset.InvalidActRecordDTO;
-import com.langtuo.teamachine.api.request.recordset.InvalidActRecordPutRequest;
+import com.langtuo.teamachine.api.model.record.InvalidActRecordDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.recordset.InvalidActRecordMgtService;
+import com.langtuo.teamachine.api.service.record.InvalidActRecordMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

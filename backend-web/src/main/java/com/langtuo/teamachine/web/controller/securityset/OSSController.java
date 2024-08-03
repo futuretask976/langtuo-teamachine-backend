@@ -1,11 +1,9 @@
 package com.langtuo.teamachine.web.controller.securityset;
 
-import com.langtuo.teamachine.api.model.menuset.SeriesDTO;
-import com.langtuo.teamachine.api.model.securityset.OSSTokenDTO;
+import com.langtuo.teamachine.api.model.security.OSSTokenDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.securityset.OSSService;
+import com.langtuo.teamachine.api.service.security.OSSService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

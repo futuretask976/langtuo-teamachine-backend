@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.web.controller.userset;
 
-import com.langtuo.teamachine.api.model.userset.PermitActGroupDTO;
+import com.langtuo.teamachine.api.model.user.PermitActGroupDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.userset.PermitActMgtService;
+import com.langtuo.teamachine.api.service.user.PermitActMgtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

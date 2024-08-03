@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.ruleset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.ruleset.OpenRuleDTO;
-import com.langtuo.teamachine.api.request.ruleset.OpenRulePutRequest;
+import com.langtuo.teamachine.api.model.rule.OpenRuleDTO;
+import com.langtuo.teamachine.api.request.rule.OpenRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.ruleset.OpenRuleMgtService;
+import com.langtuo.teamachine.api.service.rule.OpenRuleMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

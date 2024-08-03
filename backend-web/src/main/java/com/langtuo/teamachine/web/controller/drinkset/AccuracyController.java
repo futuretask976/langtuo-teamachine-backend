@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.web.controller.drinkset;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.drinkset.ToppingAccuracyTplDTO;
-import com.langtuo.teamachine.api.request.drinkset.ToppingAccuracyTplPutRequest;
+import com.langtuo.teamachine.api.model.drink.ToppingAccuracyTplDTO;
+import com.langtuo.teamachine.api.request.drink.ToppingAccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.drinkset.ToppingAccuracyTplMgtService;
+import com.langtuo.teamachine.api.service.drink.ToppingAccuracyTplMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
