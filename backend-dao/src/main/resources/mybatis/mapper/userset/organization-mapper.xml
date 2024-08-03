@@ -17,12 +17,14 @@
     <select id="selectOne" resultMap="orgStrucMap">
         SELECT * FROM organization
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and org_name = #{orgName}
+            AND tenant_code = #{tenantCode}
+            AND org_name = #{orgName}
     </select>
 
     <select id="selectList" resultMap="orgStrucMap">
         SELECT * FROM organization
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
     </select>
 
     <select id="search" parameterType="com.langtuo.teamachine.dao.query.userset.OrgStrucQuery" resultMap="orgStrucMap">
@@ -38,12 +40,12 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.userset.OrgPO">
-        INSERT INTO `organization` (
-            `gmt_created`
-            , `gmt_modified`
-            , `org_name`
-            , `parent_org_name`
-            , `tenant_code`
+        INSERT INTO organization (
+            gmt_created
+            , gmt_modified
+            , org_name
+            , parent_org_name
+            , tenant_code
         ) VALUES (
             now()
             , now()
@@ -61,14 +63,14 @@
                 , parent_org_name = #{parentOrgName}
             </if>
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and org_name = #{orgName}
+            AND tenant_code = #{tenantCode}
+            AND org_name = #{orgName}
     </update>
 
     <delete id="delete">
         DELETE FROM organization
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and org_name = #{orgName}
+            AND tenant_code = #{tenantCode}
+            AND org_name = #{orgName}
     </delete>
 </mapper>

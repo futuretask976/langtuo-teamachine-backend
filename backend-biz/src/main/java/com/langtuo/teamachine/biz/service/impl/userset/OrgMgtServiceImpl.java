@@ -7,7 +7,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.userset.OrgPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.userset.OrgMgtService;
-import com.langtuo.teamachine.dao.accessor.userset.OrgStrucAccessor;
+import com.langtuo.teamachine.dao.accessor.userset.OrgAccessor;
 import com.langtuo.teamachine.dao.po.userset.OrgPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrgMgtServiceImpl implements OrgMgtService {
     @Resource
-    private OrgStrucAccessor orgStrucAccessor;
+    private OrgAccessor orgAccessor;
 
     @Override
     public LangTuoResult<OrgDTO> listByDepth(String tenantCode) {
         LangTuoResult<OrgDTO> langTuoResult = null;
         try {
-            List<OrgPO> poList = orgStrucAccessor.selectList(tenantCode);
+            List<OrgPO> poList = orgAccessor.selectList(tenantCode);
             List<OrgDTO> dtoList = poList.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public LangTuoResult<List<OrgDTO>> list(String tenantCode) {
         LangTuoResult<List<OrgDTO>> langTuoResult = null;
         try {
-            List<OrgPO> poList = orgStrucAccessor.selectList(tenantCode);
+            List<OrgPO> poList = orgAccessor.selectList(tenantCode);
             List<OrgDTO> dtoList = convert(poList);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
@@ -70,7 +70,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
         LangTuoResult<PageDTO<OrgDTO>> langTuoResult = null;
         try {
-            PageInfo<OrgPO> pageInfo = orgStrucAccessor.search(tenantCode, orgName, pageNum, pageSize);
+            PageInfo<OrgPO> pageInfo = orgAccessor.search(tenantCode, orgName, pageNum, pageSize);
             List<OrgDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
@@ -85,7 +85,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public LangTuoResult<OrgDTO> get(String tenantCode, String orgName) {
         LangTuoResult<OrgDTO> langTuoResult = null;
         try {
-            OrgPO orgPO = orgStrucAccessor.selectOne(tenantCode, orgName);
+            OrgPO orgPO = orgAccessor.selectOne(tenantCode, orgName);
             OrgDTO orgDTO = convert(orgPO);
             langTuoResult = LangTuoResult.success(orgDTO);
         } catch (Exception e) {
@@ -107,11 +107,11 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            OrgPO exist = orgStrucAccessor.selectOne(tenantCode, orgName);
+            OrgPO exist = orgAccessor.selectOne(tenantCode, orgName);
             if (exist != null) {
-                int updated = orgStrucAccessor.update(orgPO);
+                int updated = orgAccessor.update(orgPO);
             } else {
-                int inserted = orgStrucAccessor.insert(orgPO);
+                int inserted = orgAccessor.insert(orgPO);
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -129,7 +129,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            int deleted = orgStrucAccessor.delete(tenantCode, orgName);
+            int deleted = orgAccessor.delete(tenantCode, orgName);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

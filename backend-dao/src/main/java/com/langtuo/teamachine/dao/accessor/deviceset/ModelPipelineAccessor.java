@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.deviceset;
 
+import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.deviceset.ModelPipelineMapper;
 import com.langtuo.teamachine.dao.po.deviceset.ModelPipelinePO;
 import org.springframework.stereotype.Component;
@@ -12,12 +13,21 @@ public class ModelPipelineAccessor {
     @Resource
     private ModelPipelineMapper mapper;
 
-    public ModelPipelinePO selectOne(String modelCode, String pipelineNum) {
-        return mapper.selectOne(modelCode, pipelineNum);
-    }
+    @Resource
+    private RedisManager redisManager;
 
     public List<ModelPipelinePO> selectList(String modeCode) {
-        return mapper.selectList(modeCode);
+        // 首先访问缓存
+        List<ModelPipelinePO> cachedList = getCachedModelPipelineList(modeCode);
+        if (cachedList != null) {
+            return cachedList;
+        }
+        
+        List<ModelPipelinePO> list = mapper.selectList(modeCode);
+
+        // 设置缓存
+        setCachedModelPipelineList(list);
+        return list;
     }
 
     public int insert(ModelPipelinePO po) {
@@ -25,6 +35,35 @@ public class ModelPipelineAccessor {
     }
 
     public int delete(String modelCode) {
-        return mapper.delete(modelCode);
+        int deleted = mapper.delete(modelCode);
+        if (deleted == 1) {
+            deleteCachedModel(modelCode);
+        }
+        return deleted;
+    }
+
+    private String getCacheKey(String modelCode) {
+        return "model_pipeline_acc_" + modelCode;
+    }
+
+    private String getCacheKey() {
+        return "model_pipeline_acc";
+    }
+
+    private List<ModelPipelinePO> getCachedModelPipelineList(String modelCode) {
+        String key = getCacheKey(modelCode);
+        Object cached = redisManager.getValue(key);
+        List<ModelPipelinePO> poList = (List<ModelPipelinePO>) cached;
+        return poList;
+    }
+
+    private void setCachedModelPipelineList(List<ModelPipelinePO> poList) {
+        String key = getCacheKey();
+        redisManager.setValue(key, poList);
+    }
+
+    private void deleteCachedModel(String modelCode) {
+        redisManager.deleteKey(getCacheKey(modelCode));
+        redisManager.deleteKey(getCacheKey());
     }
 }

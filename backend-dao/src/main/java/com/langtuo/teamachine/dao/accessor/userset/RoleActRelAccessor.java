@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class AdminRoleActRelAccessor {
+public class RoleActRelAccessor {
     @Resource
     private RoleActRelMapper mapper;
 

@@ -9,7 +9,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.userset.AdminMgtService;
 import com.langtuo.teamachine.api.service.userset.RoleMgtService;
 import com.langtuo.teamachine.dao.accessor.userset.AdminAccessor;
-import com.langtuo.teamachine.dao.accessor.userset.AdminRoleAccessor;
+import com.langtuo.teamachine.dao.accessor.userset.RoleAccessor;
 import com.langtuo.teamachine.dao.po.userset.AdminPO;
 import com.langtuo.teamachine.dao.po.userset.RolePO;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     private AdminAccessor adminAccessor;
 
     @Resource
-    private AdminRoleAccessor adminRoleAccessor;
+    private RoleAccessor roleAccessor;
 
     @Override
     public LangTuoResult<AdminDTO> get(String tenantCode, String loginName) {
@@ -57,7 +57,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         try {
             String roleCode = null;
             if (StringUtils.isNotBlank(roleName)) {
-                Optional<RolePO> opt = adminRoleAccessor.selectList(tenantCode).stream()
+                Optional<RolePO> opt = roleAccessor.selectList(tenantCode).stream()
                         .filter(item -> item.getRoleName().equals(roleName))
                         .findFirst();
                 if (opt.isPresent()) {
@@ -156,7 +156,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         dto.setLoginPass(adminPO.getLoginPass());
         dto.setOrgName(adminPO.getOrgName());
 
-        RolePO rolePO = adminRoleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
+        RolePO rolePO = roleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
         if (rolePO != null) {
             dto.setRoleCode(rolePO.getRoleCode());
             dto.setRoleName(rolePO.getRoleName());

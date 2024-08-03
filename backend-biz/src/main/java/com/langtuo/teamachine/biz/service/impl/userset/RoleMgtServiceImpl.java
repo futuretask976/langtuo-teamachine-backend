@@ -2,17 +2,13 @@ package com.langtuo.teamachine.biz.service.impl.userset;
 
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.api.model.userset.AdminDTO;
-import com.langtuo.teamachine.api.model.userset.PermitActDTO;
-import com.langtuo.teamachine.api.model.userset.PermitActGroupDTO;
 import com.langtuo.teamachine.api.model.userset.RoleDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.userset.RolePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.userset.PermitActMgtService;
 import com.langtuo.teamachine.api.service.userset.RoleMgtService;
-import com.langtuo.teamachine.dao.accessor.userset.AdminRoleAccessor;
-import com.langtuo.teamachine.dao.accessor.userset.AdminRoleActRelAccessor;
+import com.langtuo.teamachine.dao.accessor.userset.RoleAccessor;
+import com.langtuo.teamachine.dao.accessor.userset.RoleActRelAccessor;
 import com.langtuo.teamachine.dao.accessor.userset.PermitActAccessor;
 import com.langtuo.teamachine.dao.po.userset.PermitActGroupPO;
 import com.langtuo.teamachine.dao.po.userset.PermitActPO;
@@ -32,10 +28,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RoleMgtServiceImpl implements RoleMgtService {
     @Resource
-    private AdminRoleAccessor adminRoleAccessor;
+    private RoleAccessor roleAccessor;
 
     @Resource
-    private AdminRoleActRelAccessor adminRoleActRelAccessor;
+    private RoleActRelAccessor roleActRelAccessor;
 
     @Resource
     private PermitActAccessor permitActAccessor;
@@ -48,7 +44,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             return LangTuoResult.success(superRole);
         }
 
-        RolePO rolePO = adminRoleAccessor.selectOne(tenantCode, roleCode);
+        RolePO rolePO = roleAccessor.selectOne(tenantCode, roleCode);
         RoleDTO roleDTO = convert(rolePO);
         return LangTuoResult.success(roleDTO);
     }
@@ -60,7 +56,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         LangTuoResult<PageDTO<RoleDTO>> langTuoResult = null;
         try {
-            PageInfo<RolePO> pageInfo = adminRoleAccessor.search(tenantCode, roleName, pageNum, pageSize);
+            PageInfo<RolePO> pageInfo = roleAccessor.search(tenantCode, roleName, pageNum, pageSize);
             List<RoleDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
@@ -78,7 +74,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         LangTuoResult<PageDTO<RoleDTO>> langTuoResult = null;
         try {
-            PageInfo<RolePO> pageInfo = adminRoleAccessor.selectList(tenantCode, pageNum, pageSize);
+            PageInfo<RolePO> pageInfo = roleAccessor.selectList(tenantCode, pageNum, pageSize);
             List<RoleDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
@@ -93,7 +89,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     public LangTuoResult<List<RoleDTO>> list(String tenantCode) {
         LangTuoResult<List<RoleDTO>> langTuoResult = null;
         try {
-            List<RolePO> list = adminRoleAccessor.selectList(tenantCode);
+            List<RolePO> list = roleAccessor.selectList(tenantCode);
             List<RoleDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
@@ -114,16 +110,16 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            RolePO exist = adminRoleAccessor.selectOne(request.getTenantCode(), request.getRoleCode());
+            RolePO exist = roleAccessor.selectOne(request.getTenantCode(), request.getRoleCode());
             if (exist != null) {
-                int updated = adminRoleAccessor.update(rolePO);
+                int updated = roleAccessor.update(rolePO);
             } else {
-                int inserted = adminRoleAccessor.insert(rolePO);
+                int inserted = roleAccessor.insert(rolePO);
             }
 
-            int deleted4RoleActRel = adminRoleActRelAccessor.delete(request.getTenantCode(), request.getRoleCode());
+            int deleted4RoleActRel = roleActRelAccessor.delete(request.getTenantCode(), request.getRoleCode());
             roleActRelPOList.stream().forEach(item -> {
-                int inserted4RoleActRel = adminRoleActRelAccessor.insert(item);
+                int inserted4RoleActRel = roleActRelAccessor.insert(item);
             });
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -141,8 +137,8 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            int deleted = adminRoleAccessor.delete(tenantCode, roleCode);
-            int deleted4Rel = adminRoleActRelAccessor.delete(tenantCode, roleCode);
+            int deleted = roleAccessor.delete(tenantCode, roleCode);
+            int deleted4Rel = roleActRelAccessor.delete(tenantCode, roleCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
@@ -177,7 +173,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        List<RoleActRelPO> roleActRelPOList = adminRoleActRelAccessor.selectList(
+        List<RoleActRelPO> roleActRelPOList = roleActRelAccessor.selectList(
                 po.getTenantCode(), po.getRoleCode());
         if (!CollectionUtils.isEmpty(roleActRelPOList)) {
             dto.setPermitActCodeList(roleActRelPOList.stream()
