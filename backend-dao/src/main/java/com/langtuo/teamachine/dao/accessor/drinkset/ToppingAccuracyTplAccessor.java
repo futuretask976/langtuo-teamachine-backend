@@ -2,6 +2,7 @@ package com.langtuo.teamachine.dao.accessor.drinkset;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.drinkset.ToppingAccuracyTplMapper;
 import com.langtuo.teamachine.dao.po.drinkset.ToppingAccuracyTplPO;
 import com.langtuo.teamachine.dao.query.drinkset.ToppingAccuracyTplQuery;
@@ -16,16 +17,48 @@ public class ToppingAccuracyTplAccessor {
     @Resource
     private ToppingAccuracyTplMapper mapper;
 
+    @Resource
+    private RedisManager redisManager;
+
     public ToppingAccuracyTplPO selectOneByCode(String tenantCode, String templateCode) {
-        return mapper.selectOne(tenantCode, templateCode, null);
+        // 首先访问缓存
+        ToppingAccuracyTplPO cached = getCache(tenantCode, templateCode, null);
+        if (cached != null) {
+            return cached;
+        }
+
+        ToppingAccuracyTplPO po = mapper.selectOne(tenantCode, templateCode, null);
+
+        // 设置缓存
+        setCache(tenantCode, templateCode, null, po);
+        return po;
     }
 
     public ToppingAccuracyTplPO selectOneByName(String tenantCode, String templateName) {
-        return mapper.selectOne(tenantCode, null, templateName);
+        // 首先访问缓存
+        ToppingAccuracyTplPO cached = getCache(tenantCode, null, templateName);
+        if (cached != null) {
+            return cached;
+        }
+
+        ToppingAccuracyTplPO po = mapper.selectOne(tenantCode, null, templateName);
+
+        // 设置缓存
+        setCache(tenantCode, null, templateName, po);
+        return po;
     }
 
     public List<ToppingAccuracyTplPO> selectList(String tenantCode) {
+        // 首先访问缓存
+        List<ToppingAccuracyTplPO> cachedList = getCacheList(tenantCode);
+        if (cachedList != null) {
+            return cachedList;
+        }
+
         List<ToppingAccuracyTplPO> list = mapper.selectList(tenantCode);
+
+        // 设置缓存
+        setCacheList(tenantCode, list);
         return list;
     }
 
@@ -48,10 +81,58 @@ public class ToppingAccuracyTplAccessor {
     }
 
     public int update(ToppingAccuracyTplPO po) {
-        return mapper.update(po);
+        int updated = mapper.update(po);
+        if (updated == 1) {
+            deleteCacheAll(po.getTenantCode(), po.getTemplateCode(), null);
+            deleteCacheAll(po.getTenantCode(), null, po.getTemplateName());
+        }
+        return updated;
     }
 
-    public int delete(String tenantCode, String toppingCode) {
-        return mapper.delete(tenantCode, toppingCode);
+    public int delete(String tenantCode, String templateCode) {
+        ToppingAccuracyTplPO po = selectOneByCode(tenantCode, templateCode);
+        int deleted = mapper.delete(tenantCode, templateCode);
+        if (deleted == 1) {
+            deleteCacheAll(tenantCode, templateCode, po.getTemplateName());
+        }
+        return deleted;
+    }
+
+    private String getCacheKey(String tenantCode, String templateCode, String templateName) {
+        return "spec_acc_" + tenantCode + "-" + templateCode + "-" + templateName;
+    }
+
+    private String getCacheListKey(String tenantCode) {
+        return "spec_acc_" + tenantCode;
+    }
+
+    private ToppingAccuracyTplPO getCache(String tenantCode, String templateCode, String templateName) {
+        String key = getCacheKey(tenantCode, templateCode, templateName);
+        Object cached = redisManager.getValue(key);
+        ToppingAccuracyTplPO po = (ToppingAccuracyTplPO) cached;
+        return po;
+    }
+
+    private List<ToppingAccuracyTplPO> getCacheList(String tenantCode) {
+        String key = getCacheListKey(tenantCode);
+        Object cached = redisManager.getValue(key);
+        List<ToppingAccuracyTplPO> poList = (List<ToppingAccuracyTplPO>) cached;
+        return poList;
+    }
+
+    private void setCacheList(String tenantCode, List<ToppingAccuracyTplPO> poList) {
+        String key = getCacheListKey(tenantCode);
+        redisManager.setValue(key, poList);
+    }
+
+    private void setCache(String tenantCode, String templateCode, String templateName, ToppingAccuracyTplPO po) {
+        String key = getCacheKey(tenantCode, templateCode, templateName);
+        redisManager.setValue(key, po);
+    }
+
+    private void deleteCacheAll(String tenantCode, String templateCode, String templateName) {
+        redisManager.deleteKey(getCacheKey(tenantCode, templateCode, null));
+        redisManager.deleteKey(getCacheKey(tenantCode, null, templateName));
+        redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

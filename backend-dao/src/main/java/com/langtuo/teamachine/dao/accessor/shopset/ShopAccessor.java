@@ -93,7 +93,6 @@ public class ShopAccessor {
         ShopPO po = selectOneByCode(tenantCode, shopCode);
         int deleted = mapper.delete(tenantCode, shopCode);
         if (deleted == 1) {
-            // TODO 需要想办法删除用name缓存的对象
             deleteCachedShop(tenantCode, shopCode, po.getShopName());
         }
         return deleted;

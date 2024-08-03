@@ -22,7 +22,7 @@ public class MenuAccessor {
 
     public MenuPO selectOneByCode(String tenantCode, String menuCode) {
         // 首先访问缓存
-        MenuPO cached = getCachedMenu(tenantCode, menuCode, null);
+        MenuPO cached = getCache(tenantCode, menuCode, null);
         if (cached != null) {
             return cached;
         }
@@ -30,13 +30,13 @@ public class MenuAccessor {
         MenuPO po = mapper.selectOne(tenantCode, menuCode, null);
 
         // 设置缓存
-        setCachedMenu(tenantCode, menuCode, null, po);
+        setCache(tenantCode, menuCode, null, po);
         return po;
     }
 
     public MenuPO selectOneByName(String tenantCode, String menuName) {
         // 首先访问缓存
-        MenuPO cached = getCachedMenu(tenantCode, null, menuName);
+        MenuPO cached = getCache(tenantCode, null, menuName);
         if (cached != null) {
             return cached;
         }
@@ -44,13 +44,13 @@ public class MenuAccessor {
         MenuPO po = mapper.selectOne(tenantCode, null, menuName);
 
         // 设置缓存
-        setCachedMenu(tenantCode, null, menuName, po);
+        setCache(tenantCode, null, menuName, po);
         return po;
     }
 
     public List<MenuPO> selectList(String tenantCode) {
         // 首先访问缓存
-        List<MenuPO> cachedList = getCachedMenuList(tenantCode);
+        List<MenuPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
             return cachedList;
         }
@@ -58,7 +58,7 @@ public class MenuAccessor {
         List<MenuPO> list = mapper.selectList(tenantCode);
         
         // 设置缓存
-        setCachedMenuList(tenantCode, list);
+        setCacheList(tenantCode, list);
         return list;
     }
 
@@ -83,8 +83,8 @@ public class MenuAccessor {
     public int update(MenuPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCachedMenu(po.getTenantCode(), po.getMenuCode(), null);
-            deleteCachedMenu(po.getTenantCode(), null, po.getMenuName());
+            deleteCacheAll(po.getTenantCode(), po.getMenuCode(), null);
+            deleteCacheAll(po.getTenantCode(), null, po.getMenuName());
         }
         return updated;
     }
@@ -93,8 +93,7 @@ public class MenuAccessor {
         MenuPO po = selectOneByCode(tenantCode, menuCode);
         int deleted = mapper.delete(tenantCode, menuCode);
         if (deleted == 1) {
-            // TODO 需要想办法删除用name缓存的对象
-            deleteCachedMenu(tenantCode, menuCode, po.getMenuName());
+            deleteCacheAll(tenantCode, menuCode, po.getMenuName());
         }
         return deleted;
     }
@@ -103,37 +102,37 @@ public class MenuAccessor {
         return "menu_acc_" + tenantCode + "-" + menuCode + "-" + menuName;
     }
 
-    private String getCacheKey(String tenantCode) {
+    private String getCacheListKey(String tenantCode) {
         return "menu_acc_" + tenantCode;
     }
 
-    private MenuPO getCachedMenu(String tenantCode, String menuCode, String menuName) {
+    private MenuPO getCache(String tenantCode, String menuCode, String menuName) {
         String key = getCacheKey(tenantCode, menuCode, menuName);
         Object cached = redisManager.getValue(key);
         MenuPO po = (MenuPO) cached;
         return po;
     }
 
-    private List<MenuPO> getCachedMenuList(String tenantCode) {
-        String key = getCacheKey(tenantCode);
+    private List<MenuPO> getCacheList(String tenantCode) {
+        String key = getCacheListKey(tenantCode);
         Object cached = redisManager.getValue(key);
         List<MenuPO> poList = (List<MenuPO>) cached;
         return poList;
     }
 
-    private void setCachedMenuList(String tenantCode, List<MenuPO> poList) {
-        String key = getCacheKey(tenantCode);
+    private void setCacheList(String tenantCode, List<MenuPO> poList) {
+        String key = getCacheListKey(tenantCode);
         redisManager.setValue(key, poList);
     }
 
-    private void setCachedMenu(String tenantCode, String menuCode, String menuName, MenuPO po) {
+    private void setCache(String tenantCode, String menuCode, String menuName, MenuPO po) {
         String key = getCacheKey(tenantCode, menuCode, menuName);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCachedMenu(String tenantCode, String menuCode, String menuName) {
+    private void deleteCacheAll(String tenantCode, String menuCode, String menuName) {
         redisManager.deleteKey(getCacheKey(tenantCode, menuCode, null));
         redisManager.deleteKey(getCacheKey(tenantCode, null, menuName));
-        redisManager.deleteKey(getCacheKey(tenantCode));
+        redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }
