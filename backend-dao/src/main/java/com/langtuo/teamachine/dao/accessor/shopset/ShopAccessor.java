@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.shopset.ShopMapper;
-import com.langtuo.teamachine.dao.po.shopset.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shopset.ShopPO;
 import com.langtuo.teamachine.dao.query.shopset.ShopQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +22,7 @@ public class ShopAccessor {
 
     public ShopPO selectOneByCode(String tenantCode, String shopCode) {
         // 首先访问缓存
-        ShopPO cached = getCachedShop(tenantCode, shopCode, null);
+        ShopPO cached = setCache(tenantCode, shopCode, null);
         if (cached != null) {
             return cached;
         }
@@ -31,13 +30,13 @@ public class ShopAccessor {
         ShopPO po = mapper.selectOne(tenantCode, shopCode, null);
 
         // 设置缓存
-        setCachedShop(tenantCode, shopCode, null, po);
+        setCache(tenantCode, shopCode, null, po);
         return po;
     }
 
     public ShopPO selectOneByName(String tenantCode, String shopName) {
         // 首先访问缓存
-        ShopPO cached = getCachedShop(tenantCode, null, shopName);
+        ShopPO cached = setCache(tenantCode, null, shopName);
         if (cached != null) {
             return cached;
         }
@@ -45,13 +44,13 @@ public class ShopAccessor {
         ShopPO po = mapper.selectOne(tenantCode, null, shopName);
 
         // 设置缓存
-        setCachedShop(tenantCode, null, shopName, po);
+        setCache(tenantCode, null, shopName, po);
         return po;
     }
 
     public List<ShopPO> selectList(String tenantCode) {
         // 首先访问缓存
-        List<ShopPO> cachedList = getCachedShopList(tenantCode);
+        List<ShopPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
             return cachedList;
         }
@@ -59,7 +58,7 @@ public class ShopAccessor {
         List<ShopPO> list = mapper.selectList(tenantCode);
 
         // 设置缓存
-        setCachedShopList(tenantCode, list);
+        setCacheList(tenantCode, list);
         return list;
     }
 
@@ -83,8 +82,8 @@ public class ShopAccessor {
     public int update(ShopPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCachedShop(po.getTenantCode(), po.getShopCode(), null);
-            deleteCachedShop(po.getTenantCode(), null, po.getShopName());
+            deleteCacheAll(po.getTenantCode(), po.getShopCode(), null);
+            deleteCacheAll(po.getTenantCode(), null, po.getShopName());
         }
         return updated;
     }
@@ -93,7 +92,7 @@ public class ShopAccessor {
         ShopPO po = selectOneByCode(tenantCode, shopCode);
         int deleted = mapper.delete(tenantCode, shopCode);
         if (deleted == 1) {
-            deleteCachedShop(tenantCode, shopCode, po.getShopName());
+            deleteCacheAll(tenantCode, shopCode, po.getShopName());
         }
         return deleted;
     }
@@ -102,37 +101,37 @@ public class ShopAccessor {
         return "shop_acc_" + tenantCode + "-" + shopCode + "-" + shopName;
     }
 
-    private String getCacheKey(String tenantCode) {
+    private String getCacheListKey(String tenantCode) {
         return "shop_acc_" + tenantCode;
     }
 
-    private ShopPO getCachedShop(String tenantCode, String shopCode, String shopName) {
+    private ShopPO setCache(String tenantCode, String shopCode, String shopName) {
         String key = getCacheKey(tenantCode, shopCode, shopName);
         Object cached = redisManager.getValue(key);
         ShopPO po = (ShopPO) cached;
         return po;
     }
 
-    private List<ShopPO> getCachedShopList(String tenantCode) {
-        String key = getCacheKey(tenantCode);
+    private List<ShopPO> getCacheList(String tenantCode) {
+        String key = getCacheListKey(tenantCode);
         Object cached = redisManager.getValue(key);
         List<ShopPO> poList = (List<ShopPO>) cached;
         return poList;
     }
 
-    private void setCachedShopList(String tenantCode, List<ShopPO> poList) {
-        String key = getCacheKey(tenantCode);
+    private void setCacheList(String tenantCode, List<ShopPO> poList) {
+        String key = getCacheListKey(tenantCode);
         redisManager.setValue(key, poList);
     }
 
-    private void setCachedShop(String tenantCode, String shopCode, String shopName, ShopPO po) {
+    private void setCache(String tenantCode, String shopCode, String shopName, ShopPO po) {
         String key = getCacheKey(tenantCode, shopCode, shopName);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCachedShop(String tenantCode, String shopCode, String shopName) {
+    private void deleteCacheAll(String tenantCode, String shopCode, String shopName) {
         redisManager.deleteKey(getCacheKey(tenantCode, shopCode, null));
         redisManager.deleteKey(getCacheKey(tenantCode, null, shopName));
-        redisManager.deleteKey(getCacheKey(tenantCode));
+        redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

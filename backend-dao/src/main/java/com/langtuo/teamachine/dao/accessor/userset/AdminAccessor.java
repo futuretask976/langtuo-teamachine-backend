@@ -2,8 +2,11 @@ package com.langtuo.teamachine.dao.accessor.userset;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.userset.AdminMapper;
 import com.langtuo.teamachine.dao.po.userset.AdminPO;
+import com.langtuo.teamachine.dao.po.userset.AdminPO;
+import com.langtuo.teamachine.dao.po.userset.RolePO;
 import com.langtuo.teamachine.dao.query.userset.AdminQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -16,13 +19,34 @@ public class AdminAccessor {
     @Resource
     private AdminMapper mapper;
 
+    @Resource
+    private RedisManager redisManager;
+
     public AdminPO selectOne(String tenantCode, String loginName) {
-        return mapper.selectOne(tenantCode, loginName);
+        // 首先访问缓存
+        AdminPO cached = getCache(tenantCode, loginName);
+        if (cached != null) {
+            return cached;
+        }
+
+        AdminPO po = mapper.selectOne(tenantCode, loginName);
+
+        // 设置缓存
+        setCache(tenantCode, loginName, po);
+        return po;
     }
 
     public List<AdminPO> selectList(String tenantCode) {
+        // 首先访问缓存
+        List<AdminPO> cachedList = getCacheList(tenantCode);
+        if (cachedList != null) {
+            return cachedList;
+        }
+
         List<AdminPO> list = mapper.selectList(tenantCode);
 
+        // 设置缓存
+        setCacheList(tenantCode, list);
         return list;
     }
 
@@ -44,10 +68,55 @@ public class AdminAccessor {
     }
 
     public int update(AdminPO adminPO) {
-        return mapper.update(adminPO);
+        int updated = mapper.update(adminPO);
+        if (updated == 1) {
+            deleteCacheAll(adminPO.getTenantCode(), adminPO.getRoleCode());
+        }
+        return updated;
     }
 
     public int delete(String tenantCode, String loginName) {
-        return mapper.delete(tenantCode, loginName);
+        int deleted = mapper.delete(tenantCode, loginName);
+        if (deleted == 1) {
+            deleteCacheAll(tenantCode, loginName);
+        }
+        return deleted;
+    }
+
+    private String getCacheKey(String tenantCode, String loginName) {
+        return "role_acc_" + tenantCode + "-" + loginName;
+    }
+
+    private String getCacheListKey(String tenantCode) {
+        return "role_acc_" + tenantCode;
+    }
+
+    private AdminPO getCache(String tenantCode, String loginName) {
+        String key = getCacheKey(tenantCode, loginName);
+        Object cached = redisManager.getValue(key);
+        AdminPO po = (AdminPO) cached;
+        return po;
+    }
+
+    private List<AdminPO> getCacheList(String tenantCode) {
+        String key = getCacheListKey(tenantCode);
+        Object cached = redisManager.getValue(key);
+        List<AdminPO> poList = (List<AdminPO>) cached;
+        return poList;
+    }
+
+    private void setCacheList(String tenantCode, List<AdminPO> poList) {
+        String key = getCacheListKey(tenantCode);
+        redisManager.setValue(key, poList);
+    }
+
+    private void setCache(String tenantCode, String loginName, AdminPO po) {
+        String key = getCacheKey(tenantCode, loginName);
+        redisManager.setValue(key, po);
+    }
+
+    private void deleteCacheAll(String tenantCode, String loginName) {
+        redisManager.deleteKey(getCacheKey(tenantCode, loginName));
+        redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

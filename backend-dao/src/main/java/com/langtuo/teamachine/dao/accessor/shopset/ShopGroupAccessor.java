@@ -22,7 +22,7 @@ public class ShopGroupAccessor {
 
     public ShopGroupPO selectOne(String tenantCode, String shopGroupCode) {
         // 首先访问缓存
-        ShopGroupPO cached = getCachedShopGroup(tenantCode, shopGroupCode);
+        ShopGroupPO cached = getCache(tenantCode, shopGroupCode);
         if (cached != null) {
             return cached;
         }
@@ -30,13 +30,13 @@ public class ShopGroupAccessor {
         ShopGroupPO po = mapper.selectOne(tenantCode, shopGroupCode);
 
         // 设置缓存
-        setCachedShopGroup(tenantCode, shopGroupCode, po);
+        setCache(tenantCode, shopGroupCode, po);
         return po;
     }
 
     public List<ShopGroupPO> selectList(String tenantCode) {
         // 首先访问缓存
-        List<ShopGroupPO> cachedList = getCachedShopGroupList(tenantCode);
+        List<ShopGroupPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
             return cachedList;
         }
@@ -44,7 +44,7 @@ public class ShopGroupAccessor {
         List<ShopGroupPO> list = mapper.selectList(tenantCode);
 
         // 设置缓存
-        setCachedShopGroupList(tenantCode, list);
+        setCacheList(tenantCode, list);
         return list;
     }
 
@@ -67,7 +67,7 @@ public class ShopGroupAccessor {
     public int update(ShopGroupPO shopGroupPO) {
         int updated = mapper.update(shopGroupPO);
         if (updated == 1) {
-            deleteCachedShopGroup(shopGroupPO.getTenantCode(), shopGroupPO.getShopGroupCode());
+            deleteCacheAll(shopGroupPO.getTenantCode(), shopGroupPO.getShopGroupCode());
         }
         return updated;
     }
@@ -75,7 +75,7 @@ public class ShopGroupAccessor {
     public int delete(String tenantCode, String shopGroupCode) {
         int deleted = mapper.delete(tenantCode, shopGroupCode);
         if (deleted == 1) {
-            deleteCachedShopGroup(tenantCode, shopGroupCode);
+            deleteCacheAll(tenantCode, shopGroupCode);
         }
         return deleted;
     }
@@ -84,36 +84,36 @@ public class ShopGroupAccessor {
         return "shop_group_acc_" + tenantCode + "-" + shopGroupCode;
     }
 
-    private String getCacheKey(String tenantCode) {
+    private String getCacheListKey(String tenantCode) {
         return "shop_group_acc_" + tenantCode;
     }
 
-    private ShopGroupPO getCachedShopGroup(String tenantCode, String shopGroupCode) {
+    private ShopGroupPO getCache(String tenantCode, String shopGroupCode) {
         String key = getCacheKey(tenantCode, shopGroupCode);
         Object cached = redisManager.getValue(key);
         ShopGroupPO po = (ShopGroupPO) cached;
         return po;
     }
 
-    private List<ShopGroupPO> getCachedShopGroupList(String tenantCode) {
-        String key = getCacheKey(tenantCode);
+    private List<ShopGroupPO> getCacheList(String tenantCode) {
+        String key = getCacheListKey(tenantCode);
         Object cached = redisManager.getValue(key);
         List<ShopGroupPO> poList = (List<ShopGroupPO>) cached;
         return poList;
     }
 
-    private void setCachedShopGroupList(String tenantCode, List<ShopGroupPO> poList) {
-        String key = getCacheKey(tenantCode);
+    private void setCacheList(String tenantCode, List<ShopGroupPO> poList) {
+        String key = getCacheListKey(tenantCode);
         redisManager.setValue(key, poList);
     }
 
-    private void setCachedShopGroup(String tenantCode, String shopGroupCode, ShopGroupPO po) {
+    private void setCache(String tenantCode, String shopGroupCode, ShopGroupPO po) {
         String key = getCacheKey(tenantCode, shopGroupCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCachedShopGroup(String tenantCode, String shopGroupCode) {
+    private void deleteCacheAll(String tenantCode, String shopGroupCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, shopGroupCode));
-        redisManager.deleteKey(getCacheKey(tenantCode));
+        redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

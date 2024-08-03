@@ -22,7 +22,7 @@ public class RoleAccessor {
 
     public RolePO selectOne(String tenantCode, String roleCode) {
         // 首先访问缓存
-        RolePO cached = getCachedRole(tenantCode, roleCode);
+        RolePO cached = getCache(tenantCode, roleCode);
         if (cached != null) {
             return cached;
         }
@@ -30,13 +30,13 @@ public class RoleAccessor {
         RolePO po = mapper.selectOne(tenantCode, roleCode);
 
         // 设置缓存
-        setCachedRole(tenantCode, roleCode, po);
+        setCache(tenantCode, roleCode, po);
         return po;
     }
 
     public List<RolePO> selectList(String tenantCode) {
         // 首先访问缓存
-        List<RolePO> cachedList = getCachedRoleList(tenantCode);
+        List<RolePO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
             return cachedList;
         }
@@ -44,7 +44,7 @@ public class RoleAccessor {
         List<RolePO> list = mapper.selectList(tenantCode);
 
         // 设置缓存
-        setCachedRoleList(tenantCode, list);
+        setCacheList(tenantCode, list);
         return list;
     }
 
@@ -76,7 +76,7 @@ public class RoleAccessor {
     public int update(RolePO rolePO) {
         int updated = mapper.update(rolePO);
         if (updated == 1) {
-            deleteCachedRole(rolePO.getTenantCode(), rolePO.getRoleCode());
+            deleteCacheAll(rolePO.getTenantCode(), rolePO.getRoleCode());
         }
         return updated;
     }
@@ -84,7 +84,7 @@ public class RoleAccessor {
     public int delete(String tenantCode, String roleCode) {
         int deleted = mapper.delete(tenantCode, roleCode);
         if (deleted == 1) {
-            deleteCachedRole(tenantCode, roleCode);
+            deleteCacheAll(tenantCode, roleCode);
         }
         return deleted;
     }
@@ -93,36 +93,36 @@ public class RoleAccessor {
         return "role_acc_" + tenantCode + "-" + roleCode;
     }
 
-    private String getCacheKey(String tenantCode) {
+    private String getCacheListKey(String tenantCode) {
         return "role_acc_" + tenantCode;
     }
 
-    private RolePO getCachedRole(String tenantCode, String roleCode) {
+    private RolePO getCache(String tenantCode, String roleCode) {
         String key = getCacheKey(tenantCode, roleCode);
         Object cached = redisManager.getValue(key);
         RolePO po = (RolePO) cached;
         return po;
     }
 
-    private List<RolePO> getCachedRoleList(String tenantCode) {
-        String key = getCacheKey(tenantCode);
+    private List<RolePO> getCacheList(String tenantCode) {
+        String key = getCacheListKey(tenantCode);
         Object cached = redisManager.getValue(key);
         List<RolePO> poList = (List<RolePO>) cached;
         return poList;
     }
 
-    private void setCachedRoleList(String tenantCode, List<RolePO> poList) {
-        String key = getCacheKey(tenantCode);
+    private void setCacheList(String tenantCode, List<RolePO> poList) {
+        String key = getCacheListKey(tenantCode);
         redisManager.setValue(key, poList);
     }
 
-    private void setCachedRole(String tenantCode, String roleCode, RolePO po) {
+    private void setCache(String tenantCode, String roleCode, RolePO po) {
         String key = getCacheKey(tenantCode, roleCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCachedRole(String tenantCode, String roleCode) {
+    private void deleteCacheAll(String tenantCode, String roleCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, roleCode));
-        redisManager.deleteKey(getCacheKey(tenantCode));
+        redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

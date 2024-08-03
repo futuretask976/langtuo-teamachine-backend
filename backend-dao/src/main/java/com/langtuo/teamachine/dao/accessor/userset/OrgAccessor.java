@@ -22,7 +22,7 @@ public class OrgAccessor {
 
     public OrgPO selectOne(String tenantCode, String orgName) {
         // 首先访问缓存
-        OrgPO cached = getCachedOrg(tenantCode, orgName);
+        OrgPO cached = getCache(tenantCode, orgName);
         if (cached != null) {
             return cached;
         }
@@ -30,13 +30,13 @@ public class OrgAccessor {
         OrgPO po = mapper.selectOne(tenantCode, orgName);
 
         // 设置缓存
-        setCachedOrg(tenantCode, orgName, po);
+        setCache(tenantCode, orgName, po);
         return po;
     }
 
     public List<OrgPO> selectList(String tenantCode) {
         // 首先访问缓存
-        List<OrgPO> cachedList = getCachedOrgList(tenantCode);
+        List<OrgPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
             return cachedList;
         }
@@ -44,7 +44,7 @@ public class OrgAccessor {
         List<OrgPO> list = mapper.selectList(tenantCode);
 
         // 设置缓存
-        setCachedOrgList(tenantCode, list);
+        setCacheList(tenantCode, list);
         return list;
     }
 
@@ -67,7 +67,7 @@ public class OrgAccessor {
     public int update(OrgPO orgPO) {
         int updated = mapper.update(orgPO);
         if (updated == 1) {
-            deleteCachedOrg(orgPO.getTenantCode(), orgPO.getOrgName());
+            deleteCacheAll(orgPO.getTenantCode(), orgPO.getOrgName());
         }
         return updated;
     }
@@ -75,7 +75,7 @@ public class OrgAccessor {
     public int delete(String tenantCode, String orgName) {
         int deleted = mapper.delete(tenantCode, orgName);
         if (deleted == 1) {
-            deleteCachedOrg(tenantCode, orgName);
+            deleteCacheAll(tenantCode, orgName);
         }
         return deleted;
     }
@@ -84,36 +84,36 @@ public class OrgAccessor {
         return "org_acc_" + tenantCode + "-" + orgName;
     }
 
-    private String getCacheKey(String tenantCode) {
+    private String getCacheListKey(String tenantCode) {
         return "org_acc_" + tenantCode;
     }
 
-    private OrgPO getCachedOrg(String tenantCode, String orgName) {
+    private OrgPO getCache(String tenantCode, String orgName) {
         String key = getCacheKey(tenantCode, orgName);
         Object cached = redisManager.getValue(key);
         OrgPO po = (OrgPO) cached;
         return po;
     }
 
-    private List<OrgPO> getCachedOrgList(String tenantCode) {
-        String key = getCacheKey(tenantCode);
+    private List<OrgPO> getCacheList(String tenantCode) {
+        String key = getCacheListKey(tenantCode);
         Object cached = redisManager.getValue(key);
         List<OrgPO> poList = (List<OrgPO>) cached;
         return poList;
     }
 
-    private void setCachedOrgList(String tenantCode, List<OrgPO> poList) {
-        String key = getCacheKey(tenantCode);
+    private void setCacheList(String tenantCode, List<OrgPO> poList) {
+        String key = getCacheListKey(tenantCode);
         redisManager.setValue(key, poList);
     }
 
-    private void setCachedOrg(String tenantCode, String orgName, OrgPO po) {
+    private void setCache(String tenantCode, String orgName, OrgPO po) {
         String key = getCacheKey(tenantCode, orgName);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCachedOrg(String tenantCode, String orgName) {
+    private void deleteCacheAll(String tenantCode, String orgName) {
         redisManager.deleteKey(getCacheKey(tenantCode, orgName));
-        redisManager.deleteKey(getCacheKey(tenantCode));
+        redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }
