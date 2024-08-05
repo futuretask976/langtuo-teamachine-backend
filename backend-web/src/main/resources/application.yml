@@ -55,6 +55,7 @@ secure:
       - /login/**
       - /logout/**
       - /userset/tenant/list/**
+      - /mqtt/**
 
 server:
   servlet:
