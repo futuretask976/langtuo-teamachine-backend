@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.dao.oss;
+package com.langtuo.teamachine.dao.config;
 
 public class OSSConfig {
     /**

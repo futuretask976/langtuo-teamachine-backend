@@ -17,6 +17,7 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.langtuo.teamachine.dao.config.OSSConfig;
 import com.langtuo.teamachine.dao.po.security.OSSTokenPO;
 
 import java.io.*;
