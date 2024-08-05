@@ -4,37 +4,37 @@ public class OSSConfig {
     /**
      *
      */
-    public static final String OSS_END_POINT = "https://oss-cn-hangzhou.aliyuncs.com";
+    public static final String ENDPOINT = "https://oss-cn-hangzhou.aliyuncs.com";
 
     /**
      *
      */
-    public static final String OSS_BUCKET_NAME = "miya-bucket2";
+    public static final String BUCKET_NAME = "miya-bucket2";
 
     /**
      *
      */
-    public static final String OSS_ACCESS_KEY_ID = "LTAI5t6hg6snjTBEddAP8tz8";
+    public static final String ACCESS_KEY_ID = "LTAI5t6hg6snjTBEddAP8tz8";
 
     /**
      *
      */
-    public static final String OSS_ACCESS_KEY_SECRET = "MammwnIOPrHe9AAO4CnaUJwmIG96Kc";
+    public static final String ACCESS_KEY_SECRET = "MammwnIOPrHe9AAO4CnaUJwmIG96Kc";
 
     /**
      *
      */
-    public static final int OSS_ACCESS_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7;
+    public static final int ACCESS_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7;
 
     /**
      *
      */
-    public static final String OSS_STORAGE_PATH_PREFIX = "teamachine/";
+    public static final String STORAGE_PATH_PREFIX = "teamachine/";
 
     /**
      *
      */
-    public static final String STS_END_POINT = "sts.cn-hangzhou.aliyuncs.com";
+    public static final String STS_ENDPOINT = "sts.cn-hangzhou.aliyuncs.com";
 
     /**
      * RAM角色的RamRoleArn

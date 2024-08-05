@@ -26,10 +26,10 @@ import java.util.Date;
 public class OSSUtils {
     public static OSSTokenPO getSTS() {
         // STS服务接入点，例如sts.cn-hangzhou.aliyuncs.com。您可以通过公网或者VPC接入STS服务。
-        String endpoint = OSSConfig.STS_END_POINT;
+        String endpoint = OSSConfig.STS_ENDPOINT;
         // 从环境变量中获取步骤1生成的RAM用户的访问密钥（AccessKey ID和AccessKey Secret）。
-        String accessKeyId = OSSConfig.OSS_ACCESS_KEY_ID;
-        String accessKeySecret = OSSConfig.OSS_ACCESS_KEY_SECRET;
+        String accessKeyId = OSSConfig.ACCESS_KEY_ID;
+        String accessKeySecret = OSSConfig.ACCESS_KEY_SECRET;
         // 从环境变量中获取步骤3生成的RAM角色的RamRoleArn。
         String roleArn = OSSConfig.STS_ROLE_ARN;
         // 自定义角色会话名称，用来区分不同的令牌，例如可填写为SessionTest。
@@ -93,17 +93,17 @@ public class OSSUtils {
         String finalFileName = System.currentTimeMillis() + "" + new SecureRandom().nextInt(0x0400)
                 + suffixName;
         // OSS中的文件夹名
-        String objectName = OSSConfig.OSS_STORAGE_PATH_PREFIX + finalFileName;
+        String objectName = OSSConfig.STORAGE_PATH_PREFIX + finalFileName;
 
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT, credentialsProvider);
+                OSSConfig.ACCESS_KEY_ID, OSSConfig.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT, credentialsProvider);
         // 创建file输入流
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(file);
-            PutObjectResult result = ossClient.putObject(OSSConfig.OSS_BUCKET_NAME, objectName,
+            PutObjectResult result = ossClient.putObject(OSSConfig.BUCKET_NAME, objectName,
                     fileInputStream);
             System.out.println(result);
         } finally {
@@ -135,12 +135,12 @@ public class OSSUtils {
         String finalFileName = System.currentTimeMillis() + "" + new SecureRandom().nextInt(0x0400)
                 + suffixName;
         // OSS中的文件夹名
-        String objectName = OSSConfig.OSS_STORAGE_PATH_PREFIX + finalFileName;
+        String objectName = OSSConfig.STORAGE_PATH_PREFIX + finalFileName;
 
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT, credentialsProvider);
+                OSSConfig.ACCESS_KEY_ID, OSSConfig.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT, credentialsProvider);
         // 创建上传文件的元信息，可以通过文件元信息设置HTTP header(设置了才能通过返回的链接直接访问)。
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType("image/jpg");
@@ -149,7 +149,7 @@ public class OSSUtils {
         ByteArrayInputStream byteArrayInputStream = null;
         try {
             byteArrayInputStream = new ByteArrayInputStream(multipartFile.getBytes());
-            PutObjectResult result = ossClient.putObject(OSSConfig.OSS_BUCKET_NAME, objectName,
+            PutObjectResult result = ossClient.putObject(OSSConfig.BUCKET_NAME, objectName,
                     byteArrayInputStream, objectMetadata);
             System.out.println(result);
         } finally {
@@ -170,12 +170,12 @@ public class OSSUtils {
     public static String genAccessObjectURL(String objectName) throws OSSException, ClientException {
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT, credentialsProvider);
+                OSSConfig.ACCESS_KEY_ID, OSSConfig.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT, credentialsProvider);
 
         try {
-            Date expiration = new Date(System.currentTimeMillis() + OSSConfig.OSS_ACCESS_EXPIRATION_TIME);
-            URL result = ossClient.generatePresignedUrl(OSSConfig.OSS_BUCKET_NAME, objectName, expiration);
+            Date expiration = new Date(System.currentTimeMillis() + OSSConfig.ACCESS_EXPIRATION_TIME);
+            URL result = ossClient.generatePresignedUrl(OSSConfig.BUCKET_NAME, objectName, expiration);
             return result.toString();
         } finally {
             if (ossClient != null) {

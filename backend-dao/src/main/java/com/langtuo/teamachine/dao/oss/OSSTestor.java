@@ -36,11 +36,11 @@ public class OSSTestor {
 
         // 创建OSSClient实例
         OSSTokenPO stsPO = OSSUtils.getSTS();
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT,
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT,
                 stsPO.getAccessKeyId(), stsPO.getAccessKeySecret(), stsPO.getSecurityToken());
 
         try {
-            Date expiration = new Date(System.currentTimeMillis() + OSSConfig.OSS_ACCESS_EXPIRATION_TIME);
+            Date expiration = new Date(System.currentTimeMillis() + OSSConfig.ACCESS_EXPIRATION_TIME);
             URL result = ossClient.generatePresignedUrl(bucketName, objectName, expiration);
             System.out.println(result);
         } catch (OSSException oe) {
@@ -71,10 +71,10 @@ public class OSSTestor {
 
         // 创建OSSClient实例
         OSSTokenPO stsPO = OSSUtils.getSTS();
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT,
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT,
                 stsPO.getAccessKeyId(), stsPO.getAccessKeySecret(), stsPO.getSecurityToken());
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest(OSSConfig.OSS_BUCKET_NAME, objectName,
+        PutObjectRequest putObjectRequest = new PutObjectRequest(OSSConfig.BUCKET_NAME, objectName,
                 new File("backend-dao/src/main/resources/naicha_01.jpg"));
         try {
             PutObjectResult result = ossClient.putObject(putObjectRequest);
@@ -154,12 +154,12 @@ public class OSSTestor {
     public static void createBucket() {
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT, credentialsProvider);
+                OSSConfig.ACCESS_KEY_ID, OSSConfig.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT, credentialsProvider);
 
         try {
             // 创建存储空间
-            Bucket bucket = ossClient.createBucket(OSSConfig.OSS_BUCKET_NAME);
+            Bucket bucket = ossClient.createBucket(OSSConfig.BUCKET_NAME);
             System.out.println("bucket created=" + bucket);
         } catch (OSSException oe) {
             System.out.println("Caught an OSSException, which means your request made it to OSS, "
@@ -190,11 +190,11 @@ public class OSSTestor {
         // 创建OSSClient实例
         OSSTokenPO OSSTokenPO = OSSUtils.getSTS();
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT, credentialsProvider);
+                OSSConfig.ACCESS_KEY_ID, OSSConfig.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT, credentialsProvider);
 
         try {
-            PutObjectResult result = ossClient.putObject(OSSConfig.OSS_BUCKET_NAME, objectName,
+            PutObjectResult result = ossClient.putObject(OSSConfig.BUCKET_NAME, objectName,
                     new ByteArrayInputStream(readImgFile()));
             System.out.println(result);
         } catch (OSSException oe) {
@@ -248,11 +248,11 @@ public class OSSTestor {
 
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.OSS_END_POINT, credentialsProvider);
+                OSSConfig.ACCESS_KEY_ID, OSSConfig.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT, credentialsProvider);
 
         try {
-            Date expiration = new Date(System.currentTimeMillis() + OSSConfig.OSS_ACCESS_EXPIRATION_TIME);
+            Date expiration = new Date(System.currentTimeMillis() + OSSConfig.ACCESS_EXPIRATION_TIME);
             URL result = ossClient.generatePresignedUrl(bucketName, objectName, expiration);
             System.out.println(result);
         } catch (OSSException oe) {
@@ -279,7 +279,7 @@ public class OSSTestor {
         String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
         // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.OSS_ACCESS_KEY_ID, OSSConfig.OSS_ACCESS_KEY_SECRET);
+                OSSConfig.ACCESS_KEY_ID, OSSConfig.ACCESS_KEY_SECRET);
         // 填写Bucket名称，例如examplebucket。
         String bucketName = "miya-bucket2";
         // 填写Object完整路径，例如exampledir/exampleobject.txt。Object完整路径中不能包含Bucket名称。
