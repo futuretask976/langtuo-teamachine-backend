@@ -18,8 +18,10 @@ public enum PermitActEnum {
     SHOP_MGT("shop_mgt", "店铺管理", "shop_set"),
 
     // 饮品生产
+    TOPPING_TYPE_MGT("topping_type_mgt", "物料管理", "drink_set"),
     TOPPING_MGT("topping_mgt", "物料管理", "drink_set"),
     SPEC_MGT("spec_mgt", "规格管理", "drink_set"),
+    TEA_TYPE_MGT("tea_type_mgt", "茶品类型管理", "drink_set"),
     TEA_MGT("tea_mgt", "茶品管理", "drink_set"),
     ACCURACY_MGT("accuracy_mgt", "物料精度模板管理", "drink_set"),
 
