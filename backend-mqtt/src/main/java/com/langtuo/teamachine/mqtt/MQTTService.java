@@ -25,14 +25,6 @@ public class MQTTService implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         initMqttClient();
-        log.info("$$$$$ afterPropertiesSet exiting");
-    }
-
-    public void testSend() throws MqttException {
-        for (int i = 0; i < 10; i++) {
-            this.sendMsgByTopic("testMq4Iot", "guangxia send topic message");
-            this.sendMsgByP2P(MQTTConfig.CLIENT_ID, "guangxia send p2p message");
-        }
     }
 
     public void sendMsgByTopic(String topic, String payload) {

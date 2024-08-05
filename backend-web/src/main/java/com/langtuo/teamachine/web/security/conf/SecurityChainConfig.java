@@ -95,22 +95,29 @@ public class SecurityChainConfig {
                 .antMatchers("/deviceset/deploy/**").hasAnyRole("deploy_mgt")
                 .antMatchers("/deviceset/machine/**").hasAnyRole("machine_mgt")
                 // 用户
+                .antMatchers("/userset/role/list/**").hasAnyRole("role_mgt", "org_mgt", "admin_mgt")
+                .antMatchers("/userset/permitact/list/**").hasAnyRole("role_mgt", "org_mgt", "admin_mgt")
+                .antMatchers("/userset/org/list/**").hasAnyRole("role_mgt", "org_mgt", "admin_mgt")
                 .antMatchers("/userset/tenant/**").hasAnyRole("tenant_mgt")
                 .antMatchers("/userset/org/**").hasAnyRole("org_mgt")
-                .antMatchers("/userset/permitact/**").hasAnyRole("role_mgt")
+                .antMatchers("/userset/permitact/**").hasAnyRole("permit_act_mgt")
                 .antMatchers("/userset/role/**").hasAnyRole("role_mgt")
                 .antMatchers("/userset/admin/**").hasAnyRole("admin_mgt")
                 // 店铺
+                .antMatchers("/shopset/group/list/**").hasAnyRole("shop_group_mgt", "shop_mgt")
                 .antMatchers("/shopset/group/**").hasAnyRole("shop_group_mgt")
                 .antMatchers("/shopset/shop/**").hasAnyRole("shop_mgt")
                 // 饮品生产
-                .antMatchers("/drinkset/topping/type/**").hasAnyRole("topping_mgt")
+                .antMatchers("/drinkset/topping/type/list/**").hasAnyRole("topping_type_mgt", "topping_mgt")
+                .antMatchers("/drinkset/tea/type/list/**").hasAnyRole("tea_type_mgt", "tea_mgt")
+                .antMatchers("/drinkset/topping/type/**").hasAnyRole("topping_type_mgt")
                 .antMatchers("/drinkset/topping/**").hasAnyRole("topping_mgt")
                 .antMatchers("/drinkset/spec/**").hasAnyRole("spec_mgt")
+                .antMatchers("/drinkset/tea/type/**").hasAnyRole("tea_type_mgt")
                 .antMatchers("/drinkset/tea/**").hasAnyRole("tea_mgt")
-                .antMatchers("/drinkset/tea/type/**").hasAnyRole("tea_mgt")
                 .antMatchers("/drinkset/accuracy/**").hasAnyRole("accuracy_mgt")
                 // 菜单
+                .antMatchers("/menuset/series/list/**").hasAnyRole("series_mgt", "menu_mgt")
                 .antMatchers("/menuset/series/**").hasAnyRole("series_mgt")
                 .antMatchers("/menuset/menu/**").hasAnyRole("menu_mgt")
                 // 食安规则

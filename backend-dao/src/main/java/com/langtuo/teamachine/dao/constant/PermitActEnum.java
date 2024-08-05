@@ -10,6 +10,7 @@ public enum PermitActEnum {
     // TENANT_MGT("tenant_mgt", "商户管理", "user_set"),
     ORG_MGT("org_mgt", "组织管理", "user_set"),
     ROLE_MGT("role_mgt", "角色管理", "user_set"),
+    PERMIT_ACT_MGT("permit_act_mgt", "权限管理", "user_set"),
     ADMIN_MGT("admin_mgt", "管理员管理", "user_set"),
 
     // 店铺
