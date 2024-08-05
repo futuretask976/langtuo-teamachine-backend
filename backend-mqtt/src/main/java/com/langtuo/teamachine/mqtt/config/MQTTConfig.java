@@ -47,5 +47,8 @@ public class MQTTConfig {
      */
     public static final String PARENT_P2P_TOPIC_PREFIX = "Topic_Tea_Machine/p2p/";
 
+    /**
+     *
+     */
     public static final int TIME_TO_WAIT = 5000;
 }

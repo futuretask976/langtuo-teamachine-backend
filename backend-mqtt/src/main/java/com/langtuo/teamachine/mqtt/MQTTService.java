@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.mqtt;
 
-import com.langtuo.teamachine.mqtt.concurrent.ExecutorService4Consume;
+import com.langtuo.teamachine.mqtt.concurrent.ExeService4Consume;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
-import com.langtuo.teamachine.mqtt.concurrent.ExecutorService4Publish;
+import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
 import com.langtuo.teamachine.mqtt.worker.ConsumeWorker;
 import com.langtuo.teamachine.mqtt.wrapper.ConnectionOptionWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class MQTTService implements InitializingBean {
     }
 
     public void sendMsgByTopic(String topic, String payload) {
-        ExecutorService4Publish.getExecutorService().submit(() -> {
+        ExeService4Publish.getExecutorService().submit(() -> {
             String sendTopic = MQTTConfig.PARENT_TOPIC_PREFIX + topic;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
@@ -49,7 +49,7 @@ public class MQTTService implements InitializingBean {
     }
 
     public void sendMsgByP2P(String clientId, String payload) {
-        ExecutorService4Publish.getExecutorService().submit(() -> {
+        ExeService4Publish.getExecutorService().submit(() -> {
             String p2pSendTopic = MQTTConfig.PARENT_P2P_TOPIC_PREFIX + clientId;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
@@ -100,7 +100,7 @@ public class MQTTService implements InitializingBean {
             @Override
             public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
                 ConsumeWorker worker = new ConsumeWorker(s, new String(mqttMessage.getPayload()));
-                ExecutorService4Consume.getExecutorService().submit(worker);
+                ExeService4Consume.getExecutorService().submit(worker);
             }
 
             @Override
