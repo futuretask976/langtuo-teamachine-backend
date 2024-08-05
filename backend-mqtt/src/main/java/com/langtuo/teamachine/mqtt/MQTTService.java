@@ -105,7 +105,7 @@ public class MQTTService implements InitializingBean {
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-                System.out.println("send msg succeed topic is : " + iMqttDeliveryToken.getTopics()[0]);
+                log.info("mqtt send success: " + iMqttDeliveryToken.getTopics()[0]);
             }
         });
         ConnectionOptionWrapper connectionOptionWrapper = new ConnectionOptionWrapper(
