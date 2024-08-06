@@ -27,9 +27,9 @@ public class MQTTService implements InitializingBean {
         initMqttClient();
     }
 
-    public void sendMsgByTopic(String topic, String payload) {
+    public void sendMsgByTopic(String subTopic, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
-            String sendTopic = MQTTConfig.PARENT_TOPIC_PREFIX + topic;
+            String sendTopic = MQTTConfig.PARENT_TOPIC_PREFIX + subTopic;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {

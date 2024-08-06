@@ -7,7 +7,7 @@ public class ConsumeWorker implements Runnable {
     /**
      * 已不包含parentTopic
      */
-    private String topic;
+    private String subTopic;
 
     /**
      * 消息体，JSON格式
@@ -27,13 +27,13 @@ public class ConsumeWorker implements Runnable {
         if (topic.startsWith(MQTTConfig.PARENT_P2P_TOPIC_PREFIX)) {
             isP2P = true;
         }
-        this.topic = isP2P ? topic.substring(MQTTConfig.PARENT_P2P_TOPIC_PREFIX.length())
+        this.subTopic = isP2P ? topic.substring(MQTTConfig.PARENT_P2P_TOPIC_PREFIX.length())
                 : topic.substring(MQTTConfig.PARENT_TOPIC_PREFIX.length());
         this.payload = payload;
     }
 
     @Override
     public void run() {
-        System.out.println("$$$$$ topic=" + topic + ", payload=" + payload);
+        System.out.println("$$$$$ subTopic=" + subTopic + ", payload=" + payload);
     }
 }

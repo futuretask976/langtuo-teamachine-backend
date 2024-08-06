@@ -48,6 +48,11 @@ public class MQTTConfig {
     public static final String PARENT_P2P_TOPIC_PREFIX = "Topic_Tea_Machine/p2p/";
 
     /**
+     * 对机器的广播消息
+     */
+    public static final String TOPIC_BROADCAST_TO_MACHINES = "Broadcast_To_Machines";
+
+    /**
      *
      */
     public static final int TIME_TO_WAIT = 5000;
