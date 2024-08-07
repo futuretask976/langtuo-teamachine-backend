@@ -22,7 +22,7 @@ public class ShopAccessor {
 
     public ShopPO selectOneByCode(String tenantCode, String shopCode) {
         // 首先访问缓存
-        ShopPO cached = setCache(tenantCode, shopCode, null);
+        ShopPO cached = getCache(tenantCode, shopCode, null);
         if (cached != null) {
             return cached;
         }
@@ -30,13 +30,13 @@ public class ShopAccessor {
         ShopPO po = mapper.selectOne(tenantCode, shopCode, null);
 
         // 设置缓存
-        setCache(tenantCode, shopCode, null, po);
+        getCache(tenantCode, shopCode, null, po);
         return po;
     }
 
     public ShopPO selectOneByName(String tenantCode, String shopName) {
         // 首先访问缓存
-        ShopPO cached = setCache(tenantCode, null, shopName);
+        ShopPO cached = getCache(tenantCode, null, shopName);
         if (cached != null) {
             return cached;
         }
@@ -44,7 +44,7 @@ public class ShopAccessor {
         ShopPO po = mapper.selectOne(tenantCode, null, shopName);
 
         // 设置缓存
-        setCache(tenantCode, null, shopName, po);
+        getCache(tenantCode, null, shopName, po);
         return po;
     }
 
@@ -129,7 +129,7 @@ public class ShopAccessor {
         return "shop_acc_" + tenantCode + "-" +shopGroupCode;
     }
 
-    private ShopPO setCache(String tenantCode, String shopCode, String shopName) {
+    private ShopPO getCache(String tenantCode, String shopCode, String shopName) {
         String key = getCacheKey(tenantCode, shopCode, shopName);
         Object cached = redisManager.getValue(key);
         ShopPO po = (ShopPO) cached;
@@ -148,7 +148,7 @@ public class ShopAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String shopCode, String shopName, ShopPO po) {
+    private void getCache(String tenantCode, String shopCode, String shopName, ShopPO po) {
         String key = getCacheKey(tenantCode, shopCode, shopName);
         redisManager.setValue(key, po);
     }
