@@ -44,7 +44,7 @@ public class LangTuoResult<T> {
     }
 
     public static <T> List<T> getListModel(LangTuoResult<List<T>> result) {
-        if (result == null || result.isSuccess() || result.getModel() == null) {
+        if (result == null || !result.isSuccess() || result.getModel() == null) {
             return null;
         }
         List<T> list = result.getModel();

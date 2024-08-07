@@ -40,20 +40,29 @@ public class MQTTConfig {
     /**
      *
      */
-    public static final String PARENT_TOPIC_PREFIX = "Topic_Tea_Machine/";
+    public static final String PARENT_TOPIC = "Topic_Tea_Machine";
 
     /**
      *
      */
-    public static final String PARENT_P2P_TOPIC_PREFIX = "Topic_Tea_Machine/p2p/";
-
-    /**
-     * 对机器的广播消息
-     */
-    public static final String TOPIC_BROADCAST_TO_MACHINES = "Broadcast_To_Machines";
+    public static final String PARENT_P2P_TOPIC = "Topic_Tea_Machine/p2p";
 
     /**
      *
      */
     public static final int TIME_TO_WAIT = 5000;
+
+    /**
+     * topic列表
+     */
+    public static final String TOPIC_PREPARE_DISPATCH_MENU = PARENT_TOPIC + "/PREPARE_DISPATCH_MENU";
+    public static final String TOPIC_DISPATCH_MENU = PARENT_TOPIC + "/DISPATCH_MENU";
+
+    /**
+     * topic过滤器
+     */
+    public static final String[] TOPIC_FILTERS = new String[]{
+            TOPIC_PREPARE_DISPATCH_MENU,
+            TOPIC_DISPATCH_MENU
+    };
 }

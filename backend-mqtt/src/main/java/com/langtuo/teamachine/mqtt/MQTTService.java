@@ -3,7 +3,7 @@ package com.langtuo.teamachine.mqtt;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Consume;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
-import com.langtuo.teamachine.mqtt.worker.MenuDispatchWorker;
+import com.langtuo.teamachine.mqtt.worker.PrepareMenuDispatchWorker;
 import com.langtuo.teamachine.mqtt.wrapper.ConnectionOptionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -28,9 +28,9 @@ public class MQTTService implements InitializingBean {
         initMqttClient();
     }
 
-    public void sendMsgByTopic(String subTopic, String payload) {
+    public void sendMsgByTopic(String topic, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
-            String sendTopic = MQTTConfig.PARENT_TOPIC_PREFIX + subTopic;
+            String sendTopic = topic;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
@@ -43,7 +43,7 @@ public class MQTTService implements InitializingBean {
 
     public void sendMsgByP2P(String clientId, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
-            String p2pSendTopic = MQTTConfig.PARENT_P2P_TOPIC_PREFIX + clientId;
+            String p2pSendTopic = MQTTConfig.PARENT_P2P_TOPIC + "/" + clientId;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
@@ -76,10 +76,7 @@ public class MQTTService implements InitializingBean {
             public void connectComplete(boolean reconnect, String serverURI) {
                 // 客户端连接成功后就需要尽快订阅需要的 topic
                 try {
-                    final String topicFilter[] = {MQTTConfig.PARENT_TOPIC_PREFIX + "Menu_Dispatch"};
-                    final int[] qos = {MQTTConfig.QOS_LEVEL};
-                    mqttClient.subscribe(topicFilter, qos);
-                    log.info("$$$$$ subscribe success");
+                    mqttClient.subscribe(MQTTConfig.TOPIC_FILTERS, new int[]{MQTTConfig.QOS_LEVEL, MQTTConfig.QOS_LEVEL});
                 } catch (MqttException e) {
                     log.error("mqtt subscribe error: " + e.getMessage(), e);
                 }
@@ -107,14 +104,14 @@ public class MQTTService implements InitializingBean {
 
     public void consume(String topic, String payload) {
         if (StringUtils.isBlank(topic) || StringUtils.isBlank(payload)) {
+            log.info("topic=" + topic + ", payload=" + payload);
             return;
         }
 
-        boolean isP2P = topic.startsWith(MQTTConfig.PARENT_P2P_TOPIC_PREFIX);
-        String subTopic = isP2P ? topic.substring(MQTTConfig.PARENT_P2P_TOPIC_PREFIX.length())
-                : topic.substring(MQTTConfig.PARENT_TOPIC_PREFIX.length());
-        if ("Menu_Dispatch".equals(subTopic)) {
-            ExeService4Consume.getExeService().submit(new MenuDispatchWorker(payload));
+        if (MQTTConfig.TOPIC_PREPARE_DISPATCH_MENU.equals(topic)) {
+            ExeService4Consume.getExeService().submit(new PrepareMenuDispatchWorker(payload));
+        } else {
+            log.info("topic=" + topic + ", payload=" + payload);
         }
     }
 }

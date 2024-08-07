@@ -245,6 +245,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         po.setMaintainUntil(request.getMaintainUntil());
         po.setValidUntil(request.getValidUntil());
         po.setState(1);
+        po.setShopCode(request.getShopCode());
         po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
         return po;
@@ -263,6 +264,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         po.setMaintainUntil(request.getMaintainUntil());
         po.setValidUntil(request.getValidUntil());
         po.setState(request.getState());
+        po.setShopCode(request.getShopCode());
         po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
         return po;

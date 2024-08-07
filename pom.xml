@@ -126,6 +126,11 @@
             <!-- apache start -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>1.10.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.4</version>
             </dependency>
@@ -179,6 +184,24 @@
                 <version>1.2.3</version>
             </dependency>
             <!-- log end -->
+
+            <!-- office poi start -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>3.9</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>3.9</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-schemas</artifactId>
+                <version>3.9</version>
+            </dependency>
+            <!-- office poi end -->
 
             <!-- xml start -->
             <dependency>

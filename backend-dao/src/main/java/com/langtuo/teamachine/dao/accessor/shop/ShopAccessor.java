@@ -62,7 +62,7 @@ public class ShopAccessor {
         return list;
     }
 
-    public List<ShopPO> selectListByShopGroupCode(String tenantCode, String shopGroupCode) {
+    public List<ShopPO> selectList(String tenantCode, String shopGroupCode) {
         // 首先访问缓存
         List<ShopPO> cachedList = getCacheList(tenantCode, shopGroupCode);
         if (cachedList != null) {

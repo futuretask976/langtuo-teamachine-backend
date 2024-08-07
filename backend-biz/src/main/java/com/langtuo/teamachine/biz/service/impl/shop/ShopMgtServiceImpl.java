@@ -94,7 +94,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     public LangTuoResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         LangTuoResult<List<ShopDTO>> langTuoResult = null;
         try {
-            List<ShopPO> list = shopAccessor.selectList(tenantCode);
+            List<ShopPO> list = shopAccessor.selectList(tenantCode, shopGroupCode);
             List<ShopDTO> dtoList = convert(list);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {

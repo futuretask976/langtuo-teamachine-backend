@@ -18,6 +18,7 @@ import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
 import com.langtuo.teamachine.mqtt.MQTTService;
+import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -182,7 +183,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         JSONObject payloadJSON = new JSONObject();
         payloadJSON.put("tenantCode", request.getTenantCode());
         payloadJSON.put("menuCode", request.getMenuCode());
-        mqttService.sendMsgByTopic("Menu_Dispatch", payloadJSON.toJSONString());
+        mqttService.sendMsgByTopic(MQTTConfig.TOPIC_PREPARE_DISPATCH_MENU, payloadJSON.toJSONString());
 
         return langTuoResult;
     }

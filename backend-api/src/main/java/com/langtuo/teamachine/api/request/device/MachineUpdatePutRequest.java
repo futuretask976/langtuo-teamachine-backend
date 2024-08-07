@@ -9,6 +9,16 @@ import java.util.Map;
 @Data
 public class MachineUpdatePutRequest {
     /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
+    /**
      * 机器编码
      */
     private String machineCode;
@@ -44,14 +54,9 @@ public class MachineUpdatePutRequest {
     private Date maintainUntil;
 
     /**
-     * 租户编码
+     * 店铺编码
      */
-    private String tenantCode;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
+    private String shopCode;
 
     /**
      * 参数校验
@@ -64,7 +69,8 @@ public class MachineUpdatePutRequest {
                 || StringUtils.isBlank(screenCode)
                 || StringUtils.isBlank(elecBoardCode)
                 || validUntil == null
-                || maintainUntil == null) {
+                || maintainUntil == null
+                || StringUtils.isBlank(shopCode)) {
             return false;
         }
         return true;
