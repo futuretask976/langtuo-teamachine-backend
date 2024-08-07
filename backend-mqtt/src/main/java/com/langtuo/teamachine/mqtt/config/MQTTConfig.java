@@ -65,4 +65,9 @@ public class MQTTConfig {
             TOPIC_PREPARE_DISPATCH_MENU,
             TOPIC_DISPATCH_MENU
     };
+
+    /**
+     * topic分隔符
+     */
+    public static final String TOPIC_SEPERATOR = "/";
 }

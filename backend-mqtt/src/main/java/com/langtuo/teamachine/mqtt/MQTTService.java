@@ -24,17 +24,22 @@ public class MQTTService implements InitializingBean {
     private MqttClient mqttClient;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        initMqttClient();
+    public void afterPropertiesSet() throws MqttException, NoSuchAlgorithmException, InvalidKeyException {
+        if (mqttClient == null) {
+            synchronized (MQTTService.class) {
+                if (mqttClient == null) {
+                    doInitMqttClient();
+                }
+            }
+        }
     }
 
     public void sendMsgByTopic(String topic, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
-            String sendTopic = topic;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(sendTopic, message);
+                mqttClient.publish(topic, message);
             } catch (MqttException e) {
                 log.error("send msg by topic error: " + e.getMessage(), e);
             }
@@ -43,24 +48,15 @@ public class MQTTService implements InitializingBean {
 
     public void sendMsgByP2P(String clientId, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
-            String p2pSendTopic = MQTTConfig.PARENT_P2P_TOPIC + "/" + clientId;
+            String p2pTopic = MQTTConfig.PARENT_P2P_TOPIC + MQTTConfig.TOPIC_SEPERATOR + clientId;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(p2pSendTopic, message);
+                mqttClient.publish(p2pTopic, message);
             } catch (MqttException e) {
                 log.error("send msg by p2p error: " + e.getMessage(), e);
             }
         });
-    }
-
-    private MqttClient initMqttClient() throws MqttException, NoSuchAlgorithmException, InvalidKeyException {
-        if (mqttClient == null) {
-            synchronized (MQTTService.class) {
-                doInitMqttClient();
-            }
-        }
-        return mqttClient;
     }
 
     private void doInitMqttClient() throws MqttException, NoSuchAlgorithmException, InvalidKeyException {
@@ -104,14 +100,14 @@ public class MQTTService implements InitializingBean {
 
     public void consume(String topic, String payload) {
         if (StringUtils.isBlank(topic) || StringUtils.isBlank(payload)) {
-            log.info("topic=" + topic + ", payload=" + payload);
+            log.info("receive msg error, topic=" + topic + ", payload=" + payload);
             return;
         }
 
         if (MQTTConfig.TOPIC_PREPARE_DISPATCH_MENU.equals(topic)) {
             ExeService4Consume.getExeService().submit(new PrepareMenuDispatchWorker(payload));
         } else {
-            log.info("topic=" + topic + ", payload=" + payload);
+            log.info("match worker error, topic=" + topic);
         }
     }
 }
