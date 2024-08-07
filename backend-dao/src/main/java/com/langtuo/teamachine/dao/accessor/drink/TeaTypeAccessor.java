@@ -76,15 +76,35 @@ public class TeaTypeAccessor {
     }
 
     public int insert(TeaTypePO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getTeaTypeCode(), po.getTeaTypeName());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
     public int update(TeaTypePO po) {
-        return mapper.update(po);
+        int updated = mapper.update(po);
+        if (updated == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getTeaTypeCode(), po.getTeaTypeName());
+            deleteCacheList(po.getTenantCode());
+        }
+        return updated;
     }
 
     public int delete(String tenantCode, String teaTypeCode) {
-        return mapper.delete(tenantCode, teaTypeCode);
+        TeaTypePO po = selectOneByCode(tenantCode, teaTypeCode);
+        if (po == null) {
+            return 0;
+        }
+
+        int deleted = mapper.delete(tenantCode, teaTypeCode);
+        if (deleted == 1) {
+            deleteCacheOne(tenantCode, po.getTeaTypeCode(), po.getTeaTypeName());
+            deleteCacheList(tenantCode);
+        }
+        return deleted;
     }
 
     private String getCacheKey(String tenantCode, String teaTypeCode, String teaName) {
@@ -119,9 +139,12 @@ public class TeaTypeAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String teaTypeCode, String teaName) {
+    private void deleteCacheOne(String tenantCode, String teaTypeCode, String teaTypeName) {
         redisManager.deleteKey(getCacheKey(tenantCode, teaTypeCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, teaName));
+        redisManager.deleteKey(getCacheKey(tenantCode, null, teaTypeName));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

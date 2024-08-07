@@ -89,6 +89,23 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     }
 
     @Override
+    public LangTuoResult<List<MachineDTO>> listByShopCode(String tenantCode, String shopCode) {
+        LangTuoResult<List<MachineDTO>> langTuoResult = null;
+        try {
+            List<MachinePO> list = machineAccessor.selectListByShopCode(tenantCode, shopCode);
+            List<MachineDTO> dtoList = list.stream()
+                    .map(po -> convert(po))
+                    .collect(Collectors.toList());
+
+            langTuoResult = LangTuoResult.success(dtoList);
+        } catch (Exception e) {
+            log.error("list error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
     public LangTuoResult<Void> activate(MachineActivatePutRequest request) {
         if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);

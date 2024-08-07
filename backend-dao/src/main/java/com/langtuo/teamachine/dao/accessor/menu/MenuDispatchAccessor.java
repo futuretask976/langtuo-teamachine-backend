@@ -31,13 +31,17 @@ public class MenuDispatchAccessor {
     }
 
     public int insert(MenuDispatchPO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheList(po.getTenantCode(), po.getMenuCode());
+        }
+        return inserted;
     }
 
     public int update(MenuDispatchPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(po.getTenantCode(), po.getMenuCode());
+            deleteCacheList(po.getTenantCode(), po.getMenuCode());
         }
         return updated;
     }
@@ -45,7 +49,7 @@ public class MenuDispatchAccessor {
     public int delete(String tenantCode, String menuCode) {
         int deleted = mapper.delete(tenantCode, menuCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, menuCode);
+            deleteCacheList(tenantCode, menuCode);
         }
         return deleted;
     }
@@ -66,7 +70,7 @@ public class MenuDispatchAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCacheAll(String tenantCode, String menuCode) {
+    private void deleteCacheList(String tenantCode, String menuCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, menuCode));
     }
 }

@@ -35,6 +35,9 @@
         SELECT * FROM shop
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            <if test="shopGroupCode != null">
+                AND shop_group_code = #{shopGroupCode}
+            </if>
     </select>
 
     <select id="search" resultMap="shopPOMap">

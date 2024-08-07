@@ -5,7 +5,7 @@ import java.util.concurrent.*;
 public class ExeService4Consume {
     private static ExecutorService executorService = null;
 
-    public static ExecutorService getExecutorService() {
+    public static ExecutorService getExeService() {
         if (executorService == null) {
             synchronized (ExeService4Consume.class) {
                 if (executorService == null) {

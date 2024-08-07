@@ -37,6 +37,13 @@ public interface ShopMgtService {
 
     /**
      *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode);
+
+    /**
+     *
      * @param request
      * @return
      */

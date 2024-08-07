@@ -77,23 +77,33 @@ public class ToppingAccuracyTplAccessor {
     }
 
     public int insert(ToppingAccuracyTplPO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 0) {
+            deleteCacheOne(po.getTenantCode(), po.getTemplateCode(), po.getTemplateName());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
     public int update(ToppingAccuracyTplPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(po.getTenantCode(), po.getTemplateCode(), null);
-            deleteCacheAll(po.getTenantCode(), null, po.getTemplateName());
+            deleteCacheOne(po.getTenantCode(), po.getTemplateCode(), po.getTemplateName());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String templateCode) {
         ToppingAccuracyTplPO po = selectOneByCode(tenantCode, templateCode);
+        if (po == null) {
+            return 0;
+        }
+
         int deleted = mapper.delete(tenantCode, templateCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, templateCode, po.getTemplateName());
+            deleteCacheOne(tenantCode, po.getTemplateCode(), po.getTemplateName());
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -130,9 +140,12 @@ public class ToppingAccuracyTplAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String templateCode, String templateName) {
+    private void deleteCacheOne(String tenantCode, String templateCode, String templateName) {
         redisManager.deleteKey(getCacheKey(tenantCode, templateCode, null));
         redisManager.deleteKey(getCacheKey(tenantCode, null, templateName));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

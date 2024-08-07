@@ -64,13 +64,19 @@ public class DeployAccessor {
     }
 
     public int insert(DeployPO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getDeployCode());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
     public int update(DeployPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(po.getTenantCode(), po.getDeployCode());
+            deleteCacheOne(po.getTenantCode(), po.getDeployCode());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
@@ -78,7 +84,8 @@ public class DeployAccessor {
     public int delete(String tenantCode, String deployCode) {
         int deleted = mapper.delete(tenantCode, deployCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, deployCode);
+            deleteCacheOne(tenantCode, deployCode);
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -115,8 +122,11 @@ public class DeployAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String deployCode) {
+    private void deleteCacheOne(String tenantCode, String deployCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, deployCode));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

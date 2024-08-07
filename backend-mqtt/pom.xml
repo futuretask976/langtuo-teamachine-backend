@@ -16,6 +16,14 @@
     </properties>
 
     <dependencies>
+        <!-- internal start -->
+        <dependency>
+            <groupId>com.langtuo</groupId>
+            <artifactId>backend-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <!-- internal end -->
+
         <!-- spring start -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -87,6 +95,10 @@
         <dependency>
             <groupId>org.eclipse.paho</groupId>
             <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
         <dependency>
             <groupId> com.google.guava</groupId>

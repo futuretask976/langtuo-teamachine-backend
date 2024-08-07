@@ -61,14 +61,20 @@ public class AdminAccessor {
         return pageInfo;
     }
 
-    public int insert(AdminPO adminPO) {
-        return mapper.insert(adminPO);
+    public int insert(AdminPO po) {
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getLoginName());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
-    public int update(AdminPO adminPO) {
-        int updated = mapper.update(adminPO);
+    public int update(AdminPO po) {
+        int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(adminPO.getTenantCode(), adminPO.getRoleCode());
+            deleteCacheOne(po.getTenantCode(), po.getLoginName());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
@@ -76,7 +82,8 @@ public class AdminAccessor {
     public int delete(String tenantCode, String loginName) {
         int deleted = mapper.delete(tenantCode, loginName);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, loginName);
+            deleteCacheOne(tenantCode, loginName);
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -113,8 +120,11 @@ public class AdminAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String loginName) {
+    private void deleteCacheOne(String tenantCode, String loginName) {
         redisManager.deleteKey(getCacheKey(tenantCode, loginName));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

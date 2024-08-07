@@ -91,6 +91,20 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
+    public LangTuoResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
+        LangTuoResult<List<ShopDTO>> langTuoResult = null;
+        try {
+            List<ShopPO> list = shopAccessor.selectList(tenantCode);
+            List<ShopDTO> dtoList = convert(list);
+            langTuoResult = LangTuoResult.success(dtoList);
+        } catch (Exception e) {
+            log.error("list error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
     public LangTuoResult<Void> put(ShopPutRequest request) {
         if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);

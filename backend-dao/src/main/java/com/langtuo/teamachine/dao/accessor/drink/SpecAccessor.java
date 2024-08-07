@@ -77,23 +77,33 @@ public class SpecAccessor {
     }
 
     public int insert(SpecPO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecName());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
     public int update(SpecPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(po.getTenantCode(), po.getSpecCode(), null);
-            deleteCacheAll(po.getTenantCode(), null, po.getSpecName());
+            deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecName());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String specCode) {
         SpecPO po = selectOneByCode(tenantCode, specCode);
+        if (po == null) {
+            return 0;
+        }
+
         int deleted = mapper.delete(tenantCode, specCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, specCode, po.getSpecName());
+            deleteCacheOne(tenantCode, po.getSpecCode(), po.getSpecName());
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -130,9 +140,12 @@ public class SpecAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String specCode, String specName) {
+    private void deleteCacheOne(String tenantCode, String specCode, String specName) {
         redisManager.deleteKey(getCacheKey(tenantCode, specCode, null));
         redisManager.deleteKey(getCacheKey(tenantCode, null, specName));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

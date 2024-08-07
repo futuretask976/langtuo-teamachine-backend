@@ -76,24 +76,34 @@ public class SeriesAccessor {
         return pageInfo;
     }
 
-    public int insert(SeriesPO seriesPO) {
-        return mapper.insert(seriesPO);
+    public int insert(SeriesPO po) {
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getSeriesCode(), po.getSeriesName());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
     public int update(SeriesPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(po.getTenantCode(), po.getSeriesCode(), null);
-            deleteCacheAll(po.getTenantCode(), null, po.getSeriesName());
+            deleteCacheOne(po.getTenantCode(), po.getSeriesCode(), po.getSeriesName());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String seriesCode) {
         SeriesPO po = selectOneByCode(tenantCode, seriesCode);
+        if (po == null) {
+            return 0;
+        }
+
         int deleted = mapper.delete(tenantCode, seriesCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, seriesCode, po.getSeriesName());
+            deleteCacheOne(tenantCode, po.getSeriesCode(), po.getSeriesName());
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -130,9 +140,12 @@ public class SeriesAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String seriesCode, String seriesName) {
+    private void deleteCacheOne(String tenantCode, String seriesCode, String seriesName) {
         redisManager.deleteKey(getCacheKey(tenantCode, seriesCode, null));
         redisManager.deleteKey(getCacheKey(tenantCode, null, seriesName));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

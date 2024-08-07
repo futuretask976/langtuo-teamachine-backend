@@ -35,8 +35,8 @@ public class TeaUnitAccessor {
 
     public int delete(String tenantCode, String teaCode) {
         int deleted = mapper.delete(tenantCode, teaCode);
-        if (deleted == 1) {
-            deleteCacheAll(tenantCode, teaCode);
+        if (deleted > 0) {
+            deleteCacheList(tenantCode, teaCode);
         }
         return deleted;
     }
@@ -57,7 +57,7 @@ public class TeaUnitAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCacheAll(String tenantCode, String teaCode) {
+    private void deleteCacheList(String tenantCode, String teaCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, teaCode));
     }
 }

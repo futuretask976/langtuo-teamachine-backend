@@ -60,14 +60,20 @@ public class OrgAccessor {
         return pageInfo;
     }
 
-    public int insert(OrgPO orgPO) {
-        return mapper.insert(orgPO);
+    public int insert(OrgPO po) {
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getOrgName());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
-    public int update(OrgPO orgPO) {
-        int updated = mapper.update(orgPO);
+    public int update(OrgPO po) {
+        int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(orgPO.getTenantCode(), orgPO.getOrgName());
+            deleteCacheOne(po.getTenantCode(), po.getOrgName());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
@@ -75,7 +81,8 @@ public class OrgAccessor {
     public int delete(String tenantCode, String orgName) {
         int deleted = mapper.delete(tenantCode, orgName);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, orgName);
+            deleteCacheOne(tenantCode, orgName);
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -112,8 +119,11 @@ public class OrgAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String orgName) {
+    private void deleteCacheOne(String tenantCode, String orgName) {
         redisManager.deleteKey(getCacheKey(tenantCode, orgName));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

@@ -32,6 +32,13 @@ public interface MachineMgtService {
 
     /**
      *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<List<MachineDTO>> listByShopCode(String tenantCode, String shopCode);
+
+    /**
+     *
      * @param request
      * @return
      */

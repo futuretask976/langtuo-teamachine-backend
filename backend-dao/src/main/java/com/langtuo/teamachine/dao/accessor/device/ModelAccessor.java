@@ -60,17 +60,28 @@ public class ModelAccessor {
     }
 
     public int insert(ModelPO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getModelCode());
+            deleteCacheList();
+        }
+        return inserted;
     }
 
     public int update(ModelPO po) {
-        return mapper.update(po);
+        int updated = mapper.update(po);
+        if (updated == 1) {
+            deleteCacheOne(po.getModelCode());
+            deleteCacheList();
+        }
+        return updated;
     }
 
     public int delete(String modelCode) {
         int deleted = mapper.delete(modelCode);
         if (deleted == 1) {
-            deleteCacheAll(modelCode);
+            deleteCacheOne(modelCode);
+            deleteCacheList();
         }
         return deleted;
     }
@@ -107,8 +118,11 @@ public class ModelAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String modelCode) {
+    private void deleteCacheOne(String modelCode) {
         redisManager.deleteKey(getCacheKey(modelCode));
+    }
+
+    private void deleteCacheList() {
         redisManager.deleteKey(getCacheListKey());
     }
 }

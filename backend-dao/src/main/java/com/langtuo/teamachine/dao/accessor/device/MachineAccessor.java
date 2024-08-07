@@ -36,15 +36,29 @@ public class MachineAccessor {
 
     public List<MachinePO> selectList(String tenantCode) {
         // 首先访问缓存
-        List<MachinePO> cachedList = getCacheList(tenantCode);
+        List<MachinePO> cachedList = getCacheList(tenantCode, null);
         if (cachedList != null) {
             return cachedList;
         }
 
-        List<MachinePO> list = mapper.selectList(tenantCode);
+        List<MachinePO> list = mapper.selectList(tenantCode, null);
 
         // 设置缓存
-        setCacheList(tenantCode, list);
+        setCacheList(tenantCode, null, list);
+        return list;
+    }
+
+    public List<MachinePO> selectListByShopCode(String tenantCode, String shopCode) {
+        // 首先访问缓存
+        List<MachinePO> cachedList = getCacheList(tenantCode, shopCode);
+        if (cachedList != null) {
+            return cachedList;
+        }
+
+        List<MachinePO> list = mapper.selectList(tenantCode, shopCode);
+
+        // 设置缓存
+        setCacheList(tenantCode, shopCode, list);
         return list;
     }
 
@@ -65,21 +79,33 @@ public class MachineAccessor {
     }
 
     public int insert(MachinePO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getMachineCode());
+            deleteCacheList(po.getTenantCode(), po.getShopCode());
+        }
+        return inserted;
     }
 
     public int update(MachinePO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(po.getTenantCode(), po.getMachineCode());
+            deleteCacheOne(po.getTenantCode(), po.getMachineCode());
+            deleteCacheList(po.getTenantCode(), po.getShopCode());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String machineCode) {
+        MachinePO po = selectOne(tenantCode, machineCode);
+        if (po == null) {
+            return 0;
+        }
+
         int deleted = mapper.delete(tenantCode, machineCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, machineCode);
+            deleteCacheOne(tenantCode, machineCode);
+            deleteCacheList(tenantCode, po.getShopCode());
         }
         return deleted;
     }
@@ -88,8 +114,8 @@ public class MachineAccessor {
         return "machine_acc_" + tenantCode + "-" + machineCode;
     }
 
-    private String getCacheListKey(String tenantCode) {
-        return "machine_acc_" + tenantCode;
+    private String getCacheListKey(String tenantCode, String shopCode) {
+        return "machine_acc_" + tenantCode + "-" + shopCode;
     }
 
     private MachinePO getCache(String tenantCode, String machineCode) {
@@ -99,15 +125,15 @@ public class MachineAccessor {
         return po;
     }
 
-    private List<MachinePO> getCacheList(String tenantCode) {
-        String key = getCacheListKey(tenantCode);
+    private List<MachinePO> getCacheList(String tenantCode, String shopCode) {
+        String key = getCacheListKey(tenantCode, shopCode);
         Object cached = redisManager.getValue(key);
         List<MachinePO> poList = (List<MachinePO>) cached;
         return poList;
     }
 
-    private void setCacheList(String tenantCode, List<MachinePO> poList) {
-        String key = getCacheListKey(tenantCode);
+    private void setCacheList(String tenantCode, String shopCode, List<MachinePO> poList) {
+        String key = getCacheListKey(tenantCode, shopCode);
         redisManager.setValue(key, poList);
     }
 
@@ -116,8 +142,12 @@ public class MachineAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String machineCode) {
+    private void deleteCacheOne(String tenantCode, String machineCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, machineCode));
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+    }
+
+    private void deleteCacheList(String tenantCode, String shopCode) {
+        redisManager.deleteKey(getCacheListKey(tenantCode, shopCode));
+        redisManager.deleteKey(getCacheListKey(tenantCode, null));
     }
 }

@@ -30,14 +30,18 @@ public class RoleActRelAccessor {
         return list;
     }
 
-    public int insert(RoleActRelPO roleActRelPO) {
-        return mapper.insert(roleActRelPO);
+    public int insert(RoleActRelPO po) {
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheList(po.getTenantCode(), po.getRoleCode());
+        }
+        return inserted;
     }
 
     public int delete(String tenantCode, String roleCode) {
         int deleted = mapper.delete(tenantCode, roleCode);
         if (deleted > 0) {
-            deleteCacheAll(tenantCode, roleCode);
+            deleteCacheList(tenantCode, roleCode);
         }
         return deleted;
     }
@@ -58,7 +62,7 @@ public class RoleActRelAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCacheAll(String tenantCode, String roleCode) {
+    private void deleteCacheList(String tenantCode, String roleCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, roleCode));
     }
 }

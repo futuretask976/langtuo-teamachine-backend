@@ -26,7 +26,7 @@ public interface MachineMapper {
      *
      * @return
      */
-    List<MachinePO> selectList(@Param("tenantCode") String tenantCode);
+    List<MachinePO> selectList(@Param("tenantCode") String tenantCode, @Param("shopCode") String shopCode);
 
     /**
      *

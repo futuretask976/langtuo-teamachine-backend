@@ -77,23 +77,33 @@ public class ToppingAccessor {
     }
 
     public int insert(ToppingPO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
     public int update(ToppingPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(po.getTenantCode(), po.getToppingCode(), null);
-            deleteCacheAll(po.getTenantCode(), null, po.getToppingName());
+            deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String toppingCode) {
         ToppingPO po = selectOneByCode(tenantCode, toppingCode);
+        if (po == null) {
+            return 0;
+        }
+
         int deleted = mapper.delete(tenantCode, toppingCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, toppingCode, po.getToppingName());
+            deleteCacheOne(tenantCode, po.getToppingCode(), po.getToppingName());
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -130,9 +140,12 @@ public class ToppingAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String toppingCode, String toppingName) {
+    private void deleteCacheOne(String tenantCode, String toppingCode, String toppingName) {
         redisManager.deleteKey(getCacheKey(tenantCode, toppingCode, null));
         redisManager.deleteKey(getCacheKey(tenantCode, null, toppingName));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

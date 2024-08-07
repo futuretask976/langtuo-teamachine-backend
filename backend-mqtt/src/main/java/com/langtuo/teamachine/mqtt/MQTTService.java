@@ -3,9 +3,10 @@ package com.langtuo.teamachine.mqtt;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Consume;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
-import com.langtuo.teamachine.mqtt.worker.ConsumeWorker;
+import com.langtuo.teamachine.mqtt.worker.MenuDispatchWorker;
 import com.langtuo.teamachine.mqtt.wrapper.ConnectionOptionWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 @Slf4j
 public class MQTTService implements InitializingBean {
     /**
-     *
+     * MQTT客户端
      */
     private MqttClient mqttClient;
 
@@ -75,7 +76,7 @@ public class MQTTService implements InitializingBean {
             public void connectComplete(boolean reconnect, String serverURI) {
                 // 客户端连接成功后就需要尽快订阅需要的 topic
                 try {
-                    final String topicFilter[] = {MQTTConfig.PARENT_TOPIC_PREFIX + "testMq4Iot"};
+                    final String topicFilter[] = {MQTTConfig.PARENT_TOPIC_PREFIX + "Menu_Dispatch"};
                     final int[] qos = {MQTTConfig.QOS_LEVEL};
                     mqttClient.subscribe(topicFilter, qos);
                     log.info("$$$$$ subscribe success");
@@ -90,9 +91,8 @@ public class MQTTService implements InitializingBean {
             }
 
             @Override
-            public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-                ConsumeWorker worker = new ConsumeWorker(s, new String(mqttMessage.getPayload()));
-                ExeService4Consume.getExecutorService().submit(worker);
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                consume(topic, new String(mqttMessage.getPayload()));
             }
 
             @Override
@@ -103,5 +103,18 @@ public class MQTTService implements InitializingBean {
         ConnectionOptionWrapper connectionOptionWrapper = new ConnectionOptionWrapper(
                 MQTTConfig.INSTANCE_ID, MQTTConfig.ACCESS_KEY, MQTTConfig.ACCESS_KEY_SECRET, MQTTConfig.CLIENT_ID);
         mqttClient.connect(connectionOptionWrapper.getMqttConnectOptions());
+    }
+
+    public void consume(String topic, String payload) {
+        if (StringUtils.isBlank(topic) || StringUtils.isBlank(payload)) {
+            return;
+        }
+
+        boolean isP2P = topic.startsWith(MQTTConfig.PARENT_P2P_TOPIC_PREFIX);
+        String subTopic = isP2P ? topic.substring(MQTTConfig.PARENT_P2P_TOPIC_PREFIX.length())
+                : topic.substring(MQTTConfig.PARENT_TOPIC_PREFIX.length());
+        if ("Menu_Dispatch".equals(subTopic)) {
+            ExeService4Consume.getExeService().submit(new MenuDispatchWorker(payload));
+        }
     }
 }

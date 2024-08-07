@@ -69,14 +69,20 @@ public class RoleAccessor {
         return pageInfo;
     }
 
-    public int insert(RolePO rolePO) {
-        return mapper.insert(rolePO);
+    public int insert(RolePO po) {
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getRoleCode());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
-    public int update(RolePO rolePO) {
-        int updated = mapper.update(rolePO);
+    public int update(RolePO po) {
+        int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(rolePO.getTenantCode(), rolePO.getRoleCode());
+            deleteCacheOne(po.getTenantCode(), po.getRoleCode());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
@@ -84,7 +90,8 @@ public class RoleAccessor {
     public int delete(String tenantCode, String roleCode) {
         int deleted = mapper.delete(tenantCode, roleCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, roleCode);
+            deleteCacheOne(tenantCode, roleCode);
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -121,8 +128,11 @@ public class RoleAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String roleCode) {
+    private void deleteCacheOne(String tenantCode, String roleCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, roleCode));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

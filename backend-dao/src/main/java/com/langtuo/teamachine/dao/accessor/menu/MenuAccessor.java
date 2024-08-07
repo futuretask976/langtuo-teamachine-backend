@@ -77,23 +77,33 @@ public class MenuAccessor {
     }
 
     public int insert(MenuPO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getMenuCode(), po.getMenuName());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
     public int update(MenuPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(po.getTenantCode(), po.getMenuCode(), null);
-            deleteCacheAll(po.getTenantCode(), null, po.getMenuName());
+            deleteCacheOne(po.getTenantCode(), po.getMenuCode(), po.getMenuName());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String menuCode) {
         MenuPO po = selectOneByCode(tenantCode, menuCode);
+        if (po == null) {
+            return 0;
+        }
+
         int deleted = mapper.delete(tenantCode, menuCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, menuCode, po.getMenuName());
+            deleteCacheOne(tenantCode, po.getMenuCode(), po.getMenuName());
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -130,9 +140,12 @@ public class MenuAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String menuCode, String menuName) {
+    private void deleteCacheOne(String tenantCode, String menuCode, String menuName) {
         redisManager.deleteKey(getCacheKey(tenantCode, menuCode, null));
         redisManager.deleteKey(getCacheKey(tenantCode, null, menuName));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

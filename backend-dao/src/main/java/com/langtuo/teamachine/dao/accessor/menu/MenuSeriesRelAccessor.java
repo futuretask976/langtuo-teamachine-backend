@@ -30,14 +30,18 @@ public class MenuSeriesRelAccessor {
         return list;
     }
 
-    public int insert(MenuSeriesRelPO menuSeriesRelPO) {
-        return mapper.insert(menuSeriesRelPO);
+    public int insert(MenuSeriesRelPO po) {
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheList(po.getTenantCode(), po.getMenuCode());
+        }
+        return inserted;
     }
 
     public int delete(String tenantCode, String seriesCode) {
         int deleted = mapper.delete(tenantCode, seriesCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, seriesCode);
+            deleteCacheList(tenantCode, seriesCode);
         }
         return deleted;
     }
@@ -58,7 +62,7 @@ public class MenuSeriesRelAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCacheAll(String tenantCode, String seriesCode) {
+    private void deleteCacheList(String tenantCode, String seriesCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, seriesCode));
     }
 }

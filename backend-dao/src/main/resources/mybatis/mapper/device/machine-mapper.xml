@@ -38,6 +38,9 @@
         SELECT * FROM machine
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            <if test="shopCode != null">
+                AND shop_code = #{shopCode}
+            </if>
     </select>
 
     <select id="search" resultMap="machinePOMap">

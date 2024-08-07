@@ -4,6 +4,7 @@ import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.drink.ToppingAdjustRuleMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingAdjustRulePO;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -18,12 +19,23 @@ public class ToppingAdjustRuleAccessor {
     private RedisManager redisManager;
 
     public List<ToppingAdjustRulePO> selectList(String tenantCode, String teaCode, String teaUnitCode) {
+        List<ToppingAdjustRulePO> cached = getCacheList(tenantCode, teaCode, teaUnitCode);
+        if (!CollectionUtils.isEmpty(cached)) {
+            return cached;
+        }
+
         List<ToppingAdjustRulePO> list = mapper.selectList(tenantCode, teaCode, teaUnitCode);
+
+        setCacheList(tenantCode, teaCode, teaUnitCode, list);
         return list;
     }
 
     public int insert(ToppingAdjustRulePO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheList(po.getTenantCode(), po.getTeaCode(), po.getTeaUnitCode());
+        }
+        return inserted;
     }
 
     public int delete(String tenantCode, String teaCode) {
@@ -35,7 +47,7 @@ public class ToppingAdjustRuleAccessor {
         int deleted = mapper.delete(tenantCode, teaCode);
         if (deleted > 0) {
             teaUnitCodeList.forEach(teaUnitCode -> {
-                deleteCacheAll(tenantCode, teaCode, teaUnitCode);
+                deleteCacheList(tenantCode, teaCode, teaUnitCode);
             });
         }
         return deleted;
@@ -57,7 +69,7 @@ public class ToppingAdjustRuleAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCacheAll(String tenantCode, String teaCode, String teaUnitCode) {
+    private void deleteCacheList(String tenantCode, String teaCode, String teaUnitCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, teaCode, teaUnitCode));
     }
 }

@@ -60,14 +60,20 @@ public class ShopGroupAccessor {
         return pageInfo;
     }
 
-    public int insert(ShopGroupPO shopGroupPO) {
-        return mapper.insert(shopGroupPO);
+    public int insert(ShopGroupPO po) {
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode());
+            deleteCacheList(po.getTenantCode());
+        }
+        return inserted;
     }
 
-    public int update(ShopGroupPO shopGroupPO) {
-        int updated = mapper.update(shopGroupPO);
+    public int update(ShopGroupPO po) {
+        int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(shopGroupPO.getTenantCode(), shopGroupPO.getShopGroupCode());
+            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode());
+            deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
@@ -75,7 +81,8 @@ public class ShopGroupAccessor {
     public int delete(String tenantCode, String shopGroupCode) {
         int deleted = mapper.delete(tenantCode, shopGroupCode);
         if (deleted == 1) {
-            deleteCacheAll(tenantCode, shopGroupCode);
+            deleteCacheOne(tenantCode, shopGroupCode);
+            deleteCacheList(tenantCode);
         }
         return deleted;
     }
@@ -112,8 +119,11 @@ public class ShopGroupAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String shopGroupCode) {
+    private void deleteCacheOne(String tenantCode, String shopGroupCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, shopGroupCode));
+    }
+
+    private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 }

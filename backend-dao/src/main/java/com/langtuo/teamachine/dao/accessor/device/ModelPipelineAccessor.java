@@ -31,13 +31,19 @@ public class ModelPipelineAccessor {
     }
 
     public int insert(ModelPipelinePO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getModelCode());
+            deleteCacheList();
+        }
+        return inserted;
     }
 
     public int delete(String modelCode) {
         int deleted = mapper.delete(modelCode);
         if (deleted == 1) {
-            deleteCacheAll(modelCode);
+            deleteCacheOne(modelCode);
+            deleteCacheList();
         }
         return deleted;
     }
@@ -62,8 +68,11 @@ public class ModelPipelineAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCacheAll(String modelCode) {
+    private void deleteCacheOne(String modelCode) {
         redisManager.deleteKey(getCacheKey(modelCode));
+    }
+
+    private void deleteCacheList() {
         redisManager.deleteKey(getCacheListKey());
     }
 }

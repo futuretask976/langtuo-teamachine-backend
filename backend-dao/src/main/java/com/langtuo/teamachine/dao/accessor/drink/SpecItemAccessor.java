@@ -46,13 +46,19 @@ public class SpecItemAccessor {
     }
 
     public int insert(SpecItemPO po) {
-        return mapper.insert(po);
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecItemCode());
+            deleteCacheList(po.getTenantCode(), po.getSpecCode());
+        }
+        return inserted;
     }
 
     public int update(SpecItemPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheAll(po.getTenantCode(), po.getSpecCode(), po.getSpecItemCode());
+            deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecItemCode());
+            deleteCacheList(po.getTenantCode(), po.getSpecCode());
         }
         return updated;
     }
@@ -65,8 +71,9 @@ public class SpecItemAccessor {
         int deleted = mapper.delete(tenantCode, specCode);
         if (deleted == 1) {
             specItemCodeList.forEach(specItemCode -> {
-                deleteCacheAll(tenantCode, specCode, specItemCode);
+                deleteCacheOne(tenantCode, specCode, specItemCode);
             });
+            deleteCacheList(tenantCode, specCode);
         }
         return deleted;
     }
@@ -89,6 +96,7 @@ public class SpecItemAccessor {
     private List<SpecItemPO> getCacheList(String tenantCode, String specCode) {
         String key = getCacheListKey(tenantCode, specCode);
         Object cached = redisManager.getValue(key);
+
         List<SpecItemPO> poList = (List<SpecItemPO>) cached;
         return poList;
     }
@@ -103,8 +111,11 @@ public class SpecItemAccessor {
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheAll(String tenantCode, String specCode, String specItemCode) {
+    private void deleteCacheOne(String tenantCode, String specCode, String specItemCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, specCode, specItemCode));
+    }
+
+    private void deleteCacheList(String tenantCode, String specCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, specCode));
     }
 }

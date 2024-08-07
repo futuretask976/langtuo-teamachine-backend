@@ -30,14 +30,18 @@ public class SeriesTeaRelAccessor {
         return list;
     }
 
-    public int insert(SeriesTeaRelPO seriesPO) {
-        return mapper.insert(seriesPO);
+    public int insert(SeriesTeaRelPO po) {
+        int inserted = mapper.insert(po);
+        if (inserted == 1) {
+            deleteCacheList(po.getTenantCode(), po.getSeriesCode());
+        }
+        return inserted;
     }
 
     public int delete(String tenantCode, String seriesCode) {
         int deleted = mapper.delete(tenantCode, seriesCode);
         if (deleted > 0) {
-            deleteCacheAll(tenantCode, seriesCode);
+            deleteCacheList(tenantCode, seriesCode);
         }
         return deleted;
     }
@@ -58,7 +62,7 @@ public class SeriesTeaRelAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCacheAll(String tenantCode, String seriesCode) {
+    private void deleteCacheList(String tenantCode, String seriesCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, seriesCode));
     }
 }
