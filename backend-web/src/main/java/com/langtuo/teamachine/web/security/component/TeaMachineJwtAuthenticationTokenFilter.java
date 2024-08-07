@@ -41,7 +41,6 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String authHeader = request.getHeader(this.tokenHeader);
-        log.info("$$$$$ authHeader=" + authHeader + ", url=" + request.getRequestURL());
         if (authHeader != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             boolean isAdminToken = false;
             if (authHeader.startsWith(this.tokenHead4Admin)) {
