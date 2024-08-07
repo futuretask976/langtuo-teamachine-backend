@@ -72,7 +72,7 @@ public class MQTTService implements InitializingBean {
             public void connectComplete(boolean reconnect, String serverURI) {
                 // 客户端连接成功后就需要尽快订阅需要的 topic
                 try {
-                    mqttClient.subscribe(MQTTConfig.TOPIC_FILTERS, new int[]{MQTTConfig.QOS_LEVEL, MQTTConfig.QOS_LEVEL});
+                    mqttClient.subscribe(MQTTConfig.TOPIC_FILTERS, MQTTConfig.QOS);
                 } catch (MqttException e) {
                     log.error("mqtt subscribe error: " + e.getMessage(), e);
                 }

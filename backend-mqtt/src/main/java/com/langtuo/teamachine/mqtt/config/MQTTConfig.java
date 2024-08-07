@@ -53,21 +53,52 @@ public class MQTTConfig {
     public static final int TIME_TO_WAIT = 5000;
 
     /**
+     * topic分隔符
+     */
+    public static final String TOPIC_SEPERATOR = "/";
+
+    /**
      * topic列表
      */
-    public static final String TOPIC_PREPARE_DISPATCH_MENU = PARENT_TOPIC + "/PREPARE_DISPATCH_MENU";
-    public static final String TOPIC_DISPATCH_MENU = PARENT_TOPIC + "/DISPATCH_MENU";
+    public static final String TOPIC_PREPARE_DISPATCH_ACCURACY = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Accuracy";
+    public static final String TOPIC_DISPATCH_ACCURACY = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Accuracy";
+    public static final String TOPIC_PREPARE_DISPATCH_CLEAN_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Clean_Rule";
+    public static final String TOPIC_DISPATCH_CLEAN_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Clean_Rule";
+    public static final String TOPIC_PREPARE_DISPATCH_CLOSE_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Close_Rule";
+    public static final String TOPIC_DISPATCH_CLOSE_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Close_Rule";
+    public static final String TOPIC_PREPARE_DISPATCH_MACHINE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Machine";
+    public static final String TOPIC_DISPATCH_MACHINE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Machine";
+    public static final String TOPIC_PREPARE_DISPATCH_MENU = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Menu";
+    public static final String TOPIC_DISPATCH_MENU = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Menu";
+    public static final String TOPIC_PREPARE_DISPATCH_MODEL = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Model";
+    public static final String TOPIC_DISPATCH_MODEL = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Model";
+    public static final String TOPIC_PREPARE_DISPATCH_OPEN_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Open_Rule";
+    public static final String TOPIC_DISPATCH_OPEN_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Open_Rule";
+    public static final String TOPIC_PREPARE_DISPATCH_WARNING_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Warning_Rule";
+    public static final String TOPIC_DISPATCH_WARNING_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Warning_Rule";
 
     /**
      * topic过滤器
      */
     public static final String[] TOPIC_FILTERS = new String[]{
+            TOPIC_PREPARE_DISPATCH_ACCURACY,
+            TOPIC_PREPARE_DISPATCH_CLEAN_RULE,
+            TOPIC_PREPARE_DISPATCH_CLOSE_RULE,
+            TOPIC_PREPARE_DISPATCH_MACHINE,
             TOPIC_PREPARE_DISPATCH_MENU,
-            TOPIC_DISPATCH_MENU
+            TOPIC_PREPARE_DISPATCH_MODEL,
+            TOPIC_PREPARE_DISPATCH_OPEN_RULE,
+            TOPIC_PREPARE_DISPATCH_WARNING_RULE
     };
 
-    /**
-     * topic分隔符
-     */
-    public static final String TOPIC_SEPERATOR = "/";
+    public static final int[] QOS = new int[]{
+            MQTTConfig.QOS_LEVEL,
+            MQTTConfig.QOS_LEVEL,
+            MQTTConfig.QOS_LEVEL,
+            MQTTConfig.QOS_LEVEL,
+            MQTTConfig.QOS_LEVEL,
+            MQTTConfig.QOS_LEVEL,
+            MQTTConfig.QOS_LEVEL,
+            MQTTConfig.QOS_LEVEL
+    };
 }
