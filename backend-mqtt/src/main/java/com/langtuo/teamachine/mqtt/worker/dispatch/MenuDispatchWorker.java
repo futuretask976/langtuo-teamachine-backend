@@ -41,14 +41,15 @@ public class MenuDispatchWorker implements Runnable {
     /**
      * 收到的消息中的key关键字
      */
-    private static final String PAYLOAD_KEY_TENANT_CODE = "tenantCode";
-    private static final String PAYLOAD_KEY_MENU_CODE = "menuCode";
+    private static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
+    private static final String RECEIVE_KEY_MENU_CODE = "menuCode";
 
     /**
      * 发送的消息中的key关键字
      */
-    private static final String MSG_KEY_MD5_AS_HEX = "md5AsHex";
-    private static final String MSG_KEY_OSS_PATH = "ossPath";
+    private static final String SEND_KEY_TOPIC = "topic";
+    private static final String SEND_KEY_MD5_AS_HEX = "md5AsHex";
+    private static final String SEND_KEY_OSS_PATH = "ossPath";
 
 
     /**
@@ -63,8 +64,8 @@ public class MenuDispatchWorker implements Runnable {
 
     public MenuDispatchWorker(String payload) {
         JSONObject payloadJSON = JSONObject.parseObject(payload);
-        this.tenantCode = payloadJSON.getString(PAYLOAD_KEY_TENANT_CODE);
-        this.menuCode = payloadJSON.getString(PAYLOAD_KEY_MENU_CODE);
+        this.tenantCode = payloadJSON.getString(RECEIVE_KEY_TENANT_CODE);
+        this.menuCode = payloadJSON.getString(RECEIVE_KEY_MENU_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
@@ -100,12 +101,13 @@ public class MenuDispatchWorker implements Runnable {
             log.info("machine code list is empty, stop worker");
         }
 
+        JSONObject jsonMsg = new JSONObject();
+        jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.TOPIC_DISPATCH_MENU);
+        jsonMsg.put(SEND_KEY_MD5_AS_HEX, md5AsHex);
+        jsonMsg.put(SEND_KEY_OSS_PATH, ossPath);
         MQTTService mqttService = getMQTTService();
-        JSONObject payloadJSON = new JSONObject();
-        payloadJSON.put(MSG_KEY_MD5_AS_HEX, md5AsHex);
-        payloadJSON.put(MSG_KEY_OSS_PATH, ossPath);
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMsgByTopic(MQTTConfig.TOPIC_DISPATCH_MENU, payloadJSON.toJSONString());
+            mqttService.sendMsgByTopic(MQTTConfig.TOPIC_DISPATCH_MENU, jsonMsg.toJSONString());
         });
     }
 
