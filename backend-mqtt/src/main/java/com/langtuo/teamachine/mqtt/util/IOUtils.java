@@ -30,7 +30,7 @@ public class IOUtils {
         return result;
     }
 
-    public static boolean writeStringToFile(String outputCont, File outputFile) {
+    public static boolean writeStrToFile(String outputCont, File outputFile) {
         if (StringUtils.isBlank(outputCont) || outputCont == null) {
             return false;
         }

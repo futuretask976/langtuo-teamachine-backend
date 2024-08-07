@@ -39,6 +39,19 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.*;
 @Slf4j
 public class PrepareMenuDispatchWorker implements Runnable {
     /**
+     * 收到的消息中的key关键字
+     */
+    private static final String PAYLOAD_KEY_TENANT_CODE = "tenantCode";
+    private static final String PAYLOAD_KEY_MENU_CODE = "menuCode";
+
+    /**
+     * 发送的消息中的key关键字
+     */
+    private static final String MSG_KEY_MD5_AS_HEX = "md5AsHex";
+    private static final String MSG_KEY_OSS_PATH = "ossPath";
+
+
+    /**
      * 租户编码
      */
     private String tenantCode;
@@ -50,8 +63,8 @@ public class PrepareMenuDispatchWorker implements Runnable {
 
     public PrepareMenuDispatchWorker(String payload) {
         JSONObject payloadJSON = JSONObject.parseObject(payload);
-        this.tenantCode = payloadJSON.getString("tenantCode");
-        this.menuCode = payloadJSON.getString("menuCode");
+        this.tenantCode = payloadJSON.getString(PAYLOAD_KEY_TENANT_CODE);
+        this.menuCode = payloadJSON.getString(PAYLOAD_KEY_MENU_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
@@ -59,49 +72,25 @@ public class PrepareMenuDispatchWorker implements Runnable {
 
     @Override
     public void run() {
-        MenuMgtService menuMgtService = getMenuMgtService();
-        MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
-        if (menuDTO == null) {
-            log.info("list menu error, stop worker");
-            return;
-        }
-
-        String dispatchCont = getDispatchCont(menuDTO);
+        String dispatchCont = getDispatchCont();
         if (StringUtils.isBlank(dispatchCont)) {
-            log.info("dispatch content is blank, stop worker");
+            log.info("dispatch content error, stop worker");
             return;
         }
         File outputFile = new File("dispatch/output.json");
-        IOUtils.writeStringToFile(dispatchCont, outputFile);
-
-        String ossPath = null;
-        try {
-            ossPath = OSSUtils.uploadFile(outputFile);
-        } catch (FileNotFoundException e) {
+        boolean wrote = IOUtils.writeStrToFile(dispatchCont, outputFile);
+        if (!wrote) {
+            log.info("write file error, stop worker");
+            return;
+        }
+        String ossPath = uploadOSS(outputFile);
+        if (StringUtils.isBlank(ossPath)) {
             log.info("upload oss error, stop worker");
             return;
         }
-
-        String md5AsHex = null;
-        FileInputStream fileInputStream = null;
-        try {
-            fileInputStream = new FileInputStream(outputFile);
-            md5AsHex = DigestUtils.md5DigestAsHex(fileInputStream);
-        } catch (IOException e) {
-            log.info("calc md5 error, stop worker");
-            return;
-        } finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    log.info("close file input stream error, stop worker");
-                    return;
-                }
-            }
-        }
+        String md5AsHex = calcMD5Hex(outputFile);
         if (StringUtils.isBlank(md5AsHex)) {
-            log.info("md5AsHex is blank, stop worker");
+            log.info("calc md5 as hex error, stop worker");
             return;
         }
 
@@ -110,12 +99,11 @@ public class PrepareMenuDispatchWorker implements Runnable {
         if (CollectionUtils.isEmpty(machineCodeList)) {
             log.info("machine code list is empty, stop worker");
         }
-        log.info("prepare to send machine=" + JSONObject.toJSONString(machineCodeList));
 
         MQTTService mqttService = getMQTTService();
         JSONObject payloadJSON = new JSONObject();
-        payloadJSON.put("md5AsHex", md5AsHex);
-        payloadJSON.put("ossPath", ossPath);
+        payloadJSON.put(MSG_KEY_MD5_AS_HEX, md5AsHex);
+        payloadJSON.put(MSG_KEY_OSS_PATH, ossPath);
         machineCodeList.stream().forEach(machineCode -> {
             mqttService.sendMsgByTopic(MQTTConfig.TOPIC_DISPATCH_MENU, payloadJSON.toJSONString());
         });
@@ -157,7 +145,14 @@ public class PrepareMenuDispatchWorker implements Runnable {
         return teaMgtService;
     }
 
-    private String getDispatchCont(MenuDTO menuDTO) {
+    private String getDispatchCont() {
+        MenuMgtService menuMgtService = getMenuMgtService();
+        MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
+        if (menuDTO == null) {
+            log.info("list menu error, stop worker");
+            return null;
+        }
+
         SeriesMgtService seriesMgtService = getSeriesMgtService();
         List<SeriesDTO> seriesList = menuDTO.getMenuSeriesRelList().stream()
                 .map(menuSeriesRelDTO -> {
@@ -261,5 +256,35 @@ public class PrepareMenuDispatchWorker implements Runnable {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
         return machineCodeList;
+    }
+
+    private String uploadOSS(File file) {
+        String ossPath = null;
+        try {
+            ossPath = OSSUtils.uploadFile(file);
+        } catch (FileNotFoundException e) {
+            log.info("upload oss error, stop worker");
+        }
+        return ossPath;
+    }
+
+    private String calcMD5Hex(File file) {
+        String md5AsHex = null;
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+            md5AsHex = DigestUtils.md5DigestAsHex(fileInputStream);
+        } catch (IOException e) {
+            log.info("calc md5 error, stop worker");
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    log.info("close file input stream error, stop worker");
+                }
+            }
+        }
+        return md5AsHex;
     }
 }
