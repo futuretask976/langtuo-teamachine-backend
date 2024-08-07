@@ -3,7 +3,7 @@ package com.langtuo.teamachine.mqtt;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Consume;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
-import com.langtuo.teamachine.mqtt.worker.PrepareMenuDispatchWorker;
+import com.langtuo.teamachine.mqtt.worker.dispatch.MenuDispatchWorker;
 import com.langtuo.teamachine.mqtt.wrapper.ConnectionOptionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -105,7 +105,7 @@ public class MQTTService implements InitializingBean {
         }
 
         if (MQTTConfig.TOPIC_PREPARE_DISPATCH_MENU.equals(topic)) {
-            ExeService4Consume.getExeService().submit(new PrepareMenuDispatchWorker(payload));
+            ExeService4Consume.getExeService().submit(new MenuDispatchWorker(payload));
         } else {
             log.info("match worker error, topic=" + topic);
         }

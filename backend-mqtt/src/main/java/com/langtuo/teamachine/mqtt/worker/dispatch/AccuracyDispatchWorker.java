@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.mqtt.worker;
+package com.langtuo.teamachine.mqtt.worker.dispatch;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
@@ -34,10 +34,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.*;
+import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Slf4j
-public class PrepareMenuDispatchWorker implements Runnable {
+public class AccuracyDispatchWorker implements Runnable {
     /**
      * 收到的消息中的key关键字
      */
@@ -61,7 +62,7 @@ public class PrepareMenuDispatchWorker implements Runnable {
      */
     private String menuCode;
 
-    public PrepareMenuDispatchWorker(String payload) {
+    public AccuracyDispatchWorker(String payload) {
         JSONObject payloadJSON = JSONObject.parseObject(payload);
         this.tenantCode = payloadJSON.getString(PAYLOAD_KEY_TENANT_CODE);
         this.menuCode = payloadJSON.getString(PAYLOAD_KEY_MENU_CODE);
