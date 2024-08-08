@@ -32,8 +32,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     private ModelPipelineAccessor modelPipelineAccessor;
 
     @Override
-    public LangTuoResult<PageDTO<ModelDTO>> list() {
-        LangTuoResult<PageDTO<ModelDTO>> langTuoResult = null;
+    public LangTuoResult<List<ModelDTO>> list() {
+        LangTuoResult<List<ModelDTO>> langTuoResult = null;
         try {
             List<ModelPO> list = modelAccessor.selectList();
             List<ModelDTO> dtoList = convertToModelDTO(list);

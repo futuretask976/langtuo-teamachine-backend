@@ -63,9 +63,9 @@ public class MenuDispatchWorker implements Runnable {
     private String menuCode;
 
     public MenuDispatchWorker(String payload) {
-        JSONObject payloadJSON = JSONObject.parseObject(payload);
-        this.tenantCode = payloadJSON.getString(RECEIVE_KEY_TENANT_CODE);
-        this.menuCode = payloadJSON.getString(RECEIVE_KEY_MENU_CODE);
+        JSONObject jsonPayload = JSONObject.parseObject(payload);
+        this.tenantCode = jsonPayload.getString(RECEIVE_KEY_TENANT_CODE);
+        this.menuCode = jsonPayload.getString(RECEIVE_KEY_MENU_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
@@ -214,7 +214,7 @@ public class MenuDispatchWorker implements Runnable {
 
     private List<String> getMachineCodeList() {
         MenuMgtService menuMgtService = getMenuMgtService();
-        MenuDispatchDTO menuDispatchDTO = getModel(menuMgtService.listDispatchByMenuCode(tenantCode, menuCode));
+        MenuDispatchDTO menuDispatchDTO = getModel(menuMgtService.getDispatchByCode(tenantCode, menuCode));
         if (menuDispatchDTO == null) {
             log.info("menu dispatch is null");
             return null;

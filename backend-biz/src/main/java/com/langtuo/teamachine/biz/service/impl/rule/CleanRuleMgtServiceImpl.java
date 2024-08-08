@@ -190,7 +190,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     }
 
     @Override
-    public LangTuoResult<CleanRuleDispatchDTO> getDispatchByCleanRuleCode(String tenantCode, String cleanRuleCode) {
+    public LangTuoResult<CleanRuleDispatchDTO> getDispatchByCode(String tenantCode, String cleanRuleCode) {
         LangTuoResult<CleanRuleDispatchDTO> langTuoResult = null;
         try {
             CleanRuleDispatchDTO dto = new CleanRuleDispatchDTO();

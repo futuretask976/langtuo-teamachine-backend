@@ -5,6 +5,8 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.ModelPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
+import java.util.List;
+
 public interface ModelMgtService {
     /**
      *
@@ -23,7 +25,7 @@ public interface ModelMgtService {
      *
      * @return
      */
-    LangTuoResult<PageDTO<ModelDTO>> list();
+    LangTuoResult<List<ModelDTO>> list();
 
     /**
      *

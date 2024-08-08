@@ -2,24 +2,20 @@ package com.langtuo.teamachine.mqtt.worker.dispatch;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
-import com.langtuo.teamachine.api.model.drink.TeaDTO;
-import com.langtuo.teamachine.api.model.menu.MenuDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
-import com.langtuo.teamachine.api.model.menu.SeriesDTO;
-import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
+import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
+import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
-import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
+import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
 import com.langtuo.teamachine.mqtt.MQTTService;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
-import com.langtuo.teamachine.mqtt.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -42,14 +38,14 @@ public class CleanRuleDispatchWorker implements Runnable {
     /**
      * 收到的消息中的key关键字
      */
-    private static final String PAYLOAD_KEY_TENANT_CODE = "tenantCode";
-    private static final String PAYLOAD_KEY_MENU_CODE = "menuCode";
+    private static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
+    private static final String RECEIVE_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
 
     /**
      * 发送的消息中的key关键字
      */
-    private static final String MSG_KEY_MD5_AS_HEX = "md5AsHex";
-    private static final String MSG_KEY_OSS_PATH = "ossPath";
+    private static final String SEND_KEY_TOPIC = "topic";
+    private static final String SEND_KEY_CLEAN_RULE = "cleanRule";
 
 
     /**
@@ -58,42 +54,22 @@ public class CleanRuleDispatchWorker implements Runnable {
     private String tenantCode;
 
     /**
-     * 菜单编码
+     * 清洁规则编码
      */
-    private String menuCode;
+    private String cleanRuleCode;
 
     public CleanRuleDispatchWorker(String payload) {
-        JSONObject payloadJSON = JSONObject.parseObject(payload);
-        this.tenantCode = payloadJSON.getString(PAYLOAD_KEY_TENANT_CODE);
-        this.menuCode = payloadJSON.getString(PAYLOAD_KEY_MENU_CODE);
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)) {
-            throw new IllegalArgumentException("tenantCode or menuCode is blank");
+        JSONObject jsonPayload = JSONObject.parseObject(payload);
+        this.tenantCode = jsonPayload.getString(RECEIVE_KEY_TENANT_CODE);
+        this.cleanRuleCode = jsonPayload.getString(RECEIVE_KEY_CLEAN_RULE_CODE);
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(cleanRuleCode)) {
+            throw new IllegalArgumentException("tenantCode or cleanRuleCode is blank");
         }
     }
 
     @Override
     public void run() {
-        String dispatchCont = getDispatchCont();
-        if (StringUtils.isBlank(dispatchCont)) {
-            log.info("dispatch content error, stop worker");
-            return;
-        }
-        File outputFile = new File("dispatch/output.json");
-        boolean wrote = IOUtils.writeStrToFile(dispatchCont, outputFile);
-        if (!wrote) {
-            log.info("write file error, stop worker");
-            return;
-        }
-        String ossPath = uploadOSS(outputFile);
-        if (StringUtils.isBlank(ossPath)) {
-            log.info("upload oss error, stop worker");
-            return;
-        }
-        String md5AsHex = calcMD5Hex(outputFile);
-        if (StringUtils.isBlank(md5AsHex)) {
-            log.info("calc md5 as hex error, stop worker");
-            return;
-        }
+        JSONObject dispatchCont = getDispatchCont();
 
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
@@ -102,18 +78,18 @@ public class CleanRuleDispatchWorker implements Runnable {
         }
 
         MQTTService mqttService = getMQTTService();
-        JSONObject payloadJSON = new JSONObject();
-        payloadJSON.put(MSG_KEY_MD5_AS_HEX, md5AsHex);
-        payloadJSON.put(MSG_KEY_OSS_PATH, ossPath);
+        JSONObject jsonMsg = new JSONObject();
+        jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.TOPIC_DISPATCH_CLEAN_RULE);
+        jsonMsg.put(SEND_KEY_CLEAN_RULE, dispatchCont);
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMsgByTopic(MQTTConfig.TOPIC_DISPATCH_MENU, payloadJSON.toJSONString());
+            mqttService.sendMsgByTopic(MQTTConfig.TOPIC_DISPATCH_CLEAN_RULE, jsonMsg.toJSONString());
         });
     }
 
-    private MenuMgtService getMenuMgtService() {
+    private CleanRuleMgtService getCleanRuleMgtService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MenuMgtService menuMgtService = appContext.getBean(MenuMgtService.class);
-        return menuMgtService;
+        CleanRuleMgtService cleanRuleMgtService = appContext.getBean(CleanRuleMgtService.class);
+        return cleanRuleMgtService;
     }
 
     private MQTTService getMQTTService() {
@@ -146,81 +122,28 @@ public class CleanRuleDispatchWorker implements Runnable {
         return teaMgtService;
     }
 
-    private String getDispatchCont() {
-        MenuMgtService menuMgtService = getMenuMgtService();
-        MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
-        if (menuDTO == null) {
-            log.info("list menu error, stop worker");
+    private JSONObject getDispatchCont() {
+        CleanRuleMgtService cleanRuleMgtService = getCleanRuleMgtService();
+        CleanRuleDTO cleanRuleDTO = getModel(cleanRuleMgtService.getByCode(tenantCode, cleanRuleCode));
+        if (cleanRuleDTO == null) {
+            log.info("clean rule error, stop worker");
             return null;
         }
 
-        SeriesMgtService seriesMgtService = getSeriesMgtService();
-        List<SeriesDTO> seriesList = menuDTO.getMenuSeriesRelList().stream()
-                .map(menuSeriesRelDTO -> {
-                    SeriesDTO seriesDTO = getModel(seriesMgtService.getByCode(
-                            tenantCode, menuSeriesRelDTO.getSeriesCode()));
-                    return seriesDTO;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(seriesList)) {
-            log.info("series list is empty, stop worker");
-            return null;
-        }
-        List<String> teaCodeList = seriesList.stream()
-                .map(seriesDTO -> {
-                    List<SeriesTeaRelDTO> seriesTeaRelList = seriesDTO.getSeriesTeaRelList();
-                    if (CollectionUtils.isEmpty(seriesTeaRelList)) {
-                        return null;
-                    }
-                    return seriesTeaRelList.stream()
-                            .map(seriesTeaRelDTO -> seriesTeaRelDTO.getTeaCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(teaCodeList)) {
-            log.info("tea code list is empty, stop worker");
-            return null;
-        }
-
-        TeaMgtService teaMgtService = getTeaMgtService();
-        List<TeaDTO> teaList = teaCodeList.stream()
-                .map(teaCode -> {
-                    TeaDTO teaDTO = getModel(teaMgtService.getByCode(tenantCode, teaCode));
-                    return teaDTO;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        // 拼接需要输出的内容
-        JSONObject menuJSON = (JSONObject) JSON.toJSON(menuDTO);
-        menuJSON.remove("menuSeriesRelList");
-        menuJSON.put("seriesList", new JSONArray());
-        seriesList.stream().forEach(seriesDTO -> {
-            JSONObject seriesJSON = (JSONObject) JSON.toJSON(seriesDTO);
-            seriesJSON.remove("seriesTeaRelList");
-            seriesJSON.put("teaList", new JSONArray());
-            teaList.stream().forEach(teaDTO -> {
-                seriesJSON.getJSONArray("teaList").add(JSON.toJSON(teaDTO));
-            });
-            menuJSON.getJSONArray("seriesList").add(seriesJSON);
-        });
-
-        return menuJSON.toJSONString();
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(cleanRuleDTO);
+        return jsonObject;
     }
 
     private List<String> getMachineCodeList() {
-        MenuMgtService menuMgtService = getMenuMgtService();
-        MenuDispatchDTO menuDispatchDTO = getModel(menuMgtService.listDispatchByMenuCode(tenantCode, menuCode));
-        if (menuDispatchDTO == null) {
-            log.info("menu dispatch is null");
+        CleanRuleMgtService cleanRuleMgtService = getCleanRuleMgtService();
+        CleanRuleDispatchDTO cleanRuleDispatchDTO = getModel(cleanRuleMgtService.getDispatchByCode(tenantCode, cleanRuleCode));
+        if (cleanRuleDispatchDTO == null) {
+            log.info("clean rule dispatch is null");
             return null;
         }
 
         ShopMgtService shopMgtService = getShopMgtService();
-        List<String> shopCodeList = menuDispatchDTO.getShopGroupCodeList().stream()
+        List<String> shopCodeList = cleanRuleDispatchDTO.getShopGroupCodeList().stream()
                 .map(shopGroupCode -> {
                     List<ShopDTO> shopList = getListModel(shopMgtService.listByShopGroupCode(
                             tenantCode, shopGroupCode));

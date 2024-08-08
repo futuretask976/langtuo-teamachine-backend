@@ -8,6 +8,7 @@ import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/deviceset/model")
@@ -30,8 +31,8 @@ public class ModelController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<PageDTO<ModelDTO>> list() {
-        LangTuoResult<PageDTO<ModelDTO>> rtn = service.list();
+    public LangTuoResult<List<ModelDTO>> list() {
+        LangTuoResult<List<ModelDTO>> rtn = service.list();
         return rtn;
     }
 

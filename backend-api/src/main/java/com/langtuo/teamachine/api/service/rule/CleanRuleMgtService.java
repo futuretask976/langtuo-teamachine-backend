@@ -65,5 +65,5 @@ public interface CleanRuleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<CleanRuleDispatchDTO> getDispatchByCleanRuleCode(String tenantCode, String cleanRuleCode);
+    LangTuoResult<CleanRuleDispatchDTO> getDispatchByCode(String tenantCode, String cleanRuleCode);
 }

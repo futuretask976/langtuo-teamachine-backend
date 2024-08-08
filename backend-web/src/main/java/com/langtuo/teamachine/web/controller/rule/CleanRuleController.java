@@ -92,7 +92,7 @@ public class CleanRuleController {
     @GetMapping(value = "/dispatch/{tenantcode}/{cleanrulecode}/get")
     public LangTuoResult<CleanRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "cleanrulecode") String cleanRuleCode) {
-        LangTuoResult<CleanRuleDispatchDTO> rtn = service.getDispatchByCleanRuleCode(tenantCode, cleanRuleCode);
+        LangTuoResult<CleanRuleDispatchDTO> rtn = service.getDispatchByCode(tenantCode, cleanRuleCode);
         return rtn;
     }
 }

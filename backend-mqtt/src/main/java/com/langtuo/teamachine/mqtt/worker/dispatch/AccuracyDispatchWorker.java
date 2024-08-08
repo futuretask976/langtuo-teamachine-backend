@@ -37,8 +37,8 @@ public class AccuracyDispatchWorker implements Runnable {
     private String tenantCode;
 
     public AccuracyDispatchWorker(String payload) {
-        JSONObject payloadJSON = JSONObject.parseObject(payload);
-        this.tenantCode = payloadJSON.getString(RECEIVE_KEY_TENANT_CODE);
+        JSONObject jsonPayload = JSONObject.parseObject(payload);
+        this.tenantCode = jsonPayload.getString(RECEIVE_KEY_TENANT_CODE);
         if (StringUtils.isBlank(tenantCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }

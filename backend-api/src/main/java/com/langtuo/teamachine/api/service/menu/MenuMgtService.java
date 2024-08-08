@@ -65,5 +65,5 @@ public interface MenuMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<MenuDispatchDTO> listDispatchByMenuCode(String tenantCode, String menuCode);
+    LangTuoResult<MenuDispatchDTO> getDispatchByCode(String tenantCode, String menuCode);
 }

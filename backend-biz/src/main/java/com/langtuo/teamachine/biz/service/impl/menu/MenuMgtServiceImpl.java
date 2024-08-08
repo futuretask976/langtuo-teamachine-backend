@@ -189,7 +189,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     }
 
     @Override
-    public LangTuoResult<MenuDispatchDTO> listDispatchByMenuCode(String tenantCode, String menuCode) {
+    public LangTuoResult<MenuDispatchDTO> getDispatchByCode(String tenantCode, String menuCode) {
         LangTuoResult<MenuDispatchDTO> langTuoResult = null;
         try {
             MenuDispatchDTO dto = new MenuDispatchDTO();
