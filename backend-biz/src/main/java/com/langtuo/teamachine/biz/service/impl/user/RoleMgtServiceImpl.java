@@ -28,6 +28,9 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class RoleMgtServiceImpl implements RoleMgtService {
+    /**
+     * 租户超级管理员角色的roleCode硬编码
+     */
     private static final String TENANT_SUPER_ADMIN_ROLE_CODE = "";
 
     @Resource
