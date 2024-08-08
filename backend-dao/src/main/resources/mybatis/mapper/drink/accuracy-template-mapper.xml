@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.langtuo.teamachine.dao.mapper.drink.ToppingAccuracyTplMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.drink.ToppingAccuracyTplPO" id="toppingAccuracyTemplatePOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.drink.AccuracyTplMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.drink.AccuracyTplPO" id="accuracyTemplatePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -21,8 +21,8 @@
         <result property="comment" column="comment"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="toppingAccuracyTemplatePOMap">
-        SELECT * FROM topping_accuracy_template
+    <select id="selectOne" resultMap="accuracyTemplatePOMap">
+        SELECT * FROM accuracy_template
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             <if test="templateCode != null">
@@ -33,14 +33,14 @@
             </if>
     </select>
 
-    <select id="selectList" resultMap="toppingAccuracyTemplatePOMap">
-        SELECT * FROM topping_accuracy_template
+    <select id="selectList" resultMap="accuracyTemplatePOMap">
+        SELECT * FROM accuracy_template
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
     </select>
 
-    <select id="search" resultMap="toppingAccuracyTemplatePOMap">
-        SELECT * FROM topping_accuracy_template
+    <select id="search" resultMap="accuracyTemplatePOMap">
+        SELECT * FROM accuracy_template
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             <if test="templateCode != null">
@@ -51,8 +51,8 @@
             </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.ToppingAccuracyTplPO">
-        INSERT INTO topping_accuracy_template (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.AccuracyTplPO">
+        INSERT INTO accuracy_template (
             gmt_created
             , gmt_modified
             , template_code
@@ -83,8 +83,8 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.drink.ToppingAccuracyTplPO">
-        UPDATE topping_accuracy_template
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.drink.AccuracyTplPO">
+        UPDATE accuracy_template
         SET
             gmt_modified = now()
             <if test="specName != null">
@@ -120,7 +120,7 @@
     </update>
 
     <delete id="delete">
-        DELETE FROM topping_accuracy_template
+        DELETE FROM accuracy_template
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND template_code = #{templateCode}

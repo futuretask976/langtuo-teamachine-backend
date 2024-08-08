@@ -2,8 +2,8 @@ package com.langtuo.teamachine.dao.mapper.drink;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.po.drink.ToppingAccuracyTplPO;
-import com.langtuo.teamachine.dao.query.drink.ToppingAccuracyTplQuery;
+import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
+import com.langtuo.teamachine.dao.query.drink.AccuracyTplQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface ToppingAccuracyTplMapper {
+public interface AccuracyTplMapper {
     /**
      *
      * @param tenantCode
@@ -21,19 +21,19 @@ public interface ToppingAccuracyTplMapper {
      * @param templateName
      * @return
      */
-    ToppingAccuracyTplPO selectOne(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode, @Param("templateName") String templateName);
+    AccuracyTplPO selectOne(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode, @Param("templateName") String templateName);
 
     /**
      *
      * @return
      */
-    List<ToppingAccuracyTplPO> selectList(@Param("tenantCode") String tenantCode);
+    List<AccuracyTplPO> selectList(@Param("tenantCode") String tenantCode);
 
     /**
      *
      * @return
      */
-    List<ToppingAccuracyTplPO> search(ToppingAccuracyTplQuery query);
+    List<AccuracyTplPO> search(AccuracyTplQuery query);
 
     /**
      *
@@ -41,14 +41,14 @@ public interface ToppingAccuracyTplMapper {
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(ToppingAccuracyTplPO specPO);
+    int insert(AccuracyTplPO specPO);
 
     /**
      *
      * @param specPO
      * @return
      */
-    int update(ToppingAccuracyTplPO specPO);
+    int update(AccuracyTplPO specPO);
 
     /**
      *

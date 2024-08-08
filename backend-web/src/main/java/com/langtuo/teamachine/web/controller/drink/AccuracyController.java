@@ -2,9 +2,9 @@ package com.langtuo.teamachine.web.controller.drink;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
-import com.langtuo.teamachine.api.request.drink.ToppingAccuracyTplPutRequest;
+import com.langtuo.teamachine.api.request.drink.AccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.api.service.drink.ToppingAccuracyTplMgtService;
+import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/drinkset/accuracy")
 public class AccuracyController {
     @Resource
-    private ToppingAccuracyTplMgtService service;
+    private AccuracyTplMgtService service;
 
     /**
      * url: http://localhost:8080/teamachine/drinkset/accuracy/tenant_001/shopGroup_001/get
@@ -56,7 +56,7 @@ public class AccuracyController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody ToppingAccuracyTplPutRequest request) {
+    public LangTuoResult<Void> put(@RequestBody AccuracyTplPutRequest request) {
         LangTuoResult<Void> rtn = service.put(request);
         return rtn;
     }

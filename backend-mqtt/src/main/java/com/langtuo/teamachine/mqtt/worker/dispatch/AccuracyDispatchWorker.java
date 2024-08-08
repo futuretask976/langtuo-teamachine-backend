@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
-import com.langtuo.teamachine.api.service.drink.ToppingAccuracyTplMgtService;
+import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.mqtt.MQTTService;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -65,16 +65,16 @@ public class AccuracyDispatchWorker implements Runnable {
         return mqttService;
     }
 
-    private ToppingAccuracyTplMgtService getToppingAccuracyTplMgtService() {
+    private AccuracyTplMgtService getToppingAccuracyTplMgtService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        ToppingAccuracyTplMgtService toppingAccuracyTplMgtService = appContext.getBean(
-                ToppingAccuracyTplMgtService.class);
-        return toppingAccuracyTplMgtService;
+        AccuracyTplMgtService accuracyTplMgtService = appContext.getBean(
+                AccuracyTplMgtService.class);
+        return accuracyTplMgtService;
     }
 
     private JSONArray getDispatchCont() {
-        ToppingAccuracyTplMgtService toppingAccuracyTplMgtService = getToppingAccuracyTplMgtService();
-        List<AccuracyTplDTO> list = getListModel(toppingAccuracyTplMgtService.list(tenantCode));
+        AccuracyTplMgtService accuracyTplMgtService = getToppingAccuracyTplMgtService();
+        List<AccuracyTplDTO> list = getListModel(accuracyTplMgtService.list(tenantCode));
         if (CollectionUtils.isEmpty(list)) {
             log.info("open rule list is empty, stop worker");
             return null;

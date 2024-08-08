@@ -2,12 +2,12 @@ package com.langtuo.teamachine.api.service.drink;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
-import com.langtuo.teamachine.api.request.drink.ToppingAccuracyTplPutRequest;
+import com.langtuo.teamachine.api.request.drink.AccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
 import java.util.List;
 
-public interface ToppingAccuracyTplMgtService {
+public interface AccuracyTplMgtService {
     /**
      *
      * @param tenantCode
@@ -41,7 +41,7 @@ public interface ToppingAccuracyTplMgtService {
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(ToppingAccuracyTplPutRequest request);
+    LangTuoResult<Void> put(AccuracyTplPutRequest request);
 
     /**
      *
