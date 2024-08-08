@@ -228,7 +228,6 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         }
 
         CleanRuleDTO dto = new CleanRuleDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setExtraInfo(po.getExtraInfo());
@@ -260,9 +259,6 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         List<CleanRuleStepDTO> list = poList.stream()
                 .map(po -> {
                     CleanRuleStepDTO dto = new CleanRuleStepDTO();
-                    dto.setId(po.getId());
-                    dto.setGmtCreated(po.getGmtCreated());
-                    dto.setGmtModified(po.getGmtModified());
                     dto.setTenantCode(po.getTenantCode());
                     dto.setCleanRuleCode(po.getCleanRuleCode());
                     dto.setCleanContent(po.getCleanContent());

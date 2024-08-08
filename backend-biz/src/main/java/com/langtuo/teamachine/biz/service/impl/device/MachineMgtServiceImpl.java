@@ -194,7 +194,6 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         }
 
         MachineDTO dto = new MachineDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTenantCode(po.getTenantCode());

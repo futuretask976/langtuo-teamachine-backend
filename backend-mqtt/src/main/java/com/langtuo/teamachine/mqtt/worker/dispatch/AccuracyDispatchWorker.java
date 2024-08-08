@@ -4,7 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.model.drink.ToppingAccuracyTplDTO;
+import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.ToppingAccuracyTplMgtService;
 import com.langtuo.teamachine.mqtt.MQTTService;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
@@ -74,7 +74,7 @@ public class AccuracyDispatchWorker implements Runnable {
 
     private JSONArray getDispatchCont() {
         ToppingAccuracyTplMgtService toppingAccuracyTplMgtService = getToppingAccuracyTplMgtService();
-        List<ToppingAccuracyTplDTO> list = getListModel(toppingAccuracyTplMgtService.list(tenantCode));
+        List<AccuracyTplDTO> list = getListModel(toppingAccuracyTplMgtService.list(tenantCode));
         if (CollectionUtils.isEmpty(list)) {
             log.info("open rule list is empty, stop worker");
             return null;

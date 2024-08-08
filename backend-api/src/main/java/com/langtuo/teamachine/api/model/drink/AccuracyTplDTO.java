@@ -6,12 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class ToppingAccuracyTplDTO {
-    /**
-     * 数据表id
-     */
-    private long id;
-
+public class AccuracyTplDTO {
     /**
      * 数据表记录插入时间
      */

@@ -182,7 +182,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         }
 
         TeaDTO dto = new TeaDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTeaCode(po.getTeaCode());
@@ -222,9 +221,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             if (teaUnitDTO == null) {
                 // 初始化teaUnit信息
                 teaUnitDTO = new TeaUnitDTO();
-                teaUnitDTO.setId(teaUnitPO.getId());
-                teaUnitDTO.setGmtCreated(teaUnitPO.getGmtCreated());
-                teaUnitDTO.setGmtModified(teaUnitPO.getGmtModified());
                 teaUnitDTO.setTeaUnitCode(teaUnitPO.getTeaUnitCode());
                 teaUnitDTO.setTeaUnitName(teaUnitPO.getTeaUnitName());
                 teaUnitDTO.setSpecItemRuleList(Lists.newArrayList());
@@ -235,9 +231,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 List<ToppingAdjustRuleDTO> toppingAdjustRuleDTOList = Lists.newArrayList();
                 for (ToppingAdjustRulePO toppingAdjustRulePO : toppingAdjustRulePOList) {
                     ToppingAdjustRuleDTO toppingAdjustRuleDTO = new ToppingAdjustRuleDTO();
-                    toppingAdjustRuleDTO.setId(toppingAdjustRulePO.getId());
-                    toppingAdjustRuleDTO.setGmtCreated(toppingAdjustRulePO.getGmtCreated());
-                    toppingAdjustRuleDTO.setGmtModified(toppingAdjustRulePO.getGmtModified());
                     toppingAdjustRuleDTO.setStepIndex(toppingAdjustRulePO.getStepIndex());
                     toppingAdjustRuleDTO.setToppingCode(toppingAdjustRulePO.getToppingCode());
                     toppingAdjustRuleDTO.setBaseAmount(toppingAdjustRulePO.getBaseAmount());
@@ -273,9 +266,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
             // 初始化specItemRule，多行对应一个teaUnit，每行是独立的specItemRule，都要初始化
             SpecItemRuleDTO specItemRuleDTO = new SpecItemRuleDTO();
-            specItemRuleDTO.setId(teaUnitPO.getId());
-            specItemRuleDTO.setGmtCreated(teaUnitPO.getGmtCreated());
-            specItemRuleDTO.setGmtModified(teaUnitPO.getGmtModified());
             specItemRuleDTO.setSpecCode(teaUnitPO.getSpecCode());
             specItemRuleDTO.setSpecItemCode(teaUnitPO.getSpecItemCode());
             SpecItemPO specItemPO = specItemAccessor.selectOne(teaUnitPO.getTenantCode(), teaUnitPO.getSpecCode(),
@@ -292,7 +282,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             if (specRuleDTO == null) {
                 SpecPO specPO = specAccessor.selectOneByCode(specItemPO.getTenantCode(), specItemPO.getSpecCode());
                 specRuleDTO = new SpecRuleDTO();
-                specRuleDTO.setId(specPO.getId());
                 specRuleDTO.setGmtCreated(specPO.getGmtCreated());
                 specRuleDTO.setGmtModified(specPO.getGmtModified());
                 specRuleDTO.setSpecCode(specPO.getSpecCode());
@@ -301,9 +290,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                         specRuleDTO.getSpecCode());
                 for (SpecItemPO po : specItemPOList) {
                     SpecItemRuleDTO dto = new SpecItemRuleDTO();
-                    dto.setId(po.getId());
-                    dto.setGmtCreated(po.getGmtCreated());
-                    dto.setGmtModified(po.getGmtModified());
                     dto.setSpecCode(po.getSpecCode());
                     dto.setSpecItemCode(po.getSpecItemCode());
                     dto.setSpecItemName(po.getSpecItemName());

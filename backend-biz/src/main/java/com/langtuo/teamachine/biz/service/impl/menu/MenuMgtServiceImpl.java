@@ -227,7 +227,6 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         }
 
         MenuDTO dto = new MenuDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setComment(po.getComment());
@@ -266,9 +265,6 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         return poList.stream().map(po -> {
             MenuSeriesRelDTO dto = new MenuSeriesRelDTO();
-            dto.setId(po.getId());
-            dto.setGmtCreated(po.getGmtCreated());
-            dto.setGmtModified(po.getGmtModified());
             dto.setSeriesCode(po.getSeriesCode());
             dto.setMenuCode(po.getMenuCode());
             return dto;

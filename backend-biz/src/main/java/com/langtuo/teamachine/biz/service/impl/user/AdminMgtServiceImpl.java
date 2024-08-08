@@ -146,7 +146,6 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         }
 
         AdminDTO dto = new AdminDTO();
-        dto.setId(adminPO.getId());
         dto.setGmtCreated(adminPO.getGmtCreated());
         dto.setGmtModified(adminPO.getGmtModified());
         dto.setTenantCode(adminPO.getTenantCode());

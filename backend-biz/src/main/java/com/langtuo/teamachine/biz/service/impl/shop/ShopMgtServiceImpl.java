@@ -162,7 +162,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         }
 
         ShopDTO dto = new ShopDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setShopCode(po.getShopCode());

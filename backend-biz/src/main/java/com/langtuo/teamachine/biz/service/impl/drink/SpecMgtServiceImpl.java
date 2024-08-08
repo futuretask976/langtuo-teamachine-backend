@@ -161,7 +161,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         }
 
         SpecDTO dto = new SpecDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setSpecCode(po.getSpecCode());
@@ -183,9 +182,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         }
 
         SpecItemDTO dto = new SpecItemDTO();
-        dto.setId(po.getId());
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
         dto.setSpecCode(po.getSpecCode());
         dto.setSpecItemCode(po.getSpecItemCode());
         dto.setSpecItemName(po.getSpecItemName());

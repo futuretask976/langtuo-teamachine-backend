@@ -129,7 +129,6 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         }
 
         TenantDTO dto = new TenantDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTenantCode(po.getTenantCode());

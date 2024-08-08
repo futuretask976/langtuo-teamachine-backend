@@ -8,11 +8,6 @@ import java.util.Map;
 @Data
 public class ShopGroupDTO {
     /**
-     * 数据表id
-     */
-    private long id;
-
-    /**
      * 数据表记录插入时间
      */
     private Date gmtCreated;

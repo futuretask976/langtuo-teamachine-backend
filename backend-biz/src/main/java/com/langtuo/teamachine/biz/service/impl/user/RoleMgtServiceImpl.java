@@ -164,7 +164,6 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         }
 
         RoleDTO dto = new RoleDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setRoleCode(po.getRoleCode());

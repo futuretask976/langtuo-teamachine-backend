@@ -145,7 +145,6 @@ public class CloseRuleMgtServiceImpl implements CloseRuleMgtService {
         }
 
         CloseRuleDTO dto = new CloseRuleDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTenantCode(po.getTenantCode());

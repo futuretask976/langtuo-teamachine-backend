@@ -145,7 +145,6 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         }
 
         WarningRuleDTO dto = new WarningRuleDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTenantCode(po.getTenantCode());

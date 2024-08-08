@@ -7,21 +7,6 @@ import java.util.Date;
 @Data
 public class ModelPipelineDTO {
     /**
-     * 数据表id
-     */
-    private long id;
-
-    /**
-     * 数据表记录插入时间
-     */
-    private Date gmtCreated;
-
-    /**
-     * 数据表记录最近修改时间
-     */
-    private Date gmtModified;
-
-    /**
      * 型号编码
      */
     private String modelCode;

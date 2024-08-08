@@ -161,7 +161,6 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         }
 
         SeriesDTO dto = new SeriesDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setComment(po.getComment());
@@ -198,9 +197,6 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
         return poList.stream().map(po -> {
             SeriesTeaRelDTO dto = new SeriesTeaRelDTO();
-            dto.setId(po.getId());
-            dto.setGmtCreated(po.getGmtCreated());
-            dto.setGmtModified(po.getGmtModified());
             dto.setSeriesCode(po.getSeriesCode());
             dto.setTeaCode(po.getTeaCode());
             return dto;

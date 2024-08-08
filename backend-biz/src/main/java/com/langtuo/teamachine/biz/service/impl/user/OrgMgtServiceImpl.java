@@ -155,7 +155,6 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         }
 
         OrgDTO dto = new OrgDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setOrgName(po.getOrgName());

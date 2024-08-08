@@ -166,7 +166,6 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
         }
 
         OpenRuleDTO dto = new OpenRuleDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTenantCode(po.getTenantCode());
@@ -191,9 +190,6 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
         List<OpenRuleToppingDTO> list = poList.stream()
                 .map(po -> {
                     OpenRuleToppingDTO dto = new OpenRuleToppingDTO();
-                    dto.setId(po.getId());
-                    dto.setGmtCreated(po.getGmtCreated());
-                    dto.setGmtModified(po.getGmtModified());
                     dto.setTenantCode(po.getTenantCode());
                     dto.setOpenRuleCode(po.getOpenRuleCode());
                     dto.setToppingCode(po.getToppingCode());

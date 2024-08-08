@@ -144,7 +144,6 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         }
 
         TeaTypeDTO dto = new TeaTypeDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setTeaTypeCode(po.getTeaTypeCode());

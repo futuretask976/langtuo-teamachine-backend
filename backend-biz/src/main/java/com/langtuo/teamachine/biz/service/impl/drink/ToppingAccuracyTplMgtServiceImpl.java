@@ -3,7 +3,7 @@ package com.langtuo.teamachine.biz.service.impl.drink;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.drink.ToppingAccuracyTplDTO;
+import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingAccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.ToppingAccuracyTplMgtService;
@@ -24,11 +24,11 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
     private ToppingAccuracyTplAccessor accessor;
 
     @Override
-    public LangTuoResult<List<ToppingAccuracyTplDTO>> list(String tenantCode) {
-        LangTuoResult<List<ToppingAccuracyTplDTO>> langTuoResult = null;
+    public LangTuoResult<List<AccuracyTplDTO>> list(String tenantCode) {
+        LangTuoResult<List<AccuracyTplDTO>> langTuoResult = null;
         try {
             List<ToppingAccuracyTplPO> list = accessor.selectList(tenantCode);
-            List<ToppingAccuracyTplDTO> dtoList = list.stream()
+            List<AccuracyTplDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
             langTuoResult = LangTuoResult.success(dtoList);
@@ -40,16 +40,16 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
     }
 
     @Override
-    public LangTuoResult<PageDTO<ToppingAccuracyTplDTO>> search(String tenantName, String templateCode, String templateName,
+    public LangTuoResult<PageDTO<AccuracyTplDTO>> search(String tenantName, String templateCode, String templateName,
             int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
-        LangTuoResult<PageDTO<ToppingAccuracyTplDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<AccuracyTplDTO>> langTuoResult = null;
         try {
             PageInfo<ToppingAccuracyTplPO> pageInfo = accessor.search(tenantName, templateCode, templateName,
                     pageNum, pageSize);
-            List<ToppingAccuracyTplDTO> dtoList = pageInfo.getList().stream()
+            List<AccuracyTplDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
@@ -62,11 +62,11 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
     }
 
     @Override
-    public LangTuoResult<ToppingAccuracyTplDTO> getByCode(String tenantCode, String specCode) {
-        LangTuoResult<ToppingAccuracyTplDTO> langTuoResult = null;
+    public LangTuoResult<AccuracyTplDTO> getByCode(String tenantCode, String specCode) {
+        LangTuoResult<AccuracyTplDTO> langTuoResult = null;
         try {
             ToppingAccuracyTplPO po = accessor.selectOneByCode(tenantCode, specCode);
-            ToppingAccuracyTplDTO dto = convert(po);
+            AccuracyTplDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
@@ -76,11 +76,11 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
     }
 
     @Override
-    public LangTuoResult<ToppingAccuracyTplDTO> getByName(String tenantCode, String specName) {
-        LangTuoResult<ToppingAccuracyTplDTO> langTuoResult = null;
+    public LangTuoResult<AccuracyTplDTO> getByName(String tenantCode, String specName) {
+        LangTuoResult<AccuracyTplDTO> langTuoResult = null;
         try {
             ToppingAccuracyTplPO po = accessor.selectOneByName(tenantCode, specName);
-            ToppingAccuracyTplDTO dto = convert(po);
+            AccuracyTplDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
@@ -129,13 +129,12 @@ public class ToppingAccuracyTplMgtServiceImpl implements ToppingAccuracyTplMgtSe
         return langTuoResult;
     }
 
-    private ToppingAccuracyTplDTO convert(ToppingAccuracyTplPO po) {
+    private AccuracyTplDTO convert(ToppingAccuracyTplPO po) {
         if (po == null) {
             return null;
         }
 
-        ToppingAccuracyTplDTO dto = new ToppingAccuracyTplDTO();
-        dto.setId(po.getId());
+        AccuracyTplDTO dto = new AccuracyTplDTO();
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setExtraInfo(po.getExtraInfo());

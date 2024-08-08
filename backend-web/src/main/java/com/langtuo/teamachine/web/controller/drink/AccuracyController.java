@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.web.controller.drink;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.drink.ToppingAccuracyTplDTO;
+import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingAccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.ToppingAccuracyTplMgtService;
@@ -21,9 +21,9 @@ public class AccuracyController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{templatecode}/get")
-    public LangTuoResult<ToppingAccuracyTplDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public LangTuoResult<AccuracyTplDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "templatecode") String templateCode) {
-        LangTuoResult<ToppingAccuracyTplDTO> rtn = service.getByCode(tenantCode, templateCode);
+        LangTuoResult<AccuracyTplDTO> rtn = service.getByCode(tenantCode, templateCode);
         return rtn;
     }
 
@@ -33,8 +33,8 @@ public class AccuracyController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<ToppingAccuracyTplDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<ToppingAccuracyTplDTO>> rtn = service.list(tenantCode);
+    public LangTuoResult<List<AccuracyTplDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        LangTuoResult<List<AccuracyTplDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -43,10 +43,10 @@ public class AccuracyController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<ToppingAccuracyTplDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public LangTuoResult<PageDTO<AccuracyTplDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("templateCode") String templateCode, @RequestParam("templateName") String templateName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<ToppingAccuracyTplDTO>> rtn = service.search(tenantCode, templateCode, templateName,
+        LangTuoResult<PageDTO<AccuracyTplDTO>> rtn = service.search(tenantCode, templateCode, templateName,
                 pageNum, pageSize);
         return rtn;
     }

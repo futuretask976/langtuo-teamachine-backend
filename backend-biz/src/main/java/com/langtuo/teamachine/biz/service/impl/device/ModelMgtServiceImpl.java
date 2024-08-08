@@ -190,9 +190,6 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         List<ModelPipelineDTO> resultList = pipelinePOList.stream().map(po -> {
             ModelPipelineDTO dto = new ModelPipelineDTO();
-            dto.setId(po.getId());
-            dto.setGmtCreated(po.getGmtCreated());
-            dto.setGmtModified(po.getGmtModified());
             dto.setModelCode(po.getModelCode());
             dto.setPipelineNum(po.getPipelineNum());
             dto.setEnableFreeze(po.getEnableFreeze());

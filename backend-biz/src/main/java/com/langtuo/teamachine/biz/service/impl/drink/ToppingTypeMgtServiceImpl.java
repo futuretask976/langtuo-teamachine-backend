@@ -141,7 +141,6 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         }
 
         ToppingTypeDTO dto = new ToppingTypeDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setToppingTypeCode(po.getToppingTypeCode());

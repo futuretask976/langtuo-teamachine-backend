@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.api.service.drink;
 
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.drink.ToppingAccuracyTplDTO;
+import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingAccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
@@ -13,20 +13,20 @@ public interface ToppingAccuracyTplMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<ToppingAccuracyTplDTO> getByCode(String tenantCode, String templateCode);
+    LangTuoResult<AccuracyTplDTO> getByCode(String tenantCode, String templateCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<ToppingAccuracyTplDTO> getByName(String tenantCode, String templateName);
+    LangTuoResult<AccuracyTplDTO> getByName(String tenantCode, String templateName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<ToppingAccuracyTplDTO>> search(String tenantCode, String templateCode, String templateName,
+    LangTuoResult<PageDTO<AccuracyTplDTO>> search(String tenantCode, String templateCode, String templateName,
             int pageNum, int pageSize);
 
     /**
@@ -34,7 +34,7 @@ public interface ToppingAccuracyTplMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<ToppingAccuracyTplDTO>> list(String tenantCode);
+    LangTuoResult<List<AccuracyTplDTO>> list(String tenantCode);
 
     /**
      *

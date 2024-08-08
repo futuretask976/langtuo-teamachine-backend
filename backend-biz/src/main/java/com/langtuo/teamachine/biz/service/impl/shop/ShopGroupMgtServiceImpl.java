@@ -123,7 +123,6 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         }
 
         ShopGroupDTO dto = new ShopGroupDTO();
-        dto.setId(po.getId());
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setShopGroupCode(po.getShopGroupCode());
