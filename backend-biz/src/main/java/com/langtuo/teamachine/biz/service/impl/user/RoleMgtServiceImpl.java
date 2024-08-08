@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class RoleMgtServiceImpl implements RoleMgtService {
+    private static final String TENANT_SUPER_ADMIN_ROLE_CODE = "";
+
     @Resource
     private RoleAccessor roleAccessor;
 
@@ -141,7 +143,11 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         int adminCount = adminAccessor.countByRoleCode(tenantCode, roleCode);
         if (adminCount > 0) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_TRY_DELETE_USING_ROLE);
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_CAN_NOT_DELETE_USING_ROLE);
+        }
+
+        if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(roleCode)) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_CAN_NOT_DELETE_TENANT_SUPER_ADMIN_ROLE);
         }
 
         LangTuoResult<Void> langTuoResult = null;
