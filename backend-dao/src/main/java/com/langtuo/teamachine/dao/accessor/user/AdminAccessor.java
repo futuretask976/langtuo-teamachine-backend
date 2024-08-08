@@ -89,8 +89,20 @@ public class AdminAccessor {
     }
 
     public int countByRoleCode(String tenantCode, String roleCode) {
-        int cnt = mapper.countByRoleCode(tenantCode, roleCode);
-        return cnt;
+        // 首先访问缓存
+        Integer cached = getCacheCount(tenantCode, roleCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByRoleCode(tenantCode, roleCode);
+
+        setCacheCount(tenantCode, roleCode, count);
+        return count;
+    }
+
+    private String getCacheCountKey(String tenantCode, String roleCode) {
+        return "adminAcc-cnt-" + tenantCode + "-" + roleCode;
     }
 
     private String getCacheKey(String tenantCode, String loginName) {
@@ -99,6 +111,18 @@ public class AdminAccessor {
 
     private String getCacheListKey(String tenantCode) {
         return "adminAcc-" + tenantCode;
+    }
+
+    private Integer getCacheCount(String tenantCode, String roleCode) {
+        String key = getCacheCountKey(tenantCode, roleCode);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCount(String tenantCode, String roleCode, Integer count) {
+        String key = getCacheCountKey(tenantCode, roleCode);
+        redisManager.setValue(key, count);
     }
 
     private AdminPO getCache(String tenantCode, String loginName) {
