@@ -31,7 +31,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     /**
      * 租户超级管理员角色的roleCode硬编码
      */
-    private static final String TENANT_SUPER_ADMIN_ROLE_CODE = "";
+    private static final String TENANT_SUPER_ADMIN_ROLE_CODE = "role_tenant_super_admin";
 
     @Resource
     private RoleAccessor roleAccessor;

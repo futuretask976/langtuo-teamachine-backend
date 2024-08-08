@@ -191,6 +191,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         dto.setOuterTeaCode(po.getOuterTeaCode());
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
+        dto.setImgLink(po.getImgLink());
 
         injectTeaUnitDTO(po.getTenantCode(), dto);
         return dto;
@@ -358,6 +359,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         po.setComment(request.getComment());
         po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
+        po.setImgLink(request.getImgLink());
         return po;
     }
 

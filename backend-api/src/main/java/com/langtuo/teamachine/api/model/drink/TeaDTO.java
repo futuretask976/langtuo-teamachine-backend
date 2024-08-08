@@ -54,6 +54,11 @@ public class TeaDTO {
     private String teaTypeCode;
 
     /**
+     * 茶品图片链接
+     */
+    private String imgLink;
+
+    /**
      * 茶-物料关系列表
      */
     private List<TeaUnitDTO> teaUnitList;

@@ -34,6 +34,11 @@ public class TeaPutRequest {
     private String teaTypeCode;
 
     /**
+     * 茶品图片链接
+     */
+    private String imgLink;
+
+    /**
      * 租户编码
      */
     private String tenantCode;
@@ -62,7 +67,8 @@ public class TeaPutRequest {
                 || StringUtils.isBlank(teaCode)
                 || StringUtils.isBlank(teaName)
                 || StringUtils.isBlank(outerTeaCode)
-                || StringUtils.isBlank(teaTypeCode)) {
+                || StringUtils.isBlank(teaTypeCode)
+                || StringUtils.isBlank(imgLink)) {
             return false;
         }
         if (teaUnitList == null || teaUnitList.size() == 0) {

@@ -61,4 +61,9 @@ public class TeaPO {
      * 茶品类型编码
      */
     private String teaTypeCode;
+
+    /**
+     * 茶品图片链接
+     */
+    private String imgLink;
 }
