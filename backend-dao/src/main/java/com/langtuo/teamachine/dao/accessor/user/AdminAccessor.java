@@ -66,6 +66,7 @@ public class AdminAccessor {
         if (inserted == 1) {
             deleteCacheOne(po.getTenantCode(), po.getLoginName());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCount(po.getTenantCode(), po.getRoleCode());
         }
         return inserted;
     }
@@ -75,15 +76,22 @@ public class AdminAccessor {
         if (updated == 1) {
             deleteCacheOne(po.getTenantCode(), po.getLoginName());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCount(po.getTenantCode(), po.getRoleCode());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String loginName) {
+        AdminPO po = selectOne(tenantCode, loginName);
+        if (po == null) {
+            return 0;
+        }
+
         int deleted = mapper.delete(tenantCode, loginName);
         if (deleted == 1) {
             deleteCacheOne(tenantCode, loginName);
             deleteCacheList(tenantCode);
+            deleteCacheCount(tenantCode, po.getRoleCode());
         }
         return deleted;
     }
@@ -155,5 +163,9 @@ public class AdminAccessor {
 
     private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
+    }
+
+    private void deleteCacheCount(String tenantCode, String roleCode) {
+        redisManager.deleteKey(getCacheCountKey(tenantCode, roleCode));
     }
 }
