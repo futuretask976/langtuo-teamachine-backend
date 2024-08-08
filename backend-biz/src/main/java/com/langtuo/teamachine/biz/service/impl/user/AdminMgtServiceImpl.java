@@ -193,7 +193,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         AdminDTO dto = new AdminDTO();
         dto.setTenantCode(tenantCode);
         dto.setLoginName("SYS_SUPER_ADMIN");
-        dto.setLoginPass("SYS_SUPER_ADMIN");
+        // 经过md5加密后的密码，原始密码是SYS_SUPER_ADMIN
+        dto.setLoginPass("5505b50f5f0ec77b27a0ea270b21e7f0");
         dto.setOrgName("总公司");
         dto.setRoleCode("SYS_SUPER_ROLE");
         dto.setRoleName("SYS_SUPER_ROLE");
