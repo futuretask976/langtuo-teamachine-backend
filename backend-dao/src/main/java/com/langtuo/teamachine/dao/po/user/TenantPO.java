@@ -51,9 +51,4 @@ public class TenantPO {
      * 联系电话
      */
     private String contactPhone;
-
-    /**
-     * 图片链接
-     */
-    private String imgLink;
 }

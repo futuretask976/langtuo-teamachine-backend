@@ -28,11 +28,6 @@ public class TenantPutRequest {
     private String contactPhone;
 
     /**
-     * 租户图片
-     */
-    private String imgLink;
-
-    /**
      * 备注
      */
     private String comment;

@@ -135,7 +135,6 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         dto.setTenantName(po.getTenantName());
         dto.setContactPerson(po.getContactPerson());
         dto.setContactPhone(po.getContactPhone());
-        dto.setImgLink(po.getImgLink());
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
         return dto;
@@ -151,7 +150,6 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         po.setTenantName(request.getTenantName());
         po.setContactPerson(request.getContactPerson());
         po.setContactPhone(request.getContactPhone());
-        po.setImgLink(request.getImgLink());
         po.setComment(request.getComment());
         po.setExtraInfo(po.getExtraInfo());
         return po;

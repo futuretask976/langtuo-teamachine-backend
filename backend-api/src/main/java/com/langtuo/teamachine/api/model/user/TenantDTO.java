@@ -46,9 +46,4 @@ public class TenantDTO {
      * 联系电话
      */
     private String contactPhone;
-
-    /**
-     * 租户图片
-     */
-    private String imgLink;
 }

@@ -13,7 +13,6 @@
         <result property="tenantName" column="tenant_name"/>
         <result property="contactPerson" column="contact_person"/>
         <result property="contactPhone" column="contact_phone"/>
-        <result property="imgLink" column="img_link"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
@@ -48,7 +47,6 @@
             , `tenant_name`
             , `contact_person`
             , `contact_phone`
-            , `img_link`
             , `comment`
             , `extra_info`
         ) VALUES (
@@ -58,7 +56,6 @@
             , #{tenantName}
             , #{contactPerson}
             , #{contactPhone}
-            , #{imgLink}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
@@ -75,9 +72,6 @@
             </if>
             <if test="contactPhone != null">
                 , contact_phone = #{contactPhone}
-            </if>
-            <if test="imgLink != null">
-                , img_link = #{imgLink}
             </if>
             <if test="comment != null">
                 , comment = #{comment}
