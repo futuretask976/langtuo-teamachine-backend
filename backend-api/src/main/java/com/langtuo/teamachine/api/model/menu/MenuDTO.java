@@ -39,11 +39,6 @@ public class MenuDTO {
     private String menuName;
 
     /**
-     * 图片链接
-     */
-    private String imgLink;
-
-    /**
      *
      */
     private Date validFrom;

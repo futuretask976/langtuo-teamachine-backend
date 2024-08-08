@@ -48,11 +48,6 @@ public class MenuPO {
     private String menuName;
 
     /**
-     * 图片链接
-     */
-    private String imgLink;
-
-    /**
      * 生效时间
      */
     private Date validFrom;

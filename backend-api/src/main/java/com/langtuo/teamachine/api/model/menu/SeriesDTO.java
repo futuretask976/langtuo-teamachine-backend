@@ -39,11 +39,6 @@ public class SeriesDTO {
     private String seriesName;
 
     /**
-     * 图片链接
-     */
-    private String imgLink;
-
-    /**
      *
      */
     private List<SeriesTeaRelDTO> seriesTeaRelList;

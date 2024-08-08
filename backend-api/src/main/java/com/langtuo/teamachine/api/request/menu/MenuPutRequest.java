@@ -35,11 +35,6 @@ public class MenuPutRequest {
     private String menuName;
 
     /**
-     * 图片链接
-     */
-    private String imgLink;
-
-    /**
      * 生效时间
      */
     private Date validFrom;
@@ -57,7 +52,6 @@ public class MenuPutRequest {
         if (StringUtils.isBlank(tenantCode)
                 || StringUtils.isBlank(menuCode)
                 || StringUtils.isBlank(menuName)
-                || StringUtils.isBlank(imgLink)
                 || validFrom == null) {
             return false;
         }

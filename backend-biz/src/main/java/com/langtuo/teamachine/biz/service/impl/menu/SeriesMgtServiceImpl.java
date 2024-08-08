@@ -167,7 +167,6 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         dto.setExtraInfo(po.getExtraInfo());
         dto.setSeriesCode(po.getSeriesCode());
         dto.setSeriesName(po.getSeriesName());
-        dto.setImgLink(po.getImgLink());
 
         List<SeriesTeaRelPO> seriesTeaRelPOList = seriesTeaRelAccessor.selectList(
                 po.getTenantCode(), po.getSeriesCode());
@@ -186,7 +185,6 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         po.setExtraInfo(request.getExtraInfo());
         po.setSeriesCode(request.getSeriesCode());
         po.setSeriesName(request.getSeriesName());
-        po.setImgLink(request.getImgLink());
         return po;
     }
 

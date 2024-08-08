@@ -233,7 +233,6 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         dto.setExtraInfo(po.getExtraInfo());
         dto.setMenuCode(po.getMenuCode());
         dto.setMenuName(po.getMenuName());
-        dto.setImgLink(po.getImgLink());
         dto.setValidFrom(po.getValidFrom());
 
         List<MenuSeriesRelPO> seriesTeaRelPOList = menuSeriesRelAccessor.selectList(
@@ -253,7 +252,6 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         po.setExtraInfo(request.getExtraInfo());
         po.setMenuCode(request.getMenuCode());
         po.setMenuName(request.getMenuName());
-        po.setImgLink(request.getImgLink());
         po.setValidFrom(request.getValidFrom());
         return po;
     }

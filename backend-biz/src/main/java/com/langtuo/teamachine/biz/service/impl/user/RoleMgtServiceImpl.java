@@ -139,6 +139,11 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
+        int adminCount = adminAccessor.countByRoleCode(tenantCode, roleCode);
+        if (adminCount > 0) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_TRY_DELETE_USING_ROLE);
+        }
+
         LangTuoResult<Void> langTuoResult = null;
         try {
             int deleted = roleAccessor.delete(tenantCode, roleCode);

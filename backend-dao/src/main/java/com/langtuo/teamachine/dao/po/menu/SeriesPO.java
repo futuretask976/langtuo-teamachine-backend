@@ -46,9 +46,4 @@ public class SeriesPO {
      * 系列名称
      */
     private String seriesName;
-
-    /**
-     * 图片链接
-     */
-    private String imgLink;
 }

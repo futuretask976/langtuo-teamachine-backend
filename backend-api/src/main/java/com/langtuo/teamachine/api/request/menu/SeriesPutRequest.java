@@ -34,11 +34,6 @@ public class SeriesPutRequest {
     private String seriesName;
 
     /**
-     * 图片链接
-     */
-    private String imgLink;
-
-    /**
      * 系列-茶品关系
      */
     private List<SeriesTeaRelPutRequest> seriesTeaRelList;
@@ -50,8 +45,7 @@ public class SeriesPutRequest {
     public boolean isValid() {
         if (StringUtils.isBlank(tenantCode)
                 || StringUtils.isBlank(seriesCode)
-                || StringUtils.isBlank(seriesName)
-                || StringUtils.isBlank(imgLink)) {
+                || StringUtils.isBlank(seriesName)) {
             return false;
         }
         if (seriesTeaRelList == null || seriesTeaRelList.size() == 0) {
