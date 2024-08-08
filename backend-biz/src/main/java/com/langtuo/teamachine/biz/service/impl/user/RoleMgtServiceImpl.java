@@ -7,6 +7,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.RolePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
+import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
@@ -35,6 +36,9 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
     @Resource
     private PermitActAccessor permitActAccessor;
+
+    @Resource
+    private AdminAccessor adminAccessor;
 
     @Override
     public LangTuoResult<RoleDTO> get(String tenantCode, String roleCode) {
@@ -179,6 +183,10 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                     .map(item -> item.getPermitActCode())
                     .collect(Collectors.toList()));
         }
+
+        int adminCount = adminAccessor.countByRoleCode(po.getTenantCode(), po.getRoleCode());
+        dto.setAdminCount(adminCount);
+
         return dto;
     }
 

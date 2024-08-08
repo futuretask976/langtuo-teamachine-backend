@@ -109,11 +109,11 @@ public class SeriesAccessor {
     }
 
     private String getCacheKey(String tenantCode, String seriesCode, String seriesName) {
-        return "series_acc_" + tenantCode + "-" + seriesCode + "-" + seriesName;
+        return "seriesAcc-" + tenantCode + "-" + seriesCode + "-" + seriesName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "series_acc_" + tenantCode;
+        return "seriesAcc-" + tenantCode;
     }
 
     private SeriesPO getCache(String tenantCode, String seriesCode, String seriesName) {

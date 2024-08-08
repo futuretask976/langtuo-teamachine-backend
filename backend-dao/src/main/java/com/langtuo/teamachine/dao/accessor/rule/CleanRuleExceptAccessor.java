@@ -46,7 +46,7 @@ public class CleanRuleExceptAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String cleanRuleCode) {
-        return "clean_rule_dispatch_acc_" + tenantCode + "-" + cleanRuleCode;
+        return "cleanRuleExceptAcc-" + tenantCode + "-" + cleanRuleCode;
     }
 
     private List<CleanRuleExceptPO> getCacheList(String tenantCode, String cleanRuleCode) {

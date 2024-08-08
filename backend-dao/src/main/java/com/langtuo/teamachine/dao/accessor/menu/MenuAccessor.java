@@ -109,11 +109,11 @@ public class MenuAccessor {
     }
 
     private String getCacheKey(String tenantCode, String menuCode, String menuName) {
-        return "menu_acc_" + tenantCode + "-" + menuCode + "-" + menuName;
+        return "menuAcc-" + tenantCode + "-" + menuCode + "-" + menuName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "menu_acc_" + tenantCode;
+        return "menuAcc-" + tenantCode;
     }
 
     private MenuPO getCache(String tenantCode, String menuCode, String menuName) {

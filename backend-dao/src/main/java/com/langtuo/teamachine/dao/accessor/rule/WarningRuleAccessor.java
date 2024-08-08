@@ -103,11 +103,11 @@ public class WarningRuleAccessor {
     }
 
     private String getCacheKey(String tenantCode, String warningRuleCode, String warningRuleName) {
-        return "open_rule_acc_" + tenantCode + "-" + warningRuleCode + "-" + warningRuleName;
+        return "warningRuleAcc-" + tenantCode + "-" + warningRuleCode + "-" + warningRuleName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "open_rule_acc_" + tenantCode;
+        return "warningRuleAcc-" + tenantCode;
     }
 
     private WarningRulePO setCache(String tenantCode, String warningRuleCode, String warningRuleName) {

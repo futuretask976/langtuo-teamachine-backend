@@ -103,11 +103,11 @@ public class CleanRuleAccessor {
     }
 
     private String getCacheKey(String tenantCode, String cleanRuleCode, String cleanRuleName) {
-        return "clean_rule_acc_" + tenantCode + "-" + cleanRuleCode + "-" + cleanRuleName;
+        return "cleanRuleAcc-" + tenantCode + "-" + cleanRuleCode + "-" + cleanRuleName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "clean_rule_acc_" + tenantCode;
+        return "cleanRuleAcc-" + tenantCode;
     }
 
     private CleanRulePO setCache(String tenantCode, String cleanRuleCode, String cleanRuleName) {

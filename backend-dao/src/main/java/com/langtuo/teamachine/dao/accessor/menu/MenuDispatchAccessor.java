@@ -55,7 +55,7 @@ public class MenuDispatchAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String menuCode) {
-        return "menu_dispatch_acc_" + tenantCode + "-" + menuCode;
+        return "menuDispatchAcc-" + tenantCode + "-" + menuCode;
     }
 
     private List<MenuDispatchPO> getCacheList(String tenantCode, String menuCode) {

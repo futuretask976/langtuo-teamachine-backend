@@ -87,11 +87,11 @@ public class ModelAccessor {
     }
 
     private String getCacheKey(String modelCode) {
-        return "model_acc_" + modelCode;
+        return "modelAcc-" + modelCode;
     }
 
     private String getCacheListKey() {
-        return "model_acc";
+        return "modelAcc";
     }
 
     private ModelPO getCache(String modelCode) {

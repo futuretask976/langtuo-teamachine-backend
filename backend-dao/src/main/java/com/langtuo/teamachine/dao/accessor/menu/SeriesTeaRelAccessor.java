@@ -47,7 +47,7 @@ public class SeriesTeaRelAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String seriesCode) {
-        return "series_tea_rel_acc_" + tenantCode + "-" + seriesCode;
+        return "seriesTeaRelAcc-" + tenantCode + "-" + seriesCode;
     }
 
     private List<SeriesTeaRelPO> getCacheList(String tenantCode, String seriesCode) {

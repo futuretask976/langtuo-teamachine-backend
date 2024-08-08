@@ -45,7 +45,7 @@
             </if>
     </select>
 
-    <select id="countByRole" resultType="int">
+    <select id="countByRoleCode" resultType="int">
         SELECT COUNT(1) FROM admin
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}

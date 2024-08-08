@@ -54,7 +54,7 @@ public class ToppingAdjustRuleAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String teaCode, String teaUnitCode) {
-        return "topping_adjust_rule_acc_" + tenantCode + "-" + teaCode + "-" + teaUnitCode;
+        return "toppingAdjustRuleAcc-" + tenantCode + "-" + teaCode + "-" + teaUnitCode;
     }
 
     private List<ToppingAdjustRulePO> getCacheList(String tenantCode, String teaCode, String teaUnitCode) {

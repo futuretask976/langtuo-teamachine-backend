@@ -88,12 +88,17 @@ public class AdminAccessor {
         return deleted;
     }
 
+    public int countByRoleCode(String tenantCode, String roleCode) {
+        int cnt = mapper.countByRoleCode(tenantCode, roleCode);
+        return cnt;
+    }
+
     private String getCacheKey(String tenantCode, String loginName) {
-        return "role_acc_" + tenantCode + "-" + loginName;
+        return "adminAcc-" + tenantCode + "-" + loginName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "role_acc_" + tenantCode;
+        return "adminAcc-" + tenantCode;
     }
 
     private AdminPO getCache(String tenantCode, String loginName) {

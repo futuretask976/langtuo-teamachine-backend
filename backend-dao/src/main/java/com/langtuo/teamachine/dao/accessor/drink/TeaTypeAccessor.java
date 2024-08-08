@@ -108,11 +108,11 @@ public class TeaTypeAccessor {
     }
 
     private String getCacheKey(String tenantCode, String teaTypeCode, String teaName) {
-        return "tea_type_acc_" + tenantCode + "-" + teaTypeCode + "-" + teaName;
+        return "teaTypeAcc-" + tenantCode + "-" + teaTypeCode + "-" + teaName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "tea_type_acc_" + tenantCode;
+        return "teaTypeAcc-" + tenantCode;
     }
 
     private TeaTypePO getCache(String tenantCode, String teaTypeCode, String teaName) {

@@ -91,11 +91,11 @@ public class DeployAccessor {
     }
 
     private String getCacheKey(String tenantCode, String deployCode) {
-        return "deploy_acc_" + tenantCode + "-" + deployCode;
+        return "deployAcc-" + tenantCode + "-" + deployCode;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "deploy_acc_" + tenantCode;
+        return "deployAcc-" + tenantCode;
     }
 
     private DeployPO getCache(String tenantCode, String deployCode) {

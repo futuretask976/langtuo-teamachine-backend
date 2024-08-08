@@ -103,11 +103,11 @@ public class OpenRuleAccessor {
     }
 
     private String getCacheKey(String tenantCode, String openRuleCode, String openRuleName) {
-        return "open_rule_acc_" + tenantCode + "-" + openRuleCode + "-" + openRuleName;
+        return "openRuleAcc-" + tenantCode + "-" + openRuleCode + "-" + openRuleName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "open_rule_acc_" + tenantCode;
+        return "openRuleAcc-" + tenantCode;
     }
 
     private OpenRulePO setCache(String tenantCode, String openRuleCode, String openRuleName) {

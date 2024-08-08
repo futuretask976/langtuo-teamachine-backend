@@ -44,6 +44,11 @@ public class RoleDTO {
     private int sysReserved;
 
     /**
+     * 关联当前角色的管理员数量
+     */
+    private int adminCount;
+
+    /**
      * 关联的权限点列表
      */
     private List<String> permitActCodeList;

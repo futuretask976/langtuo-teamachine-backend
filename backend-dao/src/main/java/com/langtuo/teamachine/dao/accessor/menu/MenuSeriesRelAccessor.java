@@ -47,7 +47,7 @@ public class MenuSeriesRelAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String seriesCode) {
-        return "menu_series_rel_acc_" + tenantCode + "-" + seriesCode;
+        return "menuSeriesRelAcc-" + tenantCode + "-" + seriesCode;
     }
 
     private List<MenuSeriesRelPO> getCacheList(String tenantCode, String seriesCode) {

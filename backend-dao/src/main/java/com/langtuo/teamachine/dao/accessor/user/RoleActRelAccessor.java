@@ -47,7 +47,7 @@ public class RoleActRelAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String roleCode) {
-        return "role_act_rel_acc_" + tenantCode + "-" + roleCode;
+        return "roleActRelAcc-" + tenantCode + "-" + roleCode;
     }
 
     private List<RoleActRelPO> getCacheList(String tenantCode, String roleCode) {

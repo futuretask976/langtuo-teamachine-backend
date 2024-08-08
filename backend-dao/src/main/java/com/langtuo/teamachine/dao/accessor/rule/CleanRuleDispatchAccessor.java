@@ -45,7 +45,7 @@ public class CleanRuleDispatchAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String cleanRuleCode) {
-        return "clean_rule_acc_" + tenantCode + "-" + cleanRuleCode;
+        return "cleanRuleDispatchAcc-" + tenantCode + "-" + cleanRuleCode;
     }
 
     private List<CleanRuleDispatchPO> getCacheList(String tenantCode, String cleanRuleCode) {

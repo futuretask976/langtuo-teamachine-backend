@@ -97,11 +97,11 @@ public class RoleAccessor {
     }
 
     private String getCacheKey(String tenantCode, String roleCode) {
-        return "role_acc_" + tenantCode + "-" + roleCode;
+        return "roleAcc-" + tenantCode + "-" + roleCode;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "role_acc_" + tenantCode;
+        return "roleAcc-" + tenantCode;
     }
 
     private RolePO getCache(String tenantCode, String roleCode) {

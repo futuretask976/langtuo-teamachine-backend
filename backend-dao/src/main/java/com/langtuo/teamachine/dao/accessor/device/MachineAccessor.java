@@ -111,11 +111,11 @@ public class MachineAccessor {
     }
 
     private String getCacheKey(String tenantCode, String machineCode) {
-        return "machine_acc_" + tenantCode + "-" + machineCode;
+        return "machineAcc-" + tenantCode + "-" + machineCode;
     }
 
     private String getCacheListKey(String tenantCode, String shopCode) {
-        return "machine_acc_" + tenantCode + "-" + shopCode;
+        return "machineAcc-" + tenantCode + "-" + shopCode;
     }
 
     private MachinePO getCache(String tenantCode, String machineCode) {

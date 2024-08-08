@@ -88,11 +88,11 @@ public class OrgAccessor {
     }
 
     private String getCacheKey(String tenantCode, String orgName) {
-        return "org_acc_" + tenantCode + "-" + orgName;
+        return "orgAcc-" + tenantCode + "-" + orgName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "org_acc_" + tenantCode;
+        return "orgAcc-" + tenantCode;
     }
 
     private OrgPO getCache(String tenantCode, String orgName) {

@@ -57,4 +57,12 @@ public interface AdminMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("loginName") String loginName);
+
+    /**
+     *
+     * @param tenantCode
+     * @param roleCode
+     * @return
+     */
+    int countByRoleCode(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode);
 }

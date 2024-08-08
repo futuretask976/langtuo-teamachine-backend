@@ -46,7 +46,7 @@ public class CleanRuleStepAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String cleanRuleCode) {
-        return "clean_rule_step_acc_" + tenantCode + "-" + cleanRuleCode;
+        return "cleanRuleStepAcc-" + tenantCode + "-" + cleanRuleCode;
     }
 
     private List<CleanRuleStepPO> getCacheList(String tenantCode, String cleanRuleCode) {

@@ -45,7 +45,7 @@ public class OpenRuleToppingAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String openRuleCode) {
-        return "open_rule_topping_acc_" + tenantCode + "-" + openRuleCode;
+        return "openRuleToppingAcc-" + tenantCode + "-" + openRuleCode;
     }
 
     private List<OpenRuleToppingPO> getCacheList(String tenantCode, String openRuleCode) {

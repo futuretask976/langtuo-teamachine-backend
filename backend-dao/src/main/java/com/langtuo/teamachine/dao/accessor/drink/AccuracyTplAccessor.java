@@ -109,11 +109,11 @@ public class AccuracyTplAccessor {
     }
 
     private String getCacheKey(String tenantCode, String templateCode, String templateName) {
-        return "topping_accuracy_tpl_acc_" + tenantCode + "-" + templateCode + "-" + templateName;
+        return "accuracyTplAcc-" + tenantCode + "-" + templateCode + "-" + templateName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "topping_accuracy_tpl_acc_" + tenantCode;
+        return "accuracyTplAcc-" + tenantCode;
     }
 
     private AccuracyTplPO getCache(String tenantCode, String templateCode, String templateName) {

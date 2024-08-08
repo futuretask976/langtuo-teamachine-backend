@@ -109,11 +109,11 @@ public class ToppingAccessor {
     }
 
     private String getCacheKey(String tenantCode, String toppingCode, String toppingName) {
-        return "topping_acc_" + tenantCode + "-" + toppingCode + "-" + toppingName;
+        return "toppingAcc-" + tenantCode + "-" + toppingCode + "-" + toppingName;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "topping_acc_" + tenantCode;
+        return "toppingAcc-" + tenantCode;
     }
 
     private ToppingPO getCache(String tenantCode, String toppingCode, String toppingName) {

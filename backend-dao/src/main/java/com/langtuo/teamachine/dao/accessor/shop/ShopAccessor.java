@@ -122,11 +122,11 @@ public class ShopAccessor {
     }
 
     private String getCacheKey(String tenantCode, String shopCode, String shopName) {
-        return "shop_acc_" + tenantCode + "-" + shopCode + "-" + shopName;
+        return "shopAcc-" + tenantCode + "-" + shopCode + "-" + shopName;
     }
 
     private String getCacheListKey(String tenantCode, String shopGroupCode) {
-        return "shop_acc_" + tenantCode + "-" +shopGroupCode;
+        return "shopAcc-" + tenantCode + "-" +shopGroupCode;
     }
 
     private ShopPO getCache(String tenantCode, String shopCode, String shopName) {

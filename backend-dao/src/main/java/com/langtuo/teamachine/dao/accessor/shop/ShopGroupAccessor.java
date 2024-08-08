@@ -88,11 +88,11 @@ public class ShopGroupAccessor {
     }
 
     private String getCacheKey(String tenantCode, String shopGroupCode) {
-        return "shop_group_acc_" + tenantCode + "-" + shopGroupCode;
+        return "shopGroupAcc-" + tenantCode + "-" + shopGroupCode;
     }
 
     private String getCacheListKey(String tenantCode) {
-        return "shop_group_acc_" + tenantCode;
+        return "shopGroupAcc-" + tenantCode;
     }
 
     private ShopGroupPO getCache(String tenantCode, String shopGroupCode) {

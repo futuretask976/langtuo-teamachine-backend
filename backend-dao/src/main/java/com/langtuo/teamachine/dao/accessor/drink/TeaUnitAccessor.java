@@ -42,7 +42,7 @@ public class TeaUnitAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String teaCode) {
-        return "tea_unit_acc_" + tenantCode + "-" + teaCode;
+        return "teaUnitAcc-" + tenantCode + "-" + teaCode;
     }
 
     private List<TeaUnitPO> getCacheList(String tenantCode, String teaCode) {

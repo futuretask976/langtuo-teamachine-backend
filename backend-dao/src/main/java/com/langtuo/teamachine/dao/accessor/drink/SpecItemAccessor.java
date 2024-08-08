@@ -79,11 +79,11 @@ public class SpecItemAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String specCode) {
-        return "spec_item_acc_" + tenantCode + "-" + specCode;
+        return "specItemAcc-" + tenantCode + "-" + specCode;
     }
 
     private String getCacheKey(String tenantCode, String specCode, String specItemCode) {
-        return "spec_item_acc_" + tenantCode + "-" + specCode + "-" + specItemCode;
+        return "specItemAcc-" + tenantCode + "-" + specCode + "-" + specItemCode;
     }
 
     private SpecItemPO getCache(String tenantCode, String specCode, String specItemCode) {

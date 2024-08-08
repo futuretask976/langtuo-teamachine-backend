@@ -49,11 +49,11 @@ public class ModelPipelineAccessor {
     }
 
     private String getCacheKey(String modelCode) {
-        return "model_pipeline_acc_" + modelCode;
+        return "modelPlAcc-" + modelCode;
     }
 
     private String getCacheListKey() {
-        return "model_pipeline_acc";
+        return "modelPlAcc";
     }
 
     private List<ModelPipelinePO> getCacheList(String modelCode) {
