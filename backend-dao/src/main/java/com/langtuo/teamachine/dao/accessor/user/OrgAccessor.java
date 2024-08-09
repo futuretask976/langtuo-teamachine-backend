@@ -1,70 +1,120 @@
 package com.langtuo.teamachine.dao.accessor.user;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.google.common.collect.Maps;
 import com.langtuo.teamachine.dao.mapper.user.OrgMapper;
 import com.langtuo.teamachine.dao.po.user.OrgPO;
-import com.langtuo.teamachine.dao.query.user.OrgStrucQuery;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class OrgAccessor {
     @Resource
     private OrgMapper mapper;
 
-    @Resource
-    private RedisManager redisManager;
+    /**
+     * 基于商户的组织架构缓存
+     */
+    private Map<String, Map<String, OrgNode>> orgNodeMapByTenant = Maps.newHashMap();
 
-    public OrgPO selectOne(String tenantCode, String orgName) {
-        // 首先访问缓存
-        OrgPO cached = getCache(tenantCode, orgName);
-        if (cached != null) {
-            return cached;
-        }
-
-        OrgPO po = mapper.selectOne(tenantCode, orgName);
-
-        // 设置缓存
-        setCache(tenantCode, orgName, po);
-        return po;
-    }
-
-    public List<OrgPO> selectList(String tenantCode) {
-        // 首先访问缓存
-        List<OrgPO> cachedList = getCacheList(tenantCode);
-        if (cachedList != null) {
-            return cachedList;
+    private void initOrgNodeMapByTenant(String tenantCode) {
+        if (orgNodeMapByTenant.get(tenantCode) != null) {
+            return;
         }
 
         List<OrgPO> list = mapper.selectList(tenantCode);
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
 
-        // 设置缓存
-        setCacheList(tenantCode, list);
+        Map<String, OrgNode> orgNodeMap = Maps.newHashMap();
+        for (OrgPO po : list) {
+            orgNodeMap.put(po.getOrgName(), convert(po));
+        }
+        for (Map.Entry<String, OrgNode> entry : orgNodeMap.entrySet()) {
+            OrgNode orgNode = entry.getValue();
+            String parentOrgName = orgNode.getParentOrgName();
+            if (StringUtils.isBlank(parentOrgName)) {
+                continue;
+            }
+            OrgNode parentOrgNode = orgNodeMap.get(parentOrgName);
+            orgNode.setParent(parentOrgNode);
+            if (parentOrgNode.getChildren() == null) {
+                parentOrgNode.setChildren(Lists.newArrayList());
+            }
+            parentOrgNode.getChildren().add(orgNode);
+        }
+        orgNodeMapByTenant.put(tenantCode, orgNodeMap);
+    }
+
+    private List<OrgPO> listOrgPO(String tenantCode) {
+        if (orgNodeMapByTenant.get(tenantCode) == null) {
+            initOrgNodeMapByTenant(tenantCode);
+        }
+
+        Map<String, OrgNode> orgNodeMap = orgNodeMapByTenant.get(tenantCode);
+        List<OrgPO> list = Lists.newArrayList();
+        for (Map.Entry<String, OrgNode> entry : orgNodeMap.entrySet()) {
+            list.add(convert(entry.getValue()));
+        }
         return list;
     }
 
-    public PageInfo<OrgPO> search(String tenantCode, String orgName, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
+    public OrgPO selectOne(String tenantCode, String orgName) {
+        if (orgNodeMapByTenant.get(tenantCode) == null) {
+            initOrgNodeMapByTenant(tenantCode);
+        }
 
-        OrgStrucQuery query = new OrgStrucQuery();
-        query.setTenantCode(StringUtils.isBlank(tenantCode) ? null : tenantCode);
-        query.setOrgName(StringUtils.isBlank(orgName) ? null : orgName);
-        List<OrgPO> list = mapper.search(query);
+        Map<String, OrgNode> orgNodeMap = orgNodeMapByTenant.get(tenantCode);
+        OrgNode orgNode = orgNodeMap.get(orgName);
+        return convert(orgNode);
+    }
+
+    public List<OrgPO> selectList(String tenantCode) {
+        return listOrgPO(tenantCode);
+    }
+
+    public List<OrgPO> selectListByDepth(String tenantCode) {
+        return listOrgPO(tenantCode);
+    }
+
+    public PageInfo<OrgPO> search(String tenantCode, String orgName, int pageNum, int pageSize) {
+        List<OrgPO> poList = listOrgPO(tenantCode);
+        if (CollectionUtils.isEmpty(poList)) {
+            PageInfo<OrgPO> pageInfo = new PageInfo(null);
+            pageInfo.setTotal(0);
+            return pageInfo;
+        }
+
+        poList = poList.stream()
+                .filter(po -> StringUtils.isBlank(orgName) || orgName.equals(po.getOrgName()))
+                .collect(Collectors.toList());
+        int startIdx = (pageNum - 1) * pageSize;
+        int endIdx = pageNum * pageSize > poList.size() ? poList.size() : pageNum * pageSize;
+
+        List<OrgPO> list = Lists.newArrayList();
+        for (int i = startIdx; i < endIdx; i++) {
+            list.add(poList.get(i));
+        }
 
         PageInfo<OrgPO> pageInfo = new PageInfo(list);
+        pageInfo.setTotal(poList.size());
         return pageInfo;
     }
 
     public int insert(OrgPO po) {
         int inserted = mapper.insert(po);
         if (inserted == 1) {
-            deleteCacheOne(po.getTenantCode(), po.getOrgName());
-            deleteCacheList(po.getTenantCode());
+            orgNodeMapByTenant.remove(po.getTenantCode());
         }
         return inserted;
     }
@@ -72,8 +122,7 @@ public class OrgAccessor {
     public int update(OrgPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheOne(po.getTenantCode(), po.getOrgName());
-            deleteCacheList(po.getTenantCode());
+            orgNodeMapByTenant.remove(po.getTenantCode());
         }
         return updated;
     }
@@ -81,49 +130,73 @@ public class OrgAccessor {
     public int delete(String tenantCode, String orgName) {
         int deleted = mapper.delete(tenantCode, orgName);
         if (deleted == 1) {
-            deleteCacheOne(tenantCode, orgName);
-            deleteCacheList(tenantCode);
+            orgNodeMapByTenant.remove(tenantCode);
         }
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String orgName) {
-        return "orgAcc-" + tenantCode + "-" + orgName;
-    }
-
-    private String getCacheListKey(String tenantCode) {
-        return "orgAcc-" + tenantCode;
-    }
-
-    private OrgPO getCache(String tenantCode, String orgName) {
-        String key = getCacheKey(tenantCode, orgName);
-        Object cached = redisManager.getValue(key);
-        OrgPO po = (OrgPO) cached;
+    private OrgPO convert(OrgNode node) {
+        OrgPO po = new OrgPO();
+        po.setId(node.getId());
+        po.setGmtCreated(node.getGmtCreated());
+        po.setGmtModified(node.getGmtModified());
+        po.setTenantCode(node.getTenantCode());
+        po.setOrgName(node.getOrgName());
+        po.setParentOrgName(node.getParentOrgName());
         return po;
     }
 
-    private List<OrgPO> getCacheList(String tenantCode) {
-        String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
-        List<OrgPO> poList = (List<OrgPO>) cached;
-        return poList;
+    private OrgNode convert(OrgPO po) {
+        OrgNode node = new OrgNode();
+        node.setId(po.getId());
+        node.setGmtCreated(po.getGmtCreated());
+        node.setGmtModified(po.getGmtModified());
+        node.setTenantCode(po.getTenantCode());
+        node.setOrgName(po.getOrgName());
+        node.setParentOrgName(po.getParentOrgName());
+        return node;
     }
 
-    private void setCacheList(String tenantCode, List<OrgPO> poList) {
-        String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
-    }
+    @Data
+    class OrgNode {
+        /**
+         * 数据表id
+         */
+        private long id;
 
-    private void setCache(String tenantCode, String orgName, OrgPO po) {
-        String key = getCacheKey(tenantCode, orgName);
-        redisManager.setValue(key, po);
-    }
+        /**
+         * 数据表记录插入时间
+         */
+        private Date gmtCreated;
 
-    private void deleteCacheOne(String tenantCode, String orgName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, orgName));
-    }
+        /**
+         * 数据表记录最近修改时间
+         */
+        private Date gmtModified;
 
-    private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        /**
+         * 租户编码
+         */
+        private String tenantCode;
+
+        /**
+         * 组织名称
+         */
+        private String orgName;
+
+        /**
+         * 父节点名称
+         */
+        private String parentOrgName;
+
+        /**
+         * 父节点
+         */
+        private OrgNode parent;
+
+        /**
+         * 子节点列表
+         */
+        private List<OrgNode> children;
     }
 }

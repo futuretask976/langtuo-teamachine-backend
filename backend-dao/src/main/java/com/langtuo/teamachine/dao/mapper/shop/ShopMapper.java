@@ -30,6 +30,13 @@ public interface ShopMapper {
 
     /**
      *
+     * @return
+     */
+    List<ShopPO> selectListByOrgNameList(@Param("tenantCode") String tenantCode,
+            @Param("orgNameList") List<String> orgNameList);
+
+    /**
+     *
      * @param query
      * @return
      */

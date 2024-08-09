@@ -14,6 +14,7 @@
         <result property="outerTeaCode" column="outer_tea_code"/>
         <result property="state" column="state"/>
         <result property="teaTypeCode" column="tea_type_code"/>
+        <result property="imgLink" column="img_link"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
@@ -50,17 +51,18 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.TeaPO">
-        INSERT INTO `tea` (
-            `gmt_created`
-            , `gmt_modified`
-            , `tea_code`
-            , `tea_name`
-            , `outer_tea_code`
-            , `state`
-            , `tea_type_code`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO tea (
+            gmt_created
+            , gmt_modified
+            , tea_code
+            , tea_name
+            , outer_tea_code
+            , state
+            , tea_type_code
+            , img_link
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
@@ -69,6 +71,7 @@
             , #{outerTeaCode}
             , #{state}
             , #{teaTypeCode}
+            , #{imgLink}
             , #{tenantCode}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
@@ -90,6 +93,9 @@
             </if>
             <if test="teaTypeCode != null">
                 , tea_type_code = #{teaTypeCode}
+            </if>
+            <if test="imgLink != null">
+                , img_link = #{imgLink}
             </if>
             <if test="tenantCode != null">
                 , tenant_code = #{tenantCode}

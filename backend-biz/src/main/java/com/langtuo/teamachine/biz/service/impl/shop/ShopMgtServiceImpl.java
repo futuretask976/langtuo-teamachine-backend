@@ -9,10 +9,15 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
+import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
+import com.langtuo.teamachine.dao.po.user.AdminPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -26,6 +31,9 @@ import java.util.stream.Collectors;
 public class ShopMgtServiceImpl implements ShopMgtService {
     @Resource
     private ShopAccessor shopAccessor;
+
+    @Resource
+    private AdminAccessor adminAccessor;
 
     @Resource
     private ShopGroupAccessor shopGroupAccessor;
@@ -101,6 +109,33 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<List<ShopDTO>> listByAdmin(String tenantCode) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalArgumentException("couldn't find login session");
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String adminLoginName = userDetails.getUsername();
+        if (StringUtils.isBlank(adminLoginName)) {
+            throw new IllegalArgumentException("couldn't find login session");
+        }
+
+        AdminPO adminPO = adminAccessor.selectOne(tenantCode, adminLoginName);
+        String adminOrgName = adminPO.getOrgName();
+
+        LangTuoResult<List<ShopDTO>> langTuoResult = null;
+//        try {
+//            List<ShopPO> list = shopAccessor.selectListByAdmin(tenantCode, orgName);
+//            List<ShopDTO> dtoList = convert(list);
+//            langTuoResult = LangTuoResult.success(dtoList);
+//        } catch (Exception e) {
+//            log.error("list error: " + e.getMessage(), e);
+//            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+//        }
         return langTuoResult;
     }
 
