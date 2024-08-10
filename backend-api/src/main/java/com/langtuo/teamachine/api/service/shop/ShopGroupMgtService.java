@@ -13,7 +13,14 @@ public interface ShopGroupMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<ShopGroupDTO> get(String tenantCode, String shopGroupCode);
+    LangTuoResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<ShopGroupDTO> getByName(String tenantCode, String shopGroupName);
 
     /**
      *

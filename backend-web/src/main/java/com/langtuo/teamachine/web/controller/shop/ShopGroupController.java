@@ -23,7 +23,7 @@ public class ShopGroupController {
     @GetMapping(value = "/{tenantcode}/{shopgroupcode}/get")
     public LangTuoResult<ShopGroupDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "shopgroupcode") String shopGroupCode) {
-        LangTuoResult<ShopGroupDTO> rtn = service.get(tenantCode, shopGroupCode);
+        LangTuoResult<ShopGroupDTO> rtn = service.getByCode(tenantCode, shopGroupCode);
         return rtn;
     }
 

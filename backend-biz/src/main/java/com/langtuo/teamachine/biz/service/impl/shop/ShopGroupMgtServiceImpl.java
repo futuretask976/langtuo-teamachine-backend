@@ -25,8 +25,15 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     private ShopGroupAccessor shopGroupAccessor;
 
     @Override
-    public LangTuoResult<ShopGroupDTO> get(String tenantCode, String loginName) {
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(tenantCode, loginName);
+    public LangTuoResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode) {
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(tenantCode, shopGroupCode);
+        ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
+        return LangTuoResult.success(shopGroupDTO);
+    }
+
+    @Override
+    public LangTuoResult<ShopGroupDTO> getByName(String tenantCode, String shopGroupName) {
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(tenantCode, shopGroupName);
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
         return LangTuoResult.success(shopGroupDTO);
     }

@@ -19,7 +19,8 @@ public interface ShopGroupMapper {
      * @param tenantCode
      * @return
      */
-    ShopGroupPO selectOne(@Param("tenantCode") String tenantCode, @Param("shopGroupCode") String shopGroupCode);
+    ShopGroupPO selectOne(@Param("tenantCode") String tenantCode, @Param("shopGroupCode") String shopGroupCode,
+            @Param("shopGroupName") String shopGroupName);
 
     /**
      *

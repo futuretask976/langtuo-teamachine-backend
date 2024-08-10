@@ -4,17 +4,17 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
+import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
+import com.langtuo.teamachine.api.model.user.AdminDTO;
+import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.request.shop.ShopPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
+import com.langtuo.teamachine.api.service.user.AdminMgtService;
+import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
-import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
-import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
-import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
-import com.langtuo.teamachine.dao.node.user.OrgNode;
-import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
-import com.langtuo.teamachine.dao.po.user.AdminPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
@@ -25,8 +25,10 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Component
 @Slf4j
@@ -35,13 +37,13 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     private ShopAccessor shopAccessor;
 
     @Resource
-    private AdminAccessor adminAccessor;
+    private AdminMgtService adminMgtService;
 
     @Resource
-    private OrgAccessor orgAccessor;
+    private OrgMgtService orgMgtService;
 
     @Resource
-    private ShopGroupAccessor shopGroupAccessor;
+    private ShopGroupMgtService shopGroupMgtService;
 
     @Override
     public LangTuoResult<ShopDTO> getByCode(String tenantCode, String shopCode) {
@@ -67,13 +69,11 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         try {
             String shopGroupCode = null;
             if (StringUtils.isNotBlank(shopGroupName)) {
-                Optional<ShopGroupPO> opt = shopGroupAccessor.selectList(tenantCode).stream()
-                        .filter(item -> item.getShopGroupName().equals(shopGroupName))
-                        .findFirst();
-                if (opt.isPresent()) {
-                    shopGroupCode = opt.get().getShopGroupCode();
-                } else {
+                ShopGroupDTO shopGroupDTO = getModel(shopGroupMgtService.getByName(tenantCode, shopGroupName));
+                if (shopGroupDTO == null) {
                     return LangTuoResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
+                } else {
+                    shopGroupCode = shopGroupDTO.getShopGroupCode();
                 }
             }
 
@@ -200,10 +200,10 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOne(po.getTenantCode(), po.getShopGroupCode());
-        if (shopGroupPO != null) {
-            dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
-            dto.setShopGroupName(shopGroupPO.getShopGroupName());
+        ShopGroupDTO shopGroupDTO = getModel(shopGroupMgtService.getByCode(po.getTenantCode(), po.getShopGroupCode()));
+        if (shopGroupDTO != null) {
+            dto.setShopGroupCode(shopGroupDTO.getShopGroupCode());
+            dto.setShopGroupName(shopGroupDTO.getShopGroupName());
         }
 
         return dto;
@@ -237,10 +237,10 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             throw new IllegalArgumentException("couldn't find login session");
         }
 
-        AdminPO adminPO = adminAccessor.selectOne(tenantCode, adminLoginName);
-        String orgName = adminPO.getOrgName();
-        List<OrgNode> orgNodeList = orgAccessor.selectListByParent(tenantCode, orgName);
-        List<String> orgNameList = orgNodeList.stream()
+        AdminDTO adminDTO = getModel(adminMgtService.get(tenantCode, adminLoginName));
+        String orgName = adminDTO.getOrgName();
+        List<OrgDTO> orgDTOList = getListModel(orgMgtService.listByParent(tenantCode, orgName));
+        List<String> orgNameList = orgDTOList.stream()
                 .map(orgNode -> orgNode.getOrgName())
                 .collect(Collectors.toList());
         return orgNameList;

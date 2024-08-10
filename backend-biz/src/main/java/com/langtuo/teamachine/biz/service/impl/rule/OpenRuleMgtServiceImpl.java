@@ -3,14 +3,14 @@ package com.langtuo.teamachine.biz.service.impl.rule;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.model.drink.ToppingDTO;
 import com.langtuo.teamachine.api.model.rule.OpenRuleDTO;
 import com.langtuo.teamachine.api.model.rule.OpenRuleToppingDTO;
 import com.langtuo.teamachine.api.request.rule.OpenRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.rule.OpenRuleMgtService;
-import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.*;
-import com.langtuo.teamachine.dao.po.drink.ToppingPO;
 import com.langtuo.teamachine.dao.po.rule.OpenRuleToppingPO;
 import com.langtuo.teamachine.dao.po.rule.OpenRulePO;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+
 @Component
 @Slf4j
 public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
@@ -33,7 +35,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
     private OpenRuleToppingAccessor openRuleToppingAccessor;
 
     @Resource
-    private ToppingAccessor toppingAccessor;
+    private ToppingMgtService toppingMgtService;
 
     @Override
     public LangTuoResult<OpenRuleDTO> getByCode(String tenantCode, String openRuleCode) {
@@ -196,9 +198,10 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
                     dto.setFlushSec(po.getFlushSec());
                     dto.setFlushWeight(po.getFlushWeight());
 
-                    ToppingPO toppingPO = toppingAccessor.selectOneByCode(po.getTenantCode(), po.getToppingCode());
-                    if (toppingPO != null) {
-                        dto.setToppingName(toppingPO.getToppingName());
+                    ToppingDTO toppingDTO = getModel(toppingMgtService.getByCode(
+                            po.getTenantCode(), po.getToppingCode()));
+                    if (toppingDTO != null) {
+                        dto.setToppingName(toppingDTO.getToppingName());
                     }
                     return dto;
                 })

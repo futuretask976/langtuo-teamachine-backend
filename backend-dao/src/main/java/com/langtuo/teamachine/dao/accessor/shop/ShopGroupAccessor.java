@@ -20,17 +20,31 @@ public class ShopGroupAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public ShopGroupPO selectOne(String tenantCode, String shopGroupCode) {
+    public ShopGroupPO selectOneByCode(String tenantCode, String shopGroupCode) {
         // 首先访问缓存
-        ShopGroupPO cached = getCache(tenantCode, shopGroupCode);
+        ShopGroupPO cached = getCache(tenantCode, shopGroupCode, null);
         if (cached != null) {
             return cached;
         }
 
-        ShopGroupPO po = mapper.selectOne(tenantCode, shopGroupCode);
+        ShopGroupPO po = mapper.selectOne(tenantCode, shopGroupCode, null);
 
         // 设置缓存
-        setCache(tenantCode, shopGroupCode, po);
+        setCache(tenantCode, shopGroupCode, null, po);
+        return po;
+    }
+
+    public ShopGroupPO selectOneByName(String tenantCode, String shopGroupName) {
+        // 首先访问缓存
+        ShopGroupPO cached = getCache(tenantCode, null, shopGroupName);
+        if (cached != null) {
+            return cached;
+        }
+
+        ShopGroupPO po = mapper.selectOne(tenantCode, null, shopGroupName);
+
+        // 设置缓存
+        setCache(tenantCode, null, shopGroupName, po);
         return po;
     }
 
@@ -63,7 +77,7 @@ public class ShopGroupAccessor {
     public int insert(ShopGroupPO po) {
         int inserted = mapper.insert(po);
         if (inserted == 1) {
-            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode());
+            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode(), po.getShopGroupName());
             deleteCacheList(po.getTenantCode());
         }
         return inserted;
@@ -72,31 +86,36 @@ public class ShopGroupAccessor {
     public int update(ShopGroupPO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode());
+            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode(), po.getShopGroupName());
             deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String shopGroupCode) {
+        ShopGroupPO po = selectOneByCode(tenantCode, shopGroupCode);
+        if (po == null) {
+            return 0;
+        }
+
         int deleted = mapper.delete(tenantCode, shopGroupCode);
         if (deleted == 1) {
-            deleteCacheOne(tenantCode, shopGroupCode);
+            deleteCacheOne(tenantCode, po.getShopGroupCode(), po.getShopGroupName());
             deleteCacheList(tenantCode);
         }
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String shopGroupCode) {
-        return "shopGroupAcc-" + tenantCode + "-" + shopGroupCode;
+    private String getCacheKey(String tenantCode, String shopGroupCode, String shopGroupName) {
+        return "shopGroupAcc-" + tenantCode + "-" + shopGroupCode + "-" + shopGroupName;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "shopGroupAcc-" + tenantCode;
     }
 
-    private ShopGroupPO getCache(String tenantCode, String shopGroupCode) {
-        String key = getCacheKey(tenantCode, shopGroupCode);
+    private ShopGroupPO getCache(String tenantCode, String shopGroupCode, String shopGroupName) {
+        String key = getCacheKey(tenantCode, shopGroupCode, shopGroupName);
         Object cached = redisManager.getValue(key);
         ShopGroupPO po = (ShopGroupPO) cached;
         return po;
@@ -114,13 +133,14 @@ public class ShopGroupAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String shopGroupCode, ShopGroupPO po) {
-        String key = getCacheKey(tenantCode, shopGroupCode);
+    private void setCache(String tenantCode, String shopGroupCode, String shopGroupName, ShopGroupPO po) {
+        String key = getCacheKey(tenantCode, shopGroupCode, shopGroupName);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheOne(String tenantCode, String shopGroupCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, shopGroupCode));
+    private void deleteCacheOne(String tenantCode, String shopGroupCode, String shopGroupName) {
+        redisManager.deleteKey(getCacheKey(tenantCode, shopGroupCode, null));
+        redisManager.deleteKey(getCacheKey(tenantCode, null, shopGroupName));
     }
 
     private void deleteCacheList(String tenantCode) {

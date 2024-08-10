@@ -19,8 +19,13 @@
     <select id="selectOne" resultMap="shopGroupPOMap">
         SELECT * FROM shop_group
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and shop_group_code = #{shopGroupCode}
+            AND tenant_code = #{tenantCode}
+            <if test="shopGroupCode != null">
+                AND shop_group_code = #{shopGroupCode}
+            </if>
+            <if test="shopGroupName != null">
+                AND shop_group_name = #{shopGroupName}
+            </if>
     </select>
 
     <select id="selectList" resultMap="shopGroupPOMap">
