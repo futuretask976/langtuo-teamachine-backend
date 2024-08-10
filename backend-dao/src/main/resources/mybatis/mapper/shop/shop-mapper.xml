@@ -40,44 +40,31 @@
             </if>
     </select>
 
-    <select id="selectListByOrgNameList" resultMap="shopPOMap">
-        SELECT * FROM shop
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
-            <if test="orgNameList != null">
-                AND org_name IN
-                <foreach item="orgName" collection="orgNameList" open="(" separator="," close=")">
-                    #{orgName}
-                </foreach>
-            </if>
-    </select>
-
     <select id="search" resultMap="shopPOMap">
         SELECT * FROM shop
         WHERE 1 = 1
             <if test="shopName != null">
-                AND `shop_name` = #{shopName}
+                AND shop_name = #{shopName}
             </if>
             <if test="shopGroupCode != null">
-                AND `shop_group_code` = #{shopGroupCode}
+                AND shop_group_code = #{shopGroupCode}
             </if>
             <if test="tenantCode != null">
-                AND `tenant_code` = #{tenantCode}
+                AND tenant_code = #{tenantCode}
             </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.shop.ShopPO">
-        INSERT INTO `shop` (
-            `gmt_created`
-            , `gmt_modified`
-            , `shop_code`
-            , `shop_name`
-            , `shop_type`
-            , `shop_group_code`
-            , `org_name`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO shop (
+            gmt_created
+            , gmt_modified
+            , shop_code
+            , shop_name
+            , shop_type
+            , shop_group_code
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
@@ -85,7 +72,6 @@
             , #{shopName}
             , #{shopType}
             , #{shopGroupCode}
-            , #{orgName}
             , #{tenantCode}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
@@ -97,22 +83,19 @@
         SET
             gmt_modified = now()
             <if test="shopName != null">
-                , `shop_name` = #{shopName}
+                , shop_name = #{shopName}
             </if>
             <if test="shopType != null">
-                , `shop_type` = #{shopType}
+                , shop_type = #{shopType}
             </if>
             <if test="shopGroupCode != null">
-                , `shop_group_code` = #{shopGroupCode}
-            </if>
-            <if test="orgName != null">
-                , `org_name` = #{orgName}
+                , shop_group_code = #{shopGroupCode}
             </if>
             <if test="comment != null">
-                , `comment` = #{comment}
+                , comment = #{comment}
             </if>
             <if test="extraInfo != null">
-                , `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
             </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}

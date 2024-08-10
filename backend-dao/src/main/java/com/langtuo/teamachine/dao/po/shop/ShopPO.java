@@ -56,9 +56,4 @@ public class ShopPO {
      * 店铺组编码
      */
     private String shopGroupCode;
-
-    /**
-     * 归属的组织名称
-     */
-    private String orgName;
 }

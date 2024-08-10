@@ -33,13 +33,19 @@ public class ShopGroupPutRequest {
     private String shopGroupName;
 
     /**
+     * 归属的组织名称
+     */
+    private String orgName;
+
+    /**
      *
      * @return
      */
     public boolean isValid() {
         if (StringUtils.isBlank(tenantCode)
                 || StringUtils.isBlank(shopGroupCode)
-                || StringUtils.isBlank(shopGroupName)) {
+                || StringUtils.isBlank(shopGroupName)
+                || StringUtils.isBlank(orgName)) {
             return false;
         }
         return true;

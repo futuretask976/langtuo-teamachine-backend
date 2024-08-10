@@ -43,11 +43,6 @@ public class ShopPutRequest {
     private String shopGroupCode;
 
     /**
-     * 归属的组织架构
-     */
-    private String orgName;
-
-    /**
      *
      * @return
      */
@@ -55,8 +50,7 @@ public class ShopPutRequest {
         if (StringUtils.isBlank(tenantCode)
                 || StringUtils.isBlank(shopGroupCode)
                 || StringUtils.isBlank(shopCode)
-                || StringUtils.isBlank(shopName)
-                || StringUtils.isBlank(orgName)) {
+                || StringUtils.isBlank(shopName)) {
             return false;
         }
         return true;

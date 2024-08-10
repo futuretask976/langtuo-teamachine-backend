@@ -5,8 +5,6 @@ import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
-import com.langtuo.teamachine.api.model.user.AdminDTO;
-import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.request.shop.ShopPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
@@ -17,9 +15,7 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -87,8 +83,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
 
-        listByAdminOrgName(tenantCode);
-
         return langTuoResult;
     }
 
@@ -124,9 +118,14 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     public LangTuoResult<List<ShopDTO>> listByAdminOrgName(String tenantCode) {
         LangTuoResult<List<ShopDTO>> langTuoResult;
         try {
-            List<ShopPO> list = shopAccessor.selectListByOrgNameList(tenantCode, getAdminOrgNameList(tenantCode));
-            List<ShopDTO> dtoList = convert(list);
-            langTuoResult = LangTuoResult.success(dtoList);
+            List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
+
+            List<ShopDTO> list = Lists.newArrayList();
+            for (ShopGroupDTO shopGroupDTO : shopGroupDTOList) {
+                List<ShopPO> shopPOList = shopAccessor.selectList(tenantCode, shopGroupDTO.getShopGroupCode());
+                list.addAll(convert(shopPOList));
+            }
+            langTuoResult = LangTuoResult.success(list);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -226,23 +225,5 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         return po;
     }
 
-    private List<String> getAdminOrgNameList(String tenantCode) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new IllegalArgumentException("couldn't find login session");
-        }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String adminLoginName = userDetails.getUsername();
-        if (StringUtils.isBlank(adminLoginName)) {
-            throw new IllegalArgumentException("couldn't find login session");
-        }
 
-        AdminDTO adminDTO = getModel(adminMgtService.get(tenantCode, adminLoginName));
-        String orgName = adminDTO.getOrgName();
-        List<OrgDTO> orgDTOList = getListModel(orgMgtService.listByParent(tenantCode, orgName));
-        List<String> orgNameList = orgDTOList.stream()
-                .map(orgNode -> orgNode.getOrgName())
-                .collect(Collectors.toList());
-        return orgNameList;
-    }
 }

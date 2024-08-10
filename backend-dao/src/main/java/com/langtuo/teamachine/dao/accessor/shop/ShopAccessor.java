@@ -84,20 +84,6 @@ public class ShopAccessor {
         return list;
     }
 
-    public List<ShopPO> selectListByOrgNameList(String tenantCode, List<String> orgNameList) {
-        // 首先访问缓存
-        List<ShopPO> cachedList = getCacheListByOrgNameList(tenantCode, orgNameList);
-        if (cachedList != null) {
-            return cachedList;
-        }
-
-        List<ShopPO> list = shopMapper.selectListByOrgNameList(tenantCode, orgNameList);
-
-        // 设置缓存
-        setCacheListByOrgNameList(tenantCode, orgNameList, list);
-        return list;
-    }
-
     public PageInfo<ShopPO> search(String tenantCode, String shopName, String shopGroupCode, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
@@ -151,14 +137,6 @@ public class ShopAccessor {
         return "shopAcc-" + tenantCode + "-" +shopGroupCode;
     }
 
-    private String getCacheListKeyByOrgNameList(String tenantCode, List<String> orgNameList) {
-        String key = "shopAcc-" + tenantCode;
-        for (String orgName : orgNameList) {
-            key = key + "-" + orgName;
-        }
-        return key;
-    }
-
     private ShopPO getCache(String tenantCode, String shopCode, String shopName) {
         String key = getCacheKey(tenantCode, shopCode, shopName);
         Object cached = redisManager.getValue(key);
@@ -171,18 +149,6 @@ public class ShopAccessor {
         Object cached = redisManager.getValue(key);
         List<ShopPO> poList = (List<ShopPO>) cached;
         return poList;
-    }
-
-    private List<ShopPO> getCacheListByOrgNameList(String tenantCode, List<String> orgNameList) {
-        String key = getCacheListKeyByOrgNameList(tenantCode, orgNameList);
-        Object cached = redisManager.getValue(key);
-        List<ShopPO> poList = (List<ShopPO>) cached;
-        return poList;
-    }
-
-    private void setCacheListByOrgNameList(String tenantCode, List<String> orgNameList, List<ShopPO> poList) {
-        String key = getCacheListKeyByOrgNameList(tenantCode, orgNameList);
-        redisManager.setValue(key, poList);
     }
 
     private void setCacheList(String tenantCode, String shopGroupCode, List<ShopPO> poList) {
@@ -203,9 +169,5 @@ public class ShopAccessor {
     private void deleteCacheList(String tenantCode, String shopGroupCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, shopGroupCode));
         redisManager.deleteKey(getCacheListKey(tenantCode, null));
-    }
-
-    private void deleteCacheListByOrgNameList(String tenantCode, List<String> orgNameList) {
-        // TODO 需要考虑如何删除缓存，实在不行用redis的hashmap形式
     }
 }

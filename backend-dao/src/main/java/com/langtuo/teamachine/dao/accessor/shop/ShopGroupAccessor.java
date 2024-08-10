@@ -62,6 +62,20 @@ public class ShopGroupAccessor {
         return list;
     }
 
+    public List<ShopGroupPO> selectListByOrgNameList(String tenantCode, List<String> orgNameList) {
+        // 首先访问缓存
+        List<ShopGroupPO> cachedList = getCacheListByOrgNameList(tenantCode, orgNameList);
+        if (cachedList != null) {
+            return cachedList;
+        }
+
+        List<ShopGroupPO> list = mapper.selectListByOrgNameList(tenantCode, orgNameList);
+
+        // 设置缓存
+        setCacheListByOrgNameList(tenantCode, orgNameList, list);
+        return list;
+    }
+
     public PageInfo<ShopGroupPO> search(String tenantCode, String shopGroupName, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
@@ -110,6 +124,14 @@ public class ShopGroupAccessor {
         return "shopGroupAcc-" + tenantCode + "-" + shopGroupCode + "-" + shopGroupName;
     }
 
+    private String getCacheListKeyByOrgNameList(String tenantCode, List<String> orgNameList) {
+        String key = "shopGroupAcc-" + tenantCode;
+        for (String orgName : orgNameList) {
+            key = key + "-" + orgName;
+        }
+        return key;
+    }
+
     private String getCacheListKey(String tenantCode) {
         return "shopGroupAcc-" + tenantCode;
     }
@@ -138,6 +160,18 @@ public class ShopGroupAccessor {
         redisManager.setValue(key, po);
     }
 
+    private List<ShopGroupPO> getCacheListByOrgNameList(String tenantCode, List<String> orgNameList) {
+        String key = getCacheListKeyByOrgNameList(tenantCode, orgNameList);
+        Object cached = redisManager.getValue(key);
+        List<ShopGroupPO> poList = (List<ShopGroupPO>) cached;
+        return poList;
+    }
+
+    private void setCacheListByOrgNameList(String tenantCode, List<String> orgNameList, List<ShopGroupPO> poList) {
+        String key = getCacheListKeyByOrgNameList(tenantCode, orgNameList);
+        redisManager.setValue(key, poList);
+    }
+
     private void deleteCacheOne(String tenantCode, String shopGroupCode, String shopGroupName) {
         redisManager.deleteKey(getCacheKey(tenantCode, shopGroupCode, null));
         redisManager.deleteKey(getCacheKey(tenantCode, null, shopGroupName));
@@ -145,5 +179,9 @@ public class ShopGroupAccessor {
 
     private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
+    }
+
+    private void deleteCacheListByOrgNameList(String tenantCode, List<String> orgNameList) {
+        // TODO 需要考虑如何删除缓存，实在不行用redis的hashmap形式
     }
 }

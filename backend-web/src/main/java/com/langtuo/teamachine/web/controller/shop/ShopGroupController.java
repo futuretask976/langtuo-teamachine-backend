@@ -39,6 +39,17 @@ public class ShopGroupController {
     }
 
     /**
+     * url: http://localhost:8080/teamachine/shop/group/list?tenantCode=tenant_001
+     * @param tenantCode
+     * @return
+     */
+    @GetMapping(value = "/listbyadminorg")
+    public LangTuoResult<List<ShopGroupDTO>> listByAdminOrg(@RequestParam("tenantCode") String tenantCode) {
+        LangTuoResult<List<ShopGroupDTO>> rtn = service.listByAdminOrg(tenantCode);
+        return rtn;
+    }
+
+    /**
      * url: http://localhost:8080/teamachine/shop/group/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */

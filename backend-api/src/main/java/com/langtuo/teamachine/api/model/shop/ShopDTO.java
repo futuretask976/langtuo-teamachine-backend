@@ -51,9 +51,4 @@ public class ShopDTO {
      * 店铺组名称
      */
     private String shopGroupName;
-
-    /**
-     * 归属的组织架构
-     */
-    private String orgName;
 }

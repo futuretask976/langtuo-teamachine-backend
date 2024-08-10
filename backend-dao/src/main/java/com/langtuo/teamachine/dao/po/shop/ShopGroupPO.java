@@ -46,4 +46,9 @@ public class ShopGroupPO {
      * 店铺组名称
      */
     private String shopGroupName;
+
+    /**
+     * 归属的组织名称
+     */
+    private String orgName;
 }
