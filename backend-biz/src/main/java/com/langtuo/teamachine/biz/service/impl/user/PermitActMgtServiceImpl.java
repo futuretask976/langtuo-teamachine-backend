@@ -21,16 +21,26 @@ public class PermitActMgtServiceImpl implements PermitActMgtService {
     private PermitActAccessor permitActAccessor;
 
     @Override
-    public LangTuoResult<List<PermitActGroupDTO>> list() {
-        List<PermitActGroupDTO> PermitActGroupList = Lists.newArrayList();
+    public LangTuoResult<List<PermitActGroupDTO>> listPermitActGroup() {
+        List<PermitActGroupDTO> list = Lists.newArrayList();
         for (PermitActGroupPO po : permitActAccessor.selectPermitActGroupList()) {
             PermitActGroupDTO permitActGroup = convert(po);
             List<PermitActDTO> permitActList = convert(permitActAccessor.selectPermitActList(
                     po.getPermitActGroupCode()));
             permitActGroup.setPermitActList(permitActList);
-            PermitActGroupList.add(permitActGroup);
+            list.add(permitActGroup);
         }
-        return LangTuoResult.success(PermitActGroupList);
+        return LangTuoResult.success(list);
+    }
+
+    @Override
+    public LangTuoResult<List<PermitActDTO>> listPermitAct() {
+        List<PermitActDTO> list = Lists.newArrayList();
+        for (PermitActPO po : permitActAccessor.selectPermitActList()) {
+            PermitActDTO permitAct = convert(po);
+            list.add(permitAct);
+        }
+        return LangTuoResult.success(list);
     }
 
     private PermitActGroupDTO convert(PermitActGroupPO permitActGroupPO) {
@@ -41,6 +51,18 @@ public class PermitActMgtServiceImpl implements PermitActMgtService {
         PermitActGroupDTO dto = new PermitActGroupDTO();
         dto.setPermitActGroupCode(permitActGroupPO.getPermitActGroupCode());
         dto.setPermitActGroupName(permitActGroupPO.getPermitActGroupName());
+        return dto;
+    }
+
+    private PermitActDTO convert(PermitActPO po) {
+        if (po == null) {
+            return null;
+        }
+
+        PermitActDTO dto = new PermitActDTO();
+        dto.setPermitActCode(po.getPermitActCode());
+        dto.setPermitActName(po.getPermitActName());
+        dto.setPermitActGroupCode(po.getPermitActGroupCode());
         return dto;
     }
 

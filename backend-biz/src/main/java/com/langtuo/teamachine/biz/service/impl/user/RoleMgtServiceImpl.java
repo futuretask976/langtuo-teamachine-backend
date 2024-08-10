@@ -2,11 +2,13 @@ package com.langtuo.teamachine.biz.service.impl.user;
 
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.api.model.user.PermitActDTO;
 import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.RolePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
+import com.langtuo.teamachine.api.service.user.PermitActMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
@@ -21,6 +23,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
 import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Component
@@ -38,10 +41,19 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     private RoleActRelAccessor roleActRelAccessor;
 
     @Resource
+    private PermitActMgtService permitActMgtService;
+
+    @Resource
     private AdminMgtService adminMgtService;
 
     @Override
     public LangTuoResult<RoleDTO> getByCode(String tenantCode, String roleCode) {
+        // 超级管理员特殊逻辑
+        RoleDTO superRole = getSysSuperRole(tenantCode, roleCode);
+        if (superRole != null) {
+            return LangTuoResult.success(superRole);
+        }
+
         RolePO rolePO = roleAccessor.selectOneByCode(tenantCode, roleCode);
         RoleDTO roleDTO = convert(rolePO);
         return LangTuoResult.success(roleDTO);
@@ -229,5 +241,25 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * 此方法返回系统超级角色，不存储在数据库（因为如果存储数据库，必须指定tenant，而系统超级角色不归属任何teanant）
+     * @return
+     */
+    public RoleDTO getSysSuperRole(String tenantCode, String roleCode) {
+        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
+            return null;
+        }
 
+        RoleDTO dto = new RoleDTO();
+        dto.setRoleCode("SYS_SUPER_ROLE");
+        dto.setRoleName("SYS_SUPER_ROLE");
+        dto.setSysReserved(1);
+        dto.setAdminCount(1);
+
+        List<PermitActDTO> permitActDTOList = getListModel(permitActMgtService.listPermitAct());
+        dto.setPermitActCodeList(permitActDTOList.stream()
+                .map(permitActDTO -> permitActDTO.getPermitActCode())
+                .collect(Collectors.toList()));
+        return dto;
+    }
 }

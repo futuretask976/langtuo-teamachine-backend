@@ -22,7 +22,7 @@ public class PermitActController {
      */
     @GetMapping(value = "/list")
     public LangTuoResult<List<PermitActGroupDTO>> list() {
-        LangTuoResult<List<PermitActGroupDTO>> rtn = service.list();
+        LangTuoResult<List<PermitActGroupDTO>> rtn = service.listPermitActGroup();
         log.info("$$$$$ PermitActController#LangTuoResult entering");
         return rtn;
     }
