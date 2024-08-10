@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
+import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
@@ -34,6 +35,9 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     @Resource
     private AdminAccessor adminAccessor;
+
+    @Resource
+    private OrgAccessor orgAccessor;
 
     @Resource
     private ShopGroupAccessor shopGroupAccessor;

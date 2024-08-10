@@ -8,9 +8,10 @@ import com.langtuo.teamachine.api.request.user.OrgPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
-import com.langtuo.teamachine.dao.po.user.OrgPO;
+import com.langtuo.teamachine.dao.node.user.OrgNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -21,6 +22,11 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class OrgMgtServiceImpl implements OrgMgtService {
+    /**
+     * 组织架构中最高层次的名称
+     */
+    public static final String ORG_NAME_TOP = "总公司";
+
     @Resource
     private OrgAccessor orgAccessor;
 
@@ -28,19 +34,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public LangTuoResult<OrgDTO> listByDepth(String tenantCode) {
         LangTuoResult<OrgDTO> langTuoResult = null;
         try {
-            List<OrgPO> poList = orgAccessor.selectList(tenantCode);
-            List<OrgDTO> dtoList = poList.stream()
-                    .map(po -> convert(po))
-                    .collect(Collectors.toList());
-
-            dtoList.forEach(item -> {
-                List<OrgDTO> children = findOrgStrucPOByParent(item.getOrgName(), dtoList);
-                if (!CollectionUtils.isEmpty(children)) {
-                    item.setChildOrgNameList(children);
-                }
-            });
-
-            langTuoResult = LangTuoResult.success(findTopOrgStrucPO(dtoList));
+            OrgNode orgNode = orgAccessor.findTopOrgNode(tenantCode);
+            langTuoResult = LangTuoResult.success(convert(orgNode));
         } catch (Exception e) {
             log.error("listByDepth error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
@@ -52,8 +47,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public LangTuoResult<List<OrgDTO>> list(String tenantCode) {
         LangTuoResult<List<OrgDTO>> langTuoResult = null;
         try {
-            List<OrgPO> poList = orgAccessor.selectList(tenantCode);
-            List<OrgDTO> dtoList = convert(poList);
+            List<OrgNode> nodeList = orgAccessor.selectList(tenantCode);
+            List<OrgDTO> dtoList = convert(nodeList);
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
@@ -70,7 +65,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
         LangTuoResult<PageDTO<OrgDTO>> langTuoResult = null;
         try {
-            PageInfo<OrgPO> pageInfo = orgAccessor.search(tenantCode, orgName, pageNum, pageSize);
+            PageInfo<OrgNode> pageInfo = orgAccessor.search(tenantCode, orgName, pageNum, pageSize);
             List<OrgDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
@@ -85,8 +80,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public LangTuoResult<OrgDTO> get(String tenantCode, String orgName) {
         LangTuoResult<OrgDTO> langTuoResult = null;
         try {
-            OrgPO orgPO = orgAccessor.selectOne(tenantCode, orgName);
-            OrgDTO orgDTO = convert(orgPO);
+            OrgNode orgNode = orgAccessor.selectOne(tenantCode, orgName);
+            OrgDTO orgDTO = convert(orgNode);
             langTuoResult = LangTuoResult.success(orgDTO);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
@@ -103,15 +98,15 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
         String tenantCode = request.getTenantCode();
         String orgName = request.getOrgName();
-        OrgPO orgPO = convert(request);
+        OrgNode orgNode = convert(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            OrgPO exist = orgAccessor.selectOne(tenantCode, orgName);
+            OrgNode exist = orgAccessor.selectOne(tenantCode, orgName);
             if (exist != null) {
-                int updated = orgAccessor.update(orgPO);
+                int updated = orgAccessor.update(orgNode);
             } else {
-                int inserted = orgAccessor.insert(orgPO);
+                int inserted = orgAccessor.insert(orgNode);
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -138,7 +133,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         return langTuoResult;
     }
 
-    private List<OrgDTO> convert(List<OrgPO> poList) {
+    private List<OrgDTO> convert(List<OrgNode> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
@@ -149,51 +144,37 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         return list;
     }
 
-    private OrgDTO convert(OrgPO po) {
-        if (po == null) {
+    private OrgDTO convert(OrgNode node) {
+        if (node == null) {
             return null;
         }
 
         OrgDTO dto = new OrgDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setOrgName(po.getOrgName());
-        dto.setParentOrgName(po.getParentOrgName());
+        dto.setGmtCreated(node.getGmtCreated());
+        dto.setGmtModified(node.getGmtModified());
+        dto.setOrgName(node.getOrgName());
+        dto.setParentOrgName(node.getParentOrgName());
+
+        if (!CollectionUtils.isEmpty(node.getChildren())) {
+            List<OrgDTO> children = Lists.newArrayList();
+            node.getChildren().forEach(child -> {
+                children.add(convert(child));
+            });
+            dto.setChildren(children);
+        }
+
         return dto;
     }
 
-    private OrgPO convert(OrgPutRequest request) {
+    private OrgNode convert(OrgPutRequest request) {
         if (request == null) {
             return null;
         }
 
-        OrgPO po = new OrgPO();
-        po.setTenantCode(request.getTenantCode());
-        po.setOrgName(request.getOrgName());
-        po.setParentOrgName(request.getParentOrgName());
-        return po;
-    }
-
-    private List<OrgDTO> findOrgStrucPOByParent(String parentOrgName, List<OrgDTO> orgDTOList) {
-        if (StringUtils.isBlank(parentOrgName) || CollectionUtils.isEmpty(orgDTOList)) {
-            return null;
-        }
-
-        return orgDTOList.stream()
-                .filter(item -> item.getParentOrgName() != null && item.getParentOrgName().equals(parentOrgName))
-                .collect(Collectors.toList());
-    }
-
-    private OrgDTO findTopOrgStrucPO(List<OrgDTO> orgDTOList) {
-        if (CollectionUtils.isEmpty(orgDTOList)) {
-            return null;
-        }
-
-        for (OrgDTO item : orgDTOList) {
-            if("总公司".equals(item.getOrgName())) {
-                return item;
-            }
-        }
-        return null;
+        OrgNode node = new OrgNode();
+        node.setTenantCode(request.getTenantCode());
+        node.setOrgName(request.getOrgName());
+        node.setParentOrgName(request.getParentOrgName());
+        return node;
     }
 }

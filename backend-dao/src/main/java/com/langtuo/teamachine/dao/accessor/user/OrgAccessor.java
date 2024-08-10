@@ -3,15 +3,14 @@ package com.langtuo.teamachine.dao.accessor.user;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.langtuo.teamachine.dao.mapper.user.OrgMapper;
+import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.user.OrgPO;
-import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,103 +25,71 @@ public class OrgAccessor {
      */
     private Map<String, Map<String, OrgNode>> orgNodeMapByTenant = Maps.newHashMap();
 
-    private void initOrgNodeMapByTenant(String tenantCode) {
-        if (orgNodeMapByTenant.get(tenantCode) != null) {
-            return;
-        }
-
-        List<OrgPO> list = mapper.selectList(tenantCode);
-        if (CollectionUtils.isEmpty(list)) {
-            return;
-        }
-
-        Map<String, OrgNode> orgNodeMap = Maps.newHashMap();
-        for (OrgPO po : list) {
-            orgNodeMap.put(po.getOrgName(), convert(po));
-        }
-        for (Map.Entry<String, OrgNode> entry : orgNodeMap.entrySet()) {
-            OrgNode orgNode = entry.getValue();
-            String parentOrgName = orgNode.getParentOrgName();
-            if (StringUtils.isBlank(parentOrgName)) {
-                continue;
-            }
-            OrgNode parentOrgNode = orgNodeMap.get(parentOrgName);
-            orgNode.setParent(parentOrgNode);
-            if (parentOrgNode.getChildren() == null) {
-                parentOrgNode.setChildren(Lists.newArrayList());
-            }
-            parentOrgNode.getChildren().add(orgNode);
-        }
-        orgNodeMapByTenant.put(tenantCode, orgNodeMap);
-    }
-
-    private List<OrgPO> listOrgPO(String tenantCode) {
+    public OrgNode findTopOrgNode(String tenantCode) {
         if (orgNodeMapByTenant.get(tenantCode) == null) {
             initOrgNodeMapByTenant(tenantCode);
         }
 
         Map<String, OrgNode> orgNodeMap = orgNodeMapByTenant.get(tenantCode);
-        List<OrgPO> list = Lists.newArrayList();
         for (Map.Entry<String, OrgNode> entry : orgNodeMap.entrySet()) {
-            list.add(convert(entry.getValue()));
+            OrgNode orgNode = entry.getValue();
+            if (orgNode.getParent() == null) {
+                return orgNode;
+            }
         }
-        return list;
+        return null;
     }
 
-    public OrgPO selectOne(String tenantCode, String orgName) {
+    public OrgNode selectOne(String tenantCode, String orgName) {
         if (orgNodeMapByTenant.get(tenantCode) == null) {
             initOrgNodeMapByTenant(tenantCode);
         }
 
         Map<String, OrgNode> orgNodeMap = orgNodeMapByTenant.get(tenantCode);
         OrgNode orgNode = orgNodeMap.get(orgName);
-        return convert(orgNode);
+        return orgNode;
     }
 
-    public List<OrgPO> selectList(String tenantCode) {
-        return listOrgPO(tenantCode);
+    public List<OrgNode> selectList(String tenantCode) {
+        return listOrgNode(tenantCode);
     }
 
-    public List<OrgPO> selectListByDepth(String tenantCode) {
-        return listOrgPO(tenantCode);
-    }
-
-    public PageInfo<OrgPO> search(String tenantCode, String orgName, int pageNum, int pageSize) {
-        List<OrgPO> poList = listOrgPO(tenantCode);
-        if (CollectionUtils.isEmpty(poList)) {
-            PageInfo<OrgPO> pageInfo = new PageInfo(null);
+    public PageInfo<OrgNode> search(String tenantCode, String orgName, int pageNum, int pageSize) {
+        List<OrgNode> nodeList = listOrgNode(tenantCode);
+        if (CollectionUtils.isEmpty(nodeList)) {
+            PageInfo<OrgNode> pageInfo = new PageInfo(null);
             pageInfo.setTotal(0);
             return pageInfo;
         }
 
-        poList = poList.stream()
+        nodeList = nodeList.stream()
                 .filter(po -> StringUtils.isBlank(orgName) || orgName.equals(po.getOrgName()))
                 .collect(Collectors.toList());
         int startIdx = (pageNum - 1) * pageSize;
-        int endIdx = pageNum * pageSize > poList.size() ? poList.size() : pageNum * pageSize;
+        int endIdx = pageNum * pageSize > nodeList.size() ? nodeList.size() : pageNum * pageSize;
 
-        List<OrgPO> list = Lists.newArrayList();
+        List<OrgNode> list = Lists.newArrayList();
         for (int i = startIdx; i < endIdx; i++) {
-            list.add(poList.get(i));
+            list.add(nodeList.get(i));
         }
 
-        PageInfo<OrgPO> pageInfo = new PageInfo(list);
-        pageInfo.setTotal(poList.size());
+        PageInfo<OrgNode> pageInfo = new PageInfo(list);
+        pageInfo.setTotal(nodeList.size());
         return pageInfo;
     }
 
-    public int insert(OrgPO po) {
-        int inserted = mapper.insert(po);
+    public int insert(OrgNode node) {
+        int inserted = mapper.insert(convert(node));
         if (inserted == 1) {
-            orgNodeMapByTenant.remove(po.getTenantCode());
+            orgNodeMapByTenant.remove(node.getTenantCode());
         }
         return inserted;
     }
 
-    public int update(OrgPO po) {
-        int updated = mapper.update(po);
+    public int update(OrgNode node) {
+        int updated = mapper.update(convert(node));
         if (updated == 1) {
-            orgNodeMapByTenant.remove(po.getTenantCode());
+            orgNodeMapByTenant.remove(node.getTenantCode());
         }
         return updated;
     }
@@ -157,46 +124,59 @@ public class OrgAccessor {
         return node;
     }
 
-    @Data
-    class OrgNode {
-        /**
-         * 数据表id
-         */
-        private long id;
+    private void initOrgNodeMapByTenant(String tenantCode) {
+        if (orgNodeMapByTenant.get(tenantCode) != null) {
+            return;
+        }
 
-        /**
-         * 数据表记录插入时间
-         */
-        private Date gmtCreated;
+        List<OrgPO> list = mapper.selectList(tenantCode);
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
 
-        /**
-         * 数据表记录最近修改时间
-         */
-        private Date gmtModified;
+        Map<String, OrgNode> orgNodeMap = Maps.newHashMap();
+        for (OrgPO po : list) {
+            orgNodeMap.put(po.getOrgName(), convert(po));
+        }
+        for (Map.Entry<String, OrgNode> entry : orgNodeMap.entrySet()) {
+            OrgNode orgNode = entry.getValue();
+            String parentOrgName = orgNode.getParentOrgName();
+            if (StringUtils.isBlank(parentOrgName)) {
+                continue;
+            }
+            OrgNode parentOrgNode = orgNodeMap.get(parentOrgName);
+            orgNode.setParent(parentOrgNode);
+            if (parentOrgNode.getChildren() == null) {
+                parentOrgNode.setChildren(Lists.newArrayList());
+            }
+            parentOrgNode.getChildren().add(orgNode);
+        }
+        orgNodeMapByTenant.put(tenantCode, orgNodeMap);
+    }
 
-        /**
-         * 租户编码
-         */
-        private String tenantCode;
+    private List<OrgNode> listOrgNode(String tenantCode) {
+        if (orgNodeMapByTenant.get(tenantCode) == null) {
+            initOrgNodeMapByTenant(tenantCode);
+        }
 
-        /**
-         * 组织名称
-         */
-        private String orgName;
+        List<OrgNode> list = Lists.newArrayList();
+        convertOrgNodeToList(findTopOrgNode(tenantCode), list);
+        return list;
+    }
 
-        /**
-         * 父节点名称
-         */
-        private String parentOrgName;
+    private void convertOrgNodeToList(OrgNode orgNode, List<OrgNode> orgNodeList) {
+        if (orgNode == null) {
+            return;
+        }
+        if (orgNodeList == null) {
+            orgNodeList = Lists.newArrayList();
+        }
+        orgNodeList.add(orgNode);
 
-        /**
-         * 父节点
-         */
-        private OrgNode parent;
-
-        /**
-         * 子节点列表
-         */
-        private List<OrgNode> children;
+        if (!CollectionUtils.isEmpty(orgNode.getChildren())) {
+            for (OrgNode child : orgNode.getChildren()) {
+                convertOrgNodeToList(child, orgNodeList);
+            }
+        }
     }
 }
