@@ -21,6 +21,12 @@ public class RoleAccessor {
     private RedisManager redisManager;
 
     public RolePO selectOne(String tenantCode, String roleCode) {
+        // 超级管理员特殊逻辑
+        RolePO superRole = getSysSuperRole(tenantCode, roleCode);
+        if (superRole != null) {
+            return superRole;
+        }
+
         // 首先访问缓存
         RolePO cached = getCache(tenantCode, roleCode);
         if (cached != null) {
@@ -134,5 +140,22 @@ public class RoleAccessor {
 
     private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
+    }
+
+    /**
+     * 此方法返回系统超级角色，不存储在数据库（因为如果存储数据库，必须指定tenant，而系统超级角色不归属任何teanant）
+     * @return
+     */
+    public RolePO getSysSuperRole(String tenantCode, String roleCode) {
+        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
+            return null;
+        }
+
+        RolePO po = new RolePO();
+        po.setTenantCode(tenantCode);
+        po.setRoleCode("SYS_SUPER_ROLE");
+        po.setRoleName("SYS_SUPER_ROLE");
+        po.setSysReserved(1);
+        return po;
     }
 }

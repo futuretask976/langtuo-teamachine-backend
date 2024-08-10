@@ -33,7 +33,7 @@ public class OrgController {
      */
     @GetMapping(value = "/listbydepth")
     public LangTuoResult<OrgDTO> listByDepth(@RequestParam(name = "tenantCode") String tenantCode) {
-        LangTuoResult<OrgDTO> rtn = service.listByDepth(tenantCode);
+        LangTuoResult<OrgDTO> rtn = service.getTop(tenantCode);
         return rtn;
     }
 

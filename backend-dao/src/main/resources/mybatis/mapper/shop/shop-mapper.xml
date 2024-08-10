@@ -40,6 +40,18 @@
             </if>
     </select>
 
+    <select id="selectListByOrgNameList" resultMap="shopPOMap">
+        SELECT * FROM shop
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="orgNameList != null">
+                AND org_name IN
+                <foreach item="orgName" collection="orgNameList" open="(" separator="," close=")">
+                    #{orgName}
+                </foreach>
+            </if>
+    </select>
+
     <select id="search" resultMap="shopPOMap">
         SELECT * FROM shop
         WHERE 1 = 1

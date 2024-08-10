@@ -51,7 +51,24 @@ public class OrgAccessor {
     }
 
     public List<OrgNode> selectList(String tenantCode) {
+        if (orgNodeMapByTenant.get(tenantCode) == null) {
+            initOrgNodeMapByTenant(tenantCode);
+        }
+
         return listOrgNode(tenantCode);
+    }
+
+    public List<OrgNode> selectListByParent(String tenantCode, String orgName) {
+        if (orgNodeMapByTenant.get(tenantCode) == null) {
+            initOrgNodeMapByTenant(tenantCode);
+        }
+
+        Map<String, OrgNode> orgNodeMap = orgNodeMapByTenant.get(tenantCode);
+        OrgNode parent = orgNodeMap.get(orgName);
+        if (parent == null) {
+            return null;
+        }
+        return listOrgNodeByParent(parent);
     }
 
     public PageInfo<OrgNode> search(String tenantCode, String orgName, int pageNum, int pageSize) {
@@ -155,12 +172,14 @@ public class OrgAccessor {
     }
 
     private List<OrgNode> listOrgNode(String tenantCode) {
-        if (orgNodeMapByTenant.get(tenantCode) == null) {
-            initOrgNodeMapByTenant(tenantCode);
-        }
-
         List<OrgNode> list = Lists.newArrayList();
         convertOrgNodeToList(findTopOrgNode(tenantCode), list);
+        return list;
+    }
+
+    private List<OrgNode> listOrgNodeByParent(OrgNode parent) {
+        List<OrgNode> list = Lists.newArrayList();
+        convertOrgNodeToList(parent, list);
         return list;
     }
 

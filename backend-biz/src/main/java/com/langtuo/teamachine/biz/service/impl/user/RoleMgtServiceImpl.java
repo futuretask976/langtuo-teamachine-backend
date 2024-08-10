@@ -47,12 +47,6 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
     @Override
     public LangTuoResult<RoleDTO> get(String tenantCode, String roleCode) {
-        // 超级管理角色特殊逻辑
-        RoleDTO superRole = getSysSuperRole(roleCode);
-        if (superRole != null) {
-            return LangTuoResult.success(superRole);
-        }
-
         RolePO rolePO = roleAccessor.selectOne(tenantCode, roleCode);
         RoleDTO roleDTO = convert(rolePO);
         return LangTuoResult.success(roleDTO);
@@ -233,32 +227,5 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         }).collect(Collectors.toList());
     }
 
-    /**
-     * 此方法返回系统超级角色，不存储在数据库（因为如果存储数据库，必须指定tenant，而系统超级角色不归属任何teanant）
-     * @return
-     */
-    public RoleDTO getSysSuperRole(String roleCode) {
-        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
-            return null;
-        }
 
-        RoleDTO dto = new RoleDTO();
-        dto.setRoleCode("SYS_SUPER_ROLE");
-        dto.setRoleName("SYS_SUPER_ROLE");
-        dto.setSysReserved(1);
-
-        List<String> permitActCodeList = Lists.newArrayList();
-        List<PermitActGroupPO> permitActGroupList = permitActAccessor.selectPermitActGroupList();
-        for (PermitActGroupPO po : permitActGroupList) {
-            List<PermitActPO> permitActList = permitActAccessor.selectPermitActList(po.getPermitActGroupCode());
-            for (PermitActPO permitAct : permitActList) {
-                permitActCodeList.add(permitAct.getPermitActCode());
-            }
-        }
-        // 这个权限点通过代码增加无法在页面授予
-        permitActCodeList.add("tenant_mgt");
-        dto.setPermitActCodeList(permitActCodeList);
-
-        return dto;
-    }
 }

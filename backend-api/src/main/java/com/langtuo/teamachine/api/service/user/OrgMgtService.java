@@ -20,7 +20,14 @@ public interface OrgMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<OrgDTO> listByDepth(String tenantCode);
+    LangTuoResult<OrgDTO> getTop(String tenantCode);
+
+    /**
+     *
+     * @param orgName
+     * @return
+     */
+    LangTuoResult<List<OrgDTO>> listByParent(String tenantCode, String orgName);
 
     /**
      *

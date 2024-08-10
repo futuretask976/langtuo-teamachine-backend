@@ -4,14 +4,14 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
+import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
-import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
-import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -21,6 +21,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.LangTuoResult.*;
+
 @Component
 @Slf4j
 public class DeployMgtServiceImpl implements DeployMgtService {
@@ -28,7 +30,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     private DeployAccessor deployAccessor;
 
     @Resource
-    private ShopAccessor shopAccessor;
+    private ShopMgtService shopMgtService;
 
     @Override
     public LangTuoResult<List<DeployDTO>> list(String tenantCode) {
@@ -164,10 +166,10 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         dto.setState(po.getState());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
-        if (shopPO != null) {
-            dto.setShopCode(shopPO.getShopCode());
-            dto.setShopName(shopPO.getShopName());
+        ShopDTO shopDTO = getModel(shopMgtService.getByCode(po.getTenantCode(), po.getShopCode()));
+        if (shopDTO != null) {
+            dto.setShopCode(shopDTO.getShopCode());
+            dto.setShopName(shopDTO.getShopName());
         }
         return dto;
     }

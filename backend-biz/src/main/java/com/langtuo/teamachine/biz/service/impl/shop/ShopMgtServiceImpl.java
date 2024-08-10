@@ -11,6 +11,7 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
+import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
@@ -62,7 +63,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
-        LangTuoResult<PageDTO<ShopDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<ShopDTO>> langTuoResult;
         try {
             String shopGroupCode = null;
             if (StringUtils.isNotBlank(shopGroupName)) {
@@ -85,12 +86,15 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             log.error("search error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
+
+        listByAdminOrgName(tenantCode);
+
         return langTuoResult;
     }
 
     @Override
     public LangTuoResult<List<ShopDTO>> list(String tenantCode) {
-        LangTuoResult<List<ShopDTO>> langTuoResult = null;
+        LangTuoResult<List<ShopDTO>> langTuoResult;
         try {
             List<ShopPO> list = shopAccessor.selectList(tenantCode);
             List<ShopDTO> dtoList = convert(list);
@@ -104,7 +108,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     @Override
     public LangTuoResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
-        LangTuoResult<List<ShopDTO>> langTuoResult = null;
+        LangTuoResult<List<ShopDTO>> langTuoResult;
         try {
             List<ShopPO> list = shopAccessor.selectList(tenantCode, shopGroupCode);
             List<ShopDTO> dtoList = convert(list);
@@ -117,29 +121,16 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
-    public LangTuoResult<List<ShopDTO>> listByAdmin(String tenantCode) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new IllegalArgumentException("couldn't find login session");
+    public LangTuoResult<List<ShopDTO>> listByAdminOrgName(String tenantCode) {
+        LangTuoResult<List<ShopDTO>> langTuoResult;
+        try {
+            List<ShopPO> list = shopAccessor.selectListByOrgNameList(tenantCode, getAdminOrgNameList(tenantCode));
+            List<ShopDTO> dtoList = convert(list);
+            langTuoResult = LangTuoResult.success(dtoList);
+        } catch (Exception e) {
+            log.error("list error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
         }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String adminLoginName = userDetails.getUsername();
-        if (StringUtils.isBlank(adminLoginName)) {
-            throw new IllegalArgumentException("couldn't find login session");
-        }
-
-        AdminPO adminPO = adminAccessor.selectOne(tenantCode, adminLoginName);
-        String adminOrgName = adminPO.getOrgName();
-
-        LangTuoResult<List<ShopDTO>> langTuoResult = null;
-//        try {
-//            List<ShopPO> list = shopAccessor.selectListByAdmin(tenantCode, orgName);
-//            List<ShopDTO> dtoList = convert(list);
-//            langTuoResult = LangTuoResult.success(dtoList);
-//        } catch (Exception e) {
-//            log.error("list error: " + e.getMessage(), e);
-//            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
-//        }
         return langTuoResult;
     }
 
@@ -151,7 +142,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
         ShopPO shopPO = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             ShopPO exist = shopAccessor.selectOneByCode(request.getTenantCode(), request.getShopCode());
             if (exist != null) {
@@ -173,7 +164,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = shopAccessor.delete(tenantCode, shopGroupCode);
             langTuoResult = LangTuoResult.success();
@@ -233,5 +224,25 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         po.setExtraInfo(request.getExtraInfo());
 
         return po;
+    }
+
+    private List<String> getAdminOrgNameList(String tenantCode) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalArgumentException("couldn't find login session");
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String adminLoginName = userDetails.getUsername();
+        if (StringUtils.isBlank(adminLoginName)) {
+            throw new IllegalArgumentException("couldn't find login session");
+        }
+
+        AdminPO adminPO = adminAccessor.selectOne(tenantCode, adminLoginName);
+        String orgName = adminPO.getOrgName();
+        List<OrgNode> orgNodeList = orgAccessor.selectListByParent(tenantCode, orgName);
+        List<String> orgNameList = orgNodeList.stream()
+                .map(orgNode -> orgNode.getOrgName())
+                .collect(Collectors.toList());
+        return orgNameList;
     }
 }

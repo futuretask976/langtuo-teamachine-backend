@@ -31,11 +31,24 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     private OrgAccessor orgAccessor;
 
     @Override
-    public LangTuoResult<OrgDTO> listByDepth(String tenantCode) {
+    public LangTuoResult<OrgDTO> getTop(String tenantCode) {
         LangTuoResult<OrgDTO> langTuoResult = null;
         try {
             OrgNode orgNode = orgAccessor.findTopOrgNode(tenantCode);
             langTuoResult = LangTuoResult.success(convert(orgNode));
+        } catch (Exception e) {
+            log.error("listByDepth error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<List<OrgDTO>> listByParent(String tenantCode, String orgName) {
+        LangTuoResult<List<OrgDTO>> langTuoResult = null;
+        try {
+            List<OrgNode> orgNodeList = orgAccessor.selectListByParent(tenantCode, orgName);
+            langTuoResult = LangTuoResult.success(convert(orgNodeList));
         } catch (Exception e) {
             log.error("listByDepth error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);

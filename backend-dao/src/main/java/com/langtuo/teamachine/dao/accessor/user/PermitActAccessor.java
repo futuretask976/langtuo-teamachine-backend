@@ -73,6 +73,17 @@ public class PermitActAccessor {
         return permitActList;
     }
 
+    public List<PermitActPO> selectPermitActList() {
+        List<PermitActPO> permitActList = Lists.newArrayList();
+        for (Map.Entry<String, List<PermitActEnum>> entry : permitActMapByGroup.entrySet()) {
+            List<PermitActEnum> permitActEnumList = entry.getValue();
+            for (PermitActEnum permitActEnum : permitActEnumList) {
+                permitActList.add(convert(permitActEnum));
+            }
+        }
+        return permitActList;
+    }
+
     private PermitActPO convert(PermitActEnum permitActEnum) {
         if (permitActEnum == null) {
             return null;
