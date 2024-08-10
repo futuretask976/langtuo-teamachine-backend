@@ -10,7 +10,6 @@ import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
-import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +36,6 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
     @Resource
     private RoleActRelAccessor roleActRelAccessor;
-
-    @Resource
-    private PermitActAccessor permitActAccessor;
 
     @Resource
     private AdminMgtService adminMgtService;

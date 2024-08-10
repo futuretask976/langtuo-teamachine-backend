@@ -1,12 +1,9 @@
 package com.langtuo.teamachine.dao.accessor.user;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.PermitActEnum;
 import com.langtuo.teamachine.dao.mapper.user.RoleActRelMapper;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,12 +17,6 @@ public class RoleActRelAccessor {
     private RedisManager redisManager;
 
     public List<RoleActRelPO> selectList(String tenantCode, String roleCode) {
-        // 超级管理员特殊逻辑
-        List<RoleActRelPO> superRoleActRelList = getSysSuperRoleActRel(tenantCode, roleCode);
-        if (!CollectionUtils.isEmpty(superRoleActRelList)) {
-            return superRoleActRelList;
-        }
-
         // 首先访问缓存
         List<RoleActRelPO> cachedList = getCacheList(tenantCode, roleCode);
         if (cachedList != null) {
@@ -73,25 +64,5 @@ public class RoleActRelAccessor {
 
     private void deleteCacheList(String tenantCode, String roleCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, roleCode));
-    }
-
-    /**
-     * 此方法返回系统超级角色，不存储在数据库（因为如果存储数据库，必须指定tenant，而系统超级角色不归属任何teanant）
-     * @return
-     */
-    public List<RoleActRelPO> getSysSuperRoleActRel(String tenantCode, String roleCode) {
-        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
-            return null;
-        }
-
-        List<RoleActRelPO> list = Lists.newArrayList();
-        for (PermitActEnum permitActEnum : PermitActEnum.values()) {
-            RoleActRelPO po = new RoleActRelPO();
-            po.setTenantCode(tenantCode);
-            po.setRoleCode(roleCode);
-            po.setPermitActCode(permitActEnum.getPermitActCode());
-            list.add(po);
-        }
-        return list;
     }
 }
