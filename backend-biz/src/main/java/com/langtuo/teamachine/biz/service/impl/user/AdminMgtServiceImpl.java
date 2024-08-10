@@ -4,14 +4,13 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.request.user.AdminPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
-import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
-import com.langtuo.teamachine.dao.po.user.RolePO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -19,20 +18,18 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Component
 @Slf4j
 public class AdminMgtServiceImpl implements AdminMgtService {
     @Resource
-    private RoleMgtService roleMgtService;
-
-    @Resource
     private AdminAccessor adminAccessor;
 
     @Resource
-    private RoleAccessor roleAccessor;
+    private RoleMgtService roleMgtService;
 
     @Override
     public LangTuoResult<AdminDTO> get(String tenantCode, String loginName) {
@@ -51,13 +48,11 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         try {
             String roleCode = null;
             if (StringUtils.isNotBlank(roleName)) {
-                Optional<RolePO> opt = roleAccessor.selectList(tenantCode).stream()
-                        .filter(item -> item.getRoleName().equals(roleName))
-                        .findFirst();
-                if (opt.isPresent()) {
-                    roleCode = opt.get().getRoleCode();
-                } else {
+                RoleDTO roleDTO = getModel(roleMgtService.getByName(tenantCode, roleName));
+                if (roleDTO == null) {
                     return LangTuoResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
+                } else {
+                    roleCode = roleDTO.getRoleCode();
                 }
             }
 
@@ -134,6 +129,23 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         return langTuoResult;
     }
 
+    @Override
+    public LangTuoResult<Integer> countByRoleCode(String tenantCode, String roleCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(roleCode)) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        LangTuoResult<Integer> langTuoResult = null;
+        try {
+            int cnt = adminAccessor.countByRoleCode(tenantCode, roleCode);
+            langTuoResult = LangTuoResult.success(cnt);
+        } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
     private AdminDTO convert(AdminPO adminPO) {
         if (adminPO == null) {
             return null;
@@ -149,10 +161,10 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         dto.setLoginPass(adminPO.getLoginPass());
         dto.setOrgName(adminPO.getOrgName());
 
-        RolePO rolePO = roleAccessor.selectOne(adminPO.getTenantCode(), adminPO.getRoleCode());
-        if (rolePO != null) {
-            dto.setRoleCode(rolePO.getRoleCode());
-            dto.setRoleName(rolePO.getRoleName());
+        RoleDTO roleDTO = getModel(roleMgtService.getByCode(adminPO.getTenantCode(), adminPO.getRoleCode()));
+        if (roleDTO != null) {
+            dto.setRoleCode(roleDTO.getRoleCode());
+            dto.setRoleName(roleDTO.getRoleName());
         }
         return dto;
     }
@@ -170,7 +182,6 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         po.setComment(request.getComment());
         po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
-
         return po;
     }
 }

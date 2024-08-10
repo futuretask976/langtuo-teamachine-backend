@@ -20,7 +20,8 @@ public interface RoleMapper {
      * @param roleCode
      * @return
      */
-    RolePO selectOne(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode);
+    RolePO selectOne(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode,
+            @Param("roleName") String roleName);
 
     /**
      *

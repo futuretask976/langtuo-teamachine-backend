@@ -21,7 +21,12 @@
         SELECT * FROM role
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            AND role_code = #{roleCode}
+            <if test="roleCode != null">
+                AND role_code = #{roleCode}
+            </if>
+            <if test="roleName != null">
+                AND role_name = #{roleName}
+            </if>
     </select>
 
     <select id="selectList" resultMap="adminRolePOMap">

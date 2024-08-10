@@ -20,23 +20,31 @@ public class RoleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public RolePO selectOne(String tenantCode, String roleCode) {
-        // 超级管理员特殊逻辑
-        RolePO superRole = getSysSuperRole(tenantCode, roleCode);
-        if (superRole != null) {
-            return superRole;
-        }
-
+    public RolePO selectOneByCode(String tenantCode, String roleCode) {
         // 首先访问缓存
-        RolePO cached = getCache(tenantCode, roleCode);
+        RolePO cached = getCache(tenantCode, roleCode, null);
         if (cached != null) {
             return cached;
         }
 
-        RolePO po = mapper.selectOne(tenantCode, roleCode);
+        RolePO po = mapper.selectOne(tenantCode, roleCode, null);
 
         // 设置缓存
-        setCache(tenantCode, roleCode, po);
+        setCache(tenantCode, roleCode, null, po);
+        return po;
+    }
+
+    public RolePO selectOneByName(String tenantCode, String roleName) {
+        // 首先访问缓存
+        RolePO cached = getCache(tenantCode, null, roleName);
+        if (cached != null) {
+            return cached;
+        }
+
+        RolePO po = mapper.selectOne(tenantCode, null, roleName);
+
+        // 设置缓存
+        setCache(tenantCode, null, roleName, po);
         return po;
     }
 
@@ -78,7 +86,7 @@ public class RoleAccessor {
     public int insert(RolePO po) {
         int inserted = mapper.insert(po);
         if (inserted == 1) {
-            deleteCacheOne(po.getTenantCode(), po.getRoleCode());
+            deleteCacheOne(po.getTenantCode(), po.getRoleCode(), po.getRoleName());
             deleteCacheList(po.getTenantCode());
         }
         return inserted;
@@ -87,31 +95,36 @@ public class RoleAccessor {
     public int update(RolePO po) {
         int updated = mapper.update(po);
         if (updated == 1) {
-            deleteCacheOne(po.getTenantCode(), po.getRoleCode());
+            deleteCacheOne(po.getTenantCode(), po.getRoleCode(), po.getRoleName());
             deleteCacheList(po.getTenantCode());
         }
         return updated;
     }
 
     public int delete(String tenantCode, String roleCode) {
+        RolePO po = selectOneByCode(tenantCode, roleCode);
+        if (po == null) {
+            return 0;
+        }
+
         int deleted = mapper.delete(tenantCode, roleCode);
         if (deleted == 1) {
-            deleteCacheOne(tenantCode, roleCode);
+            deleteCacheOne(tenantCode, po.getRoleCode(), po.getRoleName());
             deleteCacheList(tenantCode);
         }
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String roleCode) {
-        return "roleAcc-" + tenantCode + "-" + roleCode;
+    private String getCacheKey(String tenantCode, String roleCode, String roleName) {
+        return "roleAcc-" + tenantCode + "-" + roleCode + "-" +  roleName;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "roleAcc-" + tenantCode;
     }
 
-    private RolePO getCache(String tenantCode, String roleCode) {
-        String key = getCacheKey(tenantCode, roleCode);
+    private RolePO getCache(String tenantCode, String roleCode, String roleName) {
+        String key = getCacheKey(tenantCode, roleCode, roleName);
         Object cached = redisManager.getValue(key);
         RolePO po = (RolePO) cached;
         return po;
@@ -129,33 +142,17 @@ public class RoleAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String roleCode, RolePO po) {
-        String key = getCacheKey(tenantCode, roleCode);
+    private void setCache(String tenantCode, String roleCode, String roleName, RolePO po) {
+        String key = getCacheKey(tenantCode, roleCode, roleName);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheOne(String tenantCode, String roleCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, roleCode));
+    private void deleteCacheOne(String tenantCode, String roleCode, String roleName) {
+        redisManager.deleteKey(getCacheKey(tenantCode, roleCode, null));
+        redisManager.deleteKey(getCacheKey(tenantCode, null, roleName));
     }
 
     private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
-    }
-
-    /**
-     * 此方法返回系统超级角色，不存储在数据库（因为如果存储数据库，必须指定tenant，而系统超级角色不归属任何teanant）
-     * @return
-     */
-    public RolePO getSysSuperRole(String tenantCode, String roleCode) {
-        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
-            return null;
-        }
-
-        RolePO po = new RolePO();
-        po.setTenantCode(tenantCode);
-        po.setRoleCode("SYS_SUPER_ROLE");
-        po.setRoleName("SYS_SUPER_ROLE");
-        po.setSysReserved(1);
-        return po;
     }
 }

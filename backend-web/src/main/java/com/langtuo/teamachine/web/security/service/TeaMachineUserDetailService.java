@@ -65,7 +65,7 @@ public class TeaMachineUserDetailService implements UserDetailsService {
         }
         AdminDTO adminDTO = adminResult.getModel();
 
-        LangTuoResult<RoleDTO> roleResult = roleMgtService.get(tenantCode, adminDTO.getRoleCode());
+        LangTuoResult<RoleDTO> roleResult = roleMgtService.getByCode(tenantCode, adminDTO.getRoleCode());
         if (roleResult == null && !roleResult.isSuccess() || roleResult.getModel() == null) {
             return null;
         }

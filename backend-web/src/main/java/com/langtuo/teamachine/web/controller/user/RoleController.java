@@ -23,7 +23,7 @@ public class RoleController {
     @GetMapping(value = "/{tenantcode}/{rolecode}/get")
     public LangTuoResult<RoleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "rolecode") String roleCode) {
-        LangTuoResult<RoleDTO> rtn = service.get(tenantCode, roleCode);
+        LangTuoResult<RoleDTO> rtn = service.getByCode(tenantCode, roleCode);
         return rtn;
     }
 

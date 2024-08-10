@@ -43,4 +43,12 @@ public interface AdminMgtService {
      * @return
      */
     LangTuoResult<Void> delete(String tenantCode, String loginName);
+
+    /**
+     *
+     * @param tenantCode
+     * @param roleCode
+     * @return
+     */
+    LangTuoResult<Integer> countByRoleCode(String tenantCode, String roleCode);
 }

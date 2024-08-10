@@ -6,24 +6,23 @@ import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.RolePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
-import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
-import com.langtuo.teamachine.dao.po.user.PermitActGroupPO;
-import com.langtuo.teamachine.dao.po.user.PermitActPO;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Component
 @Slf4j
@@ -43,11 +42,18 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     private PermitActAccessor permitActAccessor;
 
     @Resource
-    private AdminAccessor adminAccessor;
+    private AdminMgtService adminMgtService;
 
     @Override
-    public LangTuoResult<RoleDTO> get(String tenantCode, String roleCode) {
-        RolePO rolePO = roleAccessor.selectOne(tenantCode, roleCode);
+    public LangTuoResult<RoleDTO> getByCode(String tenantCode, String roleCode) {
+        RolePO rolePO = roleAccessor.selectOneByCode(tenantCode, roleCode);
+        RoleDTO roleDTO = convert(rolePO);
+        return LangTuoResult.success(roleDTO);
+    }
+
+    @Override
+    public LangTuoResult<RoleDTO> getByName(String tenantCode, String roleName) {
+        RolePO rolePO = roleAccessor.selectOneByName(tenantCode, roleName);
         RoleDTO roleDTO = convert(rolePO);
         return LangTuoResult.success(roleDTO);
     }
@@ -113,7 +119,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            RolePO exist = roleAccessor.selectOne(request.getTenantCode(), request.getRoleCode());
+            RolePO exist = roleAccessor.selectOneByCode(request.getTenantCode(), request.getRoleCode());
             if (exist != null) {
                 int updated = roleAccessor.update(rolePO);
             } else {
@@ -138,7 +144,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        int adminCount = adminAccessor.countByRoleCode(tenantCode, roleCode);
+        int adminCount = getModel(adminMgtService.countByRoleCode(tenantCode, roleCode));
         if (adminCount > 0) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_CAN_NOT_DELETE_USING_ROLE);
         }
@@ -192,7 +198,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                     .collect(Collectors.toList()));
         }
 
-        int adminCount = adminAccessor.countByRoleCode(po.getTenantCode(), po.getRoleCode());
+        int adminCount = getModel(adminMgtService.countByRoleCode(po.getTenantCode(), po.getRoleCode()));
         dto.setAdminCount(adminCount);
 
         return dto;

@@ -13,7 +13,14 @@ public interface RoleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<RoleDTO> get(String tenantCode, String roleCode);
+    LangTuoResult<RoleDTO> getByCode(String tenantCode, String roleCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<RoleDTO> getByName(String tenantCode, String roleName);
 
     /**
      *
