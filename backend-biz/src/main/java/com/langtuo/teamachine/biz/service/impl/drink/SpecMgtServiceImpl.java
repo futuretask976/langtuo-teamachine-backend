@@ -144,6 +144,34 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         return langTuoResult;
     }
 
+    @Override
+    public LangTuoResult<SpecItemDTO> getSpecItemByCode(String tenantCode, String specCode, String specItemCode) {
+        LangTuoResult<SpecItemDTO> langTuoResult = null;
+        try {
+            SpecItemPO po = specItemAccessor.selectOne(tenantCode, specCode, specItemCode);
+            SpecItemDTO dto = convert(po);
+            langTuoResult = LangTuoResult.success(dto);
+        } catch (Exception e) {
+            log.error("getByCode error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<List<SpecItemDTO>> listSpecItemBySpecCode(String tenantCode, String specCode) {
+        LangTuoResult<List<SpecItemDTO>> langTuoResult = null;
+        try {
+            List<SpecItemPO> poList = specItemAccessor.selectList(tenantCode, specCode);
+            List<SpecItemDTO> dtoList = convertToSpecItemDTO(poList);
+            langTuoResult = LangTuoResult.success(dtoList);
+        } catch (Exception e) {
+            log.error("listSpecItemBySpecCode error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+        }
+        return langTuoResult;
+    }
+
     private List<SpecDTO> convert(List<SpecPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
@@ -174,6 +202,16 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             dto.setSpecItemList(poList.stream().map(item -> convert(item)).collect(Collectors.toList()));
         }
         return dto;
+    }
+
+    private List<SpecItemDTO> convertToSpecItemDTO(List<SpecItemPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        return poList.stream()
+                .map(po -> convert(po))
+                .collect(Collectors.toList());
     }
 
     private SpecItemDTO convert(SpecItemPO po) {
