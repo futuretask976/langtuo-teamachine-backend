@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.testor.record;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.record.OrderIdSeqMapper;
+import com.langtuo.teamachine.dao.mapper.record.MachineCodeSeqMapper;
 import org.apache.ibatis.session.SqlSession;
 
 public class OrderIdTestor {
@@ -11,7 +11,7 @@ public class OrderIdTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrderIdSeqMapper mapper = sqlSession.getMapper(OrderIdSeqMapper.class);
+        MachineCodeSeqMapper mapper = sqlSession.getMapper(MachineCodeSeqMapper.class);
 
         long next = mapper.getNextSeqValue();
         System.out.println(next);
