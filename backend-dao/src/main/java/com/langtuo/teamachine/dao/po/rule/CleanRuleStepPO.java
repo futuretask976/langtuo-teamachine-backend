@@ -75,4 +75,9 @@ public class CleanRuleStepPO {
      * 是否需要再次确认
      */
     private int needConfirm;
+
+    /**
+     * 清洗液类型，0：清水，1：消毒水，2：饮用水
+     */
+    private int cleanAgentType;
 }

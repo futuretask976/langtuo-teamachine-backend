@@ -9,6 +9,7 @@
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
+        <result property="tenantCode" column="tenant_code"/>
         <result property="cleanRuleCode" column="clean_rule_code"/>
         <result property="stepIndex" column="step_index"/>
         <result property="cleanContent" column="clean_content"/>
@@ -19,7 +20,7 @@
         <result property="remindTitle" column="remind_title"/>
         <result property="remindContent" column="remind_content"/>
         <result property="needConfirm" column="need_confirm"/>
-        <result property="tenantCode" column="tenant_code"/>
+        <result property="cleanAgentType" column="clean_agent_type"/>
     </resultMap>
 
     <select id="selectOne" resultMap="cleanStepPOMap">
@@ -51,6 +52,7 @@
             , remind_title
             , remind_content
             , need_confirm
+            , clean_agent_type
             , tenant_code
         ) VALUES (
             now()
@@ -65,6 +67,7 @@
             , #{remindTitle}
             , #{remindContent}
             , #{needConfirm}
+            , #{cleanAgentType}
             , #{tenantCode}
         )
     </insert>
@@ -93,6 +96,9 @@
             </if>
             <if test="remindContent != null">
                 , remind_content = #{remindContent}
+            </if>
+            <if test="cleanAgentType != null">
+                , clean_agent_type= #{cleanAgentType}
             </if>
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}

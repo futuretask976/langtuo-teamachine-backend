@@ -51,11 +51,16 @@ public class CleanRuleStepPutRequest {
     private int needConfirm;
 
     /**
+     * 清洗液类型，0：清水，1：消毒水，2：饮用水
+     */
+    private int cleanAgentType;
+
+    /**
      *
      * @return
      */
     public boolean isValid() {
-        if (stepIndex <= 0) {
+        if (stepIndex < 0) {
             return false;
         }
         if (needConfirm == 1 && (StringUtils.isBlank(remindTitle) || StringUtils.isBlank(remindContent))) {

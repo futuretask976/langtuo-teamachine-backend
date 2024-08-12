@@ -12,6 +12,7 @@ import com.langtuo.teamachine.api.service.user.PermitActMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
+import com.langtuo.teamachine.dao.constant.PermitActGroupEnum;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import lombok.extern.slf4j.Slf4j;
@@ -260,6 +261,10 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         dto.setPermitActCodeList(permitActDTOList.stream()
                 .map(permitActDTO -> permitActDTO.getPermitActCode())
                 .collect(Collectors.toList()));
+
+        // 硬编码添加商户管理
+        dto.getPermitActCodeList().add("tenant_mgt");
+
         return dto;
     }
 }

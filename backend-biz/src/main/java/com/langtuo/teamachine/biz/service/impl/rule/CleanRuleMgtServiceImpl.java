@@ -271,6 +271,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     dto.setFlushSec(po.getFlushSec());
                     dto.setStepIndex(po.getStepIndex());
                     dto.setNeedConfirm(po.getNeedConfirm());
+                    dto.setCleanAgentType(po.getCleanAgentType());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -313,6 +314,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     po.setFlushSec(cleanRuleStepPutRequest.getFlushSec());
                     po.setStepIndex(cleanRuleStepPutRequest.getStepIndex());
                     po.setNeedConfirm(cleanRuleStepPutRequest.getNeedConfirm());
+                    po.setCleanAgentType(cleanRuleStepPutRequest.getCleanAgentType());
                     return po;
                 }).collect(Collectors.toList());
         return list;

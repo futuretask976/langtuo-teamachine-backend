@@ -41,7 +41,7 @@
             AND tenant_code = #{tenantCode}
     </select>
 
-    <select id="countByShopGroupCode" resultType="int">
+    <select id="countByToppingTypeCode" resultType="int">
         SELECT COUNT(1) FROM topping
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
