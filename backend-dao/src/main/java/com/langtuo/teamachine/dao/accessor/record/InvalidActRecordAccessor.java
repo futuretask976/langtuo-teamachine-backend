@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.mapper.record.InvalidActRecordMapper;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
 import com.langtuo.teamachine.dao.query.record.InvalidActRecordQuery;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,14 +19,14 @@ public class InvalidActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<InvalidActRecordPO> search(String tenantCode, String shopGroupCode, String shopCode,
-            int pageNum, int pageSize) {
+    public PageInfo<InvalidActRecordPO> search(String tenantCode, List<String> shopGroupCodeList,
+            List<String> shopCodeList, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         InvalidActRecordQuery query = new InvalidActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.setShopGroupCode(StringUtils.isBlank(shopGroupCode) ? null : shopGroupCode);
-        query.setShopCode(StringUtils.isBlank(shopCode) ? null : shopCode);
+        query.addShopGroupCode(shopGroupCodeList);
+        query.addShopCode(shopCodeList);
         List<InvalidActRecordPO> list = mapper.search(query);
 
         PageInfo<InvalidActRecordPO> pageInfo = new PageInfo(list);

@@ -56,15 +56,15 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<CleanActRecordDTO>> search(String tenantCode, String shopGroupCode,
-            String shopCode, int pageNum, int pageSize) {
+    public LangTuoResult<PageDTO<CleanActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
+            List<String> shopCodeList, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
         LangTuoResult<PageDTO<CleanActRecordDTO>> langTuoResult = null;
         try {
-            PageInfo<CleanActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCode,
-                    shopCode, pageNum, pageSize);
+            PageInfo<CleanActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
+                    shopCodeList, pageNum, pageSize);
             List<CleanActRecordDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {

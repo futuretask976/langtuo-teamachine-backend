@@ -19,8 +19,8 @@ public interface OrderActRecordMgtService {
      *
      * @return
      */
-    LangTuoResult<PageDTO<OrderActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
-            int pageNum, int pageSize);
+    LangTuoResult<PageDTO<OrderActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
+            List<String> shopCodeList, int pageNum, int pageSize);
 
     /**
      *

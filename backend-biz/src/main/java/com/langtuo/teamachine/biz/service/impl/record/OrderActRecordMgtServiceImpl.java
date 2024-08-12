@@ -74,15 +74,15 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<OrderActRecordDTO>> search(String tenantCode, String shopGroupCode,
-            String shopCode, int pageNum, int pageSize) {
+    public LangTuoResult<PageDTO<OrderActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
+            List<String> shopCodeList, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
         LangTuoResult<PageDTO<OrderActRecordDTO>> langTuoResult = null;
         try {
-            PageInfo<OrderActRecordPO> pageInfo = orderActRecordAccessor.search(tenantCode, shopGroupCode,
-                    shopCode, pageNum, pageSize);
+            PageInfo<OrderActRecordPO> pageInfo = orderActRecordAccessor.search(tenantCode, shopGroupCodeList,
+                    shopCodeList, pageNum, pageSize);
             List<OrderActRecordDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {

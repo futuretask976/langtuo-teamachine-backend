@@ -20,8 +20,8 @@ public interface SupplyActRecordMgtService {
      *
      * @return
      */
-    LangTuoResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
-            int pageNum, int pageSize);
+    LangTuoResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
+            List<String> shopCodeList, int pageNum, int pageSize);
 
     /**
      *

@@ -32,9 +32,10 @@ public class CleanActRecordController {
      */
     @GetMapping(value = "/search")
     public LangTuoResult<PageDTO<CleanActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopGroupCode") String shopGroupCode, @RequestParam("shopCode") String shopCode,
+            @RequestParam("shopGroupCodeList") List<String> shopGroupCodeList,
+            @RequestParam("shopCodeList") List<String> shopCodeList,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<CleanActRecordDTO>> rtn = service.search(tenantCode, shopGroupCode, shopCode,
+        LangTuoResult<PageDTO<CleanActRecordDTO>> rtn = service.search(tenantCode, shopGroupCodeList, shopCodeList,
                 pageNum, pageSize);
         return rtn;
     }

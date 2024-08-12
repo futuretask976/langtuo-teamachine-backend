@@ -56,15 +56,15 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
     }
 
     @Override
-    public LangTuoResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, String shopGroupCode,
-            String shopCode, int pageNum, int pageSize) {
+    public LangTuoResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
+            List<String> shopCodeList, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
         LangTuoResult<PageDTO<SupplyActRecordDTO>> langTuoResult = null;
         try {
-            PageInfo<SupplyActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCode,
-                    shopCode, pageNum, pageSize);
+            PageInfo<SupplyActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
+                    shopCodeList, pageNum, pageSize);
             List<SupplyActRecordDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
