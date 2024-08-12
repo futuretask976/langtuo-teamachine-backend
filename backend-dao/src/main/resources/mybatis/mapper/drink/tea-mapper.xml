@@ -42,7 +42,7 @@
         SELECT COUNT(1) FROM tea
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            <if test="toppingTypeCode != null">
+            <if test="teaTypeCode != null">
                 AND tea_type_code = #{teaTypeCode}
             </if>
     </select>

@@ -36,4 +36,9 @@ public class TeaTypeDTO {
      * 茶类型名称
      */
     private String teaTypeName;
+
+    /**
+     * 关联当前类型的茶品数量
+     */
+    private int teaCount;
 }

@@ -36,4 +36,9 @@ public class ToppingTypeDTO {
      * 物料类型名称
      */
     private String toppingTypeName;
+
+    /**
+     * 关联当前类型的物料数量
+     */
+    private int toppingCount;
 }

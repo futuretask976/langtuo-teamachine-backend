@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.request.shop.ShopGroupPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
+import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
@@ -33,6 +34,9 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     @Resource
     private ShopGroupAccessor shopGroupAccessor;
+
+    @Resource
+    private ShopMgtService shopMgtService;
 
     @Resource
     private AdminMgtService adminMgtService;
@@ -168,6 +172,10 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
         dto.setOrgName(po.getOrgName());
+
+        int shopCount = getModel(shopMgtService.countByShopGroupCode(po.getTenantCode(), po.getShopGroupCode()));
+        dto.setShopCount(shopCount);
+
         return dto;
     }
 

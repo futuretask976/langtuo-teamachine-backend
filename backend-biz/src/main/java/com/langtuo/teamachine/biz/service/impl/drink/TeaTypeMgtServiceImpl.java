@@ -6,6 +6,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.TeaTypeDTO;
 import com.langtuo.teamachine.api.request.drink.TeaTypePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaTypeMgtService;
 import com.langtuo.teamachine.dao.accessor.drink.TeaTypeAccessor;
 import com.langtuo.teamachine.dao.po.drink.TeaTypePO;
@@ -18,11 +19,16 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+
 @Component
 @Slf4j
 public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     @Resource
     private TeaTypeAccessor accessor;
+
+    @Resource
+    private TeaMgtService teaMgtService;
 
     @Override
     public LangTuoResult<List<TeaTypeDTO>> list(String tenantCode) {
@@ -150,6 +156,10 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         dto.setTeaTypeName(po.getTeaTypeName());
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
+
+        int teaCount = getModel(teaMgtService.countByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode()));
+        dto.setTeaCount(teaCount);
+
         return dto;
     }
 

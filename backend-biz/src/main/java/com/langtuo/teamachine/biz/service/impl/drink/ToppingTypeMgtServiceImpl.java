@@ -6,6 +6,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.ToppingTypeDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingTypePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.drink.ToppingTypeMgtService;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingTypeAccessor;
 import com.langtuo.teamachine.dao.po.drink.ToppingTypePO;
@@ -17,11 +18,16 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+
 @Component
 @Slf4j
 public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     @Resource
     private ToppingTypeAccessor accessor;
+
+    @Resource
+    private ToppingMgtService toppingMgtService;
 
     @Override
     public LangTuoResult<List<ToppingTypeDTO>> list(String tenantCode) {
@@ -147,6 +153,10 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         dto.setToppingTypeName(po.getToppingTypeName());
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
+
+        int toppingCount = getModel(toppingMgtService.countByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode()));
+        dto.setToppingCount(toppingCount);
+
         return dto;
     }
 

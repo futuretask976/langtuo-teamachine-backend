@@ -41,4 +41,9 @@ public class ShopGroupDTO {
      * 归属的组织名称
      */
     private String orgName;
+
+    /**
+     * 关联当前类型的店铺数量
+     */
+    private int shopCount;
 }
