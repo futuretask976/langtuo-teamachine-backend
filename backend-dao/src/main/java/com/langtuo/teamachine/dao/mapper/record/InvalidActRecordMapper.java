@@ -24,7 +24,7 @@ public interface InvalidActRecordMapper {
             @Param("idempotentMark") String idempotentMark);
 
     /**
-     *
+     * Only for test
      * @return
      */
     List<InvalidActRecordPO> selectList(@Param("tenantCode") String tenantCode);

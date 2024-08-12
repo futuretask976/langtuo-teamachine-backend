@@ -74,20 +74,6 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     }
 
     @Override
-    public LangTuoResult<List<OrderActRecordDTO>> list(String tenantCode) {
-        LangTuoResult<List<OrderActRecordDTO>> langTuoResult = null;
-        try {
-            List<OrderActRecordPO> poList = orderActRecordAccessor.selectList(tenantCode);
-            List<OrderActRecordDTO> dtoList = convert(poList);
-            langTuoResult = LangTuoResult.success(dtoList);
-        } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
-        }
-        return langTuoResult;
-    }
-
-    @Override
     public LangTuoResult<PageDTO<OrderActRecordDTO>> search(String tenantCode, String shopGroupCode,
             String shopCode, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;

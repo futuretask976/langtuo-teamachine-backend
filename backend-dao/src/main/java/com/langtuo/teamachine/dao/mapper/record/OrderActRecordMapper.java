@@ -26,12 +26,6 @@ public interface OrderActRecordMapper {
      *
      * @return
      */
-    List<OrderActRecordPO> selectList(@Param("tenantCode") String tenantCode);
-
-    /**
-     *
-     * @return
-     */
     List<OrderActRecordPO> search(OrderActRecordQuery query);
 
     /**

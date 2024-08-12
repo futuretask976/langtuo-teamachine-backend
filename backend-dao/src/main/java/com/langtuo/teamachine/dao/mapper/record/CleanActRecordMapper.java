@@ -27,12 +27,6 @@ public interface CleanActRecordMapper {
      *
      * @return
      */
-    List<CleanActRecordPO> selectList(@Param("tenantCode") String tenantCode);
-
-    /**
-     *
-     * @return
-     */
     List<CleanActRecordPO> search(CleanActRecordQuery query);
 
     /**

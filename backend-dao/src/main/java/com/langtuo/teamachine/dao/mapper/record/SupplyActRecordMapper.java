@@ -24,7 +24,7 @@ public interface SupplyActRecordMapper {
             @Param("idempotentMark") String idempotentMark);
 
     /**
-     *
+     * Only for test
      * @return
      */
     List<SupplyActRecordPO> selectList(@Param("tenantCode") String tenantCode);

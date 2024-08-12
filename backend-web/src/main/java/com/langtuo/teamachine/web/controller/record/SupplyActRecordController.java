@@ -27,17 +27,6 @@ public class SupplyActRecordController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/warning/list?tenantCode=tenant_001
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/list")
-    public LangTuoResult<List<SupplyActRecordDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<SupplyActRecordDTO>> rtn = service.list(tenantCode);
-        return rtn;
-    }
-
-    /**
      * url: http://localhost:8080/teamachine/recordset/warning/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */

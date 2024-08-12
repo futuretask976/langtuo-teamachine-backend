@@ -20,11 +20,6 @@ public class SupplyActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public List<SupplyActRecordPO> selectList(String tenantCode) {
-        List<SupplyActRecordPO> list = mapper.selectList(tenantCode);
-        return list;
-    }
-
     public PageInfo<SupplyActRecordPO> search(String tenantCode, String shopGroupCode, String shopCode,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);

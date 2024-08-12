@@ -56,20 +56,6 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
     }
 
     @Override
-    public LangTuoResult<List<SupplyActRecordDTO>> list(String tenantCode) {
-        LangTuoResult<List<SupplyActRecordDTO>> langTuoResult = null;
-        try {
-            List<SupplyActRecordPO> poList = accessor.selectList(tenantCode);
-            List<SupplyActRecordDTO> dtoList = convert(poList);
-            langTuoResult = LangTuoResult.success(dtoList);
-        } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
-        }
-        return langTuoResult;
-    }
-
-    @Override
     public LangTuoResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, String shopGroupCode,
             String shopCode, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;

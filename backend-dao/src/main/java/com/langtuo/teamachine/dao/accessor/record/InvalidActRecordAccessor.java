@@ -20,11 +20,6 @@ public class InvalidActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public List<InvalidActRecordPO> selectList(String tenantCode) {
-        List<InvalidActRecordPO> list = mapper.selectList(tenantCode);
-        return list;
-    }
-
     public PageInfo<InvalidActRecordPO> search(String tenantCode, String shopGroupCode, String shopCode,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);

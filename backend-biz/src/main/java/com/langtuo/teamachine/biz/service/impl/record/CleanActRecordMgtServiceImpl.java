@@ -56,20 +56,6 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
     }
 
     @Override
-    public LangTuoResult<List<CleanActRecordDTO>> list(String tenantCode) {
-        LangTuoResult<List<CleanActRecordDTO>> langTuoResult = null;
-        try {
-            List<CleanActRecordPO> poList = accessor.selectList(tenantCode);
-            List<CleanActRecordDTO> dtoList = convert(poList);
-            langTuoResult = LangTuoResult.success(dtoList);
-        } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
-        }
-        return langTuoResult;
-    }
-
-    @Override
     public LangTuoResult<PageDTO<CleanActRecordDTO>> search(String tenantCode, String shopGroupCode,
             String shopCode, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;

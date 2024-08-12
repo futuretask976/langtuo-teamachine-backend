@@ -20,11 +20,6 @@ public class CleanActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public List<CleanActRecordPO> selectList(String tenantCode) {
-        List<CleanActRecordPO> list = mapper.selectList(tenantCode);
-        return list;
-    }
-
     public PageInfo<CleanActRecordPO> search(String tenantCode, String shopGroupCode, String shopCode,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);

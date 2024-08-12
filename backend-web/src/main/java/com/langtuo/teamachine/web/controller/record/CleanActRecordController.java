@@ -27,17 +27,6 @@ public class CleanActRecordController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/clean/list?tenantCode=tenant_001
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/list")
-    public LangTuoResult<List<CleanActRecordDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<CleanActRecordDTO>> rtn = service.list(tenantCode);
-        return rtn;
-    }
-
-    /**
      * url: http://localhost:8080/teamachine/recordset/clean/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */

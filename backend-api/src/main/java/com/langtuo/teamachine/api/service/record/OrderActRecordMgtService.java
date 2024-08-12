@@ -25,13 +25,6 @@ public interface OrderActRecordMgtService {
     /**
      *
      * @param tenantCode
-     * @return
-     */
-    LangTuoResult<List<OrderActRecordDTO>> list(String tenantCode);
-
-    /**
-     *
-     * @param tenantCode
      * @param idempotentMark
      * @return
      */

@@ -25,13 +25,6 @@ public interface CleanActRecordMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    LangTuoResult<List<CleanActRecordDTO>> list(String tenantCode);
-
-    /**
-     *
      * @param request
      * @return
      */

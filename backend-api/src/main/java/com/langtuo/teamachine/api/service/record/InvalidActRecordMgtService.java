@@ -25,13 +25,6 @@ public interface InvalidActRecordMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    LangTuoResult<List<InvalidActRecordDTO>> list(String tenantCode);
-
-    /**
-     *
      * @param request
      * @return
      */

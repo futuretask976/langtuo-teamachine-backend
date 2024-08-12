@@ -56,20 +56,6 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
     }
 
     @Override
-    public LangTuoResult<List<InvalidActRecordDTO>> list(String tenantCode) {
-        LangTuoResult<List<InvalidActRecordDTO>> langTuoResult = null;
-        try {
-            List<InvalidActRecordPO> poList = accessor.selectList(tenantCode);
-            List<InvalidActRecordDTO> dtoList = convert(poList);
-            langTuoResult = LangTuoResult.success(dtoList);
-        } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
-        }
-        return langTuoResult;
-    }
-
-    @Override
     public LangTuoResult<PageDTO<InvalidActRecordDTO>> search(String tenantCode, String shopGroupCode,
             String shopCode, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;

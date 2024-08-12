@@ -38,11 +38,17 @@
         SELECT * FROM invalid_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            <if test="shopGroupCode != null">
-                AND shop_group_code = #{shopGroupCode}
+            <if test="shopGroupCodeList != null">
+                AND shop_group_code IN
+                <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
+                    #{shopGroupCode}
+                </foreach>
             </if>
-            <if test="shopCode != null">
-                AND shop_code = #{shopCode}
+            <if test="shopCodeList != null">
+                AND shop_code IN
+                <foreach item="shopCode" collection="shopCodeList" open="(" separator="," close=")">
+                    #{shopCode}
+                </foreach>
             </if>
     </select>
 

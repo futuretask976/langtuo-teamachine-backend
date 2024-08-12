@@ -25,13 +25,6 @@ public interface SupplyActRecordMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    LangTuoResult<List<SupplyActRecordDTO>> list(String tenantCode);
-
-    /**
-     *
      * @param request
      * @return
      */
