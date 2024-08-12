@@ -148,7 +148,6 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         dto.setGmtModified(po.getGmtModified());
         dto.setTeaTypeCode(po.getTeaTypeCode());
         dto.setTeaTypeName(po.getTeaTypeName());
-        dto.setState(po.getState());
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
         return dto;
@@ -162,7 +161,6 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         TeaTypePO po = new TeaTypePO();
         po.setTeaTypeCode(request.getTeaTypeCode());
         po.setTeaTypeName(request.getTeaTypeName());
-        po.setState(request.getState());
         po.setTenantCode(request.getTenantCode());
         po.setComment(request.getComment());
         po.setExtraInfo(request.getExtraInfo());

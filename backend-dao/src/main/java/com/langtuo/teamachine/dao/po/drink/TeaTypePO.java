@@ -46,9 +46,4 @@ public class TeaTypePO {
      * 茶品类型名称
      */
     private String teaTypeName;
-
-    /**
-     * 状态，0：禁用，1：启用
-     */
-    private int state;
 }

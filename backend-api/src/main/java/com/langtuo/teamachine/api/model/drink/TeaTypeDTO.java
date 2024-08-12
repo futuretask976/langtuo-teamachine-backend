@@ -36,9 +36,4 @@ public class TeaTypeDTO {
      * 茶类型名称
      */
     private String teaTypeName;
-
-    /**
-     * 店铺类型，0：禁用，1：启用
-     */
-    private int state;
 }

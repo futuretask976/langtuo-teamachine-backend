@@ -11,7 +11,6 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="teaTypeCode" column="tea_type_code"/>
         <result property="teaTypeName" column="tea_type_name"/>
-        <result property="state" column="state"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
@@ -48,21 +47,19 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.TeaTypePO">
-        INSERT INTO `tea_type` (
-            `gmt_created`
-            , `gmt_modified`
-            , `tea_type_code`
-            , `tea_type_name`
-            , `state`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO tea_type (
+            gmt_created
+            , gmt_modified
+            , tea_type_code
+            , tea_type_name
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
             , #{teaTypeCode}
             , #{teaTypeName}
-            , #{state}
             , #{tenantCode}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
@@ -75,9 +72,6 @@
             gmt_modified = now()
             <if test="teaTypeName != null">
                 , tea_type_name = #{teaTypeName}
-            </if>
-            <if test="state != null">
-                , state = #{state}
             </if>
             <if test="comment != null">
                 , comment = #{comment}
