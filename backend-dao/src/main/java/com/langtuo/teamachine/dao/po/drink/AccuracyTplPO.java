@@ -48,11 +48,6 @@ public class AccuracyTplPO {
     private String templateName;
 
     /**
-     * 状态，0：禁用，1：启用
-     */
-    private int state;
-
-    /**
      * 溢出允许模式，0：固定值，1：百分比
      */
     private int overMode;

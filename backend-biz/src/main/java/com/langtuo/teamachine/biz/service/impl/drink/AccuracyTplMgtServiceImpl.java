@@ -140,7 +140,6 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         dto.setExtraInfo(po.getExtraInfo());
         dto.setTemplateCode(po.getTemplateCode());
         dto.setTemplateName(po.getTemplateName());
-        dto.setState(po.getState());
         dto.setOverMode(po.getOverMode());
         dto.setOverAmount(po.getOverAmount());
         dto.setUnderMode(po.getUnderMode());
@@ -160,7 +159,6 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         po.setExtraInfo(request.getExtraInfo());
         po.setTemplateCode(request.getTemplateCode());
         po.setTemplateName(request.getTemplateName());
-        po.setState(request.getState());
         po.setOverMode(request.getOverUnit());
         po.setOverAmount(request.getOverAmount());
         po.setUnderMode(request.getUnderUnit());

@@ -38,11 +38,6 @@ public class AccuracyTplDTO {
     private String templateName;
 
     /**
-     *
-     */
-    private int state;
-
-    /**
      * 溢出允许单位，0：固定值，1：百分比
      */
     private int overMode;

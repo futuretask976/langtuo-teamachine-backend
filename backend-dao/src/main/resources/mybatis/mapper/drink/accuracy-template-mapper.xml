@@ -12,7 +12,6 @@
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
         <result property="templateCode" column="template_code"/>
         <result property="templateName" column="template_name"/>
-        <result property="state" column="state"/>
         <result property="overMode" column="over_mode"/>
         <result property="overAmount" column="over_amount"/>
         <result property="underMode" column="under_mode"/>
@@ -57,7 +56,6 @@
             , gmt_modified
             , template_code
             , template_name
-            , state
             , over_mode
             , over_amount
             , under_mode
@@ -71,7 +69,6 @@
             , now()
             , #{templateCode}
             , #{templateName}
-            , #{state}
             , #{overMode}
             , #{overAmount}
             , #{underMode}
@@ -89,9 +86,6 @@
             gmt_modified = now()
             <if test="specName != null">
                 , template_name = #{specName}
-            </if>
-            <if test="state != null">
-                , state = #{state}
             </if>
             <if test="overMode != null">
                 , over_mode = #{overMode}
