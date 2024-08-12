@@ -41,6 +41,15 @@
             AND tenant_code = #{tenantCode}
     </select>
 
+    <select id="countByShopGroupCode" resultType="int">
+        SELECT COUNT(1) FROM topping
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="toppingTypeCode != null">
+                AND topping_type_code = #{toppingTypeCode}
+            </if>
+    </select>
+
     <select id="search" resultMap="toppingPOMap">
         SELECT * FROM topping
         WHERE 1 = 1

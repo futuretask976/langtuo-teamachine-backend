@@ -107,6 +107,35 @@ public class TeaAccessor {
         return deleted;
     }
 
+    public int countByTeaTypeCode(String tenantCode, String teaTypeCode) {
+        // 首先访问缓存
+        Integer cached = getCacheCount(tenantCode, teaTypeCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByTeaTypeCode(tenantCode, teaTypeCode);
+
+        setCacheCount(tenantCode, teaTypeCode, count);
+        return count;
+    }
+
+    private String getCacheCountKey(String tenantCode, String shopGroupCode) {
+        return "teaAcc-cnt-" + tenantCode + "-" + shopGroupCode;
+    }
+
+    private Integer getCacheCount(String tenantCode, String teaTypeCode) {
+        String key = getCacheCountKey(tenantCode, teaTypeCode);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCount(String tenantCode, String teaTypeCode, Integer count) {
+        String key = getCacheCountKey(tenantCode, teaTypeCode);
+        redisManager.setValue(key, count);
+    }
+
     private String getCacheKey(String tenantCode, String teaCode, String teaName) {
         return "teaAcc-" + tenantCode + "-" + teaCode + "-" + teaName;
     }

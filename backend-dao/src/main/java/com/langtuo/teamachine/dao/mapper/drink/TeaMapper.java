@@ -57,4 +57,12 @@ public interface TeaMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param teaTypeCode
+     * @return
+     */
+    int countByTeaTypeCode(@Param("tenantCode") String tenantCode, @Param("teaTypeCode") String teaTypeCode);
 }

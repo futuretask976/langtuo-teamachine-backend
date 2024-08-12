@@ -108,12 +108,41 @@ public class ToppingAccessor {
         return deleted;
     }
 
+    public int countByToppingTypeCode(String tenantCode, String toppingTypeCode) {
+        // 首先访问缓存
+        Integer cached = getCacheCount(tenantCode, toppingTypeCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByToppingTypeCode(tenantCode, toppingTypeCode);
+
+        setCacheCount(tenantCode, toppingTypeCode, count);
+        return count;
+    }
+
     private String getCacheKey(String tenantCode, String toppingCode, String toppingName) {
         return "toppingAcc-" + tenantCode + "-" + toppingCode + "-" + toppingName;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "toppingAcc-" + tenantCode;
+    }
+
+    private String getCacheCountKey(String tenantCode, String shopGroupCode) {
+        return "toppingAcc-cnt-" + tenantCode + "-" + shopGroupCode;
+    }
+
+    private Integer getCacheCount(String tenantCode, String toppingTypeCode) {
+        String key = getCacheCountKey(tenantCode, toppingTypeCode);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCount(String tenantCode, String toppingTypeCode, Integer count) {
+        String key = getCacheCountKey(tenantCode, toppingTypeCode);
+        redisManager.setValue(key, count);
     }
 
     private ToppingPO getCache(String tenantCode, String toppingCode, String toppingName) {

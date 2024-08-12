@@ -38,6 +38,15 @@
             AND tenant_code = #{tenantCode}
     </select>
 
+    <select id="countByTeaTypeCode" resultType="int">
+        SELECT COUNT(1) FROM tea
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="toppingTypeCode != null">
+                AND tea_type_code = #{teaTypeCode}
+            </if>
+    </select>
+
     <select id="search" resultMap="teaPOMap">
         SELECT * FROM tea
         WHERE 1 = 1

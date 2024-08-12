@@ -56,4 +56,12 @@ public interface ToppingMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("toppingCode") String toppingCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param toppingTypeCode
+     * @return
+     */
+    int countByToppingTypeCode(@Param("tenantCode") String tenantCode, @Param("toppingTypeCode") String toppingTypeCode);
 }

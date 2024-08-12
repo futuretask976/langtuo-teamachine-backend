@@ -135,6 +135,19 @@ public class ShopAccessor {
         return deleted;
     }
 
+    public int countByShopGroupCode(String tenantCode, String shopGroupCode) {
+        // 首先访问缓存
+        Integer cached = getCacheCount(tenantCode, shopGroupCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByShopGroupCode(tenantCode, shopGroupCode);
+
+        setCacheCount(tenantCode, shopGroupCode, count);
+        return count;
+    }
+
     private String getCacheKey(String tenantCode, String shopCode, String shopName) {
         return "shopAcc-" + tenantCode + "-" + shopCode + "-" + shopName;
     }
@@ -149,6 +162,22 @@ public class ShopAccessor {
             key = key + "-" + shopGroupCode;
         }
         return key;
+    }
+
+    private String getCacheCountKey(String tenantCode, String shopGroupCode) {
+        return "shopAcc-cnt-" + tenantCode + "-" + shopGroupCode;
+    }
+
+    private Integer getCacheCount(String tenantCode, String shopGroupCode) {
+        String key = getCacheCountKey(tenantCode, shopGroupCode);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCount(String tenantCode, String shopGroupCode, Integer count) {
+        String key = getCacheCountKey(tenantCode, shopGroupCode);
+        redisManager.setValue(key, count);
     }
 
     private List<ShopPO> getCacheListByOrgNameList(String tenantCode, List<String> shopGroupCodeList) {
