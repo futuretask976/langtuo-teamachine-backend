@@ -115,7 +115,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
-    public LangTuoResult<List<ShopDTO>> listByAdminOrgName(String tenantCode) {
+    public LangTuoResult<List<ShopDTO>> listByAdminOrg(String tenantCode) {
         LangTuoResult<List<ShopDTO>> langTuoResult;
         try {
             List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));

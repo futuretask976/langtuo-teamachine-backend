@@ -47,7 +47,7 @@ public interface ShopMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<ShopDTO>> listByAdminOrgName(String tenantCode);
+    LangTuoResult<List<ShopDTO>> listByAdminOrg(String tenantCode);
 
     /**
      *

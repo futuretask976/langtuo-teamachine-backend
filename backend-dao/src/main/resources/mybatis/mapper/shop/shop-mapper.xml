@@ -40,6 +40,18 @@
             </if>
     </select>
 
+    <select id="selectListByShopGroupCodeList" resultMap="shopGroupPOMap">
+        SELECT * FROM shop_group
+        WHERE 1 = 1
+        AND tenant_code = #{tenantCode}
+        <if test="shopGroupCodeList != null">
+            AND shop_group_code IN
+            <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
+                #{shopGroupCode}
+            </foreach>
+        </if>
+    </select>
+
     <select id="search" resultMap="shopPOMap">
         SELECT * FROM shop
         WHERE 1 = 1

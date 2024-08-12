@@ -4,8 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.shop.ShopMapper;
-import com.langtuo.teamachine.dao.mapper.user.AdminMapper;
-import com.langtuo.teamachine.dao.mapper.user.OrgMapper;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.query.shop.ShopQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -17,13 +15,7 @@ import java.util.List;
 @Component
 public class ShopAccessor {
     @Resource
-    private ShopMapper shopMapper;
-
-    @Resource
-    private AdminMapper adminMapper;
-
-    @Resource
-    private OrgMapper orgMapper;
+    private ShopMapper mapper;
 
     @Resource
     private RedisManager redisManager;
@@ -35,7 +27,7 @@ public class ShopAccessor {
             return cached;
         }
 
-        ShopPO po = shopMapper.selectOne(tenantCode, shopCode, null);
+        ShopPO po = mapper.selectOne(tenantCode, shopCode, null);
 
         // 设置缓存
         getCache(tenantCode, shopCode, null, po);
@@ -49,7 +41,7 @@ public class ShopAccessor {
             return cached;
         }
 
-        ShopPO po = shopMapper.selectOne(tenantCode, null, shopName);
+        ShopPO po = mapper.selectOne(tenantCode, null, shopName);
 
         // 设置缓存
         getCache(tenantCode, null, shopName, po);
@@ -63,7 +55,7 @@ public class ShopAccessor {
             return cachedList;
         }
 
-        List<ShopPO> list = shopMapper.selectList(tenantCode, null);
+        List<ShopPO> list = mapper.selectList(tenantCode, null);
 
         // 设置缓存
         setCacheList(tenantCode, null, list);
@@ -77,10 +69,24 @@ public class ShopAccessor {
             return cachedList;
         }
 
-        List<ShopPO> list = shopMapper.selectList(tenantCode, shopGroupCode);
+        List<ShopPO> list = mapper.selectList(tenantCode, shopGroupCode);
 
         // 设置缓存
         setCacheList(tenantCode, shopGroupCode, list);
+        return list;
+    }
+
+    public List<ShopPO> selectListByShopGroupCodeList(String tenantCode, List<String> shopGroupCodeList) {
+        // 首先访问缓存
+        List<ShopPO> cachedList = getCacheListByOrgNameList(tenantCode, shopGroupCodeList);
+        if (cachedList != null) {
+            return cachedList;
+        }
+
+        List<ShopPO> list = mapper.selectListByShopGroupCodeList(tenantCode, shopGroupCodeList);
+
+        // 设置缓存
+        setCacheListByOrgNameList(tenantCode, shopGroupCodeList, list);
         return list;
     }
 
@@ -91,14 +97,14 @@ public class ShopAccessor {
         shopQuery.setTenantCode(tenantCode);
         shopQuery.setShopName(StringUtils.isBlank(shopName) ? null : shopName);
         shopQuery.setShopGroupCode(StringUtils.isBlank(shopGroupCode) ? null : shopGroupCode);
-        List<ShopPO> list = shopMapper.search(shopQuery);
+        List<ShopPO> list = mapper.search(shopQuery);
 
         PageInfo<ShopPO> pageInfo = new PageInfo(list);
         return pageInfo;
     }
 
     public int insert(ShopPO po) {
-        int inserted = shopMapper.insert(po);
+        int inserted = mapper.insert(po);
         if (inserted == 1) {
             deleteCacheOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
             deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
@@ -107,7 +113,7 @@ public class ShopAccessor {
     }
 
     public int update(ShopPO po) {
-        int updated = shopMapper.update(po);
+        int updated = mapper.update(po);
         if (updated == 1) {
             deleteCacheOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
             deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
@@ -121,7 +127,7 @@ public class ShopAccessor {
             return 0;
         }
 
-        int deleted = shopMapper.delete(tenantCode, shopCode);
+        int deleted = mapper.delete(tenantCode, shopCode);
         if (deleted == 1) {
             deleteCacheOne(tenantCode, po.getShopCode(), po.getShopName());
             deleteCacheList(tenantCode, po.getShopGroupCode());
@@ -135,6 +141,26 @@ public class ShopAccessor {
 
     private String getCacheListKey(String tenantCode, String shopGroupCode) {
         return "shopAcc-" + tenantCode + "-" +shopGroupCode;
+    }
+
+    private String getCacheListKeyByOrgNameList(String tenantCode, List<String> shopGroupCodeList) {
+        String key = "shopAcc-" + tenantCode;
+        for (String shopGroupCode : shopGroupCodeList) {
+            key = key + "-" + shopGroupCode;
+        }
+        return key;
+    }
+
+    private List<ShopPO> getCacheListByOrgNameList(String tenantCode, List<String> shopGroupCodeList) {
+        String key = getCacheListKeyByOrgNameList(tenantCode, shopGroupCodeList);
+        Object cached = redisManager.getValue(key);
+        List<ShopPO> poList = (List<ShopPO>) cached;
+        return poList;
+    }
+
+    private void setCacheListByOrgNameList(String tenantCode, List<String> orgNameList, List<ShopPO> poList) {
+        String key = getCacheListKeyByOrgNameList(tenantCode, orgNameList);
+        redisManager.setValue(key, poList);
     }
 
     private ShopPO getCache(String tenantCode, String shopCode, String shopName) {

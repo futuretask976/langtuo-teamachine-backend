@@ -30,6 +30,13 @@ public interface ShopMapper {
 
     /**
      *
+     * @return
+     */
+    List<ShopPO> selectListByShopGroupCodeList(@Param("tenantCode") String tenantCode,
+            @Param("shopGroupCodeList") List<String> shopGroupCodeList);
+
+    /**
+     *
      * @param query
      * @return
      */
