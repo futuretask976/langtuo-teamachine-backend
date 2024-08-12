@@ -36,9 +36,4 @@ public class ToppingTypeDTO {
      * 物料类型名称
      */
     private String toppingTypeName;
-
-    /**
-     * 店铺类型，0：禁用，1：启用
-     */
-    private int state;
 }
