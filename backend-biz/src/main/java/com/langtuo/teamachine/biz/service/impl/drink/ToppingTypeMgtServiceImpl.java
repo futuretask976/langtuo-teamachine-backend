@@ -145,7 +145,6 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         dto.setGmtModified(po.getGmtModified());
         dto.setToppingTypeCode(po.getToppingTypeCode());
         dto.setToppingTypeName(po.getToppingTypeName());
-        dto.setState(po.getState());
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
         return dto;
@@ -159,7 +158,6 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         ToppingTypePO po = new ToppingTypePO();
         po.setToppingTypeCode(request.getToppingTypeCode());
         po.setToppingTypeName(request.getToppingTypeName());
-        po.setState(request.getState());
         po.setTenantCode(request.getTenantCode());
         po.setComment(request.getComment());
         po.setExtraInfo(po.getExtraInfo());
