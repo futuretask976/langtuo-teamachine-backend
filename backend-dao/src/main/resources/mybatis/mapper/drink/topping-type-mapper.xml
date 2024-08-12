@@ -11,7 +11,6 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="toppingTypeCode" column="topping_type_code"/>
         <result property="toppingTypeName" column="topping_type_name"/>
-        <result property="state" column="state"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
@@ -48,21 +47,19 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.ToppingTypePO">
-        INSERT INTO `topping_type` (
-            `gmt_created`
-            , `gmt_modified`
-            , `topping_type_code`
-            , `topping_type_name`
-            , `state`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO topping_type (
+            gmt_created
+            , gmt_modified
+            , topping_type_code
+            , topping_type_name
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
             , #{toppingTypeCode}
             , #{toppingTypeName}
-            , #{state}
             , #{tenantCode}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}

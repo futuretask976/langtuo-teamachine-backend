@@ -46,9 +46,4 @@ public class ToppingTypePO {
      * 物料类型名称
      */
     private String toppingTypeName;
-
-    /**
-     * 状态，0：禁用，1：启用
-     */
-    private int state;
 }
