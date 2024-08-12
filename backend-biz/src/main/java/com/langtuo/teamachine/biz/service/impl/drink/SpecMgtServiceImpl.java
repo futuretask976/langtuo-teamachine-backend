@@ -193,7 +193,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         dto.setGmtModified(po.getGmtModified());
         dto.setSpecCode(po.getSpecCode());
         dto.setSpecName(po.getSpecName());
-        dto.setState(po.getState());
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
@@ -235,7 +234,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         SpecPO po = new SpecPO();
         po.setSpecCode(request.getSpecCode());
         po.setSpecName(request.getSpecName());
-        po.setState(request.getState());
         po.setComment(request.getComment());
         po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());

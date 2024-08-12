@@ -11,7 +11,6 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="specCode" column="spec_code"/>
         <result property="specName" column="spec_name"/>
-        <result property="state" column="state"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
@@ -53,7 +52,6 @@
             , gmt_modified
             , spec_code
             , spec_name
-            , state
             , tenant_code
             , comment
             , extra_info
@@ -62,7 +60,6 @@
             , now()
             , #{specCode}
             , #{specName}
-            , #{state}
             , #{tenantCode}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
@@ -75,9 +72,6 @@
             gmt_modified = now()
             <if test="specName != null">
                 , spec_name = #{specName}
-            </if>
-            <if test="state != null">
-                , state = #{state}
             </if>
             <if test="comment != null">
                 , comment = #{comment}

@@ -39,11 +39,6 @@ public class SpecDTO {
     private String specName;
 
     /**
-     * 状态，0：禁用，1：启用
-     */
-    private int state;
-
-    /**
      *
      */
     private List<SpecItemDTO> specItemList;

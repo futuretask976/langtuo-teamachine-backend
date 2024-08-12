@@ -46,9 +46,4 @@ public class SpecPO {
      * 规格名称
      */
     private String specName;
-
-    /**
-     * 状态，0：禁用，1：启用
-     */
-    private int state;
 }
