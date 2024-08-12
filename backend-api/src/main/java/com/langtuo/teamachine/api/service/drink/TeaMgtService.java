@@ -50,4 +50,12 @@ public interface TeaMgtService {
      * @return
      */
     LangTuoResult<Void> delete(String tenantCode, String teaCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param teaTypeCode
+     * @return
+     */
+    LangTuoResult<Integer> countByTeaTypeCode(String tenantCode, String teaTypeCode);
 }

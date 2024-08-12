@@ -173,6 +173,23 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         return langTuoResult;
     }
 
+    @Override
+    public LangTuoResult<Integer> countByShopGroupCode(String tenantCode, String shopGroupCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        LangTuoResult<Integer> langTuoResult = null;
+        try {
+            int cnt = shopAccessor.countByShopGroupCode(tenantCode, shopGroupCode);
+            langTuoResult = LangTuoResult.success(cnt);
+        } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
     private List<ShopDTO> convert(List<ShopPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;

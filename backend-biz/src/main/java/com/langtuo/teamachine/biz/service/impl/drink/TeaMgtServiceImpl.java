@@ -166,6 +166,23 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         return langTuoResult;
     }
 
+    @Override
+    public LangTuoResult<Integer> countByTeaTypeCode(String tenantCode, String teaTypeCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(teaTypeCode)) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        LangTuoResult<Integer> langTuoResult = null;
+        try {
+            int cnt = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
+            langTuoResult = LangTuoResult.success(cnt);
+        } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
     private List<TeaDTO> convert(List<TeaPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;

@@ -128,6 +128,23 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         return langTuoResult;
     }
 
+    @Override
+    public LangTuoResult<Integer> countByToppingTypeCode(String tenantCode, String toppingTypeCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(toppingTypeCode)) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        LangTuoResult<Integer> langTuoResult = null;
+        try {
+            int cnt = accessor.countByToppingTypeCode(tenantCode, toppingTypeCode);
+            langTuoResult = LangTuoResult.success(cnt);
+        } catch (Exception e) {
+            log.error("delete error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
     private List<ToppingDTO> convert(List<ToppingPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;

@@ -63,4 +63,12 @@ public interface ShopMgtService {
      * @return
      */
     LangTuoResult<Void> delete(String tenantCode, String shopCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param shopGroupCode
+     * @return
+     */
+    LangTuoResult<Integer> countByShopGroupCode(String tenantCode, String shopGroupCode);
 }

@@ -50,4 +50,12 @@ public interface ToppingMgtService {
      * @return
      */
     LangTuoResult<Void> delete(String tenantCode, String toppingCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param toppingTypeCode
+     * @return
+     */
+    LangTuoResult<Integer> countByToppingTypeCode(String tenantCode, String toppingTypeCode);
 }
