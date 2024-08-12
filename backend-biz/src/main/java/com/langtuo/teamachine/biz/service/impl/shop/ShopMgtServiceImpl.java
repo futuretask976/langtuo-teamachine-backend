@@ -119,13 +119,12 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         LangTuoResult<List<ShopDTO>> langTuoResult;
         try {
             List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
+            List<String> shopGroupCodeList = shopGroupDTOList.stream()
+                    .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
+                    .collect(Collectors.toList());
 
-            List<ShopDTO> list = Lists.newArrayList();
-            for (ShopGroupDTO shopGroupDTO : shopGroupDTOList) {
-                List<ShopPO> shopPOList = shopAccessor.selectList(tenantCode, shopGroupDTO.getShopGroupCode());
-                list.addAll(convert(shopPOList));
-            }
-            langTuoResult = LangTuoResult.success(list);
+            List<ShopPO> list = shopAccessor.selectListByShopGroupCodeList(tenantCode, shopGroupCodeList);
+            langTuoResult = LangTuoResult.success(convert(list));
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);

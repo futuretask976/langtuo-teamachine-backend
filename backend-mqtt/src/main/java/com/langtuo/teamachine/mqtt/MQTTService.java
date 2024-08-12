@@ -105,6 +105,7 @@ public class MQTTService implements InitializingBean {
             log.info("receive msg error, topic=" + topic + ", payload=" + payload);
             return;
         }
+        log.info("received msg, topic=" + topic + ", payload=" + payload);
 
         if (MQTTConfig.TOPIC_PREPARE_DISPATCH_ACCURACY.equals(topic)) {
             ExeService4Consume.getExeService().submit(new AccuracyDispatchWorker(payload));

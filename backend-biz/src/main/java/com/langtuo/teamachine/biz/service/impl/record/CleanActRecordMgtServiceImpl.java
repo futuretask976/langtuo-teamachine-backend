@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
 import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Component
@@ -63,6 +64,13 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
 
         LangTuoResult<PageDTO<CleanActRecordDTO>> langTuoResult = null;
         try {
+            if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
+                List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
+                shopGroupCodeList = shopGroupDTOList.stream()
+                        .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
+                        .collect(Collectors.toList());
+            }
+
             PageInfo<CleanActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
                     shopCodeList, pageNum, pageSize);
             List<CleanActRecordDTO> dtoList = convert(pageInfo.getList());

@@ -13,7 +13,6 @@
         <result property="shopName" column="shop_name"/>
         <result property="shopType" column="shop_type"/>
         <result property="shopGroupCode" column="shop_group_code"/>
-        <result property="orgName" column="org_name"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
@@ -40,8 +39,8 @@
             </if>
     </select>
 
-    <select id="selectListByShopGroupCodeList" resultMap="shopGroupPOMap">
-        SELECT * FROM shop_group
+    <select id="selectListByShopGroupCodeList" resultMap="shopPOMap">
+        SELECT * FROM shop
         WHERE 1 = 1
         AND tenant_code = #{tenantCode}
         <if test="shopGroupCodeList != null">

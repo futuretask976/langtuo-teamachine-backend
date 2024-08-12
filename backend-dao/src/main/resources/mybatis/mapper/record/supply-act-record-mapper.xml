@@ -38,13 +38,13 @@
         SELECT * FROM supply_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            <if test="shopGroupCodeList != null">
+            <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
                 AND shop_group_code IN
                 <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
                     #{shopGroupCode}
                 </foreach>
             </if>
-            <if test="shopCodeList != null">
+            <if test="shopCodeList != null and shopCodeList.size() > 0">
                 AND shop_code IN
                 <foreach item="shopCode" collection="shopCodeList" open="(" separator="," close=")">
                     #{shopCode}
