@@ -33,7 +33,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
-import com.langtuo.teamachine.mqtt.constant.SignMode;
+import com.langtuo.teamachine.mqtt.constant.SignModeEnum;
 import com.langtuo.teamachine.mqtt.util.MQTTUtils;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
@@ -158,14 +158,14 @@ public class ConnectionOptionWrapper {
      * @param secret 账号 secret，用户的自定义秘钥
      */
     public ConnectionOptionWrapper(String instanceId, String userName, String secret,
-            String clientId, SignMode signMode) throws NoSuchAlgorithmException, InvalidKeyException {
+            String clientId, SignModeEnum signModeEnum) throws NoSuchAlgorithmException, InvalidKeyException {
         this.instanceId = instanceId;
         this.clientId = clientId;
         mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setUserName(userName);
-        if (SignMode.SIGNED.equals(signMode)) {
+        if (SignModeEnum.SIGNED.equals(signModeEnum)) {
             mqttConnectOptions.setPassword(MQTTUtils.macSignature(clientId, secret).toCharArray());
-        } else if (SignMode.ORIGIN.equals(signMode)) {
+        } else if (SignModeEnum.ORIGIN.equals(signModeEnum)) {
             mqttConnectOptions.setPassword(secret.toCharArray());
         } else {
             System.out.println("signMode not exist");
