@@ -45,7 +45,7 @@ public class ModelDispatchWorker implements Runnable {
         jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.TOPIC_DISPATCH_MODEL);
         jsonMsg.put(SEND_KEY_MODEL, jsonArray);
         MQTTService mqttService = getMQTTService();
-        mqttService.sendMsgByTopic(MQTTConfig.TOPIC_DISPATCH_MODEL, jsonArray.toJSONString());
+        mqttService.sendMsgByTopic(tenantCode, MQTTConfig.TOPIC_DISPATCH_MODEL, jsonArray.toJSONString());
     }
 
     private MQTTService getMQTTService() {

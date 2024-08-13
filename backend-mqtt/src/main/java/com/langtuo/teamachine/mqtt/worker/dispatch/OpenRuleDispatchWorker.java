@@ -56,7 +56,7 @@ public class OpenRuleDispatchWorker implements Runnable {
         jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.TOPIC_DISPATCH_OPEN_RULE);
         jsonMsg.put(SEND_KEY_OPEN_RULE_LIST, jsonArray);
         MQTTService mqttService = getMQTTService();
-        mqttService.sendMsgByTopic(MQTTConfig.TOPIC_DISPATCH_OPEN_RULE, jsonArray.toJSONString());
+        mqttService.sendMsgByTopic(tenantCode, MQTTConfig.TOPIC_DISPATCH_OPEN_RULE, jsonArray.toJSONString());
     }
 
     private MQTTService getMQTTService() {

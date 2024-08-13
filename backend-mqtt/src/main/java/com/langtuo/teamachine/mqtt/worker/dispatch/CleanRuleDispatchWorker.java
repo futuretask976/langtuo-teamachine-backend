@@ -82,7 +82,7 @@ public class CleanRuleDispatchWorker implements Runnable {
         jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.TOPIC_DISPATCH_CLEAN_RULE);
         jsonMsg.put(SEND_KEY_CLEAN_RULE, dispatchCont);
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMsgByTopic(MQTTConfig.TOPIC_DISPATCH_CLEAN_RULE, jsonMsg.toJSONString());
+            mqttService.sendMsgByTopic(tenantCode, MQTTConfig.TOPIC_DISPATCH_CLEAN_RULE, jsonMsg.toJSONString());
         });
     }
 

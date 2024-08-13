@@ -107,7 +107,7 @@ public class MenuDispatchWorker implements Runnable {
         jsonMsg.put(SEND_KEY_OSS_PATH, ossPath);
         MQTTService mqttService = getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMsgByTopic(MQTTConfig.TOPIC_DISPATCH_MENU, jsonMsg.toJSONString());
+            mqttService.sendMsgByTopic(tenantCode, MQTTConfig.TOPIC_DISPATCH_MENU, jsonMsg.toJSONString());
         });
     }
 
