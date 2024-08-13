@@ -29,8 +29,8 @@ public class MQTTController {
     @GetMapping(value = "/test")
     public LangTuoResult<Void> index(Model model) {
         try {
-            mqttService.sendMsgByTopic("testMq4Iot", "here is testMq4Iot test: " + System.currentTimeMillis());
-            mqttService.sendMsgByP2P(MQTTConfig.CLIENT_ID, "here is p2p test: " + System.currentTimeMillis());
+            mqttService.sendMsgByTopic("tenant_001", "testMq4Iot", "here is testMq4Iot test: " + System.currentTimeMillis());
+            mqttService.sendMsgByP2P("tenant_001", MQTTConfig.CLIENT_ID, "here is p2p test: " + System.currentTimeMillis());
         } catch (Exception e) {
             log.error("test error: " + e.getMessage(), e);
         }

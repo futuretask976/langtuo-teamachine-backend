@@ -45,7 +45,7 @@ public class MQTTConfig {
     /**
      *
      */
-    public static final String PARENT_P2P_TOPIC_POSTFIx = "_teamachine/p2p";
+    public static final String PARENT_P2P_TOPIC_POSTFIX = "_teamachine/p2p";
 
     /**
      *

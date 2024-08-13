@@ -41,7 +41,7 @@ public class MQTTService implements InitializingBean {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(tenantCode + MQTTConfig.TOPIC_SEPERATOR + topic, message);
+                mqttClient.publish(tenantCode + MQTTConfig.PARENT_TOPIC_POSTFIX + MQTTConfig.TOPIC_SEPERATOR + topic, message);
             } catch (MqttException e) {
                 log.error("send msg by topic error: " + e.getMessage(), e);
             }
@@ -50,7 +50,7 @@ public class MQTTService implements InitializingBean {
 
     public void sendMsgByP2P(String tenantCode, String clientId, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
-            String p2pTopic = tenantCode + MQTTConfig.TOPIC_SEPERATOR + MQTTConfig.PARENT_P2P_TOPIC + MQTTConfig.TOPIC_SEPERATOR + clientId;
+            String p2pTopic = tenantCode + MQTTConfig.PARENT_P2P_TOPIC_POSTFIX + MQTTConfig.TOPIC_SEPERATOR + clientId;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
