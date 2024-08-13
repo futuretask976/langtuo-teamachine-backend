@@ -71,7 +71,7 @@ public class CleanRulePutRequest {
             return false;
         }
         for (CleanRuleStepPutRequest c : cleanRuleStepList) {
-            if (c != null && !c.isValid()) {
+            if (!c.isValid()) {
                 return false;
             }
         }
