@@ -40,12 +40,12 @@ public class MQTTConfig {
     /**
      *
      */
-    public static final String PARENT_TOPIC = "Topic_Tea_Machine";
+    public static final String PARENT_TOPIC_POSTFIX = "_teamachine";
 
     /**
      *
      */
-    public static final String PARENT_P2P_TOPIC = "Topic_Tea_Machine/p2p";
+    public static final String PARENT_P2P_TOPIC_POSTFIx = "_teamachine/p2p";
 
     /**
      *
@@ -60,22 +60,22 @@ public class MQTTConfig {
     /**
      * topic列表
      */
-    public static final String TOPIC_PREPARE_DISPATCH_ACCURACY = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Accuracy";
-    public static final String TOPIC_DISPATCH_ACCURACY = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Accuracy";
-    public static final String TOPIC_PREPARE_DISPATCH_CLEAN_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Clean_Rule";
-    public static final String TOPIC_DISPATCH_CLEAN_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Clean_Rule";
-    public static final String TOPIC_PREPARE_DISPATCH_CLOSE_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Close_Rule";
-    public static final String TOPIC_DISPATCH_CLOSE_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Close_Rule";
-    public static final String TOPIC_PREPARE_DISPATCH_MACHINE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Machine";
-    public static final String TOPIC_DISPATCH_MACHINE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Machine";
-    public static final String TOPIC_PREPARE_DISPATCH_MENU = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Menu";
-    public static final String TOPIC_DISPATCH_MENU = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Menu";
-    public static final String TOPIC_PREPARE_DISPATCH_MODEL = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Model";
-    public static final String TOPIC_DISPATCH_MODEL = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Model";
-    public static final String TOPIC_PREPARE_DISPATCH_OPEN_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Open_Rule";
-    public static final String TOPIC_DISPATCH_OPEN_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Open_Rule";
-    public static final String TOPIC_PREPARE_DISPATCH_WARNING_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Prepare_Dispatch_Warning_Rule";
-    public static final String TOPIC_DISPATCH_WARNING_RULE = PARENT_TOPIC + TOPIC_SEPERATOR + "Dispatch_Warning_Rule";
+    public static final String TOPIC_PREPARE_DISPATCH_ACCURACY = "prepare_dispatch_accuracy";
+    public static final String TOPIC_DISPATCH_ACCURACY = "dispatch_accuracy";
+    public static final String TOPIC_PREPARE_DISPATCH_CLEAN_RULE = "prepare_dispatch_clean_rule";
+    public static final String TOPIC_DISPATCH_CLEAN_RULE = "dispatch_clean_rule";
+    public static final String TOPIC_PREPARE_DISPATCH_CLOSE_RULE = "prepare_dispatch_close_rule";
+    public static final String TOPIC_DISPATCH_CLOSE_RULE = "dispatch_close_rule";
+    public static final String TOPIC_PREPARE_DISPATCH_MACHINE = "prepare_dispatch_machine";
+    public static final String TOPIC_DISPATCH_MACHINE = "dispatch_machine";
+    public static final String TOPIC_PREPARE_DISPATCH_MENU = "prepare_dispatch_menu";
+    public static final String TOPIC_DISPATCH_MENU = "dispatch_menu";
+    public static final String TOPIC_PREPARE_DISPATCH_MODEL = "prepare_dispatch_model";
+    public static final String TOPIC_DISPATCH_MODEL = "dispatch_model";
+    public static final String TOPIC_PREPARE_DISPATCH_OPEN_RULE = "prepare_dispatch_open_rule";
+    public static final String TOPIC_DISPATCH_OPEN_RULE = "dispatch_open_rule";
+    public static final String TOPIC_PREPARE_DISPATCH_WARNING_RULE = "prepare_dispatch_warning_rule";
+    public static final String TOPIC_DISPATCH_WARNING_RULE = "dispatch_warning_rule";
 
     /**
      * topic过滤器

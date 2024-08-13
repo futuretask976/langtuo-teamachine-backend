@@ -36,21 +36,21 @@ public class MQTTService implements InitializingBean {
         }
     }
 
-    public void sendMsgByTopic(String topic, String payload) {
+    public void sendMsgByTopic(String tenantCode, String topic, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(topic, message);
+                mqttClient.publish(tenantCode + MQTTConfig.TOPIC_SEPERATOR + topic, message);
             } catch (MqttException e) {
                 log.error("send msg by topic error: " + e.getMessage(), e);
             }
         });
     }
 
-    public void sendMsgByP2P(String clientId, String payload) {
+    public void sendMsgByP2P(String tenantCode, String clientId, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
-            String p2pTopic = MQTTConfig.PARENT_P2P_TOPIC + MQTTConfig.TOPIC_SEPERATOR + clientId;
+            String p2pTopic = tenantCode + MQTTConfig.TOPIC_SEPERATOR + MQTTConfig.PARENT_P2P_TOPIC + MQTTConfig.TOPIC_SEPERATOR + clientId;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
