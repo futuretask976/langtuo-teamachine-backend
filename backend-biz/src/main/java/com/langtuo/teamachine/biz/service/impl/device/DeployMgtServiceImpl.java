@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,19 +33,6 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
     @Resource
     private ShopMgtService shopMgtService;
-
-    @Override
-    public LangTuoResult<List<DeployDTO>> list(String tenantCode) {
-        LangTuoResult<List<DeployDTO>> langTuoResult = null;
-        try {
-            List<DeployPO> list = deployAccessor.selectList(tenantCode);
-            List<DeployDTO> dtoList = convert(list);
-            langTuoResult = LangTuoResult.success(dtoList);
-        } catch (Exception e) {
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
-        }
-        return langTuoResult;
-    }
 
     @Override
     public LangTuoResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
@@ -60,7 +49,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -69,11 +58,11 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     public LangTuoResult<DeployDTO> get(String tenantCode, String deployCode) {
         LangTuoResult<DeployDTO> langTuoResult = null;
         try {
-            DeployDTO machineModelDTO = convert(deployAccessor.selectOne(tenantCode, deployCode));
-            langTuoResult = LangTuoResult.success(machineModelDTO);
+            DeployDTO dto = convert(deployAccessor.selectOne(deployCode));
+            langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -88,8 +77,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            DeployPO exist = deployAccessor.selectOne(deployPO.getTenantCode(),
-                    deployPO.getDeployCode());
+            DeployPO exist = deployAccessor.selectOne(deployPO.getDeployCode());
             if (exist != null) {
                 int updated = deployAccessor.update(deployPO);
             } else {
@@ -115,6 +103,46 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<String> generateDeployCode() {
+        LangTuoResult<String> langTuoResult;
+        try {
+            String deployCode = DeployUtils.genRandomStr(20);
+            langTuoResult = LangTuoResult.success(deployCode);
+        } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<String> generateMachineCode() {
+        LangTuoResult<String> langTuoResult;
+        try {
+            long machineCodeSeqVal = deployAccessor.getMachineCodeNextSeqVal();
+            String machineCode = String.valueOf(machineCodeSeqVal);
+            if (machineCode.length() < 6) {
+                for (int i = 0; i < (6 - machineCode.length()); i++) {
+                    machineCode = "0" + machineCode;
+                }
+            }
+            // 获取当前日期
+            Calendar calendar = Calendar.getInstance();
+            // 创建一个SimpleDateFormat对象，指定目标格式
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            // 格式化日期
+            String formattedDate = sdf.format(calendar.getTime());
+            machineCode = formattedDate + machineCode;
+
+            langTuoResult = LangTuoResult.success(machineCode);
+        } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
         return langTuoResult;
@@ -161,8 +189,8 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setDeployCode(po.getDeployCode());
-        dto.setModelCode(po.getModelCode());
         dto.setMachineCode(po.getMachineCode());
+        dto.setModelCode(po.getModelCode());
         dto.setState(po.getState());
         dto.setExtraInfo(po.getExtraInfo());
 

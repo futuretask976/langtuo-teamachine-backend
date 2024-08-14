@@ -34,7 +34,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -56,7 +56,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -70,7 +70,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -84,7 +84,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }

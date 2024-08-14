@@ -33,7 +33,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -52,7 +52,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -66,7 +66,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             langTuoResult = LangTuoResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }

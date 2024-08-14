@@ -38,7 +38,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             langTuoResult = LangTuoResult.success(convert(orgNode));
         } catch (Exception e) {
             log.error("listByDepth error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -51,7 +51,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             langTuoResult = LangTuoResult.success(convert(orgNodeList));
         } catch (Exception e) {
             log.error("listByDepth error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -65,7 +65,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -84,7 +84,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -98,7 +98,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             langTuoResult = LangTuoResult.success(orgDTO);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }

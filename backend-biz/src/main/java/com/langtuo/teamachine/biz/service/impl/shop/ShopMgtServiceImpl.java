@@ -15,7 +15,6 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -80,7 +79,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
 
         return langTuoResult;
@@ -95,7 +94,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -109,7 +108,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -127,7 +126,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             langTuoResult = LangTuoResult.success(convert(list));
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -151,7 +150,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }

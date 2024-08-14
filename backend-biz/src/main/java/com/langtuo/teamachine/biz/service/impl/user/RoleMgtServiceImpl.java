@@ -12,7 +12,6 @@ import com.langtuo.teamachine.api.service.user.PermitActMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
-import com.langtuo.teamachine.dao.constant.PermitActGroupEnum;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +79,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -98,7 +97,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("page error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -112,7 +111,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -142,7 +141,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }

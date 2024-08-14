@@ -29,16 +29,6 @@ public class DeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/list?tenantCode=tenant_001&pageNum=1&pageSize=10
-     * @return
-     */
-    @GetMapping(value = "/list")
-    public LangTuoResult<List<DeployDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<DeployDTO>> rtn = service.list(tenantCode);
-        return rtn;
-    }
-
-    /**
      * url: http://localhost:8080/teamachine/deploy/search?tenantCode=tenant_001&deployCode=&shopName=&state=&pageNum=1&pageSize=10
      * @return
      */
@@ -73,9 +63,15 @@ public class DeployController {
         return rtn;
     }
 
-    @GetMapping(value = "/generate")
+    @GetMapping(value = "/deploycode/generate")
     public LangTuoResult<String> generateDeployCode(@RequestParam(name = "tenantCode") String tenantCode) {
-        LangTuoResult<String> rtn = LangTuoResult.success(DeployUtils.genRandomStr(20));
+        LangTuoResult<String> rtn = service.generateDeployCode();
+        return rtn;
+    }
+
+    @GetMapping(value = "/machinecode/generate")
+    public LangTuoResult<String> generateMachineCode(@RequestParam(name = "tenantCode") String tenantCode) {
+        LangTuoResult<String> rtn = service.generateMachineCode();
         return rtn;
     }
 }

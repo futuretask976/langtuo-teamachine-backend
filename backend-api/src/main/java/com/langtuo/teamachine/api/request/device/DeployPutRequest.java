@@ -23,14 +23,14 @@ public class DeployPutRequest {
     private String deployCode;
 
     /**
-     * 型号编码
-     */
-    private String modelCode;
-
-    /**
      * 机器编码
      */
     private String machineCode;
+
+    /**
+     * 型号编码
+     */
+    private String modelCode;
 
     /**
      * 店铺编码

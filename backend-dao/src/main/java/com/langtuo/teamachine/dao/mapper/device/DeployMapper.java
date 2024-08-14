@@ -16,11 +16,10 @@ import java.util.List;
 public interface DeployMapper {
     /**
      *
-     * @param tenantCode
      * @param deployCode
      * @return
      */
-    DeployPO selectOne(@Param("tenantCode") String tenantCode, @Param("deployCode") String deployCode);
+    DeployPO selectOne(@Param("deployCode") String deployCode);
 
     /**
      *

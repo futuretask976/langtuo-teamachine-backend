@@ -25,12 +25,6 @@ public interface DeployMgtService {
 
     /**
      *
-     * @return
-     */
-    LangTuoResult<List<DeployDTO>> list(String tenantCode);
-
-    /**
-     *
      * @param request
      * @return
      */
@@ -48,5 +42,11 @@ public interface DeployMgtService {
      *
      * @return
      */
-    LangTuoResult<String> genRandomStr();
+    LangTuoResult<String> generateDeployCode();
+
+    /**
+     *
+     * @return
+     */
+    LangTuoResult<String> generateMachineCode();
 }

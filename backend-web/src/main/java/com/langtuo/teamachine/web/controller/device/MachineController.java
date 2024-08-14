@@ -57,8 +57,8 @@ public class MachineController {
      * @return
      */
     @PutMapping(value = "/activate")
-    public LangTuoResult<Void> activate(@RequestBody MachineActivatePutRequest request) {
-        LangTuoResult<Void> rtn = service.activate(request);
+    public LangTuoResult<MachineDTO> activate(@RequestBody MachineActivatePutRequest request) {
+        LangTuoResult<MachineDTO> rtn = service.activate(request);
         return rtn;
     }
 

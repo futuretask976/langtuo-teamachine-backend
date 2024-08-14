@@ -42,7 +42,7 @@ public interface MachineMgtService {
      * @param request
      * @return
      */
-    LangTuoResult<Void> activate(MachineActivatePutRequest request);
+    LangTuoResult<MachineDTO> activate(MachineActivatePutRequest request);
 
     /**
      *

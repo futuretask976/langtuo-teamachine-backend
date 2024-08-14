@@ -14,8 +14,9 @@ public enum ErrorEnum {
     BIZ_ERR_CAN_NOT_DELETE_TENANT_SUPER_ADMIN_ROLE("BIZ_ERR_CAN_NOT_DELETE_TENANT_SUPER_ADMIN_ROLE", "不能更改/删除租户超级管理员"),
 
     // 数据库错误
-    DB_ERR_QUERY_FAIL("DB_ERR_QUERY_FAIL", "数据查询失败"),
+    DB_ERR_SELECT_FAIL("DB_ERR_QUERY_FAIL", "数据查询失败"),
     DB_ERR_INSERT_FAIL("DB_ERR_INSERT_FAIL", "数据保存失败"),
+    DB_ERR_UPDATE_FAIL("DB_ERR_INSERT_FAIL", "数据更新失败"),
     ;
 
 

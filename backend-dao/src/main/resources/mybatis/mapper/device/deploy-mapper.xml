@@ -21,8 +21,7 @@
     <select id="selectOne" resultMap="machineDeployPOMap">
         SELECT * FROM deploy
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and deploy_code = #{deployCode}
+            AND deploy_code = #{deployCode}
     </select>
 
     <select id="selectList" resultMap="machineDeployPOMap">
@@ -51,26 +50,26 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.device.DeployPO">
-        INSERT INTO `deploy` (
-            `gmt_created`
-            , `gmt_modified`
-            , `deploy_code`
-            , `model_code`
-            , `machine_code`
-            , `shop_code`
-            , `state`
-            , `tenant_code`
-            , `extra_info`
+        INSERT INTO deploy (
+            gmt_created
+            , gmt_modified
+            , tenant_code
+            , extra_info
+            , deploy_code
+            , machine_code
+            , model_code
+            , shop_code
+            , state
         ) VALUES (
             now()
             , now()
-            , #{deployCode}
-            , #{modelCode}
-            , #{machineCode}
-            , #{shopCode}
-            , #{state}
             , #{tenantCode}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            , #{deployCode}
+            , #{machineCode}
+            , #{modelCode}
+            , #{shopCode}
+            , #{state}
         )
     </insert>
 
@@ -79,19 +78,19 @@
         SET
             gmt_modified = now()
             <if test="modelCode != null">
-                , `model_code` = #{modelCode}
+                , model_code = #{modelCode}
             </if>
             <if test="machineCode != null">
-                , `machine_code` = #{machineCode}
+                , machine_code = #{machineCode}
             </if>
             <if test="shopCode != null">
-                , `shop_code` = #{shopCode}
+                , shop_code = #{shopCode}
             </if>
             <if test="state != null">
-                , `state` = #{state}
+                , state = #{state}
             </if>
             <if test="extraInfo != null">
-                , `extra_info` = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+                , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
             </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}

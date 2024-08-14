@@ -68,7 +68,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -85,7 +85,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -102,39 +102,39 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
 
     @Override
-    public LangTuoResult<Void> activate(MachineActivatePutRequest request) {
+    public LangTuoResult<MachineDTO> activate(MachineActivatePutRequest request) {
         if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<MachineDTO> langTuoResult;
         try {
             DeployPO deployPO = convert(request);
-            DeployPO existDeployPO = deployAccessor.selectOne(request.getTenantCode(),
-                    request.getDeployCode());
-            if (existDeployPO != null) {
-                int updated = deployAccessor.update(deployPO);
-            } else {
-                int inserted = deployAccessor.insert(deployPO);
+            int updated = deployAccessor.update(deployPO);
+            if (updated != 1) {
+                return LangTuoResult.error(ErrorEnum.DB_ERR_UPDATE_FAIL);
             }
 
-            MachinePO machinePO = convertToMachinePO(request);
-            MachinePO existMachinePO = machineAccessor.selectOne(request.getTenantCode(), request.getMachineCode());
-            if (existMachinePO != null) {
-                int updated = machineAccessor.update(machinePO);
-            } else {
-                int inserted = machineAccessor.insert(machinePO);
+            DeployPO exist = deployAccessor.selectOne(deployPO.getDeployCode());
+            if (exist == null) {
+                return LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
             }
-            langTuoResult = LangTuoResult.success();
+
+            MachinePO machinePO = convertToMachinePO(request, exist);
+            int inserted = machineAccessor.insert(machinePO);
+            if (inserted != 1) {
+                return LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            }
+            langTuoResult = LangTuoResult.success(convert(machinePO));
         } catch (Exception e) {
             log.error("activate error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -157,7 +157,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             log.error("update error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_QUERY_FAIL);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
     }
@@ -224,31 +224,28 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
         DeployPO po = new DeployPO();
         po.setDeployCode(request.getDeployCode());
-        po.setModelCode(request.getModelCode());
         po.setMachineCode(request.getMachineCode());
-        po.setShopCode(request.getShopCode());
         po.setState(1);
-        po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
         return po;
     }
 
-    private MachinePO convertToMachinePO(MachineActivatePutRequest request) {
-        if (request == null) {
+    private MachinePO convertToMachinePO(MachineActivatePutRequest request, DeployPO deployPO) {
+        if (request == null || deployPO == null) {
             return null;
         }
 
         MachinePO po = new MachinePO();
-        po.setMachineCode(request.getMachineCode());
+        po.setTenantCode(deployPO.getTenantCode());
+        po.setMachineCode(deployPO.getMachineCode());
         po.setScreenCode(request.getScreenCode());
         po.setElecBoardCode(request.getElecBoardCode());
-        po.setMachineName(request.getMachineName());
-        po.setMaintainUntil(request.getMaintainUntil());
-        po.setValidUntil(request.getValidUntil());
+        po.setModelCode(deployPO.getModelCode());
+        po.setShopCode(deployPO.getShopCode());
+        po.setMachineName(null);
         po.setState(1);
-        po.setShopCode(request.getShopCode());
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
+        po.setMaintainUntil(null);
+        po.setValidUntil(null);
         return po;
     }
 
