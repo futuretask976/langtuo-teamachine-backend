@@ -2,6 +2,8 @@ package com.langtuo.teamachine.web.controller.rule;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
+import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
+import com.langtuo.teamachine.api.request.rule.WarningRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.WarningRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
@@ -69,6 +71,28 @@ public class WarningRuleController {
     public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "warningrulecode") String warningRuleCode) {
         LangTuoResult<Void> rtn = service.delete(tenantCode, warningRuleCode);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/ruleset/clean/put
+     * @return
+     */
+    @PutMapping(value = "/dispatch/put")
+    public LangTuoResult<Void> putDispatch(@RequestBody WarningRuleDispatchPutRequest request) {
+        LangTuoResult<Void> rtn = service.putDispatch(request);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/ruleset/clean/list?tenantCode=tenant_001
+     * @param tenantCode
+     * @return
+     */
+    @GetMapping(value = "/dispatch/{tenantcode}/{warningrulecode}/get")
+    public LangTuoResult<WarningRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
+            @PathVariable(name = "warningrulecode") String warningRuleCode) {
+        LangTuoResult<WarningRuleDispatchDTO> rtn = service.getDispatchByCode(tenantCode, warningRuleCode);
         return rtn;
     }
 }

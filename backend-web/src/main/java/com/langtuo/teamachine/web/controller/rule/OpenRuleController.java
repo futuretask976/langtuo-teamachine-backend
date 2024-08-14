@@ -2,6 +2,8 @@ package com.langtuo.teamachine.web.controller.rule;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.OpenRuleDTO;
+import com.langtuo.teamachine.api.model.rule.OpenRuleDispatchDTO;
+import com.langtuo.teamachine.api.request.rule.OpenRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.OpenRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.rule.OpenRuleMgtService;
@@ -69,6 +71,28 @@ public class OpenRuleController {
     public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "openrulecode") String openRuleCode) {
         LangTuoResult<Void> rtn = service.delete(tenantCode, openRuleCode);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/ruleset/clean/put
+     * @return
+     */
+    @PutMapping(value = "/dispatch/put")
+    public LangTuoResult<Void> putDispatch(@RequestBody OpenRuleDispatchPutRequest request) {
+        LangTuoResult<Void> rtn = service.putDispatch(request);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachine/ruleset/clean/list?tenantCode=tenant_001
+     * @param tenantCode
+     * @return
+     */
+    @GetMapping(value = "/dispatch/{tenantcode}/{openrulecode}/get")
+    public LangTuoResult<OpenRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
+            @PathVariable(name = "openrulecode") String openRuleCode) {
+        LangTuoResult<OpenRuleDispatchDTO> rtn = service.getDispatchByCode(tenantCode, openRuleCode);
         return rtn;
     }
 }
