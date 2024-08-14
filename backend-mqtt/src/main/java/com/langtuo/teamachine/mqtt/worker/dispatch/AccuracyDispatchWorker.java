@@ -53,10 +53,10 @@ public class AccuracyDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.TOPIC_DISPATCH_ACCURACY);
+        jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_ACCURACY);
         jsonMsg.put(SEND_KEY_ACCURACY_TPL_LIST, jsonArray);
         MQTTService mqttService = getMQTTService();
-        mqttService.sendMsgByTopic(tenantCode, MQTTConfig.TOPIC_DISPATCH_ACCURACY, jsonArray.toJSONString());
+        mqttService.sendMachineMsg(tenantCode, MQTTConfig.MACHINE_TOPIC_DISPATCH_ACCURACY, jsonArray.toJSONString());
     }
 
     private MQTTService getMQTTService() {

@@ -183,7 +183,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         JSONObject payloadJSON = new JSONObject();
         payloadJSON.put("tenantCode", request.getTenantCode());
         payloadJSON.put("menuCode", request.getMenuCode());
-        mqttService.sendMsgByTopic(request.getTenantCode(), MQTTConfig.TOPIC_PREPARE_DISPATCH_MENU, payloadJSON.toJSONString());
+        mqttService.sendConsoleMsgByTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_MENU, payloadJSON.toJSONString());
 
         return langTuoResult;
     }

@@ -2,6 +2,7 @@ package com.langtuo.teamachine.mqtt.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -40,6 +41,18 @@ import java.util.*;
  * Created by alvin on 17-3-29.
  */
 public class MQTTUtils {
+    public static String getConsoleTopic(String subTopic) {
+        return MQTTConfig.CONSOLE_PARENT_TOPIC + MQTTConfig.TOPIC_SEPERATOR + subTopic;
+    }
+
+    public static String getMachineTopic(String tenantCode, String subTopic) {
+        return tenantCode + MQTTConfig.MACHINE_PARENT_TOPIC_POSTFIX + MQTTConfig.TOPIC_SEPERATOR + subTopic;
+    }
+
+    public static String getMachineP2PTopic(String tenantCode, String machineCode) {
+        return tenantCode + MQTTConfig.MACHINE_PARENT_P2P_TOPIC_POSTFIX + MQTTConfig.TOPIC_SEPERATOR + machineCode;
+    }
+
     public static Properties loadProperties() {
         Properties properties = new Properties();
         try {

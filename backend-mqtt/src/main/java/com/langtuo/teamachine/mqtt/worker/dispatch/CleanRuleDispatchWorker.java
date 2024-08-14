@@ -4,7 +4,6 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
-import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
@@ -79,10 +78,10 @@ public class CleanRuleDispatchWorker implements Runnable {
 
         MQTTService mqttService = getMQTTService();
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.TOPIC_DISPATCH_CLEAN_RULE);
+        jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_CLEAN_RULE);
         jsonMsg.put(SEND_KEY_CLEAN_RULE, dispatchCont);
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMsgByTopic(tenantCode, MQTTConfig.TOPIC_DISPATCH_CLEAN_RULE, jsonMsg.toJSONString());
+            mqttService.sendMachineMsg(tenantCode, MQTTConfig.MACHINE_TOPIC_DISPATCH_CLEAN_RULE, jsonMsg.toJSONString());
         });
     }
 

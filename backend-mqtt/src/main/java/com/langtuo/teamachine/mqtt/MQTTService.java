@@ -3,6 +3,7 @@ package com.langtuo.teamachine.mqtt;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Consume;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
+import com.langtuo.teamachine.mqtt.util.MQTTUtils;
 import com.langtuo.teamachine.mqtt.worker.dispatch.AccuracyDispatchWorker;
 import com.langtuo.teamachine.mqtt.worker.dispatch.MenuDispatchWorker;
 import com.langtuo.teamachine.mqtt.worker.dispatch.WarningRuleDispatchWorker;
@@ -36,25 +37,36 @@ public class MQTTService implements InitializingBean {
         }
     }
 
-    public void sendMsgByTopic(String tenantCode, String topic, String payload) {
+    public void sendConsoleMsgByTopic(String topic, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(tenantCode + MQTTConfig.PARENT_TOPIC_POSTFIX + MQTTConfig.TOPIC_SEPERATOR + topic, message);
+                mqttClient.publish(MQTTUtils.getConsoleTopic(topic), message);
             } catch (MqttException e) {
                 log.error("send msg by topic error: " + e.getMessage(), e);
             }
         });
     }
 
-    public void sendMsgByP2P(String tenantCode, String clientId, String payload) {
+    public void sendMachineMsg(String tenantCode, String topic, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
-            String p2pTopic = tenantCode + MQTTConfig.PARENT_P2P_TOPIC_POSTFIX + MQTTConfig.TOPIC_SEPERATOR + clientId;
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MQTTConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(p2pTopic, message);
+                mqttClient.publish(MQTTUtils.getMachineTopic(tenantCode, topic), message);
+            } catch (MqttException e) {
+                log.error("send msg by p2p error: " + e.getMessage(), e);
+            }
+        });
+    }
+
+    public void sendMachineMsgByP2P(String tenantCode, String machineCode, String payload) {
+        ExeService4Publish.getExecutorService().submit(() -> {
+            MqttMessage message = new MqttMessage(payload.getBytes());
+            message.setQos(MQTTConfig.QOS_LEVEL);
+            try {
+                mqttClient.publish(MQTTUtils.getMachineP2PTopic(tenantCode, machineCode), message);
             } catch (MqttException e) {
                 log.error("send msg by p2p error: " + e.getMessage(), e);
             }
@@ -72,6 +84,7 @@ public class MQTTService implements InitializingBean {
         mqttClient.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
+                log.info("$$$$$ mqtt connnect success: " + serverURI);
                 // 客户端连接成功后就需要尽快订阅需要的 topic
                 try {
                     mqttClient.subscribe(MQTTConfig.TOPIC_FILTERS, MQTTConfig.QOS);
@@ -82,7 +95,7 @@ public class MQTTService implements InitializingBean {
 
             @Override
             public void connectionLost(Throwable throwable) {
-                log.error("mqtt connection lost: " + throwable.getMessage(), throwable);
+                // log.error("mqtt connection lost: " + throwable.getMessage(), throwable);
             }
 
             @Override
@@ -107,11 +120,11 @@ public class MQTTService implements InitializingBean {
         }
         log.info("received msg, topic=" + topic + ", payload=" + payload);
 
-        if (MQTTConfig.TOPIC_PREPARE_DISPATCH_ACCURACY.equals(topic)) {
+        if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_ACCURACY).equals(topic)) {
             ExeService4Consume.getExeService().submit(new AccuracyDispatchWorker(payload));
-        } else if (MQTTConfig.TOPIC_PREPARE_DISPATCH_MENU.equals(topic)) {
+        } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_MENU).equals(topic)) {
             ExeService4Consume.getExeService().submit(new MenuDispatchWorker(payload));
-        } else if (MQTTConfig.TOPIC_PREPARE_DISPATCH_WARNING_RULE.equals(topic)) {
+        } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE).equals(topic)) {
             ExeService4Consume.getExeService().submit(new WarningRuleDispatchWorker(payload));
         } else {
             log.info("match worker error, topic=" + topic);

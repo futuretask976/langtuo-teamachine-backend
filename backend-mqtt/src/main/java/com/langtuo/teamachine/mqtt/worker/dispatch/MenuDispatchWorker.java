@@ -47,7 +47,7 @@ public class MenuDispatchWorker implements Runnable {
     /**
      * 发送的消息中的key关键字
      */
-    private static final String SEND_KEY_TOPIC = "topic";
+    private static final String SEND_KEY_CHILD_TOPIC = "childTopic";
     private static final String SEND_KEY_MD5_AS_HEX = "md5AsHex";
     private static final String SEND_KEY_OSS_PATH = "ossPath";
 
@@ -102,12 +102,13 @@ public class MenuDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.TOPIC_DISPATCH_MENU);
+        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_MENU);
         jsonMsg.put(SEND_KEY_MD5_AS_HEX, md5AsHex);
         jsonMsg.put(SEND_KEY_OSS_PATH, ossPath);
+        System.out.println(jsonMsg.toJSONString());
         MQTTService mqttService = getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMsgByTopic(tenantCode, MQTTConfig.TOPIC_DISPATCH_MENU, jsonMsg.toJSONString());
+            mqttService.sendMachineMsg(tenantCode, MQTTConfig.MACHINE_TOPIC_DISPATCH_MENU, jsonMsg.toJSONString());
         });
     }
 

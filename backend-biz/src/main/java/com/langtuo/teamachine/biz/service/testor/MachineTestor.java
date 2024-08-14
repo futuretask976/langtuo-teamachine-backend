@@ -2,7 +2,6 @@ package com.langtuo.teamachine.biz.service.testor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.request.device.MachineActivatePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
 
 public class MachineTestor {
     public static void main(String args[]) {
