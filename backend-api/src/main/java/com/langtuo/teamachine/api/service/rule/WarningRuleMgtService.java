@@ -2,6 +2,8 @@ package com.langtuo.teamachine.api.service.rule;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
+import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
+import com.langtuo.teamachine.api.request.rule.WarningRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.WarningRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
@@ -50,4 +52,18 @@ public interface WarningRuleMgtService {
      * @return
      */
     LangTuoResult<Void> delete(String tenantCode, String warningRuleCode);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    LangTuoResult<Void> putDispatch(WarningRuleDispatchPutRequest request);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<WarningRuleDispatchDTO> getDispatchByCode(String tenantCode, String warningRuleCode);
 }

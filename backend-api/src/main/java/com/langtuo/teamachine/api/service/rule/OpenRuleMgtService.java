@@ -2,6 +2,8 @@ package com.langtuo.teamachine.api.service.rule;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.OpenRuleDTO;
+import com.langtuo.teamachine.api.model.rule.OpenRuleDispatchDTO;
+import com.langtuo.teamachine.api.request.rule.OpenRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.OpenRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 
@@ -50,4 +52,18 @@ public interface OpenRuleMgtService {
      * @return
      */
     LangTuoResult<Void> delete(String tenantCode, String openRuleCode);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    LangTuoResult<Void> putDispatch(OpenRuleDispatchPutRequest request);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<OpenRuleDispatchDTO> getDispatchByCode(String tenantCode, String cleanRuleCode);
 }

@@ -4,13 +4,16 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.ToppingDTO;
+import com.langtuo.teamachine.api.model.rule.OpenRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.OpenRuleDTO;
 import com.langtuo.teamachine.api.model.rule.OpenRuleToppingDTO;
+import com.langtuo.teamachine.api.request.rule.OpenRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.OpenRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.rule.OpenRuleMgtService;
 import com.langtuo.teamachine.dao.accessor.rule.*;
+import com.langtuo.teamachine.dao.po.rule.OpenRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.OpenRuleToppingPO;
 import com.langtuo.teamachine.dao.po.rule.OpenRulePO;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +36,9 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
 
     @Resource
     private OpenRuleToppingAccessor openRuleToppingAccessor;
+
+    @Resource
+    private OpenRuleDispatchAccessor openRuleDispatchAccessor;
 
     @Resource
     private ToppingMgtService toppingMgtService;
@@ -151,6 +157,51 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
         return langTuoResult;
     }
 
+    @Override
+    public LangTuoResult<Void> putDispatch(OpenRuleDispatchPutRequest request) {
+        if (request == null) {
+            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        List<OpenRuleDispatchPO> poList = convert(request);
+        LangTuoResult<Void> langTuoResult = null;
+        try {
+            int deleted = openRuleDispatchAccessor.delete(request.getTenantCode(),
+                    request.getOpenRuleCode());
+            poList.forEach(po -> {
+                openRuleDispatchAccessor.insert(po);
+            });
+
+            langTuoResult = LangTuoResult.success();
+        } catch (Exception e) {
+            log.error("putDispatch error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<OpenRuleDispatchDTO> getDispatchByCode(String tenantCode, String openRuleCode) {
+        LangTuoResult<OpenRuleDispatchDTO> langTuoResult = null;
+        try {
+            OpenRuleDispatchDTO dto = new OpenRuleDispatchDTO();
+            dto.setOpenRuleCode(openRuleCode);
+
+            List<OpenRuleDispatchPO> poList = openRuleDispatchAccessor.selectList(tenantCode, openRuleCode);
+            if (!CollectionUtils.isEmpty(poList)) {
+                dto.setShopGroupCodeList(poList.stream()
+                        .map(po -> po.getShopGroupCode())
+                        .collect(Collectors.toList()));
+            }
+
+            langTuoResult = LangTuoResult.success(dto);
+        } catch (Exception e) {
+            log.error("getDispatchByOpenRuleCode error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+        }
+        return langTuoResult;
+    }
+
     private List<OpenRuleDTO> convertToOpenRuleDTO(List<OpenRulePO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
@@ -240,5 +291,19 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
                     return po;
                 }).collect(Collectors.toList());
         return list;
+    }
+
+    private List<OpenRuleDispatchPO> convert(OpenRuleDispatchPutRequest request) {
+        String tenantCode = request.getTenantCode();
+        String openRuleCode = request.getOpenRuleCode();
+
+        return request.getShopGroupCodeList().stream()
+                .map(shopGroupCode -> {
+                    OpenRuleDispatchPO po = new OpenRuleDispatchPO();
+                    po.setTenantCode(tenantCode);
+                    po.setOpenRuleCode(openRuleCode);
+                    po.setShopGroupCode(shopGroupCode);
+                    return po;
+                }).collect(Collectors.toList());
     }
 }
