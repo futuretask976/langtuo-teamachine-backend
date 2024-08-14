@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.rule.CleanRuleDispatchMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO" id="cleanRuleDispatchPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.rule.OpenRuleDispatchMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.rule.OpenRuleDispatchPO" id="openRuleDispatchPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -14,7 +14,7 @@
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="cleanRuleDispatchPOMap">
+    <select id="selectOne" resultMap="openRuleDispatchPOMap">
         SELECT * FROM open_rule_dispatch
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
@@ -26,7 +26,7 @@
             </if>
     </select>
 
-    <select id="selectList" resultMap="cleanRuleDispatchPOMap">
+    <select id="selectList" resultMap="openRuleDispatchPOMap">
         SELECT * FROM open_rule_dispatch
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
@@ -35,7 +35,7 @@
             </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.OpenRuleDispatchPO">
         INSERT INTO open_rule_dispatch (
             gmt_created
             , gmt_modified
