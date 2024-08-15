@@ -1,5 +1,8 @@
 package com.langtuo.teamachine.biz.service.testor.record;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.langtuo.teamachine.api.request.record.CleanActRecordPutRequest;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.record.CleanActRecordMapper;
 import com.langtuo.teamachine.dao.mapper.record.InvalidActRecordMapper;
@@ -14,39 +17,40 @@ import java.util.List;
 public class CleanActRecordTestor {
     public static void main(String args[]) {
         insert();
-//        select();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         CleanActRecordMapper mapper = sqlSession.getMapper(CleanActRecordMapper.class);
 
-        CleanActRecordPO po = null;
+        CleanActRecordPutRequest request = new CleanActRecordPutRequest();
+        request.setTenantCode("tenant_001");
+        request.setIdempotentMark(String.valueOf(System.currentTimeMillis()));
+        request.setMachineCode("abcd");
+        request.setShopCode("shop_001");
+        request.setShopGroupCode("shopGroup_02");
+        request.setCleanStartTime(new Date());
+        request.setCleanEndTime(new Date());
+        request.setToppingCode("topping_001");
+        request.setPipelineNum(1);
+        request.setCleanType(1);
+        request.setCleanRuleCode("123");
+        request.setOpenRuleCode("456");
+        request.setCloseRuleCode("789");
+        request.setCleanContent(1);
+        request.setWashSec(10);
+        request.setSoakMin(20);
+        request.setFlushSec(30);
+        request.setFlushIntervalMin(40);
+        mapper.insert(convert(request));
 
-        po = new CleanActRecordPO();
-        po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap(){{
-            put("abc", "def");
-        }});
-        po.setIdempotentMark("1234");
-        po.setMachineCode("abcd");
-        po.setShopCode("shop_001");
-        po.setShopGroupCode("shopGroup_02");
-        po.setCleanStartTime(new Date());
-        po.setCleanEndTime(new Date());
-        po.setToppingCode("topping_001");
-        po.setPipelineNum(1);
-        po.setCleanType(1);
-        po.setCleanRuleCode("123");
-        po.setOpenRuleCode("456");
-        po.setCloseRuleCode("789");
-        po.setCleanContent(1);
-        po.setWashSec(10);
-        po.setSoakMin(20);
-        po.setFlushSec(30);
-        po.setFlushIntervalMin(40);
-        int inserted = mapper.insert(po);
-        System.out.println("inserted=" + inserted);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(request);
+
+        JSONObject jsonMsg = new JSONObject();
+        jsonMsg.put("childTopic", "cleanActRecord");
+        jsonMsg.put("list", jsonArray);
+        System.out.println(jsonMsg.toJSONString());
 
         sqlSession.commit();
         sqlSession.close();
@@ -68,33 +72,30 @@ public class CleanActRecordTestor {
         sqlSession.close();
     }
 
-//    public static void testBySpring() {
-//        ApplicationContext context = startBySpring();
-//
-//        AdminMapper mapper =
-//                (AdminMapper) context.getBean(AdminMapper.class);
-//        AdminPOjo AdminPOjo = mapper.getOne("machine_001");
-//        System.out.printf("DaoDemo#testBySpring hotelGuestPojo=%s\n", AdminPOjo);
-//
-//        stopBySpring(context);
-//    }
-//
-//    public static ApplicationContext startBySpring() {
-//        ApplicationContext context = new ClassPathXmlApplicationContext("spring/spring-config.xml");
-//        if (context == null) {
-//            throw new RuntimeException("DaoDemo#startBySpring初始化Spring失败");
-//        }
-//        return context;
-//    }
-//
-//    public static void stopBySpring(ApplicationContext context) {
-//        if (context == null) {
-//            return;
-//        }
-//        if (context instanceof ClassPathXmlApplicationContext) {
-//            ((ClassPathXmlApplicationContext) context).close();
-//        } else {
-//            System.out.println("DaoDemo#stopBySpring上下文参数异常");
-//        }
-//    }
+    private static CleanActRecordPO convert(CleanActRecordPutRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        CleanActRecordPO po = new CleanActRecordPO();
+        po.setExtraInfo(request.getExtraInfo());
+        po.setIdempotentMark(request.getIdempotentMark());
+        po.setMachineCode(request.getMachineCode());
+        po.setShopCode(request.getShopCode());
+        po.setShopGroupCode(request.getShopGroupCode());
+        po.setCleanStartTime(request.getCleanStartTime());
+        po.setCleanEndTime(request.getCleanEndTime());
+        po.setToppingCode(request.getToppingCode());
+        po.setPipelineNum(request.getPipelineNum());
+        po.setCleanType(request.getCleanType());
+        po.setCleanRuleCode(request.getCleanRuleCode());
+        po.setOpenRuleCode(request.getOpenRuleCode());
+        po.setCloseRuleCode(request.getCloseRuleCode());
+        po.setCleanContent(request.getCleanContent());
+        po.setWashSec(request.getWashSec());
+        po.setSoakMin(request.getSoakMin());
+        po.setFlushSec(request.getFlushSec());
+        po.setFlushIntervalMin(request.getFlushIntervalMin());
+        return po;
+    }
 }

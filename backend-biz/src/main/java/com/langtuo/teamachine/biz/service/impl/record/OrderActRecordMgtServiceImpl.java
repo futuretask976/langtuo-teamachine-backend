@@ -147,11 +147,11 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
 
         List<OrderSpecItemActRecordPO> specItemActRecordList = orderSpecItemActRecordAccessor.selectList(
                 po.getTenantCode(), po.getIdempotentMark());
-        dto.setOrderSpecItemActRecordList(convertToOrderSpecItemActRecordDTO(specItemActRecordList));
+        dto.setSpecItemList(convertToOrderSpecItemActRecordDTO(specItemActRecordList));
 
         List<OrderToppingActRecordPO> toppingActRecordList = orderToppingActRecordAccessor.selectList(
                 po.getTenantCode(), po.getIdempotentMark());
-        dto.setOrderToppingActRecordList(convertToOrderToppingActRecordDTO((toppingActRecordList)));
+        dto.setToppingList(convertToOrderToppingActRecordDTO((toppingActRecordList)));
 
         return dto;
     }

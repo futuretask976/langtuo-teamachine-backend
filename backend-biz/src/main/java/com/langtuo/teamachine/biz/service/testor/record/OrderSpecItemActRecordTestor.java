@@ -1,13 +1,21 @@
 package com.langtuo.teamachine.biz.service.testor.record;
 
+import com.google.common.collect.Lists;
+import com.langtuo.teamachine.api.request.record.OrderActRecordPutRequest;
+import com.langtuo.teamachine.api.request.record.OrderSpecItemActRecordPutRequest;
+import com.langtuo.teamachine.api.request.record.OrderToppingActRecordPutRequest;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.record.InvalidActRecordMapper;
 import com.langtuo.teamachine.dao.mapper.record.OrderSpecItemActRecordMapper;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderSpecItemActRecordTestor {
     public static void main(String args[]) {
@@ -19,24 +27,53 @@ public class OrderSpecItemActRecordTestor {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         OrderSpecItemActRecordMapper mapper = sqlSession.getMapper(OrderSpecItemActRecordMapper.class);
 
-        OrderSpecItemActRecordPO po = null;
-        int inserted = 0;
+        OrderActRecordPutRequest request = new OrderActRecordPutRequest();
+        request.setTenantCode("tenant_001");
+        request.setExtraInfo(new HashMap(){{
+            put("abc", "def");
+        }});
+        request.setIdempotentMark(String.valueOf(System.currentTimeMillis()));
+        request.setMachineCode("abcd");
+        request.setShopCode("shop_001");
+        request.setShopGroupCode("shopGroup_02");
+        request.setOrderGmtCreated(new Date());
+        request.setOuterOrderId("111111");
+        request.setState(0);
 
-        po = new OrderSpecItemActRecordPO();
-        po.setTenantCode("tenant_001");
-        po.setIdempotentMark("1234");
-        po.setSpecCode("SPEC_SWEET");
-        po.setSpecItemCode("SPEC_ITEM_7_SWEET");
-        inserted = mapper.insert(po);
-        System.out.println("inserted=" + inserted);
+        List<OrderSpecItemActRecordPutRequest> specItemList = Lists.newArrayList();
+        OrderSpecItemActRecordPutRequest specItemReq1 = new OrderSpecItemActRecordPutRequest();
+        specItemReq1.setSpecCode("SPEC_SWEET");
+        specItemReq1.setSpecName("甜度");
+        specItemReq1.setSpecItemCode("SPEC_ITEM_7_SWEET");
+        specItemReq1.setSpecItemName("7分糖");
+        specItemList.add(specItemReq1);
+        OrderSpecItemActRecordPutRequest specItemReq2 = new OrderSpecItemActRecordPutRequest();
+        specItemReq2.setSpecCode("SPEC_BEIXING");
+        specItemReq2.setSpecName("杯型");
+        specItemReq2.setSpecItemCode("SPEC_ITEM_BIG");
+        specItemReq2.setSpecItemName("大杯");
+        specItemList.add(specItemReq2);
+        request.setSpecItemList(specItemList);
 
-        po = new OrderSpecItemActRecordPO();
-        po.setTenantCode("tenant_001");
-        po.setIdempotentMark("1234");
-        po.setSpecCode("SPEC_BEIXING");
-        po.setSpecItemCode("SPEC_ITEM_BIG");
-        inserted = mapper.insert(po);
-        System.out.println("inserted=" + inserted);
+        List<OrderToppingActRecordPutRequest> toppingList = Lists.newArrayList();
+        OrderToppingActRecordPutRequest toppingReq1 = new OrderToppingActRecordPutRequest();
+        toppingReq1.setStepIndex(1);
+        toppingReq1.setToppingCode("topping_002");
+        toppingReq1.setToppingName("物料2");
+        toppingReq1.setActualAmount(20);
+        toppingList.add(toppingReq1);
+        OrderToppingActRecordPutRequest toppingReq2 = new OrderToppingActRecordPutRequest();
+        toppingReq2.setStepIndex(1);
+        toppingReq2.setToppingCode("topping_003");
+        toppingReq1.setToppingName("物料3");
+        toppingReq2.setActualAmount(30);
+        toppingList.add(toppingReq2);
+        request.setToppingList(toppingList);
+
+        List<OrderSpecItemActRecordPO> poList = convertToSpecItemActRecordPO(request);
+        for (OrderSpecItemActRecordPO po : poList) {
+            mapper.insert(po);
+        }
 
         sqlSession.commit();
         sqlSession.close();
@@ -58,33 +95,20 @@ public class OrderSpecItemActRecordTestor {
         sqlSession.close();
     }
 
-//    public static void testBySpring() {
-//        ApplicationContext context = startBySpring();
-//
-//        AdminMapper mapper =
-//                (AdminMapper) context.getBean(AdminMapper.class);
-//        AdminPOjo AdminPOjo = mapper.getOne("machine_001");
-//        System.out.printf("DaoDemo#testBySpring hotelGuestPojo=%s\n", AdminPOjo);
-//
-//        stopBySpring(context);
-//    }
-//
-//    public static ApplicationContext startBySpring() {
-//        ApplicationContext context = new ClassPathXmlApplicationContext("spring/spring-config.xml");
-//        if (context == null) {
-//            throw new RuntimeException("DaoDemo#startBySpring初始化Spring失败");
-//        }
-//        return context;
-//    }
-//
-//    public static void stopBySpring(ApplicationContext context) {
-//        if (context == null) {
-//            return;
-//        }
-//        if (context instanceof ClassPathXmlApplicationContext) {
-//            ((ClassPathXmlApplicationContext) context).close();
-//        } else {
-//            System.out.println("DaoDemo#stopBySpring上下文参数异常");
-//        }
-//    }
+    private static List<OrderSpecItemActRecordPO> convertToSpecItemActRecordPO(OrderActRecordPutRequest request) {
+        if (request == null || CollectionUtils.isEmpty(request.getSpecItemList())) {
+            return null;
+        }
+
+        List<OrderSpecItemActRecordPO> specItemList = request.getSpecItemList().stream()
+                .map(orderSpecItemActRecordPutRequest -> {
+                    OrderSpecItemActRecordPO po = new OrderSpecItemActRecordPO();
+                    po.setTenantCode(request.getTenantCode());
+                    po.setIdempotentMark("1723700246767");
+                    po.setSpecCode(orderSpecItemActRecordPutRequest.getSpecCode());
+                    po.setSpecItemCode(orderSpecItemActRecordPutRequest.getSpecItemCode());
+                    return po;
+                }).collect(Collectors.toList());
+        return specItemList;
+    }
 }

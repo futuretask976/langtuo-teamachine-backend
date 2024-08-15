@@ -1,5 +1,7 @@
-package com.langtuo.teamachine.api.model.record;
+package com.langtuo.teamachine.api.request.record;
 
+import com.langtuo.teamachine.api.model.record.OrderSpecItemActRecordDTO;
+import com.langtuo.teamachine.api.model.record.OrderToppingActRecordDTO;
 import lombok.Data;
 
 import java.util.Date;
@@ -7,16 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class OrderActRecordDTO {
+public class OrderActRecordPutRequest {
     /**
-     * 数据表记录插入时间
+     * 租户编码
      */
-    private Date gmtCreated;
-
-    /**
-     * 数据表记录最近修改时间
-     */
-    private Date gmtModified;
+    private String tenantCode;
 
     /**
      * 额外信息
@@ -71,10 +68,10 @@ public class OrderActRecordDTO {
     /**
      * 规格项列表
      */
-    private List<OrderSpecItemActRecordDTO> specItemList;
+    private List<OrderSpecItemActRecordPutRequest> specItemList;
 
     /**
      * 物料列表
      */
-    private List<OrderToppingActRecordDTO> toppingList;
+    private List<OrderToppingActRecordPutRequest> toppingList;
 }

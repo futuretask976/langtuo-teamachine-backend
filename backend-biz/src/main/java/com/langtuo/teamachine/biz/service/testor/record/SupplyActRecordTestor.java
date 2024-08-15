@@ -1,5 +1,8 @@
 package com.langtuo.teamachine.biz.service.testor.record;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.langtuo.teamachine.api.request.record.SupplyActRecordPutRequest;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.record.SupplyActRecordMapper;
 import com.langtuo.teamachine.dao.po.record.SupplyActRecordPO;
@@ -12,40 +15,32 @@ import java.util.List;
 public class SupplyActRecordTestor {
     public static void main(String args[]) {
         insert();
-//        select();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
         SupplyActRecordMapper mapper = sqlSession.getMapper(SupplyActRecordMapper.class);
 
-        SupplyActRecordPO po = null;
+        SupplyActRecordPutRequest request = new SupplyActRecordPutRequest();
+        request.setTenantCode("tenant_001");
+        request.setExtraInfo(new HashMap<String, String>(){{}});
+        request.setIdempotentMark(String.valueOf(System.currentTimeMillis()));
+        request.setMachineCode("1234");
+        request.setShopGroupCode("shopGroup_02");
+        request.setShopCode("shop_001");
+        request.setSupplyTime(new Date());
+        request.setToppingCode("topping_001");
+        request.setPipelineNum(1);
+        request.setSupplyAmount(10);
+        // mapper.insert(convert(request));
 
-        po = new SupplyActRecordPO();
-        po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{}});
-        po.setIdempotentMark("1111");
-        po.setMachineCode("1234");
-        po.setShopGroupCode("shopGroup_02");
-        po.setShopCode("shop_001");
-        po.setSupplyTime(new Date());
-        po.setToppingCode("topping_001");
-        po.setPipelineNum(1);
-        po.setSupplyAmount(10);
-        mapper.insert(po);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(request);
 
-        po = new SupplyActRecordPO();
-        po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{}});
-        po.setIdempotentMark("2222");
-        po.setMachineCode("1234");
-        po.setShopGroupCode("shopGroup_03");
-        po.setShopCode("shop_001");
-        po.setSupplyTime(new Date());
-        po.setToppingCode("topping_002");
-        po.setPipelineNum(2);
-        po.setSupplyAmount(22);
-        mapper.insert(po);
+        JSONObject jsonMsg = new JSONObject();
+        jsonMsg.put("childTopic", "supplyActRecord");
+        jsonMsg.put("list", jsonArray);
+        System.out.println(jsonMsg.toJSONString());
 
         sqlSession.commit();
         sqlSession.close();
@@ -67,33 +62,22 @@ public class SupplyActRecordTestor {
         sqlSession.close();
     }
 
-//    public static void testBySpring() {
-//        ApplicationContext context = startBySpring();
-//
-//        AdminMapper mapper =
-//                (AdminMapper) context.getBean(AdminMapper.class);
-//        AdminPOjo AdminPOjo = mapper.getOne("machine_001");
-//        System.out.printf("DaoDemo#testBySpring hotelGuestPojo=%s\n", AdminPOjo);
-//
-//        stopBySpring(context);
-//    }
-//
-//    public static ApplicationContext startBySpring() {
-//        ApplicationContext context = new ClassPathXmlApplicationContext("spring/spring-config.xml");
-//        if (context == null) {
-//            throw new RuntimeException("DaoDemo#startBySpring初始化Spring失败");
-//        }
-//        return context;
-//    }
-//
-//    public static void stopBySpring(ApplicationContext context) {
-//        if (context == null) {
-//            return;
-//        }
-//        if (context instanceof ClassPathXmlApplicationContext) {
-//            ((ClassPathXmlApplicationContext) context).close();
-//        } else {
-//            System.out.println("DaoDemo#stopBySpring上下文参数异常");
-//        }
-//    }
+    private static SupplyActRecordPO convert(SupplyActRecordPutRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        SupplyActRecordPO po = new SupplyActRecordPO();
+        po.setTenantCode(request.getTenantCode());
+        po.setExtraInfo(request.getExtraInfo());
+        po.setIdempotentMark(request.getIdempotentMark());
+        po.setMachineCode(request.getMachineCode());
+        po.setShopCode(request.getShopCode());
+        po.setShopGroupCode(request.getShopGroupCode());
+        po.setSupplyTime(request.getSupplyTime());
+        po.setToppingCode(request.getToppingCode());
+        po.setPipelineNum(request.getPipelineNum());
+        po.setSupplyAmount(request.getSupplyAmount());
+        return po;
+    }
 }
