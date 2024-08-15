@@ -1,16 +1,12 @@
 package com.langtuo.teamachine.web.controller;
 
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
-import com.langtuo.teamachine.mqtt.MQTTService;
-import com.langtuo.teamachine.mqtt.config.MQTTConfig;
+import com.langtuo.teamachine.mqtt.MqttService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -20,7 +16,7 @@ import javax.annotation.Resource;
 @Slf4j
 public class MQTTController {
     @Resource
-    private MQTTService mqttService;
+    private MqttService mqttService;
 
     /**
      * url: http://localhost:8080/teamachine/mqtt/test

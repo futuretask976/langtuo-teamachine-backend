@@ -1,24 +1,26 @@
 package com.langtuo.teamachine.mqtt;
 
-import com.langtuo.teamachine.mqtt.concurrent.ExeService4Consume;
-import com.langtuo.teamachine.mqtt.config.MQTTConfig;
+import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
 import com.langtuo.teamachine.mqtt.util.MQTTUtils;
-import com.langtuo.teamachine.mqtt.worker.dispatch.*;
+import com.langtuo.teamachine.mqtt.consume.MqttMsgConsumer;
 import com.langtuo.teamachine.mqtt.wrapper.ConnectionOptionWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 @Component
 @Slf4j
-public class MQTTService implements InitializingBean {
+public class MqttService implements InitializingBean {
+    @Resource
+    private MqttMsgConsumer mqttMsgConsumer;
+
     /**
      * MQTT客户端
      */
@@ -27,7 +29,7 @@ public class MQTTService implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws MqttException, NoSuchAlgorithmException, InvalidKeyException {
         if (mqttClient == null) {
-            synchronized (MQTTService.class) {
+            synchronized (MqttService.class) {
                 if (mqttClient == null) {
                     doInitMqttClient();
                 }
@@ -38,7 +40,7 @@ public class MQTTService implements InitializingBean {
     public void sendConsoleMsgByTopic(String topic, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
             MqttMessage message = new MqttMessage(payload.getBytes());
-            message.setQos(MQTTConfig.QOS_LEVEL);
+            message.setQos(MqttConfig.QOS_LEVEL);
             try {
                 mqttClient.publish(MQTTUtils.getConsoleTopic(topic), message);
             } catch (MqttException e) {
@@ -50,7 +52,7 @@ public class MQTTService implements InitializingBean {
     public void sendMachineMsg(String tenantCode, String topic, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
             MqttMessage message = new MqttMessage(payload.getBytes());
-            message.setQos(MQTTConfig.QOS_LEVEL);
+            message.setQos(MqttConfig.QOS_LEVEL);
             try {
                 mqttClient.publish(MQTTUtils.getMachineTopic(tenantCode, topic), message);
             } catch (MqttException e) {
@@ -62,7 +64,7 @@ public class MQTTService implements InitializingBean {
     public void sendMachineMsgByP2P(String tenantCode, String machineCode, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
             MqttMessage message = new MqttMessage(payload.getBytes());
-            message.setQos(MQTTConfig.QOS_LEVEL);
+            message.setQos(MqttConfig.QOS_LEVEL);
             try {
                 mqttClient.publish(MQTTUtils.getMachineP2PTopic(tenantCode, machineCode), message);
             } catch (MqttException e) {
@@ -73,10 +75,10 @@ public class MQTTService implements InitializingBean {
 
     private void doInitMqttClient() throws MqttException, NoSuchAlgorithmException, InvalidKeyException {
         MemoryPersistence memoryPersistence = new MemoryPersistence();
-        mqttClient = new MqttClient("tcp://" + MQTTConfig.ENDPOINT + ":1883",
-                MQTTConfig.CLIENT_ID, memoryPersistence);
+        mqttClient = new MqttClient("tcp://" + MqttConfig.ENDPOINT + ":1883",
+                MqttConfig.CLIENT_ID, memoryPersistence);
         // 客户端设置好发送超时时间，防止无限阻塞
-        mqttClient.setTimeToWait(MQTTConfig.TIME_TO_WAIT);
+        mqttClient.setTimeToWait(MqttConfig.TIME_TO_WAIT);
 
         // 设置订阅
         mqttClient.setCallback(new MqttCallbackExtended() {
@@ -85,7 +87,7 @@ public class MQTTService implements InitializingBean {
                 log.info("$$$$$ mqtt connnect success: " + serverURI);
                 // 客户端连接成功后就需要尽快订阅需要的 topic
                 try {
-                    mqttClient.subscribe(MQTTConfig.TOPIC_FILTERS, MQTTConfig.QOS);
+                    mqttClient.subscribe(MqttConfig.TOPIC_FILTERS, MqttConfig.QOS);
                 } catch (MqttException e) {
                     log.error("mqtt subscribe error: " + e.getMessage(), e);
                 }
@@ -97,8 +99,8 @@ public class MQTTService implements InitializingBean {
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                consume(topic, new String(mqttMessage.getPayload()));
+            public void messageArrived(String topic, MqttMessage mqttMessage) {
+                mqttMsgConsumer.consume(topic, new String(mqttMessage.getPayload()));
             }
 
             @Override
@@ -107,29 +109,7 @@ public class MQTTService implements InitializingBean {
             }
         });
         ConnectionOptionWrapper connectionOptionWrapper = new ConnectionOptionWrapper(
-                MQTTConfig.INSTANCE_ID, MQTTConfig.ACCESS_KEY, MQTTConfig.ACCESS_KEY_SECRET, MQTTConfig.CLIENT_ID);
+                MqttConfig.INSTANCE_ID, MqttConfig.ACCESS_KEY, MqttConfig.ACCESS_KEY_SECRET, MqttConfig.CLIENT_ID);
         mqttClient.connect(connectionOptionWrapper.getMqttConnectOptions());
-    }
-
-    public void consume(String topic, String payload) {
-        if (StringUtils.isBlank(topic) || StringUtils.isBlank(payload)) {
-            log.info("receive msg error, topic=" + topic + ", payload=" + payload);
-            return;
-        }
-        log.info("received msg, topic=" + topic + ", payload=" + payload);
-
-        if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_ACCURACY).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new AccuracyDispatchWorker(payload));
-        } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_MENU).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new MenuDispatchWorker(payload));
-        } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new OpenRuleDispatchWorker(payload));
-        } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new CleanRuleDispatchWorker(payload));
-        } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new WarningRuleDispatchWorker(payload));
-        } else {
-            log.info("match worker error, topic=" + topic);
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.mqtt.worker.dispatch;
+package com.langtuo.teamachine.mqtt.consume.worker;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
@@ -17,9 +17,9 @@ import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
-import com.langtuo.teamachine.mqtt.MQTTService;
-import com.langtuo.teamachine.mqtt.config.MQTTConfig;
-import com.langtuo.teamachine.mqtt.util.IOUtils;
+import com.langtuo.teamachine.mqtt.MqttService;
+import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.util.MQTTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -79,7 +79,7 @@ public class MenuDispatchWorker implements Runnable {
             return;
         }
         File outputFile = new File("dispatch/output.json");
-        boolean wrote = IOUtils.writeStrToFile(dispatchCont, outputFile);
+        boolean wrote = MQTTUtils.writeStrToFile(dispatchCont, outputFile);
         if (!wrote) {
             log.info("write file error, stop worker");
             return;
@@ -102,13 +102,13 @@ public class MenuDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_MENU);
+        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MqttConfig.MACHINE_TOPIC_DISPATCH_MENU);
         jsonMsg.put(SEND_KEY_MD5_AS_HEX, md5AsHex);
         jsonMsg.put(SEND_KEY_OSS_PATH, ossPath);
         System.out.println(jsonMsg.toJSONString());
-        MQTTService mqttService = getMQTTService();
+        MqttService mqttService = getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMachineMsg(tenantCode, MQTTConfig.MACHINE_TOPIC_DISPATCH_MENU, jsonMsg.toJSONString());
+            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MENU, jsonMsg.toJSONString());
         });
     }
 
@@ -118,9 +118,9 @@ public class MenuDispatchWorker implements Runnable {
         return menuMgtService;
     }
 
-    private MQTTService getMQTTService() {
+    private MqttService getMQTTService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MQTTService mqttService = appContext.getBean(MQTTService.class);
+        MqttService mqttService = appContext.getBean(MqttService.class);
         return mqttService;
     }
 

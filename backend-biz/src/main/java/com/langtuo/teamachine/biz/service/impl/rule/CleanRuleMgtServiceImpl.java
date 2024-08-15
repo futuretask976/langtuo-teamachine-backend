@@ -19,8 +19,8 @@ import com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleExceptPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRulePO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleStepPO;
-import com.langtuo.teamachine.mqtt.MQTTService;
-import com.langtuo.teamachine.mqtt.config.MQTTConfig;
+import com.langtuo.teamachine.mqtt.MqttService;
+import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     private CleanRuleExceptAccessor cleanRuleExceptAccessor;
 
     @Resource
-    private MQTTService mqttService;
+    private MqttService mqttService;
 
     @Override
     public LangTuoResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
@@ -197,7 +197,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         JSONObject payloadJSON = new JSONObject();
         payloadJSON.put("tenantCode", request.getTenantCode());
         payloadJSON.put("cleanRuleCode", request.getCleanRuleCode());
-        mqttService.sendConsoleMsgByTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE, payloadJSON.toJSONString());
+        mqttService.sendConsoleMsgByTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE, payloadJSON.toJSONString());
 
         return langTuoResult;
     }

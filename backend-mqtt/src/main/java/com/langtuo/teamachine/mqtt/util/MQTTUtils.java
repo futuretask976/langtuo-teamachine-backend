@@ -2,8 +2,10 @@ package com.langtuo.teamachine.mqtt.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.mqtt.config.MQTTConfig;
+import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -30,6 +32,8 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.*;
@@ -40,17 +44,18 @@ import java.util.*;
 /**
  * Created by alvin on 17-3-29.
  */
+@Slf4j
 public class MQTTUtils {
     public static String getConsoleTopic(String subTopic) {
-        return MQTTConfig.CONSOLE_PARENT_TOPIC + MQTTConfig.TOPIC_SEPERATOR + subTopic;
+        return MqttConfig.CONSOLE_PARENT_TOPIC + MqttConfig.TOPIC_SEPERATOR + subTopic;
     }
 
     public static String getMachineTopic(String tenantCode, String subTopic) {
-        return tenantCode + MQTTConfig.MACHINE_PARENT_TOPIC_POSTFIX + MQTTConfig.TOPIC_SEPERATOR + subTopic;
+        return tenantCode + MqttConfig.MACHINE_PARENT_TOPIC_POSTFIX + MqttConfig.TOPIC_SEPERATOR + subTopic;
     }
 
     public static String getMachineP2PTopic(String tenantCode, String machineCode) {
-        return tenantCode + MQTTConfig.MACHINE_PARENT_P2P_TOPIC_POSTFIX + MQTTConfig.TOPIC_SEPERATOR + machineCode;
+        return tenantCode + MqttConfig.MACHINE_PARENT_P2P_TOPIC_POSTFIX + MqttConfig.TOPIC_SEPERATOR + machineCode;
     }
 
     public static Properties loadProperties() {
@@ -216,9 +221,76 @@ public class MQTTUtils {
         return jsonResult;
     }
 
-    public static void main(String[] args) {
-        JSONObject object = new JSONObject();
-        object.put("order", "true");//设置顺序发送的标记
-        System.out.println(object.toJSONString());
+    public static boolean removeFile(File root) {
+        if (root == null || !root.exists()) {
+            return true;
+        }
+
+        boolean result = false;
+        if (root.isFile()) {
+            result = root.delete();
+        } else {
+            File[] files = root.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
+                result = removeFile(file);
+            }
+            if (result) {
+                result = root.delete();
+            }
+        }
+        return result;
+    }
+
+    public static boolean writeStrToFile(String outputCont, File outputFile) {
+        if (StringUtils.isBlank(outputCont) || outputCont == null) {
+            return false;
+        }
+
+        boolean removed = removeFile(outputFile.getParentFile());
+        if (!removed) {
+            return false;
+        }
+
+        boolean maked = outputFile.getParentFile().mkdirs();
+        if (!maked) {
+            return false;
+        }
+
+        try {
+            if (outputFile.exists()) {
+                boolean deleted = outputFile.delete();
+                if (!deleted) {
+                    return false;
+                }
+            } else {
+                boolean created = outputFile.createNewFile();
+                if (!created) {
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            log.error("create file error: " + e.getMessage(), e);
+            return false;
+        }
+
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(outputFile);
+            writer.write(outputCont);
+            writer.flush();
+            return true;
+        } catch (IOException e) {
+            log.error("write file error: " + e.getMessage(), e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    log.error("close writer error: " + e.getMessage(), e);
+                }
+            }
+        }
+        return false;
     }
 }

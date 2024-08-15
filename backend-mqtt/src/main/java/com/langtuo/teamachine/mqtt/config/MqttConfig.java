@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.mqtt.config;
 
-public class MQTTConfig {
+public class MqttConfig {
     /**
      * MQ4IOT 实例 ID，购买后控制台获取
      */
@@ -98,13 +98,13 @@ public class MQTTConfig {
     };
 
     public static final int[] QOS = new int[]{
-            MQTTConfig.QOS_LEVEL,
-            MQTTConfig.QOS_LEVEL,
-            MQTTConfig.QOS_LEVEL,
-            MQTTConfig.QOS_LEVEL,
-            MQTTConfig.QOS_LEVEL,
-            MQTTConfig.QOS_LEVEL,
-            MQTTConfig.QOS_LEVEL,
-            MQTTConfig.QOS_LEVEL
+            MqttConfig.QOS_LEVEL,
+            MqttConfig.QOS_LEVEL,
+            MqttConfig.QOS_LEVEL,
+            MqttConfig.QOS_LEVEL,
+            MqttConfig.QOS_LEVEL,
+            MqttConfig.QOS_LEVEL,
+            MqttConfig.QOS_LEVEL,
+            MqttConfig.QOS_LEVEL
     };
 }

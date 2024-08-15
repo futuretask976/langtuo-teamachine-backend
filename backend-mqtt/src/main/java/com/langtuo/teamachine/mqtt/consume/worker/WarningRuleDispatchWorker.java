@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.mqtt.worker.dispatch;
+package com.langtuo.teamachine.mqtt.consume.worker;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
@@ -10,8 +10,8 @@ import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.rule.OpenRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.mqtt.MQTTService;
-import com.langtuo.teamachine.mqtt.config.MQTTConfig;
+import com.langtuo.teamachine.mqtt.MqttService;
+import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -68,13 +68,13 @@ public class WarningRuleDispatchWorker implements Runnable {
             log.info("machine code list is empty, stop worker");
         }
 
-        MQTTService mqttService = getMQTTService();
+        MqttService mqttService = getMQTTService();
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_WARNING_RULE);
+        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MqttConfig.MACHINE_TOPIC_DISPATCH_WARNING_RULE);
         jsonMsg.put(SEND_KEY_WARNING_RULE, dispatchCont);
         log.info("$$$$$ WarningRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMachineMsg(tenantCode, MQTTConfig.MACHINE_TOPIC_DISPATCH_OPEN_RULE, jsonMsg.toJSONString());
+            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_OPEN_RULE, jsonMsg.toJSONString());
         });
     }
 
@@ -84,9 +84,9 @@ public class WarningRuleDispatchWorker implements Runnable {
         return openRuleMgtService;
     }
 
-    private MQTTService getMQTTService() {
+    private MqttService getMQTTService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MQTTService mqttService = appContext.getBean(MQTTService.class);
+        MqttService mqttService = appContext.getBean(MqttService.class);
         return mqttService;
     }
 

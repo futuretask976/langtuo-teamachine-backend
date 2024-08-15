@@ -17,8 +17,8 @@ import com.langtuo.teamachine.dao.accessor.rule.*;
 import com.langtuo.teamachine.dao.po.rule.OpenRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.OpenRuleToppingPO;
 import com.langtuo.teamachine.dao.po.rule.OpenRulePO;
-import com.langtuo.teamachine.mqtt.MQTTService;
-import com.langtuo.teamachine.mqtt.config.MQTTConfig;
+import com.langtuo.teamachine.mqtt.MqttService;
+import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
     private ToppingMgtService toppingMgtService;
 
     @Resource
-    private MQTTService mqttService;
+    private MqttService mqttService;
 
     @Override
     public LangTuoResult<OpenRuleDTO> getByCode(String tenantCode, String openRuleCode) {
@@ -188,7 +188,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
         JSONObject payloadJSON = new JSONObject();
         payloadJSON.put("tenantCode", request.getTenantCode());
         payloadJSON.put("openRuleCode", request.getOpenRuleCode());
-        mqttService.sendConsoleMsgByTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE, payloadJSON.toJSONString());
+        mqttService.sendConsoleMsgByTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE, payloadJSON.toJSONString());
 
         return langTuoResult;
     }

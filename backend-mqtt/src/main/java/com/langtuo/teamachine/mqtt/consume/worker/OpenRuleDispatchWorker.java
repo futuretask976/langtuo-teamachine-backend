@@ -1,17 +1,17 @@
-package com.langtuo.teamachine.mqtt.worker.dispatch;
+package com.langtuo.teamachine.mqtt.consume.worker;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
-import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
-import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
+import com.langtuo.teamachine.api.model.rule.OpenRuleDTO;
+import com.langtuo.teamachine.api.model.rule.OpenRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
-import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
+import com.langtuo.teamachine.api.service.rule.OpenRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.mqtt.MQTTService;
-import com.langtuo.teamachine.mqtt.config.MQTTConfig;
+import com.langtuo.teamachine.mqtt.MqttService;
+import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -25,18 +25,18 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
 import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Slf4j
-public class CleanRuleDispatchWorker implements Runnable {
+public class OpenRuleDispatchWorker implements Runnable {
     /**
      * 收到的消息中的key关键字
      */
     private static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
-    private static final String RECEIVE_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
+    private static final String RECEIVE_KEY_OPEN_RULE_CODE = "openRuleCode";
 
     /**
      * 发送的消息中的key关键字
      */
     private static final String SEND_KEY_CHILD_TOPIC = "childTopic";
-    private static final String SEND_KEY_CLEAN_RULE = "cleanRule";
+    private static final String SEND_KEY_OPEN_RULE = "openRule";
 
 
     /**
@@ -45,22 +45,22 @@ public class CleanRuleDispatchWorker implements Runnable {
     private String tenantCode;
 
     /**
-     * 清洁规则编码
+     * 开业规则编码
      */
-    private String cleanRuleCode;
+    private String openRuleCode;
 
-    public CleanRuleDispatchWorker(String payload) {
+    public OpenRuleDispatchWorker(String payload) {
         JSONObject jsonPayload = JSONObject.parseObject(payload);
         this.tenantCode = jsonPayload.getString(RECEIVE_KEY_TENANT_CODE);
-        this.cleanRuleCode = jsonPayload.getString(RECEIVE_KEY_CLEAN_RULE_CODE);
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(cleanRuleCode)) {
-            throw new IllegalArgumentException("tenantCode or cleanRuleCode is blank");
+        this.openRuleCode = jsonPayload.getString(RECEIVE_KEY_OPEN_RULE_CODE);
+        if (StringUtils.isBlank(tenantCode)) {
+            throw new IllegalArgumentException("tenantCode is blank");
         }
     }
 
     @Override
     public void run() {
-        JSONObject dispatchCont = getDispatchCont();
+        JSONObject jsonOpenRule = getDispatchCont();
 
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
@@ -68,25 +68,25 @@ public class CleanRuleDispatchWorker implements Runnable {
             log.info("machine code list is empty, stop worker");
         }
 
-        MQTTService mqttService = getMQTTService();
+        MqttService mqttService = getMQTTService();
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_CLEAN_RULE);
-        jsonMsg.put(SEND_KEY_CLEAN_RULE, dispatchCont);
-        log.info("$$$$$ CleanRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
+        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MqttConfig.MACHINE_TOPIC_DISPATCH_OPEN_RULE);
+        jsonMsg.put(SEND_KEY_OPEN_RULE, jsonOpenRule);
+        log.info("$$$$$ OpenRuleDispatchWorker jsonMsg: " + jsonMsg.toJSONString());
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMachineMsg(tenantCode, MQTTConfig.MACHINE_TOPIC_DISPATCH_CLEAN_RULE, jsonMsg.toJSONString());
+            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_OPEN_RULE, jsonMsg.toJSONString());
         });
     }
 
-    private CleanRuleMgtService getCleanRuleMgtService() {
+    private OpenRuleMgtService getOpenRuleMgtService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        CleanRuleMgtService cleanRuleMgtService = appContext.getBean(CleanRuleMgtService.class);
-        return cleanRuleMgtService;
+        OpenRuleMgtService openRuleMgtService = appContext.getBean(OpenRuleMgtService.class);
+        return openRuleMgtService;
     }
 
-    private MQTTService getMQTTService() {
+    private MqttService getMQTTService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MQTTService mqttService = appContext.getBean(MQTTService.class);
+        MqttService mqttService = appContext.getBean(MqttService.class);
         return mqttService;
     }
 
@@ -103,27 +103,27 @@ public class CleanRuleDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        CleanRuleMgtService cleanRuleMgtService = getCleanRuleMgtService();
-        CleanRuleDTO cleanRuleDTO = getModel(cleanRuleMgtService.getByCode(tenantCode, cleanRuleCode));
-        if (cleanRuleDTO == null) {
-            log.info("clean rule error, stop worker");
+        OpenRuleMgtService openRuleMgtService = getOpenRuleMgtService();
+        OpenRuleDTO openRuleDTO = getModel(openRuleMgtService.getByCode(tenantCode, openRuleCode));
+        if (openRuleDTO == null) {
+            log.info("open rule error, stop worker");
             return null;
         }
 
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(cleanRuleDTO);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(openRuleDTO);
         return jsonObject;
     }
 
     private List<String> getMachineCodeList() {
-        CleanRuleMgtService cleanRuleMgtService = getCleanRuleMgtService();
-        CleanRuleDispatchDTO cleanRuleDispatchDTO = getModel(cleanRuleMgtService.getDispatchByCode(tenantCode, cleanRuleCode));
-        if (cleanRuleDispatchDTO == null) {
-            log.info("clean rule dispatch is null");
+        OpenRuleMgtService openRuleMgtService = getOpenRuleMgtService();
+        OpenRuleDispatchDTO openRuleDispatchDTO = getModel(openRuleMgtService.getDispatchByCode(tenantCode, openRuleCode));
+        if (openRuleDispatchDTO == null) {
+            log.info("open rule dispatch is null");
             return null;
         }
 
         ShopMgtService shopMgtService = getShopMgtService();
-        List<String> shopCodeList = cleanRuleDispatchDTO.getShopGroupCodeList().stream()
+        List<String> shopCodeList = openRuleDispatchDTO.getShopGroupCodeList().stream()
                 .map(shopGroupCode -> {
                     List<ShopDTO> shopList = getListModel(shopMgtService.listByShopGroupCode(
                             tenantCode, shopGroupCode));

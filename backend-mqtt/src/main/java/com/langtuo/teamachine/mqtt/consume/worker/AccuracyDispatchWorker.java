@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.mqtt.worker.dispatch;
+package com.langtuo.teamachine.mqtt.consume.worker;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
@@ -6,8 +6,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
-import com.langtuo.teamachine.mqtt.MQTTService;
-import com.langtuo.teamachine.mqtt.config.MQTTConfig;
+import com.langtuo.teamachine.mqtt.MqttService;
+import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -53,15 +53,15 @@ public class AccuracyDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_ACCURACY);
+        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MqttConfig.MACHINE_TOPIC_DISPATCH_ACCURACY);
         jsonMsg.put(SEND_KEY_ACCURACY_TPL_LIST, jsonArray);
-        MQTTService mqttService = getMQTTService();
-        mqttService.sendMachineMsg(tenantCode, MQTTConfig.MACHINE_TOPIC_DISPATCH_ACCURACY, jsonArray.toJSONString());
+        MqttService mqttService = getMQTTService();
+        mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_ACCURACY, jsonArray.toJSONString());
     }
 
-    private MQTTService getMQTTService() {
+    private MqttService getMQTTService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MQTTService mqttService = appContext.getBean(MQTTService.class);
+        MqttService mqttService = appContext.getBean(MqttService.class);
         return mqttService;
     }
 
