@@ -19,7 +19,7 @@ import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
-import com.langtuo.teamachine.mqtt.util.MQTTUtils;
+import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -79,7 +79,7 @@ public class MenuDispatchWorker implements Runnable {
             return;
         }
         File outputFile = new File("dispatch/output.json");
-        boolean wrote = MQTTUtils.writeStrToFile(dispatchCont, outputFile);
+        boolean wrote = MqttUtils.writeStrToFile(dispatchCont, outputFile);
         if (!wrote) {
             log.info("write file error, stop worker");
             return;

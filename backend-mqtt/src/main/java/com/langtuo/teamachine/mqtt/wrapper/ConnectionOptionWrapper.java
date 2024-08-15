@@ -34,7 +34,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import com.langtuo.teamachine.mqtt.constant.SignModeEnum;
-import com.langtuo.teamachine.mqtt.util.MQTTUtils;
+import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -121,7 +121,7 @@ public class ConnectionOptionWrapper {
         this.clientId = clientId;
         mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setUserName("Signature|" + accessKey + "|" + instanceId);
-        mqttConnectOptions.setPassword(MQTTUtils.macSignature(clientId, secretKey).toCharArray());
+        mqttConnectOptions.setPassword(MqttUtils.macSignature(clientId, secretKey).toCharArray());
         mqttConnectOptions.setCleanSession(false);
         mqttConnectOptions.setKeepAliveInterval(90);
         mqttConnectOptions.setAutomaticReconnect(true);
@@ -141,7 +141,7 @@ public class ConnectionOptionWrapper {
         mqttConnectOptions.setKeepAliveInterval(90);
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setUserName("Signature|" + accessKey + "|" + instanceId);
-        mqttConnectOptions.setPassword(MQTTUtils.macSignature(clientId, secretKey).toCharArray());
+        mqttConnectOptions.setPassword(MqttUtils.macSignature(clientId, secretKey).toCharArray());
         mqttConnectOptions.setMqttVersion(MQTT_VERSION_3_1_1);
         mqttConnectOptions.setConnectionTimeout(5000);
 
@@ -164,7 +164,7 @@ public class ConnectionOptionWrapper {
         mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setUserName(userName);
         if (SignModeEnum.SIGNED.equals(signModeEnum)) {
-            mqttConnectOptions.setPassword(MQTTUtils.macSignature(clientId, secret).toCharArray());
+            mqttConnectOptions.setPassword(MqttUtils.macSignature(clientId, secret).toCharArray());
         } else if (SignModeEnum.ORIGIN.equals(signModeEnum)) {
             mqttConnectOptions.setPassword(secret.toCharArray());
         } else {

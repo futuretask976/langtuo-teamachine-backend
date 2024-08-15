@@ -2,7 +2,7 @@ package com.langtuo.teamachine.mqtt;
 
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
-import com.langtuo.teamachine.mqtt.util.MQTTUtils;
+import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import com.langtuo.teamachine.mqtt.consume.MqttMsgConsumer;
 import com.langtuo.teamachine.mqtt.wrapper.ConnectionOptionWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class MqttService implements InitializingBean {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MqttConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(MQTTUtils.getConsoleTopic(topic), message);
+                mqttClient.publish(MqttUtils.getConsoleTopic(topic), message);
             } catch (MqttException e) {
                 log.error("send msg by topic error: " + e.getMessage(), e);
             }
@@ -54,7 +54,7 @@ public class MqttService implements InitializingBean {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MqttConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(MQTTUtils.getMachineTopic(tenantCode, topic), message);
+                mqttClient.publish(MqttUtils.getMachineTopic(tenantCode, topic), message);
             } catch (MqttException e) {
                 log.error("send msg by p2p error: " + e.getMessage(), e);
             }
@@ -66,7 +66,7 @@ public class MqttService implements InitializingBean {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MqttConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(MQTTUtils.getMachineP2PTopic(tenantCode, machineCode), message);
+                mqttClient.publish(MqttUtils.getMachineP2PTopic(tenantCode, machineCode), message);
             } catch (MqttException e) {
                 log.error("send msg by p2p error: " + e.getMessage(), e);
             }

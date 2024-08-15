@@ -45,7 +45,7 @@ import java.util.*;
  * Created by alvin on 17-3-29.
  */
 @Slf4j
-public class MQTTUtils {
+public class MqttUtils {
     public static String getConsoleTopic(String subTopic) {
         return MqttConfig.CONSOLE_PARENT_TOPIC + MqttConfig.TOPIC_SEPERATOR + subTopic;
     }
@@ -161,7 +161,7 @@ public class MQTTUtils {
      */
     public static JSONObject httpsGet(String url,
             Map<String, String> params) throws IOException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyManagementException {
-        CloseableHttpClient client = MQTTUtils.getHttpsClient();
+        CloseableHttpClient client = MqttUtils.getHttpsClient();
         JSONObject jsonResult = null;
         //发送get请求
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
