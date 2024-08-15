@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.biz.service.impl.rule;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
@@ -18,6 +19,8 @@ import com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleExceptPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRulePO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleStepPO;
+import com.langtuo.teamachine.mqtt.MQTTService;
+import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -42,6 +45,9 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
     @Resource
     private CleanRuleExceptAccessor cleanRuleExceptAccessor;
+
+    @Resource
+    private MQTTService mqttService;
 
     @Override
     public LangTuoResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
@@ -186,6 +192,13 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             log.error("putDispatch error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
+
+        // 发送一步消息推送机器
+        JSONObject payloadJSON = new JSONObject();
+        payloadJSON.put("tenantCode", request.getTenantCode());
+        payloadJSON.put("cleanRuleCode", request.getCleanRuleCode());
+        mqttService.sendConsoleMsgByTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE, payloadJSON.toJSONString());
+
         return langTuoResult;
     }
 

@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.biz.service.impl.rule;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
@@ -16,6 +17,8 @@ import com.langtuo.teamachine.dao.accessor.rule.*;
 import com.langtuo.teamachine.dao.po.rule.OpenRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.OpenRuleToppingPO;
 import com.langtuo.teamachine.dao.po.rule.OpenRulePO;
+import com.langtuo.teamachine.mqtt.MQTTService;
+import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -42,6 +45,9 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
 
     @Resource
     private ToppingMgtService toppingMgtService;
+
+    @Resource
+    private MQTTService mqttService;
 
     @Override
     public LangTuoResult<OpenRuleDTO> getByCode(String tenantCode, String openRuleCode) {
@@ -177,6 +183,13 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
             log.error("putDispatch error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
+
+        // 发送一步消息推送机器
+        JSONObject payloadJSON = new JSONObject();
+        payloadJSON.put("tenantCode", request.getTenantCode());
+        payloadJSON.put("openRuleCode", request.getOpenRuleCode());
+        mqttService.sendConsoleMsgByTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE, payloadJSON.toJSONString());
+
         return langTuoResult;
     }
 

@@ -8,23 +8,15 @@ import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
-import com.langtuo.teamachine.api.service.drink.TeaMgtService;
-import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.dao.oss.OSSUtils;
 import com.langtuo.teamachine.mqtt.MQTTService;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.DigestUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -43,7 +35,7 @@ public class CleanRuleDispatchWorker implements Runnable {
     /**
      * 发送的消息中的key关键字
      */
-    private static final String SEND_KEY_TOPIC = "topic";
+    private static final String SEND_KEY_CHILD_TOPIC = "childTopic";
     private static final String SEND_KEY_CLEAN_RULE = "cleanRule";
 
 
@@ -78,8 +70,9 @@ public class CleanRuleDispatchWorker implements Runnable {
 
         MQTTService mqttService = getMQTTService();
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_CLEAN_RULE);
+        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_CLEAN_RULE);
         jsonMsg.put(SEND_KEY_CLEAN_RULE, dispatchCont);
+        log.info("$$$$$ CleanRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
         machineCodeList.stream().forEach(machineCode -> {
             mqttService.sendMachineMsg(tenantCode, MQTTConfig.MACHINE_TOPIC_DISPATCH_CLEAN_RULE, jsonMsg.toJSONString());
         });
@@ -107,18 +100,6 @@ public class CleanRuleDispatchWorker implements Runnable {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         MachineMgtService machineMgtService = appContext.getBean(MachineMgtService.class);
         return machineMgtService;
-    }
-
-    private SeriesMgtService getSeriesMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        SeriesMgtService seriesMgtService = appContext.getBean(SeriesMgtService.class);
-        return seriesMgtService;
-    }
-
-    private TeaMgtService getTeaMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        TeaMgtService teaMgtService = appContext.getBean(TeaMgtService.class);
-        return teaMgtService;
     }
 
     private JSONObject getDispatchCont() {
@@ -179,35 +160,5 @@ public class CleanRuleDispatchWorker implements Runnable {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
         return machineCodeList;
-    }
-
-    private String uploadOSS(File file) {
-        String ossPath = null;
-        try {
-            ossPath = OSSUtils.uploadFile(file);
-        } catch (FileNotFoundException e) {
-            log.info("upload oss error, stop worker");
-        }
-        return ossPath;
-    }
-
-    private String calcMD5Hex(File file) {
-        String md5AsHex = null;
-        FileInputStream fileInputStream = null;
-        try {
-            fileInputStream = new FileInputStream(file);
-            md5AsHex = DigestUtils.md5DigestAsHex(fileInputStream);
-        } catch (IOException e) {
-            log.info("calc md5 error, stop worker");
-        } finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    log.info("close file input stream error, stop worker");
-                }
-            }
-        }
-        return md5AsHex;
     }
 }

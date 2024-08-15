@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.biz.service.impl.rule;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
@@ -13,6 +14,8 @@ import com.langtuo.teamachine.dao.accessor.rule.WarningRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
+import com.langtuo.teamachine.mqtt.MQTTService;
+import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -30,6 +33,9 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
     @Resource
     private WarningRuleDispatchAccessor warningRuleDispatchAccessor;
+
+    @Resource
+    private MQTTService mqttService;
 
     @Override
     public LangTuoResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
@@ -155,6 +161,13 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             log.error("putDispatch error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
+
+        // 发送一步消息推送机器
+        JSONObject payloadJSON = new JSONObject();
+        payloadJSON.put("tenantCode", request.getTenantCode());
+        payloadJSON.put("warningCode", request.getWarningRuleCode());
+        mqttService.sendConsoleMsgByTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE, payloadJSON.toJSONString());
+
         return langTuoResult;
     }
 

@@ -1,15 +1,15 @@
-package com.langtuo.teamachine.dao.testor.record;
+package com.langtuo.teamachine.biz.service.testor.record;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.record.InvalidActRecordMapper;
+import com.langtuo.teamachine.dao.mapper.record.OrderToppingActRecordMapper;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
+import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-public class InvalidActRecordTestor {
+public class OrderToppingActRecordTestor {
     public static void main(String args[]) {
         insert();
 //        select();
@@ -17,35 +17,28 @@ public class InvalidActRecordTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        InvalidActRecordMapper mapper = sqlSession.getMapper(InvalidActRecordMapper.class);
+        OrderToppingActRecordMapper mapper = sqlSession.getMapper(OrderToppingActRecordMapper.class);
 
-        InvalidActRecordPO po = null;
+        OrderToppingActRecordPO po = null;
+        int inserted = 0;
 
-        po = new InvalidActRecordPO();
+        po = new OrderToppingActRecordPO();
         po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{}});
-        po.setIdempotentMark("1111");
-        po.setMachineCode("1234");
-        po.setShopGroupCode("shopGroup_02");
-        po.setShopCode("shop_001");
-        po.setInvalidTime(new Date());
-        po.setToppingCode("topping_001");
-        po.setPipelineNum(1);
-        po.setInvalidAmount(10);
-        mapper.insert(po);
-
-        po = new InvalidActRecordPO();
-        po.setTenantCode("tenant_001");
-        po.setExtraInfo(new HashMap<String, String>(){{}});
-        po.setIdempotentMark("2222");
-        po.setMachineCode("1234");
-        po.setShopGroupCode("shopGroup_03");
-        po.setShopCode("shop_001");
-        po.setInvalidTime(new Date());
+        po.setIdempotentMark("1234");
+        po.setStepIndex(1);
         po.setToppingCode("topping_002");
-        po.setPipelineNum(2);
-        po.setInvalidAmount(22);
-        mapper.insert(po);
+        po.setActualAmount(20);
+        inserted = mapper.insert(po);
+        System.out.println("inserted=" + inserted);
+
+        po = new OrderToppingActRecordPO();
+        po.setTenantCode("tenant_001");
+        po.setIdempotentMark("1234");
+        po.setStepIndex(1);
+        po.setToppingCode("topping_003");
+        po.setActualAmount(30);
+        inserted = mapper.insert(po);
+        System.out.println("inserted=" + inserted);
 
         sqlSession.commit();
         sqlSession.close();

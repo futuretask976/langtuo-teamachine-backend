@@ -1,15 +1,17 @@
-package com.langtuo.teamachine.dao.testor.record;
+package com.langtuo.teamachine.biz.service.testor.record;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
+import com.langtuo.teamachine.dao.mapper.record.CleanActRecordMapper;
 import com.langtuo.teamachine.dao.mapper.record.InvalidActRecordMapper;
-import com.langtuo.teamachine.dao.mapper.record.OrderSpecItemActRecordMapper;
+import com.langtuo.teamachine.dao.po.record.CleanActRecordPO;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
-import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
-public class OrderSpecItemActRecordTestor {
+public class CleanActRecordTestor {
     public static void main(String args[]) {
         insert();
 //        select();
@@ -17,25 +19,33 @@ public class OrderSpecItemActRecordTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrderSpecItemActRecordMapper mapper = sqlSession.getMapper(OrderSpecItemActRecordMapper.class);
+        CleanActRecordMapper mapper = sqlSession.getMapper(CleanActRecordMapper.class);
 
-        OrderSpecItemActRecordPO po = null;
-        int inserted = 0;
+        CleanActRecordPO po = null;
 
-        po = new OrderSpecItemActRecordPO();
+        po = new CleanActRecordPO();
         po.setTenantCode("tenant_001");
+        po.setExtraInfo(new HashMap(){{
+            put("abc", "def");
+        }});
         po.setIdempotentMark("1234");
-        po.setSpecCode("SPEC_SWEET");
-        po.setSpecItemCode("SPEC_ITEM_7_SWEET");
-        inserted = mapper.insert(po);
-        System.out.println("inserted=" + inserted);
-
-        po = new OrderSpecItemActRecordPO();
-        po.setTenantCode("tenant_001");
-        po.setIdempotentMark("1234");
-        po.setSpecCode("SPEC_BEIXING");
-        po.setSpecItemCode("SPEC_ITEM_BIG");
-        inserted = mapper.insert(po);
+        po.setMachineCode("abcd");
+        po.setShopCode("shop_001");
+        po.setShopGroupCode("shopGroup_02");
+        po.setCleanStartTime(new Date());
+        po.setCleanEndTime(new Date());
+        po.setToppingCode("topping_001");
+        po.setPipelineNum(1);
+        po.setCleanType(1);
+        po.setCleanRuleCode("123");
+        po.setOpenRuleCode("456");
+        po.setCloseRuleCode("789");
+        po.setCleanContent(1);
+        po.setWashSec(10);
+        po.setSoakMin(20);
+        po.setFlushSec(30);
+        po.setFlushIntervalMin(40);
+        int inserted = mapper.insert(po);
         System.out.println("inserted=" + inserted);
 
         sqlSession.commit();

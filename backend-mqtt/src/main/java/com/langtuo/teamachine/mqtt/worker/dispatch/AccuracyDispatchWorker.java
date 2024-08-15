@@ -27,7 +27,7 @@ public class AccuracyDispatchWorker implements Runnable {
     /**
      * 发送的消息中的key关键字
      */
-    private static final String SEND_KEY_TOPIC = "topic";
+    private static final String SEND_KEY_CHILD_TOPIC = "childTopic";
     private static final String SEND_KEY_ACCURACY_TPL_LIST = "accuracyTplList";
 
 
@@ -53,7 +53,7 @@ public class AccuracyDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_ACCURACY);
+        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MQTTConfig.MACHINE_TOPIC_DISPATCH_ACCURACY);
         jsonMsg.put(SEND_KEY_ACCURACY_TPL_LIST, jsonArray);
         MQTTService mqttService = getMQTTService();
         mqttService.sendMachineMsg(tenantCode, MQTTConfig.MACHINE_TOPIC_DISPATCH_ACCURACY, jsonArray.toJSONString());

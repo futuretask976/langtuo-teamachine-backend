@@ -1,30 +1,51 @@
-package com.langtuo.teamachine.dao.testor.user;
+package com.langtuo.teamachine.biz.service.testor.record;
 
-import com.google.common.collect.Maps;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.record.SupplyActRecordMapper;
-import com.langtuo.teamachine.dao.mapper.user.OrgMapper;
 import com.langtuo.teamachine.dao.po.record.SupplyActRecordPO;
-import com.langtuo.teamachine.dao.po.user.OrgPO;
-import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
-import org.assertj.core.util.Lists;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class OrgTestor {
+public class SupplyActRecordTestor {
     public static void main(String args[]) {
-//        insert();
-        select();
+        insert();
+//        select();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrgMapper mapper = sqlSession.getMapper(OrgMapper.class);
+        SupplyActRecordMapper mapper = sqlSession.getMapper(SupplyActRecordMapper.class);
+
+        SupplyActRecordPO po = null;
+
+        po = new SupplyActRecordPO();
+        po.setTenantCode("tenant_001");
+        po.setExtraInfo(new HashMap<String, String>(){{}});
+        po.setIdempotentMark("1111");
+        po.setMachineCode("1234");
+        po.setShopGroupCode("shopGroup_02");
+        po.setShopCode("shop_001");
+        po.setSupplyTime(new Date());
+        po.setToppingCode("topping_001");
+        po.setPipelineNum(1);
+        po.setSupplyAmount(10);
+        mapper.insert(po);
+
+        po = new SupplyActRecordPO();
+        po.setTenantCode("tenant_001");
+        po.setExtraInfo(new HashMap<String, String>(){{}});
+        po.setIdempotentMark("2222");
+        po.setMachineCode("1234");
+        po.setShopGroupCode("shopGroup_03");
+        po.setShopCode("shop_001");
+        po.setSupplyTime(new Date());
+        po.setToppingCode("topping_002");
+        po.setPipelineNum(2);
+        po.setSupplyAmount(22);
+        mapper.insert(po);
 
         sqlSession.commit();
         sqlSession.close();
@@ -32,45 +53,18 @@ public class OrgTestor {
 
     public static void select() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrgMapper mapper = sqlSession.getMapper(OrgMapper.class);
+        SupplyActRecordMapper mapper = sqlSession.getMapper(SupplyActRecordMapper.class);
 
-        Map<String, OrgNode> orgNodeMap = Maps.newHashMap();
-        List<OrgPO> list = mapper.selectList("tenant_001");
-        for (OrgPO po : list) {
-            OrgNode orgNode = new OrgNode();
-            orgNode.orgName = po.getOrgName();
-            orgNode.parentOrgName = po.getParentOrgName();
-            orgNodeMap.put(orgNode.orgName, orgNode);
-        }
-        for (Map.Entry<String, OrgNode> entry : orgNodeMap.entrySet()) {
-            OrgNode orgNode = entry.getValue();
-            String parentOrgName = orgNode.getParentOrgName();
-            if (StringUtils.isBlank(parentOrgName)) {
-                continue;
-            }
-            OrgNode parentOrgNode = orgNodeMap.get(parentOrgName);
-            orgNode.setParent(parentOrgNode);
-            if (parentOrgNode.getChildren() == null) {
-                parentOrgNode.setChildren(Lists.newArrayList());
-            }
-            parentOrgNode.getChildren().add(orgNode);
+        List<SupplyActRecordPO> list = mapper.selectList("tenant_001");
+        for (SupplyActRecordPO po : list) {
+            System.out.printf("$$$$$ list->po: %s\n", po);
         }
 
-        System.out.println(orgNodeMap);
+        SupplyActRecordPO po = mapper.selectOne("tenant_001", "1234567890");
+        System.out.printf("$$$$$ po: %s\n", po);
 
         sqlSession.commit();
         sqlSession.close();
-    }
-
-    @Data
-    static class OrgNode {
-        private String orgName;
-
-        private String parentOrgName;
-
-        private OrgNode parent;
-
-        private List<OrgNode> children;
     }
 
 //    public static void testBySpring() {

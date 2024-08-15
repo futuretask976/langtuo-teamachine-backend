@@ -4,9 +4,7 @@ import com.langtuo.teamachine.mqtt.concurrent.ExeService4Consume;
 import com.langtuo.teamachine.mqtt.config.MQTTConfig;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
 import com.langtuo.teamachine.mqtt.util.MQTTUtils;
-import com.langtuo.teamachine.mqtt.worker.dispatch.AccuracyDispatchWorker;
-import com.langtuo.teamachine.mqtt.worker.dispatch.MenuDispatchWorker;
-import com.langtuo.teamachine.mqtt.worker.dispatch.WarningRuleDispatchWorker;
+import com.langtuo.teamachine.mqtt.worker.dispatch.*;
 import com.langtuo.teamachine.mqtt.wrapper.ConnectionOptionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -124,6 +122,10 @@ public class MQTTService implements InitializingBean {
             ExeService4Consume.getExeService().submit(new AccuracyDispatchWorker(payload));
         } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_MENU).equals(topic)) {
             ExeService4Consume.getExeService().submit(new MenuDispatchWorker(payload));
+        } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE).equals(topic)) {
+            ExeService4Consume.getExeService().submit(new OpenRuleDispatchWorker(payload));
+        } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE).equals(topic)) {
+            ExeService4Consume.getExeService().submit(new CleanRuleDispatchWorker(payload));
         } else if (MQTTUtils.getConsoleTopic(MQTTConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE).equals(topic)) {
             ExeService4Consume.getExeService().submit(new WarningRuleDispatchWorker(payload));
         } else {

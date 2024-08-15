@@ -1,15 +1,17 @@
-package com.langtuo.teamachine.dao.testor.record;
+package com.langtuo.teamachine.biz.service.testor.record;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.record.InvalidActRecordMapper;
-import com.langtuo.teamachine.dao.mapper.record.OrderToppingActRecordMapper;
+import com.langtuo.teamachine.dao.mapper.record.OrderActRecordMapper;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
-import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
+import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
-public class OrderToppingActRecordTestor {
+public class OrderActRecordTestor {
     public static void main(String args[]) {
         insert();
 //        select();
@@ -17,27 +19,23 @@ public class OrderToppingActRecordTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrderToppingActRecordMapper mapper = sqlSession.getMapper(OrderToppingActRecordMapper.class);
+        OrderActRecordMapper mapper = sqlSession.getMapper(OrderActRecordMapper.class);
 
-        OrderToppingActRecordPO po = null;
-        int inserted = 0;
+        OrderActRecordPO po = null;
 
-        po = new OrderToppingActRecordPO();
+        po = new OrderActRecordPO();
         po.setTenantCode("tenant_001");
+        po.setExtraInfo(new HashMap(){{
+            put("abc", "def");
+        }});
         po.setIdempotentMark("1234");
-        po.setStepIndex(1);
-        po.setToppingCode("topping_002");
-        po.setActualAmount(20);
-        inserted = mapper.insert(po);
-        System.out.println("inserted=" + inserted);
-
-        po = new OrderToppingActRecordPO();
-        po.setTenantCode("tenant_001");
-        po.setIdempotentMark("1234");
-        po.setStepIndex(1);
-        po.setToppingCode("topping_003");
-        po.setActualAmount(30);
-        inserted = mapper.insert(po);
+        po.setMachineCode("abcd");
+        po.setShopCode("shop_001");
+        po.setShopGroupCode("shopGroup_02");
+        po.setOrderGmtCreated(new Date());
+        po.setOuterOrderId("111111");
+        po.setState(0);
+        int inserted = mapper.insert(po);
         System.out.println("inserted=" + inserted);
 
         sqlSession.commit();
