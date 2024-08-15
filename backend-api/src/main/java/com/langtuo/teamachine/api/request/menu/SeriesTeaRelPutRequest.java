@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request.menu;
 
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,10 +21,10 @@ public class SeriesTeaRelPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(seriesCode)
-                || StringUtils.isBlank(teaCode)) {
-            return false;
+        if (RegexUtils.isValidStr(seriesCode, true)
+                && RegexUtils.isValidStr(teaCode, true)) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

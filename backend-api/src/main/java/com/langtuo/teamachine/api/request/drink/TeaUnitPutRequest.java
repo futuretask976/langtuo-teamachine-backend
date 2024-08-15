@@ -1,5 +1,8 @@
 package com.langtuo.teamachine.api.request.drink;
 
+import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
+import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,26 +35,42 @@ public class TeaUnitPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(teaUnitCode)
-                || StringUtils.isBlank(teaUnitName)) {
-            return false;
+        if (RegexUtils.isValidStr(teaUnitCode, true)
+                && RegexUtils.isValidStr(teaUnitName, true)
+                && isValidSpecItemRuleList()
+                && isValidToppingAdjustRuleList()) {
+            return true;
         }
-        if (specItemRuleList == null || specItemRuleList.size() == 0) {
-            return false;
-        }
-        for (SpecItemRulePutRequest s : specItemRuleList) {
-            if (!s.isValid()) {
-                return false;
+        return false;
+    }
+
+    private boolean isValidSpecItemRuleList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(specItemRuleList)) {
+            isValid = false;
+        } else {
+            for (SpecItemRulePutRequest m : specItemRuleList) {
+                if (!m.isValid()) {
+                    isValid = false;
+                    break;
+                }
             }
         }
-        if (toppingAdjustRuleList == null || toppingAdjustRuleList.size() == 0) {
-            return false;
-        }
-        for (ToppingAdjustRulePutRequest t : toppingAdjustRuleList) {
-            if (!t.isValid()) {
-                return false;
+        return isValid;
+    }
+
+    private boolean isValidToppingAdjustRuleList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(toppingAdjustRuleList)) {
+            isValid = false;
+        } else {
+            for (ToppingAdjustRulePutRequest m : toppingAdjustRuleList) {
+                if (!m.isValid()) {
+                    isValid = false;
+                    break;
+                }
             }
         }
-        return true;
+        return isValid;
     }
 }

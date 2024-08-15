@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request.drink;
 
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -72,11 +73,12 @@ public class ToppingPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(toppingName)
-                || StringUtils.isBlank(toppingTypeCode)) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(comment, false)
+                && RegexUtils.isValidStr(toppingName, true)
+                && RegexUtils.isValidStr(toppingTypeCode, true)) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

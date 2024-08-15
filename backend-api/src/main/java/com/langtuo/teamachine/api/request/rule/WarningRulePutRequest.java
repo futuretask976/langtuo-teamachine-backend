@@ -1,12 +1,27 @@
 package com.langtuo.teamachine.api.request.rule;
 
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
 @Data
 public class WarningRulePutRequest {
+    /**
+     * 租户编码
+     */
+    private String tenantCode;
+
+    /**
+     * 备注
+     */
+    private String comment;
+
+    /**
+     * 额外信息，格式：a:b;c:d
+     */
+    private Map<String, String> extraInfo;
+
     /**
      * 预警规则编码
      */
@@ -38,30 +53,16 @@ public class WarningRulePutRequest {
     private int threshold;
 
     /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 备注
-     */
-    private String comment;
-
-    /**
-     * 额外信息，格式：a:b;c:d
-     */
-    private Map<String, String> extraInfo;
-
-    /**
      *
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(warningRuleCode)
-                || StringUtils.isBlank(warningRuleName)) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(comment, false)
+                && RegexUtils.isValidStr(warningRuleCode, true)
+                && RegexUtils.isValidStr(warningRuleName, true)) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

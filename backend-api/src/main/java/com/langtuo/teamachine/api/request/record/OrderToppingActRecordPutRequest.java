@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request.record;
 
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 
 @Data
@@ -23,4 +24,14 @@ public class OrderToppingActRecordPutRequest {
      * 实际数量
      */
     private int actualAmount;
+
+    public boolean isValid() {
+        if (RegexUtils.isValidStr(toppingCode, true)
+                && RegexUtils.isValidStr(toppingName, true)
+                && stepIndex > 0
+                && actualAmount > 0) {
+            return true;
+        }
+        return false;
+    }
 }

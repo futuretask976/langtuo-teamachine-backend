@@ -1,7 +1,8 @@
 package com.langtuo.teamachine.api.request.menu;
 
+import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -49,20 +50,29 @@ public class MenuPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(menuCode)
-                || StringUtils.isBlank(menuName)
-                || validFrom == null) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(comment, false)
+                && RegexUtils.isValidStr(menuCode, true)
+                && RegexUtils.isValidStr(menuName, true)
+                && isValidPipelineList()
+                && validFrom != null) {
+            return true;
         }
-        if (menuSeriesRelList == null || menuSeriesRelList.size() == 0) {
-            return false;
-        }
-        for (MenuSeriesRelPutRequest m : menuSeriesRelList) {
-            if (!m.isValid()) {
-                return false;
+        return false;
+    }
+
+    private boolean isValidPipelineList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(menuSeriesRelList)) {
+            isValid = false;
+        } else {
+            for (MenuSeriesRelPutRequest m : menuSeriesRelList) {
+                if (!m.isValid()) {
+                    isValid = false;
+                    break;
+                }
             }
         }
-        return true;
+        return isValid;
     }
 }

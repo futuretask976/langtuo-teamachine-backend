@@ -1,5 +1,7 @@
 package com.langtuo.teamachine.api.request.rule;
 
+import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -53,28 +55,43 @@ public class CleanRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(cleanRuleCode)
-                || StringUtils.isBlank(cleanRuleName)) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(cleanRuleCode, true)
+                && RegexUtils.isValidStr(cleanRuleName, true)
+                && isValidExceptToppingCodeList()
+                && isValidCleanRuleStepList()) {
+            return true;
         }
-        if (exceptToppingCodeList == null || exceptToppingCodeList.size() == 0) {
-            return false;
-        }
-        for (String s : exceptToppingCodeList) {
-            if (StringUtils.isBlank(s)) {
-                return false;
-            }
-        }
+        return false;
+    }
 
-        if (cleanRuleStepList == null || cleanRuleStepList.size() == 0) {
-            return false;
-        }
-        for (CleanRuleStepPutRequest c : cleanRuleStepList) {
-            if (!c.isValid()) {
-                return false;
+    private boolean isValidExceptToppingCodeList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(exceptToppingCodeList)) {
+            isValid = false;
+        } else {
+            for (String m : exceptToppingCodeList) {
+                if (!RegexUtils.isValidStr(m, true)) {
+                    isValid = false;
+                    break;
+                }
             }
         }
-        return true;
+        return isValid;
+    }
+
+    private boolean isValidCleanRuleStepList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(cleanRuleStepList)) {
+            isValid = false;
+        } else {
+            for (CleanRuleStepPutRequest m : cleanRuleStepList) {
+                if (!m.isValid()) {
+                    isValid = false;
+                    break;
+                }
+            }
+        }
+        return isValid;
     }
 }

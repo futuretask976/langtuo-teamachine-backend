@@ -1,5 +1,8 @@
 package com.langtuo.teamachine.api.request.menu;
 
+import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
+import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,19 +46,27 @@ public class SeriesPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(seriesCode)
-                || StringUtils.isBlank(seriesName)) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(comment, false)
+                && RegexUtils.isValidStr(seriesCode, true)
+                && RegexUtils.isValidStr(seriesName, true)) {
+            return true;
         }
-        if (seriesTeaRelList == null || seriesTeaRelList.size() == 0) {
-            return false;
-        }
-        for (SeriesTeaRelPutRequest s : seriesTeaRelList) {
-            if (!s.isValid()) {
-                return false;
+        return false;
+    }
+
+    private boolean isValidPipelineList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(seriesTeaRelList)) {
+            isValid = false;
+        } else {
+            for (SeriesTeaRelPutRequest m : seriesTeaRelList) {
+                if (!m.isValid()) {
+                    isValid = false;
+                    break;
+                }
             }
         }
-        return true;
+        return isValid;
     }
 }

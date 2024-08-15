@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request.device;
 
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -63,16 +64,16 @@ public class MachineUpdatePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(machineCode)
-                || StringUtils.isBlank(machineName)
-                || StringUtils.isBlank(screenCode)
-                || StringUtils.isBlank(elecBoardCode)
-                || validUntil == null
-                || maintainUntil == null
-                || StringUtils.isBlank(shopCode)) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(machineCode, true)
+                && RegexUtils.isValidStr(machineName, true)
+                && RegexUtils.isValidStr(screenCode, true)
+                && RegexUtils.isValidStr(elecBoardCode, true)
+                && RegexUtils.isValidStr(shopCode, true)
+                && validUntil != null
+                && maintainUntil != null) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

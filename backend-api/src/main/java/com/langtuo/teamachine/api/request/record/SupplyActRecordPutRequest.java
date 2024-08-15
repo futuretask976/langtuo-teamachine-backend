@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request.record;
 
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -63,16 +64,16 @@ public class SupplyActRecordPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(idempotentMark)
-                || StringUtils.isBlank(machineCode)
-                || StringUtils.isBlank(shopCode)
-                || StringUtils.isBlank(shopGroupCode)
-                || supplyTime == null
-                || StringUtils.isBlank(toppingCode)
-                || pipelineNum <= 0) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(idempotentMark, true)
+                && RegexUtils.isValidStr(machineCode, true)
+                && RegexUtils.isValidStr(shopCode, true)
+                && RegexUtils.isValidStr(shopGroupCode, true)
+                && RegexUtils.isValidStr(toppingCode, true)
+                && supplyTime != null
+                && pipelineNum > 0) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

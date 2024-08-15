@@ -1,7 +1,8 @@
 package com.langtuo.teamachine.api.request.device;
 
+import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -33,17 +34,25 @@ public class ModelPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(modelCode)) {
-            return false;
+        if (RegexUtils.isValidStr(modelCode, true)
+                && isValidPipelineList()) {
+            return true;
         }
-        if (pipelineList == null || pipelineList.size() == 0) {
-            return false;
-        }
-        for (ModelPipelinePutRequest m : pipelineList) {
-            if (!m.isValid()) {
-                return false;
+        return false;
+    }
+
+    private boolean isValidPipelineList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(pipelineList)) {
+            isValid = false;
+        } else {
+            for (ModelPipelinePutRequest m : pipelineList) {
+                if (!m.isValid()) {
+                    isValid = false;
+                    break;
+                }
             }
         }
-        return true;
+        return isValid;
     }
 }

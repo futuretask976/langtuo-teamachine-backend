@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request.drink;
 
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,11 +26,11 @@ public class SpecItemPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(specItemCode)
-                || StringUtils.isBlank(specItemName)
-                || StringUtils.isBlank(outerSpecItemCode)) {
-            return false;
+        if (RegexUtils.isValidStr(specItemCode, true)
+                && RegexUtils.isValidStr(specItemName, true)
+                && RegexUtils.isValidStr(outerSpecItemCode, true)) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

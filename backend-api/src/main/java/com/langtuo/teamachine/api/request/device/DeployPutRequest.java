@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request.device;
 
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,13 +48,13 @@ public class DeployPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(deployCode)
-                || StringUtils.isBlank(modelCode)
-                || StringUtils.isBlank(machineCode)
-                || StringUtils.isBlank(shopCode)) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(deployCode, true)
+                && RegexUtils.isValidStr(modelCode, true)
+                && RegexUtils.isValidStr(machineCode, true)
+                && RegexUtils.isValidStr(shopCode, true)) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

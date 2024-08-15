@@ -1,7 +1,8 @@
 package com.langtuo.teamachine.api.request.drink;
 
+import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -63,22 +64,31 @@ public class TeaPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(teaCode)
-                || StringUtils.isBlank(teaName)
-                || StringUtils.isBlank(outerTeaCode)
-                || StringUtils.isBlank(teaTypeCode)
-                || StringUtils.isBlank(imgLink)) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(comment, false)
+                && RegexUtils.isValidStr(teaCode, true)
+                && RegexUtils.isValidStr(teaName, true)
+                && RegexUtils.isValidStr(outerTeaCode, true)
+                && RegexUtils.isValidStr(teaTypeCode, true)
+                && RegexUtils.isValidStr(imgLink, true)
+                && isValidTeaUnitList()) {
+            return true;
         }
-        if (teaUnitList == null || teaUnitList.size() == 0) {
-            return false;
-        }
-        for (TeaUnitPutRequest t : teaUnitList) {
-            if (!t.isValid()) {
-                return false;
+        return false;
+    }
+
+    private boolean isValidTeaUnitList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(teaUnitList)) {
+            isValid = false;
+        } else {
+            for (TeaUnitPutRequest s : teaUnitList) {
+                if (!s.isValid()) {
+                    isValid = false;
+                    break;
+                }
             }
         }
-        return true;
+        return isValid;
     }
 }

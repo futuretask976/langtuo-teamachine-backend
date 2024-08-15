@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request.shop;
 
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,12 +48,13 @@ public class ShopPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(shopGroupCode)
-                || StringUtils.isBlank(shopCode)
-                || StringUtils.isBlank(shopName)) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(comment, false)
+                && RegexUtils.isValidStr(shopGroupCode, true)
+                && RegexUtils.isValidStr(shopCode, true)
+                && RegexUtils.isValidStr(shopName, true)) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

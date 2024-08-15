@@ -1,5 +1,7 @@
 package com.langtuo.teamachine.api.request.rule;
 
+import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,19 +45,27 @@ public class OpenRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (StringUtils.isBlank(tenantCode)
-                || StringUtils.isBlank(openRuleCode)
-                || StringUtils.isBlank(openRuleName)) {
-            return false;
+        if (RegexUtils.isValidStr(tenantCode, true)
+                && RegexUtils.isValidStr(openRuleCode, true)
+                && RegexUtils.isValidStr(openRuleName, true)
+                && isValidToppingRuleList()) {
+            return true;
         }
-        if (toppingRuleList == null || toppingRuleList.size() == 0) {
-            return false;
-        }
-        for (OpenRuleToppingPutRequest t : toppingRuleList) {
-            if (!t.isValid()) {
-                return false;
+        return false;
+    }
+
+    private boolean isValidToppingRuleList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(toppingRuleList)) {
+            isValid = false;
+        } else {
+            for (OpenRuleToppingPutRequest m : toppingRuleList) {
+                if (!m.isValid()) {
+                    isValid = false;
+                    break;
+                }
             }
         }
-        return true;
+        return isValid;
     }
 }
