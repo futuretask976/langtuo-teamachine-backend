@@ -12,6 +12,7 @@ import com.langtuo.teamachine.api.service.rule.OpenRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -27,19 +28,6 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 @Slf4j
 public class WarningRuleDispatchWorker implements Runnable {
     /**
-     * 收到的消息中的key关键字
-     */
-    private static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
-    private static final String RECEIVE_KEY_WARNING_RULE_CODE = "warningRuleCode";
-
-    /**
-     * 发送的消息中的key关键字
-     */
-    private static final String SEND_KEY_CHILD_TOPIC = "childTopic";
-    private static final String SEND_KEY_WARNING_RULE = "warningRule";
-
-
-    /**
      * 租户编码
      */
     private String tenantCode;
@@ -49,18 +37,22 @@ public class WarningRuleDispatchWorker implements Runnable {
      */
     private String warningRuleCode;
 
-    public WarningRuleDispatchWorker(String payload) {
-        JSONObject jsonPayload = JSONObject.parseObject(payload);
-        this.tenantCode = jsonPayload.getString(RECEIVE_KEY_TENANT_CODE);
-        this.warningRuleCode = jsonPayload.getString(RECEIVE_KEY_WARNING_RULE_CODE);
-        if (StringUtils.isBlank(tenantCode)) {
-            throw new IllegalArgumentException("tenantCode is blank");
+    public WarningRuleDispatchWorker(JSONObject jsonPayload) {
+        this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
+        this.warningRuleCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_WARNING_RULE_CODE);
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(warningRuleCode)) {
+            throw new IllegalArgumentException("tenantCode or warningRuleCode is blank");
         }
     }
 
     @Override
     public void run() {
         JSONObject dispatchCont = getDispatchCont();
+
+        JSONObject jsonMsg = new JSONObject();
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_WARNING_RULE);
+        jsonMsg.put(MqttConsts.SEND_KEY_WARNING_RULE, dispatchCont);
+        log.info("$$$$$ WarningRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
@@ -69,12 +61,9 @@ public class WarningRuleDispatchWorker implements Runnable {
         }
 
         MqttService mqttService = getMQTTService();
-        JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MqttConfig.MACHINE_TOPIC_DISPATCH_WARNING_RULE);
-        jsonMsg.put(SEND_KEY_WARNING_RULE, dispatchCont);
-        log.info("$$$$$ WarningRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_OPEN_RULE, jsonMsg.toJSONString());
+            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_OPEN_RULE,
+                    jsonMsg.toJSONString());
         });
     }
 

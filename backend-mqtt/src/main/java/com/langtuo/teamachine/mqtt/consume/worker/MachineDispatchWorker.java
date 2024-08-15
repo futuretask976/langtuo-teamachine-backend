@@ -7,6 +7,7 @@ import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -15,19 +16,6 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Slf4j
 public class MachineDispatchWorker implements Runnable {
-    /**
-     * 收到的消息中的key关键字
-     */
-    private static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
-    private static final String RECEIVE_KEY_MENU_CODE = "machineCode";
-
-    /**
-     * 发送的消息中的key关键字
-     */
-    private static final String SEND_KEY_CHILD_TOPIC = "childTopic";
-    private static final String SEND_KEY_MACHINE = "machine";
-
-
     /**
      * 租户编码
      */
@@ -38,12 +26,11 @@ public class MachineDispatchWorker implements Runnable {
      */
     private String machineCode;
 
-    public MachineDispatchWorker(String payload) {
-        JSONObject jsonPayload = JSONObject.parseObject(payload);
-        this.tenantCode = jsonPayload.getString(RECEIVE_KEY_TENANT_CODE);
-        this.machineCode = jsonPayload.getString(RECEIVE_KEY_MENU_CODE);
-        if (StringUtils.isBlank(tenantCode)) {
-            throw new IllegalArgumentException("tenantCode or menuCode is blank");
+    public MachineDispatchWorker(JSONObject jsonPayload) {
+        this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
+        this.machineCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_MACHINE_CODE);
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode)) {
+            throw new IllegalArgumentException("tenantCode or machineCode is blank");
         }
     }
 
@@ -56,10 +43,12 @@ public class MachineDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MqttConfig.MACHINE_TOPIC_DISPATCH_MACHINE);
-        jsonMsg.put(SEND_KEY_MACHINE, jsonObject);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_MACHINE);
+        jsonMsg.put(MqttConsts.SEND_KEY_MACHINE, jsonObject);
+
         MqttService mqttService = getMQTTService();
-        mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MACHINE, jsonMsg.toJSONString());
+        mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MACHINE,
+                jsonMsg.toJSONString());
     }
 
     private MqttService getMQTTService() {

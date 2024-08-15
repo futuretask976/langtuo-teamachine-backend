@@ -19,6 +19,7 @@ import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -39,20 +40,6 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.*;
 @Slf4j
 public class MenuDispatchWorker implements Runnable {
     /**
-     * 收到的消息中的key关键字
-     */
-    private static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
-    private static final String RECEIVE_KEY_MENU_CODE = "menuCode";
-
-    /**
-     * 发送的消息中的key关键字
-     */
-    private static final String SEND_KEY_CHILD_TOPIC = "childTopic";
-    private static final String SEND_KEY_MD5_AS_HEX = "md5AsHex";
-    private static final String SEND_KEY_OSS_PATH = "ossPath";
-
-
-    /**
      * 租户编码
      */
     private String tenantCode;
@@ -62,10 +49,9 @@ public class MenuDispatchWorker implements Runnable {
      */
     private String menuCode;
 
-    public MenuDispatchWorker(String payload) {
-        JSONObject jsonPayload = JSONObject.parseObject(payload);
-        this.tenantCode = jsonPayload.getString(RECEIVE_KEY_TENANT_CODE);
-        this.menuCode = jsonPayload.getString(RECEIVE_KEY_MENU_CODE);
+    public MenuDispatchWorker(JSONObject jsonPayload) {
+        this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
+        this.menuCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_MENU_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
@@ -95,20 +81,22 @@ public class MenuDispatchWorker implements Runnable {
             return;
         }
 
+        JSONObject jsonMsg = new JSONObject();
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_MENU);
+        jsonMsg.put(MqttConsts.SEND_KEY_MD5_AS_HEX, md5AsHex);
+        jsonMsg.put(MqttConsts.SEND_KEY_OSS_PATH, ossPath);
+        System.out.println(jsonMsg.toJSONString());
+
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
         if (CollectionUtils.isEmpty(machineCodeList)) {
             log.info("machine code list is empty, stop worker");
         }
 
-        JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MqttConfig.MACHINE_TOPIC_DISPATCH_MENU);
-        jsonMsg.put(SEND_KEY_MD5_AS_HEX, md5AsHex);
-        jsonMsg.put(SEND_KEY_OSS_PATH, ossPath);
-        System.out.println(jsonMsg.toJSONString());
         MqttService mqttService = getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MENU, jsonMsg.toJSONString());
+            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MENU,
+                    jsonMsg.toJSONString());
         });
     }
 

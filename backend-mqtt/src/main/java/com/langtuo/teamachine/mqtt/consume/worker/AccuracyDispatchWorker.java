@@ -8,6 +8,7 @@ import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -20,25 +21,12 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
 @Slf4j
 public class AccuracyDispatchWorker implements Runnable {
     /**
-     * 收到的消息中的key关键字
-     */
-    private static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
-
-    /**
-     * 发送的消息中的key关键字
-     */
-    private static final String SEND_KEY_CHILD_TOPIC = "childTopic";
-    private static final String SEND_KEY_ACCURACY_TPL_LIST = "accuracyTplList";
-
-
-    /**
      * 租户编码
      */
     private String tenantCode;
 
-    public AccuracyDispatchWorker(String payload) {
-        JSONObject jsonPayload = JSONObject.parseObject(payload);
-        this.tenantCode = jsonPayload.getString(RECEIVE_KEY_TENANT_CODE);
+    public AccuracyDispatchWorker(JSONObject jsonPayload) {
+        this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
         if (StringUtils.isBlank(tenantCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
@@ -53,10 +41,13 @@ public class AccuracyDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MqttConfig.MACHINE_TOPIC_DISPATCH_ACCURACY);
-        jsonMsg.put(SEND_KEY_ACCURACY_TPL_LIST, jsonArray);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_ACCURACY);
+        jsonMsg.put(MqttConsts.SEND_KEY_ACCURACY_TPL_LIST, jsonArray);
+        log.info("$$$$$ AccuracyDispatchWorker sendMsg: " + jsonMsg.toJSONString());
+
         MqttService mqttService = getMQTTService();
-        mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_ACCURACY, jsonArray.toJSONString());
+        mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_ACCURACY,
+                jsonMsg.toJSONString());
     }
 
     private MqttService getMQTTService() {

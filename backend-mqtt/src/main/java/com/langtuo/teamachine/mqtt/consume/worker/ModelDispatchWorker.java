@@ -5,32 +5,24 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.ModelDTO;
+import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
+import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
 
 @Slf4j
 public class ModelDispatchWorker implements Runnable {
-    /**
-     * 发送的消息中的key关键字
-     */
-    private static final String SEND_KEY_CHILD_TOPIC = "childTopic";
-    private static final String SEND_KEY_MODEL = "modelList";
-
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    public ModelDispatchWorker(String payload) {
+    public ModelDispatchWorker(JSONObject jsonPayload) {
     }
 
     @Override
@@ -42,16 +34,31 @@ public class ModelDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(SEND_KEY_CHILD_TOPIC, MqttConfig.MACHINE_TOPIC_DISPATCH_MODEL);
-        jsonMsg.put(SEND_KEY_MODEL, jsonArray);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_MODEL);
+        jsonMsg.put(MqttConsts.SEND_KEY_MODEL_LIST, jsonArray);
+
+        TenantMgtService tenantMgtService = getTenantMgtService();
+        List<String> tenantCodeList = getListModel(tenantMgtService.list()).stream()
+                .map(TenantDTO::getTenantCode)
+                .collect(Collectors.toList());
+
         MqttService mqttService = getMQTTService();
-        mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MODEL, jsonArray.toJSONString());
+        tenantCodeList.forEach(tenantCode -> {
+            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MODEL,
+                    jsonArray.toJSONString());
+        });
     }
 
     private MqttService getMQTTService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         MqttService mqttService = appContext.getBean(MqttService.class);
         return mqttService;
+    }
+
+    private TenantMgtService getTenantMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        TenantMgtService tenantMgtService = appContext.getBean(TenantMgtService.class);
+        return tenantMgtService;
     }
 
     private ModelMgtService getCloseRuleMgtService() {

@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.mqtt.consume;
 
+import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Consume;
-import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.consume.worker.*;
-import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -13,21 +13,23 @@ import org.springframework.stereotype.Component;
 public class MqttMsgConsumer {
     public void consume(String topic, String payload) {
         if (StringUtils.isBlank(topic) || StringUtils.isBlank(payload)) {
-            log.info("receive msg error, topic=" + topic + ", payload=" + payload);
+            log.error("receive msg error, topic=" + topic + ", payload=" + payload);
             return;
         }
+        JSONObject jsonPayload = JSONObject.parseObject(payload);
         log.info("received msg, topic=" + topic + ", payload=" + payload);
 
-        if (MqttUtils.getConsoleTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_ACCURACY).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new AccuracyDispatchWorker(payload));
-        } else if (MqttUtils.getConsoleTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_MENU).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new MenuDispatchWorker(payload));
-        } else if (MqttUtils.getConsoleTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new OpenRuleDispatchWorker(payload));
-        } else if (MqttUtils.getConsoleTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new CleanRuleDispatchWorker(payload));
-        } else if (MqttUtils.getConsoleTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE).equals(topic)) {
-            ExeService4Consume.getExeService().submit(new WarningRuleDispatchWorker(payload));
+        String title = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TITLE);
+        if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_ACCURACY.equals(title)) {
+            ExeService4Consume.getExeService().submit(new AccuracyDispatchWorker(jsonPayload));
+        } else if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_MENU.equals(title)) {
+            ExeService4Consume.getExeService().submit(new MenuDispatchWorker(jsonPayload));
+        } else if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_OPEN_RULE.equals(title)) {
+            ExeService4Consume.getExeService().submit(new OpenRuleDispatchWorker(jsonPayload));
+        } else if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_CLEAN_RULE.equals(title)) {
+            ExeService4Consume.getExeService().submit(new CleanRuleDispatchWorker(jsonPayload));
+        } else if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_WARNING_RULE.equals(title)) {
+            ExeService4Consume.getExeService().submit(new WarningRuleDispatchWorker(jsonPayload));
         } else {
             log.info("match worker error, topic=" + topic);
         }

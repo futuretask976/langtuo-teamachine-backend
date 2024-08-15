@@ -51,11 +51,11 @@ public class MqttUtils {
     }
 
     public static String getMachineTopic(String tenantCode, String subTopic) {
-        return tenantCode + MqttConfig.MACHINE_PARENT_TOPIC_POSTFIX + MqttConfig.TOPIC_SEPERATOR + subTopic;
+        return tenantCode + MqttConfig.TENANT_PARENT_TOPIC_POSTFIX + MqttConfig.TOPIC_SEPERATOR + subTopic;
     }
 
     public static String getMachineP2PTopic(String tenantCode, String machineCode) {
-        return tenantCode + MqttConfig.MACHINE_PARENT_P2P_TOPIC_POSTFIX + MqttConfig.TOPIC_SEPERATOR + machineCode;
+        return tenantCode + MqttConfig.TENANT_PARENT_P2P_TOPIC_POSTFIX + MqttConfig.TOPIC_SEPERATOR + machineCode;
     }
 
     public static Properties loadProperties() {

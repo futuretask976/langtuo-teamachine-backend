@@ -45,12 +45,12 @@ public class MqttConfig {
     /**
      *
      */
-    public static final String MACHINE_PARENT_TOPIC_POSTFIX = "_teamachine";
+    public static final String TENANT_PARENT_TOPIC_POSTFIX = "_teamachine";
 
     /**
      *
      */
-    public static final String MACHINE_PARENT_P2P_TOPIC_POSTFIX = "_teamachine/p2p";
+    public static final String TENANT_PARENT_P2P_TOPIC_POSTFIX = "_teamachine/p2p";
 
     /**
      *
@@ -61,50 +61,4 @@ public class MqttConfig {
      * topic分隔符
      */
     public static final String TOPIC_SEPERATOR = "/";
-
-    /**
-     * topic列表
-     */
-    public static final String CONSOLE_TOPIC_PREPARE_DISPATCH_ACCURACY = "prepare_dispatch_accuracy";
-    public static final String CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE = "prepare_dispatch_clean_rule";
-    public static final String CONSOLE_TOPIC_PREPARE_DISPATCH_CLOSE_RULE = "prepare_dispatch_close_rule";
-    public static final String CONSOLE_TOPIC_PREPARE_DISPATCH_MACHINE = "prepare_dispatch_machine";
-    public static final String CONSOLE_TOPIC_PREPARE_DISPATCH_MENU = "prepare_dispatch_menu";
-    public static final String CONSOLE_TOPIC_PREPARE_DISPATCH_MODEL = "prepare_dispatch_model";
-    public static final String CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE = "prepare_dispatch_open_rule";
-    public static final String CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE = "prepare_dispatch_warning_rule";
-
-    public static final String MACHINE_TOPIC_DISPATCH_ACCURACY = "dispatch_accuracy";
-    public static final String MACHINE_TOPIC_DISPATCH_CLEAN_RULE = "dispatch_clean_rule";
-    public static final String MACHINE_TOPIC_DISPATCH_CLOSE_RULE = "dispatch_close_rule";
-    public static final String MACHINE_TOPIC_DISPATCH_MACHINE = "dispatch_machine";
-    public static final String MACHINE_TOPIC_DISPATCH_MENU = "dispatch_menu";
-    public static final String MACHINE_TOPIC_DISPATCH_MODEL = "dispatch_model";
-    public static final String MACHINE_TOPIC_DISPATCH_OPEN_RULE = "dispatch_open_rule";
-    public static final String MACHINE_TOPIC_DISPATCH_WARNING_RULE = "dispatch_warning_rule";
-
-    /**
-     * topic过滤器
-     */
-    public static final String[] TOPIC_FILTERS = new String[]{
-            CONSOLE_PARENT_TOPIC + TOPIC_SEPERATOR + CONSOLE_TOPIC_PREPARE_DISPATCH_ACCURACY,
-            CONSOLE_PARENT_TOPIC + TOPIC_SEPERATOR + CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE,
-            CONSOLE_PARENT_TOPIC + TOPIC_SEPERATOR + CONSOLE_TOPIC_PREPARE_DISPATCH_CLOSE_RULE,
-            CONSOLE_PARENT_TOPIC + TOPIC_SEPERATOR + CONSOLE_TOPIC_PREPARE_DISPATCH_MACHINE,
-            CONSOLE_PARENT_TOPIC + TOPIC_SEPERATOR + CONSOLE_TOPIC_PREPARE_DISPATCH_MENU,
-            CONSOLE_PARENT_TOPIC + TOPIC_SEPERATOR + CONSOLE_TOPIC_PREPARE_DISPATCH_MODEL,
-            CONSOLE_PARENT_TOPIC + TOPIC_SEPERATOR + CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE,
-            CONSOLE_PARENT_TOPIC + TOPIC_SEPERATOR + CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE
-    };
-
-    public static final int[] QOS = new int[]{
-            MqttConfig.QOS_LEVEL,
-            MqttConfig.QOS_LEVEL,
-            MqttConfig.QOS_LEVEL,
-            MqttConfig.QOS_LEVEL,
-            MqttConfig.QOS_LEVEL,
-            MqttConfig.QOS_LEVEL,
-            MqttConfig.QOS_LEVEL,
-            MqttConfig.QOS_LEVEL
-    };
 }
