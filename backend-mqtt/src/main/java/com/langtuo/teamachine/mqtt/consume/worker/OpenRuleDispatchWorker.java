@@ -63,7 +63,7 @@ public class OpenRuleDispatchWorker implements Runnable {
         JSONObject jsonOpenRule = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_OPEN_RULE);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.SEND_TITLE_DISPATCH_OPEN_RULE);
         jsonMsg.put(MqttConsts.SEND_KEY_OPEN_RULE, jsonOpenRule);
         log.info("$$$$$ OpenRuleDispatchWorker jsonMsg: " + jsonMsg.toJSONString());
 
@@ -75,8 +75,7 @@ public class OpenRuleDispatchWorker implements Runnable {
 
         MqttService mqttService = getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_OPEN_RULE,
-                    jsonMsg.toJSONString());
+            mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 

@@ -43,12 +43,11 @@ public class MachineDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_MACHINE);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.SEND_TITLE_DISPATCH_MACHINE);
         jsonMsg.put(MqttConsts.SEND_KEY_MACHINE, jsonObject);
 
         MqttService mqttService = getMQTTService();
-        mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MACHINE,
-                jsonMsg.toJSONString());
+        mqttService.sendDispatchMsgByTenant(tenantCode, jsonMsg.toJSONString());
     }
 
     private MqttService getMQTTService() {

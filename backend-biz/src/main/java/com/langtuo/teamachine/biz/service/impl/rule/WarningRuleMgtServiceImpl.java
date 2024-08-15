@@ -166,7 +166,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         JSONObject payloadJSON = new JSONObject();
         payloadJSON.put("tenantCode", request.getTenantCode());
         payloadJSON.put("warningCode", request.getWarningRuleCode());
-        mqttService.sendConsoleMsgByTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE, payloadJSON.toJSONString());
+        mqttService.sendConsoleMsg(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE, payloadJSON.toJSONString());
 
         return langTuoResult;
     }

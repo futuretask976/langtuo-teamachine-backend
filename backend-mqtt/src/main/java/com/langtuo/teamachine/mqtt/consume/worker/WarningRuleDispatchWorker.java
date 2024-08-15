@@ -50,7 +50,7 @@ public class WarningRuleDispatchWorker implements Runnable {
         JSONObject dispatchCont = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_WARNING_RULE);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.SEND_TITLE_DISPATCH_WARNING_RULE);
         jsonMsg.put(MqttConsts.SEND_KEY_WARNING_RULE, dispatchCont);
         log.info("$$$$$ WarningRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
@@ -62,8 +62,7 @@ public class WarningRuleDispatchWorker implements Runnable {
 
         MqttService mqttService = getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_OPEN_RULE,
-                    jsonMsg.toJSONString());
+            mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 

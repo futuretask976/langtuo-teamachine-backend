@@ -188,7 +188,7 @@ public class OpenRuleMgtServiceImpl implements OpenRuleMgtService {
         JSONObject payloadJSON = new JSONObject();
         payloadJSON.put("tenantCode", request.getTenantCode());
         payloadJSON.put("openRuleCode", request.getOpenRuleCode());
-        mqttService.sendConsoleMsgByTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE, payloadJSON.toJSONString());
+        mqttService.sendConsoleMsg(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_OPEN_RULE, payloadJSON.toJSONString());
 
         return langTuoResult;
     }

@@ -197,7 +197,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         JSONObject payloadJSON = new JSONObject();
         payloadJSON.put("tenantCode", request.getTenantCode());
         payloadJSON.put("cleanRuleCode", request.getCleanRuleCode());
-        mqttService.sendConsoleMsgByTopic(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE, payloadJSON.toJSONString());
+        mqttService.sendConsoleMsg(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_CLEAN_RULE, payloadJSON.toJSONString());
 
         return langTuoResult;
     }

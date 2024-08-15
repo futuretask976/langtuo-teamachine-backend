@@ -4,6 +4,7 @@ import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import com.langtuo.teamachine.mqtt.consume.MqttMsgConsumer;
 import com.langtuo.teamachine.mqtt.wrapper.ConnectionOptionWrapper;
@@ -47,36 +48,36 @@ public class MqttService implements InitializingBean {
         }
     }
 
-    public void sendConsoleMsgByTopic(String topic, String payload) {
+    public void sendConsoleMsg(String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MqttConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(MqttUtils.getConsoleTopic(topic), message);
+                mqttClient.publish(MqttUtils.getConsoleTopic(), message);
             } catch (MqttException e) {
                 log.error("send msg by topic error: " + e.getMessage(), e);
             }
         });
     }
 
-    public void sendMachineMsg(String tenantCode, String topic, String payload) {
+    public void sendDispatchMsgByTenant(String tenantCode, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MqttConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(MqttUtils.getMachineTopic(tenantCode, topic), message);
+                mqttClient.publish(MqttUtils.getDispatchTopicByTenant(tenantCode), message);
             } catch (MqttException e) {
                 log.error("send msg by p2p error: " + e.getMessage(), e);
             }
         });
     }
 
-    public void sendMachineMsgByP2P(String tenantCode, String machineCode, String payload) {
+    public void sendP2PMsgByTenant(String tenantCode, String machineCode, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MqttConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(MqttUtils.getMachineP2PTopic(tenantCode, machineCode), message);
+                mqttClient.publish(MqttUtils.getP2PTopicByTenant(tenantCode, machineCode), message);
             } catch (MqttException e) {
                 log.error("send msg by p2p error: " + e.getMessage(), e);
             }
@@ -126,25 +127,16 @@ public class MqttService implements InitializingBean {
     }
 
     private String[] getTopicFilterArray() {
-        List<String> topicList = Lists.newArrayList();
-        topicList.add(MqttConfig.CONSOLE_PARENT_TOPIC + MqttConfig.TOPIC_SEPERATOR + "console");
-        topicList.add(MqttConfig.CONSOLE_PARENT_TOPIC + MqttConfig.TOPIC_SEPERATOR + "recall");
-
-        List<String> tenantCodeList = getListModel(tenantMgtService.list()).stream()
-                .map(TenantDTO::getTenantCode)
-                .collect(Collectors.toList());
-        tenantCodeList.forEach(tenantCode -> {
-            topicList.add(tenantCode + MqttConfig.TENANT_PARENT_TOPIC_POSTFIX
-                    + MqttConfig.TOPIC_SEPERATOR + "dispatch");
-        });
-        return (String[]) topicList.toArray();
+        return new String[]{
+                MqttConsts.CONSOLE_PARENT_TOPIC + MqttConsts.TOPIC_SEPERATOR + "console",
+                MqttConsts.CONSOLE_PARENT_TOPIC + MqttConsts.TOPIC_SEPERATOR + "recall"
+        };
     }
 
     private int[] getQosArray(String[] topicArray) {
-        int[] qosArr = new int[topicArray.length];
-        for (int i = 0; i < qosArr.length; i++) {
-            qosArr[i] = MqttConfig.QOS_LEVEL;
-        }
-        return qosArr;
+        return new int[]{
+                MqttConfig.QOS_LEVEL,
+                MqttConfig.QOS_LEVEL
+        };
     }
 }

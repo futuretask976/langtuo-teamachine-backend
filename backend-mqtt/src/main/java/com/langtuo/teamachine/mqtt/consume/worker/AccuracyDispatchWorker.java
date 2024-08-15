@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
-import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,13 +40,12 @@ public class AccuracyDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_ACCURACY);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.SEND_TITLE_DISPATCH_ACCURACY);
         jsonMsg.put(MqttConsts.SEND_KEY_ACCURACY_TPL_LIST, jsonArray);
         log.info("$$$$$ AccuracyDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         MqttService mqttService = getMQTTService();
-        mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_ACCURACY,
-                jsonMsg.toJSONString());
+        mqttService.sendDispatchMsgByTenant(tenantCode, jsonMsg.toJSONString());
     }
 
     private MqttService getMQTTService() {

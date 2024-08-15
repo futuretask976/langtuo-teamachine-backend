@@ -2,7 +2,7 @@ package com.langtuo.teamachine.mqtt.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -46,16 +46,16 @@ import java.util.*;
  */
 @Slf4j
 public class MqttUtils {
-    public static String getConsoleTopic(String subTopic) {
-        return MqttConfig.CONSOLE_PARENT_TOPIC + MqttConfig.TOPIC_SEPERATOR + subTopic;
+    public static String getConsoleTopic() {
+        return MqttConsts.CONSOLE_PARENT_TOPIC + MqttConsts.TOPIC_SEPERATOR + "console";
     }
 
-    public static String getMachineTopic(String tenantCode, String subTopic) {
-        return tenantCode + MqttConfig.TENANT_PARENT_TOPIC_POSTFIX + MqttConfig.TOPIC_SEPERATOR + subTopic;
+    public static String getDispatchTopicByTenant(String tenantCode) {
+        return tenantCode + MqttConsts.TENANT_PARENT_TOPIC_POSTFIX + MqttConsts.TOPIC_SEPERATOR + "dispatch";
     }
 
-    public static String getMachineP2PTopic(String tenantCode, String machineCode) {
-        return tenantCode + MqttConfig.TENANT_PARENT_P2P_TOPIC_POSTFIX + MqttConfig.TOPIC_SEPERATOR + machineCode;
+    public static String getP2PTopicByTenant(String tenantCode, String machineCode) {
+        return tenantCode + MqttConsts.TENANT_PARENT_P2P_TOPIC_POSTFIX + MqttConsts.TOPIC_SEPERATOR + machineCode;
     }
 
     public static Properties loadProperties() {

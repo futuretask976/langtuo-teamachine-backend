@@ -50,7 +50,7 @@ public class CleanRuleDispatchWorker implements Runnable {
         JSONObject dispatchCont = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_CLEAN_RULE);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.SEND_TITLE_DISPATCH_OPEN_RULE);
         jsonMsg.put(MqttConsts.SEND_KEY_CLEAN_RULE, dispatchCont);
         log.info("$$$$$ CleanRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
@@ -62,8 +62,7 @@ public class CleanRuleDispatchWorker implements Runnable {
 
         MqttService mqttService = getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_CLEAN_RULE,
-                    jsonMsg.toJSONString());
+            mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 

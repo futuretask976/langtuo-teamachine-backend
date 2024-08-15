@@ -41,12 +41,34 @@ public class MqttConsts {
     /**
      * dispatch用的消息title
      */
-    public static final String SEND_MSG_TITLE_DISPATCH_ACCURACY = "dispatch_accuracy";
-    public static final String SEND_MSG_TITLE_DISPATCH_CLEAN_RULE = "dispatch_clean_rule";
-    public static final String SEND_MSG_TITLE_DISPATCH_CLOSE_RULE = "dispatch_close_rule";
-    public static final String SEND_MSG_TITLE_DISPATCH_MACHINE = "dispatch_machine";
-    public static final String SEND_MSG_TITLE_DISPATCH_MENU = "dispatch_menu";
-    public static final String SEND_MSG_TITLE_DISPATCH_MODEL = "dispatch_model";
-    public static final String SEND_MSG_TITLE_DISPATCH_OPEN_RULE = "dispatch_open_rule";
-    public static final String SEND_MSG_TITLE_DISPATCH_WARNING_RULE = "dispatch_warning_rule";
+    public static final String SEND_TITLE_DISPATCH_ACCURACY = "dispatch_accuracy";
+    public static final String SEND_TITLE_DISPATCH_CLEAN_RULE = "dispatch_clean_rule";
+    public static final String SEND_TITLE_DISPATCH_CLOSE_RULE = "dispatch_close_rule";
+    public static final String SEND_TITLE_DISPATCH_MACHINE = "dispatch_machine";
+    public static final String SEND_TITLE_DISPATCH_MENU = "dispatch_menu";
+    public static final String SEND_TITLE_DISPATCH_MODEL = "dispatch_model";
+    public static final String SEND_TITLE_DISPATCH_OPEN_RULE = "dispatch_open_rule";
+    public static final String SEND_TITLE_DISPATCH_WARNING_RULE = "dispatch_warning_rule";
+
+    /**
+     *
+     */
+    public static final String CONSOLE_PARENT_TOPIC = "teamachine";
+
+    /**
+     *
+     */
+    public static final String TENANT_PARENT_TOPIC_POSTFIX = "_teamachine";
+
+    /**
+     *
+     */
+    public static final String TENANT_PARENT_P2P_TOPIC_POSTFIX = "_teamachine/p2p";
+
+    /**
+     * topic分隔符
+     */
+    public static final String TOPIC_SEPERATOR = "/";
+
+    private static final String CHILD_TOPIC_DISPATCH = "dispatch";
 }

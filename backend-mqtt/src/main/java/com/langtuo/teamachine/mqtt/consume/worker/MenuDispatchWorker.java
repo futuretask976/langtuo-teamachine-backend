@@ -82,7 +82,7 @@ public class MenuDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_MENU);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.SEND_TITLE_DISPATCH_MENU);
         jsonMsg.put(MqttConsts.SEND_KEY_MD5_AS_HEX, md5AsHex);
         jsonMsg.put(MqttConsts.SEND_KEY_OSS_PATH, ossPath);
         System.out.println(jsonMsg.toJSONString());
@@ -95,8 +95,7 @@ public class MenuDispatchWorker implements Runnable {
 
         MqttService mqttService = getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MENU,
-                    jsonMsg.toJSONString());
+            mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 

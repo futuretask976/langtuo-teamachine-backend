@@ -34,7 +34,7 @@ public class ModelDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConfig.MACHINE_TOPIC_DISPATCH_MODEL);
+        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.SEND_TITLE_DISPATCH_MODEL);
         jsonMsg.put(MqttConsts.SEND_KEY_MODEL_LIST, jsonArray);
 
         TenantMgtService tenantMgtService = getTenantMgtService();
@@ -44,8 +44,7 @@ public class ModelDispatchWorker implements Runnable {
 
         MqttService mqttService = getMQTTService();
         tenantCodeList.forEach(tenantCode -> {
-            mqttService.sendMachineMsg(tenantCode, MqttConfig.MACHINE_TOPIC_DISPATCH_MODEL,
-                    jsonArray.toJSONString());
+            mqttService.sendDispatchMsgByTenant(tenantCode, jsonArray.toJSONString());
         });
     }
 
