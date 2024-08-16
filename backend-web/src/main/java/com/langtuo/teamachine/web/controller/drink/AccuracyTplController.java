@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/drinkset/accuracy")
-public class AccuracyController {
+public class AccuracyTplController {
     @Resource
     private AccuracyTplMgtService service;
 

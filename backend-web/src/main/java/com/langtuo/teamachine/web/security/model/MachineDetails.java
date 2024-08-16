@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.web.security.model;
 
+import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
 import org.assertj.core.util.Lists;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,22 +16,25 @@ import java.util.List;
  */
 public class MachineDetails implements UserDetails {
     /**
-     *
+     * 机器信息
      */
     private MachineDTO machineDTO;
 
-    public MachineDetails(MachineDTO machineDTO) {
+    /**
+     * 部署信息
+     */
+    private DeployDTO deployDTO;
+
+    public MachineDetails(DeployDTO deployDTO, MachineDTO machineDTO) {
         this.machineDTO = machineDTO;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> grantedAuthorityList = Lists.newArrayList();
-        grantedAuthorityList.add(new GrantedAuthority() {
-            public String getAuthority() {
-                // 系统在外面比较时，会加上ROLE_前缀，所以这里返回时需要加上
-                return "ROLE_MACHINE";
-            }
+        grantedAuthorityList.add((GrantedAuthority) () -> {
+            // 系统在外面比较时，会加上ROLE_前缀，所以这里返回时需要加上
+            return "ROLE_MACHINE";
         });
         return grantedAuthorityList;
     }
@@ -42,7 +46,7 @@ public class MachineDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return machineDTO.getMachineName();
+        return deployDTO.getDeployCode();
     }
 
     @Override

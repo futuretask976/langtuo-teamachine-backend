@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.mqtt.consume.worker;
+package com.langtuo.teamachine.mqtt.consume.worker.device;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
@@ -11,6 +11,7 @@ import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
@@ -18,23 +19,34 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Slf4j
 public class ModelDispatchWorker implements Runnable {
+    /**
+     * 型号编码
+     */
+    private String modelCode;
+
     public ModelDispatchWorker(JSONObject jsonPayload) {
+        this.modelCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_MODEL_CODE);
+        if (StringUtils.isBlank(modelCode)) {
+            throw new IllegalArgumentException("modelCode is blank");
+        }
     }
 
     @Override
     public void run() {
-        JSONArray jsonArray = getDispatchCont();
-        if (jsonArray == null) {
+        JSONObject jsonDispatchCont = getDispatchCont();
+        if (jsonDispatchCont == null) {
             log.info("dispatch content error, stop worker");
             return;
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.MSG_TITLE_DISPATCH_MODEL);
-        jsonMsg.put(MqttConsts.SEND_KEY_MODEL_LIST, jsonArray);
+        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_MODEL);
+        jsonMsg.put(MqttConsts.SEND_KEY_MODEL, jsonDispatchCont);
+        log.info("$$$$$ ModelDispatchWorker jsonMsg: " + jsonMsg);
 
         TenantMgtService tenantMgtService = getTenantMgtService();
         List<String> tenantCodeList = getListModel(tenantMgtService.list()).stream()
@@ -43,7 +55,7 @@ public class ModelDispatchWorker implements Runnable {
 
         MqttService mqttService = getMQTTService();
         tenantCodeList.forEach(tenantCode -> {
-            mqttService.sendDispatchMsgByTenant(tenantCode, jsonArray.toJSONString());
+            mqttService.sendDispatchMsgByTenant(tenantCode, jsonMsg.toJSONString());
         });
     }
 
@@ -59,21 +71,21 @@ public class ModelDispatchWorker implements Runnable {
         return tenantMgtService;
     }
 
-    private ModelMgtService getCloseRuleMgtService() {
+    private ModelMgtService getModelMgtService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         ModelMgtService modelMgtService = appContext.getBean(ModelMgtService.class);
         return modelMgtService;
     }
 
-    private JSONArray getDispatchCont() {
-        ModelMgtService modelMgtService = getCloseRuleMgtService();
-        List<ModelDTO> list = getListModel(modelMgtService.list());
-        if (CollectionUtils.isEmpty(list)) {
-            log.info("model list is empty, stop worker");
+    private JSONObject getDispatchCont() {
+        ModelMgtService modelMgtService = getModelMgtService();
+        ModelDTO dto = getModel(modelMgtService.get(modelCode));
+        if (dto == null) {
+            log.info("model is empty, stop worker");
             return null;
         }
 
-        JSONArray jsonArray = (JSONArray) JSON.toJSON(list);
-        return jsonArray;
+        JSONObject jsonDispatchCont = (JSONObject) JSONObject.toJSON(dto);
+        return jsonDispatchCont;
     }
 }

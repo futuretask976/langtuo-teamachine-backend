@@ -55,10 +55,23 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     @Override
-    public LangTuoResult<DeployDTO> get(String tenantCode, String deployCode) {
+    public LangTuoResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode) {
         LangTuoResult<DeployDTO> langTuoResult = null;
         try {
-            DeployDTO dto = convert(deployAccessor.selectOne(deployCode));
+            DeployDTO dto = convert(deployAccessor.selectOneByDeployCode(tenantCode, deployCode));
+            langTuoResult = LangTuoResult.success(dto);
+        } catch (Exception e) {
+            log.error("get error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode) {
+        LangTuoResult<DeployDTO> langTuoResult = null;
+        try {
+            DeployDTO dto = convert(deployAccessor.selectOneByMachineCode(tenantCode, machineCode));
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
@@ -77,7 +90,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            DeployPO exist = deployAccessor.selectOne(deployPO.getDeployCode());
+            DeployPO exist = deployAccessor.selectOneByDeployCode(deployPO.getTenantCode(), deployPO.getDeployCode());
             if (exist != null) {
                 int updated = deployAccessor.update(deployPO);
             } else {

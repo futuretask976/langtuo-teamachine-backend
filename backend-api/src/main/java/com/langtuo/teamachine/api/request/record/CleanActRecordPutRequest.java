@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.request.record;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.Map;
@@ -109,14 +108,14 @@ public class CleanActRecordPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(idempotentMark, true)
-                && RegexUtils.isValidStr(machineCode, true)
-                && RegexUtils.isValidStr(shopCode, true)
-                && RegexUtils.isValidStr(shopGroupCode, true)
-                && (cleanType == 0 && RegexUtils.isValidStr(cleanRuleCode, true))
-                && (cleanType == 2 && RegexUtils.isValidStr(openRuleCode, true))
-                && (cleanType == 3 && RegexUtils.isValidStr(closeRuleCode, true))
+        if (RegexUtils.isValidCode(tenantCode, true)
+                && RegexUtils.isValidCode(idempotentMark, true)
+                && RegexUtils.isValidCode(machineCode, true)
+                && RegexUtils.isValidCode(shopCode, true)
+                && RegexUtils.isValidCode(shopGroupCode, true)
+                && (cleanType == 0 && RegexUtils.isValidCode(cleanRuleCode, true))
+                && (cleanType == 2 && RegexUtils.isValidCode(openRuleCode, true))
+                && (cleanType == 3 && RegexUtils.isValidCode(closeRuleCode, true))
                 && cleanStartTime != null
                 && cleanEndTime != null) {
             return true;

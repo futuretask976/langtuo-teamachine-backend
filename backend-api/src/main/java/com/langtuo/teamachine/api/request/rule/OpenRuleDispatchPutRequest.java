@@ -3,7 +3,6 @@ package com.langtuo.teamachine.api.request.rule;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -29,8 +28,8 @@ public class OpenRuleDispatchPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(openRuleCode, true)
+        if (RegexUtils.isValidCode(tenantCode, true)
+                && RegexUtils.isValidCode(openRuleCode, true)
                 && isValidShopGroupCodeList()) {
             return true;
         }
@@ -43,7 +42,7 @@ public class OpenRuleDispatchPutRequest {
             isValid = false;
         } else {
             for (String m : shopGroupCodeList) {
-                if (!RegexUtils.isValidStr(m, true)) {
+                if (!RegexUtils.isValidCode(m, true)) {
                     isValid = false;
                     break;
                 }

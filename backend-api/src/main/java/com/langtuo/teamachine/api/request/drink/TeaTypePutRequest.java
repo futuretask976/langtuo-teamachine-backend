@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.request.drink;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -38,10 +37,10 @@ public class TeaTypePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(comment, false)
-                && RegexUtils.isValidStr(teaTypeCode, true)
-                && RegexUtils.isValidStr(teaTypeName, true)) {
+        if (RegexUtils.isValidCode(tenantCode, true)
+                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidCode(teaTypeCode, true)
+                && RegexUtils.isValidName(teaTypeName, true)) {
             return true;
         }
         return false;

@@ -14,6 +14,7 @@ import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
+import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,9 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Resource
     private ShopMgtService shopMgtService;
+
+    @Resource
+    private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
     public LangTuoResult<MachineDTO> get(String tenantCode, String machineCode) {
@@ -121,7 +125,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
                 return LangTuoResult.error(ErrorEnum.DB_ERR_UPDATE_FAIL);
             }
 
-            DeployPO exist = deployAccessor.selectOne(deployPO.getDeployCode());
+            DeployPO exist = deployAccessor.selectOneByDeployCode(deployPO.getTenantCode(), deployPO.getDeployCode());
             if (exist == null) {
                 return LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
             }
@@ -159,6 +163,10 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             log.error("update error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
+
+        // 异步发送消息准备配置信息分发
+        mqttPublisher4Console.send4Machine(request.getTenantCode(), request.getMachineCode());
+
         return langTuoResult;
     }
 

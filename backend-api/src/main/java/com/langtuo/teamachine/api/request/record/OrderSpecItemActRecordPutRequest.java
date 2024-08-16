@@ -26,10 +26,10 @@ public class OrderSpecItemActRecordPutRequest {
     private String specItemName;
 
     public boolean isValid() {
-        if (RegexUtils.isValidStr(specCode, true)
-                && RegexUtils.isValidStr(specName, true)
-                && RegexUtils.isValidStr(specItemCode, true)
-                && RegexUtils.isValidStr(specItemName, true)) {
+        if (RegexUtils.isValidCode(specCode, true)
+                && RegexUtils.isValidName(specName, true)
+                && RegexUtils.isValidCode(specItemCode, true)
+                && RegexUtils.isValidName(specItemName, true)) {
             return true;
         }
         return false;

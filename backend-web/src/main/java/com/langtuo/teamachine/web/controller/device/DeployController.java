@@ -5,11 +5,9 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
-import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RestController
 @RequestMapping("/deviceset/deploy")
@@ -24,7 +22,7 @@ public class DeployController {
     @GetMapping(value = "/{tenantcode}/{deploycode}/get")
     public LangTuoResult<DeployDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "deploycode") String deployCode) {
-        LangTuoResult<DeployDTO> rtn = service.get(tenantCode, deployCode);
+        LangTuoResult<DeployDTO> rtn = service.getByDeployCode(tenantCode, deployCode);
         return rtn;
     }
 

@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.request.shop;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -48,11 +47,11 @@ public class ShopPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(comment, false)
-                && RegexUtils.isValidStr(shopGroupCode, true)
-                && RegexUtils.isValidStr(shopCode, true)
-                && RegexUtils.isValidStr(shopName, true)) {
+        if (RegexUtils.isValidCode(tenantCode, true)
+                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidCode(shopGroupCode, true)
+                && RegexUtils.isValidCode(shopCode, true)
+                && RegexUtils.isValidName(shopName, true)) {
             return true;
         }
         return false;

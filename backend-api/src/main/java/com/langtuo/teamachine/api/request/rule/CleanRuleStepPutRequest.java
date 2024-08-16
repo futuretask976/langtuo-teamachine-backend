@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.request.rule;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class CleanRuleStepPutRequest {
@@ -62,7 +61,7 @@ public class CleanRuleStepPutRequest {
      */
     public boolean isValid() {
         if (stepIndex > 0
-                && (needConfirm == 1 && RegexUtils.isValidStr(remindTitle, true) && RegexUtils.isValidStr(remindContent, true))) {
+                && (needConfirm == 1 && RegexUtils.isValidCode(remindTitle, true) && RegexUtils.isValidCode(remindContent, true))) {
             return true;
         }
         return false;

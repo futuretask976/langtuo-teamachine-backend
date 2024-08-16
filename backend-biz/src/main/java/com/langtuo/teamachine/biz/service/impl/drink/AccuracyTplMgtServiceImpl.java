@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplAccessor;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
+import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,9 @@ import java.util.stream.Collectors;
 public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     @Resource
     private AccuracyTplAccessor accessor;
+
+    @Resource
+    private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
     public LangTuoResult<List<AccuracyTplDTO>> list(String tenantCode) {
@@ -109,6 +113,10 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
+
+        // 异步发送消息准备配置信息分发
+        mqttPublisher4Console.send4AccuracyTpl(request.getTenantCode(), request.getTemplateCode());
+
         return langTuoResult;
     }
 

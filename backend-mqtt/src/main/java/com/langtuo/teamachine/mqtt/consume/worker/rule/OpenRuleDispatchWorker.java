@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.mqtt.consume.worker;
+package com.langtuo.teamachine.mqtt.consume.worker.rule;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
@@ -27,19 +27,6 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 @Slf4j
 public class OpenRuleDispatchWorker implements Runnable {
     /**
-     * 收到的消息中的key关键字
-     */
-    private static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
-    private static final String RECEIVE_KEY_OPEN_RULE_CODE = "openRuleCode";
-
-    /**
-     * 发送的消息中的key关键字
-     */
-    private static final String SEND_KEY_TITLE = "title";
-    private static final String SEND_KEY_OPEN_RULE = "openRule";
-
-
-    /**
      * 租户编码
      */
     private String tenantCode;
@@ -59,11 +46,11 @@ public class OpenRuleDispatchWorker implements Runnable {
 
     @Override
     public void run() {
-        JSONObject jsonOpenRule = getDispatchCont();
+        JSONObject jsonDispatchCont = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.MSG_TITLE_DISPATCH_OPEN_RULE);
-        jsonMsg.put(MqttConsts.SEND_KEY_OPEN_RULE, jsonOpenRule);
+        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_OPEN_RULE);
+        jsonMsg.put(MqttConsts.SEND_KEY_OPEN_RULE, jsonDispatchCont);
         log.info("$$$$$ OpenRuleDispatchWorker jsonMsg: " + jsonMsg.toJSONString());
 
         // 准备发送

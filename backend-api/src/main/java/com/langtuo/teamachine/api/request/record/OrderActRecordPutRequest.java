@@ -80,14 +80,14 @@ public class OrderActRecordPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(idempotentMark, true)
-                && RegexUtils.isValidStr(machineCode, true)
-                && RegexUtils.isValidStr(shopCode, true)
-                && RegexUtils.isValidStr(shopName, true)
-                && RegexUtils.isValidStr(shopGroupCode, true)
-                && RegexUtils.isValidStr(shopGroupName, true)
-                && RegexUtils.isValidStr(outerOrderId, true)
+        if (RegexUtils.isValidCode(tenantCode, true)
+                && RegexUtils.isValidCode(idempotentMark, true)
+                && RegexUtils.isValidCode(machineCode, true)
+                && RegexUtils.isValidCode(shopCode, true)
+                && RegexUtils.isValidName(shopName, true)
+                && RegexUtils.isValidCode(shopGroupCode, true)
+                && RegexUtils.isValidName(shopGroupName, true)
+                && RegexUtils.isValidCode(outerOrderId, true)
                 && isValidSpecItemList()
                 && isValidToppingList()) {
             return true;

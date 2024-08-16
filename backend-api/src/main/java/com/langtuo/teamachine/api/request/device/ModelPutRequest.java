@@ -34,7 +34,7 @@ public class ModelPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(modelCode, true)
+        if (RegexUtils.isValidCode(modelCode, true)
                 && isValidPipelineList()) {
             return true;
         }

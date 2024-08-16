@@ -3,7 +3,6 @@ package com.langtuo.teamachine.api.request.rule;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -45,9 +44,9 @@ public class OpenRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(openRuleCode, true)
-                && RegexUtils.isValidStr(openRuleName, true)
+        if (RegexUtils.isValidCode(tenantCode, true)
+                && RegexUtils.isValidCode(openRuleCode, true)
+                && RegexUtils.isValidName(openRuleName, true)
                 && isValidToppingRuleList()) {
             return true;
         }

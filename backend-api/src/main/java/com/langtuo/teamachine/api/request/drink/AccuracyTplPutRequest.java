@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.request.drink;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -63,11 +62,11 @@ public class AccuracyTplPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(comment, false)
-                && RegexUtils.isValidStr(templateCode, true)
-                && RegexUtils.isValidStr(templateName, true)
-                && RegexUtils.isValidStr(toppingCode, true)) {
+        if (RegexUtils.isValidCode(tenantCode, true)
+                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidCode(templateCode, true)
+                && RegexUtils.isValidName(templateName, true)
+                && RegexUtils.isValidCode(toppingCode, true)) {
             return true;
         }
         return false;

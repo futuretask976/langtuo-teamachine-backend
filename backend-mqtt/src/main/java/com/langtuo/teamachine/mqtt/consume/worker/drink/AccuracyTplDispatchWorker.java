@@ -1,8 +1,6 @@
-package com.langtuo.teamachine.mqtt.consume.worker;
+package com.langtuo.teamachine.mqtt.consume.worker.drink;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
@@ -11,21 +9,24 @@ import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-
-import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Slf4j
-public class AccuracyDispatchWorker implements Runnable {
+public class AccuracyTplDispatchWorker implements Runnable {
     /**
      * 租户编码
      */
     private String tenantCode;
 
-    public AccuracyDispatchWorker(JSONObject jsonPayload) {
+    /**
+     * 模板编码
+     */
+    private String templateCode;
+
+    public AccuracyTplDispatchWorker(JSONObject jsonPayload) {
         this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
+        this.templateCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TEMPLATE_CODE);
         if (StringUtils.isBlank(tenantCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
@@ -33,15 +34,15 @@ public class AccuracyDispatchWorker implements Runnable {
 
     @Override
     public void run() {
-        JSONArray jsonArray = getDispatchCont();
-        if (jsonArray == null) {
+        JSONObject jsonDispatchCont = getDispatchCont();
+        if (jsonDispatchCont == null) {
             log.info("dispatch content error, stop worker");
             return;
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.MSG_TITLE_DISPATCH_ACCURACY);
-        jsonMsg.put(MqttConsts.SEND_KEY_ACCURACY_TPL_LIST, jsonArray);
+        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_ACCURACY);
+        jsonMsg.put(MqttConsts.SEND_KEY_ACCURACY_TPL, jsonDispatchCont);
         log.info("$$$$$ AccuracyDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         MqttService mqttService = getMQTTService();
@@ -61,15 +62,15 @@ public class AccuracyDispatchWorker implements Runnable {
         return accuracyTplMgtService;
     }
 
-    private JSONArray getDispatchCont() {
+    private JSONObject getDispatchCont() {
         AccuracyTplMgtService accuracyTplMgtService = getToppingAccuracyTplMgtService();
-        List<AccuracyTplDTO> list = getListModel(accuracyTplMgtService.list(tenantCode));
-        if (CollectionUtils.isEmpty(list)) {
+        AccuracyTplDTO dto = getModel(accuracyTplMgtService.getByCode(tenantCode, templateCode));
+        if (dto == null) {
             log.info("open rule list is empty, stop worker");
             return null;
         }
 
-        JSONArray jsonArray = (JSONArray) JSON.toJSON(list);
-        return jsonArray;
+        JSONObject jsonDispatchCont = (JSONObject) JSONObject.toJSON(dto);
+        return jsonDispatchCont;
     }
 }

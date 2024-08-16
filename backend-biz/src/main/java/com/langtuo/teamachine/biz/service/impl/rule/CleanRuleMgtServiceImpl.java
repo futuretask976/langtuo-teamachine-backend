@@ -191,7 +191,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
 
-        // 发送一步消息推送机器
+        // 异步发送消息准备配置信息分发
         mqttPublisher4Console.send4CleanRule(
                 request.getTenantCode(), request.getCleanRuleCode());
 

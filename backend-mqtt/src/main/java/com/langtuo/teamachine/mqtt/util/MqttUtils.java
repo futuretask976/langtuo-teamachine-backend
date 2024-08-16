@@ -51,7 +51,7 @@ public class MqttUtils {
     }
 
     public static String getDispatchTopicByTenant(String tenantCode) {
-        return tenantCode + MqttConsts.TENANT_PARENT_TOPIC_POSTFIX + MqttConsts.TOPIC_SEPERATOR + "dispatch";
+        return tenantCode + MqttConsts.TENANT_PARENT_TOPIC_POSTFIX + MqttConsts.TOPIC_SEPERATOR + "broadcast";
     }
 
     public static String getP2PTopicByTenant(String tenantCode, String machineCode) {

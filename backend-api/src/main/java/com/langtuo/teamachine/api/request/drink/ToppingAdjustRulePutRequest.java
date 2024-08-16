@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.request.drink;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class ToppingAdjustRulePutRequest {
@@ -42,7 +41,7 @@ public class ToppingAdjustRulePutRequest {
      */
     public boolean isValid() {
         if (stepIndex > 0
-                && RegexUtils.isValidStr(toppingCode, true)) {
+                && RegexUtils.isValidCode(toppingCode, true)) {
             return true;
         }
         return false;

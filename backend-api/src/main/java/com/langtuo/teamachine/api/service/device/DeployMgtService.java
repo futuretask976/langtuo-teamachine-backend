@@ -14,7 +14,15 @@ public interface DeployMgtService {
      * @param deployCode
      * @return
      */
-    LangTuoResult<DeployDTO> get(String tenantCode, String deployCode);
+    LangTuoResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param machineCode
+     * @return
+     */
+    LangTuoResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode);
 
     /**
      *

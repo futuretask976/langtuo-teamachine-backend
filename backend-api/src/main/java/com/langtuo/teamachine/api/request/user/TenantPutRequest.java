@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.request.user;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -43,11 +42,11 @@ public class TenantPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(tenantName, true)
-                && RegexUtils.isValidStr(contactPerson, true)
-                && RegexUtils.isValidStr(contactPhone, true)
-                && RegexUtils.isValidStr(comment, false)) {
+        if (RegexUtils.isValidCode(tenantCode, true)
+                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidName(tenantName, true)
+                && RegexUtils.isValidName(contactPerson, true)
+                && RegexUtils.isValidCode(contactPhone, true)) {
             return true;
         }
         return false;

@@ -50,10 +50,10 @@ public class MenuPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(comment, false)
-                && RegexUtils.isValidStr(menuCode, true)
-                && RegexUtils.isValidStr(menuName, true)
+        if (RegexUtils.isValidCode(tenantCode, true)
+                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidCode(menuCode, true)
+                && RegexUtils.isValidName(menuName, true)
                 && isValidPipelineList()
                 && validFrom != null) {
             return true;

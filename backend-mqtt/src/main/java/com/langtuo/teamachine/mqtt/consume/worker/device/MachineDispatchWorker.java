@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.mqtt.consume.worker;
+package com.langtuo.teamachine.mqtt.consume.worker.device;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
@@ -35,18 +35,19 @@ public class MachineDispatchWorker implements Runnable {
 
     @Override
     public void run() {
-        JSONObject jsonObject = getDispatchCont();
-        if (jsonObject == null) {
+        JSONObject jsonDispatchCont = getDispatchCont();
+        if (jsonDispatchCont == null) {
             log.info("dispatch content error, stop worker");
             return;
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.MSG_TITLE_DISPATCH_MACHINE);
-        jsonMsg.put(MqttConsts.SEND_KEY_MACHINE, jsonObject);
+        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_MACHINE);
+        jsonMsg.put(MqttConsts.SEND_KEY_MACHINE, jsonDispatchCont);
+        log.info("$$$$$ MachineDispatchWorker jsonMsg: " + jsonMsg);
 
         MqttService mqttService = getMQTTService();
-        mqttService.sendDispatchMsgByTenant(tenantCode, jsonMsg.toJSONString());
+        mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
     }
 
     private MqttService getMQTTService() {

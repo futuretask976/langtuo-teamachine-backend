@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.request.rule;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class OpenRuleToppingPutRequest {
@@ -26,7 +25,7 @@ public class OpenRuleToppingPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(toppingCode, true)
+        if (RegexUtils.isValidCode(toppingCode, true)
                 && flushSec > 0
                 && flushWeight > 0) {
             return true;

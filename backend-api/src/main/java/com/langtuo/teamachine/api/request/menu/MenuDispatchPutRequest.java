@@ -1,10 +1,8 @@
 package com.langtuo.teamachine.api.request.menu;
 
-import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -30,8 +28,8 @@ public class MenuDispatchPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(menuCode, true)
+        if (RegexUtils.isValidCode(tenantCode, true)
+                && RegexUtils.isValidCode(menuCode, true)
                 && isValidShopGroupList()) {
             return true;
         }
@@ -44,7 +42,7 @@ public class MenuDispatchPutRequest {
             isValid = false;
         } else {
             for (String m : shopGroupCodeList) {
-                if (!RegexUtils.isValidStr(m, true)) {
+                if (!RegexUtils.isValidCode(m, true)) {
                     isValid = false;
                     break;
                 }

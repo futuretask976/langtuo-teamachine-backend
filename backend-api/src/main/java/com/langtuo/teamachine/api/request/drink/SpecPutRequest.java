@@ -3,7 +3,6 @@ package com.langtuo.teamachine.api.request.drink;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -45,10 +44,10 @@ public class SpecPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(comment, false)
-                && RegexUtils.isValidStr(specCode, true)
-                && RegexUtils.isValidStr(specName, true)
+        if (RegexUtils.isValidCode(tenantCode, true)
+                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidCode(specCode, true)
+                && RegexUtils.isValidName(specName, true)
                 && isValidSpecItem()) {
             return true;
         }

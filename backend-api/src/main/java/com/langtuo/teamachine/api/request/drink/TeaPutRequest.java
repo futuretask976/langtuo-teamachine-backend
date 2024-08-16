@@ -64,13 +64,13 @@ public class TeaPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(comment, false)
-                && RegexUtils.isValidStr(teaCode, true)
-                && RegexUtils.isValidStr(teaName, true)
-                && RegexUtils.isValidStr(outerTeaCode, true)
-                && RegexUtils.isValidStr(teaTypeCode, true)
-                && RegexUtils.isValidStr(imgLink, true)
+        if (RegexUtils.isValidCode(tenantCode, true)
+                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidCode(teaCode, true)
+                && RegexUtils.isValidName(teaName, true)
+                && RegexUtils.isValidCode(outerTeaCode, true)
+                && RegexUtils.isValidCode(teaTypeCode, true)
+                // && RegexUtils.isValidCode(imgLink, true)
                 && isValidTeaUnitList()) {
             return true;
         }

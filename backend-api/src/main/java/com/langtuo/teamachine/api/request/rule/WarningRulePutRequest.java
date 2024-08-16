@@ -57,10 +57,10 @@ public class WarningRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(comment, false)
-                && RegexUtils.isValidStr(warningRuleCode, true)
-                && RegexUtils.isValidStr(warningRuleName, true)) {
+        if (RegexUtils.isValidCode(tenantCode, true)
+                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidCode(warningRuleCode, true)
+                && RegexUtils.isValidName(warningRuleName, true)) {
             return true;
         }
         return false;

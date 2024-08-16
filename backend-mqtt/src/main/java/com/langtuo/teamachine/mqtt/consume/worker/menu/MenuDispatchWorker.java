@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.mqtt.consume.worker;
+package com.langtuo.teamachine.mqtt.consume.worker.menu;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
@@ -81,7 +81,7 @@ public class MenuDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.MSG_TITLE_DISPATCH_MENU);
+        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_MENU);
         jsonMsg.put(MqttConsts.SEND_KEY_MD5_AS_HEX, md5AsHex);
         jsonMsg.put(MqttConsts.SEND_KEY_OSS_PATH, ossPath);
         System.out.println(jsonMsg.toJSONString());

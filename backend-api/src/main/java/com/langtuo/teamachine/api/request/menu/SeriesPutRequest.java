@@ -1,10 +1,8 @@
 package com.langtuo.teamachine.api.request.menu;
 
-import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -46,10 +44,10 @@ public class SeriesPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(comment, false)
-                && RegexUtils.isValidStr(seriesCode, true)
-                && RegexUtils.isValidStr(seriesName, true)) {
+        if (RegexUtils.isValidCode(tenantCode, true)
+                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidCode(seriesCode, true)
+                && RegexUtils.isValidName(seriesName, true)) {
             return true;
         }
         return false;

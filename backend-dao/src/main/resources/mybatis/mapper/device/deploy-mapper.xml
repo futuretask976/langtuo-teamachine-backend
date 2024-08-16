@@ -21,32 +21,39 @@
     <select id="selectOne" resultMap="machineDeployPOMap">
         SELECT * FROM deploy
         WHERE 1 = 1
-            AND deploy_code = #{deployCode}
+            AND tenant_code = #{tenantCode}
+            <if test="deployCode != null">
+                AND deploy_code = #{deployCode}
+            </if>
+            <if test="machineCode != null">
+                AND machine_code = #{machineCode}
+            </if>
     </select>
 
     <select id="selectList" resultMap="machineDeployPOMap">
-        SELECT * FROM deploy
+        SELECT *
+        FROM deploy
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
     </select>
 
     <select id="search" parameterType="com.langtuo.teamachine.dao.query.device.MachineDeployQuery" resultMap="machineDeployPOMap">
         SELECT *
         FROM deploy
         WHERE 1 = 1
-        <if test="tenantCode != null">
             AND tenant_code = #{tenantCode}
-        </if>
-        <if test="deployCode != null">
-            AND deploy_code = #{deployCode}
-        </if>
-        <if test="machineCode != null">
-            AND machine_code = #{machineCode}
-        </if>
-        <if test="shopCode != null">
-            AND shop_code = #{shopCode}
-        </if>
-        <if test="state != null">
-            AND state = #{state}
-        </if>
+            <if test="deployCode != null">
+                AND deploy_code = #{deployCode}
+            </if>
+            <if test="machineCode != null">
+                AND machine_code = #{machineCode}
+            </if>
+            <if test="shopCode != null">
+                AND shop_code = #{shopCode}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.device.DeployPO">
@@ -93,14 +100,14 @@
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
             </if>
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and deploy_code = #{deployCode}
+            AND tenant_code = #{tenantCode}
+            AND deploy_code = #{deployCode}
     </update>
 
     <delete id="delete">
         DELETE FROM deploy
         WHERE 1 = 1
-            and tenant_code = #{tenantCode}
-            and deploy_code = #{deployCode}
+            AND tenant_code = #{tenantCode}
+            AND deploy_code = #{deployCode}
     </delete>
 </mapper>

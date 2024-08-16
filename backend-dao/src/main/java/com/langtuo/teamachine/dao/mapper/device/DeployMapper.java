@@ -19,7 +19,8 @@ public interface DeployMapper {
      * @param deployCode
      * @return
      */
-    DeployPO selectOne(@Param("deployCode") String deployCode);
+    DeployPO selectOne(@Param("tenantCode") String tenantCode, @Param("deployCode") String deployCode,
+            @Param("machineCode") String machineCode);
 
     /**
      *

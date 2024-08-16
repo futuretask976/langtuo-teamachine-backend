@@ -13,6 +13,7 @@ import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelPipelineAccessor;
 import com.langtuo.teamachine.dao.po.device.ModelPO;
 import com.langtuo.teamachine.dao.po.device.ModelPipelinePO;
+import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,9 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     @Resource
     private ModelPipelineAccessor modelPipelineAccessor;
+
+    @Resource
+    private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
     public LangTuoResult<List<ModelDTO>> list() {
@@ -111,6 +115,10 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             log.error("put error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
+
+        // 异步发送消息准备配置信息分发
+        mqttPublisher4Console.send4Model(request.getModelCode());
+
         return langTuoResult;
     }
 

@@ -1,14 +1,14 @@
-package com.langtuo.teamachine.mqtt.consume.worker;
+package com.langtuo.teamachine.mqtt.consume.worker.rule;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
-import com.langtuo.teamachine.api.model.rule.OpenRuleDTO;
-import com.langtuo.teamachine.api.model.rule.OpenRuleDispatchDTO;
+import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
+import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
-import com.langtuo.teamachine.api.service.rule.OpenRuleMgtService;
+import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
@@ -25,33 +25,33 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
 import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Slf4j
-public class WarningRuleDispatchWorker implements Runnable {
+public class CleanRuleDispatchWorker implements Runnable {
     /**
      * 租户编码
      */
     private String tenantCode;
 
     /**
-     * 预警规则编码
+     * 清洁规则编码
      */
-    private String warningRuleCode;
+    private String cleanRuleCode;
 
-    public WarningRuleDispatchWorker(JSONObject jsonPayload) {
+    public CleanRuleDispatchWorker(JSONObject jsonPayload) {
         this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
-        this.warningRuleCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_WARNING_RULE_CODE);
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(warningRuleCode)) {
-            throw new IllegalArgumentException("tenantCode or warningRuleCode is blank");
+        this.cleanRuleCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_CLEAN_RULE_CODE);
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(cleanRuleCode)) {
+            throw new IllegalArgumentException("tenantCode or cleanRuleCode is blank");
         }
     }
 
     @Override
     public void run() {
-        JSONObject dispatchCont = getDispatchCont();
+        JSONObject jsonDispatchCont = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_TITLE, MqttConsts.MSG_TITLE_DISPATCH_WARNING_RULE);
-        jsonMsg.put(MqttConsts.SEND_KEY_WARNING_RULE, dispatchCont);
-        log.info("$$$$$ WarningRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
+        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_CLEAN_RULE);
+        jsonMsg.put(MqttConsts.SEND_KEY_CLEAN_RULE, jsonDispatchCont);
+        log.info("$$$$$ CleanRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
@@ -65,10 +65,10 @@ public class WarningRuleDispatchWorker implements Runnable {
         });
     }
 
-    private OpenRuleMgtService getOpenRuleMgtService() {
+    private CleanRuleMgtService getCleanRuleMgtService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        OpenRuleMgtService openRuleMgtService = appContext.getBean(OpenRuleMgtService.class);
-        return openRuleMgtService;
+        CleanRuleMgtService cleanRuleMgtService = appContext.getBean(CleanRuleMgtService.class);
+        return cleanRuleMgtService;
     }
 
     private MqttService getMQTTService() {
@@ -90,27 +90,27 @@ public class WarningRuleDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        OpenRuleMgtService openRuleMgtService = getOpenRuleMgtService();
-        OpenRuleDTO openRuleDTO = getModel(openRuleMgtService.getByCode(tenantCode, warningRuleCode));
-        if (openRuleDTO == null) {
-            log.info("open rule error, stop worker");
+        CleanRuleMgtService cleanRuleMgtService = getCleanRuleMgtService();
+        CleanRuleDTO cleanRuleDTO = getModel(cleanRuleMgtService.getByCode(tenantCode, cleanRuleCode));
+        if (cleanRuleDTO == null) {
+            log.info("clean rule error, stop worker");
             return null;
         }
 
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(openRuleDTO);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(cleanRuleDTO);
         return jsonObject;
     }
 
     private List<String> getMachineCodeList() {
-        OpenRuleMgtService openRuleMgtService = getOpenRuleMgtService();
-        OpenRuleDispatchDTO openRuleDispatchDTO = getModel(openRuleMgtService.getDispatchByCode(tenantCode, warningRuleCode));
-        if (openRuleDispatchDTO == null) {
-            log.info("open rule dispatch is null");
+        CleanRuleMgtService cleanRuleMgtService = getCleanRuleMgtService();
+        CleanRuleDispatchDTO cleanRuleDispatchDTO = getModel(cleanRuleMgtService.getDispatchByCode(tenantCode, cleanRuleCode));
+        if (cleanRuleDispatchDTO == null) {
+            log.info("clean rule dispatch is null");
             return null;
         }
 
         ShopMgtService shopMgtService = getShopMgtService();
-        List<String> shopCodeList = openRuleDispatchDTO.getShopGroupCodeList().stream()
+        List<String> shopCodeList = cleanRuleDispatchDTO.getShopGroupCodeList().stream()
                 .map(shopGroupCode -> {
                     List<ShopDTO> shopList = getListModel(shopMgtService.listByShopGroupCode(
                             tenantCode, shopGroupCode));

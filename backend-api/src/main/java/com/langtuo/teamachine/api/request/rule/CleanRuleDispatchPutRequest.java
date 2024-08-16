@@ -28,8 +28,8 @@ public class CleanRuleDispatchPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(tenantCode, true)
-                && RegexUtils.isValidStr(cleanRuleCode, true)
+        if (RegexUtils.isValidCode(tenantCode, true)
+                && RegexUtils.isValidCode(cleanRuleCode, true)
                 && isValidShopGroupCodeList()) {
             return true;
         }
@@ -42,7 +42,7 @@ public class CleanRuleDispatchPutRequest {
             isValid = false;
         } else {
             for (String m : shopGroupCodeList) {
-                if (!RegexUtils.isValidStr(m, true)) {
+                if (!RegexUtils.isValidCode(m, true)) {
                     isValid = false;
                     break;
                 }

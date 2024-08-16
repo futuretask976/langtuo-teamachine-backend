@@ -1,10 +1,8 @@
 package com.langtuo.teamachine.api.request.drink;
 
-import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -35,8 +33,8 @@ public class TeaUnitPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidStr(teaUnitCode, true)
-                && RegexUtils.isValidStr(teaUnitName, true)
+        if (RegexUtils.isValidCode(teaUnitCode, true)
+                && RegexUtils.isValidName(teaUnitName, true)
                 && isValidSpecItemRuleList()
                 && isValidToppingAdjustRuleList()) {
             return true;

@@ -1,9 +1,11 @@
 package com.langtuo.teamachine.web.security.service;
 
+import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.service.device.DeployMgtService;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
@@ -16,12 +18,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Slf4j
 public class TeaMachineUserDetailService implements UserDetailsService {
     @Autowired
     private HttpServletRequest request;
+
+    @Resource
+    private DeployMgtService deployMgtService;
 
     @Autowired
     private AdminMgtService adminMgtService;
@@ -48,13 +56,13 @@ public class TeaMachineUserDetailService implements UserDetailsService {
     }
 
     public UserDetails loadMachineUserDetails(String tenantCode, String machineCode) {
-        LangTuoResult<MachineDTO> result = machineMgtService.get(tenantCode, machineCode);
-        if (result == null && !result.isSuccess() || result.getModel() == null) {
+        DeployDTO deployDTO = getModel(deployMgtService.getByDeployCode(tenantCode, machineCode));
+        MachineDTO machineDTO = getModel(machineMgtService.get(tenantCode, machineCode));
+        if (deployDTO == null || machineDTO == null) {
             return null;
         }
-        MachineDTO machineDTO = result.getModel();
 
-        MachineDetails adminDetails = new MachineDetails(machineDTO);
+        MachineDetails adminDetails = new MachineDetails(deployDTO, machineDTO);
         return adminDetails;
     }
 
