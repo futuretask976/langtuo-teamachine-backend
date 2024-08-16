@@ -16,7 +16,7 @@ public class DeployController {
     private DeployMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/tenant_001/123456/get
+     * url: http://localhost:8080/teamachine/deploy/{tenantcode}/{deploycode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{deploycode}/get")
@@ -27,7 +27,7 @@ public class DeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/search?tenantCode=tenant_001&deployCode=&shopName=&state=&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/deploy/search?tenantCode={tenantCode}&deployCode={deployCode}&machineCode={machineCode}&shopName={shopName}&state={state}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -51,7 +51,7 @@ public class DeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/tenant_001/123456/delete
+     * url: http://localhost:8080/teamachine/deploy/{tenantcode}/{deploycode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{deploycode}/delete")
@@ -61,12 +61,22 @@ public class DeployController {
         return rtn;
     }
 
+    /**
+     * url: http://localhost:8080/teamachine/deploy/deploycode/generate?tenantCode={tenantCode}
+     * @param tenantCode
+     * @return
+     */
     @GetMapping(value = "/deploycode/generate")
     public LangTuoResult<String> generateDeployCode(@RequestParam(name = "tenantCode") String tenantCode) {
         LangTuoResult<String> rtn = service.generateDeployCode();
         return rtn;
     }
 
+    /**
+     * url: http://localhost:8080/teamachine/deploy/machinecode/generate?tenantCode={tenantCode}
+     * @param tenantCode
+     * @return
+     */
     @GetMapping(value = "/machinecode/generate")
     public LangTuoResult<String> generateMachineCode(@RequestParam(name = "tenantCode") String tenantCode) {
         LangTuoResult<String> rtn = service.generateMachineCode();

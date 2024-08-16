@@ -18,7 +18,7 @@ public class MachineController {
     private MachineMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/machine/tenant_001/machine_001/get
+     * url: http://localhost:8080/teamachine/machine/{tenantcode}/{machinecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{machinecode}/get")
@@ -29,7 +29,7 @@ public class MachineController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/list?tenantCode=tenant_001&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/machine/list?tenantCode={tenantCode}
      * @return
      */
     @GetMapping(value = "/list")
@@ -39,7 +39,7 @@ public class MachineController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/search?tenantCode=tenant_001&screenCode=&elecBoardCode=&modelCode=&shopName=&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/machine/search?tenantCode={tenantCode}&screenCode={screenCode}&elecBoardCode={elecBoardCode}&modelCode={modelCode}&shopName={shopName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -63,7 +63,7 @@ public class MachineController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/deploy/put
+     * url: http://localhost:8080/teamachine/machine/update
      * @return
      */
     @PutMapping(value = "/update")
@@ -73,7 +73,7 @@ public class MachineController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/tenant_001/123456/delete
+     * url: http://localhost:8080/teamachine/machine/{tenantcode}/{machinecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{machinecode}/delete")

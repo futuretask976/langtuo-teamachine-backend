@@ -17,7 +17,7 @@ public class ModelController {
     private ModelMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/model/get
+     * url: http://localhost:8080/teamachine/model/{modelcode}/get
      * @return
      */
     @GetMapping(value = "/{modelcode}/get")
@@ -27,7 +27,7 @@ public class ModelController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/model/list?pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/model/list
      * @return
      */
     @GetMapping(value = "/list")
@@ -37,7 +37,7 @@ public class ModelController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/model/search?modelCode=model_001&pageNum=1&pageSize=2
+     * url: http://localhost:8080/teamachine/model/search?modelCode={modelCode}&pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/search")
@@ -58,7 +58,7 @@ public class ModelController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/model/put
+     * url: http://localhost:8080/teamachine/model/{modelcode}/delete
      * @return
      */
     @DeleteMapping(value = "/{modelcode}/delete")
