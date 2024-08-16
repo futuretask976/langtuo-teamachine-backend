@@ -19,7 +19,7 @@ public class OpenRuleController {
     private OpenRuleMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/flushair/tenant_001/shopGroup_001/get
+     * url: http://localhost:8080/teamachine/ruleset/open/{tenantcode}/{openrulecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{openrulecode}/get")
@@ -30,7 +30,7 @@ public class OpenRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/list?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/ruleset/open/list?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -41,7 +41,7 @@ public class OpenRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/ruleset/open/search?tenantCode={tenantCode}&openRuleCode={openRuleCode}&openRuleName={openRuleName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -54,7 +54,7 @@ public class OpenRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/put
+     * url: http://localhost:8080/teamachine/ruleset/open/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -64,7 +64,7 @@ public class OpenRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/{tenantcode}/{cleanrulecode}/delete
+     * url: http://localhost:8080/teamachine/ruleset/open/{tenantcode}/{openrulecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{openrulecode}/delete")
@@ -75,7 +75,7 @@ public class OpenRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/put
+     * url: http://localhost:8080/teamachine/ruleset/open/dispatch/put
      * @return
      */
     @PutMapping(value = "/dispatch/put")
@@ -85,7 +85,7 @@ public class OpenRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/list?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/ruleset/open/dispatch/{tenantcode}/{openrulecode}/get
      * @param tenantCode
      * @return
      */
