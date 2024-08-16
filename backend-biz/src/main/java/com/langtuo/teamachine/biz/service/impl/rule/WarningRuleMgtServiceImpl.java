@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.biz.service.impl.rule;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
@@ -14,9 +13,6 @@ import com.langtuo.teamachine.dao.accessor.rule.WarningRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
-import com.langtuo.teamachine.mqtt.MqttService;
-import com.langtuo.teamachine.mqtt.config.MqttConfig;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -165,7 +161,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         }
 
         // 发送一步消息推送机器
-        mqttPublisher4Console.sendConsoleMsg4WarningRule(
+        mqttPublisher4Console.send4WarningRule(
                 request.getTenantCode(), request.getWarningRuleCode());
 
         return langTuoResult;

@@ -178,7 +178,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         }
 
         // 发送一步消息推送机器
-        mqttPublisher4Console.sendConsoleMsg4Menu(
+        mqttPublisher4Console.send4Menu(
                 request.getTenantCode(), request.getMenuCode());
 
         return langTuoResult;

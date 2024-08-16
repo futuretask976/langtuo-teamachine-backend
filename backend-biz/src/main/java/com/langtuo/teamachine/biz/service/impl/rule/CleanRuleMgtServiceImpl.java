@@ -192,7 +192,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         }
 
         // 发送一步消息推送机器
-        mqttPublisher4Console.sendConsoleMsg4CleanRule(
+        mqttPublisher4Console.send4CleanRule(
                 request.getTenantCode(), request.getCleanRuleCode());
 
         return langTuoResult;
