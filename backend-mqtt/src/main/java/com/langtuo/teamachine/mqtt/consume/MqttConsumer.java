@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class MqttMsgConsumer {
+public class MqttConsumer {
     public void consume(String topic, String payload) {
         if (StringUtils.isBlank(topic) || StringUtils.isBlank(payload)) {
             log.error("receive msg error, topic=" + topic + ", payload=" + payload);
@@ -20,15 +20,15 @@ public class MqttMsgConsumer {
         log.info("received msg, topic=" + topic + ", payload=" + payload);
 
         String title = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TITLE);
-        if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_ACCURACY.equals(title)) {
+        if (MqttConsts.MSG_TITLE_PREPARE_ACCURACY.equals(title)) {
             ExeService4Consume.getExeService().submit(new AccuracyDispatchWorker(jsonPayload));
-        } else if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_MENU.equals(title)) {
+        } else if (MqttConsts.MSG_TITLE_PREPARE_MENU.equals(title)) {
             ExeService4Consume.getExeService().submit(new MenuDispatchWorker(jsonPayload));
-        } else if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_OPEN_RULE.equals(title)) {
+        } else if (MqttConsts.MSG_TITLE_PREPARE_OPEN_RULE.equals(title)) {
             ExeService4Consume.getExeService().submit(new OpenRuleDispatchWorker(jsonPayload));
-        } else if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_CLEAN_RULE.equals(title)) {
+        } else if (MqttConsts.MSG_TITLE_PREPARE_CLEAN_RULE.equals(title)) {
             ExeService4Consume.getExeService().submit(new CleanRuleDispatchWorker(jsonPayload));
-        } else if (MqttConsts.CONSOLE_MSG_TITLE_PREPARE_WARNING_RULE.equals(title)) {
+        } else if (MqttConsts.MSG_TITLE_PREPARE_WARNING_RULE.equals(title)) {
             ExeService4Consume.getExeService().submit(new WarningRuleDispatchWorker(jsonPayload));
         } else {
             log.info("match worker error, topic=" + topic);

@@ -1,15 +1,13 @@
 package com.langtuo.teamachine.mqtt;
 
-import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Publish;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
-import com.langtuo.teamachine.mqtt.consume.MqttMsgConsumer;
+import com.langtuo.teamachine.mqtt.consume.MqttConsumer;
 import com.langtuo.teamachine.mqtt.wrapper.ConnectionOptionWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,16 +16,12 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
 
 @Component
 @Slf4j
 public class MqttService implements InitializingBean {
     @Resource
-    private MqttMsgConsumer mqttMsgConsumer;
+    private MqttConsumer mqttConsumer;
 
     @Resource
     private TenantMgtService tenantMgtService;
@@ -98,9 +92,9 @@ public class MqttService implements InitializingBean {
                 log.info("$$$$$ mqtt connnect success: " + serverURI);
                 // 客户端连接成功后就需要尽快订阅需要的 topic
                 try {
-                    String[] topicFilterArray = getTopicFilterArray();
-                    int[] qosArray = getQosArray(topicFilterArray);
-                    mqttClient.subscribe(topicFilterArray, qosArray);
+                    String[] topicFilters = getTopicFilters();
+                    int[] qos = getQos();
+                    mqttClient.subscribe(topicFilters, qos);
                 } catch (MqttException e) {
                     log.error("mqtt subscribe error: " + e.getMessage(), e);
                 }
@@ -108,12 +102,12 @@ public class MqttService implements InitializingBean {
 
             @Override
             public void connectionLost(Throwable throwable) {
-                // log.error("mqtt connection lost: " + throwable.getMessage(), throwable);
+                log.error("mqtt connection lost: " + throwable.getMessage(), throwable);
             }
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) {
-                mqttMsgConsumer.consume(topic, new String(mqttMessage.getPayload()));
+                mqttConsumer.consume(topic, new String(mqttMessage.getPayload()));
             }
 
             @Override
@@ -126,14 +120,14 @@ public class MqttService implements InitializingBean {
         mqttClient.connect(connectionOptionWrapper.getMqttConnectOptions());
     }
 
-    private String[] getTopicFilterArray() {
+    private String[] getTopicFilters() {
         return new String[]{
                 MqttConsts.CONSOLE_PARENT_TOPIC + MqttConsts.TOPIC_SEPERATOR + "console",
                 MqttConsts.CONSOLE_PARENT_TOPIC + MqttConsts.TOPIC_SEPERATOR + "recall"
         };
     }
 
-    private int[] getQosArray(String[] topicArray) {
+    private int[] getQos() {
         return new int[]{
                 MqttConfig.QOS_LEVEL,
                 MqttConfig.QOS_LEVEL

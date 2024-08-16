@@ -16,6 +16,8 @@ import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -35,7 +37,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     private WarningRuleDispatchAccessor warningRuleDispatchAccessor;
 
     @Resource
-    private MqttService mqttService;
+    private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
     public LangTuoResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
@@ -163,10 +165,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         }
 
         // 发送一步消息推送机器
-        JSONObject payloadJSON = new JSONObject();
-        payloadJSON.put("tenantCode", request.getTenantCode());
-        payloadJSON.put("warningCode", request.getWarningRuleCode());
-        mqttService.sendConsoleMsg(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_WARNING_RULE, payloadJSON.toJSONString());
+        mqttPublisher4Console.sendConsoleMsg4WarningRule(
+                request.getTenantCode(), request.getWarningRuleCode());
 
         return langTuoResult;
     }

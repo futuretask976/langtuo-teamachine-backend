@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.biz.service.impl.menu;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
@@ -17,8 +16,7 @@ import com.langtuo.teamachine.dao.accessor.menu.MenuSeriesRelAccessor;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
-import com.langtuo.teamachine.mqtt.MqttService;
-import com.langtuo.teamachine.mqtt.config.MqttConfig;
+import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -41,7 +39,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     private MenuDispatchAccessor menuDispatchAccessor;
 
     @Resource
-    private MqttService mqttService;
+    private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
     public LangTuoResult<List<MenuDTO>> list(String tenantCode) {
@@ -180,10 +178,8 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         }
 
         // 发送一步消息推送机器
-        JSONObject payloadJSON = new JSONObject();
-        payloadJSON.put("tenantCode", request.getTenantCode());
-        payloadJSON.put("menuCode", request.getMenuCode());
-        mqttService.sendConsoleMsg(MqttConfig.CONSOLE_TOPIC_PREPARE_DISPATCH_MENU, payloadJSON.toJSONString());
+        mqttPublisher4Console.sendConsoleMsg4Menu(
+                request.getTenantCode(), request.getMenuCode());
 
         return langTuoResult;
     }
