@@ -60,15 +60,15 @@ public class MqttPublisher4Console {
         mqttService.sendConsoleMsg(jsonPayload.toJSONString());
     }
 
-    public void send4OpenRule(String tenantCode, String openRuleCode) {
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(openRuleCode)) {
+    public void send4DrainRule(String tenantCode, String drainRuleCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(drainRuleCode)) {
             return;
         }
 
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_PREPARE_OPEN_RULE);
+        jsonPayload.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_PREPARE_DRAIN_RULE);
         jsonPayload.put(MqttConsts.SEND_KEY_TENANT_CODE, tenantCode);
-        jsonPayload.put(MqttConsts.SEND_KEY_OPEN_RULE_CODE, openRuleCode);
+        jsonPayload.put(MqttConsts.SEND_KEY_DRAIN_RULE_CODE, drainRuleCode);
         mqttService.sendConsoleMsg(jsonPayload.toJSONString());
     }
 

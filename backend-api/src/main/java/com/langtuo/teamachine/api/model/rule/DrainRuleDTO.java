@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class OpenRuleDTO {
+public class DrainRuleDTO {
     /**
      * 数据表记录插入时间
      */
@@ -31,12 +31,12 @@ public class OpenRuleDTO {
     /**
      * 开业规则编码
      */
-    private String openRuleCode;
+    private String drainRuleCode;
 
     /**
      * 清洁规则名称
      */
-    private String openRuleName;
+    private String drainRuleName;
 
     /**
      * 是否允许提醒，0：不允许，1：允许
@@ -56,5 +56,5 @@ public class OpenRuleDTO {
     /**
      * 包括物料列表
      */
-    private List<OpenRuleToppingDTO> toppingRuleList;
+    private List<DrainRuleToppingDTO> toppingRuleList;
 }

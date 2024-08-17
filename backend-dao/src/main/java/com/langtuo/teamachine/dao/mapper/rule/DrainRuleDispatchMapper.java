@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper.rule;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
-import com.langtuo.teamachine.dao.po.rule.OpenRuleDispatchPO;
+import com.langtuo.teamachine.dao.po.rule.DrainRuleDispatchPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,44 +12,44 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface OpenRuleDispatchMapper {
+public interface DrainRuleDispatchMapper {
     /**
      *
      * @param tenantCode
-     * @param openRuleCode
+     * @param drainRuleCode
      * @param shopGroupCode
      * @return
      */
-    OpenRuleDispatchPO selectOne(@Param("tenantCode") String tenantCode, @Param("openRuleCode") String openRuleCode, 
+    DrainRuleDispatchPO selectOne(@Param("tenantCode") String tenantCode, @Param("drainRuleCode") String drainRuleCode,
             @Param("shopGroupCode") String shopGroupCode);
 
     /**
      *
      * @return
      */
-    List<OpenRuleDispatchPO> selectList(@Param("tenantCode") String tenantCode,
-            @Param("openRuleCode") String openRuleCode);
+    List<DrainRuleDispatchPO> selectList(@Param("tenantCode") String tenantCode,
+            @Param("drainRuleCode") String drainRuleCode);
 
     /**
      *
-     * @param openRuleDispatchPO
+     * @param drainRuleDispatchPO
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(OpenRuleDispatchPO openRuleDispatchPO);
+    int insert(DrainRuleDispatchPO drainRuleDispatchPO);
 
     /**
      *
-     * @param openRuleDispatchPO
+     * @param drainRuleDispatchPO
      * @return
      */
-    int update(OpenRuleDispatchPO openRuleDispatchPO);
+    int update(DrainRuleDispatchPO drainRuleDispatchPO);
 
     /**
      *
      * @param tenantCode
-     * @param openRuleCode
+     * @param drainRuleCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("openRuleCode") String openRuleCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("drainRuleCode") String drainRuleCode);
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class OpenRuleToppingPO {
+public class DrainRuleDispatchPO {
     /**
      * 数据表id
      */
@@ -29,20 +29,10 @@ public class OpenRuleToppingPO {
     /**
      * 开业规则编码
      */
-    private String openRuleCode;
+    private String drainRuleCode;
 
     /**
-     * 物料编码
+     * 店铺组编码
      */
-    private String toppingCode;
-
-    /**
-     * 排空时间（单位：秒）
-     */
-    private int flushSec;
-
-    /**
-     * 排空重量
-     */
-    private int flushWeight;
+    private String shopGroupCode;
 }

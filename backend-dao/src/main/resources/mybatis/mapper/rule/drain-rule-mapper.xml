@@ -4,74 +4,74 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.rule.OpenRuleMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.rule.OpenRulePO" id="openRulePOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.rule.DrainRuleMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.rule.DrainRulePO" id="drainRulePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
-        <result property="openRuleCode" column="open_rule_code"/>
-        <result property="openRuleName" column="open_rule_name"/>
+        <result property="drainRuleCode" column="drain_rule_code"/>
+        <result property="drainRuleName" column="drain_rule_name"/>
         <result property="defaultRule" column="default_rule"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectOne" resultMap="openRulePOMap">
-        SELECT * FROM open_rule
+    <select id="selectOne" resultMap="drainRulePOMap">
+        SELECT * FROM drain_rule
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            <if test="openRuleCode != null">
-                AND open_rule_code = #{openRuleCode}
+            <if test="drainRuleCode != null">
+                AND drain_rule_code = #{drainRuleCode}
             </if>
-            <if test="openRuleName != null">
-                AND open_rule_name = #{openRuleName}
+            <if test="drainRuleName != null">
+                AND drain_rule_name = #{drainRuleName}
             </if>
     </select>
 
-    <select id="selectList" resultMap="openRulePOMap">
-        SELECT * FROM open_rule
+    <select id="selectList" resultMap="drainRulePOMap">
+        SELECT * FROM drain_rule
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
     </select>
 
-    <select id="search" resultMap="openRulePOMap">
-        SELECT * FROM open_rule
+    <select id="search" resultMap="drainRulePOMap">
+        SELECT * FROM drain_rule
         WHERE 1 = 1
         AND tenant_code = #{tenantCode}
-        <if test="openRuleCode != null">
-            AND open_rule_code = #{openRuleCode}
+        <if test="drainRuleCode != null">
+            AND drain_rule_code = #{drainRuleCode}
         </if>
-        <if test="openRuleName != null">
-            AND open_rule_name = #{openRuleName}
+        <if test="drainRuleName != null">
+            AND drain_rule_name = #{drainRuleName}
         </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.OpenRulePO">
-        INSERT INTO open_rule (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.DrainRulePO">
+        INSERT INTO drain_rule (
             gmt_created
             , gmt_modified
-            , open_rule_code
-            , open_rule_name
+            , drain_rule_code
+            , drain_rule_name
             , default_rule
             , tenant_code
             , extra_info
         ) VALUES (
             now()
             , now()
-            , #{openRuleCode}
-            , #{openRuleName}
+            , #{drainRuleCode}
+            , #{drainRuleName}
             , #{defaultRule}
             , #{tenantCode}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
 
-    <update id="update" parameterType="com.langtuo.teamachine.dao.po.rule.OpenRulePO">
-        UPDATE open_rule
+    <update id="update" parameterType="com.langtuo.teamachine.dao.po.rule.DrainRulePO">
+        UPDATE drain_rule
         SET
             gmt_modified = now()
-            <if test="openRuleName != null">
-                , open_rule_name = #{openRuleName}
+            <if test="drainRuleName != null">
+                , drain_rule_name = #{drainRuleName}
             </if>
             <if test="defaultRule != null">
                 , default_rule = #{defaultRule}
@@ -81,13 +81,13 @@
             </if>
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            AND open_rule_code = #{openRuleCode}
+            AND drain_rule_code = #{drainRuleCode}
     </update>
 
     <delete id="delete">
-        DELETE FROM open_rule
+        DELETE FROM drain_rule
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            AND open_rule_code = #{openRuleCode}
+            AND drain_rule_code = #{drainRuleCode}
     </delete>
 </mapper>

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class OpenRulePO {
+public class DrainRulePO {
     /**
      * 数据表id
      */
@@ -36,12 +36,12 @@ public class OpenRulePO {
     /**
      * 开业规则编码
      */
-    private String openRuleCode;
+    private String drainRuleCode;
 
     /**
      * 开业规则名称
      */
-    private String openRuleName;
+    private String drainRuleName;
 
     /**
      * 是否默认规则，0：不是，1：是
@@ -51,5 +51,5 @@ public class OpenRulePO {
     /**
      * 包括物料列表
      */
-    private List<OpenRuleToppingPO> toppingRuleList;
+    private List<DrainRuleToppingPO> toppingRuleList;
 }

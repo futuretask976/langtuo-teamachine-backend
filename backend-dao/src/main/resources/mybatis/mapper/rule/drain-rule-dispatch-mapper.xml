@@ -4,57 +4,57 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.rule.OpenRuleDispatchMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.rule.OpenRuleDispatchPO" id="openRuleDispatchPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.rule.DrainRuleDispatchMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.rule.DrainRuleDispatchPO" id="drainRuleDispatchPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
-        <result property="openRuleCode" column="open_rule_code"/>
+        <result property="drainRuleCode" column="drain_rule_code"/>
         <result property="shopGroupCode" column="shop_group_code"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="openRuleDispatchPOMap">
-        SELECT * FROM open_rule_dispatch
+    <select id="selectOne" resultMap="drainRuleDispatchPOMap">
+        SELECT * FROM drain_rule_dispatch
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            <if test="openRuleCode != null">
-                AND open_rule_code = #{openRuleCode}
+            <if test="drainRuleCode != null">
+                AND drain_rule_code = #{drainRuleCode}
             </if>
             <if test="shopGroupCode != null">
                 AND shop_group_code = #{shopGroupCode}
             </if>
     </select>
 
-    <select id="selectList" resultMap="openRuleDispatchPOMap">
-        SELECT * FROM open_rule_dispatch
+    <select id="selectList" resultMap="drainRuleDispatchPOMap">
+        SELECT * FROM drain_rule_dispatch
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            <if test="openRuleCode != null">
-                AND open_rule_code = #{openRuleCode}
+            <if test="drainRuleCode != null">
+                AND drain_rule_code = #{drainRuleCode}
             </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.OpenRuleDispatchPO">
-        INSERT INTO open_rule_dispatch (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.DrainRuleDispatchPO">
+        INSERT INTO drain_rule_dispatch (
             gmt_created
             , gmt_modified
-            , open_rule_code
+            , drain_rule_code
             , shop_group_code
             , tenant_code
         ) VALUES (
             now()
             , now()
-            , #{openRuleCode}
+            , #{drainRuleCode}
             , #{shopGroupCode}
             , #{tenantCode}
         )
     </insert>
 
     <delete id="delete">
-        DELETE FROM open_rule_dispatch
+        DELETE FROM drain_rule_dispatch
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            AND open_rule_code = #{openRuleCode}
+            AND drain_rule_code = #{drainRuleCode}
     </delete>
 </mapper>

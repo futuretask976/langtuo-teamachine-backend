@@ -4,17 +4,17 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.ToppingDTO;
-import com.langtuo.teamachine.api.model.record.CleanActRecordDTO;
+import com.langtuo.teamachine.api.model.record.DrainActRecordDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
-import com.langtuo.teamachine.api.request.record.CleanActRecordPutRequest;
+import com.langtuo.teamachine.api.request.record.DrainActRecordPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
-import com.langtuo.teamachine.api.service.record.CleanActRecordMgtService;
+import com.langtuo.teamachine.api.service.record.DrainActRecordMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.dao.accessor.record.CleanActRecordAccessor;
-import com.langtuo.teamachine.dao.po.record.CleanActRecordPO;
+import com.langtuo.teamachine.dao.accessor.record.DrainActRecordAccessor;
+import com.langtuo.teamachine.dao.po.record.DrainActRecordPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -29,9 +29,9 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @Component
 @Slf4j
-public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
+public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
     @Resource
-    private CleanActRecordAccessor accessor;
+    private DrainActRecordAccessor accessor;
 
     @Resource
     private ToppingMgtService toppingMgtService;
@@ -43,11 +43,11 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
     private ShopMgtService shopMgtService;
 
     @Override
-    public LangTuoResult<CleanActRecordDTO> get(String tenantCode, String idempotentMark) {
-        LangTuoResult<CleanActRecordDTO> langTuoResult = null;
+    public LangTuoResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark) {
+        LangTuoResult<DrainActRecordDTO> langTuoResult = null;
         try {
-            CleanActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
-            CleanActRecordDTO dto = convert(po);
+            DrainActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
+            DrainActRecordDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
@@ -57,12 +57,12 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
     }
 
     @Override
-    public LangTuoResult<PageDTO<CleanActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
+    public LangTuoResult<PageDTO<DrainActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
             List<String> shopCodeList, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
-        LangTuoResult<PageDTO<CleanActRecordDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<DrainActRecordDTO>> langTuoResult = null;
         try {
             if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
                 List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
@@ -71,9 +71,9 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
                         .collect(Collectors.toList());
             }
 
-            PageInfo<CleanActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
+            PageInfo<DrainActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
                     shopCodeList, pageNum, pageSize);
-            List<CleanActRecordDTO> dtoList = convert(pageInfo.getList());
+            List<DrainActRecordDTO> dtoList = convert(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
@@ -83,16 +83,16 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
     }
 
     @Override
-    public LangTuoResult<Void> put(CleanActRecordPutRequest request) {
+    public LangTuoResult<Void> put(DrainActRecordPutRequest request) {
         if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        CleanActRecordPO po = convert(request);
+        DrainActRecordPO po = convert(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            CleanActRecordPO exist = accessor.selectOne(po.getTenantCode(),
+            DrainActRecordPO exist = accessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
             if (exist != null) {
                 int updated = accessor.delete(po.getTenantCode(), po.getIdempotentMark());
@@ -124,39 +124,36 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
         return langTuoResult;
     }
 
-    private List<CleanActRecordDTO> convert(List<CleanActRecordPO> poList) {
+    private List<DrainActRecordDTO> convert(List<DrainActRecordPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
-        List<CleanActRecordDTO> list = poList.stream()
+        List<DrainActRecordDTO> list = poList.stream()
                 .map(po -> convert(po))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private CleanActRecordDTO convert(CleanActRecordPO po) {
+    private DrainActRecordDTO convert(DrainActRecordPO po) {
         if (po == null) {
             return null;
         }
 
-        CleanActRecordDTO dto = new CleanActRecordDTO();
+        DrainActRecordDTO dto = new DrainActRecordDTO();
         dto.setExtraInfo(po.getExtraInfo());
         dto.setIdempotentMark(po.getIdempotentMark());
         dto.setMachineCode(po.getMachineCode());
         dto.setShopCode(po.getShopCode());
         dto.setShopGroupCode(po.getShopGroupCode());
-        dto.setCleanStartTime(po.getCleanStartTime());
-        dto.setCleanEndTime(po.getCleanEndTime());
+        dto.setDrainStartTime(po.getDrainStartTime());
+        dto.setDrainEndTime(po.getDrainEndTime());
         dto.setToppingCode(po.getToppingCode());
         dto.setPipelineNum(po.getPipelineNum());
-        dto.setCleanType(po.getCleanType());
-        dto.setCleanRuleCode(po.getCleanRuleCode());
-        dto.setCleanContent(po.getCleanContent());
-        dto.setWashSec(po.getWashSec());
-        dto.setSoakMin(po.getSoakMin());
+        dto.setDrainType(po.getDrainType());
+        dto.setDrainRuleCode(po.getDrainRuleCode());
         dto.setFlushSec(po.getFlushSec());
-        dto.setFlushIntervalMin(po.getFlushIntervalMin());
+        dto.setFlushWeight(po.getFlushWeight());
 
         ToppingDTO toppingDTO = getModel(toppingMgtService.getByCode(po.getTenantCode(), po.getToppingCode()));
         if (toppingDTO != null) {
@@ -173,28 +170,25 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
         return dto;
     }
 
-    private CleanActRecordPO convert(CleanActRecordPutRequest request) {
+    private DrainActRecordPO convert(DrainActRecordPutRequest request) {
         if (request == null) {
             return null;
         }
 
-        CleanActRecordPO po = new CleanActRecordPO();
+        DrainActRecordPO po = new DrainActRecordPO();
         po.setExtraInfo(request.getExtraInfo());
         po.setIdempotentMark(request.getIdempotentMark());
         po.setMachineCode(request.getMachineCode());
         po.setShopCode(request.getShopCode());
         po.setShopGroupCode(request.getShopGroupCode());
-        po.setCleanStartTime(request.getCleanStartTime());
-        po.setCleanEndTime(request.getCleanEndTime());
+        po.setDrainStartTime(request.getDrainStartTime());
+        po.setDrainEndTime(request.getDrainEndTime());
         po.setToppingCode(request.getToppingCode());
         po.setPipelineNum(request.getPipelineNum());
-        po.setCleanType(request.getCleanType());
-        po.setCleanRuleCode(request.getCleanRuleCode());
-        po.setCleanContent(request.getCleanContent());
-        po.setWashSec(request.getWashSec());
-        po.setSoakMin(request.getSoakMin());
+        po.setDrainType(request.getDrainType());
+        po.setDrainRuleCode(request.getDrainRuleCode());
         po.setFlushSec(request.getFlushSec());
-        po.setFlushIntervalMin(request.getFlushIntervalMin());
+        po.setFlushWeight(request.getFlushWeight());
         return po;
     }
 }

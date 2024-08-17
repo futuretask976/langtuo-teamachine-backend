@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class CleanActRecordPO {
+public class DrainActRecordPO {
     /**
      * 数据表id
      */
@@ -55,12 +55,12 @@ public class CleanActRecordPO {
     /**
      * 清洗开始时间
      */
-    private Date cleanStartTime;
+    private Date drainStartTime;
 
     /**
      * 清洗结束时间
      */
-    private Date cleanEndTime;
+    private Date drainEndTime;
 
     /**
      * 物料名称
@@ -73,37 +73,22 @@ public class CleanActRecordPO {
     private int pipelineNum;
 
     /**
-     * 清洗方式，0：清洗规则清洗，1：手动清洗
+     * 清洗方式，0：排空规则排空，1：手动排空
      */
-    private int cleanType;
+    private int drainType;
 
     /**
-     * 清洗规则
+     * 开业规则编码
      */
-    private String cleanRuleCode;
+    private String drainRuleCode;
 
     /**
-     * 清洗内容，0：冲洗，1：浸泡
-     */
-    private int cleanContent;
-
-    /**
-     * 清洗时间（单位：秒）
-     */
-    private int washSec;
-
-    /**
-     * 浸泡时间（单位：分钟）
-     */
-    private int soakMin;
-
-    /**
-     * 浸泡期间冲洗间隔（单位：分钟）
-     */
-    private int flushIntervalMin;
-
-    /**
-     * 浸泡期间冲洗时间（单位：秒）
+     * 排空时间（单位：秒）
      */
     private int flushSec;
+
+    /**
+     * 排空重量
+     */
+    private int flushWeight;
 }

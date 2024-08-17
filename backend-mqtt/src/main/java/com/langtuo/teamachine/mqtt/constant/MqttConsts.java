@@ -11,7 +11,7 @@ public class MqttConsts {
     public static final String RECEIVE_KEY_TEMPLATE_CODE = "templateCode";
     public static final String RECEIVE_KEY_MENU_CODE = "menuCode";
     public static final String RECEIVE_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
-    public static final String RECEIVE_KEY_OPEN_RULE_CODE = "openRuleCode";
+    public static final String RECEIVE_KEY_DRAIN_RULE_CODE = "drainRuleCode";
     public static final String RECEIVE_KEY_WARNING_RULE_CODE = "warningRuleCode";
 
 
@@ -29,7 +29,7 @@ public class MqttConsts {
     public static final String SEND_KEY_TEMPLATE_CODE = "templateCode";
     public static final String SEND_KEY_ACCURACY_TPL = "accuracyTpl";
     public static final String SEND_KEY_MENU_CODE = "menuCode";
-    public static final String SEND_KEY_OPEN_RULE_CODE = "openRuleCode";
+    public static final String SEND_KEY_DRAIN_RULE_CODE = "openRuleCode";
     public static final String SEND_KEY_OPEN_RULE = "openRule";
     public static final String SEND_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
     public static final String SEND_KEY_CLEAN_RULE = "cleanRule";
@@ -43,7 +43,7 @@ public class MqttConsts {
     public static final String BIZ_CODE_PREPARE_MACHINE = "prepare_machine";
     public static final String BIZ_CODE_PREPARE_ACCURACY_TPL = "prepare_accuracy";
     public static final String BIZ_CODE_PREPARE_MENU = "prepare_menu";
-    public static final String BIZ_CODE_PREPARE_OPEN_RULE = "prepare_open_rule";
+    public static final String BIZ_CODE_PREPARE_DRAIN_RULE = "prepare_open_rule";
     public static final String BIZ_CODE_PREPARE_CLEAN_RULE = "prepare_clean_rule";
     public static final String BIZ_CODE_PREPARE_WARNING_RULE = "prepare_warning_rule";
 

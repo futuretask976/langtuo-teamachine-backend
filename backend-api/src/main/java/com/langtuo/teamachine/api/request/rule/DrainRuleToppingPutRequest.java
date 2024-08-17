@@ -4,7 +4,7 @@ import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 
 @Data
-public class OpenRuleToppingPutRequest {
+public class DrainRuleToppingPutRequest {
     /**
      * 物料名称
      */

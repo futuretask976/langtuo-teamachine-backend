@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class OpenRuleToppingDTO {
+public class DrainRuleToppingDTO {
     /**
      * 租户编码
      */
@@ -14,7 +14,7 @@ public class OpenRuleToppingDTO {
     /**
      * 清洁规则编码
      */
-    private String openRuleCode;
+    private String drainRuleCode;
 
     /**
      * 清洁排除物料编码

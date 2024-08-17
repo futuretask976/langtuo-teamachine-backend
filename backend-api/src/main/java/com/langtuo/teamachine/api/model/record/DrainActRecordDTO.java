@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-public class CleanActRecordDTO {
+public class DrainActRecordDTO {
     /**
      * 数据表记录插入时间
      */
@@ -18,7 +18,7 @@ public class CleanActRecordDTO {
     private Date gmtModified;
 
     /**
-     * 额外信息
+     * 额外信息，格式：a:b;c:d
      */
     private Map<String,String> extraInfo;
 
@@ -55,15 +55,15 @@ public class CleanActRecordDTO {
     /**
      * 清洗开始时间
      */
-    private Date cleanStartTime;
+    private Date drainStartTime;
 
     /**
      * 清洗结束时间
      */
-    private Date cleanEndTime;
+    private Date drainEndTime;
 
     /**
-     * 物料编码
+     * 物料名称
      */
     private String toppingCode;
 
@@ -73,42 +73,27 @@ public class CleanActRecordDTO {
     private String toppingName;
 
     /**
-     * 管道号
+     * 管道序号
      */
     private int pipelineNum;
 
     /**
-     * 清洗方式，0：清洗规则清洗，1：手动清洗，2：营业准备规则，3：打烊规则
+     * 清洗方式，0：排空规则排空，1：手动排空
      */
-    private int cleanType;
+    private int drainType;
 
     /**
-     * 清洗规则
+     * 开业规则编码
      */
-    private String cleanRuleCode;
+    private String drainRuleCode;
 
     /**
-     * 清洗内容，0：冲洗，1：浸泡
-     */
-    private int cleanContent;
-
-    /**
-     * 清洗时间（单位：秒）
-     */
-    private int washSec;
-
-    /**
-     * 浸泡时间（单位：分钟）
-     */
-    private int soakMin;
-
-    /**
-     * 浸泡期间冲洗间隔（单位：分钟）
-     */
-    private int flushIntervalMin;
-
-    /**
-     * 浸泡期间冲洗时间（单位：秒）
+     * 排空时间（单位：秒）
      */
     private int flushSec;
+
+    /**
+     * 排空重量
+     */
+    private int flushWeight;
 }

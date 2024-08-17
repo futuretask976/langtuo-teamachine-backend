@@ -1,37 +1,37 @@
 package com.langtuo.teamachine.dao.accessor.rule;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.mapper.rule.OpenRuleToppingMapper;
-import com.langtuo.teamachine.dao.po.rule.OpenRuleToppingPO;
+import com.langtuo.teamachine.dao.mapper.rule.DrainRuleToppingMapper;
+import com.langtuo.teamachine.dao.po.rule.DrainRuleToppingPO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class OpenRuleToppingAccessor {
+public class DrainRuleToppingAccessor {
     @Resource
-    private OpenRuleToppingMapper mapper;
+    private DrainRuleToppingMapper mapper;
 
     @Resource
     private RedisManager redisManager;
 
-    public List<OpenRuleToppingPO> selectList(String tenantCode, String openRuleCode) {
-        List<OpenRuleToppingPO> cached = getCacheList(tenantCode, openRuleCode);
+    public List<DrainRuleToppingPO> selectList(String tenantCode, String openRuleCode) {
+        List<DrainRuleToppingPO> cached = getCacheList(tenantCode, openRuleCode);
         if (cached != null) {
             return cached;
         }
 
-        List<OpenRuleToppingPO> list = mapper.selectList(tenantCode, openRuleCode);
+        List<DrainRuleToppingPO> list = mapper.selectList(tenantCode, openRuleCode);
 
         setCacheList(tenantCode, openRuleCode, list);
         return list;
     }
 
-    public int insert(OpenRuleToppingPO po) {
+    public int insert(DrainRuleToppingPO po) {
         int inserted = mapper.insert(po);
         if (inserted == 1) {
-            deleteCacheList(po.getTenantCode(), po.getOpenRuleCode());
+            deleteCacheList(po.getTenantCode(), po.getDrainRuleCode());
         }
         return inserted;
     }
@@ -48,14 +48,14 @@ public class OpenRuleToppingAccessor {
         return "openRuleToppingAcc-" + tenantCode + "-" + openRuleCode;
     }
 
-    private List<OpenRuleToppingPO> getCacheList(String tenantCode, String openRuleCode) {
+    private List<DrainRuleToppingPO> getCacheList(String tenantCode, String openRuleCode) {
         String key = getCacheListKey(tenantCode, openRuleCode);
         Object cached = redisManager.getValue(key);
-        List<OpenRuleToppingPO> poList = (List<OpenRuleToppingPO>) cached;
+        List<DrainRuleToppingPO> poList = (List<DrainRuleToppingPO>) cached;
         return poList;
     }
 
-    private void setCacheList(String tenantCode, String openRuleCode, List<OpenRuleToppingPO> poList) {
+    private void setCacheList(String tenantCode, String openRuleCode, List<DrainRuleToppingPO> poList) {
         String key = getCacheListKey(tenantCode, openRuleCode);
         redisManager.setValue(key, poList);
     }

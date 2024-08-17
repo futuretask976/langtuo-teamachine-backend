@@ -5,11 +5,11 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class OpenRuleDispatchDTO {
+public class DrainRuleDispatchDTO {
     /**
      * 开业规则编码
      */
-    private String openRuleCode;
+    private String drainRuleCode;
 
     /**
      * 店铺组编码列表

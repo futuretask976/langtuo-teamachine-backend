@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper.rule;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
-import com.langtuo.teamachine.dao.po.rule.OpenRuleToppingPO;
+import com.langtuo.teamachine.dao.po.rule.DrainRuleToppingPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,27 +12,27 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface OpenRuleToppingMapper {
+public interface DrainRuleToppingMapper {
     /**
      *
      * @return
      */
-    List<OpenRuleToppingPO> selectList(@Param("tenantCode") String tenantCode,
-            @Param("openRuleCode") String openRuleCode);
+    List<DrainRuleToppingPO> selectList(@Param("tenantCode") String tenantCode,
+            @Param("drainRuleCode") String drainRuleCode);
 
     /**
      *
-     * @param cleanRuleExceptPO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(OpenRuleToppingPO cleanRuleExceptPO);
+    int insert(DrainRuleToppingPO po);
 
     /**
      *
      * @param tenantCode
-     * @param openRuleCode
+     * @param drainRuleCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("openRuleCode") String openRuleCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("drainRuleCode") String drainRuleCode);
 }

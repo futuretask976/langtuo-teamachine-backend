@@ -8,7 +8,7 @@ import com.langtuo.teamachine.mqtt.consume.worker.device.ModelDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.drink.AccuracyTplDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.menu.MenuDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.rule.CleanRuleDispatchWorker;
-import com.langtuo.teamachine.mqtt.consume.worker.rule.OpenRuleDispatchWorker;
+import com.langtuo.teamachine.mqtt.consume.worker.rule.DrainRuleDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.rule.WarningRuleDispatchWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +34,8 @@ public class MqttConsumer {
             ExeService4Consume.getExeService().submit(new AccuracyTplDispatchWorker(jsonPayload));
         } else if (MqttConsts.BIZ_CODE_PREPARE_MENU.equals(bizCode)) {
             ExeService4Consume.getExeService().submit(new MenuDispatchWorker(jsonPayload));
-        } else if (MqttConsts.BIZ_CODE_PREPARE_OPEN_RULE.equals(bizCode)) {
-            ExeService4Consume.getExeService().submit(new OpenRuleDispatchWorker(jsonPayload));
+        } else if (MqttConsts.BIZ_CODE_PREPARE_DRAIN_RULE.equals(bizCode)) {
+            ExeService4Consume.getExeService().submit(new DrainRuleDispatchWorker(jsonPayload));
         } else if (MqttConsts.BIZ_CODE_PREPARE_CLEAN_RULE.equals(bizCode)) {
             ExeService4Consume.getExeService().submit(new CleanRuleDispatchWorker(jsonPayload));
         } else if (MqttConsts.BIZ_CODE_PREPARE_WARNING_RULE.equals(bizCode)) {

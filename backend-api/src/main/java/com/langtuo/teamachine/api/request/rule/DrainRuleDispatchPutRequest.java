@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class OpenRuleDispatchPutRequest {
+public class DrainRuleDispatchPutRequest {
     /**
      * 租户编码
      */
@@ -16,7 +16,7 @@ public class OpenRuleDispatchPutRequest {
     /**
      * 开业规则编码
      */
-    private String openRuleCode;
+    private String drainRuleCode;
 
     /**
      * 店铺组编码列表
@@ -29,7 +29,7 @@ public class OpenRuleDispatchPutRequest {
      */
     public boolean isValid() {
         if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(openRuleCode, true)
+                && RegexUtils.isValidCode(drainRuleCode, true)
                 && isValidShopGroupCodeList()) {
             return true;
         }

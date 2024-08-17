@@ -4,30 +4,30 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.rule.OpenRuleToppingMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.rule.OpenRuleToppingPO" id="openRuleToppingPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.rule.DrainRuleToppingMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.rule.DrainRuleToppingPO" id="drainRuleToppingPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
-        <result property="openRuleCode" column="open_rule_code"/>
+        <result property="drainRuleCode" column="drain_rule_code"/>
         <result property="toppingCode" column="topping_code"/>
         <result property="flushSec" column="flush_sec"/>
         <result property="flushWeight" column="flush_weight"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
-    <select id="selectList" resultMap="openRuleToppingPOMap">
-        SELECT * FROM open_rule_topping
+    <select id="selectList" resultMap="drainRuleToppingPOMap">
+        SELECT * FROM drain_rule_topping
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            AND open_rule_code = #{openRuleCode}
+            AND drain_rule_code = #{drainRuleCode}
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.OpenRuleToppingPO">
-        INSERT INTO open_rule_topping (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.DrainRuleToppingPO">
+        INSERT INTO drain_rule_topping (
             gmt_created
             , gmt_modified
-            , open_rule_code
+            , drain_rule_code
             , topping_code
             , flush_sec
             , flush_weight
@@ -35,7 +35,7 @@
         ) VALUES (
             now()
             , now()
-            , #{openRuleCode}
+            , #{drainRuleCode}
             , #{toppingCode}
             , #{flushSec}
             , #{flushWeight}
@@ -44,9 +44,9 @@
     </insert>
 
     <delete id="delete">
-        DELETE FROM open_rule_topping
+        DELETE FROM drain_rule_topping
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            AND open_rule_code = #{openRuleCode}
+            AND drain_rule_code = #{drainRuleCode}
     </delete>
 </mapper>
