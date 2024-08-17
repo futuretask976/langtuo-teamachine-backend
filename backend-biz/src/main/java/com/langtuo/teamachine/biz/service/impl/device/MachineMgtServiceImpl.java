@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.request.device.MachineUpdatePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
@@ -51,8 +52,8 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     @Override
     public LangTuoResult<PageDTO<MachineDTO>> search(String tenantCode, String screenCode, String elecBoardCode,
             String modelCode, String shopName, int pageNum, int pageSize) {
-        pageNum = pageNum <= 0 ? 1 : pageNum;
-        pageSize = pageSize <=0 ? 20 : pageSize;
+        pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
+        pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
         LangTuoResult<PageDTO<MachineDTO>> langTuoResult = null;
         try {

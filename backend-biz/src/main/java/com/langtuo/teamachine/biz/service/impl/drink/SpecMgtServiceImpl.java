@@ -8,6 +8,7 @@ import com.langtuo.teamachine.api.model.drink.SpecItemDTO;
 import com.langtuo.teamachine.api.request.drink.SpecPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.SpecMgtService;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.SpecItemAccessor;
 import com.langtuo.teamachine.dao.po.drink.SpecPO;
@@ -47,8 +48,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     @Override
     public LangTuoResult<PageDTO<SpecDTO>> search(String tenantName, String specCode, String specName,
             int pageNum, int pageSize) {
-        pageNum = pageNum <= 0 ? 1 : pageNum;
-        pageSize = pageSize <=0 ? 20 : pageSize;
+        pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
+        pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
         LangTuoResult<PageDTO<SpecDTO>> langTuoResult = null;
         try {

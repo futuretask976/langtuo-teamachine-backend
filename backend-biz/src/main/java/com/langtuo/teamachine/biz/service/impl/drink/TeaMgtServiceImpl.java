@@ -13,6 +13,7 @@ import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.SpecMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.*;
 import com.langtuo.teamachine.dao.po.drink.*;
 import lombok.extern.slf4j.Slf4j;
@@ -93,8 +94,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     @Override
     public LangTuoResult<PageDTO<TeaDTO>> search(String tenantName, String teaCode, String teaName,
             int pageNum, int pageSize) {
-        pageNum = pageNum <= 0 ? 1 : pageNum;
-        pageSize = pageSize <=0 ? 20 : pageSize;
+        pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
+        pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
         LangTuoResult<PageDTO<TeaDTO>> langTuoResult = null;
         try {

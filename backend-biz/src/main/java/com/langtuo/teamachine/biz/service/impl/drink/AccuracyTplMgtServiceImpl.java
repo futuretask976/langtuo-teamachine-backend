@@ -7,6 +7,7 @@ import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.request.drink.AccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplToppingAccessor;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
@@ -53,8 +54,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     @Override
     public LangTuoResult<PageDTO<AccuracyTplDTO>> search(String tenantName, String templateCode, String templateName,
             int pageNum, int pageSize) {
-        pageNum = pageNum <= 0 ? 1 : pageNum;
-        pageSize = pageSize <=0 ? 20 : pageSize;
+        pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
+        pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
         LangTuoResult<PageDTO<AccuracyTplDTO>> langTuoResult = null;
         try {
