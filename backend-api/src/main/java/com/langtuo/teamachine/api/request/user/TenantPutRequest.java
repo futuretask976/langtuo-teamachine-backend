@@ -43,7 +43,7 @@ public class TenantPutRequest {
      */
     public boolean isValid() {
         if (RegexUtils.isValidCode(tenantCode, true)
-                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidComment(comment, false)
                 && RegexUtils.isValidName(tenantName, true)
                 && RegexUtils.isValidName(contactPerson, true)
                 && RegexUtils.isValidCode(contactPhone, true)) {

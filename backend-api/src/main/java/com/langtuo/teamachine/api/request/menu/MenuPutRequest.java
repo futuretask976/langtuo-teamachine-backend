@@ -51,7 +51,7 @@ public class MenuPutRequest {
      */
     public boolean isValid() {
         if (RegexUtils.isValidCode(tenantCode, true)
-                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidComment(comment, false)
                 && RegexUtils.isValidCode(menuCode, true)
                 && RegexUtils.isValidName(menuName, true)
                 && isValidPipelineList()

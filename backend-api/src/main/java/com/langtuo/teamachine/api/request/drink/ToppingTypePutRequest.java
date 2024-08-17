@@ -38,7 +38,7 @@ public class ToppingTypePutRequest {
      */
     public boolean isValid() {
         if (RegexUtils.isValidCode(tenantCode, true)
-                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidComment(comment, false)
                 && RegexUtils.isValidCode(toppingTypeCode, true)
                 && RegexUtils.isValidName(toppingTypeName, true)) {
             return true;

@@ -45,7 +45,7 @@ public class SeriesPutRequest {
      */
     public boolean isValid() {
         if (RegexUtils.isValidCode(tenantCode, true)
-                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidComment(comment, false)
                 && RegexUtils.isValidCode(seriesCode, true)
                 && RegexUtils.isValidName(seriesName, true)) {
             return true;

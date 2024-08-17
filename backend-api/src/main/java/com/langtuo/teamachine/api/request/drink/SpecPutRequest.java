@@ -45,7 +45,7 @@ public class SpecPutRequest {
      */
     public boolean isValid() {
         if (RegexUtils.isValidCode(tenantCode, true)
-                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidComment(comment, false)
                 && RegexUtils.isValidCode(specCode, true)
                 && RegexUtils.isValidName(specName, true)
                 && isValidSpecItem()) {

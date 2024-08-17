@@ -65,7 +65,7 @@ public class TeaPutRequest {
      */
     public boolean isValid() {
         if (RegexUtils.isValidCode(tenantCode, true)
-                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidComment(comment, false)
                 && RegexUtils.isValidCode(teaCode, true)
                 && RegexUtils.isValidName(teaName, true)
                 && RegexUtils.isValidCode(outerTeaCode, true)

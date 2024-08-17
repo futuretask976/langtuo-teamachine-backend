@@ -43,7 +43,7 @@ public class ShopGroupPutRequest {
      */
     public boolean isValid() {
         if (RegexUtils.isValidCode(tenantCode, true)
-                // && RegexUtils.isValidCode(comment, false)
+                && RegexUtils.isValidComment(comment, false)
                 && RegexUtils.isValidCode(shopGroupCode, true)
                 && RegexUtils.isValidName(shopGroupName, true)
                 && RegexUtils.isValidName(orgName, true)) {

@@ -35,13 +35,28 @@ public class RegexUtils {
         return false;
     }
 
-    public static boolean isValidText(String input, boolean required) {
+    public static boolean isValidComment(String input, boolean required) {
         if (StringUtils.isBlank(input)) {
             if (!required) {
                 return true;
             }
         } else {
-            String pattern = "^[A-Za-z0-9_\\u4e00-\\u9fa5\\p{P}]{0,50}$";
+            String pattern = "^[A-Za-z0-9_" +
+                    "\\u4e00-\\u9fa5" + // 中文字符
+                    "\\u3002" + // 。
+                    "\\uff1b" + // ；
+                    "\\uff0c" + // ，
+                    "\\uff1a" + // ：
+                    "\\u201c" + // “
+                    "\\u201d" + // ”
+                    "\\uff08" + // （
+                    "\\uff09" + // ）
+                    "\\u3001" + // 、
+                    "\\uff1f" + // ？
+                    "\\u300a" + // 《
+                    "\\u300b" + // 》
+                    "\\uFF01" + // ！
+                    "]{0,200}$";
             boolean isMatch = Pattern.matches(pattern, input);
             if (isMatch) {
                 return true;
@@ -58,6 +73,6 @@ public class RegexUtils {
 //        System.out.println(isValidStr("aAbce01234", false));
 //        System.out.println(isValidStr("aAbce_01234", false));
 //        System.out.println(isValidStr("aAbce-01234", false));
-        System.out.println(isValidText("这里是我的", false));
+        System.out.println(isValidComment("这里是我的", false));
     }
 }
