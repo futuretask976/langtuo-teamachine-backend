@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.rule;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.rule.CleanRuleStepMapper;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleStepPO;
@@ -31,7 +32,7 @@ public class CleanRuleStepAccessor {
 
     public int insert(CleanRuleStepPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getCleanRuleCode());
         }
         return inserted;
@@ -39,7 +40,7 @@ public class CleanRuleStepAccessor {
 
     public int delete(String tenantCode, String cleanRuleCode) {
         int deleted = mapper.delete(tenantCode, cleanRuleCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, cleanRuleCode);
         }
         return deleted;

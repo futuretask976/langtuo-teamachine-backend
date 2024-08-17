@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.accessor.shop;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.shop.ShopMapper;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.query.shop.ShopQuery;
@@ -105,7 +106,7 @@ public class ShopAccessor {
 
     public int insert(ShopPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
             deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
         }
@@ -114,7 +115,7 @@ public class ShopAccessor {
 
     public int update(ShopPO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
             deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
         }
@@ -124,11 +125,11 @@ public class ShopAccessor {
     public int delete(String tenantCode, String shopCode) {
         ShopPO po = selectOneByCode(tenantCode, shopCode);
         if (po == null) {
-            return 0;
+            return DBOpeConts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, shopCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getShopCode(), po.getShopName());
             deleteCacheList(tenantCode, po.getShopGroupCode());
         }

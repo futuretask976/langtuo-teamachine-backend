@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.accessor.drink;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.drink.ToppingTypeMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingTypePO;
 import com.langtuo.teamachine.dao.query.drink.ToppingTypeQuery;
@@ -78,7 +79,7 @@ public class ToppingTypeAccessor {
 
     public int insert(ToppingTypePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getToppingTypeCode(), po.getToppingTypeName());
             deleteCacheList(po.getTenantCode());
         }
@@ -87,7 +88,7 @@ public class ToppingTypeAccessor {
 
     public int update(ToppingTypePO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getToppingTypeCode(), po.getToppingTypeName());
             deleteCacheList(po.getTenantCode());
         }
@@ -97,11 +98,11 @@ public class ToppingTypeAccessor {
     public int delete(String tenantCode, String toppingTypeCode) {
         ToppingTypePO po = selectOneByCode(tenantCode, toppingTypeCode);
         if (po == null) {
-            return 0;
+            return DBOpeConts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, toppingTypeCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getToppingTypeCode(), po.getToppingTypeName());
             deleteCacheList(tenantCode);
         }

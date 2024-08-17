@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.accessor.menu;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.menu.SeriesMapper;
 import com.langtuo.teamachine.dao.po.menu.SeriesPO;
 import com.langtuo.teamachine.dao.query.menu.SeriesQuery;
@@ -78,7 +79,7 @@ public class SeriesAccessor {
 
     public int insert(SeriesPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSeriesCode(), po.getSeriesName());
             deleteCacheList(po.getTenantCode());
         }
@@ -87,7 +88,7 @@ public class SeriesAccessor {
 
     public int update(SeriesPO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSeriesCode(), po.getSeriesName());
             deleteCacheList(po.getTenantCode());
         }
@@ -97,11 +98,11 @@ public class SeriesAccessor {
     public int delete(String tenantCode, String seriesCode) {
         SeriesPO po = selectOneByCode(tenantCode, seriesCode);
         if (po == null) {
-            return 0;
+            return DBOpeConts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, seriesCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getSeriesCode(), po.getSeriesName());
             deleteCacheList(tenantCode);
         }

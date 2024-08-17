@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.accessor.device;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.device.ModelMapper;
 import com.langtuo.teamachine.dao.po.device.ModelPO;
 import com.langtuo.teamachine.dao.query.device.MachineModelQuery;
@@ -61,7 +62,7 @@ public class ModelAccessor {
 
     public int insert(ModelPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getModelCode());
             deleteCacheList();
         }
@@ -70,7 +71,7 @@ public class ModelAccessor {
 
     public int update(ModelPO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getModelCode());
             deleteCacheList();
         }
@@ -79,7 +80,7 @@ public class ModelAccessor {
 
     public int delete(String modelCode) {
         int deleted = mapper.delete(modelCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(modelCode);
             deleteCacheList();
         }

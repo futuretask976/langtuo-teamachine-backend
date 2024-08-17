@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.accessor.drink;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.drink.TeaMapper;
 import com.langtuo.teamachine.dao.po.drink.TeaPO;
 import com.langtuo.teamachine.dao.query.drink.TeaQuery;
@@ -78,7 +79,7 @@ public class TeaAccessor {
 
     public int insert(TeaPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode());
         }
         return inserted;
@@ -86,7 +87,7 @@ public class TeaAccessor {
 
     public int update(TeaPO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getTeaCode(), po.getTeaName());
             deleteCacheList(po.getTenantCode());
         }
@@ -96,11 +97,11 @@ public class TeaAccessor {
     public int delete(String tenantCode, String teaCode) {
         TeaPO po = selectOneByCode(tenantCode, teaCode);
         if (po == null) {
-            return 0;
+            return DBOpeConts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, teaCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getTeaCode(), po.getTeaName());
             deleteCacheList(tenantCode);
         }

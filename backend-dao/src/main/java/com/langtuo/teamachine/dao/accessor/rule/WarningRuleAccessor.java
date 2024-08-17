@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.accessor.rule;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.rule.WarningRuleMapper;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.query.rule.WarningRuleQuery;
@@ -72,7 +73,7 @@ public class WarningRuleAccessor {
 
     public int update(WarningRulePO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getWarningRuleCode(), po.getWarningRuleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -81,7 +82,7 @@ public class WarningRuleAccessor {
 
     public int insert(WarningRulePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getWarningRuleCode(), po.getWarningRuleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -91,11 +92,11 @@ public class WarningRuleAccessor {
     public int delete(String tenantCode, String warningRuleCode) {
         WarningRulePO po = selectOneByCode(tenantCode, warningRuleCode);
         if (po == null) {
-            return 0;
+            return DBOpeConts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, warningRuleCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getWarningRuleCode(), po.getWarningRuleName());
             deleteCacheList(tenantCode);
         }

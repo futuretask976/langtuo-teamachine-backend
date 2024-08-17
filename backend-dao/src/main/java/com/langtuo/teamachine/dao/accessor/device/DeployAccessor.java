@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.device;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.device.DeployMapper;
 import com.langtuo.teamachine.dao.mapper.record.MachineCodeSeqMapper;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
-import com.langtuo.teamachine.dao.po.user.RolePO;
 import com.langtuo.teamachine.dao.query.device.MachineDeployQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -26,17 +26,17 @@ public class DeployAccessor {
     private RedisManager redisManager;
 
     /**
-     *
+     * 取值步长
      */
     private static final long SEQ_SCOPE = 100;
 
     /**
-     *
+     * 机器编码步长起始值
      */
     private long machineCodeSeqStartVal;
 
     /**
-     *
+     * 机器编码步长当前值
      */
     private long machineCodeSeqCurVal;
 
@@ -99,7 +99,7 @@ public class DeployAccessor {
 
     public int insert(DeployPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode());
         }
@@ -108,7 +108,7 @@ public class DeployAccessor {
 
     public int update(DeployPO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode());
         }
@@ -118,11 +118,11 @@ public class DeployAccessor {
     public int delete(String tenantCode, String deployCode) {
         DeployPO po = selectOneByDeployCode(tenantCode, deployCode);
         if (po == null) {
-            return 0;
+            return DBOpeConts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, deployCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(tenantCode);
         }

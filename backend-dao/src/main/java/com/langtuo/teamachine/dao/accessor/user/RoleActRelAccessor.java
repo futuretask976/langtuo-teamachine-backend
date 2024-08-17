@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.user;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.user.RoleActRelMapper;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ public class RoleActRelAccessor {
 
     public int insert(RoleActRelPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getRoleCode());
         }
         return inserted;
@@ -40,7 +41,7 @@ public class RoleActRelAccessor {
 
     public int delete(String tenantCode, String roleCode) {
         int deleted = mapper.delete(tenantCode, roleCode);
-        if (deleted > 0) {
+        if (deleted > DBOpeConts.DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, roleCode);
         }
         return deleted;

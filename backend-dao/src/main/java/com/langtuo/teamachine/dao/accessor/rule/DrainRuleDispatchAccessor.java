@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.rule;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.rule.DrainRuleDispatchMapper;
 import com.langtuo.teamachine.dao.po.rule.DrainRuleDispatchPO;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,7 @@ public class DrainRuleDispatchAccessor {
 
     public int insert(DrainRuleDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getDrainRuleCode());
         }
         return inserted;
@@ -38,7 +39,7 @@ public class DrainRuleDispatchAccessor {
 
     public int delete(String tenantCode, String cleanRuleCode) {
         int deleted = mapper.delete(tenantCode, cleanRuleCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, cleanRuleCode);
         }
         return deleted;

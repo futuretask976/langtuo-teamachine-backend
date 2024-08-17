@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.accessor.device;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.device.MachineMapper;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.query.device.MachineQuery;
@@ -80,7 +81,7 @@ public class MachineAccessor {
 
     public int insert(MachinePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode(), po.getShopCode());
         }
@@ -89,7 +90,7 @@ public class MachineAccessor {
 
     public int update(MachinePO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode(), po.getShopCode());
         }
@@ -99,11 +100,11 @@ public class MachineAccessor {
     public int delete(String tenantCode, String machineCode) {
         MachinePO po = selectOne(tenantCode, machineCode);
         if (po == null) {
-            return 0;
+            return DBOpeConts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, machineCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, machineCode);
             deleteCacheList(tenantCode, po.getShopCode());
         }

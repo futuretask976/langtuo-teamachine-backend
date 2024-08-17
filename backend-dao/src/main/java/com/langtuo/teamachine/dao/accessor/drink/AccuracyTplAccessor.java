@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.accessor.drink;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.drink.AccuracyTplMapper;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
 import com.langtuo.teamachine.dao.query.drink.AccuracyTplQuery;
@@ -78,7 +79,7 @@ public class AccuracyTplAccessor {
 
     public int insert(AccuracyTplPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 0) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getTemplateCode(), po.getTemplateName());
             deleteCacheList(po.getTenantCode());
         }
@@ -87,7 +88,7 @@ public class AccuracyTplAccessor {
 
     public int update(AccuracyTplPO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getTemplateCode(), po.getTemplateName());
             deleteCacheList(po.getTenantCode());
         }
@@ -97,11 +98,11 @@ public class AccuracyTplAccessor {
     public int delete(String tenantCode, String templateCode) {
         AccuracyTplPO po = selectOneByCode(tenantCode, templateCode);
         if (po == null) {
-            return 0;
+            return DBOpeConts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, templateCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getTemplateCode(), po.getTemplateName());
             deleteCacheList(tenantCode);
         }

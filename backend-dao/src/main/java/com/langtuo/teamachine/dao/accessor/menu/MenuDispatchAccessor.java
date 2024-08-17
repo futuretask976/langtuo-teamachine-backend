@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.menu;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.menu.MenuDispatchMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ public class MenuDispatchAccessor {
 
     public int insert(MenuDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getMenuCode());
         }
         return inserted;
@@ -40,7 +41,7 @@ public class MenuDispatchAccessor {
 
     public int update(MenuDispatchPO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getMenuCode());
         }
         return updated;
@@ -48,7 +49,7 @@ public class MenuDispatchAccessor {
 
     public int delete(String tenantCode, String menuCode) {
         int deleted = mapper.delete(tenantCode, menuCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, menuCode);
         }
         return deleted;

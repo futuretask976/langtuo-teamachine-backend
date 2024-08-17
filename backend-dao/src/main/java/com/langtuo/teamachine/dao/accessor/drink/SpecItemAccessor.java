@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.drink.SpecItemMapper;
 import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,7 @@ public class SpecItemAccessor {
 
     public int insert(SpecItemPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecItemCode());
             deleteCacheList(po.getTenantCode(), po.getSpecCode());
         }
@@ -56,7 +57,7 @@ public class SpecItemAccessor {
 
     public int update(SpecItemPO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecItemCode());
             deleteCacheList(po.getTenantCode(), po.getSpecCode());
         }
@@ -69,7 +70,7 @@ public class SpecItemAccessor {
                 .collect(Collectors.toList());
 
         int deleted = mapper.delete(tenantCode, specCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             specItemCodeList.forEach(specItemCode -> {
                 deleteCacheOne(tenantCode, specCode, specItemCode);
             });

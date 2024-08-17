@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.accessor.rule;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.rule.CleanRuleMapper;
 import com.langtuo.teamachine.dao.po.rule.CleanRulePO;
 import com.langtuo.teamachine.dao.query.rule.CleanRuleQuery;
@@ -72,7 +73,7 @@ public class CleanRuleAccessor {
 
     public int update(CleanRulePO po) {
         int updated = mapper.update(po);
-        if (updated == 1) {
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getCleanRuleCode(), po.getCleanRuleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -81,7 +82,7 @@ public class CleanRuleAccessor {
 
     public int insert(CleanRulePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == 1) {
+        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getCleanRuleCode(), po.getCleanRuleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -91,11 +92,11 @@ public class CleanRuleAccessor {
     public int delete(String tenantCode, String cleanRuleCode) {
         CleanRulePO po = selectOneByCode(tenantCode, cleanRuleCode);
         if (po == null) {
-            return 0;
+            return DBOpeConts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, cleanRuleCode);
-        if (deleted == 1) {
+        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getCleanRuleCode(), po.getCleanRuleName());
             deleteCacheList(tenantCode);
         }
