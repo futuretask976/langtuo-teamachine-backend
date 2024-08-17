@@ -2,7 +2,6 @@ package com.langtuo.teamachine.dao.mapper.drink;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
-import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplToppingPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,7 +17,7 @@ public interface AccuracyTplToppingMapper {
      *
      * @return
      */
-    List<AccuracyTplPO> selectList(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode);
+    List<AccuracyTplToppingPO> selectList(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode);
 
     /**
      *
