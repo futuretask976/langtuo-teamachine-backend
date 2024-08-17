@@ -17,7 +17,7 @@ public class ToppingTypeController {
     private ToppingTypeMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/type/tenant_001/shopGroup_001/get
+     * url: http://localhost:8080/teamachine/drinkset/topping/type//{tenantcode}/{toppingtypecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{toppingtypecode}/get")
@@ -28,7 +28,7 @@ public class ToppingTypeController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/type/list?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/drinkset/topping/type/list?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -39,7 +39,7 @@ public class ToppingTypeController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/type/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/drinkset/topping/type/search?tenantCode={tenantCode}&toppingTypeCode={toppingTypeCode}&toppingTypeName={toppingTypeName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -63,7 +63,7 @@ public class ToppingTypeController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/type/{tenantcode}/{shopgroupcode}/delete
+     * url: http://localhost:8080/teamachine/drinkset/topping/type/{tenantcode}/{toppingtypecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{toppingtypecode}/delete")

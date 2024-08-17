@@ -17,7 +17,7 @@ public class AccuracyTplController {
     private AccuracyTplMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/accuracy/tenant_001/shopGroup_001/get
+     * url: http://localhost:8080/teamachine/drinkset/accuracy/{tenantcode}/{templatecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{templatecode}/get")
@@ -28,7 +28,7 @@ public class AccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/accuracy/list?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/drinkset/accuracy/list?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -39,7 +39,7 @@ public class AccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/accuracy/search?tenantCode=tenant_001&specName=&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/drinkset/accuracy/search?tenantCode={tenantCode}&templateCode={templateCode}&templateName={templateName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -62,7 +62,7 @@ public class AccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/accuracy/{tenantcode}/{shopgroupcode}/delete
+     * url: http://localhost:8080/teamachine/drinkset/accuracy/{tenantcode}/{templatecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{templatecode}/delete")

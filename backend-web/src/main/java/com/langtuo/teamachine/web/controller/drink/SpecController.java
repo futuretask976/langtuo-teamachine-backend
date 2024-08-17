@@ -17,7 +17,7 @@ public class SpecController {
     private SpecMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/spec/tenant_001/shopGroup_001/get
+     * url: http://localhost:8080/teamachine/drinkset/spec/{tenantcode}/{speccode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{speccode}/get")
@@ -28,7 +28,7 @@ public class SpecController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/spec/list?tenantCode=tenant_001
+     * url: http://localhost:8080/teamachine/drinkset/spec/list?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -39,7 +39,7 @@ public class SpecController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/spec/search?tenantCode=tenant_001&specName=&pageNum=1&pageSize=10
+     * url: http://localhost:8080/teamachine/drinkset/spec/search?tenantCode={tenantCode}&specCode={specCode}&specName={specName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -52,7 +52,7 @@ public class SpecController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/put
+     * url: http://localhost:8080/teamachine/drinkset/spec/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -62,7 +62,7 @@ public class SpecController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/topping/{tenantcode}/{shopgroupcode}/delete
+     * url: http://localhost:8080/teamachine/drinkset/spec/{tenantcode}/{speccode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{speccode}/delete")
