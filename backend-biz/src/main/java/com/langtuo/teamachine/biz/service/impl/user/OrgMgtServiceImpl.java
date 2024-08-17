@@ -23,11 +23,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class OrgMgtServiceImpl implements OrgMgtService {
-    /**
-     * 组织架构中最高层次的名称
-     */
-    public static final String ORG_NAME_TOP = "总公司";
-
     @Resource
     private OrgAccessor orgAccessor;
 
