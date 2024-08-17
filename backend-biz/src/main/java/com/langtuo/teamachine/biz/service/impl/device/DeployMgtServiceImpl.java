@@ -140,8 +140,9 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         try {
             long machineCodeSeqVal = deployAccessor.getMachineCodeNextSeqVal();
             String machineCode = String.valueOf(machineCodeSeqVal);
+            long needSupplyCnt = 6 - machineCode.length();
             if (machineCode.length() < 6) {
-                for (int i = 0; i < (6 - machineCode.length()); i++) {
+                for (int i = 0; i < needSupplyCnt; i++) {
                     machineCode = "0" + machineCode;
                 }
             }
