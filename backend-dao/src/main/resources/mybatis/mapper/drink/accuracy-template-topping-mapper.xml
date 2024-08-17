@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.drink.AccuracyTplToppingMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.rule.AccuracyTplToppingPO" id="accuracyTplToppingPOMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.drink.AccuracyTplToppingPO" id="accuracyTplToppingPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -21,7 +21,7 @@
             AND template_code = #{templateCode}
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.AccuracyTplToppingPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.AccuracyTplToppingPO">
         INSERT INTO accuracy_template_topping (
             gmt_created
             , gmt_modified

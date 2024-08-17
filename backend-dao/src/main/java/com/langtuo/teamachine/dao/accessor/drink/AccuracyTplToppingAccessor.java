@@ -47,7 +47,7 @@ public class AccuracyTplToppingAccessor {
     }
 
     private String getCacheListKey(String tenantCode, String templateCode) {
-        return "accuracyTplAcc-" + tenantCode + "-" + templateCode;
+        return "accuracyTplToppingAcc-" + tenantCode + "-" + templateCode;
     }
 
     private List<AccuracyTplToppingPO> getCacheList(String tenantCode, String templateCode) {

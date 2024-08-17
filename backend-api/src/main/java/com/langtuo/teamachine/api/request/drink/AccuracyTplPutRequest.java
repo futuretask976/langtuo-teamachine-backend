@@ -1,8 +1,11 @@
 package com.langtuo.teamachine.api.request.drink;
 
+import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
+import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -50,7 +53,7 @@ public class AccuracyTplPutRequest {
     /**
      * 应用物料编码
      */
-    private String toppingCode;
+    private List<String> toppingCodeList;
 
     /**
      * 备注
@@ -66,9 +69,24 @@ public class AccuracyTplPutRequest {
                 // && RegexUtils.isValidCode(comment, false)
                 && RegexUtils.isValidCode(templateCode, true)
                 && RegexUtils.isValidName(templateName, true)
-                && RegexUtils.isValidCode(toppingCode, true)) {
+                && isValidToppingCodeList()) {
             return true;
         }
         return false;
+    }
+
+    private boolean isValidToppingCodeList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(toppingCodeList)) {
+            isValid = false;
+        } else {
+            for (String m : toppingCodeList) {
+                if (!RegexUtils.isValidCode(m, true)) {
+                    isValid = false;
+                    break;
+                }
+            }
+        }
+        return isValid;
     }
 }

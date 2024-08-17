@@ -8,11 +8,15 @@ import com.langtuo.teamachine.api.request.drink.AccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplAccessor;
+import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplToppingAccessor;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
+import com.langtuo.teamachine.dao.po.drink.AccuracyTplToppingPO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -22,7 +26,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     @Resource
-    private AccuracyTplAccessor accessor;
+    private AccuracyTplAccessor accuracyTplAccessor;
+
+    @Resource
+    private AccuracyTplToppingAccessor accuracyTplToppingAccessor;
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
@@ -31,9 +38,9 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     public LangTuoResult<List<AccuracyTplDTO>> list(String tenantCode) {
         LangTuoResult<List<AccuracyTplDTO>> langTuoResult = null;
         try {
-            List<AccuracyTplPO> list = accessor.selectList(tenantCode);
+            List<AccuracyTplPO> list = accuracyTplAccessor.selectList(tenantCode);
             List<AccuracyTplDTO> dtoList = list.stream()
-                    .map(po -> convert(po))
+                    .map(po -> convertToAccuracyTplPO(po))
                     .collect(Collectors.toList());
             langTuoResult = LangTuoResult.success(dtoList);
         } catch (Exception e) {
@@ -51,10 +58,10 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
         LangTuoResult<PageDTO<AccuracyTplDTO>> langTuoResult = null;
         try {
-            PageInfo<AccuracyTplPO> pageInfo = accessor.search(tenantName, templateCode, templateName,
+            PageInfo<AccuracyTplPO> pageInfo = accuracyTplAccessor.search(tenantName, templateCode, templateName,
                     pageNum, pageSize);
             List<AccuracyTplDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
+                    .map(po -> convertToAccuracyTplPO(po))
                     .collect(Collectors.toList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
@@ -69,8 +76,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     public LangTuoResult<AccuracyTplDTO> getByCode(String tenantCode, String specCode) {
         LangTuoResult<AccuracyTplDTO> langTuoResult = null;
         try {
-            AccuracyTplPO po = accessor.selectOneByCode(tenantCode, specCode);
-            AccuracyTplDTO dto = convert(po);
+            AccuracyTplPO po = accuracyTplAccessor.selectOneByCode(tenantCode, specCode);
+            AccuracyTplDTO dto = convertToAccuracyTplPO(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
@@ -83,8 +90,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     public LangTuoResult<AccuracyTplDTO> getByName(String tenantCode, String specName) {
         LangTuoResult<AccuracyTplDTO> langTuoResult = null;
         try {
-            AccuracyTplPO po = accessor.selectOneByName(tenantCode, specName);
-            AccuracyTplDTO dto = convert(po);
+            AccuracyTplPO po = accuracyTplAccessor.selectOneByName(tenantCode, specName);
+            AccuracyTplDTO dto = convertToAccuracyTplPO(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
@@ -98,15 +105,23 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         if (request == null || !request.isValid()) {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
-        AccuracyTplPO po = convert(request);
+        AccuracyTplPO po = convertToAccuracyTplPO(request);
+        List<AccuracyTplToppingPO> toppingPOList = convertToAccuracyTplToppingPO(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            AccuracyTplPO exist = accessor.selectOneByCode(po.getTenantCode(), po.getTemplateCode());
+            AccuracyTplPO exist = accuracyTplAccessor.selectOneByCode(po.getTenantCode(), po.getTemplateCode());
             if (exist != null) {
-                int updated = accessor.update(po);
+                int updated = accuracyTplAccessor.update(po);
             } else {
-                int inserted = accessor.insert(po);
+                int inserted = accuracyTplAccessor.insert(po);
+            }
+
+            int deleted = accuracyTplToppingAccessor.delete(request.getTenantCode(), request.getTemplateCode());
+            if (!CollectionUtils.isEmpty(toppingPOList)) {
+                toppingPOList.forEach(toppingPO -> {
+                    int inserted = accuracyTplToppingAccessor.insert(toppingPO);
+                });
             }
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
@@ -128,7 +143,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            int deleted = accessor.delete(tenantCode, templateCode);
+            int deleted = accuracyTplAccessor.delete(tenantCode, templateCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
@@ -137,7 +152,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         return langTuoResult;
     }
 
-    private AccuracyTplDTO convert(AccuracyTplPO po) {
+    private AccuracyTplDTO convertToAccuracyTplPO(AccuracyTplPO po) {
         if (po == null) {
             return null;
         }
@@ -145,6 +160,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         AccuracyTplDTO dto = new AccuracyTplDTO();
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
+        dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
         dto.setTemplateCode(po.getTemplateCode());
         dto.setTemplateName(po.getTemplateName());
@@ -152,12 +168,20 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         dto.setOverAmount(po.getOverAmount());
         dto.setUnderMode(po.getUnderMode());
         dto.setUnderAmount(po.getUnderAmount());
-        dto.setToppingCode(po.getToppingCode());
-        dto.setComment(po.getComment());
+
+        List<AccuracyTplToppingPO> toppingPOList = accuracyTplToppingAccessor.selectList(
+                po.getTenantCode(), po.getTemplateCode());
+        if (!CollectionUtils.isEmpty(toppingPOList)) {
+            List<String> toppingCodeList = Lists.newArrayList();
+            toppingPOList.forEach(toppingPO -> {
+                toppingCodeList.add(toppingPO.getToppingCode());
+            });
+            dto.setToppingCodeList(toppingCodeList);
+        }
         return dto;
     }
 
-    private AccuracyTplPO convert(AccuracyTplPutRequest request) {
+    private AccuracyTplPO convertToAccuracyTplPO(AccuracyTplPutRequest request) {
         if (request == null) {
             return null;
         }
@@ -171,8 +195,22 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         po.setOverAmount(request.getOverAmount());
         po.setUnderMode(request.getUnderUnit());
         po.setUnderAmount(request.getUnderAmount());
-        po.setToppingCode(request.getToppingCode());
         po.setComment(request.getComment());
         return po;
+    }
+
+    private List<AccuracyTplToppingPO> convertToAccuracyTplToppingPO(AccuracyTplPutRequest request) {
+        if (request == null || CollectionUtils.isEmpty(request.getToppingCodeList())) {
+            return null;
+        }
+
+        return request.getToppingCodeList().stream()
+                .map(toppingCode -> {
+                    AccuracyTplToppingPO po = new AccuracyTplToppingPO();
+                    po.setTenantCode(request.getTenantCode());
+                    po.setTemplateCode(request.getTemplateCode());
+                    po.setToppingCode(toppingCode);
+                    return po;
+                }).collect(Collectors.toList());
     }
 }

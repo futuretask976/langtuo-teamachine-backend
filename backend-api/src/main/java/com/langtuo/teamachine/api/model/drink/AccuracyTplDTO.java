@@ -3,6 +3,7 @@ package com.langtuo.teamachine.api.model.drink;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -58,7 +59,7 @@ public class AccuracyTplDTO {
     private int underAmount;
 
     /**
-     * 应用物料编码
+     * 应用物料编码列表
      */
-    private String toppingCode;
+    private List<String> toppingCodeList;
 }

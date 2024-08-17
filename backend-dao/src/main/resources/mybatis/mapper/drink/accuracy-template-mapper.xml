@@ -82,8 +82,8 @@
         UPDATE accuracy_template
         SET
             gmt_modified = now()
-            <if test="specName != null">
-                , template_name = #{specName}
+            <if test="templateName != null">
+                , template_name = #{templateName}
             </if>
             <if test="overMode != null">
                 , over_mode = #{overMode}
