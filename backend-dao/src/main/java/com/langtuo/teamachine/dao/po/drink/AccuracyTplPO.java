@@ -66,9 +66,4 @@ public class AccuracyTplPO {
      * 不及数值
      */
     private int underAmount;
-
-    /**
-     * 应用物料编码
-     */
-    private String toppingCode;
 }

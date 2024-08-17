@@ -9,6 +9,7 @@
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="tenantCode" column="tenant_code"/>
+        <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
         <result property="templateCode" column="template_code"/>
         <result property="templateName" column="template_name"/>
@@ -16,8 +17,7 @@
         <result property="overAmount" column="over_amount"/>
         <result property="underMode" column="under_mode"/>
         <result property="underAmount" column="under_amount"/>
-        <result property="toppingCode" column="topping_code"/>
-        <result property="comment" column="comment"/>
+
     </resultMap>
 
     <select id="selectOne" resultMap="accuracyTemplatePOMap">
@@ -60,7 +60,6 @@
             , over_amount
             , under_mode
             , under_amount
-            , topping_code
             , tenant_code
             , comment
             , extra_info
@@ -73,7 +72,6 @@
             , #{overAmount}
             , #{underMode}
             , #{underAmount}
-            , #{toppingCode}
             , #{tenantCode}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
@@ -98,9 +96,6 @@
             </if>
             <if test="underAmount != null">
                 , under_amount = #{underAmount}
-            </if>
-            <if test="toppingCode != null">
-                , topping_code = #{toppingCode}
             </if>
             <if test="comment != null">
                 , comment = #{comment}
