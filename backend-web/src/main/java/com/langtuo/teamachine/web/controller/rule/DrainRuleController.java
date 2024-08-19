@@ -41,6 +41,18 @@ public class DrainRuleController {
     }
 
     /**
+     * url: http://localhost:8080/teamachine/ruleset/drain/listbyshop?tenantCode=tenant_001
+     * @param tenantCode
+     * @return
+     */
+    @GetMapping(value = "/listbyshop")
+    public LangTuoResult<List<DrainRuleDTO>> list(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("shopCode") String shopCode) {
+        LangTuoResult<List<DrainRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
+        return rtn;
+    }
+
+    /**
      * url: http://localhost:8080/teamachine/ruleset/drain/search?tenantCode={tenantCode}&drainRuleCode={drainRuleCode}&drainRuleName={drainRuleName}&pageNum=1&pageSize=10
      * @return
      */

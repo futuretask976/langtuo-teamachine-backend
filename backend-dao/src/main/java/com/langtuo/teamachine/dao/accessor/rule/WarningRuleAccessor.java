@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.rule.WarningRuleMapper;
+import com.langtuo.teamachine.dao.po.rule.DrainRulePO;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.query.rule.WarningRuleQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -50,10 +51,16 @@ public class WarningRuleAccessor {
             return cachedList;
         }
 
-        List<WarningRulePO> list = mapper.selectList(tenantCode);
+        List<WarningRulePO> list = mapper.selectList(tenantCode, null);
 
         // 设置缓存
         setCacheList(tenantCode, list);
+        return list;
+    }
+
+    public List<WarningRulePO> selectListByWarningRuleCode(String tenantCode, List<String> warningruleCodeList) {
+        // 这里只是在每台机器初始化的时候会调用，所以先不加缓存
+        List<WarningRulePO> list = mapper.selectList(tenantCode, warningruleCodeList);
         return list;
     }
 

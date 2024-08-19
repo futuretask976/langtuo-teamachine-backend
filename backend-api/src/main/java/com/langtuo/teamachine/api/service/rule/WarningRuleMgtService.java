@@ -40,6 +40,13 @@ public interface WarningRuleMgtService {
 
     /**
      *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<List<WarningRuleDTO>> listByShopCode(String tenantCode, String shopCode);
+
+    /**
+     *
      * @param request
      * @return
      */

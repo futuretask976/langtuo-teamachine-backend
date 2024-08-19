@@ -5,10 +5,12 @@ import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
+import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.rule.WarningRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.WarningRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
+import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
@@ -24,6 +26,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+
 @Component
 @Slf4j
 public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
@@ -34,6 +38,9 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     private WarningRuleDispatchAccessor warningRuleDispatchAccessor;
 
     @Resource
+    private ShopMgtService shopMgtService;
+
+    @Resource
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
@@ -41,7 +48,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         LangTuoResult<WarningRuleDTO> langTuoResult = null;
         try {
             WarningRulePO po = warningRuleAccessor.selectOneByCode(tenantCode, warningRuleCode);
-            WarningRuleDTO dto = convert(po);
+            WarningRuleDTO dto = convertToWarningRuleDTO(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
@@ -55,7 +62,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         LangTuoResult<WarningRuleDTO> langTuoResult = null;
         try {
             WarningRulePO po = warningRuleAccessor.selectOneByName(tenantCode, warningRuleName);
-            WarningRuleDTO dto = convert(po);
+            WarningRuleDTO dto = convertToWarningRuleDTO(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
@@ -69,8 +76,37 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         LangTuoResult<List<WarningRuleDTO>> langTuoResult = null;
         try {
             List<WarningRulePO> poList = warningRuleAccessor.selectList(tenantCode);
-            List<WarningRuleDTO> dtoList = convert(poList);
+            List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(poList);
             langTuoResult = LangTuoResult.success(dtoList);
+        } catch (Exception e) {
+            log.error("list error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<List<WarningRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
+        LangTuoResult<List<WarningRuleDTO>> langTuoResult;
+        try {
+            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
+            if (shopDTO == null) {
+                langTuoResult = LangTuoResult.success();
+            }
+
+            List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.selectListByShopGroupCode(
+                    tenantCode, shopDTO.getShopGroupCode());
+            if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
+                langTuoResult = LangTuoResult.success();
+            }
+
+            List<String> warningRuleCodeList = warningRuleDispatchPOList.stream()
+                    .map(WarningRuleDispatchPO::getWarningRuleCode)
+                    .collect(Collectors.toList());
+            List<WarningRulePO> warningRulePOList = warningRuleAccessor.selectListByWarningRuleCode(tenantCode,
+                    warningRuleCodeList);
+            List<WarningRuleDTO> drainRuleDTOList = convertToWarningRuleDTO(warningRulePOList);
+            langTuoResult = LangTuoResult.success(drainRuleDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
@@ -88,7 +124,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         try {
             PageInfo<WarningRulePO> pageInfo = warningRuleAccessor.search(tenantCode, warningRuleCode,
                     warningRuleName, pageNum, pageSize);
-            List<WarningRuleDTO> dtoList = convert(pageInfo.getList());
+            List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
@@ -103,7 +139,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        WarningRulePO warningRulePO = convert(request);
+        WarningRulePO warningRulePO = convertToWarningRuleDTO(request);
 
         LangTuoResult<Void> langTuoResult = null;
         try {
@@ -146,7 +182,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        List<WarningRuleDispatchPO> poList = convert(request);
+        List<WarningRuleDispatchPO> poList = convertToWarningRuleDTO(request);
         LangTuoResult<Void> langTuoResult = null;
         try {
             int deleted = warningRuleDispatchAccessor.delete(request.getTenantCode(),
@@ -190,18 +226,18 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         return langTuoResult;
     }
 
-    private List<WarningRuleDTO> convert(List<WarningRulePO> poList) {
+    private List<WarningRuleDTO> convertToWarningRuleDTO(List<WarningRulePO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<WarningRuleDTO> list = poList.stream()
-                .map(po -> convert(po))
+                .map(po -> convertToWarningRuleDTO(po))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private WarningRuleDTO convert(WarningRulePO po) {
+    private WarningRuleDTO convertToWarningRuleDTO(WarningRulePO po) {
         if (po == null) {
             return null;
         }
@@ -222,7 +258,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         return dto;
     }
 
-    private WarningRulePO convert(WarningRulePutRequest request) {
+    private WarningRulePO convertToWarningRuleDTO(WarningRulePutRequest request) {
         if (request == null) {
             return null;
         }
@@ -241,7 +277,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         return po;
     }
 
-    private List<WarningRuleDispatchPO> convert(WarningRuleDispatchPutRequest request) {
+    private List<WarningRuleDispatchPO> convertToWarningRuleDTO(WarningRuleDispatchPutRequest request) {
         String tenantCode = request.getTenantCode();
         String warningRuleCode = request.getWarningRuleCode();
 

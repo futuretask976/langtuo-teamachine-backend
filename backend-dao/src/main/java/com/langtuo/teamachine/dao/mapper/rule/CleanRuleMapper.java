@@ -27,7 +27,8 @@ public interface CleanRuleMapper {
      *
      * @return
      */
-    List<CleanRulePO> selectList(@Param("tenantCode") String tenantCode);
+    List<CleanRulePO> selectList(@Param("tenantCode") String tenantCode,
+            @Param("cleanRuleCodeList") List<String> cleanRuleCodeList);
 
     /**
      *

@@ -1,8 +1,6 @@
 package com.langtuo.teamachine.mqtt.consume.worker.device;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.ModelDTO;
 import com.langtuo.teamachine.api.model.user.TenantDTO;
@@ -13,7 +11,6 @@ import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +52,7 @@ public class ModelDispatchWorker implements Runnable {
 
         MqttService mqttService = getMQTTService();
         tenantCodeList.forEach(tenantCode -> {
-            mqttService.sendDispatchMsgByTenant(tenantCode, jsonMsg.toJSONString());
+            mqttService.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
         });
     }
 

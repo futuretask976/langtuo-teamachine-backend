@@ -36,6 +36,12 @@
         SELECT * FROM warning_rule
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            <if test="warningRuleCodeList != null and warningRuleCodeList.size() > 0">
+                AND warning_rule_code IN
+                <foreach item="warningRuleCode" collection="warningRuleCodeList" open="(" separator="," close=")">
+                    #{warningRuleCode}
+                </foreach>
+            </if>
     </select>
 
     <select id="search" resultMap="warningRulePOMap">

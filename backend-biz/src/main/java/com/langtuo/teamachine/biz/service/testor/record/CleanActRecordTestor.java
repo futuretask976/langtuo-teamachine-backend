@@ -46,7 +46,7 @@ public class CleanActRecordTestor {
         jsonArray.add(request);
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put("childTopic", "cleanActRecord");
+        jsonMsg.put("bizCode", "cleanActRecord");
         jsonMsg.put("list", jsonArray);
         System.out.println(jsonMsg.toJSONString());
 

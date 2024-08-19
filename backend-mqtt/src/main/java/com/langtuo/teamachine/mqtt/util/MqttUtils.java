@@ -50,7 +50,7 @@ public class MqttUtils {
         return MqttConsts.CONSOLE_PARENT_TOPIC + MqttConsts.TOPIC_SEPERATOR + "console";
     }
 
-    public static String getDispatchTopicByTenant(String tenantCode) {
+    public static String getBroadcastTopicByTenant(String tenantCode) {
         return tenantCode + MqttConsts.TENANT_PARENT_TOPIC_POSTFIX + MqttConsts.TOPIC_SEPERATOR + "broadcast";
     }
 

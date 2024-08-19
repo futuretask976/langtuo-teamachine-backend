@@ -50,10 +50,16 @@ public class CleanRuleAccessor {
             return cachedList;
         }
 
-        List<CleanRulePO> list = mapper.selectList(tenantCode);
+        List<CleanRulePO> list = mapper.selectList(tenantCode, null);
 
         // 设置缓存
         setCacheList(tenantCode, list);
+        return list;
+    }
+
+    public List<CleanRulePO> selectListByCleanRuleCode(String tenantCode, List<String> cleanRuleCodeList) {
+        // 这里只是在每台机器初始化的时候会调用，所以先不加缓存
+        List<CleanRulePO> list = mapper.selectList(tenantCode, cleanRuleCodeList);
         return list;
     }
 

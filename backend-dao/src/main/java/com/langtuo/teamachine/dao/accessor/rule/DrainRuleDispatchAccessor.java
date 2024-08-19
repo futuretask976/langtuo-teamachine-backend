@@ -5,6 +5,7 @@ import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.rule.DrainRuleDispatchMapper;
 import com.langtuo.teamachine.dao.po.rule.DrainRuleDispatchPO;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,28 +30,57 @@ public class DrainRuleDispatchAccessor {
         return list;
     }
 
+    public List<DrainRuleDispatchPO> selectListByShopGroupCode(String tenantCode, String shopGroupCode) {
+        List<DrainRuleDispatchPO> cached = getCacheListByShopGroupCode(tenantCode, shopGroupCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        List<DrainRuleDispatchPO> list = mapper.selectListByShopGroupCode(tenantCode, shopGroupCode);
+
+        setCacheListByShopGroupCode(tenantCode, shopGroupCode, list);
+        return list;
+    }
+
     public int insert(DrainRuleDispatchPO po) {
         int inserted = mapper.insert(po);
         if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
-            deleteCacheList(po.getTenantCode(), po.getDrainRuleCode());
+            deleteCacheList(po.getTenantCode(), po.getDrainRuleCode(), po.getShopGroupCode());
         }
         return inserted;
     }
 
     public int delete(String tenantCode, String cleanRuleCode) {
+        List<DrainRuleDispatchPO> existList = selectList(tenantCode, cleanRuleCode);
+        if (CollectionUtils.isEmpty(existList)) {
+            return DBOpeConts.DELETED_ZERO_ROW;
+        }
+        String shopGroupCode = existList.get(0).getShopGroupCode();
+
         int deleted = mapper.delete(tenantCode, cleanRuleCode);
         if (deleted == DBOpeConts.DELETED_ONE_ROW) {
-            deleteCacheList(tenantCode, cleanRuleCode);
+            deleteCacheList(tenantCode, cleanRuleCode, shopGroupCode);
         }
         return deleted;
     }
 
     private String getCacheListKey(String tenantCode, String cleanRuleCode) {
-        return "cleanRuleDispatchAcc-" + tenantCode + "-" + cleanRuleCode;
+        return "drainRuleDispatchAcc-" + tenantCode + "-" + cleanRuleCode;
+    }
+
+    private String getCacheListKeyByShopGroupCode(String tenantCode, String shopGroupCode) {
+        return "drainRuleDispatchAcc-byShopGroupCode-" + tenantCode + "-" + shopGroupCode;
     }
 
     private List<DrainRuleDispatchPO> getCacheList(String tenantCode, String cleanRuleCode) {
         String key = getCacheListKey(tenantCode, cleanRuleCode);
+        Object cached = redisManager.getValue(key);
+        List<DrainRuleDispatchPO> poList = (List<DrainRuleDispatchPO>) cached;
+        return poList;
+    }
+
+    private List<DrainRuleDispatchPO> getCacheListByShopGroupCode(String tenantCode, String shopGroupCode) {
+        String key = getCacheListKeyByShopGroupCode(tenantCode, shopGroupCode);
         Object cached = redisManager.getValue(key);
         List<DrainRuleDispatchPO> poList = (List<DrainRuleDispatchPO>) cached;
         return poList;
@@ -61,7 +91,13 @@ public class DrainRuleDispatchAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCacheList(String tenantCode, String cleanRuleCode) {
+    private void setCacheListByShopGroupCode(String tenantCode, String shopGroupCode, List<DrainRuleDispatchPO> poList) {
+        String key = getCacheListKeyByShopGroupCode(tenantCode, shopGroupCode);
+        redisManager.setValue(key, poList);
+    }
+
+    private void deleteCacheList(String tenantCode, String cleanRuleCode, String shopGroupCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, cleanRuleCode));
+        redisManager.deleteKey(getCacheListKeyByShopGroupCode(tenantCode, shopGroupCode));
     }
 }

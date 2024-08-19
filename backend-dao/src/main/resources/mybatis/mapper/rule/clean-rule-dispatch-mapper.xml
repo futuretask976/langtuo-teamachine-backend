@@ -35,6 +35,15 @@
             </if>
     </select>
 
+    <select id="selectListByShopGroupCode" resultMap="cleanRuleDispatchPOMap">
+        SELECT * FROM clean_rule_dispatch
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="shopGroupCode != null">
+                AND shop_group_code = #{shopGroupCode}
+            </if>
+    </select>
+
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO">
         INSERT INTO clean_rule_dispatch (
             gmt_created

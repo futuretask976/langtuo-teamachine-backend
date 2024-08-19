@@ -6,10 +6,12 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleStepDTO;
+import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.rule.CleanRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.CleanRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
+import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleDispatchAccessor;
@@ -30,6 +32,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+
 @Component
 @Slf4j
 public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
@@ -46,11 +50,14 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     private CleanRuleExceptAccessor cleanRuleExceptAccessor;
 
     @Resource
+    private ShopMgtService shopMgtService;
+
+    @Resource
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
     public LangTuoResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
-        LangTuoResult<CleanRuleDTO> langTuoResult = null;
+        LangTuoResult<CleanRuleDTO> langTuoResult;
         try {
             CleanRulePO po = cleanRuleAccessor.selectOneByCode(tenantCode, cleanRuleCode);
             CleanRuleDTO dto = convert(po);
@@ -64,7 +71,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
     @Override
     public LangTuoResult<CleanRuleDTO> getByName(String tenantCode, String cleanRuleName) {
-        LangTuoResult<CleanRuleDTO> langTuoResult = null;
+        LangTuoResult<CleanRuleDTO> langTuoResult;
         try {
             CleanRulePO po = cleanRuleAccessor.selectOneByName(tenantCode, cleanRuleName);
             CleanRuleDTO dto = convert(po);
@@ -78,11 +85,40 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
     @Override
     public LangTuoResult<List<CleanRuleDTO>> list(String tenantCode) {
-        LangTuoResult<List<CleanRuleDTO>> langTuoResult = null;
+        LangTuoResult<List<CleanRuleDTO>> langTuoResult;
         try {
             List<CleanRulePO> cleanRulePOList = cleanRuleAccessor.selectList(tenantCode);
-            List<CleanRuleDTO> teaDTOList = convertToCleanRuleDTO(cleanRulePOList);
-            langTuoResult = LangTuoResult.success(teaDTOList);
+            List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
+            langTuoResult = LangTuoResult.success(cleanRuleDTOList);
+        } catch (Exception e) {
+            log.error("list error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
+        LangTuoResult<List<CleanRuleDTO>> langTuoResult;
+        try {
+            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
+            if (shopDTO == null) {
+                langTuoResult = LangTuoResult.success();
+            }
+
+            List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.selectListByShopGroupCode(
+                    tenantCode, shopDTO.getShopGroupCode());
+            if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
+                langTuoResult = LangTuoResult.success();
+            }
+
+            List<String> cleanRuleCodeList = cleanRuleDispatchPOList.stream()
+                    .map(CleanRuleDispatchPO::getCleanRuleCode)
+                    .collect(Collectors.toList());
+            List<CleanRulePO> cleanRulePOList = cleanRuleAccessor.selectListByCleanRuleCode(tenantCode,
+                    cleanRuleCodeList);
+            List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
+            langTuoResult = LangTuoResult.success(cleanRuleDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
@@ -96,7 +132,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<CleanRuleDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<CleanRuleDTO>> langTuoResult;
         try {
             PageInfo<CleanRulePO> pageInfo = cleanRuleAccessor.search(tenantCode, cleanRuleCode, cleanRuleName,
                     pageNum, pageSize);
@@ -120,7 +156,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         List<CleanRuleStepPO> cleanRuleStepPOList = convertToCleanRuleStepPO(request);
         List<CleanRuleExceptPO> cleanRuleExceptPOList = convertToCleanRuleExceptPO(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             CleanRulePO exist = cleanRuleAccessor.selectOneByCode(cleanRulePO.getTenantCode(),
                     cleanRulePO.getCleanRuleCode());
@@ -158,7 +194,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = cleanRuleAccessor.delete(tenantCode, cleanRuleCode);
             int deleted4Step = cleanRuleStepAccessor.delete(tenantCode, cleanRuleCode);
@@ -178,7 +214,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         }
 
         List<CleanRuleDispatchPO> poList = convert(request);
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = cleanRuleDispatchAccessor.delete(request.getTenantCode(),
                     request.getCleanRuleCode());

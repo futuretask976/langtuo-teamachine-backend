@@ -32,6 +32,13 @@ public interface CleanRuleDispatchMapper {
 
     /**
      *
+     * @return
+     */
+    List<CleanRuleDispatchPO> selectListByShopGroupCode(@Param("tenantCode") String tenantCode,
+            @Param("shopGroupCode") String shopGroupCode);
+
+    /**
+     *
      * @param cleanRuleDispatchPO
      * @return
      */

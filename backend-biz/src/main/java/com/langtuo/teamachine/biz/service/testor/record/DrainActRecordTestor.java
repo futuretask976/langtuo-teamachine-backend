@@ -2,13 +2,10 @@ package com.langtuo.teamachine.biz.service.testor.record;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.request.record.CleanActRecordPutRequest;
 import com.langtuo.teamachine.api.request.record.DrainActRecordPutRequest;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
-import com.langtuo.teamachine.dao.mapper.record.CleanActRecordMapper;
 import com.langtuo.teamachine.dao.mapper.record.DrainActRecordMapper;
 import com.langtuo.teamachine.dao.mapper.record.InvalidActRecordMapper;
-import com.langtuo.teamachine.dao.po.record.CleanActRecordPO;
 import com.langtuo.teamachine.dao.po.record.DrainActRecordPO;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
 import org.apache.ibatis.session.SqlSession;
@@ -39,7 +36,15 @@ public class DrainActRecordTestor {
         request.setDrainRuleCode("123");
         request.setFlushSec(30);
         request.setFlushWeight(40);
-        mapper.insert(convert(request));
+        // mapper.insert(convert(request));
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(request);
+
+        JSONObject jsonMsg = new JSONObject();
+        jsonMsg.put("bizCode", "drainActRecord");
+        jsonMsg.put("list", jsonArray);
+        System.out.println(jsonMsg.toJSONString());
 
         sqlSession.commit();
         sqlSession.close();

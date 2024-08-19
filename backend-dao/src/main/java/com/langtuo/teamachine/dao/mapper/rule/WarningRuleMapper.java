@@ -27,7 +27,8 @@ public interface WarningRuleMapper {
      *
      * @return
      */
-    List<WarningRulePO> selectList(@Param("tenantCode") String tenantCode);
+    List<WarningRulePO> selectList(@Param("tenantCode") String tenantCode,
+            @Param("warningRuleCodeList") List<String> warningRuleCodeList);
 
     /**
      *

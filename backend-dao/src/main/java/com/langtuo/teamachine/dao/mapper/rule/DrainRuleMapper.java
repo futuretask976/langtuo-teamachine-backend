@@ -28,7 +28,8 @@ public interface DrainRuleMapper {
      *
      * @return
      */
-    List<DrainRulePO> selectList(@Param("tenantCode") String tenantCode);
+    List<DrainRulePO> selectList(@Param("tenantCode") String tenantCode,
+            @Param("drainRuleCodeList") List<String> drainRuleCodeList);
 
     /**
      *

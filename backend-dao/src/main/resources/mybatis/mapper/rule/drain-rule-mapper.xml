@@ -32,6 +32,12 @@
         SELECT * FROM drain_rule
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            <if test="drainRuleCodeList != null and drainRuleCodeList.size() > 0">
+                AND drain_rule_code IN
+                <foreach item="drainRuleCode" collection="drainRuleCodeList" open="(" separator="," close=")">
+                    #{drainRuleCode}
+                </foreach>
+            </if>
     </select>
 
     <select id="search" resultMap="drainRulePOMap">

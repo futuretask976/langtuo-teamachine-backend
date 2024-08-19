@@ -54,12 +54,12 @@ public class MqttService implements InitializingBean {
         });
     }
 
-    public void sendDispatchMsgByTenant(String tenantCode, String payload) {
+    public void sendBroadcastMsgByTenant(String tenantCode, String payload) {
         ExeService4Publish.getExecutorService().submit(() -> {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(MqttConfig.QOS_LEVEL);
             try {
-                mqttClient.publish(MqttUtils.getDispatchTopicByTenant(tenantCode), message);
+                mqttClient.publish(MqttUtils.getBroadcastTopicByTenant(tenantCode), message);
             } catch (MqttException e) {
                 log.error("send msg by p2p error: " + e.getMessage(), e);
             }

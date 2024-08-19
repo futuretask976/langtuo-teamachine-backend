@@ -7,16 +7,16 @@ import com.langtuo.teamachine.api.model.drink.ToppingDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleToppingDTO;
+import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.rule.DrainRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.DrainRulePutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
+import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.rule.*;
-import com.langtuo.teamachine.dao.po.rule.DrainRuleDispatchPO;
-import com.langtuo.teamachine.dao.po.rule.DrainRuleToppingPO;
-import com.langtuo.teamachine.dao.po.rule.DrainRulePO;
+import com.langtuo.teamachine.dao.po.rule.*;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,25 +34,28 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 @Slf4j
 public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     @Resource
-    private DrainRuleAccessor openRuleAccessor;
+    private DrainRuleAccessor drainRuleAccessor;
 
     @Resource
-    private DrainRuleToppingAccessor openRuleToppingAccessor;
+    private DrainRuleToppingAccessor drainRuleToppingAccessor;
 
     @Resource
-    private DrainRuleDispatchAccessor openRuleDispatchAccessor;
+    private DrainRuleDispatchAccessor drainRuleDispatchAccessor;
 
     @Resource
     private ToppingMgtService toppingMgtService;
+
+    @Resource
+    private ShopMgtService shopMgtService;
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
     public LangTuoResult<DrainRuleDTO> getByCode(String tenantCode, String openRuleCode) {
-        LangTuoResult<DrainRuleDTO> langTuoResult = null;
+        LangTuoResult<DrainRuleDTO> langTuoResult;
         try {
-            DrainRulePO po = openRuleAccessor.selectOneByCode(tenantCode, openRuleCode);
+            DrainRulePO po = drainRuleAccessor.selectOneByCode(tenantCode, openRuleCode);
             DrainRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
@@ -64,9 +67,9 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
     @Override
     public LangTuoResult<DrainRuleDTO> getByName(String tenantCode, String openRuleName) {
-        LangTuoResult<DrainRuleDTO> langTuoResult = null;
+        LangTuoResult<DrainRuleDTO> langTuoResult;
         try {
-            DrainRulePO po = openRuleAccessor.selectOneByName(tenantCode, openRuleName);
+            DrainRulePO po = drainRuleAccessor.selectOneByName(tenantCode, openRuleName);
             DrainRuleDTO dto = convert(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
@@ -78,11 +81,40 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
     @Override
     public LangTuoResult<List<DrainRuleDTO>> list(String tenantCode) {
-        LangTuoResult<List<DrainRuleDTO>> langTuoResult = null;
+        LangTuoResult<List<DrainRuleDTO>> langTuoResult;
         try {
-            List<DrainRulePO> poList = openRuleAccessor.selectList(tenantCode);
+            List<DrainRulePO> poList = drainRuleAccessor.selectList(tenantCode);
             List<DrainRuleDTO> dtoList = convertToDrainRuleDTO(poList);
             langTuoResult = LangTuoResult.success(dtoList);
+        } catch (Exception e) {
+            log.error("list error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<List<DrainRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
+        LangTuoResult<List<DrainRuleDTO>> langTuoResult;
+        try {
+            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
+            if (shopDTO == null) {
+                langTuoResult = LangTuoResult.success();
+            }
+
+            List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.selectListByShopGroupCode(
+                    tenantCode, shopDTO.getShopGroupCode());
+            if (CollectionUtils.isEmpty(drainRuleDispatchPOList)) {
+                langTuoResult = LangTuoResult.success();
+            }
+
+            List<String> drainRuleCodeList = drainRuleDispatchPOList.stream()
+                    .map(DrainRuleDispatchPO::getDrainRuleCode)
+                    .collect(Collectors.toList());
+            List<DrainRulePO> cleanRulePOList = drainRuleAccessor.selectListByDrainRuleCode(tenantCode,
+                    drainRuleCodeList);
+            List<DrainRuleDTO> drainRuleDTOList = convertToDrainRuleDTO(cleanRulePOList);
+            langTuoResult = LangTuoResult.success(drainRuleDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
@@ -96,9 +128,9 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<DrainRuleDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<DrainRuleDTO>> langTuoResult;
         try {
-            PageInfo<DrainRulePO> pageInfo = openRuleAccessor.search(tenantCode, openRuleCode,
+            PageInfo<DrainRulePO> pageInfo = drainRuleAccessor.search(tenantCode, openRuleCode,
                     openRuleName, pageNum, pageSize);
             List<DrainRuleDTO> dtoList = convertToDrainRuleDTO(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
@@ -118,21 +150,21 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         DrainRulePO openRulePO = convertToDrainRulePO(request);
         List<DrainRuleToppingPO> openRuleToppingPOList = convertToDrainRuleIncludePO(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
-            DrainRulePO exist = openRuleAccessor.selectOneByCode(openRulePO.getTenantCode(),
+            DrainRulePO exist = drainRuleAccessor.selectOneByCode(openRulePO.getTenantCode(),
                     openRulePO.getDrainRuleCode());
             if (exist != null) {
-                int updated = openRuleAccessor.update(openRulePO);
+                int updated = drainRuleAccessor.update(openRulePO);
             } else {
-                int inserted = openRuleAccessor.insert(openRulePO);
+                int inserted = drainRuleAccessor.insert(openRulePO);
             }
 
-            int deleted4Topping = openRuleToppingAccessor.delete(request.getTenantCode(),
+            int deleted4Topping = drainRuleToppingAccessor.delete(request.getTenantCode(),
                     request.getDrainRuleCode());
             if (!CollectionUtils.isEmpty(openRuleToppingPOList)) {
                 openRuleToppingPOList.forEach(item -> {
-                    int inserted4Topping = openRuleToppingAccessor.insert(item);
+                    int inserted4Topping = drainRuleToppingAccessor.insert(item);
                 });
             }
 
@@ -150,10 +182,10 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
-            int deleted = openRuleAccessor.delete(tenantCode, openRuleCode);
-            int deleted4Topping = openRuleToppingAccessor.delete(tenantCode, openRuleCode);
+            int deleted = drainRuleAccessor.delete(tenantCode, openRuleCode);
+            int deleted4Topping = drainRuleToppingAccessor.delete(tenantCode, openRuleCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
@@ -169,12 +201,12 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         }
 
         List<DrainRuleDispatchPO> poList = convert(request);
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
-            int deleted = openRuleDispatchAccessor.delete(request.getTenantCode(),
+            int deleted = drainRuleDispatchAccessor.delete(request.getTenantCode(),
                     request.getDrainRuleCode());
             poList.forEach(po -> {
-                openRuleDispatchAccessor.insert(po);
+                drainRuleDispatchAccessor.insert(po);
             });
 
             langTuoResult = LangTuoResult.success();
@@ -192,12 +224,12 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
     @Override
     public LangTuoResult<DrainRuleDispatchDTO> getDispatchByCode(String tenantCode, String openRuleCode) {
-        LangTuoResult<DrainRuleDispatchDTO> langTuoResult = null;
+        LangTuoResult<DrainRuleDispatchDTO> langTuoResult;
         try {
             DrainRuleDispatchDTO dto = new DrainRuleDispatchDTO();
             dto.setDrainRuleCode(openRuleCode);
 
-            List<DrainRuleDispatchPO> poList = openRuleDispatchAccessor.selectList(tenantCode, openRuleCode);
+            List<DrainRuleDispatchPO> poList = drainRuleDispatchAccessor.selectList(tenantCode, openRuleCode);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())
@@ -237,7 +269,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         dto.setDrainRuleName(po.getDrainRuleName());
         dto.setDefaultRule(po.getDefaultRule());
 
-        List<DrainRuleToppingPO> poList = openRuleToppingAccessor.selectList(
+        List<DrainRuleToppingPO> poList = drainRuleToppingAccessor.selectList(
                 po.getTenantCode(), po.getDrainRuleCode());
         if (!CollectionUtils.isEmpty(poList)) {
             dto.setToppingRuleList(convertToDrainRuleToppingDTO(poList));

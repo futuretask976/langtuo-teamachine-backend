@@ -50,10 +50,16 @@ public class DrainRuleAccessor {
             return cachedList;
         }
 
-        List<DrainRulePO> list = mapper.selectList(tenantCode);
+        List<DrainRulePO> list = mapper.selectList(tenantCode, null);
 
         // 设置缓存
         setCacheList(tenantCode, list);
+        return list;
+    }
+
+    public List<DrainRulePO> selectListByDrainRuleCode(String tenantCode, List<String> drainRuleCodeList) {
+        // 这里只是在每台机器初始化的时候会调用，所以先不加缓存
+        List<DrainRulePO> list = mapper.selectList(tenantCode, drainRuleCodeList);
         return list;
     }
 

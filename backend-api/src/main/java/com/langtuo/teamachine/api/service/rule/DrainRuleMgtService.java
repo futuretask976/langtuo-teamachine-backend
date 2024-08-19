@@ -40,6 +40,13 @@ public interface DrainRuleMgtService {
 
     /**
      *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<List<DrainRuleDTO>> listByShopCode(String tenantCode, String shopCode);
+
+    /**
+     *
      * @param request
      * @return
      */

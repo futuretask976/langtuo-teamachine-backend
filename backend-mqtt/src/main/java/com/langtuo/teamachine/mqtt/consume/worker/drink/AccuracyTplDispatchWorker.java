@@ -46,7 +46,7 @@ public class AccuracyTplDispatchWorker implements Runnable {
         log.info("$$$$$ AccuracyDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         MqttService mqttService = getMQTTService();
-        mqttService.sendDispatchMsgByTenant(tenantCode, jsonMsg.toJSONString());
+        mqttService.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
     }
 
     private MqttService getMQTTService() {

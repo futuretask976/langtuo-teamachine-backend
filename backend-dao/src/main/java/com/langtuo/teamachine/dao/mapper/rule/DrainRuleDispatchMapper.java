@@ -32,6 +32,13 @@ public interface DrainRuleDispatchMapper {
 
     /**
      *
+     * @return
+     */
+    List<DrainRuleDispatchPO> selectListByShopGroupCode(@Param("tenantCode") String tenantCode,
+            @Param("shopGroupCode") String shopGroupCode);
+
+    /**
+     *
      * @param drainRuleDispatchPO
      * @return
      */

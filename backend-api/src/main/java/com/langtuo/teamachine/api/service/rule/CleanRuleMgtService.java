@@ -40,6 +40,13 @@ public interface CleanRuleMgtService {
 
     /**
      *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode);
+
+    /**
+     *
      * @param request
      * @return
      */

@@ -41,6 +41,18 @@ public class CleanRuleController {
     }
 
     /**
+     * url: http://localhost:8080/teamachine/ruleset/clean/listbyshop?tenantCode=tenant_001
+     * @param tenantCode
+     * @return
+     */
+    @GetMapping(value = "/listbyshop")
+    public LangTuoResult<List<CleanRuleDTO>> list(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("shopCode") String shopCode) {
+        LangTuoResult<List<CleanRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
+        return rtn;
+    }
+
+    /**
      * url: http://localhost:8080/teamachine/ruleset/clean/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */

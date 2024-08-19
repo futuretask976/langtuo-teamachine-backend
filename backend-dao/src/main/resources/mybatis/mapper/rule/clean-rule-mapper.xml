@@ -34,6 +34,12 @@
         SELECT * FROM clean_rule
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            <if test="cleanRuleCodeList != null and cleanRuleCodeList.size() > 0">
+                AND clean_rule_code IN
+                <foreach item="cleanRuleCode" collection="cleanRuleCodeList" open="(" separator="," close=")">
+                    #{cleanRuleCode}
+                </foreach>
+            </if>
     </select>
 
     <select id="search" resultMap="cleanRulePOMap">

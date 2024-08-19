@@ -32,6 +32,13 @@ public interface WarningRuleDispatchMapper {
 
     /**
      *
+     * @return
+     */
+    List<WarningRuleDispatchPO> selectListByShopGroupCode(@Param("tenantCode") String tenantCode,
+            @Param("shopGroupCode") String shopGroupCode);
+
+    /**
+     *
      * @param warningRuleDispatchPO
      * @return
      */
