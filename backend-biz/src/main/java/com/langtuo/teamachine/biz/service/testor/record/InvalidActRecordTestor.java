@@ -38,7 +38,7 @@ public class InvalidActRecordTestor {
         jsonArray.add(request);
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put("childTopic", "invalidActRecord");
+        jsonMsg.put("bizCode", "invalidActRecord");
         jsonMsg.put("list", jsonArray);
         System.out.println(jsonMsg.toJSONString());
 

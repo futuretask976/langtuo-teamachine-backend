@@ -38,7 +38,7 @@ public class SupplyActRecordTestor {
         jsonArray.add(request);
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put("childTopic", "supplyActRecord");
+        jsonMsg.put("bizCode", "supplyActRecord");
         jsonMsg.put("list", jsonArray);
         System.out.println(jsonMsg.toJSONString());
 
