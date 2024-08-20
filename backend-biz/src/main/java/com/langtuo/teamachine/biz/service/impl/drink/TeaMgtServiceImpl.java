@@ -163,8 +163,9 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
         LangTuoResult<Void> langTuoResult = null;
         try {
-            int deleted = teaAccessor.delete(tenantCode, teaCode);
+            int deleted4Tea = teaAccessor.delete(tenantCode, teaCode);
             int deleted4TeaUnit = teaUnitAccessor.delete(tenantCode, teaCode);
+            int deleted4ToppingBaseRule = toppingBaseRuleAccessor.delete(tenantCode, teaCode);
             int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.delete(tenantCode, teaCode);
             langTuoResult = LangTuoResult.success();
         } catch (Exception e) {
