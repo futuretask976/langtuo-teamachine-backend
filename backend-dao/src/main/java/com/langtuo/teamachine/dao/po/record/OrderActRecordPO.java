@@ -48,19 +48,9 @@ public class OrderActRecordPO {
     private String shopCode;
 
     /**
-     * 店铺名称
-     */
-    private String shopName;
-
-    /**
      * 店铺组编码
      */
     private String shopGroupCode;
-
-    /**
-     * 店铺组名称
-     */
-    private String shopGroupName;
 
     /**
      * 订单生成时间

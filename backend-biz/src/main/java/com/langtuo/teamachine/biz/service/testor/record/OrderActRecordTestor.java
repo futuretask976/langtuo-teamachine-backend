@@ -70,7 +70,7 @@ public class OrderActRecordTestor {
         request.setToppingList(toppingList);
 
         // mapper.insert(convertToOrderActRecordPO(request));
-        System.out.println(JSONObject.toJSONString(request));
+        System.out.println(JSONObject.toJSONString(convertToOrderActRecordPO(request)));
 
         sqlSession.commit();
         sqlSession.close();
