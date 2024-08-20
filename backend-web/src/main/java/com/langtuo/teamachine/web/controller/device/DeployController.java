@@ -5,6 +5,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @RestController
 @RequestMapping("/deviceset/deploy")
+@Slf4j
 public class DeployController {
     @Resource
     private DeployMgtService service;
@@ -103,7 +105,7 @@ public class DeployController {
             xssfWorkbook.write(outputStream);
             xssfWorkbook.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("write output stream error: " + e.getMessage(), e);
         }
 
         HttpHeaders headers = new HttpHeaders();
