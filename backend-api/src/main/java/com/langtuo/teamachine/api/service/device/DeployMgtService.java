@@ -4,6 +4,7 @@ import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.List;
 
@@ -57,4 +58,11 @@ public interface DeployMgtService {
      * @return
      */
     LangTuoResult<String> generateMachineCode();
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<XSSFWorkbook> exportByExcel(String tenantCode);
 }

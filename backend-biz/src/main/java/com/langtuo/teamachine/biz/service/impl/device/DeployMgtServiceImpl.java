@@ -5,22 +5,36 @@ import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
+import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
+import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +45,9 @@ import static com.langtuo.teamachine.api.result.LangTuoResult.*;
 public class DeployMgtServiceImpl implements DeployMgtService {
     @Resource
     private DeployAccessor deployAccessor;
+
+    @Resource
+    private TenantMgtService tenantMgtService;
 
     @Resource
     private ShopMgtService shopMgtService;
@@ -163,6 +180,69 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         return langTuoResult;
     }
 
+    public LangTuoResult<XSSFWorkbook> exportByExcel(String tenantCode) {
+        // 创建一个新的工作簿
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        // 创建一个工作表
+        Sheet sheet = workbook.createSheet("部署信息导出");
+        // 标题内容
+        List<String> titleList = Lists.newArrayList(
+                "创建时间",
+                "修改时间",
+                "商户编码",
+                "部署编码",
+                "机器编码",
+                "型号编码",
+                "店铺编码",
+                "状态");
+        // 创建标题行（0基索引）
+        Row row = sheet.createRow(0);
+        // 创建单元格并设置值
+        for (int i = 0; i < titleList.size(); i++) {
+            Cell cell = row.createCell(i);
+            cell.setCellValue(titleList.get(i));
+        }
+
+        List<DeployPO> deployPOList = deployAccessor.selectList(tenantCode);
+        int lineIndex = 1;
+        for (DeployPO deployPO : deployPOList) {
+            Row dataRow = sheet.createRow(lineIndex++);
+            int columnIndex = 0;
+            Cell cell;
+            cell = dataRow.createCell(columnIndex++);
+            cell.setCellValue(transform(deployPO.getGmtCreated(), "yyyy-MM-dd hh:mm:ss"));
+            cell = dataRow.createCell(columnIndex++);
+            cell.setCellValue(transform(deployPO.getGmtModified(), "yyyy-MM-dd hh:mm:ss"));
+            cell = dataRow.createCell(columnIndex++);
+            cell.setCellValue(deployPO.getTenantCode());
+            cell = dataRow.createCell(columnIndex++);
+            cell.setCellValue(deployPO.getDeployCode());
+
+            cell = dataRow.createCell(columnIndex++);
+            TenantDTO tenantDTO = getModel(tenantMgtService.get(tenantCode));
+            if (tenantDTO == null) {
+                cell.setCellValue("");
+            } else {
+                cell.setCellValue(tenantDTO.getTenantName());
+            }
+
+            cell = dataRow.createCell(columnIndex++);
+            cell.setCellValue(deployPO.getModelCode());
+
+            cell = dataRow.createCell(columnIndex++);
+            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, deployPO.getShopCode()));
+            if (shopDTO == null) {
+                cell.setCellValue("");
+            } else {
+                cell.setCellValue(shopDTO.getShopName());
+            }
+
+            cell = dataRow.createCell(columnIndex++);
+            cell.setCellValue(deployPO.getState() == 0 ? "未部署" : "已部署");
+        }
+        return LangTuoResult.success(workbook);
+    }
+
     public LangTuoResult<String> genRandomStr() {
         String randomStr = DeployUtils.genRandomStr(20);
         return LangTuoResult.success(randomStr);
@@ -215,5 +295,35 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             dto.setShopName(shopDTO.getShopName());
         }
         return dto;
+    }
+
+    public static boolean removeFile(File root) {
+        if (root == null || !root.exists()) {
+            return true;
+        }
+
+        boolean result = false;
+        if (root.isFile()) {
+            result = root.delete();
+        } else {
+            File[] files = root.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
+                result = removeFile(file);
+            }
+            if (result) {
+                result = root.delete();
+            }
+        }
+        return result;
+    }
+
+    public static String transform(Date date, String pattern) {
+        if (StringUtils.isBlank(pattern)) {
+            pattern = "yyyy-MM-dd hh:mm:ss";
+        }
+
+        DateFormat format = new SimpleDateFormat(pattern);
+        return format.format(date);
     }
 }

@@ -5,9 +5,18 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @RestController
 @RequestMapping("/deviceset/deploy")
@@ -81,5 +90,28 @@ public class DeployController {
     public LangTuoResult<String> generateMachineCode(@RequestParam(name = "tenantCode") String tenantCode) {
         LangTuoResult<String> rtn = service.generateMachineCode();
         return rtn;
+    }
+
+    @GetMapping("/{tenantcode}/export")
+    public ResponseEntity<byte[]> exportExcel(@PathVariable(name = "tenantcode") String tenantCode) {
+        LangTuoResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
+        XSSFWorkbook xssfWorkbook = getModel(rtn);
+
+        // 导出Excel文件
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            xssfWorkbook.write(outputStream);
+            xssfWorkbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "export.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(outputStream.toByteArray());
     }
 }

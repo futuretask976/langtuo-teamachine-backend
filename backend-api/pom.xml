@@ -23,6 +23,13 @@
         </dependency>
         <!-- apache end -->
 
+        <!-- office poi start -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+        <!-- office poi end -->
+
         <!-- others start -->
         <dependency>
             <groupId> com.google.guava</groupId>

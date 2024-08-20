@@ -63,7 +63,7 @@ public class MenuDispatchWorker implements Runnable {
             log.info("dispatch content error, stop worker");
             return;
         }
-        File outputFile = new File("dispatch/output.json");
+        File outputFile = new File("dispatch/menu_output.json");
         boolean wrote = MqttUtils.writeStrToFile(dispatchCont.toJSONString(), outputFile);
         if (!wrote) {
             log.info("write file error, stop worker");
