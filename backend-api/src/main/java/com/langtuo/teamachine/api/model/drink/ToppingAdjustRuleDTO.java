@@ -7,16 +7,6 @@ import java.util.Date;
 @Data
 public class ToppingAdjustRuleDTO {
     /**
-     * 租户编码
-     */
-    private String tenantCode;
-
-    /**
-     * 茶饮编码
-     */
-    private String teaCode;
-
-    /**
      * 茶品unit编码
      */
     private String teaUnitCode;
