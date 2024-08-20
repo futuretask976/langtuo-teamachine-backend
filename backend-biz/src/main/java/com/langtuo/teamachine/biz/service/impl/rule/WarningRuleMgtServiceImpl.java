@@ -45,7 +45,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
     @Override
     public LangTuoResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
-        LangTuoResult<WarningRuleDTO> langTuoResult = null;
+        LangTuoResult<WarningRuleDTO> langTuoResult;
         try {
             WarningRulePO po = warningRuleAccessor.selectOneByCode(tenantCode, warningRuleCode);
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
@@ -59,7 +59,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
     @Override
     public LangTuoResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName) {
-        LangTuoResult<WarningRuleDTO> langTuoResult = null;
+        LangTuoResult<WarningRuleDTO> langTuoResult;
         try {
             WarningRulePO po = warningRuleAccessor.selectOneByName(tenantCode, warningRuleName);
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
@@ -73,7 +73,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
     @Override
     public LangTuoResult<List<WarningRuleDTO>> list(String tenantCode) {
-        LangTuoResult<List<WarningRuleDTO>> langTuoResult = null;
+        LangTuoResult<List<WarningRuleDTO>> langTuoResult;
         try {
             List<WarningRulePO> poList = warningRuleAccessor.selectList(tenantCode);
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(poList);
@@ -120,7 +120,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<WarningRuleDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<WarningRuleDTO>> langTuoResult;
         try {
             PageInfo<WarningRulePO> pageInfo = warningRuleAccessor.search(tenantCode, warningRuleCode,
                     warningRuleName, pageNum, pageSize);
@@ -141,7 +141,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
         WarningRulePO warningRulePO = convertToWarningRuleDTO(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             WarningRulePO exist = warningRuleAccessor.selectOneByCode(warningRulePO.getTenantCode(),
                     warningRulePO.getWarningRuleCode());
@@ -165,7 +165,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = warningRuleAccessor.delete(tenantCode, warningRuleCode);
             langTuoResult = LangTuoResult.success();
@@ -183,7 +183,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         }
 
         List<WarningRuleDispatchPO> poList = convertToWarningRuleDTO(request);
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = warningRuleDispatchAccessor.delete(request.getTenantCode(),
                     request.getWarningRuleCode());
@@ -206,7 +206,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
     @Override
     public LangTuoResult<WarningRuleDispatchDTO> getDispatchByCode(String tenantCode, String warningRuleCode) {
-        LangTuoResult<WarningRuleDispatchDTO> langTuoResult = null;
+        LangTuoResult<WarningRuleDispatchDTO> langTuoResult;
         try {
             WarningRuleDispatchDTO dto = new WarningRuleDispatchDTO();
             dto.setWarningRuleCode(warningRuleCode);

@@ -28,7 +28,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
     @Override
     public LangTuoResult<OrgDTO> getTop(String tenantCode) {
-        LangTuoResult<OrgDTO> langTuoResult = null;
+        LangTuoResult<OrgDTO> langTuoResult;
         try {
             OrgNode orgNode = orgAccessor.findTopOrgNode(tenantCode);
             langTuoResult = LangTuoResult.success(convert(orgNode));
@@ -41,7 +41,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
     @Override
     public LangTuoResult<List<OrgDTO>> listByParent(String tenantCode, String orgName) {
-        LangTuoResult<List<OrgDTO>> langTuoResult = null;
+        LangTuoResult<List<OrgDTO>> langTuoResult;
         try {
             List<OrgNode> orgNodeList = orgAccessor.selectListByParent(tenantCode, orgName);
             langTuoResult = LangTuoResult.success(convert(orgNodeList));
@@ -54,7 +54,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
     @Override
     public LangTuoResult<List<OrgDTO>> list(String tenantCode) {
-        LangTuoResult<List<OrgDTO>> langTuoResult = null;
+        LangTuoResult<List<OrgDTO>> langTuoResult;
         try {
             List<OrgNode> nodeList = orgAccessor.selectList(tenantCode);
             List<OrgDTO> dtoList = convert(nodeList);
@@ -72,7 +72,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<OrgDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<OrgDTO>> langTuoResult;
         try {
             PageInfo<OrgNode> pageInfo = orgAccessor.search(tenantCode, orgName, pageNum, pageSize);
             List<OrgDTO> dtoList = convert(pageInfo.getList());
@@ -87,7 +87,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
     @Override
     public LangTuoResult<OrgDTO> get(String tenantCode, String orgName) {
-        LangTuoResult<OrgDTO> langTuoResult = null;
+        LangTuoResult<OrgDTO> langTuoResult;
         try {
             OrgNode orgNode = orgAccessor.selectOne(tenantCode, orgName);
             OrgDTO orgDTO = convert(orgNode);
@@ -109,7 +109,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         String orgName = request.getOrgName();
         OrgNode orgNode = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             OrgNode exist = orgAccessor.selectOne(tenantCode, orgName);
             if (exist != null) {
@@ -131,7 +131,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = orgAccessor.delete(tenantCode, orgName);
             langTuoResult = LangTuoResult.success();

@@ -44,7 +44,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
 
     @Override
     public LangTuoResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark) {
-        LangTuoResult<InvalidActRecordDTO> langTuoResult = null;
+        LangTuoResult<InvalidActRecordDTO> langTuoResult;
         try {
             InvalidActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
             InvalidActRecordDTO dto = convert(po);
@@ -62,7 +62,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<InvalidActRecordDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<InvalidActRecordDTO>> langTuoResult;
         try {
             PageInfo<InvalidActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
                     shopCodeList, pageNum, pageSize);
@@ -83,7 +83,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
 
         InvalidActRecordPO po = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             InvalidActRecordPO exist = accessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
@@ -106,7 +106,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = accessor.delete(tenantCode, warningRuleCode);
             langTuoResult = LangTuoResult.success();

@@ -33,7 +33,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
     @Override
     public LangTuoResult<List<TeaTypeDTO>> list(String tenantCode) {
-        LangTuoResult<List<TeaTypeDTO>> langTuoResult = null;
+        LangTuoResult<List<TeaTypeDTO>> langTuoResult;
         try {
             List<TeaTypePO> list = accessor.selectList(tenantCode);
             List<TeaTypeDTO> dtoList = convert(list);
@@ -51,7 +51,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<TeaTypeDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<TeaTypeDTO>> langTuoResult;
         try {
             PageInfo<TeaTypePO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
@@ -67,7 +67,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
     @Override
     public LangTuoResult<TeaTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
-        LangTuoResult<TeaTypeDTO> langTuoResult = null;
+        LangTuoResult<TeaTypeDTO> langTuoResult;
         try {
             TeaTypePO toppingTypePO = accessor.selectOneByCode(tenantCode, toppingTypeCode);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
@@ -81,7 +81,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
     @Override
     public LangTuoResult<TeaTypeDTO> getByName(String tenantCode, String toppingTypeName) {
-        LangTuoResult<TeaTypeDTO> langTuoResult = null;
+        LangTuoResult<TeaTypeDTO> langTuoResult;
         try {
             TeaTypePO toppingTypePO = accessor.selectOneByName(tenantCode, toppingTypeName);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
@@ -101,7 +101,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
         TeaTypePO teaTypePO = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             TeaTypePO exist = accessor.selectOneByCode(teaTypePO.getTenantCode(), teaTypePO.getTeaTypeCode());
             if (exist != null) {
@@ -123,7 +123,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = accessor.delete(tenantCode, teaTypeCode);
             langTuoResult = LangTuoResult.success();

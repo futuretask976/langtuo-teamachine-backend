@@ -27,7 +27,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
     @Override
     public LangTuoResult<List<ToppingDTO>> list(String tenantCode) {
-        LangTuoResult<List<ToppingDTO>> langTuoResult = null;
+        LangTuoResult<List<ToppingDTO>> langTuoResult;
         try {
             List<ToppingPO> list = accessor.selectList(tenantCode);
             List<ToppingDTO> dtoList = convert(list);
@@ -45,7 +45,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<ToppingDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<ToppingDTO>> langTuoResult;
         try {
             PageInfo<ToppingPO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
@@ -61,7 +61,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
     @Override
     public LangTuoResult<ToppingDTO> getByCode(String tenantCode, String toppingTypeCode) {
-        LangTuoResult<ToppingDTO> langTuoResult = null;
+        LangTuoResult<ToppingDTO> langTuoResult;
         try {
             ToppingPO toppingTypePO = accessor.selectOneByCode(tenantCode, toppingTypeCode);
             ToppingDTO tenantDTO = convert(toppingTypePO);
@@ -75,7 +75,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
     @Override
     public LangTuoResult<ToppingDTO> getByName(String tenantCode, String toppingTypeName) {
-        LangTuoResult<ToppingDTO> langTuoResult = null;
+        LangTuoResult<ToppingDTO> langTuoResult;
         try {
             ToppingPO toppingTypePO = accessor.selectOneByName(tenantCode, toppingTypeName);
             ToppingDTO tenantDTO = convert(toppingTypePO);
@@ -95,7 +95,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
         ToppingPO toppingTypePO = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             ToppingPO exist = accessor.selectOneByCode(toppingTypePO.getTenantCode(),
                     toppingTypePO.getToppingCode());
@@ -118,7 +118,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = accessor.delete(tenantCode, toppingTypeCode);
             langTuoResult = LangTuoResult.success();
@@ -135,7 +135,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Integer> langTuoResult = null;
+        LangTuoResult<Integer> langTuoResult;
         try {
             int cnt = accessor.countByToppingTypeCode(tenantCode, toppingTypeCode);
             langTuoResult = LangTuoResult.success(cnt);

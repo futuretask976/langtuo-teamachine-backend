@@ -45,7 +45,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
 
     @Override
     public LangTuoResult<CleanActRecordDTO> get(String tenantCode, String idempotentMark) {
-        LangTuoResult<CleanActRecordDTO> langTuoResult = null;
+        LangTuoResult<CleanActRecordDTO> langTuoResult;
         try {
             CleanActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
             CleanActRecordDTO dto = convert(po);
@@ -63,7 +63,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<CleanActRecordDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<CleanActRecordDTO>> langTuoResult;
         try {
             if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
                 List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
@@ -91,7 +91,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
 
         CleanActRecordPO po = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             CleanActRecordPO exist = accessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
@@ -114,7 +114,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = accessor.delete(tenantCode, idempotentMark);
             langTuoResult = LangTuoResult.success();

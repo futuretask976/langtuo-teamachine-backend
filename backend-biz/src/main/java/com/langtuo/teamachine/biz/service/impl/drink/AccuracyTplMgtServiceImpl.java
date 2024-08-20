@@ -37,7 +37,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
     @Override
     public LangTuoResult<List<AccuracyTplDTO>> list(String tenantCode) {
-        LangTuoResult<List<AccuracyTplDTO>> langTuoResult = null;
+        LangTuoResult<List<AccuracyTplDTO>> langTuoResult;
         try {
             List<AccuracyTplPO> list = accuracyTplAccessor.selectList(tenantCode);
             List<AccuracyTplDTO> dtoList = list.stream()
@@ -57,7 +57,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<AccuracyTplDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<AccuracyTplDTO>> langTuoResult;
         try {
             PageInfo<AccuracyTplPO> pageInfo = accuracyTplAccessor.search(tenantName, templateCode, templateName,
                     pageNum, pageSize);
@@ -75,7 +75,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
     @Override
     public LangTuoResult<AccuracyTplDTO> getByCode(String tenantCode, String specCode) {
-        LangTuoResult<AccuracyTplDTO> langTuoResult = null;
+        LangTuoResult<AccuracyTplDTO> langTuoResult;
         try {
             AccuracyTplPO po = accuracyTplAccessor.selectOneByCode(tenantCode, specCode);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
@@ -89,7 +89,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
     @Override
     public LangTuoResult<AccuracyTplDTO> getByName(String tenantCode, String specName) {
-        LangTuoResult<AccuracyTplDTO> langTuoResult = null;
+        LangTuoResult<AccuracyTplDTO> langTuoResult;
         try {
             AccuracyTplPO po = accuracyTplAccessor.selectOneByName(tenantCode, specName);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
@@ -109,7 +109,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         AccuracyTplPO po = convertToAccuracyTplPO(request);
         List<AccuracyTplToppingPO> toppingPOList = convertToAccuracyTplToppingPO(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             AccuracyTplPO exist = accuracyTplAccessor.selectOneByCode(po.getTenantCode(), po.getTemplateCode());
             if (exist != null) {
@@ -142,7 +142,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = accuracyTplAccessor.delete(tenantCode, templateCode);
             langTuoResult = LangTuoResult.success();

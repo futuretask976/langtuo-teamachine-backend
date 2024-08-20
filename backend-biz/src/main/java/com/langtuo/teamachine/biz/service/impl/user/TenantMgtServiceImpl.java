@@ -27,7 +27,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
     @Override
     public LangTuoResult<List<TenantDTO>> list() {
-        LangTuoResult<List<TenantDTO>> langTuoResult = null;
+        LangTuoResult<List<TenantDTO>> langTuoResult;
         try {
             List<TenantPO> list = tenantAccessor.selectList();
             List<TenantDTO> dtoList = convert(list);
@@ -45,7 +45,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<TenantDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<TenantDTO>> langTuoResult;
         try {
             PageInfo<TenantPO> pageInfo = tenantAccessor.search(tenantName, contactPerson, pageNum, pageSize);
             List<TenantDTO> dtoList = convert(pageInfo.getList());
@@ -60,7 +60,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
     @Override
     public LangTuoResult<TenantDTO> get(String tenantCode) {
-        LangTuoResult<TenantDTO> langTuoResult = null;
+        LangTuoResult<TenantDTO> langTuoResult;
         try {
             TenantPO tenantPO = tenantAccessor.selectOne(tenantCode);
             TenantDTO tenantDTO = convert(tenantPO);
@@ -81,7 +81,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         String tenantCode = request.getTenantCode();
         TenantPO tenantPO = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             TenantPO exist = tenantAccessor.selectOne(tenantCode);
             if (exist != null) {
@@ -103,7 +103,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = tenantAccessor.delete(tenantCode);
             langTuoResult = LangTuoResult.success();

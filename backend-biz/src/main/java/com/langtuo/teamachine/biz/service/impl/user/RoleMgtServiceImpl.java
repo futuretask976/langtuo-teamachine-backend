@@ -72,7 +72,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<RoleDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<RoleDTO>> langTuoResult;
         try {
             PageInfo<RolePO> pageInfo = roleAccessor.search(tenantCode, roleName, pageNum, pageSize);
             List<RoleDTO> dtoList = convert(pageInfo.getList());
@@ -90,7 +90,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         pageNum = pageNum <= 0 ? 1 : pageNum;
         pageSize = pageSize <=0 ? 20 : pageSize;
 
-        LangTuoResult<PageDTO<RoleDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<RoleDTO>> langTuoResult;
         try {
             PageInfo<RolePO> pageInfo = roleAccessor.selectList(tenantCode, pageNum, pageSize);
             List<RoleDTO> dtoList = convert(pageInfo.getList());
@@ -105,7 +105,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
     @Override
     public LangTuoResult<List<RoleDTO>> list(String tenantCode) {
-        LangTuoResult<List<RoleDTO>> langTuoResult = null;
+        LangTuoResult<List<RoleDTO>> langTuoResult;
         try {
             List<RolePO> list = roleAccessor.selectList(tenantCode);
             List<RoleDTO> dtoList = convert(list);
@@ -126,7 +126,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         RolePO rolePO = convert(request);
         List<RoleActRelPO> roleActRelPOList = convertRoleActRel(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             RolePO exist = roleAccessor.selectOneByCode(request.getTenantCode(), request.getRoleCode());
             if (exist != null) {
@@ -162,7 +162,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_CAN_NOT_DELETE_TENANT_SUPER_ADMIN_ROLE);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = roleAccessor.delete(tenantCode, roleCode);
             int deleted4Rel = roleActRelAccessor.delete(tenantCode, roleCode);

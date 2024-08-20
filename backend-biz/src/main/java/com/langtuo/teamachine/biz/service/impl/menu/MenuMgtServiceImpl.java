@@ -51,7 +51,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Override
     public LangTuoResult<List<MenuDTO>> list(String tenantCode) {
-        LangTuoResult<List<MenuDTO>> langTuoResult = null;
+        LangTuoResult<List<MenuDTO>> langTuoResult;
         try {
             List<MenuPO> list = menuAccessor.selectList(tenantCode);
             List<MenuDTO> dtoList = convertToMenuDTO(list);
@@ -104,7 +104,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<MenuDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<MenuDTO>> langTuoResult;
         try {
             PageInfo<MenuPO> pageInfo = menuAccessor.search(tenantName, seriesCode, seriesName,
                     pageNum, pageSize);
@@ -120,7 +120,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Override
     public LangTuoResult<MenuDTO> getByCode(String tenantCode, String seriesCode) {
-        LangTuoResult<MenuDTO> langTuoResult = null;
+        LangTuoResult<MenuDTO> langTuoResult;
         try {
             MenuPO toppingTypePO = menuAccessor.selectOneByCode(tenantCode, seriesCode);
             MenuDTO seriesDTO = convert(toppingTypePO);
@@ -134,7 +134,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Override
     public LangTuoResult<MenuDTO> getByName(String tenantCode, String seriesName) {
-        LangTuoResult<MenuDTO> langTuoResult = null;
+        LangTuoResult<MenuDTO> langTuoResult;
         try {
             MenuPO toppingTypePO = menuAccessor.selectOneByName(tenantCode, seriesName);
             MenuDTO tenantDTO = convert(toppingTypePO);
@@ -155,7 +155,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         MenuPO seriesPO = convertMenuPO(request);
         List<MenuSeriesRelPO> menuSeriesRelPOList = convertToMenuSeriesRelPO(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             MenuPO exist = menuAccessor.selectOneByCode(seriesPO.getTenantCode(),
                     seriesPO.getMenuCode());
@@ -186,7 +186,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted4Series = menuAccessor.delete(tenantCode, menuCode);
             int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(tenantCode, menuCode);
@@ -206,7 +206,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         List<MenuDispatchPO> poList = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = menuDispatchAccessor.delete(request.getTenantCode(),
                     request.getMenuCode());
@@ -229,7 +229,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Override
     public LangTuoResult<MenuDispatchDTO> getDispatchByCode(String tenantCode, String menuCode) {
-        LangTuoResult<MenuDispatchDTO> langTuoResult = null;
+        LangTuoResult<MenuDispatchDTO> langTuoResult;
         try {
             MenuDispatchDTO dto = new MenuDispatchDTO();
             dto.setMenuCode(menuCode);

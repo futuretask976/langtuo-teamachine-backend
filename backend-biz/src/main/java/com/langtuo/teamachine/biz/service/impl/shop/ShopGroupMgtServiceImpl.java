@@ -65,7 +65,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<ShopGroupDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<ShopGroupDTO>> langTuoResult;
         try {
             PageInfo<ShopGroupPO> pageInfo = shopGroupAccessor.search(tenantCode, shopGroupName,
                     pageNum, pageSize);
@@ -81,7 +81,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
     @Override
     public LangTuoResult<List<ShopGroupDTO>> list(String tenantCode) {
-        LangTuoResult<List<ShopGroupDTO>> langTuoResult = null;
+        LangTuoResult<List<ShopGroupDTO>> langTuoResult;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.selectList(tenantCode);
             List<ShopGroupDTO> dtoList = convert(list);
@@ -95,7 +95,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
     @Override
     public LangTuoResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode) {
-        LangTuoResult<List<ShopGroupDTO>> langTuoResult = null;
+        LangTuoResult<List<ShopGroupDTO>> langTuoResult;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.selectListByOrgNameList(
                     tenantCode, getAdminOrgNameList(tenantCode));
@@ -116,7 +116,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
         ShopGroupPO shopGroupPO = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             ShopGroupPO exist = shopGroupAccessor.selectOneByCode(request.getTenantCode(), request.getShopGroupCode());
             if (exist != null) {
@@ -138,7 +138,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = shopGroupAccessor.delete(tenantCode, shopGroupCode);
             langTuoResult = LangTuoResult.success();

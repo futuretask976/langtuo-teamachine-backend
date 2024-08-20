@@ -41,7 +41,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<DeployDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<DeployDTO>> langTuoResult;
         try {
             PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
                     shopName, state, pageNum, pageSize);
@@ -57,7 +57,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
     @Override
     public LangTuoResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode) {
-        LangTuoResult<DeployDTO> langTuoResult = null;
+        LangTuoResult<DeployDTO> langTuoResult;
         try {
             DeployDTO dto = convert(deployAccessor.selectOneByDeployCode(tenantCode, deployCode));
             langTuoResult = LangTuoResult.success(dto);
@@ -70,7 +70,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
     @Override
     public LangTuoResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode) {
-        LangTuoResult<DeployDTO> langTuoResult = null;
+        LangTuoResult<DeployDTO> langTuoResult;
         try {
             DeployDTO dto = convert(deployAccessor.selectOneByMachineCode(tenantCode, machineCode));
             langTuoResult = LangTuoResult.success(dto);
@@ -89,7 +89,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
         DeployPO deployPO = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             DeployPO exist = deployAccessor.selectOneByDeployCode(deployPO.getTenantCode(), deployPO.getDeployCode());
             if (exist != null) {
@@ -111,7 +111,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = deployAccessor.delete(tenantCode, deployCode);
             langTuoResult = LangTuoResult.success();

@@ -32,7 +32,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
     @Override
     public LangTuoResult<List<ToppingTypeDTO>> list(String tenantCode) {
-        LangTuoResult<List<ToppingTypeDTO>> langTuoResult = null;
+        LangTuoResult<List<ToppingTypeDTO>> langTuoResult;
         try {
             List<ToppingTypePO> list = accessor.selectList(tenantCode);
             List<ToppingTypeDTO> dtoList = list.stream()
@@ -53,7 +53,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<ToppingTypeDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<ToppingTypeDTO>> langTuoResult;
         try {
             PageInfo<ToppingTypePO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
@@ -72,7 +72,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
     @Override
     public LangTuoResult<ToppingTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
-        LangTuoResult<ToppingTypeDTO> langTuoResult = null;
+        LangTuoResult<ToppingTypeDTO> langTuoResult;
         try {
             ToppingTypePO toppingTypePO = accessor.selectOneByCode(tenantCode, toppingTypeCode);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
@@ -87,7 +87,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
     @Override
     public LangTuoResult<ToppingTypeDTO> getByName(String tenantCode, String toppingTypeName) {
-        LangTuoResult<ToppingTypeDTO> langTuoResult = null;
+        LangTuoResult<ToppingTypeDTO> langTuoResult;
         try {
             ToppingTypePO toppingTypePO = accessor.selectOneByName(tenantCode, toppingTypeName);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
@@ -108,7 +108,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
         ToppingTypePO toppingTypePO = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             ToppingTypePO exist = accessor.selectOneByCode(toppingTypePO.getTenantCode(),
                     toppingTypePO.getToppingTypeCode());
@@ -131,7 +131,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = accessor.delete(tenantCode, toppingTypeCode);
             langTuoResult = LangTuoResult.success();

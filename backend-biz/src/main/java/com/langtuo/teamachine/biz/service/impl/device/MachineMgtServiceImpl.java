@@ -55,7 +55,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<MachineDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<MachineDTO>> langTuoResult;
         try {
             ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopName));
             if (shopDTO == null && StringUtils.isNotBlank(shopName)) {
@@ -80,7 +80,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Override
     public LangTuoResult<List<MachineDTO>> list(String tenantCode) {
-        LangTuoResult<List<MachineDTO>> langTuoResult = null;
+        LangTuoResult<List<MachineDTO>> langTuoResult;
         try {
             List<MachinePO> list = machineAccessor.selectList(tenantCode);
             List<MachineDTO> dtoList = list.stream()
@@ -97,7 +97,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Override
     public LangTuoResult<List<MachineDTO>> listByShopCode(String tenantCode, String shopCode) {
-        LangTuoResult<List<MachineDTO>> langTuoResult = null;
+        LangTuoResult<List<MachineDTO>> langTuoResult;
         try {
             List<MachinePO> list = machineAccessor.selectListByShopCode(tenantCode, shopCode);
             List<MachineDTO> dtoList = list.stream()
@@ -150,7 +150,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             MachinePO po = convert(request);
             MachinePO exist = machineAccessor.selectOne(request.getTenantCode(), request.getMachineCode());
@@ -177,7 +177,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = machineAccessor.delete(tenantCode, machineCode);
             langTuoResult = LangTuoResult.success();

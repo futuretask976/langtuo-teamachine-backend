@@ -51,7 +51,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
     @Override
     public LangTuoResult<TeaDTO> getByCode(String tenantCode, String teaCode) {
-        LangTuoResult<TeaDTO> langTuoResult = null;
+        LangTuoResult<TeaDTO> langTuoResult;
         try {
             TeaPO po = teaAccessor.selectOneByCode(tenantCode, teaCode);
             TeaDTO dto = convertToTeaDTO(po);
@@ -65,7 +65,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
     @Override
     public LangTuoResult<TeaDTO> getByName(String tenantCode, String teaName) {
-        LangTuoResult<TeaDTO> langTuoResult = null;
+        LangTuoResult<TeaDTO> langTuoResult;
         try {
             TeaPO po = teaAccessor.selectOneByName(tenantCode, teaName);
             TeaDTO dto = convertToTeaDTO(po);
@@ -79,7 +79,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
     @Override
     public LangTuoResult<List<TeaDTO>> list(String tenantCode) {
-        LangTuoResult<List<TeaDTO>> langTuoResult = null;
+        LangTuoResult<List<TeaDTO>> langTuoResult;
         try {
             List<TeaPO> teaPOList = teaAccessor.selectList(tenantCode);
             List<TeaDTO> teaDTOList = convertToTeaDTO(teaPOList);
@@ -97,7 +97,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<TeaDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<TeaDTO>> langTuoResult;
         try {
             PageInfo<TeaPO> pageInfo = teaAccessor.search(tenantName, teaCode, teaName,
                     pageNum, pageSize);
@@ -123,7 +123,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         List<ToppingAdjustRulePO> toppingAdjustRulePOList = convertToToppingAdjustRulePO(request);
 
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             TeaPO exist = teaAccessor.selectOneByCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             if (exist != null) {
@@ -161,7 +161,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted4Tea = teaAccessor.delete(tenantCode, teaCode);
             int deleted4TeaUnit = teaUnitAccessor.delete(tenantCode, teaCode);
@@ -181,7 +181,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Integer> langTuoResult = null;
+        LangTuoResult<Integer> langTuoResult;
         try {
             int cnt = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
             langTuoResult = LangTuoResult.success(cnt);

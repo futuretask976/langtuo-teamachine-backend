@@ -51,7 +51,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<AdminDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<AdminDTO>> langTuoResult;
         try {
             String roleCode = null;
             if (StringUtils.isNotBlank(roleName)) {
@@ -80,7 +80,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
     @Override
     public LangTuoResult<List<AdminDTO>> list(String tenantCode) {
-        LangTuoResult<List<AdminDTO>> langTuoResult = null;
+        LangTuoResult<List<AdminDTO>> langTuoResult;
         try {
             List<AdminPO> list = adminAccessor.selectList(tenantCode);
             List<AdminDTO> dtoList = list.stream()
@@ -103,7 +103,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
         AdminPO adminPO = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             AdminPO exist = adminAccessor.selectOne(request.getTenantCode(), request.getLoginName());
             if (exist != null) {
@@ -125,7 +125,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = adminAccessor.delete(tenantCode, loginName);
             langTuoResult = LangTuoResult.success();
@@ -142,7 +142,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Integer> langTuoResult = null;
+        LangTuoResult<Integer> langTuoResult;
         try {
             int cnt = adminAccessor.countByRoleCode(tenantCode, roleCode);
             langTuoResult = LangTuoResult.success(cnt);

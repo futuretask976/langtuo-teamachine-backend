@@ -45,7 +45,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
 
     @Override
     public LangTuoResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark) {
-        LangTuoResult<DrainActRecordDTO> langTuoResult = null;
+        LangTuoResult<DrainActRecordDTO> langTuoResult;
         try {
             DrainActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
             DrainActRecordDTO dto = convert(po);
@@ -63,7 +63,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<DrainActRecordDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<DrainActRecordDTO>> langTuoResult;
         try {
             if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
                 List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
@@ -91,7 +91,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
 
         DrainActRecordPO po = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             DrainActRecordPO exist = accessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
@@ -114,7 +114,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = accessor.delete(tenantCode, idempotentMark);
             langTuoResult = LangTuoResult.success();

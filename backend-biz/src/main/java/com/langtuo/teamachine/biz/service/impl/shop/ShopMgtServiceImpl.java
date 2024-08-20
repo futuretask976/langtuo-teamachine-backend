@@ -179,7 +179,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Integer> langTuoResult = null;
+        LangTuoResult<Integer> langTuoResult;
         try {
             int cnt = shopAccessor.countByShopGroupCode(tenantCode, shopGroupCode);
             langTuoResult = LangTuoResult.success(cnt);

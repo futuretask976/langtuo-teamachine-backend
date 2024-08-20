@@ -33,7 +33,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     @Override
     public LangTuoResult<List<SpecDTO>> list(String tenantCode) {
-        LangTuoResult<List<SpecDTO>> langTuoResult = null;
+        LangTuoResult<List<SpecDTO>> langTuoResult;
         try {
             List<SpecPO> list = specAccessor.selectList(tenantCode);
             List<SpecDTO> dtoList = convert(list);
@@ -51,7 +51,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<SpecDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<SpecDTO>> langTuoResult;
         try {
             PageInfo<SpecPO> pageInfo = specAccessor.search(tenantName, specCode, specName,
                     pageNum, pageSize);
@@ -67,7 +67,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     @Override
     public LangTuoResult<SpecDTO> getByCode(String tenantCode, String specCode) {
-        LangTuoResult<SpecDTO> langTuoResult = null;
+        LangTuoResult<SpecDTO> langTuoResult;
         try {
             SpecPO po = specAccessor.selectOneByCode(tenantCode, specCode);
             SpecDTO dto = convert(po);
@@ -81,7 +81,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     @Override
     public LangTuoResult<SpecDTO> getByName(String tenantCode, String specName) {
-        LangTuoResult<SpecDTO> langTuoResult = null;
+        LangTuoResult<SpecDTO> langTuoResult;
         try {
             SpecPO po = specAccessor.selectOneByName(tenantCode, specName);
             SpecDTO dto = convert(po);
@@ -102,7 +102,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         SpecPO specPO = convert(request);
         List<SpecItemPO> specItemPOList = convertToSpecItemPO(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             SpecPO exist = specAccessor.selectOneByCode(specPO.getTenantCode(), specPO.getSpecCode());
             if (exist != null) {
@@ -132,7 +132,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted4Spec = specAccessor.delete(tenantCode, specCode);
             int deleted4SpecSub = specItemAccessor.delete(tenantCode, specCode);
@@ -147,7 +147,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     @Override
     public LangTuoResult<SpecItemDTO> getSpecItemByCode(String tenantCode, String specCode, String specItemCode) {
-        LangTuoResult<SpecItemDTO> langTuoResult = null;
+        LangTuoResult<SpecItemDTO> langTuoResult;
         try {
             SpecItemPO po = specItemAccessor.selectOne(tenantCode, specCode, specItemCode);
             SpecItemDTO dto = convert(po);
@@ -161,7 +161,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     @Override
     public LangTuoResult<List<SpecItemDTO>> listSpecItemBySpecCode(String tenantCode, String specCode) {
-        LangTuoResult<List<SpecItemDTO>> langTuoResult = null;
+        LangTuoResult<List<SpecItemDTO>> langTuoResult;
         try {
             List<SpecItemPO> poList = specItemAccessor.selectList(tenantCode, specCode);
             List<SpecItemDTO> dtoList = convertToSpecItemDTO(poList);

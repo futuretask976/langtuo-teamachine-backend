@@ -33,7 +33,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
     @Override
     public LangTuoResult<List<SeriesDTO>> list(String tenantCode) {
-        LangTuoResult<List<SeriesDTO>> langTuoResult = null;
+        LangTuoResult<List<SeriesDTO>> langTuoResult;
         try {
             List<SeriesPO> list = seriesAccessor.selectList(tenantCode);
             List<SeriesDTO> dtoList = convertToSeriesDTO(list);
@@ -51,7 +51,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<SeriesDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<SeriesDTO>> langTuoResult;
         try {
             PageInfo<SeriesPO> pageInfo = seriesAccessor.search(tenantName, seriesCode, seriesName,
                     pageNum, pageSize);
@@ -67,7 +67,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
     @Override
     public LangTuoResult<SeriesDTO> getByCode(String tenantCode, String seriesCode) {
-        LangTuoResult<SeriesDTO> langTuoResult = null;
+        LangTuoResult<SeriesDTO> langTuoResult;
         try {
             SeriesPO toppingTypePO = seriesAccessor.selectOneByCode(tenantCode, seriesCode);
             SeriesDTO seriesDTO = convert(toppingTypePO);
@@ -81,7 +81,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
     @Override
     public LangTuoResult<SeriesDTO> getByName(String tenantCode, String seriesName) {
-        LangTuoResult<SeriesDTO> langTuoResult = null;
+        LangTuoResult<SeriesDTO> langTuoResult;
         try {
             SeriesPO toppingTypePO = seriesAccessor.selectOneByName(tenantCode, seriesName);
             SeriesDTO tenantDTO = convert(toppingTypePO);
@@ -102,7 +102,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         SeriesPO seriesPO = convertSeriesPO(request);
         List<SeriesTeaRelPO> seriesTeaRelPOList = convertToSeriesTeaRelPO(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             SeriesPO exist = seriesAccessor.selectOneByCode(seriesPO.getTenantCode(),
                     seriesPO.getSeriesCode());
@@ -133,7 +133,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted4Series = seriesAccessor.delete(tenantCode, seriesCode);
             int deleted4SeriesTeaRel = seriesTeaRelAccessor.delete(tenantCode, seriesCode);

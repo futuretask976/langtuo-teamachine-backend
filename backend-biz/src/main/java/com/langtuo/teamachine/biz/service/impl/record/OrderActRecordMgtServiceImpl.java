@@ -62,7 +62,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
 
     @Override
     public LangTuoResult<OrderActRecordDTO> get(String tenantCode, String idempotentMark) {
-        LangTuoResult<OrderActRecordDTO> langTuoResult = null;
+        LangTuoResult<OrderActRecordDTO> langTuoResult;
         try {
             OrderActRecordPO po = orderActRecordAccessor.selectOne(tenantCode, idempotentMark);
             OrderActRecordDTO dto = convert(po);
@@ -80,7 +80,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<OrderActRecordDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<OrderActRecordDTO>> langTuoResult;
         try {
             PageInfo<OrderActRecordPO> pageInfo = orderActRecordAccessor.search(tenantCode, shopGroupCodeList,
                     shopCodeList, pageNum, pageSize);
@@ -99,7 +99,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = orderActRecordAccessor.delete(tenantCode, warningRuleCode);
             langTuoResult = LangTuoResult.success();

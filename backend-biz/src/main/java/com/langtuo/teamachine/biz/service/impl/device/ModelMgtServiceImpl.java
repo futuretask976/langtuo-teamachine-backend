@@ -38,7 +38,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     @Override
     public LangTuoResult<List<ModelDTO>> list() {
-        LangTuoResult<List<ModelDTO>> langTuoResult = null;
+        LangTuoResult<List<ModelDTO>> langTuoResult;
         try {
             List<ModelPO> list = modelAccessor.selectList();
             List<ModelDTO> dtoList = convertToModelDTO(list);
@@ -56,7 +56,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<ModelDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<ModelDTO>> langTuoResult;
         try {
             PageInfo<ModelPO> pageInfo = modelAccessor.search(modelCode, pageNum, pageSize);
             List<ModelDTO> dtoList = convertToModelDTO(pageInfo.getList());
@@ -71,7 +71,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     @Override
     public LangTuoResult<ModelDTO> get(String modelCode) {
-        LangTuoResult<ModelDTO> langTuoResult = null;
+        LangTuoResult<ModelDTO> langTuoResult;
         try {
             ModelPO modelPO = modelAccessor.selectOne(modelCode);
             ModelDTO modelDTO = convert(modelPO);
@@ -98,7 +98,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         ModelPO modelPO = convert(request);
         List<ModelPipelinePO> modelPipelinePOList = convert(modelCode, request.getPipelineList());
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             ModelPO exist = modelAccessor.selectOne(modelCode);
             if (exist != null) {
@@ -129,7 +129,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted4ModelCode = modelAccessor.delete(modelCode);
             int deleted4Pipeline = modelPipelineAccessor.delete(modelCode);

@@ -44,7 +44,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
 
     @Override
     public LangTuoResult<SupplyActRecordDTO> get(String tenantCode, String idempotentMark) {
-        LangTuoResult<SupplyActRecordDTO> langTuoResult = null;
+        LangTuoResult<SupplyActRecordDTO> langTuoResult;
         try {
             SupplyActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
             SupplyActRecordDTO dto = convert(po);
@@ -62,7 +62,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<SupplyActRecordDTO>> langTuoResult = null;
+        LangTuoResult<PageDTO<SupplyActRecordDTO>> langTuoResult;
         try {
             PageInfo<SupplyActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
                     shopCodeList, pageNum, pageSize);
@@ -83,7 +83,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
 
         SupplyActRecordPO po = convert(request);
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             SupplyActRecordPO exist = accessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
@@ -106,7 +106,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult = null;
+        LangTuoResult<Void> langTuoResult;
         try {
             int deleted = accessor.delete(tenantCode, warningRuleCode);
             langTuoResult = LangTuoResult.success();
