@@ -54,7 +54,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         LangTuoResult<TeaDTO> langTuoResult = null;
         try {
             TeaPO po = teaAccessor.selectOneByCode(tenantCode, teaCode);
-            TeaDTO dto = convert(po);
+            TeaDTO dto = convertToTeaDTO(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
@@ -68,7 +68,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         LangTuoResult<TeaDTO> langTuoResult = null;
         try {
             TeaPO po = teaAccessor.selectOneByName(tenantCode, teaName);
-            TeaDTO dto = convert(po);
+            TeaDTO dto = convertToTeaDTO(po);
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
@@ -82,7 +82,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         LangTuoResult<List<TeaDTO>> langTuoResult = null;
         try {
             List<TeaPO> teaPOList = teaAccessor.selectList(tenantCode);
-            List<TeaDTO> teaDTOList = convert(teaPOList);
+            List<TeaDTO> teaDTOList = convertToTeaDTO(teaPOList);
             langTuoResult = LangTuoResult.success(teaDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
@@ -101,7 +101,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         try {
             PageInfo<TeaPO> pageInfo = teaAccessor.search(tenantName, teaCode, teaName,
                     pageNum, pageSize);
-            List<TeaDTO> dtoList = convert(pageInfo.getList());
+            List<TeaDTO> dtoList = convertToTeaDTO(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -192,18 +192,18 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         return langTuoResult;
     }
 
-    private List<TeaDTO> convert(List<TeaPO> poList) {
+    private List<TeaDTO> convertToTeaDTO(List<TeaPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<TeaDTO> list = poList.stream()
-                .map(po -> convert(po))
+                .map(po -> convertToTeaDTO(po))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private TeaDTO convert(TeaPO po) {
+    private TeaDTO convertToTeaDTO(TeaPO po) {
         if (po == null) {
             return null;
         }
