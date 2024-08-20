@@ -5,10 +5,7 @@ import com.google.common.collect.Maps;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.*;
 import com.langtuo.teamachine.api.model.drink.*;
-import com.langtuo.teamachine.api.request.drink.SpecItemRulePutRequest;
-import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
-import com.langtuo.teamachine.api.request.drink.TeaUnitPutRequest;
-import com.langtuo.teamachine.api.request.drink.ToppingAdjustRulePutRequest;
+import com.langtuo.teamachine.api.request.drink.*;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.SpecMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
@@ -42,6 +39,9 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
     @Resource
     private ToppingAdjustRuleAccessor toppingAdjustRuleAccessor;
+
+    @Resource
+    private ToppingBaseRuleAccessor toppingBaseRuleAccessor;
 
     @Resource
     private SpecMgtService specMgtService;
@@ -119,7 +119,9 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
         TeaPO teaPO = convertToTeaPO(request);
         List<TeaUnitPO> teaUnitPOList = convertToTeaUnitPO(request);
+        List<ToppingBaseRulePO> toppingBaseRulePOList = convertToToppingBaseRulePO(request);
         List<ToppingAdjustRulePO> toppingAdjustRulePOList = convertToToppingAdjustRulePO(request);
+
 
         LangTuoResult<Void> langTuoResult = null;
         try {
@@ -133,6 +135,11 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             int deleted4TeaUnit = teaUnitAccessor.delete(teaPO.getTenantCode(), teaPO.getTeaCode());
             teaUnitPOList.forEach(item -> {
                 int inserted4TeaUnit = teaUnitAccessor.insert(item);
+            });
+
+            int deleted4ToppingBaseRule = toppingBaseRuleAccessor.delete(teaPO.getTenantCode(), teaPO.getTeaCode());
+            toppingBaseRulePOList.forEach(item -> {
+                int inserted4ToppingAdjustRule = toppingBaseRuleAccessor.insert(item);
             });
 
             int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.delete(teaPO.getTenantCode(), teaPO.getTeaCode());
@@ -212,156 +219,185 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         dto.setExtraInfo(po.getExtraInfo());
         dto.setImgLink(po.getImgLink());
 
-        injectTeaUnitDTO(po.getTenantCode(), dto);
+        fulfillTeaDTO(po.getTenantCode(), dto);
         return dto;
     }
 
-    private void injectTeaUnitDTO(String tenantCode, TeaDTO teaDTO) {
+    private void fulfillTeaDTO(String tenantCode, TeaDTO teaDTO) {
         if (teaDTO == null) {
+            // teaDTO 不能为空
             return;
         }
 
         List<TeaUnitPO> teaUnitPOList = teaUnitAccessor.selectList(tenantCode, teaDTO.getTeaCode());
         if (CollectionUtils.isEmpty(teaUnitPOList)) {
+            // teaUnitPOList 不应该为空
+            return;
+        }
+        List<ToppingBaseRulePO> toppingBaseRulePOList = toppingBaseRuleAccessor.selectList(tenantCode,
+                teaDTO.getTeaCode());
+        if (CollectionUtils.isEmpty(toppingBaseRulePOList)) {
+            // toppingBaseRulePOList 不应该为空
             return;
         }
 
-        // tea下有3个主要字段，分别是：teaUnitList，actStepList，specRuleList，这3个信息都存储在tea_unit表中
-        // 用于构建teaUnitList
+        // tea 下有 3 个主要字段，分别是：teaUnitList，actStepList，specRuleList，这3个信息都存储在 tea_unit 表中
+        // 用于构建 teaUnitList，存储在 tea_unit 表中，多行对应一个
         Map<String, TeaUnitDTO> teaUnitDTOMap = Maps.newHashMap();
-        // 用于构建actStepList
-        Map<String, ToppingBaseRuleDTO> topppingBaseRuleDTOMap = Maps.newHashMap();
-        // 用于构建specRuleList
-        Map<String, SpecRuleDTO> specRuleMap = Maps.newHashMap();
+        // 用于构建 specRuleList，冗余存储在 tea_unit 表中
+        Map<String, SpecRuleDTO> specRuleDTOMap = Maps.newHashMap();
+        // 用于构建已选择的规格项编码（即当前饮品有哪些规格），冗余存储在 tea_unit 表中
         Set<String> selectedSpecItemCodeSet = Sets.newHashSet();
+
         // 开始构建
         for (TeaUnitPO teaUnitPO : teaUnitPOList) {
-            // 初始化teaUnit，多行对应一个teaUnit，只要初始化一个，因此用map先查询下
+            // 是 tea 的子项，表示当前茶品有哪些规格项组合可选，初始化 teaUnit，因为 tea_unit 表中单行表示一个规格项，所以需要先判断是否已经初始化过
             TeaUnitDTO teaUnitDTO = teaUnitDTOMap.get(teaUnitPO.getTeaUnitCode());
             if (teaUnitDTO == null) {
-                // 初始化teaUnit信息
-                teaUnitDTO = new TeaUnitDTO();
-                teaUnitDTO.setTeaUnitCode(teaUnitPO.getTeaUnitCode());
-                teaUnitDTO.setTeaUnitName(teaUnitPO.getTeaUnitName());
-                teaUnitDTO.setSpecItemRuleList(Lists.newArrayList());
-
-                // 查询当前teaUnit对应的物料调整规则
-                List<ToppingAdjustRulePO> toppingAdjustRulePOList = toppingAdjustRuleAccessor.selectList(
-                        teaUnitPO.getTenantCode(), teaUnitPO.getTeaCode(), teaUnitDTO.getTeaUnitCode());
-                List<ToppingAdjustRuleDTO> toppingAdjustRuleDTOList = Lists.newArrayList();
-                for (ToppingAdjustRulePO toppingAdjustRulePO : toppingAdjustRulePOList) {
-                    ToppingAdjustRuleDTO toppingAdjustRuleDTO = new ToppingAdjustRuleDTO();
-                    toppingAdjustRuleDTO.setStepIndex(toppingAdjustRulePO.getStepIndex());
-                    toppingAdjustRuleDTO.setToppingCode(toppingAdjustRulePO.getToppingCode());
-                    toppingAdjustRuleDTO.setBaseAmount(toppingAdjustRulePO.getBaseAmount());
-                    toppingAdjustRuleDTO.setAdjustType(toppingAdjustRulePO.getAdjustType());
-                    toppingAdjustRuleDTO.setAdjustMode(toppingAdjustRulePO.getAdjustMode());
-                    toppingAdjustRuleDTO.setAdjustAmount(toppingAdjustRulePO.getAdjustAmount());
-
-                    ToppingDTO toppingDTO = getModel(toppingMgtService.getByCode(
-                            teaUnitPO.getTenantCode(), toppingAdjustRulePO.getToppingCode()));
-                    toppingAdjustRuleDTO.setToppingName(toppingDTO.getToppingName());
-                    toppingAdjustRuleDTO.setMeasureUnit(toppingDTO.getMeasureUnit());
-                    toppingAdjustRuleDTOList.add(toppingAdjustRuleDTO);
-
-                    ToppingBaseRuleDTO toppingBaseRuleDTO = topppingBaseRuleDTOMap.get(
-                            toppingAdjustRulePO.getToppingCode());
-                    if (toppingBaseRuleDTO == null) {
-                        toppingBaseRuleDTO = new ToppingBaseRuleDTO();
-                        toppingBaseRuleDTO.setToppingCode(toppingDTO.getToppingCode());
-                        toppingBaseRuleDTO.setToppingName(toppingDTO.getToppingName());
-                        toppingBaseRuleDTO.setToppingTypeCode(toppingDTO.getToppingTypeCode());
-                        toppingBaseRuleDTO.setMeasureUnit(toppingDTO.getMeasureUnit());
-                        toppingBaseRuleDTO.setState(toppingDTO.getState());
-                        toppingBaseRuleDTO.setStepIndex(toppingAdjustRulePO.getStepIndex());
-                        toppingBaseRuleDTO.setBaseAmount(toppingAdjustRulePO.getBaseAmount());
-                        topppingBaseRuleDTOMap.put(toppingAdjustRulePO.getToppingCode(), toppingBaseRuleDTO);
-                    }
-                }
-                teaUnitDTO.setToppingAdjustRuleList(toppingAdjustRuleDTOList);
-
-                // 放入map
+                teaUnitDTO = getTeaUnitDTO(teaUnitPO);
                 teaUnitDTOMap.put(teaUnitPO.getTeaUnitCode(), teaUnitDTO);
             }
 
-            // 初始化specItemRule，多行对应一个teaUnit，每行是独立的specItemRule，都要初始化
-            SpecItemRuleDTO specItemRuleDTO = new SpecItemRuleDTO();
-            specItemRuleDTO.setSpecCode(teaUnitPO.getSpecCode());
-            specItemRuleDTO.setSpecItemCode(teaUnitPO.getSpecItemCode());
-            SpecItemDTO specItemDTO = getModel(specMgtService.getSpecItemByCode(teaUnitPO.getTenantCode(), teaUnitPO.getSpecCode(),
-                    teaUnitPO.getSpecItemCode()));
-            if (specItemDTO != null) {
-                specItemRuleDTO.setSpecItemName(specItemDTO.getSpecItemName());
-                specItemRuleDTO.setOuterSpecItemCode(specItemDTO.getOuterSpecItemCode());
-            }
-            teaUnitDTO.getSpecItemRuleList().add(specItemRuleDTO);
+            // 是 teaUnit 的子项，表示当前teaUnit下选择了哪些规格项，因为 tea_unit 表中单行表示一个规格项，所以都要初始化
+            teaUnitDTO.addSpecItemRule(getSpecItemRuleDTO(teaUnitPO));
             selectedSpecItemCodeSet.add(teaUnitPO.getSpecItemCode());
 
-            // 初始化SpecRule，跟着Tea走，多行对应一个TeaUnit，只要初始化一个，因此用Map先查询下
-            SpecRuleDTO specRuleDTO = specRuleMap.get(specItemDTO.getSpecCode());
+            // 是 tea 的子项，表示当前茶品有哪些规格可选，因为 tea_unit 表中单行表示一个规格项，所以需要先判断是否已经初始化过
+            SpecRuleDTO specRuleDTO = specRuleDTOMap.get(teaUnitPO.getSpecCode());
             if (specRuleDTO == null) {
-                SpecDTO specDTO = getModel(specMgtService.getByCode(tenantCode, specItemDTO.getSpecCode()));
-                specRuleDTO = new SpecRuleDTO();
-                specRuleDTO.setGmtCreated(specDTO.getGmtCreated());
-                specRuleDTO.setGmtModified(specDTO.getGmtModified());
-                specRuleDTO.setSpecCode(specDTO.getSpecCode());
-                specRuleDTO.setSpecName(specDTO.getSpecName());
-                List<SpecItemDTO> specItemDTOList = getListModel(specMgtService.listSpecItemBySpecCode(teaUnitPO.getTenantCode(),
-                        specRuleDTO.getSpecCode()));
-                for (SpecItemDTO ite : specItemDTOList) {
-                    SpecItemRuleDTO dto = new SpecItemRuleDTO();
-                    dto.setSpecCode(ite.getSpecCode());
-                    dto.setSpecItemCode(ite.getSpecItemCode());
-                    dto.setSpecItemName(ite.getSpecItemName());
-                    dto.setOuterSpecItemCode(ite.getOuterSpecItemCode());
-                    if (specRuleDTO.getSpecItemRuleList() == null) {
-                        specRuleDTO.setSpecItemRuleList(Lists.newArrayList());
-                    }
-                    specRuleDTO.getSpecItemRuleList().add(dto);
-                }
-                specRuleMap.put(specItemDTO.getSpecCode(), specRuleDTO);
+                specRuleDTO = getSpecRuleDTO(teaUnitPO);
+                specRuleDTOMap.putIfAbsent(teaUnitPO.getSpecCode(), specRuleDTO);
             }
         }
 
         // 构建teaUnitList
+        teaDTO.setTeaUnitList(getTeaUnitDTOList(teaUnitDTOMap));
+
+        // 构建actStepList
+        teaDTO.setActStepList(getActStepDTOList(toppingBaseRulePOList));
+
+        // 构建specRuleList
+        teaDTO.setSpecRuleList(getSpecRuleDTOList(specRuleDTOMap, selectedSpecItemCodeSet));
+    }
+
+    private List<TeaUnitDTO> getTeaUnitDTOList(Map<String, TeaUnitDTO> teaUnitDTOMap) {
         List<TeaUnitDTO> teaUnitDTOList = Lists.newArrayList();
         for (Map.Entry<String, TeaUnitDTO> entry : teaUnitDTOMap.entrySet()) {
             teaUnitDTOList.add(entry.getValue());
         }
-        teaDTO.setTeaUnitList(teaUnitDTOList);
+        return teaUnitDTOList;
+    }
 
-        // 构建actStepList
-        Map<Integer, List<ToppingBaseRuleDTO>> actStepMap = Maps.newHashMap();
-        for (Map.Entry<String, ToppingBaseRuleDTO> entry : topppingBaseRuleDTOMap.entrySet()) {
-            ToppingBaseRuleDTO toppingBaseRuleDTO = entry.getValue();
-            List<ToppingBaseRuleDTO> list = actStepMap.get(toppingBaseRuleDTO.getStepIndex());
-            if (list == null) {
-                list = Lists.newArrayList();
-                actStepMap.put(toppingBaseRuleDTO.getStepIndex(), list);
-            }
-            list.add(toppingBaseRuleDTO);
-        }
-        List<ActStepDTO> actStepList = Lists.newArrayList();
-        for (Map.Entry<Integer, List<ToppingBaseRuleDTO>> entry : actStepMap.entrySet()) {
-            ActStepDTO actStepDTO = new ActStepDTO();
-            actStepDTO.setStepIndex(entry.getKey());
-            actStepDTO.setToppingBaseRuleList(entry.getValue());
-            actStepList.add(actStepDTO);
-        }
-        teaDTO.setActStepList(actStepList);
-
-        // 构建specRuleList
-        List<SpecRuleDTO> specRuleList = Lists.newArrayList();
-        for (Map.Entry<String, SpecRuleDTO> entry : specRuleMap.entrySet()) {
+    private List<SpecRuleDTO> getSpecRuleDTOList(Map<String, SpecRuleDTO> specRuleDTOMap,
+            Set<String> selectedSpecItemCodeSet) {
+        List<SpecRuleDTO> specRuleDTOList = Lists.newArrayList();
+        for (Map.Entry<String, SpecRuleDTO> entry : specRuleDTOMap.entrySet()) {
             SpecRuleDTO specRuleDTO = entry.getValue();
             for (SpecItemRuleDTO specItemRuleDTO : specRuleDTO.getSpecItemRuleList()) {
                 if (selectedSpecItemCodeSet.contains(specItemRuleDTO.getSpecItemCode())) {
                     specItemRuleDTO.setSelected(1);
                 }
             }
-            specRuleList.add(specRuleDTO);
+            specRuleDTOList.add(specRuleDTO);
         }
-        teaDTO.setSpecRuleList(specRuleList);
+        return specRuleDTOList;
+    }
+
+    private List<ActStepDTO> getActStepDTOList(List<ToppingBaseRulePO> toppingBaseRulePOList) {
+        Map<Integer, ActStepDTO> actStepDTOMap = Maps.newHashMap();
+        for (ToppingBaseRulePO po : toppingBaseRulePOList) {
+            ActStepDTO actStepDTO = actStepDTOMap.get(po.getStepIndex());
+            if (actStepDTO == null) {
+                actStepDTO = new ActStepDTO();
+                actStepDTO.setStepIndex(po.getStepIndex());
+                actStepDTO.setToppingBaseRuleList(Lists.newArrayList());
+            }
+            actStepDTO.addToppingBaseRule(convertToToppingBaseRulePO(po));
+            actStepDTOMap.put(actStepDTO.getStepIndex(), actStepDTO);
+        }
+
+        List<ActStepDTO> actStepDTOList = Lists.newArrayList();
+        for (Map.Entry<Integer, ActStepDTO> entry : actStepDTOMap.entrySet()) {
+            actStepDTOList.add(entry.getValue());
+        }
+        return actStepDTOList;
+    }
+
+    private SpecRuleDTO getSpecRuleDTO(TeaUnitPO teaUnitPO) {
+        SpecDTO specDTO = getModel(specMgtService.getByCode(teaUnitPO.getTenantCode(), teaUnitPO.getSpecCode()));
+        SpecRuleDTO specRuleDTO = new SpecRuleDTO();
+        specRuleDTO.setSpecCode(specDTO.getSpecCode());
+        specRuleDTO.setSpecName(specDTO.getSpecName());
+
+        List<SpecItemDTO> specItemDTOList = getListModel(specMgtService.listSpecItemBySpecCode(
+                teaUnitPO.getTenantCode(), teaUnitPO.getSpecCode()));
+        for (SpecItemDTO ite : specItemDTOList) {
+            SpecItemRuleDTO dto = new SpecItemRuleDTO();
+            dto.setSpecCode(ite.getSpecCode());
+            dto.setSpecItemCode(ite.getSpecItemCode());
+            dto.setSpecItemName(ite.getSpecItemName());
+            dto.setOuterSpecItemCode(ite.getOuterSpecItemCode());
+            if (specRuleDTO.getSpecItemRuleList() == null) {
+                specRuleDTO.setSpecItemRuleList(Lists.newArrayList());
+            }
+            specRuleDTO.getSpecItemRuleList().add(dto);
+        }
+        return specRuleDTO;
+    }
+
+    private SpecItemRuleDTO getSpecItemRuleDTO(TeaUnitPO teaUnitPO) {
+        SpecItemRuleDTO specItemRuleDTO = new SpecItemRuleDTO();
+        specItemRuleDTO.setSpecCode(teaUnitPO.getSpecCode());
+        specItemRuleDTO.setSpecItemCode(teaUnitPO.getSpecItemCode());
+
+        SpecItemDTO specItemDTO = getModel(specMgtService.getSpecItemByCode(teaUnitPO.getTenantCode(),
+                teaUnitPO.getSpecCode(), teaUnitPO.getSpecItemCode()));
+        if (specItemDTO != null) {
+            specItemRuleDTO.setSpecItemName(specItemDTO.getSpecItemName());
+            specItemRuleDTO.setOuterSpecItemCode(specItemDTO.getOuterSpecItemCode());
+        }
+        return specItemRuleDTO;
+    }
+
+    private TeaUnitDTO getTeaUnitDTO(TeaUnitPO teaUnitPO) {
+        // 初始化teaUnit信息
+        TeaUnitDTO teaUnitDTO = new TeaUnitDTO();
+        teaUnitDTO.setTeaUnitCode(teaUnitPO.getTeaUnitCode());
+        teaUnitDTO.setTeaUnitName(teaUnitPO.getTeaUnitName());
+        teaUnitDTO.setSpecItemRuleList(Lists.newArrayList());
+
+        // 查询当前teaUnit对应的物料调整规则
+        teaUnitDTO.setToppingAdjustRuleList(getToppingAdjustRuleDTOList(teaUnitPO.getTenantCode(),
+                teaUnitPO.getTeaCode(), teaUnitDTO.getTeaUnitCode()));
+        return teaUnitDTO;
+    }
+
+    private List<ToppingAdjustRuleDTO> getToppingAdjustRuleDTOList(String tenantCode, String teaCode,
+            String teaUnitCode) {
+        List<ToppingAdjustRuleDTO> toppingAdjustRuleDTOList = Lists.newArrayList();
+
+        List<ToppingAdjustRulePO> toppingAdjustRulePOList = toppingAdjustRuleAccessor.selectList(
+                tenantCode, teaCode, teaUnitCode);
+        if (CollectionUtils.isEmpty(toppingAdjustRulePOList)) {
+            return toppingAdjustRuleDTOList;
+        }
+        for (ToppingAdjustRulePO toppingAdjustRulePO : toppingAdjustRulePOList) {
+            ToppingAdjustRuleDTO toppingAdjustRuleDTO = new ToppingAdjustRuleDTO();
+            toppingAdjustRuleDTO.setStepIndex(toppingAdjustRulePO.getStepIndex());
+            toppingAdjustRuleDTO.setToppingCode(toppingAdjustRulePO.getToppingCode());
+            toppingAdjustRuleDTO.setAdjustType(toppingAdjustRulePO.getAdjustType());
+            toppingAdjustRuleDTO.setAdjustMode(toppingAdjustRulePO.getAdjustMode());
+            toppingAdjustRuleDTO.setAdjustAmount(toppingAdjustRulePO.getAdjustAmount());
+
+            ToppingDTO toppingDTO = getModel(toppingMgtService.getByCode(tenantCode,
+                    toppingAdjustRulePO.getToppingCode()));
+            if (toppingDTO != null) {
+                toppingAdjustRuleDTO.setToppingName(toppingDTO.getToppingName());
+                toppingAdjustRuleDTO.setMeasureUnit(toppingDTO.getMeasureUnit());
+            }
+            toppingAdjustRuleDTOList.add(toppingAdjustRuleDTO);
+        }
+        return toppingAdjustRuleDTOList;
     }
 
     private TeaPO convertToTeaPO(TeaPutRequest request) {
@@ -421,7 +457,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 po.setTeaUnitCode(teaUnitPutRequest.getTeaUnitCode());
                 po.setStepIndex(toppingAdjustRulePutRequest.getStepIndex());
                 po.setToppingCode(toppingAdjustRulePutRequest.getToppingCode());
-                po.setBaseAmount(toppingAdjustRulePutRequest.getBaseAmount());
                 po.setAdjustType(toppingAdjustRulePutRequest.getAdjustType());
                 po.setAdjustMode(toppingAdjustRulePutRequest.getAdjustMode());
                 po.setAdjustAmount(toppingAdjustRulePutRequest.getAdjustAmount());
@@ -429,5 +464,47 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             }
         }
         return toppingAdjustRulePOList;
+    }
+
+    private List<ToppingBaseRulePO> convertToToppingBaseRulePO(TeaPutRequest request) {
+        if (request == null || CollectionUtils.isEmpty(request.getTeaUnitList())) {
+            return null;
+        }
+
+        List<ToppingBaseRulePO> toppingBaseRulePOList = Lists.newArrayList();
+        List<ActStepPutRequest> actStepList = request.getActStepList();
+        for (ActStepPutRequest actStepPutRequest : actStepList) {
+            int stepIndex = actStepPutRequest.getStepIndex();
+            List<ToppingBaseRulePutRequest> toppingBaseRuleList = actStepPutRequest.getToppingBaseRuleList();
+            for (ToppingBaseRulePutRequest toppingBaseRulePutRequest : toppingBaseRuleList) {
+                ToppingBaseRulePO toppingBaseRulePO = new ToppingBaseRulePO();
+                toppingBaseRulePO.setTenantCode(request.getTenantCode());
+                toppingBaseRulePO.setTeaCode(request.getTeaCode());
+                toppingBaseRulePO.setStepIndex(stepIndex);
+                toppingBaseRulePO.setToppingCode(toppingBaseRulePutRequest.getToppingCode());
+                toppingBaseRulePO.setBaseAmount(toppingBaseRulePutRequest.getBaseAmount());
+                toppingBaseRulePOList.add(toppingBaseRulePO);
+            }
+        }
+        return toppingBaseRulePOList;
+    }
+
+    private ToppingBaseRuleDTO convertToToppingBaseRulePO(ToppingBaseRulePO po) {
+        if (po == null) {
+            return null;
+        }
+
+        ToppingBaseRuleDTO dto = new ToppingBaseRuleDTO();
+        dto.setStepIndex(po.getStepIndex());
+        dto.setToppingCode(po.getToppingCode());
+        dto.setBaseAmount(po.getBaseAmount());
+
+        ToppingDTO toppingDTO = getModel(toppingMgtService.getByCode(po.getTenantCode(), po.getToppingCode()));
+        if (toppingDTO != null) {
+            dto.setToppingName(toppingDTO.getToppingName());
+            dto.setMeasureUnit(toppingDTO.getMeasureUnit());
+            dto.setState(toppingDTO.getState());
+        }
+        return dto;
     }
 }

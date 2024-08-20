@@ -27,11 +27,6 @@ public class ToppingBaseRuleDTO {
     private String toppingName;
 
     /**
-     * 物料类型编码
-     */
-    private String toppingTypeCode;
-
-    /**
      * 计量单位，0：克，1：毫升
      */
     private Integer measureUnit;

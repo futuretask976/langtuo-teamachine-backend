@@ -6,10 +6,12 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
 import com.langtuo.teamachine.api.model.menu.MenuSeriesRelDTO;
+import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.menu.MenuDispatchPutRequest;
 import com.langtuo.teamachine.api.request.menu.MenuPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
+import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
@@ -27,6 +29,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+
 @Component
 @Slf4j
 public class MenuMgtServiceImpl implements MenuMgtService {
@@ -38,6 +42,9 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Resource
     private MenuDispatchAccessor menuDispatchAccessor;
+
+    @Resource
+    private ShopMgtService shopMgtService;
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
@@ -54,6 +61,41 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
         return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode) {
+        LangTuoResult<List<MenuDTO>> langTuoResult;
+        try {
+            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
+            if (shopDTO == null) {
+                langTuoResult = LangTuoResult.success();
+            }
+
+            List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.selectListByShopGroupCode(
+                    tenantCode, shopDTO.getShopGroupCode());
+            if (CollectionUtils.isEmpty(menuDispatchPOList)) {
+                langTuoResult = LangTuoResult.success();
+            }
+
+            List<String> menuCodeList = menuDispatchPOList.stream()
+                    .map(MenuDispatchPO::getMenuCode)
+                    .collect(Collectors.toList());
+            List<MenuPO> cleanRulePOList = menuAccessor.selectListByMenuCode(tenantCode,
+                    menuCodeList);
+            List<MenuDTO> menuDTOList = convertToMenuDTO(cleanRulePOList);
+            langTuoResult = LangTuoResult.success(menuDTOList);
+        } catch (Exception e) {
+            log.error("list error: " + e.getMessage(), e);
+            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+        }
+        return langTuoResult;
+    }
+
+    @Override
+    public LangTuoResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode) {
+        mqttPublisher4Console.send4MenuInitList(tenantCode, shopCode, machineCode);
+        return LangTuoResult.success();
     }
 
     @Override

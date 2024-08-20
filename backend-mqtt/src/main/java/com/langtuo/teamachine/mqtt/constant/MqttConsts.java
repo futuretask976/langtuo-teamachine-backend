@@ -8,6 +8,7 @@ public class MqttConsts {
     public static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
     public static final String RECEIVE_KEY_MODEL_CODE = "modelCode";
     public static final String RECEIVE_KEY_MACHINE_CODE = "machineCode";
+    public static final String RECEIVE_KEY_SHOP_CODE = "shopCode";
     public static final String RECEIVE_KEY_TEMPLATE_CODE = "templateCode";
     public static final String RECEIVE_KEY_MENU_CODE = "menuCode";
     public static final String RECEIVE_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
@@ -28,6 +29,7 @@ public class MqttConsts {
     public static final String SEND_KEY_OSS_PATH = "ossPath";
     public static final String SEND_KEY_TEMPLATE_CODE = "templateCode";
     public static final String SEND_KEY_ACCURACY_TPL = "accuracyTpl";
+    public static final String SEND_KEY_SHOP_CODE = "shopCode";
     public static final String SEND_KEY_MENU_CODE = "menuCode";
     public static final String SEND_KEY_DRAIN_RULE_CODE = "openRuleCode";
     public static final String SEND_KEY_OPEN_RULE = "openRule";
@@ -43,6 +45,7 @@ public class MqttConsts {
     public static final String BIZ_CODE_PREPARE_MACHINE = "prepare_machine";
     public static final String BIZ_CODE_PREPARE_ACCURACY_TPL = "prepare_accuracy";
     public static final String BIZ_CODE_PREPARE_MENU = "prepare_menu";
+    public static final String BIZ_CODE_PREPARE_MENU_INIT_LIST = "prepare_menu_init_list";
     public static final String BIZ_CODE_PREPARE_DRAIN_RULE = "prepare_open_rule";
     public static final String BIZ_CODE_PREPARE_CLEAN_RULE = "prepare_clean_rule";
     public static final String BIZ_CODE_PREPARE_WARNING_RULE = "prepare_warning_rule";
@@ -55,6 +58,7 @@ public class MqttConsts {
     public static final String BIZ_CODE_DISPATCH_CLOSE_RULE = "dispatch_close_rule";
     public static final String BIZ_CODE_DISPATCH_MACHINE = "dispatch_machine";
     public static final String BIZ_CODE_DISPATCH_MENU = "dispatch_menu";
+    public static final String BIZ_CODE_DISPATCH_MENU_INIT_LIST = "dispatch_menu_init_list";
     public static final String BIZ_CODE_DISPATCH_MODEL = "dispatch_model";
     public static final String BIZ_CODE_DISPATCH_OPEN_RULE = "dispatch_open_rule";
     public static final String BIZ_CODE_DISPATCH_WARNING_RULE = "dispatch_warning_rule";

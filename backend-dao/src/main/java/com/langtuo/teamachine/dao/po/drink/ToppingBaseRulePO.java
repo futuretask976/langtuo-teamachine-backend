@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class ToppingAdjustRulePO {
+public class ToppingBaseRulePO {
     /**
      * 数据表id
      */
@@ -32,11 +32,6 @@ public class ToppingAdjustRulePO {
     private String teaCode;
 
     /**
-     * 茶品unit编码
-     */
-    private String teaUnitCode;
-
-    /**
      * 步骤序号，从1开始
      */
     private int stepIndex;
@@ -47,17 +42,7 @@ public class ToppingAdjustRulePO {
     private String toppingCode;
 
     /**
-     * 调整类型，0：减少，1：添加
+     * 基础用量
      */
-    private int adjustType;
-
-    /**
-     * 调整模式，0：固定值，1：百分比
-     */
-    private int adjustMode;
-
-    /**
-     * 调整用量
-     */
-    private int adjustAmount;
+    private int baseAmount;
 }

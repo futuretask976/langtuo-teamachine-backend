@@ -34,6 +34,12 @@
         SELECT * FROM menu
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            <if test="menuCodeList != null and menuCodeList.size() > 0">
+                AND menu_code IN
+                <foreach item="menuCode" collection="menuCodeList" open="(" separator="," close=")">
+                    #{menuCode}
+                </foreach>
+            </if>
     </select>
 
     <select id="search" resultMap="menuPOMap">

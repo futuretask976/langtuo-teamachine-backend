@@ -35,6 +35,15 @@
             </if>
     </select>
 
+    <select id="selectListByShopGroupCode" resultMap="menuDispatchPOMap">
+        SELECT * FROM menu_dispatch
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="shopGroupCode != null">
+                AND shop_group_code = #{shopGroupCode}
+            </if>
+    </select>
+
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.menu.MenuDispatchPO">
         INSERT INTO menu_dispatch (
             gmt_created

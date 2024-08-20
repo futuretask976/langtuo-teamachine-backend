@@ -31,6 +31,13 @@ public interface MenuDispatchMapper {
 
     /**
      *
+     * @return
+     */
+    List<MenuDispatchPO> selectListByShopGroupCode(@Param("tenantCode") String tenantCode,
+            @Param("shopGroupCode") String shopGroupCode);
+
+    /**
+     *
      * @param menuDispatchPO
      * @return
      */

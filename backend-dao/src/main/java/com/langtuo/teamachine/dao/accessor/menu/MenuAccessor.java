@@ -56,10 +56,16 @@ public class MenuAccessor {
             return cachedList;
         }
         
-        List<MenuPO> list = mapper.selectList(tenantCode);
+        List<MenuPO> list = mapper.selectList(tenantCode, null);
         
         // 设置缓存
         setCacheList(tenantCode, list);
+        return list;
+    }
+
+    public List<MenuPO> selectListByMenuCode(String tenantCode, List<String> menuCodeList) {
+        // 这里只是在每台机器初始化的时候会调用，所以先不加缓存
+        List<MenuPO> list = mapper.selectList(tenantCode, menuCodeList);
         return list;
     }
 

@@ -60,6 +60,11 @@ public class TeaPutRequest {
     private List<TeaUnitPutRequest> teaUnitList;
 
     /**
+     * 物料基础规则
+     */
+    private List<ActStepPutRequest> actStepList;
+
+    /**
      * 参数校验
      * @return
      */
@@ -71,7 +76,8 @@ public class TeaPutRequest {
                 && RegexUtils.isValidCode(outerTeaCode, true)
                 && RegexUtils.isValidCode(teaTypeCode, true)
                 // && RegexUtils.isValidCode(imgLink, true)
-                && isValidTeaUnitList()) {
+                && isValidTeaUnitList()
+                && isValidActStepList()) {
             return true;
         }
         return false;
@@ -83,6 +89,21 @@ public class TeaPutRequest {
             isValid = false;
         } else {
             for (TeaUnitPutRequest s : teaUnitList) {
+                if (!s.isValid()) {
+                    isValid = false;
+                    break;
+                }
+            }
+        }
+        return isValid;
+    }
+
+    private boolean isValidActStepList() {
+        boolean isValid = true;
+        if (CollectionUtils.isEmpty(actStepList)) {
+            isValid = false;
+        } else {
+            for (ActStepPutRequest s : actStepList) {
                 if (!s.isValid()) {
                     isValid = false;
                     break;

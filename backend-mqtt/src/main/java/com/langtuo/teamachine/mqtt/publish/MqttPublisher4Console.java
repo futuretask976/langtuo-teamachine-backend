@@ -60,6 +60,19 @@ public class MqttPublisher4Console {
         mqttService.sendConsoleMsg(jsonPayload.toJSONString());
     }
 
+    public void send4MenuInitList(String tenantCode, String shopCode, String machineCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopCode) || StringUtils.isBlank(machineCode)) {
+            return;
+        }
+
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_PREPARE_MENU_INIT_LIST);
+        jsonPayload.put(MqttConsts.SEND_KEY_TENANT_CODE, tenantCode);
+        jsonPayload.put(MqttConsts.SEND_KEY_SHOP_CODE, shopCode);
+        jsonPayload.put(MqttConsts.SEND_KEY_MACHINE_CODE, machineCode);
+        mqttService.sendConsoleMsg(jsonPayload.toJSONString());
+    }
+
     public void send4DrainRule(String tenantCode, String drainRuleCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(drainRuleCode)) {
             return;

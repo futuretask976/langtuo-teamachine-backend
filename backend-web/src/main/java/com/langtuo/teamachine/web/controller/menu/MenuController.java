@@ -19,7 +19,7 @@ public class MenuController {
     private MenuMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/menu/tenant_001/shopGroup_001/get
+     * url: http://{host}:{port}/teamachine/menuset/menu/{tenantcode}/{menucode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{menucode}/get")
@@ -30,7 +30,7 @@ public class MenuController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/menu/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachine/menuset/menu/list?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -41,7 +41,19 @@ public class MenuController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/menu/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachine/menuset/menu/trigger?tenantCode={tenantCode}
+     * @param tenantCode
+     * @return
+     */
+    @GetMapping(value = "/trigger")
+    public LangTuoResult<Void> trigger(@RequestParam("tenantCode") String tenantCode
+            , @RequestParam("shopCode") String shopCode, @RequestParam("machineCode") String machineCode) {
+        LangTuoResult<Void> rtn = service.triggerDispatchByShopCode(tenantCode, shopCode, machineCode);
+        return rtn;
+    }
+
+    /**
+     * url: http://{host}:{port}/teamachine/menuset/menu/search?tenantCode={tenantCode}&menuCode={menuCode}&menuName={menuName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -54,7 +66,7 @@ public class MenuController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/menu/put
+     * url: http://{host}:{port}/teamachine/menuset/menu/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -64,7 +76,7 @@ public class MenuController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/menu/{tenantcode}/{menucode}/delete
+     * url: http://{host}:{port}/teamachine/menuset/menu/{tenantcode}/{menucode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{menucode}/delete")
@@ -75,7 +87,7 @@ public class MenuController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/menu/put
+     * url: http://{host}:{port}/teamachine/menuset/menu/dispatch/put
      * @return
      */
     @PutMapping(value = "/dispatch/put")
@@ -85,7 +97,7 @@ public class MenuController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/menu/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachine/menuset/menu/dispatch/{tenantcode}/{menucode}/get
      * @param tenantCode
      * @return
      */

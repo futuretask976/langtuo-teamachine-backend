@@ -6,6 +6,7 @@ import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.consume.worker.device.MachineDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.device.ModelDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.drink.AccuracyTplDispatchWorker;
+import com.langtuo.teamachine.mqtt.consume.worker.menu.MenuDispatch4InitWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.menu.MenuDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.rule.CleanRuleDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.rule.DrainRuleDispatchWorker;
@@ -34,6 +35,8 @@ public class MqttConsumer {
             ExeService4Consume.getExeService().submit(new AccuracyTplDispatchWorker(jsonPayload));
         } else if (MqttConsts.BIZ_CODE_PREPARE_MENU.equals(bizCode)) {
             ExeService4Consume.getExeService().submit(new MenuDispatchWorker(jsonPayload));
+        } else if (MqttConsts.BIZ_CODE_PREPARE_MENU_INIT_LIST.equals(bizCode)) {
+            ExeService4Consume.getExeService().submit(new MenuDispatch4InitWorker(jsonPayload));
         } else if (MqttConsts.BIZ_CODE_PREPARE_DRAIN_RULE.equals(bizCode)) {
             ExeService4Consume.getExeService().submit(new DrainRuleDispatchWorker(jsonPayload));
         } else if (MqttConsts.BIZ_CODE_PREPARE_CLEAN_RULE.equals(bizCode)) {

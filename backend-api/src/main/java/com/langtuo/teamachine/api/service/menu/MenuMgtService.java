@@ -40,6 +40,20 @@ public interface MenuMgtService {
 
     /**
      *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode);
+
+    /**
+     *
      * @param request
      * @return
      */

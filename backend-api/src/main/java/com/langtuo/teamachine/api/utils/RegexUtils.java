@@ -11,7 +11,7 @@ public class RegexUtils {
                 return true;
             }
         } else {
-            String pattern = "^[A-Za-z0-9_]{0,50}$";
+            String pattern = "^[A-Za-z0-9_\\-]{0,50}$";
             boolean isMatch = Pattern.matches(pattern, input);
             if (isMatch) {
                 return true;
@@ -26,7 +26,7 @@ public class RegexUtils {
                 return true;
             }
         } else {
-            String pattern = "^[A-Za-z0-9_\\u4e00-\\u9fa5]{0,50}$";
+            String pattern = "^[A-Za-z0-9_\\-\\u4e00-\\u9fa5]{0,50}$";
             boolean isMatch = Pattern.matches(pattern, input);
             if (isMatch) {
                 return true;
@@ -41,7 +41,7 @@ public class RegexUtils {
                 return true;
             }
         } else {
-            String pattern = "^[A-Za-z0-9_" +
+            String pattern = "^[A-Za-z0-9_\\-" +
                     "\\u4e00-\\u9fa5" + // 中文字符
                     "\\u3002" + // 。
                     "\\uff1b" + // ；
@@ -73,6 +73,7 @@ public class RegexUtils {
 //        System.out.println(isValidStr("aAbce01234", false));
 //        System.out.println(isValidStr("aAbce_01234", false));
 //        System.out.println(isValidStr("aAbce-01234", false));
-        System.out.println(isValidComment("这里是我的", false));
+        System.out.println(isValidName("大杯-五分糖", true));
+        System.out.println(isValidName("SPEC_ITEM_BIG-SPEC_ITEM_5_SWEET", true));
     }
 }

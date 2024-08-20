@@ -26,7 +26,8 @@ public interface MenuMapper {
      *
      * @return
      */
-    List<MenuPO> selectList(@Param("tenantCode") String tenantCode);
+    List<MenuPO> selectList(@Param("tenantCode") String tenantCode,
+            @Param("menuCodeList") List<String> menuCodeList);
 
     /**
      *
