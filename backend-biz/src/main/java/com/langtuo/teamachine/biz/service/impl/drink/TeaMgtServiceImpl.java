@@ -220,16 +220,11 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         dto.setExtraInfo(po.getExtraInfo());
         dto.setImgLink(po.getImgLink());
 
-        fulfillTeaDTO(po.getTenantCode(), dto);
+        fillTeaDTO(po.getTenantCode(), dto);
         return dto;
     }
 
-    private void fulfillTeaDTO(String tenantCode, TeaDTO teaDTO) {
-        if (teaDTO == null) {
-            // teaDTO 不能为空
-            return;
-        }
-
+    private void fillTeaDTO(String tenantCode, TeaDTO teaDTO) {
         List<TeaUnitPO> teaUnitPOList = teaUnitAccessor.selectList(tenantCode, teaDTO.getTeaCode());
         if (CollectionUtils.isEmpty(teaUnitPOList)) {
             // teaUnitPOList 不应该为空
@@ -241,6 +236,9 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             // toppingBaseRulePOList 不应该为空
             return;
         }
+        // 用于在构建 toppingAdjustRule 时，填充 baseAmount
+        Map<Integer, Map<String, ToppingBaseRulePO>> toppingBaseRulePOMapByStepIndex =
+                getToppingBaseRulePOMapByStepIndex(toppingBaseRulePOList);
 
         // tea 下有 3 个主要字段，分别是：teaUnitList，actStepList，specRuleList，这3个信息都存储在 tea_unit 表中
         // 用于构建 teaUnitList，存储在 tea_unit 表中，多行对应一个
@@ -255,7 +253,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             // 是 tea 的子项，表示当前茶品有哪些规格项组合可选，初始化 teaUnit，因为 tea_unit 表中单行表示一个规格项，所以需要先判断是否已经初始化过
             TeaUnitDTO teaUnitDTO = teaUnitDTOMap.get(teaUnitPO.getTeaUnitCode());
             if (teaUnitDTO == null) {
-                teaUnitDTO = getTeaUnitDTO(teaUnitPO);
+                teaUnitDTO = getTeaUnitDTO(teaUnitPO, toppingBaseRulePOMapByStepIndex);
                 teaUnitDTOMap.put(teaUnitPO.getTeaUnitCode(), teaUnitDTO);
             }
 
@@ -279,6 +277,22 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
         // 构建specRuleList
         teaDTO.setSpecRuleList(getSpecRuleDTOList(specRuleDTOMap, selectedSpecItemCodeSet));
+    }
+
+    private Map<Integer, Map<String, ToppingBaseRulePO>> getToppingBaseRulePOMapByStepIndex(
+            List<ToppingBaseRulePO> toppingBaseRulePOList) {
+        Map<Integer, Map<String, ToppingBaseRulePO>> toppingBaseRulePOMapByStepIndex = Maps.newHashMap();
+        for (ToppingBaseRulePO toppingBaseRulePO : toppingBaseRulePOList) {
+            Map<String, ToppingBaseRulePO> toppingBaseRulePOMapByToppingCode = toppingBaseRulePOMapByStepIndex.get(
+                    toppingBaseRulePO.getStepIndex());
+            if (toppingBaseRulePOMapByToppingCode == null) {
+                toppingBaseRulePOMapByToppingCode = Maps.newHashMap();
+                toppingBaseRulePOMapByStepIndex.put(toppingBaseRulePO.getStepIndex(),
+                        toppingBaseRulePOMapByToppingCode);
+            }
+            toppingBaseRulePOMapByToppingCode.put(toppingBaseRulePO.getToppingCode(), toppingBaseRulePO);
+        }
+        return toppingBaseRulePOMapByStepIndex;
     }
 
     private List<TeaUnitDTO> getTeaUnitDTOList(Map<String, TeaUnitDTO> teaUnitDTOMap) {
@@ -360,7 +374,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         return specItemRuleDTO;
     }
 
-    private TeaUnitDTO getTeaUnitDTO(TeaUnitPO teaUnitPO) {
+    private TeaUnitDTO getTeaUnitDTO(TeaUnitPO teaUnitPO,
+            Map<Integer, Map<String, ToppingBaseRulePO>> toppingBaseRulePOMapByStepIndex) {
         // 初始化teaUnit信息
         TeaUnitDTO teaUnitDTO = new TeaUnitDTO();
         teaUnitDTO.setTeaUnitCode(teaUnitPO.getTeaUnitCode());
@@ -369,12 +384,12 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
         // 查询当前teaUnit对应的物料调整规则
         teaUnitDTO.setToppingAdjustRuleList(getToppingAdjustRuleDTOList(teaUnitPO.getTenantCode(),
-                teaUnitPO.getTeaCode(), teaUnitDTO.getTeaUnitCode()));
+                teaUnitPO.getTeaCode(), teaUnitDTO.getTeaUnitCode(), toppingBaseRulePOMapByStepIndex));
         return teaUnitDTO;
     }
 
     private List<ToppingAdjustRuleDTO> getToppingAdjustRuleDTOList(String tenantCode, String teaCode,
-            String teaUnitCode) {
+            String teaUnitCode, Map<Integer, Map<String, ToppingBaseRulePO>> toppingBaseRulePOMapByStepIndex) {
         List<ToppingAdjustRuleDTO> toppingAdjustRuleDTOList = Lists.newArrayList();
 
         List<ToppingAdjustRulePO> toppingAdjustRulePOList = toppingAdjustRuleAccessor.selectList(
@@ -396,6 +411,13 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 toppingAdjustRuleDTO.setToppingName(toppingDTO.getToppingName());
                 toppingAdjustRuleDTO.setMeasureUnit(toppingDTO.getMeasureUnit());
             }
+
+            Map<String, ToppingBaseRulePO> toppingBaseRulePOMapByToppingCode = toppingBaseRulePOMapByStepIndex.get(
+                    toppingAdjustRulePO.getStepIndex());
+            ToppingBaseRulePO toppingBaseRulePO = toppingBaseRulePOMapByToppingCode.get(
+                    toppingAdjustRulePO.getToppingCode());
+            toppingAdjustRuleDTO.setBaseAmount(toppingBaseRulePO.getBaseAmount());
+
             toppingAdjustRuleDTOList.add(toppingAdjustRuleDTO);
         }
         return toppingAdjustRuleDTOList;
