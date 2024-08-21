@@ -5,6 +5,7 @@ import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
+import com.langtuo.teamachine.web.constant.WebConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpHeaders;
@@ -98,7 +99,8 @@ public class TeaController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", "export.xlsx");
+        headers.setContentDispositionFormData(WebConsts.HTTP_HEADER_DISPOSITION_NAME,
+                WebConsts.HTTP_HEADER_DISPOSITION_FILE_NAME_4_TEA_EXPORT);
 
         return ResponseEntity.ok()
                 .headers(headers)
