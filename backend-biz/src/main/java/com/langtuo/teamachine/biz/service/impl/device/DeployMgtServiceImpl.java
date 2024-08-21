@@ -202,18 +202,24 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             // 添加商户编码
             Cell cell4TenantCode = dataRow.createCell(columnIndex++);
             cell4TenantCode.setCellValue(deployPO.getTenantCode());
-            // 添加部署编码
-            Cell cell4DeployCode = dataRow.createCell(columnIndex++);
-            cell4DeployCode.setCellValue(deployPO.getDeployCode());
             // 添加商户名称
             Cell cell4TenantName = dataRow.createCell(columnIndex++);
             TenantDTO tenantDTO = getModel(tenantMgtService.get(tenantCode));
             if (tenantDTO != null) {
                 cell4TenantName.setCellValue(tenantDTO.getTenantName());
             }
+            // 添加部署编码
+            Cell cell4DeployCode = dataRow.createCell(columnIndex++);
+            cell4DeployCode.setCellValue(deployPO.getDeployCode());
+            // 添加机器编码
+            Cell cell4MachineCode = dataRow.createCell(columnIndex++);
+            cell4MachineCode.setCellValue(deployPO.getMachineCode());
             // 添加型号编码
             Cell cell4ModelCode = dataRow.createCell(columnIndex++);
             cell4ModelCode.setCellValue(deployPO.getModelCode());
+            // 添加店铺编码
+            Cell cell4ShopCode = dataRow.createCell(columnIndex++);
+            cell4ShopCode.setCellValue(deployPO.getShopCode());
             // 添加店铺名称
             Cell cell4ShopName = dataRow.createCell(columnIndex++);
             ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, deployPO.getShopCode()));
