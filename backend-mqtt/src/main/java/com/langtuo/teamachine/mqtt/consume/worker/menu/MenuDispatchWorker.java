@@ -201,7 +201,7 @@ public class MenuDispatchWorker implements Runnable {
 
     private List<String> getMachineCodeList() {
         MenuMgtService menuMgtService = getMenuMgtService();
-        MenuDispatchDTO menuDispatchDTO = getModel(menuMgtService.getDispatchByCode(tenantCode, menuCode));
+        MenuDispatchDTO menuDispatchDTO = getModel(menuMgtService.getDispatchByMenuCode(tenantCode, menuCode));
         if (menuDispatchDTO == null) {
             log.info("menu dispatch is null");
             return null;

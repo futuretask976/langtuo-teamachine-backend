@@ -24,7 +24,7 @@ public class MachineController {
     @GetMapping(value = "/{tenantcode}/{machinecode}/get")
     public TeaMachineResult<MachineDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "machinecode") String machineCode) {
-        TeaMachineResult<MachineDTO> rtn = service.get(tenantCode, machineCode);
+        TeaMachineResult<MachineDTO> rtn = service.getByCode(tenantCode, machineCode);
         return rtn;
     }
 
@@ -68,7 +68,7 @@ public class MachineController {
      */
     @PutMapping(value = "/update")
     public TeaMachineResult<Void> update(@RequestBody MachineUpdatePutRequest request) {
-        TeaMachineResult<Void> rtn = service.update(request);
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 

@@ -72,5 +72,5 @@ public interface CleanRuleMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<CleanRuleDispatchDTO> getDispatchByCode(String tenantCode, String cleanRuleCode);
+    TeaMachineResult<CleanRuleDispatchDTO> getDispatchByCleanRuleCode(String tenantCode, String cleanRuleCode);
 }

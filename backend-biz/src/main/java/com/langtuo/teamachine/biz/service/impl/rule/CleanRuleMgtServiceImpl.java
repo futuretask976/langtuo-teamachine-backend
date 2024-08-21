@@ -236,7 +236,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     }
 
     @Override
-    public TeaMachineResult<CleanRuleDispatchDTO> getDispatchByCode(String tenantCode, String cleanRuleCode) {
+    public TeaMachineResult<CleanRuleDispatchDTO> getDispatchByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         TeaMachineResult<CleanRuleDispatchDTO> teaMachineResult;
         try {
             CleanRuleDispatchDTO dto = new CleanRuleDispatchDTO();

@@ -103,7 +103,7 @@ public class DrainRuleDispatchWorker implements Runnable {
 
     private List<String> getMachineCodeList() {
         DrainRuleMgtService drainRuleMgtService = getOpenRuleMgtService();
-        DrainRuleDispatchDTO drainRuleDispatchDTO = getModel(drainRuleMgtService.getDispatchByCode(tenantCode, drainRuleCode));
+        DrainRuleDispatchDTO drainRuleDispatchDTO = getModel(drainRuleMgtService.getDispatchByDrainRuleCode(tenantCode, drainRuleCode));
         if (drainRuleDispatchDTO == null) {
             log.info("open rule dispatch is null");
             return null;

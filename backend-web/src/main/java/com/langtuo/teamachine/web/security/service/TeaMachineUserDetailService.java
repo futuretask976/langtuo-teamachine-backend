@@ -57,7 +57,7 @@ public class TeaMachineUserDetailService implements UserDetailsService {
 
     public UserDetails loadMachineUserDetails(String tenantCode, String machineCode) {
         DeployDTO deployDTO = getModel(deployMgtService.getByDeployCode(tenantCode, machineCode));
-        MachineDTO machineDTO = getModel(machineMgtService.get(tenantCode, machineCode));
+        MachineDTO machineDTO = getModel(machineMgtService.getByCode(tenantCode, machineCode));
         if (deployDTO == null || machineDTO == null) {
             return null;
         }

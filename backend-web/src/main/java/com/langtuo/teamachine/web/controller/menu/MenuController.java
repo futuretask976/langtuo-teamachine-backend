@@ -104,7 +104,7 @@ public class MenuController {
     @GetMapping(value = "/dispatch/{tenantcode}/{menucode}/get")
     public TeaMachineResult<MenuDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "menucode") String menuCode) {
-        TeaMachineResult<MenuDispatchDTO> rtn = service.getDispatchByCode(tenantCode, menuCode);
+        TeaMachineResult<MenuDispatchDTO> rtn = service.getDispatchByMenuCode(tenantCode, menuCode);
         return rtn;
     }
 }

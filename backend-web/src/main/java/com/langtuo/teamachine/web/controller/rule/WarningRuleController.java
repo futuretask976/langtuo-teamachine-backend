@@ -104,7 +104,7 @@ public class WarningRuleController {
     @GetMapping(value = "/dispatch/{tenantcode}/{warningrulecode}/get")
     public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "warningrulecode") String warningRuleCode) {
-        TeaMachineResult<WarningRuleDispatchDTO> rtn = service.getDispatchByCode(tenantCode, warningRuleCode);
+        TeaMachineResult<WarningRuleDispatchDTO> rtn = service.getDispatchByWarningRuleCode(tenantCode, warningRuleCode);
         return rtn;
     }
 }

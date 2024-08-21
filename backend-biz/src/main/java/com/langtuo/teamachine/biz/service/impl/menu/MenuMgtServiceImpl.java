@@ -228,7 +228,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     }
 
     @Override
-    public TeaMachineResult<MenuDispatchDTO> getDispatchByCode(String tenantCode, String menuCode) {
+    public TeaMachineResult<MenuDispatchDTO> getDispatchByMenuCode(String tenantCode, String menuCode) {
         TeaMachineResult<MenuDispatchDTO> teaMachineResult;
         try {
             MenuDispatchDTO dto = new MenuDispatchDTO();

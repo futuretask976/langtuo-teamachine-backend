@@ -146,7 +146,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     }
 
     @Override
-    public TeaMachineResult<SpecItemDTO> getSpecItemByCode(String tenantCode, String specCode, String specItemCode) {
+    public TeaMachineResult<SpecItemDTO> getSpecItemBySpecItemCode(String tenantCode, String specCode, String specItemCode) {
         TeaMachineResult<SpecItemDTO> teaMachineResult;
         try {
             SpecItemPO po = specItemAccessor.selectOne(tenantCode, specCode, specItemCode);

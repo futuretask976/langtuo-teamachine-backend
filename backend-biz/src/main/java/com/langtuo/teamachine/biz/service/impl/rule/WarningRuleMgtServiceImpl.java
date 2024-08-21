@@ -205,7 +205,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     }
 
     @Override
-    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByCode(String tenantCode, String warningRuleCode) {
+    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByWarningRuleCode(String tenantCode, String warningRuleCode) {
         TeaMachineResult<WarningRuleDispatchDTO> teaMachineResult;
         try {
             WarningRuleDispatchDTO dto = new WarningRuleDispatchDTO();

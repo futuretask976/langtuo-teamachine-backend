@@ -72,5 +72,5 @@ public interface WarningRuleMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<WarningRuleDispatchDTO> getDispatchByCode(String tenantCode, String warningRuleCode);
+    TeaMachineResult<WarningRuleDispatchDTO> getDispatchByWarningRuleCode(String tenantCode, String warningRuleCode);
 }

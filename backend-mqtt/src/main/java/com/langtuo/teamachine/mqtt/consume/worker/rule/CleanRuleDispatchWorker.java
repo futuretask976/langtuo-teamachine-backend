@@ -103,7 +103,7 @@ public class CleanRuleDispatchWorker implements Runnable {
 
     private List<String> getMachineCodeList() {
         CleanRuleMgtService cleanRuleMgtService = getCleanRuleMgtService();
-        CleanRuleDispatchDTO cleanRuleDispatchDTO = getModel(cleanRuleMgtService.getDispatchByCode(tenantCode, cleanRuleCode));
+        CleanRuleDispatchDTO cleanRuleDispatchDTO = getModel(cleanRuleMgtService.getDispatchByCleanRuleCode(tenantCode, cleanRuleCode));
         if (cleanRuleDispatchDTO == null) {
             log.info("clean rule dispatch is null");
             return null;

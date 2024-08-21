@@ -104,7 +104,7 @@ public class DrainRuleController {
     @GetMapping(value = "/dispatch/{tenantcode}/{drainrulecode}/get")
     public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "drainrulecode") String drainRuleCode) {
-        TeaMachineResult<DrainRuleDispatchDTO> rtn = service.getDispatchByCode(tenantCode, drainRuleCode);
+        TeaMachineResult<DrainRuleDispatchDTO> rtn = service.getDispatchByDrainRuleCode(tenantCode, drainRuleCode);
         return rtn;
     }
 }

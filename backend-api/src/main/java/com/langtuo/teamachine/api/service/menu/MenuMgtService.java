@@ -79,5 +79,5 @@ public interface MenuMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<MenuDispatchDTO> getDispatchByCode(String tenantCode, String menuCode);
+    TeaMachineResult<MenuDispatchDTO> getDispatchByMenuCode(String tenantCode, String menuCode);
 }

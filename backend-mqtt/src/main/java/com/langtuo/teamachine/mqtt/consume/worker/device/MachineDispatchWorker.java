@@ -64,7 +64,7 @@ public class MachineDispatchWorker implements Runnable {
 
     private JSONObject getDispatchCont() {
         MachineMgtService machineMgtService = getMachineMgtService();
-        MachineDTO dto = getModel(machineMgtService.get(tenantCode, machineCode));
+        MachineDTO dto = getModel(machineMgtService.getByCode(tenantCode, machineCode));
         if (dto == null) {
             log.info("machine is null, stop worker");
             return null;

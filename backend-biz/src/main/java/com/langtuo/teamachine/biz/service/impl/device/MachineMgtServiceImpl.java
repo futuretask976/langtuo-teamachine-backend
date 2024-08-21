@@ -43,7 +43,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
-    public TeaMachineResult<MachineDTO> get(String tenantCode, String machineCode) {
+    public TeaMachineResult<MachineDTO> getByCode(String tenantCode, String machineCode) {
         MachinePO machinePO = machineAccessor.selectOne(tenantCode, machineCode);
         MachineDTO adminRoleDTO = convert(machinePO);
         return TeaMachineResult.success(adminRoleDTO);
@@ -145,7 +145,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> update(MachineUpdatePutRequest request) {
+    public TeaMachineResult<Void> put(MachineUpdatePutRequest request) {
         if (request == null) {
             return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }

@@ -57,7 +57,7 @@ public interface SpecMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<SpecItemDTO> getSpecItemByCode(String tenantCode, String specCode, String specItemCode);
+    TeaMachineResult<SpecItemDTO> getSpecItemBySpecItemCode(String tenantCode, String specCode, String specItemCode);
 
     /**
      *

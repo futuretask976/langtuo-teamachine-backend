@@ -29,7 +29,7 @@ public interface TenantMgtService {
 
     /**
      *
-     * @param tenantPutRequest
+     * @param request
      * @return
      */
     TeaMachineResult<Void> put(TenantPutRequest request);

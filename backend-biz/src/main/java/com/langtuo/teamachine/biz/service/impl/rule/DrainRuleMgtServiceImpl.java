@@ -223,7 +223,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     }
 
     @Override
-    public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByCode(String tenantCode, String openRuleCode) {
+    public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByDrainRuleCode(String tenantCode, String openRuleCode) {
         TeaMachineResult<DrainRuleDispatchDTO> teaMachineResult;
         try {
             DrainRuleDispatchDTO dto = new DrainRuleDispatchDTO();

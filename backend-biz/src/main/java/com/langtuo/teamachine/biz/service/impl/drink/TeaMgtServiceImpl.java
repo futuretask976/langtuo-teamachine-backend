@@ -591,7 +591,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         specItemRuleDTO.setSpecCode(teaUnitPO.getSpecCode());
         specItemRuleDTO.setSpecItemCode(teaUnitPO.getSpecItemCode());
 
-        SpecItemDTO specItemDTO = getModel(specMgtService.getSpecItemByCode(teaUnitPO.getTenantCode(),
+        SpecItemDTO specItemDTO = getModel(specMgtService.getSpecItemBySpecItemCode(teaUnitPO.getTenantCode(),
                 teaUnitPO.getSpecCode(), teaUnitPO.getSpecItemCode()));
         if (specItemDTO != null) {
             specItemRuleDTO.setSpecItemName(specItemDTO.getSpecItemName());

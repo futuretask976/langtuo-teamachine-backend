@@ -14,7 +14,7 @@ public interface MachineMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<MachineDTO> get(String tenantCode, String machineCode);
+    TeaMachineResult<MachineDTO> getByCode(String tenantCode, String machineCode);
 
     /**
      *
@@ -49,7 +49,7 @@ public interface MachineMgtService {
      * @param request
      * @return
      */
-    TeaMachineResult<Void> update(MachineUpdatePutRequest request);
+    TeaMachineResult<Void> put(MachineUpdatePutRequest request);
 
     /**
      *

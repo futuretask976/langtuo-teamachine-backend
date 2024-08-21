@@ -72,5 +72,5 @@ public interface DrainRuleMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<DrainRuleDispatchDTO> getDispatchByCode(String tenantCode, String drainRuleCode);
+    TeaMachineResult<DrainRuleDispatchDTO> getDispatchByDrainRuleCode(String tenantCode, String drainRuleCode);
 }
