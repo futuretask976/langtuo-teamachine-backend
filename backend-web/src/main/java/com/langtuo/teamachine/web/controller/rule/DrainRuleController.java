@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.model.rule.DrainRuleDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDispatchDTO;
 import com.langtuo.teamachine.api.request.rule.DrainRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.DrainRulePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +23,9 @@ public class DrainRuleController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{drainrulecode}/get")
-    public LangTuoResult<DrainRuleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<DrainRuleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "drainrulecode") String drainRuleCode) {
-        LangTuoResult<DrainRuleDTO> rtn = service.getByCode(tenantCode, drainRuleCode);
+        TeaMachineResult<DrainRuleDTO> rtn = service.getByCode(tenantCode, drainRuleCode);
         return rtn;
     }
 
@@ -35,8 +35,8 @@ public class DrainRuleController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<DrainRuleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<DrainRuleDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<DrainRuleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<DrainRuleDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -46,9 +46,9 @@ public class DrainRuleController {
      * @return
      */
     @GetMapping(value = "/listbyshop")
-    public LangTuoResult<List<DrainRuleDTO>> list(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<List<DrainRuleDTO>> list(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopCode") String shopCode) {
-        LangTuoResult<List<DrainRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
+        TeaMachineResult<List<DrainRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
         return rtn;
     }
 
@@ -57,10 +57,10 @@ public class DrainRuleController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<DrainRuleDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<DrainRuleDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("drainRuleCode") String drainRuleCode, @RequestParam("drainRuleName") String drainRuleName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<DrainRuleDTO>> rtn = service.search(tenantCode, drainRuleCode, drainRuleName,
+        TeaMachineResult<PageDTO<DrainRuleDTO>> rtn = service.search(tenantCode, drainRuleCode, drainRuleName,
                 pageNum, pageSize);
         return rtn;
     }
@@ -70,8 +70,8 @@ public class DrainRuleController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody DrainRulePutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody DrainRulePutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -80,9 +80,9 @@ public class DrainRuleController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{drainrulecode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "drainrulecode") String drainRuleCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, drainRuleCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, drainRuleCode);
         return rtn;
     }
 
@@ -91,8 +91,8 @@ public class DrainRuleController {
      * @return
      */
     @PutMapping(value = "/dispatch/put")
-    public LangTuoResult<Void> putDispatch(@RequestBody DrainRuleDispatchPutRequest request) {
-        LangTuoResult<Void> rtn = service.putDispatch(request);
+    public TeaMachineResult<Void> putDispatch(@RequestBody DrainRuleDispatchPutRequest request) {
+        TeaMachineResult<Void> rtn = service.putDispatch(request);
         return rtn;
     }
 
@@ -102,9 +102,9 @@ public class DrainRuleController {
      * @return
      */
     @GetMapping(value = "/dispatch/{tenantcode}/{drainrulecode}/get")
-    public LangTuoResult<DrainRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "drainrulecode") String drainRuleCode) {
-        LangTuoResult<DrainRuleDispatchDTO> rtn = service.getDispatchByCode(tenantCode, drainRuleCode);
+        TeaMachineResult<DrainRuleDispatchDTO> rtn = service.getDispatchByCode(tenantCode, drainRuleCode);
         return rtn;
     }
 }

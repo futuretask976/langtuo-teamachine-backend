@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.user;
 import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.OrgPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,9 @@ public class OrgController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{orgname}/get")
-    public LangTuoResult<OrgDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<OrgDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "orgname") String orgName) {
-        LangTuoResult<OrgDTO> rtn = service.get(tenantCode, orgName);
+        TeaMachineResult<OrgDTO> rtn = service.get(tenantCode, orgName);
         return rtn;
     }
 
@@ -32,8 +32,8 @@ public class OrgController {
      * @return
      */
     @GetMapping(value = "/listbydepth")
-    public LangTuoResult<OrgDTO> listByDepth(@RequestParam(name = "tenantCode") String tenantCode) {
-        LangTuoResult<OrgDTO> rtn = service.getTop(tenantCode);
+    public TeaMachineResult<OrgDTO> listByDepth(@RequestParam(name = "tenantCode") String tenantCode) {
+        TeaMachineResult<OrgDTO> rtn = service.getTop(tenantCode);
         return rtn;
     }
 
@@ -42,8 +42,8 @@ public class OrgController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<OrgDTO>> list(@RequestParam(name = "tenantCode") String tenantCode) {
-        LangTuoResult<List<OrgDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<OrgDTO>> list(@RequestParam(name = "tenantCode") String tenantCode) {
+        TeaMachineResult<List<OrgDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -52,10 +52,10 @@ public class OrgController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<OrgDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<OrgDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("orgName") String orgName, @RequestParam("pageNum") int pageNum,
             @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<OrgDTO>> rtn = service.search(tenantCode, orgName, pageNum, pageSize);
+        TeaMachineResult<PageDTO<OrgDTO>> rtn = service.search(tenantCode, orgName, pageNum, pageSize);
         return rtn;
     }
 
@@ -64,8 +64,8 @@ public class OrgController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody OrgPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody OrgPutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -74,9 +74,9 @@ public class OrgController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{orgname}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "orgname") String orgName) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, orgName);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, orgName);
         return rtn;
     }
 }

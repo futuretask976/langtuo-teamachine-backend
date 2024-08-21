@@ -4,7 +4,7 @@ import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.user.RoleDTO;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
@@ -21,7 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
 public class TeaMachineUserDetailService implements UserDetailsService {
@@ -67,13 +67,13 @@ public class TeaMachineUserDetailService implements UserDetailsService {
     }
 
     public UserDetails loadAdminUserDetails(String tenantCode, String loginName) {
-        LangTuoResult<AdminDTO> adminResult = adminMgtService.get(tenantCode, loginName);
+        TeaMachineResult<AdminDTO> adminResult = adminMgtService.get(tenantCode, loginName);
         if (adminResult == null && !adminResult.isSuccess() || adminResult.getModel() == null) {
             return null;
         }
         AdminDTO adminDTO = adminResult.getModel();
 
-        LangTuoResult<RoleDTO> roleResult = roleMgtService.getByCode(tenantCode, adminDTO.getRoleCode());
+        TeaMachineResult<RoleDTO> roleResult = roleMgtService.getByCode(tenantCode, adminDTO.getRoleCode());
         if (roleResult == null && !roleResult.isSuccess() || roleResult.getModel() == null) {
             return null;
         }

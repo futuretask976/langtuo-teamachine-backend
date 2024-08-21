@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.service.user;
 import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.RolePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -13,27 +13,27 @@ public interface RoleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<RoleDTO> getByCode(String tenantCode, String roleCode);
+    TeaMachineResult<RoleDTO> getByCode(String tenantCode, String roleCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<RoleDTO> getByName(String tenantCode, String roleName);
+    TeaMachineResult<RoleDTO> getByName(String tenantCode, String roleName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<RoleDTO>> search(String tenantCode, String roleName, int pageNum, int pageSize);
+    TeaMachineResult<PageDTO<RoleDTO>> search(String tenantCode, String roleName, int pageNum, int pageSize);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<RoleDTO>> list(String tenantCode);
+    TeaMachineResult<List<RoleDTO>> list(String tenantCode);
 
     /**
      *
@@ -42,19 +42,19 @@ public interface RoleMgtService {
      * @param pageSize
      * @return
      */
-    LangTuoResult<PageDTO<RoleDTO>> page(String tenantCode, int pageNum, int pageSize);
+    TeaMachineResult<PageDTO<RoleDTO>> page(String tenantCode, int pageNum, int pageSize);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(RolePutRequest request);
+    TeaMachineResult<Void> put(RolePutRequest request);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String roleCode);
+    TeaMachineResult<Void> delete(String tenantCode, String roleCode);
 }

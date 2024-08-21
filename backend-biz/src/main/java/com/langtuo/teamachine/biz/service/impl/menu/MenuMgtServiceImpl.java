@@ -9,7 +9,7 @@ import com.langtuo.teamachine.api.model.menu.MenuSeriesRelDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.menu.MenuDispatchPutRequest;
 import com.langtuo.teamachine.api.request.menu.MenuPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
@@ -29,7 +29,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -50,32 +50,32 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
-    public LangTuoResult<List<MenuDTO>> list(String tenantCode) {
-        LangTuoResult<List<MenuDTO>> langTuoResult;
+    public TeaMachineResult<List<MenuDTO>> list(String tenantCode) {
+        TeaMachineResult<List<MenuDTO>> teaMachineResult;
         try {
             List<MenuPO> list = menuAccessor.selectList(tenantCode);
             List<MenuDTO> dtoList = convertToMenuDTO(list);
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode) {
-        LangTuoResult<List<MenuDTO>> langTuoResult;
+    public TeaMachineResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode) {
+        TeaMachineResult<List<MenuDTO>> teaMachineResult;
         try {
             ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
             if (shopDTO == null) {
-                langTuoResult = LangTuoResult.success();
+                teaMachineResult = TeaMachineResult.success();
             }
 
             List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.selectListByShopGroupCode(
                     tenantCode, shopDTO.getShopGroupCode());
             if (CollectionUtils.isEmpty(menuDispatchPOList)) {
-                langTuoResult = LangTuoResult.success();
+                teaMachineResult = TeaMachineResult.success();
             }
 
             List<String> menuCodeList = menuDispatchPOList.stream()
@@ -84,78 +84,78 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             List<MenuPO> cleanRulePOList = menuAccessor.selectListByMenuCode(tenantCode,
                     menuCodeList);
             List<MenuDTO> menuDTOList = convertToMenuDTO(cleanRulePOList);
-            langTuoResult = LangTuoResult.success(menuDTOList);
+            teaMachineResult = TeaMachineResult.success(menuDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode) {
+    public TeaMachineResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode) {
         mqttPublisher4Console.send4MenuInitList(tenantCode, shopCode, machineCode);
-        return LangTuoResult.success();
+        return TeaMachineResult.success();
     }
 
     @Override
-    public LangTuoResult<PageDTO<MenuDTO>> search(String tenantName, String seriesCode, String seriesName,
+    public TeaMachineResult<PageDTO<MenuDTO>> search(String tenantName, String seriesCode, String seriesName,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<MenuDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<MenuDTO>> teaMachineResult;
         try {
             PageInfo<MenuPO> pageInfo = menuAccessor.search(tenantName, seriesCode, seriesName,
                     pageNum, pageSize);
             List<MenuDTO> dtoList = convertToMenuDTO(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<MenuDTO> getByCode(String tenantCode, String seriesCode) {
-        LangTuoResult<MenuDTO> langTuoResult;
+    public TeaMachineResult<MenuDTO> getByCode(String tenantCode, String seriesCode) {
+        TeaMachineResult<MenuDTO> teaMachineResult;
         try {
             MenuPO toppingTypePO = menuAccessor.selectOneByCode(tenantCode, seriesCode);
             MenuDTO seriesDTO = convert(toppingTypePO);
-            langTuoResult = LangTuoResult.success(seriesDTO);
+            teaMachineResult = TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<MenuDTO> getByName(String tenantCode, String seriesName) {
-        LangTuoResult<MenuDTO> langTuoResult;
+    public TeaMachineResult<MenuDTO> getByName(String tenantCode, String seriesName) {
+        TeaMachineResult<MenuDTO> teaMachineResult;
         try {
             MenuPO toppingTypePO = menuAccessor.selectOneByName(tenantCode, seriesName);
             MenuDTO tenantDTO = convert(toppingTypePO);
-            langTuoResult = LangTuoResult.success(tenantDTO);
+            teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(MenuPutRequest request) {
+    public TeaMachineResult<Void> put(MenuPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         MenuPO seriesPO = convertMenuPO(request);
         List<MenuSeriesRelPO> menuSeriesRelPOList = convertToMenuSeriesRelPO(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             MenuPO exist = menuAccessor.selectOneByCode(seriesPO.getTenantCode(),
                     seriesPO.getMenuCode());
@@ -172,41 +172,41 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 });
             }
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String menuCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String menuCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted4Series = menuAccessor.delete(tenantCode, menuCode);
             int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(tenantCode, menuCode);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> putDispatch(MenuDispatchPutRequest request) {
+    public TeaMachineResult<Void> putDispatch(MenuDispatchPutRequest request) {
         if (request == null) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         List<MenuDispatchPO> poList = convert(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = menuDispatchAccessor.delete(request.getTenantCode(),
                     request.getMenuCode());
@@ -214,22 +214,22 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 menuDispatchAccessor.insert(po);
             });
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("putDispatch error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
 
         // 异步发送消息准备配置信息分发
         mqttPublisher4Console.send4Menu(
                 request.getTenantCode(), request.getMenuCode());
 
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<MenuDispatchDTO> getDispatchByCode(String tenantCode, String menuCode) {
-        LangTuoResult<MenuDispatchDTO> langTuoResult;
+    public TeaMachineResult<MenuDispatchDTO> getDispatchByCode(String tenantCode, String menuCode) {
+        TeaMachineResult<MenuDispatchDTO> teaMachineResult;
         try {
             MenuDispatchDTO dto = new MenuDispatchDTO();
             dto.setMenuCode(menuCode);
@@ -241,12 +241,12 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                         .collect(Collectors.toList()));
             }
 
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("listDispatchByMenuCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private List<MenuDTO> convertToMenuDTO(List<MenuPO> poList) {

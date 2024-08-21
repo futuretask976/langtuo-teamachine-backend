@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.user;
 import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.RolePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,9 @@ public class RoleController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{rolecode}/get")
-    public LangTuoResult<RoleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<RoleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "rolecode") String roleCode) {
-        LangTuoResult<RoleDTO> rtn = service.getByCode(tenantCode, roleCode);
+        TeaMachineResult<RoleDTO> rtn = service.getByCode(tenantCode, roleCode);
         return rtn;
     }
 
@@ -32,8 +32,8 @@ public class RoleController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<RoleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<RoleDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<RoleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<RoleDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -42,10 +42,10 @@ public class RoleController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<RoleDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<RoleDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("roleName") String roleName, @RequestParam("pageNum") int pageNum,
             @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<RoleDTO>> rtn = service.search(tenantCode, roleName, pageNum, pageSize);
+        TeaMachineResult<PageDTO<RoleDTO>> rtn = service.search(tenantCode, roleName, pageNum, pageSize);
         return rtn;
     }
 
@@ -54,8 +54,8 @@ public class RoleController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody RolePutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody RolePutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -64,9 +64,9 @@ public class RoleController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{rolecode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "rolecode") String roleCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, roleCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, roleCode);
         return rtn;
     }
 }

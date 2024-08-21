@@ -6,7 +6,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.SpecDTO;
 import com.langtuo.teamachine.api.model.drink.SpecItemDTO;
 import com.langtuo.teamachine.api.request.drink.SpecPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.SpecMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
@@ -32,77 +32,77 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     private SpecItemAccessor specItemAccessor;
 
     @Override
-    public LangTuoResult<List<SpecDTO>> list(String tenantCode) {
-        LangTuoResult<List<SpecDTO>> langTuoResult;
+    public TeaMachineResult<List<SpecDTO>> list(String tenantCode) {
+        TeaMachineResult<List<SpecDTO>> teaMachineResult;
         try {
             List<SpecPO> list = specAccessor.selectList(tenantCode);
             List<SpecDTO> dtoList = convert(list);
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<PageDTO<SpecDTO>> search(String tenantName, String specCode, String specName,
+    public TeaMachineResult<PageDTO<SpecDTO>> search(String tenantName, String specCode, String specName,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<SpecDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<SpecDTO>> teaMachineResult;
         try {
             PageInfo<SpecPO> pageInfo = specAccessor.search(tenantName, specCode, specName,
                     pageNum, pageSize);
             List<SpecDTO> dtoList = convert(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<SpecDTO> getByCode(String tenantCode, String specCode) {
-        LangTuoResult<SpecDTO> langTuoResult;
+    public TeaMachineResult<SpecDTO> getByCode(String tenantCode, String specCode) {
+        TeaMachineResult<SpecDTO> teaMachineResult;
         try {
             SpecPO po = specAccessor.selectOneByCode(tenantCode, specCode);
             SpecDTO dto = convert(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<SpecDTO> getByName(String tenantCode, String specName) {
-        LangTuoResult<SpecDTO> langTuoResult;
+    public TeaMachineResult<SpecDTO> getByName(String tenantCode, String specName) {
+        TeaMachineResult<SpecDTO> teaMachineResult;
         try {
             SpecPO po = specAccessor.selectOneByName(tenantCode, specName);
             SpecDTO dto = convert(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(SpecPutRequest request) {
+    public TeaMachineResult<Void> put(SpecPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         SpecPO specPO = convert(request);
         List<SpecItemPO> specItemPOList = convertToSpecItemPO(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             SpecPO exist = specAccessor.selectOneByCode(specPO.getTenantCode(), specPO.getSpecCode());
             if (exist != null) {
@@ -118,59 +118,59 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                 });
             }
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String specCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String specCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted4Spec = specAccessor.delete(tenantCode, specCode);
             int deleted4SpecSub = specItemAccessor.delete(tenantCode, specCode);
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<SpecItemDTO> getSpecItemByCode(String tenantCode, String specCode, String specItemCode) {
-        LangTuoResult<SpecItemDTO> langTuoResult;
+    public TeaMachineResult<SpecItemDTO> getSpecItemByCode(String tenantCode, String specCode, String specItemCode) {
+        TeaMachineResult<SpecItemDTO> teaMachineResult;
         try {
             SpecItemPO po = specItemAccessor.selectOne(tenantCode, specCode, specItemCode);
             SpecItemDTO dto = convert(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<SpecItemDTO>> listSpecItemBySpecCode(String tenantCode, String specCode) {
-        LangTuoResult<List<SpecItemDTO>> langTuoResult;
+    public TeaMachineResult<List<SpecItemDTO>> listSpecItemBySpecCode(String tenantCode, String specCode) {
+        TeaMachineResult<List<SpecItemDTO>> teaMachineResult;
         try {
             List<SpecItemPO> poList = specItemAccessor.selectList(tenantCode, specCode);
             List<SpecItemDTO> dtoList = convertToSpecItemDTO(poList);
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("listSpecItemBySpecCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private List<SpecDTO> convert(List<SpecPO> poList) {

@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.drink;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.TeaTypeDTO;
 import com.langtuo.teamachine.api.request.drink.TeaTypePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.TeaTypeMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,9 @@ public class TeaTypeController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{teatypecode}/get")
-    public LangTuoResult<TeaTypeDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<TeaTypeDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "teatypecode") String teaTypeCode) {
-        LangTuoResult<TeaTypeDTO> rtn = service.getByCode(tenantCode, teaTypeCode);
+        TeaMachineResult<TeaTypeDTO> rtn = service.getByCode(tenantCode, teaTypeCode);
         return rtn;
     }
 
@@ -33,8 +33,8 @@ public class TeaTypeController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<TeaTypeDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<TeaTypeDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<TeaTypeDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<TeaTypeDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -43,11 +43,11 @@ public class TeaTypeController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<TeaTypeDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<TeaTypeDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("teaTypeCode") String teaTypeCode,
             @RequestParam("teaTypeName") String teaTypeName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<TeaTypeDTO>> rtn = service.search(tenantCode, teaTypeCode, teaTypeName,
+        TeaMachineResult<PageDTO<TeaTypeDTO>> rtn = service.search(tenantCode, teaTypeCode, teaTypeName,
                 pageNum, pageSize);
         return rtn;
     }
@@ -57,8 +57,8 @@ public class TeaTypeController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody TeaTypePutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody TeaTypePutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -67,9 +67,9 @@ public class TeaTypeController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{teatypecode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "teatypecode") String teaTypeCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, teaTypeCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, teaTypeCode);
         return rtn;
     }
 }

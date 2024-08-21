@@ -8,7 +8,7 @@ import com.langtuo.teamachine.api.model.record.CleanActRecordDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.request.record.CleanActRecordPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.record.CleanActRecordMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
@@ -25,8 +25,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -44,26 +44,26 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
     private ShopMgtService shopMgtService;
 
     @Override
-    public LangTuoResult<CleanActRecordDTO> get(String tenantCode, String idempotentMark) {
-        LangTuoResult<CleanActRecordDTO> langTuoResult;
+    public TeaMachineResult<CleanActRecordDTO> get(String tenantCode, String idempotentMark) {
+        TeaMachineResult<CleanActRecordDTO> teaMachineResult;
         try {
             CleanActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
             CleanActRecordDTO dto = convert(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<PageDTO<CleanActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
+    public TeaMachineResult<PageDTO<CleanActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
             List<String> shopCodeList, int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<CleanActRecordDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<CleanActRecordDTO>> teaMachineResult;
         try {
             if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
                 List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
@@ -75,23 +75,23 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
             PageInfo<CleanActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
                     shopCodeList, pageNum, pageSize);
             List<CleanActRecordDTO> dtoList = convert(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(CleanActRecordPutRequest request) {
+    public TeaMachineResult<Void> put(CleanActRecordPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         CleanActRecordPO po = convert(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             CleanActRecordPO exist = accessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
@@ -100,29 +100,29 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
             }
             int inserted = accessor.insert(po);
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String idempotentMark) {
+    public TeaMachineResult<Void> delete(String tenantCode, String idempotentMark) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = accessor.delete(tenantCode, idempotentMark);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private List<CleanActRecordDTO> convert(List<CleanActRecordPO> poList) {

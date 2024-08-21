@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.service.shop;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.shop.ShopPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -13,48 +13,48 @@ public interface ShopMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<ShopDTO> getByCode(String tenantCode, String shopCode);
+    TeaMachineResult<ShopDTO> getByCode(String tenantCode, String shopCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<ShopDTO> getByName(String tenantCode, String shopName);
+    TeaMachineResult<ShopDTO> getByName(String tenantCode, String shopName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, String shopGroupName, int pageNum, int pageSize);
-
-    /**
-     *
-     * @param tenantCode
-     * @return
-     */
-    LangTuoResult<List<ShopDTO>> list(String tenantCode);
+    TeaMachineResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, String shopGroupName, int pageNum, int pageSize);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode);
+    TeaMachineResult<List<ShopDTO>> list(String tenantCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<ShopDTO>> listByAdminOrg(String tenantCode);
+    TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    TeaMachineResult<List<ShopDTO>> listByAdminOrg(String tenantCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(ShopPutRequest request);
+    TeaMachineResult<Void> put(ShopPutRequest request);
 
     /**
      *
@@ -62,7 +62,7 @@ public interface ShopMgtService {
      * @param shopCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String shopCode);
+    TeaMachineResult<Void> delete(String tenantCode, String shopCode);
 
     /**
      *
@@ -70,5 +70,5 @@ public interface ShopMgtService {
      * @param shopGroupCode
      * @return
      */
-    LangTuoResult<Integer> countByShopGroupCode(String tenantCode, String shopGroupCode);
+    TeaMachineResult<Integer> countByShopGroupCode(String tenantCode, String shopGroupCode);
 }

@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.service.record;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.DrainActRecordDTO;
 import com.langtuo.teamachine.api.request.record.DrainActRecordPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -14,13 +14,13 @@ public interface DrainActRecordMgtService {
      * @param idempotentMark
      * @return
      */
-    LangTuoResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark);
+    TeaMachineResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<DrainActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
+    TeaMachineResult<PageDTO<DrainActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
             List<String> shopCodeList, int pageNum, int pageSize);
 
     /**
@@ -28,7 +28,7 @@ public interface DrainActRecordMgtService {
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(DrainActRecordPutRequest request);
+    TeaMachineResult<Void> put(DrainActRecordPutRequest request);
 
     /**
      *
@@ -36,5 +36,5 @@ public interface DrainActRecordMgtService {
      * @param idempotentMark
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String idempotentMark);
+    TeaMachineResult<Void> delete(String tenantCode, String idempotentMark);
 }

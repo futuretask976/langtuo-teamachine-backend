@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.menu;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesDTO;
 import com.langtuo.teamachine.api.request.menu.SeriesPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,9 @@ public class SeriesController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{seriescode}/get")
-    public LangTuoResult<SeriesDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<SeriesDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "seriescode") String seriesCode) {
-        LangTuoResult<SeriesDTO> rtn = service.getByCode(tenantCode, seriesCode);
+        TeaMachineResult<SeriesDTO> rtn = service.getByCode(tenantCode, seriesCode);
         return rtn;
     }
 
@@ -33,8 +33,8 @@ public class SeriesController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<SeriesDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<SeriesDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<SeriesDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<SeriesDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -43,10 +43,10 @@ public class SeriesController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<SeriesDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<SeriesDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("seriesCode") String seriesCode, @RequestParam("seriesName") String seriesName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<SeriesDTO>> rtn = service.search(tenantCode, seriesCode, seriesName,
+        TeaMachineResult<PageDTO<SeriesDTO>> rtn = service.search(tenantCode, seriesCode, seriesName,
                 pageNum, pageSize);
         return rtn;
     }
@@ -56,8 +56,8 @@ public class SeriesController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody SeriesPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody SeriesPutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -66,9 +66,9 @@ public class SeriesController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{seriescode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "seriescode") String seriesCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, seriesCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, seriesCode);
         return rtn;
     }
 }

@@ -9,7 +9,7 @@ import com.langtuo.teamachine.api.model.rule.CleanRuleStepDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.rule.CleanRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.CleanRulePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -56,60 +56,60 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
-    public LangTuoResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
-        LangTuoResult<CleanRuleDTO> langTuoResult;
+    public TeaMachineResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
+        TeaMachineResult<CleanRuleDTO> teaMachineResult;
         try {
             CleanRulePO po = cleanRuleAccessor.selectOneByCode(tenantCode, cleanRuleCode);
             CleanRuleDTO dto = convert(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<CleanRuleDTO> getByName(String tenantCode, String cleanRuleName) {
-        LangTuoResult<CleanRuleDTO> langTuoResult;
+    public TeaMachineResult<CleanRuleDTO> getByName(String tenantCode, String cleanRuleName) {
+        TeaMachineResult<CleanRuleDTO> teaMachineResult;
         try {
             CleanRulePO po = cleanRuleAccessor.selectOneByName(tenantCode, cleanRuleName);
             CleanRuleDTO dto = convert(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<CleanRuleDTO>> list(String tenantCode) {
-        LangTuoResult<List<CleanRuleDTO>> langTuoResult;
+    public TeaMachineResult<List<CleanRuleDTO>> list(String tenantCode) {
+        TeaMachineResult<List<CleanRuleDTO>> teaMachineResult;
         try {
             List<CleanRulePO> cleanRulePOList = cleanRuleAccessor.selectList(tenantCode);
             List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
-            langTuoResult = LangTuoResult.success(cleanRuleDTOList);
+            teaMachineResult = TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
-        LangTuoResult<List<CleanRuleDTO>> langTuoResult;
+    public TeaMachineResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
+        TeaMachineResult<List<CleanRuleDTO>> teaMachineResult;
         try {
             ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
             if (shopDTO == null) {
-                langTuoResult = LangTuoResult.success();
+                teaMachineResult = TeaMachineResult.success();
             }
 
             List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.selectListByShopGroupCode(
                     tenantCode, shopDTO.getShopGroupCode());
             if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
-                langTuoResult = LangTuoResult.success();
+                teaMachineResult = TeaMachineResult.success();
             }
 
             List<String> cleanRuleCodeList = cleanRuleDispatchPOList.stream()
@@ -118,45 +118,45 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             List<CleanRulePO> cleanRulePOList = cleanRuleAccessor.selectListByCleanRuleCode(tenantCode,
                     cleanRuleCodeList);
             List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
-            langTuoResult = LangTuoResult.success(cleanRuleDTOList);
+            teaMachineResult = TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<PageDTO<CleanRuleDTO>> search(String tenantCode, String cleanRuleCode, String cleanRuleName,
+    public TeaMachineResult<PageDTO<CleanRuleDTO>> search(String tenantCode, String cleanRuleCode, String cleanRuleName,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<CleanRuleDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<CleanRuleDTO>> teaMachineResult;
         try {
             PageInfo<CleanRulePO> pageInfo = cleanRuleAccessor.search(tenantCode, cleanRuleCode, cleanRuleName,
                     pageNum, pageSize);
             List<CleanRuleDTO> dtoList = convertToCleanRuleDTO(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(CleanRulePutRequest request) {
+    public TeaMachineResult<Void> put(CleanRulePutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         CleanRulePO cleanRulePO = convertToCleanRulePO(request);
         List<CleanRuleStepPO> cleanRuleStepPOList = convertToCleanRuleStepPO(request);
         List<CleanRuleExceptPO> cleanRuleExceptPOList = convertToCleanRuleExceptPO(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             CleanRulePO exist = cleanRuleAccessor.selectOneByCode(cleanRulePO.getTenantCode(),
                     cleanRulePO.getCleanRuleCode());
@@ -180,41 +180,41 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                 });
             }
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String cleanRuleCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String cleanRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = cleanRuleAccessor.delete(tenantCode, cleanRuleCode);
             int deleted4Step = cleanRuleStepAccessor.delete(tenantCode, cleanRuleCode);
             int deleted4Except = cleanRuleExceptAccessor.delete(tenantCode, cleanRuleCode);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> putDispatch(CleanRuleDispatchPutRequest request) {
+    public TeaMachineResult<Void> putDispatch(CleanRuleDispatchPutRequest request) {
         if (request == null) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         List<CleanRuleDispatchPO> poList = convert(request);
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = cleanRuleDispatchAccessor.delete(request.getTenantCode(),
                     request.getCleanRuleCode());
@@ -222,22 +222,22 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                 cleanRuleDispatchAccessor.insert(po);
             });
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("putDispatch error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
 
         // 异步发送消息准备配置信息分发
         mqttPublisher4Console.send4CleanRule(
                 request.getTenantCode(), request.getCleanRuleCode());
 
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<CleanRuleDispatchDTO> getDispatchByCode(String tenantCode, String cleanRuleCode) {
-        LangTuoResult<CleanRuleDispatchDTO> langTuoResult;
+    public TeaMachineResult<CleanRuleDispatchDTO> getDispatchByCode(String tenantCode, String cleanRuleCode) {
+        TeaMachineResult<CleanRuleDispatchDTO> teaMachineResult;
         try {
             CleanRuleDispatchDTO dto = new CleanRuleDispatchDTO();
             dto.setCleanRuleCode(cleanRuleCode);
@@ -249,12 +249,12 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                         .collect(Collectors.toList()));
             }
 
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getDispatchByCleanRuleCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private List<CleanRuleDTO> convertToCleanRuleDTO(List<CleanRulePO> poList) {

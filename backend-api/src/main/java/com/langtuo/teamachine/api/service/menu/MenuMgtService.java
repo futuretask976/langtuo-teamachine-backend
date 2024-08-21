@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.model.menu.MenuDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
 import com.langtuo.teamachine.api.request.menu.MenuDispatchPutRequest;
 import com.langtuo.teamachine.api.request.menu.MenuPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -15,20 +15,20 @@ public interface MenuMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<MenuDTO> getByCode(String tenantCode, String menuCode);
+    TeaMachineResult<MenuDTO> getByCode(String tenantCode, String menuCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<MenuDTO> getByName(String tenantCode, String menuName);
+    TeaMachineResult<MenuDTO> getByName(String tenantCode, String menuName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<MenuDTO>> search(String tenantCode, String menuCode, String menuName,
+    TeaMachineResult<PageDTO<MenuDTO>> search(String tenantCode, String menuCode, String menuName,
             int pageNum, int pageSize);
 
     /**
@@ -36,28 +36,28 @@ public interface MenuMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<MenuDTO>> list(String tenantCode);
+    TeaMachineResult<List<MenuDTO>> list(String tenantCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode);
+    TeaMachineResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode);
+    TeaMachineResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(MenuPutRequest request);
+    TeaMachineResult<Void> put(MenuPutRequest request);
 
     /**
      *
@@ -65,19 +65,19 @@ public interface MenuMgtService {
      * @param menuCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String menuCode);
+    TeaMachineResult<Void> delete(String tenantCode, String menuCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> putDispatch(MenuDispatchPutRequest request);
+    TeaMachineResult<Void> putDispatch(MenuDispatchPutRequest request);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<MenuDispatchDTO> getDispatchByCode(String tenantCode, String menuCode);
+    TeaMachineResult<MenuDispatchDTO> getDispatchByCode(String tenantCode, String menuCode);
 }

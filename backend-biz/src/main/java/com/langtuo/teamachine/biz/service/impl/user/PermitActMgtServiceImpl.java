@@ -2,7 +2,7 @@ package com.langtuo.teamachine.biz.service.impl.user;
 
 import com.langtuo.teamachine.api.model.user.PermitActDTO;
 import com.langtuo.teamachine.api.model.user.PermitActGroupDTO;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.PermitActMgtService;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.po.user.PermitActGroupPO;
@@ -21,7 +21,7 @@ public class PermitActMgtServiceImpl implements PermitActMgtService {
     private PermitActAccessor permitActAccessor;
 
     @Override
-    public LangTuoResult<List<PermitActGroupDTO>> listPermitActGroup() {
+    public TeaMachineResult<List<PermitActGroupDTO>> listPermitActGroup() {
         List<PermitActGroupDTO> list = Lists.newArrayList();
         for (PermitActGroupPO po : permitActAccessor.selectPermitActGroupList()) {
             PermitActGroupDTO permitActGroup = convert(po);
@@ -30,17 +30,17 @@ public class PermitActMgtServiceImpl implements PermitActMgtService {
             permitActGroup.setPermitActList(permitActList);
             list.add(permitActGroup);
         }
-        return LangTuoResult.success(list);
+        return TeaMachineResult.success(list);
     }
 
     @Override
-    public LangTuoResult<List<PermitActDTO>> listPermitAct() {
+    public TeaMachineResult<List<PermitActDTO>> listPermitAct() {
         List<PermitActDTO> list = Lists.newArrayList();
         for (PermitActPO po : permitActAccessor.selectPermitActList()) {
             PermitActDTO permitAct = convert(po);
             list.add(permitAct);
         }
-        return LangTuoResult.success(list);
+        return TeaMachineResult.success(list);
     }
 
     private PermitActGroupDTO convert(PermitActGroupPO permitActGroupPO) {

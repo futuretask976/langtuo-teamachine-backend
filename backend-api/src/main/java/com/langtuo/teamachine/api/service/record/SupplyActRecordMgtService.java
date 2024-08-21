@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.service.record;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.SupplyActRecordDTO;
 import com.langtuo.teamachine.api.request.record.SupplyActRecordPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -14,13 +14,13 @@ public interface SupplyActRecordMgtService {
      * @param idempotentMark
      * @return
      */
-    LangTuoResult<SupplyActRecordDTO> get(String tenantCode, String idempotentMark);
+    TeaMachineResult<SupplyActRecordDTO> get(String tenantCode, String idempotentMark);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
+    TeaMachineResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
             List<String> shopCodeList, int pageNum, int pageSize);
 
     /**
@@ -28,7 +28,7 @@ public interface SupplyActRecordMgtService {
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(SupplyActRecordPutRequest request);
+    TeaMachineResult<Void> put(SupplyActRecordPutRequest request);
 
     /**
      *
@@ -36,5 +36,5 @@ public interface SupplyActRecordMgtService {
      * @param idempotentMark
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String idempotentMark);
+    TeaMachineResult<Void> delete(String tenantCode, String idempotentMark);
 }

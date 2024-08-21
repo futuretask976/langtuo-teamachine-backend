@@ -7,7 +7,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.request.shop.ShopGroupPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
@@ -27,8 +27,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -46,77 +46,77 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     private OrgMgtService orgMgtService;
 
     @Override
-    public LangTuoResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode) {
+    public TeaMachineResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode) {
         ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByCode(tenantCode, shopGroupCode);
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
-        return LangTuoResult.success(shopGroupDTO);
+        return TeaMachineResult.success(shopGroupDTO);
     }
 
     @Override
-    public LangTuoResult<ShopGroupDTO> getByName(String tenantCode, String shopGroupName) {
+    public TeaMachineResult<ShopGroupDTO> getByName(String tenantCode, String shopGroupName) {
         ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByName(tenantCode, shopGroupName);
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
-        return LangTuoResult.success(shopGroupDTO);
+        return TeaMachineResult.success(shopGroupDTO);
     }
 
     @Override
-    public LangTuoResult<PageDTO<ShopGroupDTO>> search(String tenantCode, String shopGroupName,
+    public TeaMachineResult<PageDTO<ShopGroupDTO>> search(String tenantCode, String shopGroupName,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<ShopGroupDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<ShopGroupDTO>> teaMachineResult;
         try {
             PageInfo<ShopGroupPO> pageInfo = shopGroupAccessor.search(tenantCode, shopGroupName,
                     pageNum, pageSize);
             List<ShopGroupDTO> dtoList = convert(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<ShopGroupDTO>> list(String tenantCode) {
-        LangTuoResult<List<ShopGroupDTO>> langTuoResult;
+    public TeaMachineResult<List<ShopGroupDTO>> list(String tenantCode) {
+        TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.selectList(tenantCode);
             List<ShopGroupDTO> dtoList = convert(list);
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode) {
-        LangTuoResult<List<ShopGroupDTO>> langTuoResult;
+    public TeaMachineResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode) {
+        TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.selectListByOrgNameList(
                     tenantCode, getAdminOrgNameList(tenantCode));
             List<ShopGroupDTO> dtoList = convert(list);
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(ShopGroupPutRequest request) {
+    public TeaMachineResult<Void> put(ShopGroupPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         ShopGroupPO shopGroupPO = convert(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             ShopGroupPO exist = shopGroupAccessor.selectOneByCode(request.getTenantCode(), request.getShopGroupCode());
             if (exist != null) {
@@ -124,29 +124,29 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             } else {
                 int inserted = shopGroupAccessor.insert(shopGroupPO);
             }
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String shopGroupCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String shopGroupCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = shopGroupAccessor.delete(tenantCode, shopGroupCode);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private List<ShopGroupDTO> convert(List<ShopGroupPO> poList) {

@@ -7,7 +7,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.*;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.*;
 
 @Component
 @Slf4j
@@ -47,60 +47,60 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     private ShopMgtService shopMgtService;
 
     @Override
-    public LangTuoResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
+    public TeaMachineResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
             String shopName, Integer state, int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<DeployDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<DeployDTO>> teaMachineResult;
         try {
             PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
                     shopName, state, pageNum, pageSize);
             List<DeployDTO> dtoList = convertToDeployDTO(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode) {
-        LangTuoResult<DeployDTO> langTuoResult;
+    public TeaMachineResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode) {
+        TeaMachineResult<DeployDTO> teaMachineResult;
         try {
             DeployDTO dto = convertToDeployDTO(deployAccessor.selectOneByDeployCode(tenantCode, deployCode));
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode) {
-        LangTuoResult<DeployDTO> langTuoResult;
+    public TeaMachineResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode) {
+        TeaMachineResult<DeployDTO> teaMachineResult;
         try {
             DeployDTO dto = convertToDeployDTO(deployAccessor.selectOneByMachineCode(tenantCode, machineCode));
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(DeployPutRequest request) {
+    public TeaMachineResult<Void> put(DeployPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         DeployPO deployPO = convertToDeployDTO(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             DeployPO exist = deployAccessor.selectOneByDeployCode(deployPO.getTenantCode(), deployPO.getDeployCode());
             if (exist != null) {
@@ -108,47 +108,47 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             } else {
                 int inserted = deployAccessor.insert(deployPO);
             }
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String deployCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String deployCode) {
         if (StringUtils.isEmpty(tenantCode) || StringUtils.isBlank(deployCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = deployAccessor.delete(tenantCode, deployCode);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<String> generateDeployCode() {
-        LangTuoResult<String> langTuoResult;
+    public TeaMachineResult<String> generateDeployCode() {
+        TeaMachineResult<String> teaMachineResult;
         try {
             String deployCode = DeployUtils.genRandomStr(20);
-            langTuoResult = LangTuoResult.success(deployCode);
+            teaMachineResult = TeaMachineResult.success(deployCode);
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<String> generateMachineCode() {
-        LangTuoResult<String> langTuoResult;
+    public TeaMachineResult<String> generateMachineCode() {
+        TeaMachineResult<String> teaMachineResult;
         try {
             long machineCodeSeqVal = deployAccessor.getMachineCodeNextSeqVal();
             String machineCode = String.valueOf(machineCodeSeqVal);
@@ -166,15 +166,15 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             String formattedDate = sdf.format(calendar.getTime());
             machineCode = formattedDate + machineCode;
 
-            langTuoResult = LangTuoResult.success(machineCode);
+            teaMachineResult = TeaMachineResult.success(machineCode);
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
-    public LangTuoResult<XSSFWorkbook> exportByExcel(String tenantCode) {
+    public TeaMachineResult<XSSFWorkbook> exportByExcel(String tenantCode) {
         // 创建一个新的工作簿
         XSSFWorkbook workbook = new XSSFWorkbook();
         // 创建一个工作表
@@ -231,7 +231,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             cell4State.setCellValue(deployPO.getState() == BizConsts.DEPLOY_STATE_DISABLED ?
                     BizConsts.DEPLOY_STATE_DISABLED_LABEL : BizConsts.DEPLOY_STATE_ENABLED_LABEL);
         }
-        return LangTuoResult.success(workbook);
+        return TeaMachineResult.success(workbook);
     }
 
     private DeployPO convertToDeployDTO(DeployPutRequest request) {

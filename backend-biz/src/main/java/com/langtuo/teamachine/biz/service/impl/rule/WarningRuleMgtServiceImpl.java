@@ -8,7 +8,7 @@ import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.rule.WarningRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.WarningRulePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
@@ -26,7 +26,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -44,60 +44,60 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
-    public LangTuoResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
-        LangTuoResult<WarningRuleDTO> langTuoResult;
+    public TeaMachineResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
+        TeaMachineResult<WarningRuleDTO> teaMachineResult;
         try {
             WarningRulePO po = warningRuleAccessor.selectOneByCode(tenantCode, warningRuleCode);
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName) {
-        LangTuoResult<WarningRuleDTO> langTuoResult;
+    public TeaMachineResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName) {
+        TeaMachineResult<WarningRuleDTO> teaMachineResult;
         try {
             WarningRulePO po = warningRuleAccessor.selectOneByName(tenantCode, warningRuleName);
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<WarningRuleDTO>> list(String tenantCode) {
-        LangTuoResult<List<WarningRuleDTO>> langTuoResult;
+    public TeaMachineResult<List<WarningRuleDTO>> list(String tenantCode) {
+        TeaMachineResult<List<WarningRuleDTO>> teaMachineResult;
         try {
             List<WarningRulePO> poList = warningRuleAccessor.selectList(tenantCode);
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(poList);
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<WarningRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
-        LangTuoResult<List<WarningRuleDTO>> langTuoResult;
+    public TeaMachineResult<List<WarningRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
+        TeaMachineResult<List<WarningRuleDTO>> teaMachineResult;
         try {
             ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
             if (shopDTO == null) {
-                langTuoResult = LangTuoResult.success();
+                teaMachineResult = TeaMachineResult.success();
             }
 
             List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.selectListByShopGroupCode(
                     tenantCode, shopDTO.getShopGroupCode());
             if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
-                langTuoResult = LangTuoResult.success();
+                teaMachineResult = TeaMachineResult.success();
             }
 
             List<String> warningRuleCodeList = warningRuleDispatchPOList.stream()
@@ -106,42 +106,42 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRulePO> warningRulePOList = warningRuleAccessor.selectListByWarningRuleCode(tenantCode,
                     warningRuleCodeList);
             List<WarningRuleDTO> drainRuleDTOList = convertToWarningRuleDTO(warningRulePOList);
-            langTuoResult = LangTuoResult.success(drainRuleDTOList);
+            teaMachineResult = TeaMachineResult.success(drainRuleDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<PageDTO<WarningRuleDTO>> search(String tenantCode, String warningRuleCode,
+    public TeaMachineResult<PageDTO<WarningRuleDTO>> search(String tenantCode, String warningRuleCode,
             String warningRuleName, int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<WarningRuleDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<WarningRuleDTO>> teaMachineResult;
         try {
             PageInfo<WarningRulePO> pageInfo = warningRuleAccessor.search(tenantCode, warningRuleCode,
                     warningRuleName, pageNum, pageSize);
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(WarningRulePutRequest request) {
+    public TeaMachineResult<Void> put(WarningRulePutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         WarningRulePO warningRulePO = convertToWarningRuleDTO(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             WarningRulePO exist = warningRuleAccessor.selectOneByCode(warningRulePO.getTenantCode(),
                     warningRulePO.getWarningRuleCode());
@@ -151,39 +151,39 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
                 int inserted = warningRuleAccessor.insert(warningRulePO);
             }
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String warningRuleCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String warningRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = warningRuleAccessor.delete(tenantCode, warningRuleCode);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> putDispatch(WarningRuleDispatchPutRequest request) {
+    public TeaMachineResult<Void> putDispatch(WarningRuleDispatchPutRequest request) {
         if (request == null) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         List<WarningRuleDispatchPO> poList = convertToWarningRuleDTO(request);
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = warningRuleDispatchAccessor.delete(request.getTenantCode(),
                     request.getWarningRuleCode());
@@ -191,22 +191,22 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
                 warningRuleDispatchAccessor.insert(po);
             });
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("putDispatch error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
 
         // 异步发送消息准备配置信息分发
         mqttPublisher4Console.send4WarningRule(
                 request.getTenantCode(), request.getWarningRuleCode());
 
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<WarningRuleDispatchDTO> getDispatchByCode(String tenantCode, String warningRuleCode) {
-        LangTuoResult<WarningRuleDispatchDTO> langTuoResult;
+    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByCode(String tenantCode, String warningRuleCode) {
+        TeaMachineResult<WarningRuleDispatchDTO> teaMachineResult;
         try {
             WarningRuleDispatchDTO dto = new WarningRuleDispatchDTO();
             dto.setWarningRuleCode(warningRuleCode);
@@ -218,12 +218,12 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
                         .collect(Collectors.toList()));
             }
 
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getDispatchByWarningRuleCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private List<WarningRuleDTO> convertToWarningRuleDTO(List<WarningRulePO> poList) {

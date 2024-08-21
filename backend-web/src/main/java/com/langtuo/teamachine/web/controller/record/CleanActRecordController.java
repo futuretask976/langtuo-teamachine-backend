@@ -2,7 +2,7 @@ package com.langtuo.teamachine.web.controller.record;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.CleanActRecordDTO;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.CleanActRecordMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +20,9 @@ public class CleanActRecordController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{idempotentmark}/get")
-    public LangTuoResult<CleanActRecordDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<CleanActRecordDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "idempotentmark") String idempotentMark) {
-        LangTuoResult<CleanActRecordDTO> rtn = service.get(tenantCode, idempotentMark);
+        TeaMachineResult<CleanActRecordDTO> rtn = service.get(tenantCode, idempotentMark);
         return rtn;
     }
 
@@ -31,11 +31,11 @@ public class CleanActRecordController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<CleanActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<CleanActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopGroupCodeList") List<String> shopGroupCodeList,
             @RequestParam("shopCodeList") List<String> shopCodeList,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<CleanActRecordDTO>> rtn = service.search(tenantCode, shopGroupCodeList, shopCodeList,
+        TeaMachineResult<PageDTO<CleanActRecordDTO>> rtn = service.search(tenantCode, shopGroupCodeList, shopCodeList,
                 pageNum, pageSize);
         return rtn;
     }
@@ -45,9 +45,9 @@ public class CleanActRecordController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{idempotentmark}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "idempotentmark") String idempotentMark) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, idempotentMark);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, idempotentMark);
         return rtn;
     }
 }

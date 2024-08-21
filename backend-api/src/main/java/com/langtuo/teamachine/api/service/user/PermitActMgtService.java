@@ -2,7 +2,7 @@ package com.langtuo.teamachine.api.service.user;
 
 import com.langtuo.teamachine.api.model.user.PermitActDTO;
 import com.langtuo.teamachine.api.model.user.PermitActGroupDTO;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ public interface PermitActMgtService {
      *
      * @return
      */
-    LangTuoResult<List<PermitActGroupDTO>> listPermitActGroup();
+    TeaMachineResult<List<PermitActGroupDTO>> listPermitActGroup();
 
     /**
      *
      * @return
      */
-    LangTuoResult<List<PermitActDTO>> listPermitAct();
+    TeaMachineResult<List<PermitActDTO>> listPermitAct();
 }

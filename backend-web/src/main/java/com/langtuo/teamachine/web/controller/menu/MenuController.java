@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.model.menu.MenuDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
 import com.langtuo.teamachine.api.request.menu.MenuDispatchPutRequest;
 import com.langtuo.teamachine.api.request.menu.MenuPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +23,9 @@ public class MenuController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{menucode}/get")
-    public LangTuoResult<MenuDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<MenuDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "menucode") String menuCode) {
-        LangTuoResult<MenuDTO> rtn = service.getByCode(tenantCode, menuCode);
+        TeaMachineResult<MenuDTO> rtn = service.getByCode(tenantCode, menuCode);
         return rtn;
     }
 
@@ -35,8 +35,8 @@ public class MenuController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<MenuDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<MenuDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<MenuDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<MenuDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -46,9 +46,9 @@ public class MenuController {
      * @return
      */
     @GetMapping(value = "/trigger")
-    public LangTuoResult<Void> trigger(@RequestParam("tenantCode") String tenantCode
+    public TeaMachineResult<Void> trigger(@RequestParam("tenantCode") String tenantCode
             , @RequestParam("shopCode") String shopCode, @RequestParam("machineCode") String machineCode) {
-        LangTuoResult<Void> rtn = service.triggerDispatchByShopCode(tenantCode, shopCode, machineCode);
+        TeaMachineResult<Void> rtn = service.triggerDispatchByShopCode(tenantCode, shopCode, machineCode);
         return rtn;
     }
 
@@ -57,10 +57,10 @@ public class MenuController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<MenuDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<MenuDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("menuCode") String menuCode, @RequestParam("menuName") String menuName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<MenuDTO>> rtn = service.search(tenantCode, menuCode, menuName,
+        TeaMachineResult<PageDTO<MenuDTO>> rtn = service.search(tenantCode, menuCode, menuName,
                 pageNum, pageSize);
         return rtn;
     }
@@ -70,8 +70,8 @@ public class MenuController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody MenuPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody MenuPutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -80,9 +80,9 @@ public class MenuController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{menucode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "menucode") String menuCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, menuCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, menuCode);
         return rtn;
     }
 
@@ -91,8 +91,8 @@ public class MenuController {
      * @return
      */
     @PutMapping(value = "/dispatch/put")
-    public LangTuoResult<Void> putDispatch(@RequestBody MenuDispatchPutRequest request) {
-        LangTuoResult<Void> rtn = service.putDispatch(request);
+    public TeaMachineResult<Void> putDispatch(@RequestBody MenuDispatchPutRequest request) {
+        TeaMachineResult<Void> rtn = service.putDispatch(request);
         return rtn;
     }
 
@@ -102,9 +102,9 @@ public class MenuController {
      * @return
      */
     @GetMapping(value = "/dispatch/{tenantcode}/{menucode}/get")
-    public LangTuoResult<MenuDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<MenuDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "menucode") String menuCode) {
-        LangTuoResult<MenuDispatchDTO> rtn = service.getDispatchByCode(tenantCode, menuCode);
+        TeaMachineResult<MenuDispatchDTO> rtn = service.getDispatchByCode(tenantCode, menuCode);
         return rtn;
     }
 }

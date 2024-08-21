@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
 import com.langtuo.teamachine.api.request.rule.WarningRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.WarningRulePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -15,20 +15,20 @@ public interface WarningRuleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode);
+    TeaMachineResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName);
+    TeaMachineResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<WarningRuleDTO>> search(String tenantCode, String warningRuleCode, String warningRuleName,
+    TeaMachineResult<PageDTO<WarningRuleDTO>> search(String tenantCode, String warningRuleCode, String warningRuleName,
             int pageNum, int pageSize);
 
     /**
@@ -36,21 +36,21 @@ public interface WarningRuleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<WarningRuleDTO>> list(String tenantCode);
+    TeaMachineResult<List<WarningRuleDTO>> list(String tenantCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<WarningRuleDTO>> listByShopCode(String tenantCode, String shopCode);
+    TeaMachineResult<List<WarningRuleDTO>> listByShopCode(String tenantCode, String shopCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(WarningRulePutRequest request);
+    TeaMachineResult<Void> put(WarningRulePutRequest request);
 
     /**
      *
@@ -58,19 +58,19 @@ public interface WarningRuleMgtService {
      * @param warningRuleCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String warningRuleCode);
+    TeaMachineResult<Void> delete(String tenantCode, String warningRuleCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> putDispatch(WarningRuleDispatchPutRequest request);
+    TeaMachineResult<Void> putDispatch(WarningRuleDispatchPutRequest request);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<WarningRuleDispatchDTO> getDispatchByCode(String tenantCode, String warningRuleCode);
+    TeaMachineResult<WarningRuleDispatchDTO> getDispatchByCode(String tenantCode, String warningRuleCode);
 }

@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.request.drink.AccuracyTplPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplAccessor;
@@ -36,80 +36,80 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
-    public LangTuoResult<List<AccuracyTplDTO>> list(String tenantCode) {
-        LangTuoResult<List<AccuracyTplDTO>> langTuoResult;
+    public TeaMachineResult<List<AccuracyTplDTO>> list(String tenantCode) {
+        TeaMachineResult<List<AccuracyTplDTO>> teaMachineResult;
         try {
             List<AccuracyTplPO> list = accuracyTplAccessor.selectList(tenantCode);
             List<AccuracyTplDTO> dtoList = list.stream()
                     .map(po -> convertToAccuracyTplPO(po))
                     .collect(Collectors.toList());
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<PageDTO<AccuracyTplDTO>> search(String tenantName, String templateCode, String templateName,
+    public TeaMachineResult<PageDTO<AccuracyTplDTO>> search(String tenantName, String templateCode, String templateName,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<AccuracyTplDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<AccuracyTplDTO>> teaMachineResult;
         try {
             PageInfo<AccuracyTplPO> pageInfo = accuracyTplAccessor.search(tenantName, templateCode, templateName,
                     pageNum, pageSize);
             List<AccuracyTplDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convertToAccuracyTplPO(po))
                     .collect(Collectors.toList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<AccuracyTplDTO> getByCode(String tenantCode, String specCode) {
-        LangTuoResult<AccuracyTplDTO> langTuoResult;
+    public TeaMachineResult<AccuracyTplDTO> getByCode(String tenantCode, String specCode) {
+        TeaMachineResult<AccuracyTplDTO> teaMachineResult;
         try {
             AccuracyTplPO po = accuracyTplAccessor.selectOneByCode(tenantCode, specCode);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<AccuracyTplDTO> getByName(String tenantCode, String specName) {
-        LangTuoResult<AccuracyTplDTO> langTuoResult;
+    public TeaMachineResult<AccuracyTplDTO> getByName(String tenantCode, String specName) {
+        TeaMachineResult<AccuracyTplDTO> teaMachineResult;
         try {
             AccuracyTplPO po = accuracyTplAccessor.selectOneByName(tenantCode, specName);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(AccuracyTplPutRequest request) {
+    public TeaMachineResult<Void> put(AccuracyTplPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
         AccuracyTplPO po = convertToAccuracyTplPO(request);
         List<AccuracyTplToppingPO> toppingPOList = convertToAccuracyTplToppingPO(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             AccuracyTplPO exist = accuracyTplAccessor.selectOneByCode(po.getTenantCode(), po.getTemplateCode());
             if (exist != null) {
@@ -124,33 +124,33 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
                     int inserted = accuracyTplToppingAccessor.insert(toppingPO);
                 });
             }
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
 
         // 异步发送消息准备配置信息分发
         mqttPublisher4Console.send4AccuracyTpl(request.getTenantCode(), request.getTemplateCode());
 
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String templateCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String templateCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = accuracyTplAccessor.delete(tenantCode, templateCode);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private AccuracyTplDTO convertToAccuracyTplPO(AccuracyTplPO po) {

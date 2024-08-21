@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.OrgPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
@@ -27,89 +27,89 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     private OrgAccessor orgAccessor;
 
     @Override
-    public LangTuoResult<OrgDTO> getTop(String tenantCode) {
-        LangTuoResult<OrgDTO> langTuoResult;
+    public TeaMachineResult<OrgDTO> getTop(String tenantCode) {
+        TeaMachineResult<OrgDTO> teaMachineResult;
         try {
             OrgNode orgNode = orgAccessor.findTopOrgNode(tenantCode);
-            langTuoResult = LangTuoResult.success(convert(orgNode));
+            teaMachineResult = TeaMachineResult.success(convert(orgNode));
         } catch (Exception e) {
             log.error("listByDepth error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<OrgDTO>> listByParent(String tenantCode, String orgName) {
-        LangTuoResult<List<OrgDTO>> langTuoResult;
+    public TeaMachineResult<List<OrgDTO>> listByParent(String tenantCode, String orgName) {
+        TeaMachineResult<List<OrgDTO>> teaMachineResult;
         try {
             List<OrgNode> orgNodeList = orgAccessor.selectListByParent(tenantCode, orgName);
-            langTuoResult = LangTuoResult.success(convert(orgNodeList));
+            teaMachineResult = TeaMachineResult.success(convert(orgNodeList));
         } catch (Exception e) {
             log.error("listByDepth error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<OrgDTO>> list(String tenantCode) {
-        LangTuoResult<List<OrgDTO>> langTuoResult;
+    public TeaMachineResult<List<OrgDTO>> list(String tenantCode) {
+        TeaMachineResult<List<OrgDTO>> teaMachineResult;
         try {
             List<OrgNode> nodeList = orgAccessor.selectList(tenantCode);
             List<OrgDTO> dtoList = convert(nodeList);
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<PageDTO<OrgDTO>> search(String tenantCode, String orgName,
+    public TeaMachineResult<PageDTO<OrgDTO>> search(String tenantCode, String orgName,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<OrgDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<OrgDTO>> teaMachineResult;
         try {
             PageInfo<OrgNode> pageInfo = orgAccessor.search(tenantCode, orgName, pageNum, pageSize);
             List<OrgDTO> dtoList = convert(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<OrgDTO> get(String tenantCode, String orgName) {
-        LangTuoResult<OrgDTO> langTuoResult;
+    public TeaMachineResult<OrgDTO> get(String tenantCode, String orgName) {
+        TeaMachineResult<OrgDTO> teaMachineResult;
         try {
             OrgNode orgNode = orgAccessor.selectOne(tenantCode, orgName);
             OrgDTO orgDTO = convert(orgNode);
-            langTuoResult = LangTuoResult.success(orgDTO);
+            teaMachineResult = TeaMachineResult.success(orgDTO);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(OrgPutRequest request) {
+    public TeaMachineResult<Void> put(OrgPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         String tenantCode = request.getTenantCode();
         String orgName = request.getOrgName();
         OrgNode orgNode = convert(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             OrgNode exist = orgAccessor.selectOne(tenantCode, orgName);
             if (exist != null) {
@@ -117,29 +117,29 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             } else {
                 int inserted = orgAccessor.insert(orgNode);
             }
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String orgName) {
+    public TeaMachineResult<Void> delete(String tenantCode, String orgName) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = orgAccessor.delete(tenantCode, orgName);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private List<OrgDTO> convert(List<OrgNode> poList) {

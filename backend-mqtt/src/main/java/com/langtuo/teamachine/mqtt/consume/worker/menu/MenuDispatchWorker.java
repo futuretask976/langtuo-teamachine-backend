@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.*;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.*;
 
 @Slf4j
 public class MenuDispatchWorker implements Runnable {

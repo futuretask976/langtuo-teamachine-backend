@@ -3,10 +3,8 @@ package com.langtuo.teamachine.api.service.device;
 import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.util.List;
 
 public interface DeployMgtService {
     /**
@@ -15,7 +13,7 @@ public interface DeployMgtService {
      * @param deployCode
      * @return
      */
-    LangTuoResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode);
+    TeaMachineResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode);
 
     /**
      *
@@ -23,13 +21,13 @@ public interface DeployMgtService {
      * @param machineCode
      * @return
      */
-    LangTuoResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode);
+    TeaMachineResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
+    TeaMachineResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
             String shopName, Integer state, int pageNum, int pageSize);
 
     /**
@@ -37,7 +35,7 @@ public interface DeployMgtService {
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(DeployPutRequest request);
+    TeaMachineResult<Void> put(DeployPutRequest request);
 
     /**
      *
@@ -45,24 +43,24 @@ public interface DeployMgtService {
      * @param deployCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String deployCode);
+    TeaMachineResult<Void> delete(String tenantCode, String deployCode);
 
     /**
      *
      * @return
      */
-    LangTuoResult<String> generateDeployCode();
+    TeaMachineResult<String> generateDeployCode();
 
     /**
      *
      * @return
      */
-    LangTuoResult<String> generateMachineCode();
+    TeaMachineResult<String> generateMachineCode();
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<XSSFWorkbook> exportByExcel(String tenantCode);
+    TeaMachineResult<XSSFWorkbook> exportByExcel(String tenantCode);
 }

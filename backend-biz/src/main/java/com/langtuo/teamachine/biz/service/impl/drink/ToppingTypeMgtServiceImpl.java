@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.ToppingTypeDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingTypePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.drink.ToppingTypeMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -31,29 +31,29 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     private ToppingMgtService toppingMgtService;
 
     @Override
-    public LangTuoResult<List<ToppingTypeDTO>> list(String tenantCode) {
-        LangTuoResult<List<ToppingTypeDTO>> langTuoResult;
+    public TeaMachineResult<List<ToppingTypeDTO>> list(String tenantCode) {
+        TeaMachineResult<List<ToppingTypeDTO>> teaMachineResult;
         try {
             List<ToppingTypePO> list = accessor.selectList(tenantCode);
             List<ToppingTypeDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<PageDTO<ToppingTypeDTO>> search(String tenantName, String toppingTypeCode,
+    public TeaMachineResult<PageDTO<ToppingTypeDTO>> search(String tenantName, String toppingTypeCode,
             String toppingTypeName, int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<ToppingTypeDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<ToppingTypeDTO>> teaMachineResult;
         try {
             PageInfo<ToppingTypePO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
@@ -61,54 +61,54 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<ToppingTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
-        LangTuoResult<ToppingTypeDTO> langTuoResult;
+    public TeaMachineResult<ToppingTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
+        TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
             ToppingTypePO toppingTypePO = accessor.selectOneByCode(tenantCode, toppingTypeCode);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
 
-            langTuoResult = LangTuoResult.success(tenantDTO);
+            teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<ToppingTypeDTO> getByName(String tenantCode, String toppingTypeName) {
-        LangTuoResult<ToppingTypeDTO> langTuoResult;
+    public TeaMachineResult<ToppingTypeDTO> getByName(String tenantCode, String toppingTypeName) {
+        TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
             ToppingTypePO toppingTypePO = accessor.selectOneByName(tenantCode, toppingTypeName);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
 
-            langTuoResult = LangTuoResult.success(tenantDTO);
+            teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(ToppingTypePutRequest request) {
+    public TeaMachineResult<Void> put(ToppingTypePutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         ToppingTypePO toppingTypePO = convert(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             ToppingTypePO exist = accessor.selectOneByCode(toppingTypePO.getTenantCode(),
                     toppingTypePO.getToppingTypeCode());
@@ -117,29 +117,29 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             } else {
                 int inserted = accessor.insert(toppingTypePO);
             }
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String toppingTypeCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String toppingTypeCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = accessor.delete(tenantCode, toppingTypeCode);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private ToppingTypeDTO convert(ToppingTypePO po) {

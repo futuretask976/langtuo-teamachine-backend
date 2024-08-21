@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.drink;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.ToppingDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,9 @@ public class ToppingController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{toppingcode}/get")
-    public LangTuoResult<ToppingDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<ToppingDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "toppingcode") String toppingCode) {
-        LangTuoResult<ToppingDTO> rtn = service.getByCode(tenantCode, toppingCode);
+        TeaMachineResult<ToppingDTO> rtn = service.getByCode(tenantCode, toppingCode);
         return rtn;
     }
 
@@ -33,8 +33,8 @@ public class ToppingController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<ToppingDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<ToppingDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<ToppingDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<ToppingDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -43,10 +43,10 @@ public class ToppingController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<ToppingDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<ToppingDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("toppingCode") String toppingCode, @RequestParam("toppingName") String toppingName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<ToppingDTO>> rtn = service.search(tenantCode, toppingCode, toppingName,
+        TeaMachineResult<PageDTO<ToppingDTO>> rtn = service.search(tenantCode, toppingCode, toppingName,
                 pageNum, pageSize);
         return rtn;
     }
@@ -56,8 +56,8 @@ public class ToppingController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody ToppingPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody ToppingPutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -66,9 +66,9 @@ public class ToppingController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{toppingcode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "toppingcode") String toppingCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, toppingCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, toppingCode);
         return rtn;
     }
 }

@@ -2,7 +2,7 @@ package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
@@ -24,7 +24,7 @@ public class TeaMachineAuthFailureHandler implements AuthenticationFailureHandle
         response.addHeader("Access-Control-Allow-Credentials", "true");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        LangTuoResult<Void> result = LangTuoResult.error(ErrorEnum.LOGIN_ERR_UNAUTHENTICATED);
+        TeaMachineResult<Void> result = TeaMachineResult.error(ErrorEnum.LOGIN_ERR_UNAUTHENTICATED);
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();
     }

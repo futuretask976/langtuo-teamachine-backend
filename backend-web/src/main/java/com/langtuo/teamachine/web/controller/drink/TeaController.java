@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.drink;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.web.constant.WebConsts;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @RestController
 @RequestMapping("/drinkset/tea")
@@ -32,9 +32,9 @@ public class TeaController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{teacode}/get")
-    public LangTuoResult<TeaDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<TeaDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "teacode") String teaCode) {
-        LangTuoResult<TeaDTO> rtn = service.getByCode(tenantCode, teaCode);
+        TeaMachineResult<TeaDTO> rtn = service.getByCode(tenantCode, teaCode);
         return rtn;
     }
 
@@ -44,8 +44,8 @@ public class TeaController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<TeaDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<TeaDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<TeaDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<TeaDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -54,10 +54,10 @@ public class TeaController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<TeaDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<TeaDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("teaCode") String teaCode, @RequestParam("teaName") String teaName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<TeaDTO>> rtn = service.search(tenantCode, teaCode, teaName,
+        TeaMachineResult<PageDTO<TeaDTO>> rtn = service.search(tenantCode, teaCode, teaName,
                 pageNum, pageSize);
         return rtn;
     }
@@ -67,8 +67,8 @@ public class TeaController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody TeaPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody TeaPutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -77,15 +77,15 @@ public class TeaController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{teacode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "teacode") String teaCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, teaCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, teaCode);
         return rtn;
     }
 
     @GetMapping("/{tenantcode}/export")
     public ResponseEntity<byte[]> exportExcel(@PathVariable(name = "tenantcode") String tenantCode) {
-        LangTuoResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
+        TeaMachineResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
         XSSFWorkbook xssfWorkbook = getModel(rtn);
 
         // 导出Excel文件

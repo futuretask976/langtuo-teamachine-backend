@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.shop;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.shop.ShopPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,9 @@ public class ShopController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{shopcode}/get")
-    public LangTuoResult<ShopDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<ShopDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "shopcode") String shopCode) {
-        LangTuoResult<ShopDTO> rtn = service.getByCode(tenantCode, shopCode);
+        TeaMachineResult<ShopDTO> rtn = service.getByCode(tenantCode, shopCode);
         return rtn;
     }
 
@@ -32,8 +32,8 @@ public class ShopController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<ShopDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<ShopDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<ShopDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<ShopDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -42,8 +42,8 @@ public class ShopController {
      * @return
      */
     @GetMapping(value = "/listbyadminorg")
-    public LangTuoResult<List<ShopDTO>> listByAdminOrg(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<ShopDTO>> rtn = service.listByAdminOrg(tenantCode);
+    public TeaMachineResult<List<ShopDTO>> listByAdminOrg(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<ShopDTO>> rtn = service.listByAdminOrg(tenantCode);
         return rtn;
     }
 
@@ -52,10 +52,10 @@ public class ShopController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<ShopDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<ShopDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopName") String shopName, @RequestParam("shopGroupName") String shopGroupName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<ShopDTO>> rtn = service.search(tenantCode, shopName, shopGroupName, pageNum, pageSize);
+        TeaMachineResult<PageDTO<ShopDTO>> rtn = service.search(tenantCode, shopName, shopGroupName, pageNum, pageSize);
         return rtn;
     }
 
@@ -64,8 +64,8 @@ public class ShopController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody ShopPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody ShopPutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -74,9 +74,9 @@ public class ShopController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{shopcode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "shopcode") String shopCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, shopCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, shopCode);
         return rtn;
     }
 }

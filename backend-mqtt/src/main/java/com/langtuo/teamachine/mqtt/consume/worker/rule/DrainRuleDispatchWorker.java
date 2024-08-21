@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getListModel;
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
 public class DrainRuleDispatchWorker implements Runnable {

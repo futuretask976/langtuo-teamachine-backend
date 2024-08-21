@@ -6,7 +6,7 @@ import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.request.user.AdminPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -33,31 +33,31 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     private RoleMgtService roleMgtService;
 
     @Override
-    public LangTuoResult<AdminDTO> get(String tenantCode, String loginName) {
+    public TeaMachineResult<AdminDTO> get(String tenantCode, String loginName) {
         // 超级管理员特殊逻辑
         AdminDTO superAdminDTO = getSysSuperAdmin(tenantCode, loginName);
         if (superAdminDTO != null) {
-            return LangTuoResult.success(superAdminDTO);
+            return TeaMachineResult.success(superAdminDTO);
         }
 
         AdminPO adminPO = adminAccessor.selectOne(tenantCode, loginName);
         AdminDTO adminRoleDTO = convert(adminPO);
-        return LangTuoResult.success(adminRoleDTO);
+        return TeaMachineResult.success(adminRoleDTO);
     }
 
     @Override
-    public LangTuoResult<PageDTO<AdminDTO>> search(String tenantCode, String loginName, String roleName,
+    public TeaMachineResult<PageDTO<AdminDTO>> search(String tenantCode, String loginName, String roleName,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<AdminDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<AdminDTO>> teaMachineResult;
         try {
             String roleCode = null;
             if (StringUtils.isNotBlank(roleName)) {
                 RoleDTO roleDTO = getModel(roleMgtService.getByName(tenantCode, roleName));
                 if (roleDTO == null) {
-                    return LangTuoResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
+                    return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
                 } else {
                     roleCode = roleDTO.getRoleCode();
                 }
@@ -70,40 +70,40 @@ public class AdminMgtServiceImpl implements AdminMgtService {
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<AdminDTO>> list(String tenantCode) {
-        LangTuoResult<List<AdminDTO>> langTuoResult;
+    public TeaMachineResult<List<AdminDTO>> list(String tenantCode) {
+        TeaMachineResult<List<AdminDTO>> teaMachineResult;
         try {
             List<AdminPO> list = adminAccessor.selectList(tenantCode);
             List<AdminDTO> dtoList = list.stream()
                     .map(adminPO -> convert(adminPO))
                     .collect(Collectors.toList());
 
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(AdminPutRequest request) {
+    public TeaMachineResult<Void> put(AdminPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         AdminPO adminPO = convert(request);
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             AdminPO exist = adminAccessor.selectOne(request.getTenantCode(), request.getLoginName());
             if (exist != null) {
@@ -111,46 +111,46 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             } else {
                 int inserted = adminAccessor.insert(adminPO);
             }
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String loginName) {
+    public TeaMachineResult<Void> delete(String tenantCode, String loginName) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(loginName)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = adminAccessor.delete(tenantCode, loginName);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Integer> countByRoleCode(String tenantCode, String roleCode) {
+    public TeaMachineResult<Integer> countByRoleCode(String tenantCode, String roleCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(roleCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Integer> langTuoResult;
+        TeaMachineResult<Integer> teaMachineResult;
         try {
             int cnt = adminAccessor.countByRoleCode(tenantCode, roleCode);
-            langTuoResult = LangTuoResult.success(cnt);
+            teaMachineResult = TeaMachineResult.success(cnt);
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private AdminDTO convert(AdminPO adminPO) {

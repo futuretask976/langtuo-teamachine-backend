@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.device;
 import com.langtuo.teamachine.api.model.device.ModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.ModelPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +21,8 @@ public class ModelController {
      * @return
      */
     @GetMapping(value = "/{modelcode}/get")
-    public LangTuoResult<ModelDTO> get(@PathVariable(name = "modelcode") String modelCode) {
-        LangTuoResult<ModelDTO> rtn = service.get(modelCode);
+    public TeaMachineResult<ModelDTO> get(@PathVariable(name = "modelcode") String modelCode) {
+        TeaMachineResult<ModelDTO> rtn = service.get(modelCode);
         return rtn;
     }
 
@@ -31,8 +31,8 @@ public class ModelController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<ModelDTO>> list() {
-        LangTuoResult<List<ModelDTO>> rtn = service.list();
+    public TeaMachineResult<List<ModelDTO>> list() {
+        TeaMachineResult<List<ModelDTO>> rtn = service.list();
         return rtn;
     }
 
@@ -41,9 +41,9 @@ public class ModelController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<ModelDTO>> search(@RequestParam("modelCode") String modelCode,
+    public TeaMachineResult<PageDTO<ModelDTO>> search(@RequestParam("modelCode") String modelCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<ModelDTO>> rtn = service.search(modelCode, pageNum, pageSize);
+        TeaMachineResult<PageDTO<ModelDTO>> rtn = service.search(modelCode, pageNum, pageSize);
         return rtn;
     }
 
@@ -52,8 +52,8 @@ public class ModelController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody ModelPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody ModelPutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -62,8 +62,8 @@ public class ModelController {
      * @return
      */
     @DeleteMapping(value = "/{modelcode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "modelcode") String modelCode) {
-        LangTuoResult<Void> rtn = service.delete(modelCode);
+    public TeaMachineResult<Void> delete(@PathVariable(name = "modelcode") String modelCode) {
+        TeaMachineResult<Void> rtn = service.delete(modelCode);
         return rtn;
     }
 }

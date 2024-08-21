@@ -8,7 +8,7 @@ import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.*;
 import com.langtuo.teamachine.api.model.drink.*;
 import com.langtuo.teamachine.api.request.drink.*;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.SpecMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.*;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.*;
 
 @Component
 @Slf4j
@@ -56,71 +56,71 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     private ToppingMgtService toppingMgtService;
 
     @Override
-    public LangTuoResult<TeaDTO> getByCode(String tenantCode, String teaCode) {
-        LangTuoResult<TeaDTO> langTuoResult;
+    public TeaMachineResult<TeaDTO> getByCode(String tenantCode, String teaCode) {
+        TeaMachineResult<TeaDTO> teaMachineResult;
         try {
             TeaPO po = teaAccessor.selectOneByCode(tenantCode, teaCode);
             TeaDTO dto = convertToTeaDTO(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<TeaDTO> getByName(String tenantCode, String teaName) {
-        LangTuoResult<TeaDTO> langTuoResult;
+    public TeaMachineResult<TeaDTO> getByName(String tenantCode, String teaName) {
+        TeaMachineResult<TeaDTO> teaMachineResult;
         try {
             TeaPO po = teaAccessor.selectOneByName(tenantCode, teaName);
             TeaDTO dto = convertToTeaDTO(po);
-            langTuoResult = LangTuoResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<List<TeaDTO>> list(String tenantCode) {
-        LangTuoResult<List<TeaDTO>> langTuoResult;
+    public TeaMachineResult<List<TeaDTO>> list(String tenantCode) {
+        TeaMachineResult<List<TeaDTO>> teaMachineResult;
         try {
             List<TeaPO> teaPOList = teaAccessor.selectList(tenantCode);
             List<TeaDTO> teaDTOList = convertToTeaDTO(teaPOList);
-            langTuoResult = LangTuoResult.success(teaDTOList);
+            teaMachineResult = TeaMachineResult.success(teaDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<PageDTO<TeaDTO>> search(String tenantName, String teaCode, String teaName,
+    public TeaMachineResult<PageDTO<TeaDTO>> search(String tenantName, String teaCode, String teaName,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<TeaDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<TeaDTO>> teaMachineResult;
         try {
             PageInfo<TeaPO> pageInfo = teaAccessor.search(tenantName, teaCode, teaName,
                     pageNum, pageSize);
             List<TeaDTO> dtoList = convertToTeaDTO(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(TeaPutRequest request) {
+    public TeaMachineResult<Void> put(TeaPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         TeaPO teaPO = convertToTeaPO(request);
@@ -129,7 +129,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         List<ToppingAdjustRulePO> toppingAdjustRulePOList = convertToToppingAdjustRulePO(request);
 
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             TeaPO exist = teaAccessor.selectOneByCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             if (exist != null) {
@@ -153,53 +153,53 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(item);
             });
 
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String tenantCode, String teaCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String teaCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted4Tea = teaAccessor.delete(tenantCode, teaCode);
             int deleted4TeaUnit = teaUnitAccessor.delete(tenantCode, teaCode);
             int deleted4ToppingBaseRule = toppingBaseRuleAccessor.delete(tenantCode, teaCode);
             int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.delete(tenantCode, teaCode);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Integer> countByTeaTypeCode(String tenantCode, String teaTypeCode) {
+    public TeaMachineResult<Integer> countByTeaTypeCode(String tenantCode, String teaTypeCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(teaTypeCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Integer> langTuoResult;
+        TeaMachineResult<Integer> teaMachineResult;
         try {
             int cnt = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
-            langTuoResult = LangTuoResult.success(cnt);
+            teaMachineResult = TeaMachineResult.success(cnt);
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<XSSFWorkbook> exportByExcel(String tenantCode) {
+    public TeaMachineResult<XSSFWorkbook> exportByExcel(String tenantCode) {
         // 获取数据
         List<TeaExcel> teaExcelList = fetchData4Export(tenantCode);
 
@@ -317,7 +317,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             rowStartIndex4Tea = rowStartIndex4Tea + size4AdjustRuleList;
         }
 
-        return LangTuoResult.success(workbook);
+        return TeaMachineResult.success(workbook);
     }
 
     private void addMergedRegion4RowRange(Sheet sheet, Cell cell, int rowRange) {

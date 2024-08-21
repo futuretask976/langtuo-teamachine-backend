@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
 import com.langtuo.teamachine.api.request.rule.WarningRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.WarningRulePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +23,9 @@ public class WarningRuleController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{warningrulecode}/get")
-    public LangTuoResult<WarningRuleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<WarningRuleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "warningrulecode") String warningRuleCode) {
-        LangTuoResult<WarningRuleDTO> rtn = service.getByCode(tenantCode, warningRuleCode);
+        TeaMachineResult<WarningRuleDTO> rtn = service.getByCode(tenantCode, warningRuleCode);
         return rtn;
     }
 
@@ -35,8 +35,8 @@ public class WarningRuleController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<WarningRuleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<WarningRuleDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<WarningRuleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<WarningRuleDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -46,9 +46,9 @@ public class WarningRuleController {
      * @return
      */
     @GetMapping(value = "/listbyshop")
-    public LangTuoResult<List<WarningRuleDTO>> list(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<List<WarningRuleDTO>> list(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopCode") String shopCode) {
-        LangTuoResult<List<WarningRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
+        TeaMachineResult<List<WarningRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
         return rtn;
     }
 
@@ -57,10 +57,10 @@ public class WarningRuleController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<WarningRuleDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<WarningRuleDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("warningRuleCode") String warningRuleCode, @RequestParam("warningRuleName") String warningRuleName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<WarningRuleDTO>> rtn = service.search(tenantCode, warningRuleCode, warningRuleName,
+        TeaMachineResult<PageDTO<WarningRuleDTO>> rtn = service.search(tenantCode, warningRuleCode, warningRuleName,
                 pageNum, pageSize);
         return rtn;
     }
@@ -70,8 +70,8 @@ public class WarningRuleController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody WarningRulePutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody WarningRulePutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -80,9 +80,9 @@ public class WarningRuleController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{warningrulecode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "warningrulecode") String warningRuleCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, warningRuleCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, warningRuleCode);
         return rtn;
     }
 
@@ -91,8 +91,8 @@ public class WarningRuleController {
      * @return
      */
     @PutMapping(value = "/dispatch/put")
-    public LangTuoResult<Void> putDispatch(@RequestBody WarningRuleDispatchPutRequest request) {
-        LangTuoResult<Void> rtn = service.putDispatch(request);
+    public TeaMachineResult<Void> putDispatch(@RequestBody WarningRuleDispatchPutRequest request) {
+        TeaMachineResult<Void> rtn = service.putDispatch(request);
         return rtn;
     }
 
@@ -102,9 +102,9 @@ public class WarningRuleController {
      * @return
      */
     @GetMapping(value = "/dispatch/{tenantcode}/{warningrulecode}/get")
-    public LangTuoResult<WarningRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "warningrulecode") String warningRuleCode) {
-        LangTuoResult<WarningRuleDispatchDTO> rtn = service.getDispatchByCode(tenantCode, warningRuleCode);
+        TeaMachineResult<WarningRuleDispatchDTO> rtn = service.getDispatchByCode(tenantCode, warningRuleCode);
         return rtn;
     }
 }

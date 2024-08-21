@@ -4,7 +4,7 @@ import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.MachineActivatePutRequest;
 import com.langtuo.teamachine.api.request.device.MachineUpdatePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +22,9 @@ public class MachineController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{machinecode}/get")
-    public LangTuoResult<MachineDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<MachineDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "machinecode") String machineCode) {
-        LangTuoResult<MachineDTO> rtn = service.get(tenantCode, machineCode);
+        TeaMachineResult<MachineDTO> rtn = service.get(tenantCode, machineCode);
         return rtn;
     }
 
@@ -33,8 +33,8 @@ public class MachineController {
      * @return
      */
     @GetMapping(value = "/list")
-    public LangTuoResult<List<MachineDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        LangTuoResult<List<MachineDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<MachineDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+        TeaMachineResult<List<MachineDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
@@ -43,11 +43,11 @@ public class MachineController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<MachineDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<MachineDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("screenCode") String screenCode, @RequestParam("elecBoardCode") String elecBoardCode,
             @RequestParam("modelCode") String modelCode, @RequestParam("shopName") String shopName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<MachineDTO>> rtn = service.search(tenantCode, screenCode, elecBoardCode, modelCode,
+        TeaMachineResult<PageDTO<MachineDTO>> rtn = service.search(tenantCode, screenCode, elecBoardCode, modelCode,
                 shopName, pageNum, pageSize);
         return rtn;
     }
@@ -57,8 +57,8 @@ public class MachineController {
      * @return
      */
     @PutMapping(value = "/activate")
-    public LangTuoResult<MachineDTO> activate(@RequestBody MachineActivatePutRequest request) {
-        LangTuoResult<MachineDTO> rtn = service.activate(request);
+    public TeaMachineResult<MachineDTO> activate(@RequestBody MachineActivatePutRequest request) {
+        TeaMachineResult<MachineDTO> rtn = service.activate(request);
         return rtn;
     }
 
@@ -67,8 +67,8 @@ public class MachineController {
      * @return
      */
     @PutMapping(value = "/update")
-    public LangTuoResult<Void> update(@RequestBody MachineUpdatePutRequest request) {
-        LangTuoResult<Void> rtn = service.update(request);
+    public TeaMachineResult<Void> update(@RequestBody MachineUpdatePutRequest request) {
+        TeaMachineResult<Void> rtn = service.update(request);
         return rtn;
     }
 
@@ -77,9 +77,9 @@ public class MachineController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{machinecode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "machinecode") String machineCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, machineCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, machineCode);
         return rtn;
     }
 }

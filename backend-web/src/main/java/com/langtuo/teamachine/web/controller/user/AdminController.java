@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.user;
 import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.AdminPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +22,9 @@ public class AdminController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{loginname}/get")
-    public LangTuoResult<AdminDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<AdminDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "loginname") String loginName) {
-        LangTuoResult<AdminDTO> rtn = service.get(tenantCode, loginName);
+        TeaMachineResult<AdminDTO> rtn = service.get(tenantCode, loginName);
         return rtn;
     }
 
@@ -33,10 +33,10 @@ public class AdminController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<AdminDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<AdminDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("loginName") String loginName, @RequestParam("roleName") String roleName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<AdminDTO>> rtn = service.search(tenantCode, loginName, roleName, pageNum, pageSize);
+        TeaMachineResult<PageDTO<AdminDTO>> rtn = service.search(tenantCode, loginName, roleName, pageNum, pageSize);
         return rtn;
     }
 
@@ -45,8 +45,8 @@ public class AdminController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody AdminPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody AdminPutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -55,9 +55,9 @@ public class AdminController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{loginname}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "loginname") String loginName) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, loginName);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, loginName);
         return rtn;
     }
 }

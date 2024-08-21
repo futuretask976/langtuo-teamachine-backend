@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.service.drink;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.TeaTypeDTO;
 import com.langtuo.teamachine.api.request.drink.TeaTypePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -13,20 +13,20 @@ public interface TeaTypeMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<TeaTypeDTO> getByCode(String tenantCode, String teaTypeCode);
+    TeaMachineResult<TeaTypeDTO> getByCode(String tenantCode, String teaTypeCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<TeaTypeDTO> getByName(String tenantCode, String teaTypeName);
+    TeaMachineResult<TeaTypeDTO> getByName(String tenantCode, String teaTypeName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<TeaTypeDTO>> search(String tenantCode, String teaTypeCode, String teaTypeName,
+    TeaMachineResult<PageDTO<TeaTypeDTO>> search(String tenantCode, String teaTypeCode, String teaTypeName,
             int pageNum, int pageSize);
 
     /**
@@ -34,14 +34,14 @@ public interface TeaTypeMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<TeaTypeDTO>> list(String tenantCode);
+    TeaMachineResult<List<TeaTypeDTO>> list(String tenantCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(TeaTypePutRequest request);
+    TeaMachineResult<Void> put(TeaTypePutRequest request);
 
     /**
      *
@@ -49,5 +49,5 @@ public interface TeaTypeMgtService {
      * @param teaTypeCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String teaTypeCode);
+    TeaMachineResult<Void> delete(String tenantCode, String teaTypeCode);
 }

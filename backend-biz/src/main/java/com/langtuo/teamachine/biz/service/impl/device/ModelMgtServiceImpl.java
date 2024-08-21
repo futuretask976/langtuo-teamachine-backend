@@ -6,7 +6,7 @@ import com.langtuo.teamachine.api.model.device.ModelPipelineDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
 import com.langtuo.teamachine.api.request.device.ModelPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
@@ -37,41 +37,41 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
-    public LangTuoResult<List<ModelDTO>> list() {
-        LangTuoResult<List<ModelDTO>> langTuoResult;
+    public TeaMachineResult<List<ModelDTO>> list() {
+        TeaMachineResult<List<ModelDTO>> teaMachineResult;
         try {
             List<ModelPO> list = modelAccessor.selectList();
             List<ModelDTO> dtoList = convertToModelDTO(list);
-            langTuoResult = LangTuoResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<PageDTO<ModelDTO>> search(String modelCode,
+    public TeaMachineResult<PageDTO<ModelDTO>> search(String modelCode,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
-        LangTuoResult<PageDTO<ModelDTO>> langTuoResult;
+        TeaMachineResult<PageDTO<ModelDTO>> teaMachineResult;
         try {
             PageInfo<ModelPO> pageInfo = modelAccessor.search(modelCode, pageNum, pageSize);
             List<ModelDTO> dtoList = convertToModelDTO(pageInfo.getList());
-            langTuoResult = LangTuoResult.success(new PageDTO<>(
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<ModelDTO> get(String modelCode) {
-        LangTuoResult<ModelDTO> langTuoResult;
+    public TeaMachineResult<ModelDTO> get(String modelCode) {
+        TeaMachineResult<ModelDTO> teaMachineResult;
         try {
             ModelPO modelPO = modelAccessor.selectOne(modelCode);
             ModelDTO modelDTO = convert(modelPO);
@@ -80,25 +80,25 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             if (!CollectionUtils.isEmpty(pipelinePOList)) {
                 modelDTO.setPipelineList(convert(pipelinePOList));
             }
-            langTuoResult = LangTuoResult.success(modelDTO);
+            teaMachineResult = TeaMachineResult.success(modelDTO);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> put(ModelPutRequest request) {
+    public TeaMachineResult<Void> put(ModelPutRequest request) {
         if (request == null || !request.isValid()) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         String modelCode = request.getModelCode();
         ModelPO modelPO = convert(request);
         List<ModelPipelinePO> modelPipelinePOList = convert(modelCode, request.getPipelineList());
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             ModelPO exist = modelAccessor.selectOne(modelCode);
             if (exist != null) {
@@ -111,34 +111,34 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             modelPipelinePOList.stream().forEach(po -> {
                 int inserted = modelPipelineAccessor.insert(po);
             });
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
 
         // 异步发送消息准备配置信息分发
         mqttPublisher4Console.send4Model(request.getModelCode());
 
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     @Override
-    public LangTuoResult<Void> delete(String modelCode) {
+    public TeaMachineResult<Void> delete(String modelCode) {
         if (StringUtils.isEmpty(modelCode)) {
-            return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        LangTuoResult<Void> langTuoResult;
+        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted4ModelCode = modelAccessor.delete(modelCode);
             int deleted4Pipeline = modelPipelineAccessor.delete(modelCode);
-            langTuoResult = LangTuoResult.success();
+            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            langTuoResult = LangTuoResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
-        return langTuoResult;
+        return teaMachineResult;
     }
 
     private List<ModelDTO> convertToModelDTO(List<ModelPO> poList) {

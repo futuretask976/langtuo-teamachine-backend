@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import com.langtuo.teamachine.web.model.LoginSuccessDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
         // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录成功
         LoginSuccessDTO dto = new LoginSuccessDTO();
         dto.setJwtToken(tokenHead4Admin + jwtTokenHelper.generateToken(authUser));
-        LangTuoResult<LoginSuccessDTO> result = LangTuoResult.success(dto);
+        TeaMachineResult<LoginSuccessDTO> result = TeaMachineResult.success(dto);
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();
         // 如果不是前后端分离项目，这里返回/welcome渲染thymeleaf模板

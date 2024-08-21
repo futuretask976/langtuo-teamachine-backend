@@ -3,7 +3,7 @@ package com.langtuo.teamachine.api.service.shop;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.request.shop.ShopGroupPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -13,41 +13,41 @@ public interface ShopGroupMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode);
+    TeaMachineResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<ShopGroupDTO> getByName(String tenantCode, String shopGroupName);
+    TeaMachineResult<ShopGroupDTO> getByName(String tenantCode, String shopGroupName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<ShopGroupDTO>> search(String tenantCode, String shopGroupName, int pageNum, int pageSize);
-
-    /**
-     *
-     * @param tenantCode
-     * @return
-     */
-    LangTuoResult<List<ShopGroupDTO>> list(String tenantCode);
+    TeaMachineResult<PageDTO<ShopGroupDTO>> search(String tenantCode, String shopGroupName, int pageNum, int pageSize);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode);
+    TeaMachineResult<List<ShopGroupDTO>> list(String tenantCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    TeaMachineResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(ShopGroupPutRequest request);
+    TeaMachineResult<Void> put(ShopGroupPutRequest request);
 
     /**
      *
@@ -55,5 +55,5 @@ public interface ShopGroupMgtService {
      * @param shopGroupCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String shopGroupCode);
+    TeaMachineResult<Void> delete(String tenantCode, String shopGroupCode);
 }

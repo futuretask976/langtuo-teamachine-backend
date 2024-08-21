@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.controller.device;
 import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
 import com.langtuo.teamachine.web.constant.WebConsts;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @RestController
 @RequestMapping("/deviceset/deploy")
@@ -32,9 +32,9 @@ public class DeployController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{deploycode}/get")
-    public LangTuoResult<DeployDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<DeployDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "deploycode") String deployCode) {
-        LangTuoResult<DeployDTO> rtn = service.getByDeployCode(tenantCode, deployCode);
+        TeaMachineResult<DeployDTO> rtn = service.getByDeployCode(tenantCode, deployCode);
         return rtn;
     }
 
@@ -43,11 +43,11 @@ public class DeployController {
      * @return
      */
     @GetMapping(value = "/search")
-    public LangTuoResult<PageDTO<DeployDTO>> search(@RequestParam("tenantCode") String tenantCode,
+    public TeaMachineResult<PageDTO<DeployDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("deployCode") String deployCode, @RequestParam("machineCode") String machineCode,
             @RequestParam("shopName") String shopName, @RequestParam(required = false, name = "state") Integer state,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        LangTuoResult<PageDTO<DeployDTO>> rtn = service.search(tenantCode, deployCode, machineCode, shopName, state,
+        TeaMachineResult<PageDTO<DeployDTO>> rtn = service.search(tenantCode, deployCode, machineCode, shopName, state,
                 pageNum, pageSize);
         return rtn;
     }
@@ -57,8 +57,8 @@ public class DeployController {
      * @return
      */
     @PutMapping(value = "/put")
-    public LangTuoResult<Void> put(@RequestBody DeployPutRequest request) {
-        LangTuoResult<Void> rtn = service.put(request);
+    public TeaMachineResult<Void> put(@RequestBody DeployPutRequest request) {
+        TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
@@ -67,9 +67,9 @@ public class DeployController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{deploycode}/delete")
-    public LangTuoResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
+    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "deploycode") String deployCode) {
-        LangTuoResult<Void> rtn = service.delete(tenantCode, deployCode);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, deployCode);
         return rtn;
     }
 
@@ -79,8 +79,8 @@ public class DeployController {
      * @return
      */
     @GetMapping(value = "/deploycode/generate")
-    public LangTuoResult<String> generateDeployCode(@RequestParam(name = "tenantCode") String tenantCode) {
-        LangTuoResult<String> rtn = service.generateDeployCode();
+    public TeaMachineResult<String> generateDeployCode(@RequestParam(name = "tenantCode") String tenantCode) {
+        TeaMachineResult<String> rtn = service.generateDeployCode();
         return rtn;
     }
 
@@ -90,14 +90,14 @@ public class DeployController {
      * @return
      */
     @GetMapping(value = "/machinecode/generate")
-    public LangTuoResult<String> generateMachineCode(@RequestParam(name = "tenantCode") String tenantCode) {
-        LangTuoResult<String> rtn = service.generateMachineCode();
+    public TeaMachineResult<String> generateMachineCode(@RequestParam(name = "tenantCode") String tenantCode) {
+        TeaMachineResult<String> rtn = service.generateMachineCode();
         return rtn;
     }
 
     @GetMapping("/{tenantcode}/export")
     public ResponseEntity<byte[]> exportExcel(@PathVariable(name = "tenantcode") String tenantCode) {
-        LangTuoResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
+        TeaMachineResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
         XSSFWorkbook xssfWorkbook = getModel(rtn);
 
         // 导出Excel文件

@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
 import com.langtuo.teamachine.api.request.rule.CleanRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.CleanRulePutRequest;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
 
@@ -15,20 +15,20 @@ public interface CleanRuleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode);
+    TeaMachineResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<CleanRuleDTO> getByName(String tenantCode, String cleanRuleName);
+    TeaMachineResult<CleanRuleDTO> getByName(String tenantCode, String cleanRuleName);
 
     /**
      *
      * @return
      */
-    LangTuoResult<PageDTO<CleanRuleDTO>> search(String tenantCode, String cleanRuleCode, String cleanRuleName,
+    TeaMachineResult<PageDTO<CleanRuleDTO>> search(String tenantCode, String cleanRuleCode, String cleanRuleName,
             int pageNum, int pageSize);
 
     /**
@@ -36,21 +36,21 @@ public interface CleanRuleMgtService {
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<CleanRuleDTO>> list(String tenantCode);
+    TeaMachineResult<List<CleanRuleDTO>> list(String tenantCode);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode);
+    TeaMachineResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> put(CleanRulePutRequest request);
+    TeaMachineResult<Void> put(CleanRulePutRequest request);
 
     /**
      *
@@ -58,19 +58,19 @@ public interface CleanRuleMgtService {
      * @param cleanRuleCode
      * @return
      */
-    LangTuoResult<Void> delete(String tenantCode, String cleanRuleCode);
+    TeaMachineResult<Void> delete(String tenantCode, String cleanRuleCode);
 
     /**
      *
      * @param request
      * @return
      */
-    LangTuoResult<Void> putDispatch(CleanRuleDispatchPutRequest request);
+    TeaMachineResult<Void> putDispatch(CleanRuleDispatchPutRequest request);
 
     /**
      *
      * @param tenantCode
      * @return
      */
-    LangTuoResult<CleanRuleDispatchDTO> getDispatchByCode(String tenantCode, String cleanRuleCode);
+    TeaMachineResult<CleanRuleDispatchDTO> getDispatchByCode(String tenantCode, String cleanRuleCode);
 }

@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.web.controller;
 
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.api.result.LangTuoResult;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.mqtt.MqttService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
@@ -23,13 +23,13 @@ public class MQTTController {
      * @return
      */
     @GetMapping(value = "/test")
-    public LangTuoResult<Void> index(Model model) {
+    public TeaMachineResult<Void> index(Model model) {
         try {
             // mqttService.sendMsgByTopic("tenant_001", "testMq4Iot", "here is testMq4Iot test: " + System.currentTimeMillis());
             // mqttService.sendMsgByP2P("tenant_001", MQTTConfig.CLIENT_ID, "here is p2p test: " + System.currentTimeMillis());
         } catch (Exception e) {
             log.error("test error: " + e.getMessage(), e);
         }
-        return LangTuoResult.error(ErrorEnum.TEST_ERR_ONLY_TEST);
+        return TeaMachineResult.error(ErrorEnum.TEST_ERR_ONLY_TEST);
     }
 }
