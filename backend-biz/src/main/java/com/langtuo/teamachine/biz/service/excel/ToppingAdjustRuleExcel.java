@@ -10,9 +10,9 @@ public class ToppingAdjustRuleExcel {
     private int stepIndex;
 
     /**
-     * 物料编码
+     * 物料名称
      */
-    private String toppingCode;
+    private String toppingName;
 
     /**
      * 调整类型，0：减少，1：添加

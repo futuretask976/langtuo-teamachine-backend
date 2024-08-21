@@ -20,17 +20,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -62,7 +56,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         try {
             PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
                     shopName, state, pageNum, pageSize);
-            List<DeployDTO> dtoList = convert(pageInfo.getList());
+            List<DeployDTO> dtoList = convertToDeployDTO(pageInfo.getList());
             langTuoResult = LangTuoResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
@@ -76,7 +70,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     public LangTuoResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode) {
         LangTuoResult<DeployDTO> langTuoResult;
         try {
-            DeployDTO dto = convert(deployAccessor.selectOneByDeployCode(tenantCode, deployCode));
+            DeployDTO dto = convertToDeployDTO(deployAccessor.selectOneByDeployCode(tenantCode, deployCode));
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
@@ -89,7 +83,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     public LangTuoResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode) {
         LangTuoResult<DeployDTO> langTuoResult;
         try {
-            DeployDTO dto = convert(deployAccessor.selectOneByMachineCode(tenantCode, machineCode));
+            DeployDTO dto = convertToDeployDTO(deployAccessor.selectOneByMachineCode(tenantCode, machineCode));
             langTuoResult = LangTuoResult.success(dto);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
@@ -104,7 +98,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             return LangTuoResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        DeployPO deployPO = convert(request);
+        DeployPO deployPO = convertToDeployDTO(request);
 
         LangTuoResult<Void> langTuoResult;
         try {
@@ -184,71 +178,57 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         // 创建一个新的工作簿
         XSSFWorkbook workbook = new XSSFWorkbook();
         // 创建一个工作表
-        Sheet sheet = workbook.createSheet("部署信息导出");
-        // 标题内容
-        List<String> titleList = Lists.newArrayList(
-                "创建时间",
-                "修改时间",
-                "商户编码",
-                "部署编码",
-                "机器编码",
-                "型号编码",
-                "店铺编码",
-                "状态");
+        Sheet sheet = workbook.createSheet(BizConsts.SHEET_NAME_4_DEPLOY_EXPORT);
         // 创建标题行（0基索引）
-        Row row = sheet.createRow(0);
+        Row row = sheet.createRow(BizConsts.ROW_NUM_4_TITLE);
         // 创建单元格并设置值
-        for (int i = 0; i < titleList.size(); i++) {
+        for (int i = 0; i < BizConsts.TITLE_LIST_4_DEPLOY_EXPORT.size(); i++) {
             Cell cell = row.createCell(i);
-            cell.setCellValue(titleList.get(i));
+            cell.setCellValue(BizConsts.TITLE_LIST_4_DEPLOY_EXPORT.get(i));
         }
 
         List<DeployPO> deployPOList = deployAccessor.selectList(tenantCode);
-        int lineIndex = 1;
+        int lineIndex = BizConsts.ROW_START_NUM_4_DEPLOY;
         for (DeployPO deployPO : deployPOList) {
             Row dataRow = sheet.createRow(lineIndex++);
-            int columnIndex = 0;
-            Cell cell;
-            cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(transform(deployPO.getGmtCreated(), "yyyy-MM-dd hh:mm:ss"));
-            cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(transform(deployPO.getGmtModified(), "yyyy-MM-dd hh:mm:ss"));
-            cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(deployPO.getTenantCode());
-            cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(deployPO.getDeployCode());
+            int columnIndex = BizConsts.COL_START_NUM_4_DEPLOY;
 
-            cell = dataRow.createCell(columnIndex++);
+            // 添加创建日期
+            Cell cell4GmtCreated = dataRow.createCell(columnIndex++);
+            cell4GmtCreated.setCellValue(transform(deployPO.getGmtCreated()));
+            // 添加修改日期
+            Cell cell4GmtModified = dataRow.createCell(columnIndex++);
+            cell4GmtModified.setCellValue(transform(deployPO.getGmtModified()));
+            // 添加商户编码
+            Cell cell4TenantCode = dataRow.createCell(columnIndex++);
+            cell4TenantCode.setCellValue(deployPO.getTenantCode());
+            // 添加部署编码
+            Cell cell4DeployCode = dataRow.createCell(columnIndex++);
+            cell4DeployCode.setCellValue(deployPO.getDeployCode());
+            // 添加商户名称
+            Cell cell4TenantName = dataRow.createCell(columnIndex++);
             TenantDTO tenantDTO = getModel(tenantMgtService.get(tenantCode));
-            if (tenantDTO == null) {
-                cell.setCellValue("");
-            } else {
-                cell.setCellValue(tenantDTO.getTenantName());
+            if (tenantDTO != null) {
+                cell4TenantName.setCellValue(tenantDTO.getTenantName());
             }
-
-            cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(deployPO.getModelCode());
-
-            cell = dataRow.createCell(columnIndex++);
+            // 添加型号编码
+            Cell cell4ModelCode = dataRow.createCell(columnIndex++);
+            cell4ModelCode.setCellValue(deployPO.getModelCode());
+            // 添加店铺名称
+            Cell cell4ShopName = dataRow.createCell(columnIndex++);
             ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, deployPO.getShopCode()));
-            if (shopDTO == null) {
-                cell.setCellValue("");
-            } else {
-                cell.setCellValue(shopDTO.getShopName());
+            if (shopDTO != null) {
+                cell4ShopName.setCellValue(shopDTO.getShopName());
             }
-
-            cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(deployPO.getState() == 0 ? "未部署" : "已部署");
+            // 添加部署状态
+            Cell cell4State = dataRow.createCell(columnIndex++);
+            cell4State.setCellValue(deployPO.getState() == BizConsts.DEPLOY_STATE_DISABLED ?
+                    BizConsts.DEPLOY_STATE_DISABLED_LABEL : BizConsts.DEPLOY_STATE_ENABLED_LABEL);
         }
         return LangTuoResult.success(workbook);
     }
 
-    public LangTuoResult<String> genRandomStr() {
-        String randomStr = DeployUtils.genRandomStr(20);
-        return LangTuoResult.success(randomStr);
-    }
-
-    private DeployPO convert(DeployPutRequest request) {
+    private DeployPO convertToDeployDTO(DeployPutRequest request) {
         if (request == null) {
             return null;
         }
@@ -264,18 +244,18 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         return po;
     }
 
-    private List<DeployDTO> convert(List<DeployPO> poList) {
+    private List<DeployDTO> convertToDeployDTO(List<DeployPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<DeployDTO> list = poList.stream()
-                .map(po -> convert(po))
+                .map(po -> convertToDeployDTO(po))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private DeployDTO convert(DeployPO po) {
+    private DeployDTO convertToDeployDTO(DeployPO po) {
         if (po == null) {
             return null;
         }
@@ -297,33 +277,8 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         return dto;
     }
 
-    public static boolean removeFile(File root) {
-        if (root == null || !root.exists()) {
-            return true;
-        }
-
-        boolean result = false;
-        if (root.isFile()) {
-            result = root.delete();
-        } else {
-            File[] files = root.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
-                result = removeFile(file);
-            }
-            if (result) {
-                result = root.delete();
-            }
-        }
-        return result;
-    }
-
-    public static String transform(Date date, String pattern) {
-        if (StringUtils.isBlank(pattern)) {
-            pattern = "yyyy-MM-dd hh:mm:ss";
-        }
-
-        DateFormat format = new SimpleDateFormat(pattern);
+    public static String transform(Date date) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return format.format(date);
     }
 }

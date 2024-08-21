@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 public class ExcelUtils {
-    public static void doCellRangeAddress(Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol) {
+    public static void addMergedRegion(Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol) {
         // 定义要合并的单元格的开始行、结束行、开始列、结束列
         // 这里是从第一行的第一个单元格开始，跨越至第二行的第一个单元格
         CellRangeAddress cellRangeAddress = new CellRangeAddress(firstRow, lastRow, firstCol, lastCol);

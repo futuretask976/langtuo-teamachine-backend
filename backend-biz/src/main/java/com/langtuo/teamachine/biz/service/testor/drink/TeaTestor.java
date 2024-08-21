@@ -98,27 +98,27 @@ public class TeaTestor {
 
             cell = dataRow.createCell(columnIndex++);
             cell.setCellValue(teaInfoExcel.getTeaCode());
-            ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
             cell.setCellValue(teaInfoExcel.getTeaName());
-            ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
             cell.setCellValue(teaInfoExcel.getOuterTeaCode());
-            ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
             cell.setCellValue(teaInfoExcel.getState());
-            ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
             cell.setCellValue(teaInfoExcel.getTeaTypeCode());
-            ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
             cell.setCellValue(teaInfoExcel.getImgLink());
-            ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
 
             List<ToppingBaseRuleExcel> ToppingBaseRuleExcelList = teaExcel.getToppingBaseRuleExcelList();
@@ -134,15 +134,15 @@ public class TeaTestor {
 
                 cell = row4BaseRule.createCell(columnIndex4BaseRule++);
                 cell.setCellValue(toppingBaseRuleExcel.getStepIndex());
-                ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4BaseRule - 1, cell.getColumnIndex(), cell.getColumnIndex());
+                ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4BaseRule - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
                 cell = row4BaseRule.createCell(columnIndex4BaseRule++);
-                cell.setCellValue(toppingBaseRuleExcel.getToppingCode());
-                ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4BaseRule - 1, cell.getColumnIndex(), cell.getColumnIndex());
+                cell.setCellValue(toppingBaseRuleExcel.getToppingName());
+                ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4BaseRule - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
                 cell = row4BaseRule.createCell(columnIndex4BaseRule++);
                 cell.setCellValue(toppingBaseRuleExcel.getBaseAmount());
-                ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4BaseRule - 1, cell.getColumnIndex(), cell.getColumnIndex());
+                ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4BaseRule - 1, cell.getColumnIndex(), cell.getColumnIndex());
             }
 
             List<TeaUnitExcel> teaUnitExcelList = teaExcel.getTeaUnitExcelList();
@@ -154,7 +154,7 @@ public class TeaTestor {
 
                 cell = row4TeaUnit.createCell(columnIndex4TeaUnit++);
                 cell.setCellValue(teaUnitExcel.getTeaUnitName());
-                ExcelUtils.doCellRangeAddress(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4TeaUnit - 1, cell.getColumnIndex(), cell.getColumnIndex());
+                ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4TeaUnit - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
                 rowIndex4TeaUnit = rowIndex4TeaUnit + rowRange4TeaUnit;
             }
@@ -169,7 +169,7 @@ public class TeaTestor {
                 cell.setCellValue(toppingAdjustRuleExcel.getStepIndex());
 
                 cell = row4AdjustRule.createCell(columnIndex4AdjustRule++);
-                cell.setCellValue(toppingAdjustRuleExcel.getToppingCode());
+                cell.setCellValue(toppingAdjustRuleExcel.getToppingName());
 
                 cell = row4AdjustRule.createCell(columnIndex4AdjustRule++);
                 cell.setCellValue(toppingAdjustRuleExcel.getAdjustType());
@@ -219,7 +219,7 @@ public class TeaTestor {
         for (ToppingAdjustRulePO toppingAdjustRulePO : list) {
             ToppingAdjustRuleExcel toppingAdjustRuleExcel = new ToppingAdjustRuleExcel();
             toppingAdjustRuleExcel.setStepIndex(toppingAdjustRulePO.getStepIndex());
-            toppingAdjustRuleExcel.setToppingCode(toppingAdjustRulePO.getToppingCode());
+            toppingAdjustRuleExcel.setToppingName(toppingAdjustRulePO.getToppingCode());
             toppingAdjustRuleExcel.setAdjustMode(toppingAdjustRulePO.getAdjustMode());
             toppingAdjustRuleExcel.setAdjustType(toppingAdjustRulePO.getAdjustType());
             toppingAdjustRuleExcel.setAdjustAmount(toppingAdjustRulePO.getAdjustAmount());
@@ -244,7 +244,7 @@ public class TeaTestor {
         for (ToppingBaseRulePO toppingBaseRulePO : list) {
             ToppingBaseRuleExcel toppingBaseRuleExcel = new ToppingBaseRuleExcel();
             toppingBaseRuleExcel.setStepIndex(toppingBaseRulePO.getStepIndex());
-            toppingBaseRuleExcel.setToppingCode(toppingBaseRulePO.getToppingCode());
+            toppingBaseRuleExcel.setToppingName(toppingBaseRulePO.getToppingCode());
             toppingBaseRuleExcel.setBaseAmount(toppingBaseRulePO.getBaseAmount());
             resultList.add(toppingBaseRuleExcel);
         }

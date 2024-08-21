@@ -10,9 +10,9 @@ public class ToppingBaseRuleExcel {
     private int stepIndex;
 
     /**
-     * 物料编码
+     * 物料名称
      */
-    private String toppingCode;
+    private String toppingName;
 
     /**
      * 基础用量
