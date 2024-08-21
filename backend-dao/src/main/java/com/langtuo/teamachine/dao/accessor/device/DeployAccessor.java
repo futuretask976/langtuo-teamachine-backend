@@ -115,7 +115,7 @@ public class DeployAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String deployCode) {
+    public int deleteByDeployCode(String tenantCode, String deployCode) {
         DeployPO po = selectOneByDeployCode(tenantCode, deployCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
@@ -129,7 +129,7 @@ public class DeployAccessor {
         return deleted;
     }
 
-    public long getMachineCodeNextSeqVal() {
+    public long selectNextSeqVal4MachineCode() {
         if (machineCodeSeqCurVal < machineCodeSeqStartVal + SEQ_SCOPE) {
             return machineCodeSeqCurVal++;
         }

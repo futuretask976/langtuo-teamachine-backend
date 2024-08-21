@@ -21,7 +21,7 @@ public class SpecAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public SpecPO selectOneByCode(String tenantCode, String specCode) {
+    public SpecPO selectOneBySpecCode(String tenantCode, String specCode) {
         // 首先访问缓存
         SpecPO cached = getCache(tenantCode, specCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class SpecAccessor {
         return po;
     }
 
-    public SpecPO selectOneByName(String tenantCode, String specName) {
+    public SpecPO selectOneBySpecName(String tenantCode, String specName) {
         // 首先访问缓存
         SpecPO cached = getCache(tenantCode, null, specName);
         if (cached != null) {
@@ -95,8 +95,8 @@ public class SpecAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String specCode) {
-        SpecPO po = selectOneByCode(tenantCode, specCode);
+    public int deleteBySpecCode(String tenantCode, String specCode) {
+        SpecPO po = selectOneBySpecCode(tenantCode, specCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

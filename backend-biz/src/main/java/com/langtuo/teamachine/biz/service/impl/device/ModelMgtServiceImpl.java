@@ -73,10 +73,10 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     public TeaMachineResult<ModelDTO> get(String modelCode) {
         TeaMachineResult<ModelDTO> teaMachineResult;
         try {
-            ModelPO modelPO = modelAccessor.selectOne(modelCode);
+            ModelPO modelPO = modelAccessor.selectOneByModelCode(modelCode);
             ModelDTO modelDTO = convert(modelPO);
 
-            List<ModelPipelinePO> pipelinePOList = modelPipelineAccessor.selectList(modelCode);
+            List<ModelPipelinePO> pipelinePOList = modelPipelineAccessor.selectListByModelCode(modelCode);
             if (!CollectionUtils.isEmpty(pipelinePOList)) {
                 modelDTO.setPipelineList(convert(pipelinePOList));
             }
@@ -100,14 +100,14 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            ModelPO exist = modelAccessor.selectOne(modelCode);
+            ModelPO exist = modelAccessor.selectOneByModelCode(modelCode);
             if (exist != null) {
                 int updated = modelAccessor.update(modelPO);
             } else {
                 int inserted = modelAccessor.insert(modelPO);
             }
 
-            int deleted = modelPipelineAccessor.delete(modelCode);
+            int deleted = modelPipelineAccessor.deleteByModelCode(modelCode);
             modelPipelinePOList.stream().forEach(po -> {
                 int inserted = modelPipelineAccessor.insert(po);
             });
@@ -131,8 +131,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted4ModelCode = modelAccessor.delete(modelCode);
-            int deleted4Pipeline = modelPipelineAccessor.delete(modelCode);
+            int deleted4ModelCode = modelAccessor.deleteByModelCode(modelCode);
+            int deleted4Pipeline = modelPipelineAccessor.deleteByModelCode(modelCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

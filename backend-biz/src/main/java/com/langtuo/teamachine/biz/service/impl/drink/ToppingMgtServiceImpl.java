@@ -63,7 +63,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     public TeaMachineResult<ToppingDTO> getByCode(String tenantCode, String toppingTypeCode) {
         TeaMachineResult<ToppingDTO> teaMachineResult;
         try {
-            ToppingPO toppingTypePO = accessor.selectOneByCode(tenantCode, toppingTypeCode);
+            ToppingPO toppingTypePO = accessor.selectOneByToppingCode(tenantCode, toppingTypeCode);
             ToppingDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -77,7 +77,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     public TeaMachineResult<ToppingDTO> getByName(String tenantCode, String toppingTypeName) {
         TeaMachineResult<ToppingDTO> teaMachineResult;
         try {
-            ToppingPO toppingTypePO = accessor.selectOneByName(tenantCode, toppingTypeName);
+            ToppingPO toppingTypePO = accessor.selectOneByToppingName(tenantCode, toppingTypeName);
             ToppingDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            ToppingPO exist = accessor.selectOneByCode(toppingTypePO.getTenantCode(),
+            ToppingPO exist = accessor.selectOneByToppingCode(toppingTypePO.getTenantCode(),
                     toppingTypePO.getToppingCode());
             if (exist != null) {
                 int updated = accessor.update(toppingTypePO);
@@ -120,7 +120,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = accessor.delete(tenantCode, toppingTypeCode);
+            int deleted = accessor.deleteByToppingCode(tenantCode, toppingTypeCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

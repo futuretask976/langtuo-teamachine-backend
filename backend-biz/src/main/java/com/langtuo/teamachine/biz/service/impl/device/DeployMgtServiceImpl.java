@@ -124,7 +124,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = deployAccessor.delete(tenantCode, deployCode);
+            int deleted = deployAccessor.deleteByDeployCode(tenantCode, deployCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
@@ -150,7 +150,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     public TeaMachineResult<String> generateMachineCode() {
         TeaMachineResult<String> teaMachineResult;
         try {
-            long machineCodeSeqVal = deployAccessor.getMachineCodeNextSeqVal();
+            long machineCodeSeqVal = deployAccessor.selectNextSeqVal4MachineCode();
             String machineCode = String.valueOf(machineCodeSeqVal);
             long needSupplyCnt = 6 - machineCode.length();
             if (machineCode.length() < 6) {

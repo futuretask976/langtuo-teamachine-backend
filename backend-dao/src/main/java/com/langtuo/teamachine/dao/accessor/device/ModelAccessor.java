@@ -21,7 +21,7 @@ public class ModelAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public ModelPO selectOne(String modelCode) {
+    public ModelPO selectOneByModelCode(String modelCode) {
         // 首先访问缓存
         ModelPO cached = getCache(modelCode);
         if (cached != null) {
@@ -78,7 +78,7 @@ public class ModelAccessor {
         return updated;
     }
 
-    public int delete(String modelCode) {
+    public int deleteByModelCode(String modelCode) {
         int deleted = mapper.delete(modelCode);
         if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(modelCode);

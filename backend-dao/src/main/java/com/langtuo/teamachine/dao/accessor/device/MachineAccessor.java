@@ -21,7 +21,7 @@ public class MachineAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public MachinePO selectOne(String tenantCode, String machineCode) {
+    public MachinePO selectOneByMachineCode(String tenantCode, String machineCode) {
         // 首先访问缓存
         MachinePO cached = getCache(tenantCode, machineCode);
         if (cached != null) {
@@ -97,8 +97,8 @@ public class MachineAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String machineCode) {
-        MachinePO po = selectOne(tenantCode, machineCode);
+    public int deleteByMachineCode(String tenantCode, String machineCode) {
+        MachinePO po = selectOneByMachineCode(tenantCode, machineCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

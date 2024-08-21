@@ -77,7 +77,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     public TeaMachineResult<AccuracyTplDTO> getByCode(String tenantCode, String specCode) {
         TeaMachineResult<AccuracyTplDTO> teaMachineResult;
         try {
-            AccuracyTplPO po = accuracyTplAccessor.selectOneByCode(tenantCode, specCode);
+            AccuracyTplPO po = accuracyTplAccessor.selectOneByTplCode(tenantCode, specCode);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -91,7 +91,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     public TeaMachineResult<AccuracyTplDTO> getByName(String tenantCode, String specName) {
         TeaMachineResult<AccuracyTplDTO> teaMachineResult;
         try {
-            AccuracyTplPO po = accuracyTplAccessor.selectOneByName(tenantCode, specName);
+            AccuracyTplPO po = accuracyTplAccessor.selectOneByTplName(tenantCode, specName);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -111,14 +111,14 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            AccuracyTplPO exist = accuracyTplAccessor.selectOneByCode(po.getTenantCode(), po.getTemplateCode());
+            AccuracyTplPO exist = accuracyTplAccessor.selectOneByTplCode(po.getTenantCode(), po.getTemplateCode());
             if (exist != null) {
                 int updated = accuracyTplAccessor.update(po);
             } else {
                 int inserted = accuracyTplAccessor.insert(po);
             }
 
-            int deleted = accuracyTplToppingAccessor.delete(request.getTenantCode(), request.getTemplateCode());
+            int deleted = accuracyTplToppingAccessor.deleteByTplCode(request.getTenantCode(), request.getTemplateCode());
             if (!CollectionUtils.isEmpty(toppingPOList)) {
                 toppingPOList.forEach(toppingPO -> {
                     int inserted = accuracyTplToppingAccessor.insert(toppingPO);
@@ -144,7 +144,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = accuracyTplAccessor.delete(tenantCode, templateCode);
+            int deleted = accuracyTplAccessor.deleteByTplCode(tenantCode, templateCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

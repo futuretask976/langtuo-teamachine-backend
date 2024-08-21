@@ -21,7 +21,7 @@ public class ToppingAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public ToppingPO selectOneByCode(String tenantCode, String toppingCode) {
+    public ToppingPO selectOneByToppingCode(String tenantCode, String toppingCode) {
         // 首先访问缓存
         ToppingPO cached = getCache(tenantCode, toppingCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class ToppingAccessor {
         return po;
     }
 
-    public ToppingPO selectOneByName(String tenantCode, String toppingName) {
+    public ToppingPO selectOneByToppingName(String tenantCode, String toppingName) {
         // 首先访问缓存
         ToppingPO cached = getCache(tenantCode, null, toppingName);
         if (cached != null) {
@@ -95,8 +95,8 @@ public class ToppingAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String toppingCode) {
-        ToppingPO po = selectOneByCode(tenantCode, toppingCode);
+    public int deleteByToppingCode(String tenantCode, String toppingCode) {
+        ToppingPO po = selectOneByToppingCode(tenantCode, toppingCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

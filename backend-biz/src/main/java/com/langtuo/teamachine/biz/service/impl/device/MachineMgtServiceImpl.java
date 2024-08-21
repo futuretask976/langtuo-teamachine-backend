@@ -44,7 +44,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Override
     public TeaMachineResult<MachineDTO> getByCode(String tenantCode, String machineCode) {
-        MachinePO machinePO = machineAccessor.selectOne(tenantCode, machineCode);
+        MachinePO machinePO = machineAccessor.selectOneByMachineCode(tenantCode, machineCode);
         MachineDTO adminRoleDTO = convert(machinePO);
         return TeaMachineResult.success(adminRoleDTO);
     }
@@ -153,7 +153,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         TeaMachineResult<Void> teaMachineResult;
         try {
             MachinePO po = convert(request);
-            MachinePO exist = machineAccessor.selectOne(request.getTenantCode(), request.getMachineCode());
+            MachinePO exist = machineAccessor.selectOneByMachineCode(request.getTenantCode(), request.getMachineCode());
             if (exist != null) {
                 int updated = machineAccessor.update(po);
             } else {
@@ -179,7 +179,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = machineAccessor.delete(tenantCode, machineCode);
+            int deleted = machineAccessor.deleteByMachineCode(tenantCode, machineCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

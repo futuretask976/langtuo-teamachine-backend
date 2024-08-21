@@ -69,7 +69,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     public TeaMachineResult<SpecDTO> getByCode(String tenantCode, String specCode) {
         TeaMachineResult<SpecDTO> teaMachineResult;
         try {
-            SpecPO po = specAccessor.selectOneByCode(tenantCode, specCode);
+            SpecPO po = specAccessor.selectOneBySpecCode(tenantCode, specCode);
             SpecDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     public TeaMachineResult<SpecDTO> getByName(String tenantCode, String specName) {
         TeaMachineResult<SpecDTO> teaMachineResult;
         try {
-            SpecPO po = specAccessor.selectOneByName(tenantCode, specName);
+            SpecPO po = specAccessor.selectOneBySpecName(tenantCode, specName);
             SpecDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -104,14 +104,14 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            SpecPO exist = specAccessor.selectOneByCode(specPO.getTenantCode(), specPO.getSpecCode());
+            SpecPO exist = specAccessor.selectOneBySpecCode(specPO.getTenantCode(), specPO.getSpecCode());
             if (exist != null) {
                 int updated = specAccessor.update(specPO);
             } else {
                 int inserted = specAccessor.insert(specPO);
             }
 
-            int deleted4SpecSub = specItemAccessor.delete(specPO.getTenantCode(), specPO.getSpecCode());
+            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(specPO.getTenantCode(), specPO.getSpecCode());
             if (!CollectionUtils.isEmpty(specItemPOList)) {
                 specItemPOList.stream().forEach(item -> {
                     specItemAccessor.insert(item);
@@ -134,8 +134,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted4Spec = specAccessor.delete(tenantCode, specCode);
-            int deleted4SpecSub = specItemAccessor.delete(tenantCode, specCode);
+            int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
+            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
 
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
@@ -149,7 +149,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     public TeaMachineResult<SpecItemDTO> getSpecItemBySpecItemCode(String tenantCode, String specCode, String specItemCode) {
         TeaMachineResult<SpecItemDTO> teaMachineResult;
         try {
-            SpecItemPO po = specItemAccessor.selectOne(tenantCode, specCode, specItemCode);
+            SpecItemPO po = specItemAccessor.selectOneBySpecItemCode(tenantCode, specCode, specItemCode);
             SpecItemDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -163,7 +163,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     public TeaMachineResult<List<SpecItemDTO>> listSpecItemBySpecCode(String tenantCode, String specCode) {
         TeaMachineResult<List<SpecItemDTO>> teaMachineResult;
         try {
-            List<SpecItemPO> poList = specItemAccessor.selectList(tenantCode, specCode);
+            List<SpecItemPO> poList = specItemAccessor.selectListBySpecCode(tenantCode, specCode);
             List<SpecItemDTO> dtoList = convertToSpecItemDTO(poList);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -197,7 +197,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        List<SpecItemPO> poList = specItemAccessor.selectList(po.getTenantCode(), po.getSpecCode());
+        List<SpecItemPO> poList = specItemAccessor.selectListBySpecCode(po.getTenantCode(), po.getSpecCode());
         if (!CollectionUtils.isEmpty(poList)) {
             dto.setSpecItemList(poList.stream().map(item -> convert(item)).collect(Collectors.toList()));
         }

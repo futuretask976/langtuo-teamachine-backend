@@ -21,7 +21,7 @@ public class TeaAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public TeaPO selectOneByCode(String tenantCode, String teaCode) {
+    public TeaPO selectOneByTeaCode(String tenantCode, String teaCode) {
         // 首先访问缓存
         TeaPO cached = getCache(tenantCode, teaCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class TeaAccessor {
         return po;
     }
 
-    public TeaPO selectOneByName(String tenantCode, String teaName) {
+    public TeaPO selectOneByTeaName(String tenantCode, String teaName) {
         // 首先访问缓存
         TeaPO cached = getCache(tenantCode, null, teaName);
         if (cached != null) {
@@ -94,8 +94,8 @@ public class TeaAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String teaCode) {
-        TeaPO po = selectOneByCode(tenantCode, teaCode);
+    public int deleteByTeaCode(String tenantCode, String teaCode) {
+        TeaPO po = selectOneByTeaCode(tenantCode, teaCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

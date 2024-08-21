@@ -17,14 +17,14 @@ public class ModelPipelineAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<ModelPipelinePO> selectList(String modeCode) {
+    public List<ModelPipelinePO> selectListByModelCode(String modelCode) {
         // 首先访问缓存
-        List<ModelPipelinePO> cachedList = getCacheList(modeCode);
+        List<ModelPipelinePO> cachedList = getCacheList(modelCode);
         if (cachedList != null) {
             return cachedList;
         }
         
-        List<ModelPipelinePO> list = mapper.selectList(modeCode);
+        List<ModelPipelinePO> list = mapper.selectList(modelCode);
 
         // 设置缓存
         setCacheList(list);
@@ -40,7 +40,7 @@ public class ModelPipelineAccessor {
         return inserted;
     }
 
-    public int delete(String modelCode) {
+    public int deleteByModelCode(String modelCode) {
         int deleted = mapper.delete(modelCode);
         if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheOne(modelCode);

@@ -18,7 +18,7 @@ public class ToppingBaseRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<ToppingBaseRulePO> selectList(String tenantCode, String teaCode) {
+    public List<ToppingBaseRulePO> selectListByTeaCode(String tenantCode, String teaCode) {
         List<ToppingBaseRulePO> cached = getCacheList(tenantCode, teaCode);
         if (!CollectionUtils.isEmpty(cached)) {
             return cached;
@@ -38,7 +38,7 @@ public class ToppingBaseRuleAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String teaCode) {
+    public int deleteByTeaCode(String tenantCode, String teaCode) {
         int deleted = mapper.delete(tenantCode, teaCode);
         if (deleted > DBOpeConts.DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, teaCode);

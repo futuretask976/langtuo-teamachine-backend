@@ -17,7 +17,7 @@ public class TeaUnitAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<TeaUnitPO> selectList(String tenantCode, String teaCode) {
+    public List<TeaUnitPO> selectListByTeaCode(String tenantCode, String teaCode) {
         // 首先访问缓存
         List<TeaUnitPO> cachedList = getCacheList(tenantCode, teaCode);
         if (cachedList != null) {
@@ -34,7 +34,7 @@ public class TeaUnitAccessor {
         return mapper.insert(po);
     }
 
-    public int delete(String tenantCode, String teaCode) {
+    public int deleteByTeaCode(String tenantCode, String teaCode) {
         int deleted = mapper.delete(tenantCode, teaCode);
         if (deleted > DBOpeConts.DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, teaCode);

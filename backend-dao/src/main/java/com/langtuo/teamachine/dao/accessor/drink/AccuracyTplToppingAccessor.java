@@ -39,7 +39,7 @@ public class AccuracyTplToppingAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String templateCode) {
+    public int deleteByTplCode(String tenantCode, String templateCode) {
         int deleted = mapper.delete(tenantCode, templateCode);
         if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, templateCode);

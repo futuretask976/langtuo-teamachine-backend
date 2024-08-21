@@ -74,7 +74,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     public TeaMachineResult<ToppingTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
         TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
-            ToppingTypePO toppingTypePO = accessor.selectOneByCode(tenantCode, toppingTypeCode);
+            ToppingTypePO toppingTypePO = accessor.selectOneByToppingTypeCode(tenantCode, toppingTypeCode);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
 
             teaMachineResult = TeaMachineResult.success(tenantDTO);
@@ -89,7 +89,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     public TeaMachineResult<ToppingTypeDTO> getByName(String tenantCode, String toppingTypeName) {
         TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
-            ToppingTypePO toppingTypePO = accessor.selectOneByName(tenantCode, toppingTypeName);
+            ToppingTypePO toppingTypePO = accessor.selectOneByToppingTypeName(tenantCode, toppingTypeName);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
 
             teaMachineResult = TeaMachineResult.success(tenantDTO);
@@ -110,7 +110,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            ToppingTypePO exist = accessor.selectOneByCode(toppingTypePO.getTenantCode(),
+            ToppingTypePO exist = accessor.selectOneByToppingTypeCode(toppingTypePO.getTenantCode(),
                     toppingTypePO.getToppingTypeCode());
             if (exist != null) {
                 int updated = accessor.update(toppingTypePO);

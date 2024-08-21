@@ -21,7 +21,7 @@ public class ToppingTypeAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public ToppingTypePO selectOneByCode(String tenantCode, String toppingTypeCode) {
+    public ToppingTypePO selectOneByToppingTypeCode(String tenantCode, String toppingTypeCode) {
         // 首先访问缓存
         ToppingTypePO cached = getCache(tenantCode, toppingTypeCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class ToppingTypeAccessor {
         return po;
     }
 
-    public ToppingTypePO selectOneByName(String tenantCode, String toppingTypeName) {
+    public ToppingTypePO selectOneByToppingTypeName(String tenantCode, String toppingTypeName) {
         // 首先访问缓存
         ToppingTypePO cached = getCache(tenantCode, null, toppingTypeName);
         if (cached != null) {
@@ -96,7 +96,7 @@ public class ToppingTypeAccessor {
     }
 
     public int delete(String tenantCode, String toppingTypeCode) {
-        ToppingTypePO po = selectOneByCode(tenantCode, toppingTypeCode);
+        ToppingTypePO po = selectOneByToppingTypeCode(tenantCode, toppingTypeCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

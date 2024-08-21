@@ -69,7 +69,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     public TeaMachineResult<TeaTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
         TeaMachineResult<TeaTypeDTO> teaMachineResult;
         try {
-            TeaTypePO toppingTypePO = accessor.selectOneByCode(tenantCode, toppingTypeCode);
+            TeaTypePO toppingTypePO = accessor.selectOneByTeaTypeCode(tenantCode, toppingTypeCode);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     public TeaMachineResult<TeaTypeDTO> getByName(String tenantCode, String toppingTypeName) {
         TeaMachineResult<TeaTypeDTO> teaMachineResult;
         try {
-            TeaTypePO toppingTypePO = accessor.selectOneByName(tenantCode, toppingTypeName);
+            TeaTypePO toppingTypePO = accessor.selectOneByTeaName(tenantCode, toppingTypeName);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -103,7 +103,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            TeaTypePO exist = accessor.selectOneByCode(teaTypePO.getTenantCode(), teaTypePO.getTeaTypeCode());
+            TeaTypePO exist = accessor.selectOneByTeaTypeCode(teaTypePO.getTenantCode(), teaTypePO.getTeaTypeCode());
             if (exist != null) {
                 int updated = accessor.update(teaTypePO);
             } else {
@@ -125,7 +125,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = accessor.delete(tenantCode, teaTypeCode);
+            int deleted = accessor.deleteByTeaTypeCode(tenantCode, teaTypeCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

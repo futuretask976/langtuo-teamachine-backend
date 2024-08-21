@@ -18,7 +18,7 @@ public class SpecItemAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public SpecItemPO selectOne(String tenantCode, String specCode, String specItemCode) {
+    public SpecItemPO selectOneBySpecItemCode(String tenantCode, String specCode, String specItemCode) {
         // 首先访问缓存
         SpecItemPO cached = getCache(tenantCode, specCode, specItemCode);
         if (cached != null) {
@@ -32,7 +32,7 @@ public class SpecItemAccessor {
         return po;
     }
 
-    public List<SpecItemPO> selectList(String tenantCode, String specCode) {
+    public List<SpecItemPO> selectListBySpecCode(String tenantCode, String specCode) {
         // 首先访问缓存
         List<SpecItemPO> cachedList = getCacheList(tenantCode, specCode);
         if (cachedList != null) {
@@ -64,7 +64,7 @@ public class SpecItemAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String specCode) {
+    public int deleteBySpecCode(String tenantCode, String specCode) {
         List<String> specItemCodeList = mapper.selectList(tenantCode, specCode).stream()
                 .map(po -> po.getSpecItemCode())
                 .collect(Collectors.toList());

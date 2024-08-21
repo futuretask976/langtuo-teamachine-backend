@@ -19,7 +19,7 @@ public class ToppingAdjustRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<ToppingAdjustRulePO> selectList(String tenantCode, String teaCode, String teaUnitCode) {
+    public List<ToppingAdjustRulePO> selectListByTeaUnitCode(String tenantCode, String teaCode, String teaUnitCode) {
         List<ToppingAdjustRulePO> cached = getCacheList(tenantCode, teaCode, teaUnitCode);
         if (!CollectionUtils.isEmpty(cached)) {
             return cached;
@@ -39,7 +39,7 @@ public class ToppingAdjustRuleAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String teaCode) {
+    public int deleteByTeaCode(String tenantCode, String teaCode) {
         List<ToppingAdjustRulePO> poList = mapper.selectList(tenantCode, teaCode, null);
         List<String> teaUnitCodeList = poList.stream()
                 .map(po -> po.getTeaUnitCode())
