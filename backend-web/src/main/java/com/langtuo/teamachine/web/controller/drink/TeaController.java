@@ -5,13 +5,23 @@ import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
+
+import static com.langtuo.teamachine.api.result.LangTuoResult.getModel;
 
 @RestController
 @RequestMapping("/drinkset/tea")
+@Slf4j
 public class TeaController {
     @Resource
     private TeaMgtService service;
@@ -70,5 +80,28 @@ public class TeaController {
             @PathVariable(name = "teacode") String teaCode) {
         LangTuoResult<Void> rtn = service.delete(tenantCode, teaCode);
         return rtn;
+    }
+
+    @GetMapping("/{tenantcode}/export")
+    public ResponseEntity<byte[]> exportExcel(@PathVariable(name = "tenantcode") String tenantCode) {
+        LangTuoResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
+        XSSFWorkbook xssfWorkbook = getModel(rtn);
+
+        // 导出Excel文件
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            xssfWorkbook.write(outputStream);
+            xssfWorkbook.close();
+        } catch (IOException e) {
+            log.error("write output stream error: " + e.getMessage(), e);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "export.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(outputStream.toByteArray());
     }
 }

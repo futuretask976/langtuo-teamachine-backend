@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class ToppingBaseRuleDTO {
     /**
-     *
+     * 步骤序号
      */
     private int stepIndex;
 
@@ -17,7 +17,7 @@ public class ToppingBaseRuleDTO {
     private String toppingCode;
 
     /**
-     *
+     * 基础用量
      */
     private int baseAmount;
 

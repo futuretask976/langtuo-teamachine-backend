@@ -4,6 +4,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
 import com.langtuo.teamachine.api.result.LangTuoResult;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.List;
 
@@ -58,4 +59,11 @@ public interface TeaMgtService {
      * @return
      */
     LangTuoResult<Integer> countByTeaTypeCode(String tenantCode, String teaTypeCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    LangTuoResult<XSSFWorkbook> exportByExcel(String tenantCode);
 }
