@@ -1,14 +1,13 @@
 package com.langtuo.teamachine.mqtt.consume.worker.drink;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 
 import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
@@ -45,25 +44,12 @@ public class AccuracyTplDispatchWorker implements Runnable {
         jsonMsg.put(MqttConsts.SEND_KEY_ACCURACY_TPL, jsonDispatchCont);
         log.info("$$$$$ AccuracyDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
-        MqttService mqttService = getMQTTService();
+        MqttService mqttService = SpringUtils.getMQTTService();
         mqttService.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
     }
 
-    private MqttService getMQTTService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MqttService mqttService = appContext.getBean(MqttService.class);
-        return mqttService;
-    }
-
-    private AccuracyTplMgtService getToppingAccuracyTplMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        AccuracyTplMgtService accuracyTplMgtService = appContext.getBean(
-                AccuracyTplMgtService.class);
-        return accuracyTplMgtService;
-    }
-
     private JSONObject getDispatchCont() {
-        AccuracyTplMgtService accuracyTplMgtService = getToppingAccuracyTplMgtService();
+        AccuracyTplMgtService accuracyTplMgtService = SpringUtils.getToppingAccuracyTplMgtService();
         AccuracyTplDTO dto = getModel(accuracyTplMgtService.getByCode(tenantCode, templateCode));
         if (dto == null) {
             log.info("open rule list is empty, stop worker");

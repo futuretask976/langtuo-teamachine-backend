@@ -20,6 +20,7 @@ import com.langtuo.teamachine.dao.oss.OSSUtils;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
+import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -92,57 +93,21 @@ public class MenuDispatchWorker implements Runnable {
             log.info("machine code list is empty, stop worker");
         }
 
-        MqttService mqttService = getMQTTService();
+        MqttService mqttService = SpringUtils.getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
             mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 
-    private MenuMgtService getMenuMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MenuMgtService menuMgtService = appContext.getBean(MenuMgtService.class);
-        return menuMgtService;
-    }
-
-    private MqttService getMQTTService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MqttService mqttService = appContext.getBean(MqttService.class);
-        return mqttService;
-    }
-
-    private ShopMgtService getShopMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        ShopMgtService shopMgtService = appContext.getBean(ShopMgtService.class);
-        return shopMgtService;
-    }
-
-    private MachineMgtService getMachineMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MachineMgtService machineMgtService = appContext.getBean(MachineMgtService.class);
-        return machineMgtService;
-    }
-
-    private SeriesMgtService getSeriesMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        SeriesMgtService seriesMgtService = appContext.getBean(SeriesMgtService.class);
-        return seriesMgtService;
-    }
-
-    private TeaMgtService getTeaMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        TeaMgtService teaMgtService = appContext.getBean(TeaMgtService.class);
-        return teaMgtService;
-    }
-
     private JSONObject getDispatchCont() {
-        MenuMgtService menuMgtService = getMenuMgtService();
+        MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
         MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
         if (menuDTO == null) {
             log.info("list menu error, stop worker");
             return null;
         }
 
-        SeriesMgtService seriesMgtService = getSeriesMgtService();
+        SeriesMgtService seriesMgtService = SpringUtils.getSeriesMgtService();
         List<SeriesDTO> seriesList = menuDTO.getMenuSeriesRelList().stream()
                 .map(menuSeriesRelDTO -> {
                     SeriesDTO seriesDTO = getModel(seriesMgtService.getByCode(
@@ -173,7 +138,7 @@ public class MenuDispatchWorker implements Runnable {
             return null;
         }
 
-        TeaMgtService teaMgtService = getTeaMgtService();
+        TeaMgtService teaMgtService = SpringUtils.getTeaMgtService();
         List<TeaDTO> teaList = teaCodeList.stream()
                 .map(teaCode -> {
                     TeaDTO teaDTO = getModel(teaMgtService.getByCode(tenantCode, teaCode));
@@ -200,14 +165,14 @@ public class MenuDispatchWorker implements Runnable {
     }
 
     private List<String> getMachineCodeList() {
-        MenuMgtService menuMgtService = getMenuMgtService();
+        MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
         MenuDispatchDTO menuDispatchDTO = getModel(menuMgtService.getDispatchByMenuCode(tenantCode, menuCode));
         if (menuDispatchDTO == null) {
             log.info("menu dispatch is null");
             return null;
         }
 
-        ShopMgtService shopMgtService = getShopMgtService();
+        ShopMgtService shopMgtService = SpringUtils.getShopMgtService();
         List<String> shopCodeList = menuDispatchDTO.getShopGroupCodeList().stream()
                 .map(shopGroupCode -> {
                     List<ShopDTO> shopList = getListModel(shopMgtService.listByShopGroupCode(
@@ -228,7 +193,7 @@ public class MenuDispatchWorker implements Runnable {
             return null;
         }
 
-        MachineMgtService machineMgtService = getMachineMgtService();
+        MachineMgtService machineMgtService = SpringUtils.getMachineMgtService();
         List<String> machineCodeList = shopCodeList.stream()
                 .map(shopCode -> {
                     List<MachineDTO> machineList = getListModel(machineMgtService.listByShopCode(

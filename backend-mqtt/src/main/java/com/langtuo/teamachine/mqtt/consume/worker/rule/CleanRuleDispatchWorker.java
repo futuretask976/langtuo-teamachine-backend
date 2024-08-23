@@ -12,6 +12,7 @@ import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -59,38 +60,14 @@ public class CleanRuleDispatchWorker implements Runnable {
             log.info("machine code list is empty, stop worker");
         }
 
-        MqttService mqttService = getMQTTService();
+        MqttService mqttService = SpringUtils.getMQTTService();
         machineCodeList.stream().forEach(machineCode -> {
             mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 
-    private CleanRuleMgtService getCleanRuleMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        CleanRuleMgtService cleanRuleMgtService = appContext.getBean(CleanRuleMgtService.class);
-        return cleanRuleMgtService;
-    }
-
-    private MqttService getMQTTService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MqttService mqttService = appContext.getBean(MqttService.class);
-        return mqttService;
-    }
-
-    private ShopMgtService getShopMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        ShopMgtService shopMgtService = appContext.getBean(ShopMgtService.class);
-        return shopMgtService;
-    }
-
-    private MachineMgtService getMachineMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MachineMgtService machineMgtService = appContext.getBean(MachineMgtService.class);
-        return machineMgtService;
-    }
-
     private JSONObject getDispatchCont() {
-        CleanRuleMgtService cleanRuleMgtService = getCleanRuleMgtService();
+        CleanRuleMgtService cleanRuleMgtService = SpringUtils.getCleanRuleMgtService();
         CleanRuleDTO cleanRuleDTO = getModel(cleanRuleMgtService.getByCode(tenantCode, cleanRuleCode));
         if (cleanRuleDTO == null) {
             log.info("clean rule error, stop worker");
@@ -102,14 +79,14 @@ public class CleanRuleDispatchWorker implements Runnable {
     }
 
     private List<String> getMachineCodeList() {
-        CleanRuleMgtService cleanRuleMgtService = getCleanRuleMgtService();
+        CleanRuleMgtService cleanRuleMgtService = SpringUtils.getCleanRuleMgtService();
         CleanRuleDispatchDTO cleanRuleDispatchDTO = getModel(cleanRuleMgtService.getDispatchByCleanRuleCode(tenantCode, cleanRuleCode));
         if (cleanRuleDispatchDTO == null) {
             log.info("clean rule dispatch is null");
             return null;
         }
 
-        ShopMgtService shopMgtService = getShopMgtService();
+        ShopMgtService shopMgtService = SpringUtils.getShopMgtService();
         List<String> shopCodeList = cleanRuleDispatchDTO.getShopGroupCodeList().stream()
                 .map(shopGroupCode -> {
                     List<ShopDTO> shopList = getListModel(shopMgtService.listByShopGroupCode(
@@ -130,7 +107,7 @@ public class CleanRuleDispatchWorker implements Runnable {
             return null;
         }
 
-        MachineMgtService machineMgtService = getMachineMgtService();
+        MachineMgtService machineMgtService = SpringUtils.getMachineMgtService();
         List<String> machineCodeList = shopCodeList.stream()
                 .map(shopCode -> {
                     List<MachineDTO> machineList = getListModel(machineMgtService.listByShopCode(

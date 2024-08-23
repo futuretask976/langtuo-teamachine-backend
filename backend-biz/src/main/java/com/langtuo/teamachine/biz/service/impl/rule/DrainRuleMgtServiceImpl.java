@@ -52,10 +52,10 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
-    public TeaMachineResult<DrainRuleDTO> getByCode(String tenantCode, String openRuleCode) {
+    public TeaMachineResult<DrainRuleDTO> getByCode(String tenantCode, String drainRuleCode) {
         TeaMachineResult<DrainRuleDTO> teaMachineResult;
         try {
-            DrainRulePO po = drainRuleAccessor.selectOneByCode(tenantCode, openRuleCode);
+            DrainRulePO po = drainRuleAccessor.selectOneByCode(tenantCode, drainRuleCode);
             DrainRuleDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {

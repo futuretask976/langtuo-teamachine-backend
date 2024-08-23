@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.mqtt.consume.worker.menu;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,18 +7,16 @@ import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
-import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
+import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
@@ -90,48 +87,12 @@ public class MenuDispatch4InitWorker implements Runnable {
         log.info("$$$$$ MenuDispatch4InitWorker jsonMsg=" + jsonMsg.toJSONString());
 
         // 准备发送
-        MqttService mqttService = getMQTTService();
+        MqttService mqttService = SpringUtils.getMQTTService();
         mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
     }
 
-    private MenuMgtService getMenuMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MenuMgtService menuMgtService = appContext.getBean(MenuMgtService.class);
-        return menuMgtService;
-    }
-
-    private MqttService getMQTTService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MqttService mqttService = appContext.getBean(MqttService.class);
-        return mqttService;
-    }
-
-    private ShopMgtService getShopMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        ShopMgtService shopMgtService = appContext.getBean(ShopMgtService.class);
-        return shopMgtService;
-    }
-
-    private MachineMgtService getMachineMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MachineMgtService machineMgtService = appContext.getBean(MachineMgtService.class);
-        return machineMgtService;
-    }
-
-    private SeriesMgtService getSeriesMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        SeriesMgtService seriesMgtService = appContext.getBean(SeriesMgtService.class);
-        return seriesMgtService;
-    }
-
-    private TeaMgtService getTeaMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        TeaMgtService teaMgtService = appContext.getBean(TeaMgtService.class);
-        return teaMgtService;
-    }
-
     private JSONArray getDispatchCont() {
-        MenuMgtService menuMgtService = getMenuMgtService();
+        MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
         List<MenuDTO> menuDTOList = getModel(menuMgtService.listByShopCode(tenantCode, shopCode));
         if (CollectionUtils.isEmpty(menuDTOList)) {
             log.info("list menu error, stop worker");
@@ -147,14 +108,14 @@ public class MenuDispatch4InitWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont4Menu(String menuCode) {
-        MenuMgtService menuMgtService = getMenuMgtService();
+        MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
         MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
         if (menuDTO == null) {
             log.info("list menu error, stop worker");
             return null;
         }
 
-        SeriesMgtService seriesMgtService = getSeriesMgtService();
+        SeriesMgtService seriesMgtService = SpringUtils.getSeriesMgtService();
         List<SeriesDTO> seriesList = menuDTO.getMenuSeriesRelList().stream()
                 .map(menuSeriesRelDTO -> {
                     SeriesDTO seriesDTO = getModel(seriesMgtService.getByCode(
@@ -185,7 +146,7 @@ public class MenuDispatch4InitWorker implements Runnable {
             return null;
         }
 
-        TeaMgtService teaMgtService = getTeaMgtService();
+        TeaMgtService teaMgtService = SpringUtils.getTeaMgtService();
         List<TeaDTO> teaList = teaCodeList.stream()
                 .map(teaCode -> {
                     TeaDTO teaDTO = getModel(teaMgtService.getByCode(tenantCode, teaCode));

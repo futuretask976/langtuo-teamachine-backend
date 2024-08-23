@@ -1,15 +1,14 @@
 package com.langtuo.teamachine.mqtt.consume.worker.device;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 
 import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
@@ -46,24 +45,12 @@ public class MachineDispatchWorker implements Runnable {
         jsonMsg.put(MqttConsts.SEND_KEY_MACHINE, jsonDispatchCont);
         log.info("$$$$$ MachineDispatchWorker jsonMsg: " + jsonMsg);
 
-        MqttService mqttService = getMQTTService();
+        MqttService mqttService = SpringUtils.getMQTTService();
         mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
     }
 
-    private MqttService getMQTTService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MqttService mqttService = appContext.getBean(MqttService.class);
-        return mqttService;
-    }
-
-    private MachineMgtService getMachineMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MachineMgtService machineMgtService = appContext.getBean(MachineMgtService.class);
-        return machineMgtService;
-    }
-
     private JSONObject getDispatchCont() {
-        MachineMgtService machineMgtService = getMachineMgtService();
+        MachineMgtService machineMgtService = SpringUtils.getMachineMgtService();
         MachineDTO dto = getModel(machineMgtService.getByCode(tenantCode, machineCode));
         if (dto == null) {
             log.info("machine is null, stop worker");

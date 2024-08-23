@@ -6,9 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDispatchDTO;
+import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
+import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
+import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
@@ -65,10 +68,10 @@ public class WarningRuleDispatchWorker implements Runnable {
         });
     }
 
-    private DrainRuleMgtService getOpenRuleMgtService() {
+    private WarningRuleMgtService getWarningRuleMgtService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        DrainRuleMgtService drainRuleMgtService = appContext.getBean(DrainRuleMgtService.class);
-        return drainRuleMgtService;
+        WarningRuleMgtService warningRuleMgtService = appContext.getBean(WarningRuleMgtService.class);
+        return warningRuleMgtService;
     }
 
     private MqttService getMQTTService() {
@@ -90,22 +93,22 @@ public class WarningRuleDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        DrainRuleMgtService drainRuleMgtService = getOpenRuleMgtService();
-        DrainRuleDTO drainRuleDTO = getModel(drainRuleMgtService.getByCode(tenantCode, warningRuleCode));
-        if (drainRuleDTO == null) {
-            log.info("open rule error, stop worker");
+        WarningRuleMgtService warningRuleMgtService = getWarningRuleMgtService();
+        WarningRuleDTO warningRuleDTO = getModel(warningRuleMgtService.getByCode(tenantCode, warningRuleCode));
+        if (warningRuleDTO == null) {
+            log.info("warning rule error, stop worker");
             return null;
         }
 
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(drainRuleDTO);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(warningRuleDTO);
         return jsonObject;
     }
 
     private List<String> getMachineCodeList() {
-        DrainRuleMgtService drainRuleMgtService = getOpenRuleMgtService();
-        DrainRuleDispatchDTO drainRuleDispatchDTO = getModel(drainRuleMgtService.getDispatchByDrainRuleCode(tenantCode, warningRuleCode));
+        WarningRuleMgtService warningRuleMgtService = getWarningRuleMgtService();
+        WarningRuleDispatchDTO drainRuleDispatchDTO = getModel(warningRuleMgtService.getDispatchByWarningRuleCode(tenantCode, warningRuleCode));
         if (drainRuleDispatchDTO == null) {
-            log.info("open rule dispatch is null");
+            log.info("warning rule dispatch is null");
             return null;
         }
 
