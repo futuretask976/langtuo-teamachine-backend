@@ -6,8 +6,10 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.OrderActRecordDTO;
 import com.langtuo.teamachine.api.model.record.OrderSpecItemActRecordDTO;
 import com.langtuo.teamachine.api.model.record.OrderToppingActRecordDTO;
+import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
+import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.SpecItemAccessor;
@@ -34,6 +36,8 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
 
 @Component
 @Slf4j
@@ -62,6 +66,9 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     @Resource
     private SpecItemAccessor specItemAccessor;
 
+    @Resource
+    private ShopGroupMgtService shopGroupMgtService;
+
     @Override
     public TeaMachineResult<OrderActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<OrderActRecordDTO> teaMachineResult;
@@ -84,6 +91,13 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
 
         TeaMachineResult<PageDTO<OrderActRecordDTO>> teaMachineResult;
         try {
+            if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
+                List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
+                shopGroupCodeList = shopGroupDTOList.stream()
+                        .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
+                        .collect(Collectors.toList());
+            }
+
             PageInfo<OrderActRecordPO> pageInfo = orderActRecordAccessor.search(tenantCode, shopGroupCodeList,
                     shopCodeList, pageNum, pageSize);
             List<OrderActRecordDTO> dtoList = convert(pageInfo.getList());

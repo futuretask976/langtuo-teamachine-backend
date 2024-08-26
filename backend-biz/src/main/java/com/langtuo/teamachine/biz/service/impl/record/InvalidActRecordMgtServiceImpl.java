@@ -4,9 +4,11 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.InvalidActRecordDTO;
+import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.request.record.InvalidActRecordPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.InvalidActRecordMgtService;
+import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
@@ -25,6 +27,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
+
 @Component
 @Slf4j
 public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtService {
@@ -39,6 +43,9 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
 
     @Resource
     private ShopGroupAccessor shopGroupAccessor;
+
+    @Resource
+    private ShopGroupMgtService shopGroupMgtService;
 
     @Override
     public TeaMachineResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark) {
@@ -62,6 +69,20 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
 
         TeaMachineResult<PageDTO<InvalidActRecordDTO>> teaMachineResult;
         try {
+            if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
+                List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
+                shopGroupCodeList = shopGroupDTOList.stream()
+                        .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
+                        .collect(Collectors.toList());
+            }
+
+            if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
+                List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
+                shopGroupCodeList = shopGroupDTOList.stream()
+                        .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
+                        .collect(Collectors.toList());
+            }
+
             PageInfo<InvalidActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
                     shopCodeList, pageNum, pageSize);
             List<InvalidActRecordDTO> dtoList = convert(pageInfo.getList());
