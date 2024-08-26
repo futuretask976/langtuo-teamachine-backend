@@ -51,4 +51,12 @@ public interface MenuSeriesRelMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param seriesCode
+     * @return
+     */
+    int countBySeriesCode(@Param("tenantCode") String tenantCode, @Param("seriesCode") String seriesCode);
 }

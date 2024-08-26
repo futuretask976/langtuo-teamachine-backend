@@ -44,4 +44,12 @@ public interface SeriesTeaRelMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("seriesCode") String seriesCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param teaCode
+     * @return
+     */
+    int countByTeaCode(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
 }

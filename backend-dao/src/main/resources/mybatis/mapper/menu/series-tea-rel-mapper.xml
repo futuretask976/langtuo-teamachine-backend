@@ -33,6 +33,15 @@
             AND series_code = #{seriesCode}
     </select>
 
+    <select id="countByTeaCode" resultType="int">
+        SELECT COUNT(1) FROM series_tea_rel
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="teaCode != null">
+                AND tea_code = #{teaCode}
+            </if>
+    </select>
+
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.menu.SeriesTeaRelPO">
         INSERT INTO series_tea_rel (
             gmt_created

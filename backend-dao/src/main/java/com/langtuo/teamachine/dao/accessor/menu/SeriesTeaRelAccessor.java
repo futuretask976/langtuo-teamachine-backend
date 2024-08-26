@@ -31,6 +31,19 @@ public class SeriesTeaRelAccessor {
         return list;
     }
 
+    public int countByTeaCode(String tenantCode, String teaCode) {
+        // 首先访问缓存
+        Integer cached = getCacheCount(tenantCode, teaCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByTeaCode(tenantCode, teaCode);
+
+        setCacheCount(tenantCode, teaCode, count);
+        return count;
+    }
+
     public int insert(SeriesTeaRelPO po) {
         int inserted = mapper.insert(po);
         if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
@@ -49,6 +62,22 @@ public class SeriesTeaRelAccessor {
 
     private String getCacheListKey(String tenantCode, String seriesCode) {
         return "seriesTeaRelAcc-" + tenantCode + "-" + seriesCode;
+    }
+
+    private String getCacheCountKey(String tenantCode, String teaCode) {
+        return "seriesTeaRelAcc-cnt-" + tenantCode + "-" + teaCode;
+    }
+
+    private Integer getCacheCount(String tenantCode, String teaCode) {
+        String key = getCacheCountKey(tenantCode, teaCode);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCount(String tenantCode, String teaCode, Integer count) {
+        String key = getCacheCountKey(tenantCode, teaCode);
+        redisManager.setValue(key, count);
     }
 
     private List<SeriesTeaRelPO> getCacheList(String tenantCode, String seriesCode) {

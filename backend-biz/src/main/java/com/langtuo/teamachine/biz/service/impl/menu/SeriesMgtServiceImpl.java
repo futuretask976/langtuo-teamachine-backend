@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.request.menu.SeriesPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.accessor.menu.MenuSeriesRelAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesTeaRelAccessor;
 import com.langtuo.teamachine.dao.po.menu.SeriesPO;
@@ -30,6 +31,9 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
     @Resource
     private SeriesTeaRelAccessor seriesTeaRelAccessor;
+
+    @Resource
+    private MenuSeriesRelAccessor menuSeriesRelAccessor;
 
     @Override
     public TeaMachineResult<List<SeriesDTO>> list(String tenantCode) {
@@ -135,9 +139,14 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted4Series = seriesAccessor.delete(tenantCode, seriesCode);
-            int deleted4SeriesTeaRel = seriesTeaRelAccessor.delete(tenantCode, seriesCode);
-            teaMachineResult = TeaMachineResult.success();
+            int count = menuSeriesRelAccessor.countBySeriesCode(tenantCode, seriesCode);
+            if (count == 0) {
+                int deleted4Series = seriesAccessor.delete(tenantCode, seriesCode);
+                int deleted4SeriesTeaRel = seriesTeaRelAccessor.delete(tenantCode, seriesCode);
+                teaMachineResult = TeaMachineResult.success();
+            } else {
+                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_SERIES);
+            }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);

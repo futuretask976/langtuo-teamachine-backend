@@ -14,6 +14,7 @@ import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.excel.*;
 import com.langtuo.teamachine.biz.service.util.ExcelUtils;
 import com.langtuo.teamachine.dao.accessor.drink.*;
+import com.langtuo.teamachine.dao.accessor.menu.SeriesTeaRelAccessor;
 import com.langtuo.teamachine.dao.po.drink.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +54,9 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
     @Resource
     private ToppingAccessor toppingAccessor;
+
+    @Resource
+    private SeriesTeaRelAccessor seriesTeaRelAccessor;
 
     @Override
     public TeaMachineResult<TeaDTO> getByCode(String tenantCode, String teaCode) {
@@ -168,11 +172,16 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted4Tea = teaAccessor.deleteByTeaCode(tenantCode, teaCode);
-            int deleted4TeaUnit = teaUnitAccessor.deleteByTeaCode(tenantCode, teaCode);
-            int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(tenantCode, teaCode);
-            int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.deleteByTeaCode(tenantCode, teaCode);
-            teaMachineResult = TeaMachineResult.success();
+            int count = seriesTeaRelAccessor.countByTeaCode(tenantCode, teaCode);
+            if (count == 0) {
+                int deleted4Tea = teaAccessor.deleteByTeaCode(tenantCode, teaCode);
+                int deleted4TeaUnit = teaUnitAccessor.deleteByTeaCode(tenantCode, teaCode);
+                int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(tenantCode, teaCode);
+                int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.deleteByTeaCode(tenantCode, teaCode);
+                teaMachineResult = TeaMachineResult.success();
+            } else {
+                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_TEA);
+            }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
