@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.user.RoleMapper;
+import com.langtuo.teamachine.dao.po.user.AdminPO;
+import com.langtuo.teamachine.dao.po.user.PermitActPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import com.langtuo.teamachine.dao.query.user.AdminRoleQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class RoleAccessor {
@@ -22,6 +25,12 @@ public class RoleAccessor {
     private RedisManager redisManager;
 
     public RolePO selectOneByRoleCode(String tenantCode, String roleCode) {
+        // 超级管理员特殊逻辑
+        RolePO superRolePO = getSysSuperRole(tenantCode, roleCode);
+        if (superRolePO != null) {
+            return superRolePO;
+        }
+
         // 首先访问缓存
         RolePO cached = getCache(tenantCode, roleCode, null);
         if (cached != null) {
@@ -155,5 +164,17 @@ public class RoleAccessor {
 
     private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
+    }
+
+    public RolePO getSysSuperRole(String tenantCode, String roleCode) {
+        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
+            return null;
+        }
+
+        RolePO po = new RolePO();
+        po.setRoleCode("SYS_SUPER_ROLE");
+        po.setRoleName("SYS_SUPER_ROLE");
+        po.setSysReserved(1);
+        return po;
     }
 }

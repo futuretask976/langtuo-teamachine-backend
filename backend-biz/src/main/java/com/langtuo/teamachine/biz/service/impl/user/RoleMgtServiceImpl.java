@@ -46,12 +46,6 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
     @Override
     public TeaMachineResult<RoleDTO> getByCode(String tenantCode, String roleCode) {
-        // 超级管理员特殊逻辑
-        RoleDTO superRole = getSysSuperRole(tenantCode, roleCode);
-        if (superRole != null) {
-            return TeaMachineResult.success(superRole);
-        }
-
         RolePO rolePO = roleAccessor.selectOneByRoleCode(tenantCode, roleCode);
         RoleDTO roleDTO = convert(rolePO);
         return TeaMachineResult.success(roleDTO);
@@ -237,31 +231,5 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             po.setPermitActCode(item);
             return po;
         }).collect(Collectors.toList());
-    }
-
-    /**
-     * 此方法返回系统超级角色，不存储在数据库（因为如果存储数据库，必须指定tenant，而系统超级角色不归属任何teanant）
-     * @return
-     */
-    public RoleDTO getSysSuperRole(String tenantCode, String roleCode) {
-        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
-            return null;
-        }
-
-        RoleDTO dto = new RoleDTO();
-        dto.setRoleCode("SYS_SUPER_ROLE");
-        dto.setRoleName("SYS_SUPER_ROLE");
-        dto.setSysReserved(1);
-        dto.setAdminCount(1);
-
-        List<PermitActPO> permitActPOList = permitActAccessor.selectPermitActList();
-        dto.setPermitActCodeList(permitActPOList.stream()
-                .map(permitActDTO -> permitActDTO.getPermitActCode())
-                .collect(Collectors.toList()));
-
-        // 硬编码添加商户管理
-        dto.getPermitActCodeList().add("tenant_mgt");
-
-        return dto;
     }
 }
