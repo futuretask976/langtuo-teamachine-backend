@@ -55,7 +55,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
         TeaMachineResult<PageDTO<MachineDTO>> teaMachineResult;
         try {
-            ShopPO shopPO = shopAccessor.selectOneByName(tenantCode, shopName);
+            ShopPO shopPO = shopAccessor.selectOneByShopName(tenantCode, shopName);
             if (shopPO == null && StringUtils.isNotBlank(shopName)) {
                 return TeaMachineResult.success(new PageDTO<MachineDTO>(null, 0, pageNum, pageSize));
             }
@@ -216,7 +216,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         dto.setState(po.getState());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
+        ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
         if (shopPO != null) {
             dto.setShopCode(shopPO.getShopCode());
             dto.setShopName(shopPO.getShopName());

@@ -17,7 +17,7 @@ public class MenuSeriesRelAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<MenuSeriesRelPO> selectList(String tenantCode, String seriesCode) {
+    public List<MenuSeriesRelPO> selectListBySeriesCode(String tenantCode, String seriesCode) {
         // 首先访问缓存
         List<MenuSeriesRelPO> cachedList = getCacheList(tenantCode, seriesCode);
         if (cachedList != null) {
@@ -52,7 +52,7 @@ public class MenuSeriesRelAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String seriesCode) {
+    public int deleteBySeriesCode(String tenantCode, String seriesCode) {
         int deleted = mapper.delete(tenantCode, seriesCode);
         if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, seriesCode);

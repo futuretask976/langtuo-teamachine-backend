@@ -62,7 +62,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
     public TeaMachineResult<TenantDTO> get(String tenantCode) {
         TeaMachineResult<TenantDTO> teaMachineResult;
         try {
-            TenantPO tenantPO = tenantAccessor.selectOne(tenantCode);
+            TenantPO tenantPO = tenantAccessor.selectOneByTenantCode(tenantCode);
             TenantDTO tenantDTO = convert(tenantPO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            TenantPO exist = tenantAccessor.selectOne(tenantCode);
+            TenantPO exist = tenantAccessor.selectOneByTenantCode(tenantCode);
             if (exist != null) {
                 int updated = tenantAccessor.update(tenantPO);
             } else {
@@ -105,7 +105,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = tenantAccessor.delete(tenantCode);
+            int deleted = tenantAccessor.deleteByTenantCode(tenantCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);

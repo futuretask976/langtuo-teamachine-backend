@@ -152,12 +152,12 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         dto.setOuterOrderId(po.getOuterOrderId());
         dto.setState(po.getState());
 
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByCode(
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(
                 po.getTenantCode(), po.getShopGroupCode());
         if (shopGroupPO != null) {
             dto.setShopGroupName(shopGroupPO.getShopGroupName());
         }
-        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
+        ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
         if (shopPO != null) {
             dto.setShopName(shopPO.getShopName());
         }

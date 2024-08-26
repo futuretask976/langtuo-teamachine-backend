@@ -21,7 +21,7 @@ public class AdminAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public AdminPO selectOne(String tenantCode, String loginName) {
+    public AdminPO selectOneByLoginName(String tenantCode, String loginName) {
         // 首先访问缓存
         AdminPO cached = getCache(tenantCode, loginName);
         if (cached != null) {
@@ -82,8 +82,8 @@ public class AdminAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String loginName) {
-        AdminPO po = selectOne(tenantCode, loginName);
+    public int deleteByLoginName(String tenantCode, String loginName) {
+        AdminPO po = selectOneByLoginName(tenantCode, loginName);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

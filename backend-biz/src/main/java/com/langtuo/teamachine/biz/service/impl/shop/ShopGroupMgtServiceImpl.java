@@ -44,14 +44,14 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
     @Override
     public TeaMachineResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode) {
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByCode(tenantCode, shopGroupCode);
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(tenantCode, shopGroupCode);
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
         return TeaMachineResult.success(shopGroupDTO);
     }
 
     @Override
     public TeaMachineResult<ShopGroupDTO> getByName(String tenantCode, String shopGroupName) {
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByName(tenantCode, shopGroupName);
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupName(tenantCode, shopGroupName);
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
         return TeaMachineResult.success(shopGroupDTO);
     }
@@ -94,7 +94,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     public TeaMachineResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode) {
         TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
-            List<ShopGroupPO> list = shopGroupAccessor.selectListByOrgNameList(
+            List<ShopGroupPO> list = shopGroupAccessor.selectListByOrgName(
                     tenantCode, getAdminOrgNameList(tenantCode));
             List<ShopGroupDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
@@ -115,7 +115,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            ShopGroupPO exist = shopGroupAccessor.selectOneByCode(request.getTenantCode(), request.getShopGroupCode());
+            ShopGroupPO exist = shopGroupAccessor.selectOneByShopGroupCode(request.getTenantCode(), request.getShopGroupCode());
             if (exist != null) {
                 int updated = shopGroupAccessor.update(shopGroupPO);
             } else {
@@ -139,7 +139,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         try {
             int count = shopAccessor.countByShopGroupCode(tenantCode, shopGroupCode);
             if (count == 0) {
-                int deleted = shopGroupAccessor.delete(tenantCode, shopGroupCode);
+                int deleted = shopGroupAccessor.deleteByShopGroupCode(tenantCode, shopGroupCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
                 teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_SHOP_GROUP);
@@ -208,7 +208,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             throw new IllegalArgumentException("couldn't find login session");
         }
 
-        AdminPO adminPO = adminAccessor.selectOne(tenantCode, adminLoginName);
+        AdminPO adminPO = adminAccessor.selectOneByLoginName(tenantCode, adminLoginName);
         String orgName = adminPO.getOrgName();
         List<OrgNode> orgPOList = orgAccessor.selectListByParent(tenantCode, orgName);
         List<String> orgNameList = orgPOList.stream()

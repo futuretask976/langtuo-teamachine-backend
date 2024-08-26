@@ -18,7 +18,7 @@ public class MenuDispatchAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<MenuDispatchPO> selectList(String tenantCode, String menuCode) {
+    public List<MenuDispatchPO> selectListByMenuCode(String tenantCode, String menuCode) {
         // 首先访问缓存
         List<MenuDispatchPO> cachedList = getCacheList(tenantCode, menuCode);
         if (cachedList != null) {
@@ -60,8 +60,8 @@ public class MenuDispatchAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String menuCode) {
-        List<MenuDispatchPO> existList = selectList(tenantCode, menuCode);
+    public int deleteByMenuCode(String tenantCode, String menuCode) {
+        List<MenuDispatchPO> existList = selectListByMenuCode(tenantCode, menuCode);
         if (CollectionUtils.isEmpty(existList)) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

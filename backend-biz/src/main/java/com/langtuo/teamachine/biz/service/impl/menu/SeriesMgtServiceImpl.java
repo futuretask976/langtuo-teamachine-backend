@@ -73,7 +73,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     public TeaMachineResult<SeriesDTO> getByCode(String tenantCode, String seriesCode) {
         TeaMachineResult<SeriesDTO> teaMachineResult;
         try {
-            SeriesPO toppingTypePO = seriesAccessor.selectOneByCode(tenantCode, seriesCode);
+            SeriesPO toppingTypePO = seriesAccessor.selectOneBySeriesCode(tenantCode, seriesCode);
             SeriesDTO seriesDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
@@ -87,7 +87,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     public TeaMachineResult<SeriesDTO> getByName(String tenantCode, String seriesName) {
         TeaMachineResult<SeriesDTO> teaMachineResult;
         try {
-            SeriesPO toppingTypePO = seriesAccessor.selectOneByName(tenantCode, seriesName);
+            SeriesPO toppingTypePO = seriesAccessor.selectOneBySeriesName(tenantCode, seriesName);
             SeriesDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            SeriesPO exist = seriesAccessor.selectOneByCode(seriesPO.getTenantCode(),
+            SeriesPO exist = seriesAccessor.selectOneBySeriesCode(seriesPO.getTenantCode(),
                     seriesPO.getSeriesCode());
             if (exist != null) {
                 int updated = seriesAccessor.update(seriesPO);
@@ -116,7 +116,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
                 int inserted = seriesAccessor.insert(seriesPO);
             }
 
-            int deleted4SeriesTeaRel = seriesTeaRelAccessor.delete(seriesPO.getTenantCode(), seriesPO.getSeriesCode());
+            int deleted4SeriesTeaRel = seriesTeaRelAccessor.deleteBySeriesCode(seriesPO.getTenantCode(), seriesPO.getSeriesCode());
             if (!CollectionUtils.isEmpty(seriesTeaRelPOList)) {
                 seriesTeaRelPOList.forEach(seriesTeaRelPO -> {
                     seriesTeaRelAccessor.insert(seriesTeaRelPO);
@@ -141,8 +141,8 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         try {
             int count = menuSeriesRelAccessor.countBySeriesCode(tenantCode, seriesCode);
             if (count == 0) {
-                int deleted4Series = seriesAccessor.delete(tenantCode, seriesCode);
-                int deleted4SeriesTeaRel = seriesTeaRelAccessor.delete(tenantCode, seriesCode);
+                int deleted4Series = seriesAccessor.deleteBySeriesCode(tenantCode, seriesCode);
+                int deleted4SeriesTeaRel = seriesTeaRelAccessor.deleteBySeriesCode(tenantCode, seriesCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
                 teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_SERIES);
@@ -178,7 +178,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         dto.setSeriesCode(po.getSeriesCode());
         dto.setSeriesName(po.getSeriesName());
 
-        List<SeriesTeaRelPO> seriesTeaRelPOList = seriesTeaRelAccessor.selectList(
+        List<SeriesTeaRelPO> seriesTeaRelPOList = seriesTeaRelAccessor.selectListBySeriesCode(
                 po.getTenantCode(), po.getSeriesCode());
         dto.setSeriesTeaRelList(convert(seriesTeaRelPOList));
         return dto;

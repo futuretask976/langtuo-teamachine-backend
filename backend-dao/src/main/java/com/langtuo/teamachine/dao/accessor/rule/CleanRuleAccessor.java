@@ -21,7 +21,7 @@ public class CleanRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public CleanRulePO selectOneByCode(String tenantCode, String cleanRuleCode) {
+    public CleanRulePO selectOneByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         CleanRulePO cached = setCache(tenantCode, cleanRuleCode, null);
         if (cached != null) {
             return cached;
@@ -32,7 +32,7 @@ public class CleanRuleAccessor {
         return po;
     }
 
-    public CleanRulePO selectOneByName(String tenantCode, String cleanRuleName) {
+    public CleanRulePO selectOneByCleanRuleName(String tenantCode, String cleanRuleName) {
         CleanRulePO cached = setCache(tenantCode, null, cleanRuleName);
         if (cached != null) {
             return cached;
@@ -95,8 +95,8 @@ public class CleanRuleAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String cleanRuleCode) {
-        CleanRulePO po = selectOneByCode(tenantCode, cleanRuleCode);
+    public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
+        CleanRulePO po = selectOneByCleanRuleCode(tenantCode, cleanRuleCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

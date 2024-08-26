@@ -17,7 +17,7 @@ public class RoleActRelAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<RoleActRelPO> selectList(String tenantCode, String roleCode) {
+    public List<RoleActRelPO> selectListByRoleCode(String tenantCode, String roleCode) {
         // 首先访问缓存
         List<RoleActRelPO> cachedList = getCacheList(tenantCode, roleCode);
         if (cachedList != null) {
@@ -39,7 +39,7 @@ public class RoleActRelAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String roleCode) {
+    public int deleteByRoleCode(String tenantCode, String roleCode) {
         int deleted = mapper.delete(tenantCode, roleCode);
         if (deleted > DBOpeConts.DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, roleCode);

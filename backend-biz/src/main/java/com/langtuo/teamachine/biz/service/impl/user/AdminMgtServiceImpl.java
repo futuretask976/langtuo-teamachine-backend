@@ -38,7 +38,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             return TeaMachineResult.success(superAdminDTO);
         }
 
-        AdminPO adminPO = adminAccessor.selectOne(tenantCode, loginName);
+        AdminPO adminPO = adminAccessor.selectOneByLoginName(tenantCode, loginName);
         AdminDTO adminRoleDTO = convert(adminPO);
         return TeaMachineResult.success(adminRoleDTO);
     }
@@ -53,7 +53,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         try {
             String roleCode = null;
             if (StringUtils.isNotBlank(roleName)) {
-                RolePO rolePO = roleAccessor.selectOneByName(tenantCode, roleName);
+                RolePO rolePO = roleAccessor.selectOneByRoleName(tenantCode, roleName);
                 if (rolePO == null) {
                     return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
                 } else {
@@ -103,7 +103,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            AdminPO exist = adminAccessor.selectOne(request.getTenantCode(), request.getLoginName());
+            AdminPO exist = adminAccessor.selectOneByLoginName(request.getTenantCode(), request.getLoginName());
             if (exist != null) {
                 int updated = adminAccessor.update(adminPO);
             } else {
@@ -125,7 +125,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = adminAccessor.delete(tenantCode, loginName);
+            int deleted = adminAccessor.deleteByLoginName(tenantCode, loginName);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
@@ -166,7 +166,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         dto.setLoginPass(adminPO.getLoginPass());
         dto.setOrgName(adminPO.getOrgName());
 
-        RolePO rolePO = roleAccessor.selectOneByCode(adminPO.getTenantCode(), adminPO.getRoleCode());
+        RolePO rolePO = roleAccessor.selectOneByRoleCode(adminPO.getTenantCode(), adminPO.getRoleCode());
         if (rolePO != null) {
             dto.setRoleCode(rolePO.getRoleCode());
             dto.setRoleName(rolePO.getRoleName());

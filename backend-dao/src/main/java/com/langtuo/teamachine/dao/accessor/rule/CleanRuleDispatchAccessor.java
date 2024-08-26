@@ -18,7 +18,7 @@ public class CleanRuleDispatchAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<CleanRuleDispatchPO> selectList(String tenantCode, String cleanRuleCode) {
+    public List<CleanRuleDispatchPO> selectListByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         List<CleanRuleDispatchPO> cached = getCacheList(tenantCode, cleanRuleCode);
         if (cached != null) {
             return cached;
@@ -50,8 +50,8 @@ public class CleanRuleDispatchAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String cleanRuleCode) {
-        List<CleanRuleDispatchPO> existList = selectList(tenantCode, cleanRuleCode);
+    public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
+        List<CleanRuleDispatchPO> existList = selectListByCleanRuleCode(tenantCode, cleanRuleCode);
         if (CollectionUtils.isEmpty(existList)) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

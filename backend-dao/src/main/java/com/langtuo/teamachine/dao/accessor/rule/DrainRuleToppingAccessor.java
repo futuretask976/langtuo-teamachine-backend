@@ -17,15 +17,15 @@ public class DrainRuleToppingAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<DrainRuleToppingPO> selectList(String tenantCode, String openRuleCode) {
-        List<DrainRuleToppingPO> cached = getCacheList(tenantCode, openRuleCode);
+    public List<DrainRuleToppingPO> selectListByDrainRuleCode(String tenantCode, String drainRuleCode) {
+        List<DrainRuleToppingPO> cached = getCacheList(tenantCode, drainRuleCode);
         if (cached != null) {
             return cached;
         }
 
-        List<DrainRuleToppingPO> list = mapper.selectList(tenantCode, openRuleCode);
+        List<DrainRuleToppingPO> list = mapper.selectList(tenantCode, drainRuleCode);
 
-        setCacheList(tenantCode, openRuleCode, list);
+        setCacheList(tenantCode, drainRuleCode, list);
         return list;
     }
 
@@ -37,10 +37,10 @@ public class DrainRuleToppingAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String openRuleCode) {
-        int deleted = mapper.delete(tenantCode, openRuleCode);
+    public int deleteByDrainRuleCode(String tenantCode, String drainRuleCode) {
+        int deleted = mapper.delete(tenantCode, drainRuleCode);
         if (deleted == DBOpeConts.DELETED_ONE_ROW) {
-            deleteCacheList(tenantCode, openRuleCode);
+            deleteCacheList(tenantCode, drainRuleCode);
         }
         return deleted;
     }

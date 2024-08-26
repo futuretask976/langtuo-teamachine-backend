@@ -18,7 +18,7 @@ public class CleanRuleStepAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<CleanRuleStepPO> selectList(String tenantCode, String cleanRuleCode) {
+    public List<CleanRuleStepPO> selectListByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         List<CleanRuleStepPO> cached = getCacheList(tenantCode, cleanRuleCode);
         if (cached != null) {
             return cached;
@@ -38,7 +38,7 @@ public class CleanRuleStepAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String cleanRuleCode) {
+    public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         int deleted = mapper.delete(tenantCode, cleanRuleCode);
         if (deleted == DBOpeConts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, cleanRuleCode);

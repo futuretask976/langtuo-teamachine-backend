@@ -16,7 +16,7 @@ public class TenantAccessor {
     @Resource
     private TenantMapper mapper;
 
-    public TenantPO selectOne(String tenantCode) {
+    public TenantPO selectOneByTenantCode(String tenantCode) {
         return mapper.selectOne(tenantCode);
     }
 
@@ -55,7 +55,7 @@ public class TenantAccessor {
         return mapper.update(tenantPO);
     }
 
-    public int delete(String tenantCode) {
+    public int deleteByTenantCode(String tenantCode) {
         return mapper.delete(tenantCode);
     }
 }

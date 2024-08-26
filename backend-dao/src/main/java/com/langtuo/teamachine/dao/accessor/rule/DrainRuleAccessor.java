@@ -21,7 +21,7 @@ public class DrainRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public DrainRulePO selectOneByCode(String tenantCode, String drainRuleCode) {
+    public DrainRulePO selectOneByDrainRuleCode(String tenantCode, String drainRuleCode) {
         DrainRulePO cached = setCache(tenantCode, drainRuleCode, null);
         if (cached != null) {
             return cached;
@@ -32,7 +32,7 @@ public class DrainRuleAccessor {
         return po;
     }
 
-    public DrainRulePO selectOneByName(String tenantCode, String drainRuleName) {
+    public DrainRulePO selectOneByDrainRuleName(String tenantCode, String drainRuleName) {
         DrainRulePO cached = setCache(tenantCode, null, drainRuleName);
         if (cached != null) {
             return cached;
@@ -95,8 +95,8 @@ public class DrainRuleAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String drainRuleCode) {
-        DrainRulePO po = selectOneByCode(tenantCode, drainRuleCode);
+    public int deleteByDrainRuleCode(String tenantCode, String drainRuleCode) {
+        DrainRulePO po = selectOneByDrainRuleCode(tenantCode, drainRuleCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

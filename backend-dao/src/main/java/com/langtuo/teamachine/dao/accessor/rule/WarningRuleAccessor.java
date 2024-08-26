@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.rule.WarningRuleMapper;
-import com.langtuo.teamachine.dao.po.rule.DrainRulePO;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.query.rule.WarningRuleQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +21,7 @@ public class WarningRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public WarningRulePO selectOneByCode(String tenantCode, String warningRuleCode) {
+    public WarningRulePO selectOneByWarningRuleCode(String tenantCode, String warningRuleCode) {
         WarningRulePO cached = setCache(tenantCode, warningRuleCode, null);
         if (cached != null) {
             return cached;
@@ -33,7 +32,7 @@ public class WarningRuleAccessor {
         return po;
     }
 
-    public WarningRulePO selectOneByName(String tenantCode, String warningRuleName) {
+    public WarningRulePO selectOneByWarningRuleName(String tenantCode, String warningRuleName) {
         WarningRulePO cached = setCache(tenantCode, null, warningRuleName);
         if (cached != null) {
             return cached;
@@ -96,8 +95,8 @@ public class WarningRuleAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String warningRuleCode) {
-        WarningRulePO po = selectOneByCode(tenantCode, warningRuleCode);
+    public int deleteByWarningRuleCode(String tenantCode, String warningRuleCode) {
+        WarningRulePO po = selectOneByWarningRuleCode(tenantCode, warningRuleCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

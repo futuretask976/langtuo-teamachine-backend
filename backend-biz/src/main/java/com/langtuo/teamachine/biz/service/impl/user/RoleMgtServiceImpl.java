@@ -52,14 +52,14 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             return TeaMachineResult.success(superRole);
         }
 
-        RolePO rolePO = roleAccessor.selectOneByCode(tenantCode, roleCode);
+        RolePO rolePO = roleAccessor.selectOneByRoleCode(tenantCode, roleCode);
         RoleDTO roleDTO = convert(rolePO);
         return TeaMachineResult.success(roleDTO);
     }
 
     @Override
     public TeaMachineResult<RoleDTO> getByName(String tenantCode, String roleName) {
-        RolePO rolePO = roleAccessor.selectOneByName(tenantCode, roleName);
+        RolePO rolePO = roleAccessor.selectOneByRoleName(tenantCode, roleName);
         RoleDTO roleDTO = convert(rolePO);
         return TeaMachineResult.success(roleDTO);
     }
@@ -125,14 +125,14 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            RolePO exist = roleAccessor.selectOneByCode(request.getTenantCode(), request.getRoleCode());
+            RolePO exist = roleAccessor.selectOneByRoleCode(request.getTenantCode(), request.getRoleCode());
             if (exist != null) {
                 int updated = roleAccessor.update(rolePO);
             } else {
                 int inserted = roleAccessor.insert(rolePO);
             }
 
-            int deleted4RoleActRel = roleActRelAccessor.delete(request.getTenantCode(), request.getRoleCode());
+            int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(request.getTenantCode(), request.getRoleCode());
             roleActRelPOList.stream().forEach(item -> {
                 int inserted4RoleActRel = roleActRelAccessor.insert(item);
             });
@@ -161,8 +161,8 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = roleAccessor.delete(tenantCode, roleCode);
-            int deleted4Rel = roleActRelAccessor.delete(tenantCode, roleCode);
+            int deleted = roleAccessor.deleteByRoleCode(tenantCode, roleCode);
+            int deleted4Rel = roleActRelAccessor.deleteByRoleCode(tenantCode, roleCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
@@ -196,7 +196,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        List<RoleActRelPO> roleActRelPOList = roleActRelAccessor.selectList(
+        List<RoleActRelPO> roleActRelPOList = roleActRelAccessor.selectListByRoleCode(
                 po.getTenantCode(), po.getRoleCode());
         if (!CollectionUtils.isEmpty(roleActRelPOList)) {
             dto.setPermitActCodeList(roleActRelPOList.stream()

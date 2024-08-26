@@ -40,14 +40,14 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     @Override
     public TeaMachineResult<ShopDTO> getByCode(String tenantCode, String shopCode) {
-        ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, shopCode);
+        ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, shopCode);
         ShopDTO shopDTO = convert(shopPO);
         return TeaMachineResult.success(shopDTO);
     }
 
     @Override
     public TeaMachineResult<ShopDTO> getByName(String tenantCode, String shopName) {
-        ShopPO shopPO = shopAccessor.selectOneByName(tenantCode, shopName);
+        ShopPO shopPO = shopAccessor.selectOneByShopName(tenantCode, shopName);
         ShopDTO shopDTO = convert(shopPO);
         return TeaMachineResult.success(shopDTO);
     }
@@ -62,7 +62,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         try {
             String shopGroupCode = null;
             if (StringUtils.isNotBlank(shopGroupName)) {
-                ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByName(tenantCode, shopGroupName);
+                ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupName(tenantCode, shopGroupName);
                 if (shopGroupPO == null) {
                     return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
                 } else {
@@ -101,7 +101,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     public TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {
-            List<ShopPO> list = shopAccessor.selectList(tenantCode, shopGroupCode);
+            List<ShopPO> list = shopAccessor.selectListByShopGroupCode(tenantCode, shopGroupCode);
             List<ShopDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
                     .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
                     .collect(Collectors.toList());
 
-            List<ShopPO> list = shopAccessor.selectListByShopGroupCodeList(tenantCode, shopGroupCodeList);
+            List<ShopPO> list = shopAccessor.selectListByShopGroupCode(tenantCode, shopGroupCodeList);
             teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
@@ -139,7 +139,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            ShopPO exist = shopAccessor.selectOneByCode(request.getTenantCode(), request.getShopCode());
+            ShopPO exist = shopAccessor.selectOneByShopCode(request.getTenantCode(), request.getShopCode());
             if (exist != null) {
                 int updated = shopAccessor.update(shopPO);
             } else {
@@ -212,7 +212,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByCode(po.getTenantCode(), po.getShopGroupCode());
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
         if (shopGroupPO != null) {
             dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
             dto.setShopGroupName(shopGroupPO.getShopGroupName());

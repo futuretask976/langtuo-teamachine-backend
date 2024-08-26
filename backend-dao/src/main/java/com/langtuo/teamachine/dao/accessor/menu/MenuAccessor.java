@@ -21,7 +21,7 @@ public class MenuAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public MenuPO selectOneByCode(String tenantCode, String menuCode) {
+    public MenuPO selectOneByMenuCode(String tenantCode, String menuCode) {
         // 首先访问缓存
         MenuPO cached = getCache(tenantCode, menuCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class MenuAccessor {
         return po;
     }
 
-    public MenuPO selectOneByName(String tenantCode, String menuName) {
+    public MenuPO selectOneByMenuName(String tenantCode, String menuName) {
         // 首先访问缓存
         MenuPO cached = getCache(tenantCode, null, menuName);
         if (cached != null) {
@@ -101,8 +101,8 @@ public class MenuAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String menuCode) {
-        MenuPO po = selectOneByCode(tenantCode, menuCode);
+    public int deleteByMenuCode(String tenantCode, String menuCode) {
+        MenuPO po = selectOneByMenuCode(tenantCode, menuCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

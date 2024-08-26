@@ -6,12 +6,10 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
 import com.langtuo.teamachine.api.model.menu.MenuSeriesRelDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.menu.MenuDispatchPutRequest;
 import com.langtuo.teamachine.api.request.menu.MenuPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
@@ -30,8 +28,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -69,7 +65,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     public TeaMachineResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<MenuDTO>> teaMachineResult;
         try {
-            ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, shopCode);
+            ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, shopCode);
             if (shopPO == null) {
                 teaMachineResult = TeaMachineResult.success();
             }
@@ -124,7 +120,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     public TeaMachineResult<MenuDTO> getByCode(String tenantCode, String seriesCode) {
         TeaMachineResult<MenuDTO> teaMachineResult;
         try {
-            MenuPO toppingTypePO = menuAccessor.selectOneByCode(tenantCode, seriesCode);
+            MenuPO toppingTypePO = menuAccessor.selectOneByMenuCode(tenantCode, seriesCode);
             MenuDTO seriesDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
@@ -138,7 +134,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     public TeaMachineResult<MenuDTO> getByName(String tenantCode, String seriesName) {
         TeaMachineResult<MenuDTO> teaMachineResult;
         try {
-            MenuPO toppingTypePO = menuAccessor.selectOneByName(tenantCode, seriesName);
+            MenuPO toppingTypePO = menuAccessor.selectOneByMenuName(tenantCode, seriesName);
             MenuDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -159,7 +155,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            MenuPO exist = menuAccessor.selectOneByCode(seriesPO.getTenantCode(),
+            MenuPO exist = menuAccessor.selectOneByMenuCode(seriesPO.getTenantCode(),
                     seriesPO.getMenuCode());
             if (exist != null) {
                 int updated = menuAccessor.update(seriesPO);
@@ -167,7 +163,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 int inserted = menuAccessor.insert(seriesPO);
             }
 
-            int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(seriesPO.getTenantCode(), seriesPO.getMenuCode());
+            int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteBySeriesCode(seriesPO.getTenantCode(), seriesPO.getMenuCode());
             if (!CollectionUtils.isEmpty(menuSeriesRelPOList)) {
                 menuSeriesRelPOList.forEach(seriesTeaRelPO -> {
                     menuSeriesRelAccessor.insert(seriesTeaRelPO);
@@ -190,8 +186,8 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted4Series = menuAccessor.delete(tenantCode, menuCode);
-            int deleted4SeriesTeaRel = menuSeriesRelAccessor.delete(tenantCode, menuCode);
+            int deleted4Series = menuAccessor.deleteByMenuCode(tenantCode, menuCode);
+            int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteBySeriesCode(tenantCode, menuCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
@@ -210,7 +206,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = menuDispatchAccessor.delete(request.getTenantCode(),
+            int deleted = menuDispatchAccessor.deleteByMenuCode(request.getTenantCode(),
                     request.getMenuCode());
             poList.forEach(po -> {
                 menuDispatchAccessor.insert(po);
@@ -236,7 +232,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             MenuDispatchDTO dto = new MenuDispatchDTO();
             dto.setMenuCode(menuCode);
 
-            List<MenuDispatchPO> poList = menuDispatchAccessor.selectList(tenantCode, menuCode);
+            List<MenuDispatchPO> poList = menuDispatchAccessor.selectListByMenuCode(tenantCode, menuCode);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())
@@ -276,7 +272,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         dto.setMenuName(po.getMenuName());
         dto.setValidFrom(po.getValidFrom());
 
-        List<MenuSeriesRelPO> seriesTeaRelPOList = menuSeriesRelAccessor.selectList(
+        List<MenuSeriesRelPO> seriesTeaRelPOList = menuSeriesRelAccessor.selectListBySeriesCode(
                 po.getTenantCode(), po.getMenuCode());
         dto.setMenuSeriesRelList(convert(seriesTeaRelPOList));
         return dto;

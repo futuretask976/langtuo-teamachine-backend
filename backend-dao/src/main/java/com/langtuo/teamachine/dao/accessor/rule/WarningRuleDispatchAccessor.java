@@ -18,15 +18,15 @@ public class WarningRuleDispatchAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<WarningRuleDispatchPO> selectList(String tenantCode, String cleanRuleCode) {
-        List<WarningRuleDispatchPO> cached = getCacheList(tenantCode, cleanRuleCode);
+    public List<WarningRuleDispatchPO> selectListByWarningRuleCode(String tenantCode, String warningRuleCode) {
+        List<WarningRuleDispatchPO> cached = getCacheList(tenantCode, warningRuleCode);
         if (cached != null) {
             return cached;
         }
         
-        List<WarningRuleDispatchPO> list = mapper.selectList(tenantCode, cleanRuleCode);
+        List<WarningRuleDispatchPO> list = mapper.selectList(tenantCode, warningRuleCode);
         
-        setCacheList(tenantCode, cleanRuleCode, list);
+        setCacheList(tenantCode, warningRuleCode, list);
         return list;
     }
 
@@ -50,16 +50,16 @@ public class WarningRuleDispatchAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String cleanRuleCode) {
-        List<WarningRuleDispatchPO> existList = selectList(tenantCode, cleanRuleCode);
+    public int deleteByWarningRuleCode(String tenantCode, String warningrRuleCode) {
+        List<WarningRuleDispatchPO> existList = selectListByWarningRuleCode(tenantCode, warningRuleCode);
         if (CollectionUtils.isEmpty(existList)) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }
         String shopGroupCode = existList.get(0).getShopGroupCode();
 
-        int deleted = mapper.delete(tenantCode, cleanRuleCode);
+        int deleted = mapper.delete(tenantCode, warningRuleCode);
         if (deleted == DBOpeConts.DELETED_ONE_ROW) {
-            deleteCacheList(tenantCode, cleanRuleCode, shopGroupCode);
+            deleteCacheList(tenantCode, warningRuleCode, shopGroupCode);
         }
         return deleted;
     }

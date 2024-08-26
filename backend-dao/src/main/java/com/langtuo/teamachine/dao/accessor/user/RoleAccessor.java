@@ -21,7 +21,7 @@ public class RoleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public RolePO selectOneByCode(String tenantCode, String roleCode) {
+    public RolePO selectOneByRoleCode(String tenantCode, String roleCode) {
         // 首先访问缓存
         RolePO cached = getCache(tenantCode, roleCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class RoleAccessor {
         return po;
     }
 
-    public RolePO selectOneByName(String tenantCode, String roleName) {
+    public RolePO selectOneByRoleName(String tenantCode, String roleName) {
         // 首先访问缓存
         RolePO cached = getCache(tenantCode, null, roleName);
         if (cached != null) {
@@ -102,8 +102,8 @@ public class RoleAccessor {
         return updated;
     }
 
-    public int delete(String tenantCode, String roleCode) {
-        RolePO po = selectOneByCode(tenantCode, roleCode);
+    public int deleteByRoleCode(String tenantCode, String roleCode) {
+        RolePO po = selectOneByRoleCode(tenantCode, roleCode);
         if (po == null) {
             return DBOpeConts.DELETED_ZERO_ROW;
         }

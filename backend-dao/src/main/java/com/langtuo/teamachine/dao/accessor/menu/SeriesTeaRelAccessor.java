@@ -17,7 +17,7 @@ public class SeriesTeaRelAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<SeriesTeaRelPO> selectList(String tenantCode, String seriesCode) {
+    public List<SeriesTeaRelPO> selectListBySeriesCode(String tenantCode, String seriesCode) {
         // 首先访问缓存
         List<SeriesTeaRelPO> cachedList = getCacheList(tenantCode, seriesCode);
         if (cachedList != null) {
@@ -52,7 +52,7 @@ public class SeriesTeaRelAccessor {
         return inserted;
     }
 
-    public int delete(String tenantCode, String seriesCode) {
+    public int deleteBySeriesCode(String tenantCode, String seriesCode) {
         int deleted = mapper.delete(tenantCode, seriesCode);
         if (deleted > DBOpeConts.DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, seriesCode);

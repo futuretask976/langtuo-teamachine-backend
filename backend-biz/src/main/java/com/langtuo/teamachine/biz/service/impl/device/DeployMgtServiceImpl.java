@@ -4,13 +4,9 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
-import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
@@ -35,8 +31,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.*;
 
 @Component
 @Slf4j
@@ -208,7 +202,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             cell4TenantCode.setCellValue(deployPO.getTenantCode());
             // 添加商户名称
             Cell cell4TenantName = dataRow.createCell(columnIndex++);
-            TenantPO tenantPO = tenantAccessor.selectOne(tenantCode);
+            TenantPO tenantPO = tenantAccessor.selectOneByTenantCode(tenantCode);
             if (tenantPO != null) {
                 cell4TenantName.setCellValue(tenantPO.getTenantName());
             }
@@ -226,7 +220,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             cell4ShopCode.setCellValue(deployPO.getShopCode());
             // 添加店铺名称
             Cell cell4ShopName = dataRow.createCell(columnIndex++);
-            ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, deployPO.getShopCode());
+            ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, deployPO.getShopCode());
             if (shopPO != null) {
                 cell4ShopName.setCellValue(shopPO.getShopName());
             }
@@ -279,7 +273,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         dto.setState(po.getState());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
+        ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
         if (shopPO != null) {
             dto.setShopCode(shopPO.getShopCode());
             dto.setShopName(shopPO.getShopName());
