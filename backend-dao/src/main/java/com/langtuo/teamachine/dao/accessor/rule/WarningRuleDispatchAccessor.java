@@ -50,7 +50,7 @@ public class WarningRuleDispatchAccessor {
         return inserted;
     }
 
-    public int deleteByWarningRuleCode(String tenantCode, String warningrRuleCode) {
+    public int deleteByWarningRuleCode(String tenantCode, String warningRuleCode) {
         List<WarningRuleDispatchPO> existList = selectListByWarningRuleCode(tenantCode, warningRuleCode);
         if (CollectionUtils.isEmpty(existList)) {
             return DBOpeConts.DELETED_ZERO_ROW;
