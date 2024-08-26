@@ -6,6 +6,7 @@ import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.constant.DBOpeConts;
 import com.langtuo.teamachine.dao.mapper.device.MachineMapper;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
+import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.query.device.MachineQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -61,6 +62,19 @@ public class MachineAccessor {
         // 设置缓存
         setCacheList(tenantCode, shopCode, list);
         return list;
+    }
+
+    public int countByModelCode(String modelCode) {
+        // 首先访问缓存
+        Integer cached = getCacheCount(modelCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByModelCode(modelCode);
+
+        setCacheCount(modelCode, count);
+        return count;
     }
 
     public PageInfo<MachinePO> search(String tenantCode, String screenCode, String elecBoardCode,
@@ -119,6 +133,10 @@ public class MachineAccessor {
         return "machineAcc-" + tenantCode + "-" + shopCode;
     }
 
+    private String getCacheCountKey(String modelCode) {
+        return "machineAcc-cnt-" + modelCode;
+    }
+
     private MachinePO getCache(String tenantCode, String machineCode) {
         String key = getCacheKey(tenantCode, machineCode);
         Object cached = redisManager.getValue(key);
@@ -141,6 +159,18 @@ public class MachineAccessor {
     private void setCache(String tenantCode, String machineCode, MachinePO po) {
         String key = getCacheKey(tenantCode, machineCode);
         redisManager.setValue(key, po);
+    }
+
+    private Integer getCacheCount(String shopGroupCode) {
+        String key = getCacheCountKey(shopGroupCode);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCount(String modelCode, Integer count) {
+        String key = getCacheCountKey(modelCode);
+        redisManager.setValue(key, count);
     }
 
     private void deleteCacheOne(String tenantCode, String machineCode) {

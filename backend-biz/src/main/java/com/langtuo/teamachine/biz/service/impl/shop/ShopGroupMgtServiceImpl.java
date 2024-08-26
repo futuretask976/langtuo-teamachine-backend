@@ -137,8 +137,13 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = shopGroupAccessor.delete(tenantCode, shopGroupCode);
-            teaMachineResult = TeaMachineResult.success();
+            int count = shopAccessor.countByShopGroupCode(tenantCode, shopGroupCode);
+            if (count == 0) {
+                int deleted = shopGroupAccessor.delete(tenantCode, shopGroupCode);
+                teaMachineResult = TeaMachineResult.success();
+            } else {
+                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_SHOP_GROUP);
+            }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);

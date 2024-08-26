@@ -57,4 +57,11 @@ public interface MachineMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode);
+
+    /**
+     *
+     * @param modelCode
+     * @return
+     */
+    int countByModelCode(@Param("modelCode") String modelCode);
 }

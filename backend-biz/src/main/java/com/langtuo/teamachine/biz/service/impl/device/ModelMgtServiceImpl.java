@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelPipelineAccessor;
 import com.langtuo.teamachine.dao.po.device.ModelPO;
@@ -32,6 +33,9 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     @Resource
     private ModelPipelineAccessor modelPipelineAccessor;
+
+    @Resource
+    private MachineAccessor machineAccessor;
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
@@ -131,9 +135,14 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted4ModelCode = modelAccessor.deleteByModelCode(modelCode);
-            int deleted4Pipeline = modelPipelineAccessor.deleteByModelCode(modelCode);
-            teaMachineResult = TeaMachineResult.success();
+            int count = machineAccessor.countByModelCode(modelCode);
+            if (count == 0) {
+                int deleted4ModelCode = modelAccessor.deleteByModelCode(modelCode);
+                int deleted4Pipeline = modelPipelineAccessor.deleteByModelCode(modelCode);
+                teaMachineResult = TeaMachineResult.success();
+            } else {
+                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_MODEL);
+            }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);

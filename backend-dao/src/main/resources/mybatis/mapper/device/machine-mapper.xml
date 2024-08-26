@@ -43,6 +43,14 @@
             </if>
     </select>
 
+    <select id="countByModelCode" resultType="int">
+        SELECT COUNT(1) FROM machine
+        WHERE 1 = 1
+            <if test="modelCode != null">
+                AND model_code = #{modelCode}
+            </if>
+    </select>
+
     <select id="search" resultMap="machinePOMap">
         SELECT * FROM machine
         WHERE 1 = 1
