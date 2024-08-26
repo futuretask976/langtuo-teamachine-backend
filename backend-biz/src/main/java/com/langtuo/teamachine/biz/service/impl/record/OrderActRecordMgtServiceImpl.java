@@ -3,27 +3,28 @@ package com.langtuo.teamachine.biz.service.impl.record;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.drink.SpecDTO;
-import com.langtuo.teamachine.api.model.drink.SpecItemDTO;
-import com.langtuo.teamachine.api.model.drink.ToppingDTO;
 import com.langtuo.teamachine.api.model.record.OrderActRecordDTO;
 import com.langtuo.teamachine.api.model.record.OrderSpecItemActRecordDTO;
 import com.langtuo.teamachine.api.model.record.OrderToppingActRecordDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
-import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.drink.SpecMgtService;
-import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
+import com.langtuo.teamachine.dao.accessor.drink.SpecItemAccessor;
+import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.record.OrderActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.OrderSpecItemActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.OrderToppingActRecordAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
+import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
+import com.langtuo.teamachine.dao.po.drink.SpecPO;
+import com.langtuo.teamachine.dao.po.drink.ToppingPO;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
+import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
+import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -33,8 +34,6 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -49,16 +48,19 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     private OrderToppingActRecordAccessor orderToppingActRecordAccessor;
 
     @Resource
-    private ShopGroupMgtService shopGroupMgtService;
+    private ShopGroupAccessor shopGroupAccessor;
 
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopAccessor shopAccessor;
 
     @Resource
-    private ToppingMgtService toppingMgtService;
+    private ToppingAccessor toppingAccessor;
 
     @Resource
-    private SpecMgtService specMgtService;
+    private SpecAccessor specAccessor;
+
+    @Resource
+    private SpecItemAccessor specItemAccessor;
 
     @Override
     public TeaMachineResult<OrderActRecordDTO> get(String tenantCode, String idempotentMark) {
@@ -136,14 +138,14 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         dto.setOuterOrderId(po.getOuterOrderId());
         dto.setState(po.getState());
 
-        ShopGroupDTO shopGroupDTO = getModel(shopGroupMgtService.getByCode(
-                po.getTenantCode(), po.getShopGroupCode()));
-        if (shopGroupDTO != null) {
-            dto.setShopGroupName(shopGroupDTO.getShopGroupName());
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByCode(
+                po.getTenantCode(), po.getShopGroupCode());
+        if (shopGroupPO != null) {
+            dto.setShopGroupName(shopGroupPO.getShopGroupName());
         }
-        ShopDTO shopDTO = getModel(shopMgtService.getByCode(po.getTenantCode(), po.getShopCode()));
-        if (shopDTO != null) {
-            dto.setShopName(shopDTO.getShopName());
+        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
+        if (shopPO != null) {
+            dto.setShopName(shopPO.getShopName());
         }
 
         List<OrderSpecItemActRecordPO> specItemActRecordList = orderSpecItemActRecordAccessor.selectList(
@@ -176,11 +178,11 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         dto.setSpecCode(po.getSpecCode());
         dto.setSpecItemCode(po.getSpecItemCode());
 
-        SpecDTO specDTO = getModel(specMgtService.getByCode(po.getTenantCode(), po.getSpecCode()));
-        dto.setSpecName(specDTO.getSpecName());
-        SpecItemDTO specItemDTO = getModel(specMgtService.getSpecItemBySpecItemCode(
-                po.getTenantCode(), po.getSpecCode(), po.getSpecItemCode()));
-        dto.setSpecItemName(specItemDTO.getSpecItemName());
+        SpecPO specPO = specAccessor.selectOneBySpecCode(po.getTenantCode(), po.getSpecCode());
+        dto.setSpecName(specPO.getSpecName());
+        SpecItemPO specItemPO = specItemAccessor.selectOneBySpecItemCode(
+                po.getTenantCode(), po.getSpecCode(), po.getSpecItemCode());
+        dto.setSpecItemName(specItemPO.getSpecItemName());
         return dto;
     }
 
@@ -204,8 +206,8 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         dto.setToppingCode(po.getToppingCode());
         dto.setActualAmount(po.getActualAmount());
 
-        ToppingDTO toppingDTO = getModel(toppingMgtService.getByCode(po.getTenantCode(), po.getToppingCode()));
-        dto.setToppingName(toppingDTO.getToppingName());
+        ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
+        dto.setToppingName(toppingPO.getToppingName());
         return dto;
     }
 }

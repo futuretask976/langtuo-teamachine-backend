@@ -4,17 +4,17 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.device.MachineActivatePutRequest;
 import com.langtuo.teamachine.api.request.device.MachineUpdatePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
+import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,8 +24,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.*;
 
 @Component
 @Slf4j
@@ -37,7 +35,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     private DeployAccessor deployAccessor;
 
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopAccessor shopAccessor;
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
@@ -57,11 +55,11 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
         TeaMachineResult<PageDTO<MachineDTO>> teaMachineResult;
         try {
-            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopName));
-            if (shopDTO == null && StringUtils.isNotBlank(shopName)) {
+            ShopPO shopPO = shopAccessor.selectOneByName(tenantCode, shopName);
+            if (shopPO == null && StringUtils.isNotBlank(shopName)) {
                 return TeaMachineResult.success(new PageDTO<MachineDTO>(null, 0, pageNum, pageSize));
             }
-            String shopCode = shopDTO == null ? null : shopDTO.getShopCode();
+            String shopCode = shopPO == null ? null : shopPO.getShopCode();
 
             PageInfo<MachinePO> pageInfo = machineAccessor.search(tenantCode, screenCode, elecBoardCode, modelCode,
                     shopCode, pageNum, pageSize);
@@ -218,10 +216,10 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         dto.setState(po.getState());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopDTO shopDTO = getModel(shopMgtService.getByCode(po.getTenantCode(), po.getShopCode()));
-        if (shopDTO != null) {
-            dto.setShopCode(shopDTO.getShopCode());
-            dto.setShopName(shopDTO.getShopName());
+        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
+        if (shopPO != null) {
+            dto.setShopCode(shopPO.getShopCode());
+            dto.setShopName(shopPO.getShopName());
         }
         return dto;
     }

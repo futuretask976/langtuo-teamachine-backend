@@ -4,14 +4,14 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.request.user.AdminPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
-import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
+import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
+import com.langtuo.teamachine.dao.po.user.RolePO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
-
 @Component
 @Slf4j
 public class AdminMgtServiceImpl implements AdminMgtService {
@@ -30,7 +28,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     private AdminAccessor adminAccessor;
 
     @Resource
-    private RoleMgtService roleMgtService;
+    private RoleAccessor roleAccessor;
 
     @Override
     public TeaMachineResult<AdminDTO> get(String tenantCode, String loginName) {
@@ -55,11 +53,11 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         try {
             String roleCode = null;
             if (StringUtils.isNotBlank(roleName)) {
-                RoleDTO roleDTO = getModel(roleMgtService.getByName(tenantCode, roleName));
-                if (roleDTO == null) {
+                RolePO rolePO = roleAccessor.selectOneByName(tenantCode, roleName);
+                if (rolePO == null) {
                     return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
                 } else {
-                    roleCode = roleDTO.getRoleCode();
+                    roleCode = rolePO.getRoleCode();
                 }
             }
 
@@ -168,10 +166,10 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         dto.setLoginPass(adminPO.getLoginPass());
         dto.setOrgName(adminPO.getOrgName());
 
-        RoleDTO roleDTO = getModel(roleMgtService.getByCode(adminPO.getTenantCode(), adminPO.getRoleCode()));
-        if (roleDTO != null) {
-            dto.setRoleCode(roleDTO.getRoleCode());
-            dto.setRoleName(roleDTO.getRoleName());
+        RolePO rolePO = roleAccessor.selectOneByCode(adminPO.getTenantCode(), adminPO.getRoleCode());
+        if (rolePO != null) {
+            dto.setRoleCode(rolePO.getRoleCode());
+            dto.setRoleName(rolePO.getRoleName());
         }
         return dto;
     }

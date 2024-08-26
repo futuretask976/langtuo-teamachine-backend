@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.drink.ToppingTypeMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingTypeAccessor;
 import com.langtuo.teamachine.dao.po.drink.ToppingTypePO;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     private ToppingTypeAccessor accessor;
 
     @Resource
-    private ToppingMgtService toppingMgtService;
+    private ToppingAccessor toppingAccessor;
 
     @Override
     public TeaMachineResult<List<ToppingTypeDTO>> list(String tenantCode) {
@@ -155,7 +156,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
 
-        int toppingCount = getModel(toppingMgtService.countByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode()));
+        int toppingCount = toppingAccessor.countByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode());
         dto.setToppingCount(toppingCount);
 
         return dto;

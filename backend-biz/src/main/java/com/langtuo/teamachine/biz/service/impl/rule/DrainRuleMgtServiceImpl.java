@@ -3,20 +3,20 @@ package com.langtuo.teamachine.biz.service.impl.rule;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.drink.ToppingDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleToppingDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.rule.DrainRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.DrainRulePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.*;
+import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
+import com.langtuo.teamachine.dao.po.drink.ToppingPO;
 import com.langtuo.teamachine.dao.po.rule.*;
+import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -27,8 +27,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -43,10 +41,10 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     private DrainRuleDispatchAccessor drainRuleDispatchAccessor;
 
     @Resource
-    private ToppingMgtService toppingMgtService;
+    private ToppingAccessor toppingAccessor;
 
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopAccessor shopAccessor;
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
@@ -97,13 +95,13 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     public TeaMachineResult<List<DrainRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<DrainRuleDTO>> teaMachineResult;
         try {
-            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
-            if (shopDTO == null) {
+            ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, shopCode);
+            if (shopPO == null) {
                 teaMachineResult = TeaMachineResult.success();
             }
 
             List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.selectListByShopGroupCode(
-                    tenantCode, shopDTO.getShopGroupCode());
+                    tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(drainRuleDispatchPOList)) {
                 teaMachineResult = TeaMachineResult.success();
             }
@@ -291,10 +289,10 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
                     dto.setFlushSec(po.getFlushSec());
                     dto.setFlushWeight(po.getFlushWeight());
 
-                    ToppingDTO toppingDTO = getModel(toppingMgtService.getByCode(
-                            po.getTenantCode(), po.getToppingCode()));
-                    if (toppingDTO != null) {
-                        dto.setToppingName(toppingDTO.getToppingName());
+                    ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(
+                            po.getTenantCode(), po.getToppingCode());
+                    if (toppingPO != null) {
+                        dto.setToppingName(toppingPO.getToppingName());
                     }
                     return dto;
                 })

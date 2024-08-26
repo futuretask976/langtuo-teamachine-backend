@@ -5,17 +5,17 @@ import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.rule.WarningRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.WarningRulePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
+import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +25,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -38,7 +36,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     private WarningRuleDispatchAccessor warningRuleDispatchAccessor;
 
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopAccessor shopAccessor;
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
@@ -89,13 +87,13 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     public TeaMachineResult<List<WarningRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<WarningRuleDTO>> teaMachineResult;
         try {
-            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
-            if (shopDTO == null) {
+            ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, shopCode);
+            if (shopPO == null) {
                 teaMachineResult = TeaMachineResult.success();
             }
 
             List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.selectListByShopGroupCode(
-                    tenantCode, shopDTO.getShopGroupCode());
+                    tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
                 teaMachineResult = TeaMachineResult.success();
             }

@@ -6,21 +6,21 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleStepDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.rule.CleanRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.CleanRulePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleExceptAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleStepAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleExceptPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRulePO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleStepPO;
+import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -31,8 +31,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -50,7 +48,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     private CleanRuleExceptAccessor cleanRuleExceptAccessor;
 
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopAccessor shopAccessor;
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
@@ -101,13 +99,13 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     public TeaMachineResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<CleanRuleDTO>> teaMachineResult;
         try {
-            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
-            if (shopDTO == null) {
+            ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, shopCode);
+            if (shopPO == null) {
                 teaMachineResult = TeaMachineResult.success();
             }
 
             List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.selectListByShopGroupCode(
-                    tenantCode, shopDTO.getShopGroupCode());
+                    tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
                 teaMachineResult = TeaMachineResult.success();
             }

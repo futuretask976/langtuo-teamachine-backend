@@ -14,7 +14,11 @@ import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
+import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
+import com.langtuo.teamachine.dao.po.shop.ShopPO;
+import com.langtuo.teamachine.dao.po.user.TenantPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -41,10 +45,10 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     private DeployAccessor deployAccessor;
 
     @Resource
-    private TenantMgtService tenantMgtService;
+    private TenantAccessor tenantAccessor;
 
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopAccessor shopAccessor;
 
     @Override
     public TeaMachineResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
@@ -204,9 +208,9 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             cell4TenantCode.setCellValue(deployPO.getTenantCode());
             // 添加商户名称
             Cell cell4TenantName = dataRow.createCell(columnIndex++);
-            TenantDTO tenantDTO = getModel(tenantMgtService.get(tenantCode));
-            if (tenantDTO != null) {
-                cell4TenantName.setCellValue(tenantDTO.getTenantName());
+            TenantPO tenantPO = tenantAccessor.selectOne(tenantCode);
+            if (tenantPO != null) {
+                cell4TenantName.setCellValue(tenantPO.getTenantName());
             }
             // 添加部署编码
             Cell cell4DeployCode = dataRow.createCell(columnIndex++);
@@ -222,9 +226,9 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             cell4ShopCode.setCellValue(deployPO.getShopCode());
             // 添加店铺名称
             Cell cell4ShopName = dataRow.createCell(columnIndex++);
-            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, deployPO.getShopCode()));
-            if (shopDTO != null) {
-                cell4ShopName.setCellValue(shopDTO.getShopName());
+            ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, deployPO.getShopCode());
+            if (shopPO != null) {
+                cell4ShopName.setCellValue(shopPO.getShopName());
             }
             // 添加部署状态
             Cell cell4State = dataRow.createCell(columnIndex++);
@@ -275,10 +279,10 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         dto.setState(po.getState());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopDTO shopDTO = getModel(shopMgtService.getByCode(po.getTenantCode(), po.getShopCode()));
-        if (shopDTO != null) {
-            dto.setShopCode(shopDTO.getShopCode());
-            dto.setShopName(shopDTO.getShopName());
+        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
+        if (shopPO != null) {
+            dto.setShopCode(shopPO.getShopCode());
+            dto.setShopName(shopPO.getShopName());
         }
         return dto;
     }

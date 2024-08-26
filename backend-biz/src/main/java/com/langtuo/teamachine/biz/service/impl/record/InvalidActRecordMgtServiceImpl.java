@@ -3,19 +3,19 @@ package com.langtuo.teamachine.biz.service.impl.record;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.drink.ToppingDTO;
 import com.langtuo.teamachine.api.model.record.InvalidActRecordDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
-import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.request.record.InvalidActRecordPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.record.InvalidActRecordMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
+import com.langtuo.teamachine.dao.po.drink.ToppingPO;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
+import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
+import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -25,8 +25,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
-
 @Component
 @Slf4j
 public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtService {
@@ -34,13 +32,13 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
     private InvalidActRecordAccessor accessor;
 
     @Resource
-    private ToppingMgtService toppingMgtService;
+    private ToppingAccessor toppingAccessor;
 
     @Resource
-    private ShopGroupMgtService shopGroupMgtService;
+    private ShopAccessor shopAccessor;
 
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopGroupAccessor shopGroupAccessor;
 
     @Override
     public TeaMachineResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark) {
@@ -144,18 +142,18 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         dto.setPipelineNum(po.getPipelineNum());
         dto.setInvalidAmount(po.getInvalidAmount());
 
-        ToppingDTO toppingDTO = getModel(toppingMgtService.getByCode(
-                po.getTenantCode(), po.getToppingCode()));
-        if (toppingDTO != null) {
-            dto.setToppingName(toppingDTO.getToppingName());
+        ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(
+                po.getTenantCode(), po.getToppingCode());
+        if (toppingPO != null) {
+            dto.setToppingName(toppingPO.getToppingName());
         }
-        ShopGroupDTO shopGroupDTO = getModel(shopGroupMgtService.getByCode(po.getTenantCode(), po.getShopGroupCode()));
-        if (shopGroupDTO != null) {
-            dto.setShopGroupName(shopGroupDTO.getShopGroupName());
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByCode(po.getTenantCode(), po.getShopGroupCode());
+        if (shopGroupPO != null) {
+            dto.setShopGroupName(shopGroupPO.getShopGroupName());
         }
-        ShopDTO shopDTO = getModel(shopMgtService.getByCode(po.getTenantCode(), po.getShopCode()));
-        if (shopDTO != null) {
-            dto.setShopName(shopDTO.getShopName());
+        ShopPO shopPO = shopAccessor.selectOneByCode(po.getTenantCode(), po.getShopCode());
+        if (shopPO != null) {
+            dto.setShopName(shopPO.getShopName());
         }
         return dto;
     }

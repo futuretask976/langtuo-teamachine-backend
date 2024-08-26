@@ -2,17 +2,17 @@ package com.langtuo.teamachine.biz.service.impl.user;
 
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
-import com.langtuo.teamachine.api.model.user.PermitActDTO;
 import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.RolePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.user.AdminMgtService;
-import com.langtuo.teamachine.api.service.user.PermitActMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
+import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
+import com.langtuo.teamachine.dao.po.user.PermitActPO;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +23,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -42,10 +39,10 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     private RoleActRelAccessor roleActRelAccessor;
 
     @Resource
-    private PermitActMgtService permitActMgtService;
+    private PermitActAccessor permitActAccessor;
 
     @Resource
-    private AdminMgtService adminMgtService;
+    private AdminAccessor adminAccessor;
 
     @Override
     public TeaMachineResult<RoleDTO> getByCode(String tenantCode, String roleCode) {
@@ -153,7 +150,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
-        int adminCount = getModel(adminMgtService.countByRoleCode(tenantCode, roleCode));
+        int adminCount = adminAccessor.countByRoleCode(tenantCode, roleCode);
         if (adminCount > 0) {
             return TeaMachineResult.error(ErrorEnum.BIZ_ERR_CAN_NOT_DELETE_USING_ROLE);
         }
@@ -207,7 +204,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                     .collect(Collectors.toList()));
         }
 
-        int adminCount = getModel(adminMgtService.countByRoleCode(po.getTenantCode(), po.getRoleCode()));
+        int adminCount = adminAccessor.countByRoleCode(po.getTenantCode(), po.getRoleCode());
         dto.setAdminCount(adminCount);
 
         return dto;
@@ -257,8 +254,8 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         dto.setSysReserved(1);
         dto.setAdminCount(1);
 
-        List<PermitActDTO> permitActDTOList = getListModel(permitActMgtService.listPermitAct());
-        dto.setPermitActCodeList(permitActDTOList.stream()
+        List<PermitActPO> permitActPOList = permitActAccessor.selectPermitActList();
+        dto.setPermitActCodeList(permitActPOList.stream()
                 .map(permitActDTO -> permitActDTO.getPermitActCode())
                 .collect(Collectors.toList()));
 

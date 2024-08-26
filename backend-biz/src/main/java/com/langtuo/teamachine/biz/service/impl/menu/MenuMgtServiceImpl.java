@@ -16,9 +16,11 @@ import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuSeriesRelAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
+import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +46,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     private MenuDispatchAccessor menuDispatchAccessor;
 
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopAccessor shopAccessor;
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
@@ -67,13 +69,13 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     public TeaMachineResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<MenuDTO>> teaMachineResult;
         try {
-            ShopDTO shopDTO = getModel(shopMgtService.getByCode(tenantCode, shopCode));
-            if (shopDTO == null) {
+            ShopPO shopPO = shopAccessor.selectOneByCode(tenantCode, shopCode);
+            if (shopPO == null) {
                 teaMachineResult = TeaMachineResult.success();
             }
 
             List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.selectListByShopGroupCode(
-                    tenantCode, shopDTO.getShopGroupCode());
+                    tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(menuDispatchPOList)) {
                 teaMachineResult = TeaMachineResult.success();
             }

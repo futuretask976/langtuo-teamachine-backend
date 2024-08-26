@@ -4,15 +4,15 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
-import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.request.shop.ShopPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.api.service.user.AdminMgtService;
-import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
+import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
+import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
+import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,9 +23,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
-
 @Component
 @Slf4j
 public class ShopMgtServiceImpl implements ShopMgtService {
@@ -33,13 +30,13 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     private ShopAccessor shopAccessor;
 
     @Resource
-    private AdminMgtService adminMgtService;
+    private AdminAccessor adminAccessor;
 
     @Resource
-    private OrgMgtService orgMgtService;
+    private OrgAccessor orgAccessor;
 
     @Resource
-    private ShopGroupMgtService shopGroupMgtService;
+    private ShopGroupAccessor shopGroupAccessor;
 
     @Override
     public TeaMachineResult<ShopDTO> getByCode(String tenantCode, String shopCode) {
@@ -65,11 +62,11 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         try {
             String shopGroupCode = null;
             if (StringUtils.isNotBlank(shopGroupName)) {
-                ShopGroupDTO shopGroupDTO = getModel(shopGroupMgtService.getByName(tenantCode, shopGroupName));
-                if (shopGroupDTO == null) {
+                ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByName(tenantCode, shopGroupName);
+                if (shopGroupPO == null) {
                     return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
                 } else {
-                    shopGroupCode = shopGroupDTO.getShopGroupCode();
+                    shopGroupCode = shopGroupPO.getShopGroupCode();
                 }
             }
 
@@ -118,8 +115,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     public TeaMachineResult<List<ShopDTO>> listByAdminOrg(String tenantCode) {
         TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {
-            List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
-            List<String> shopGroupCodeList = shopGroupDTOList.stream()
+            List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.selectList(tenantCode);
+            List<String> shopGroupCodeList = shopGroupPOList.stream()
                     .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
                     .collect(Collectors.toList());
 
@@ -215,10 +212,10 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopGroupDTO shopGroupDTO = getModel(shopGroupMgtService.getByCode(po.getTenantCode(), po.getShopGroupCode()));
-        if (shopGroupDTO != null) {
-            dto.setShopGroupCode(shopGroupDTO.getShopGroupCode());
-            dto.setShopGroupName(shopGroupDTO.getShopGroupName());
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByCode(po.getTenantCode(), po.getShopGroupCode());
+        if (shopGroupPO != null) {
+            dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
+            dto.setShopGroupName(shopGroupPO.getShopGroupName());
         }
 
         return dto;

@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaTypeMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.accessor.drink.TeaAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.TeaTypeAccessor;
 import com.langtuo.teamachine.dao.po.drink.TeaTypePO;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     private TeaTypeAccessor accessor;
 
     @Resource
-    private TeaMgtService teaMgtService;
+    private TeaAccessor teaAccessor;
 
     @Override
     public TeaMachineResult<List<TeaTypeDTO>> list(String tenantCode) {
@@ -158,7 +159,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         dto.setComment(po.getComment());
         po.setExtraInfo(po.getExtraInfo());
 
-        int teaCount = getModel(teaMgtService.countByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode()));
+        int teaCount = teaAccessor.countByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
         dto.setTeaCount(teaCount);
 
         return dto;

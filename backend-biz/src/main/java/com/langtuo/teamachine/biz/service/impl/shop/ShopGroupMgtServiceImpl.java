@@ -4,17 +4,17 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.user.AdminDTO;
-import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.request.shop.ShopGroupPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.api.service.user.AdminMgtService;
-import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
+import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
+import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
+import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
+import com.langtuo.teamachine.dao.po.user.AdminPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
@@ -27,9 +27,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
-
 @Component
 @Slf4j
 public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
@@ -37,13 +34,13 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     private ShopGroupAccessor shopGroupAccessor;
 
     @Resource
-    private ShopMgtService shopMgtService;
+    private ShopAccessor shopAccessor;
 
     @Resource
-    private AdminMgtService adminMgtService;
+    private AdminAccessor adminAccessor;
 
     @Resource
-    private OrgMgtService orgMgtService;
+    private OrgAccessor orgAccessor;
 
     @Override
     public TeaMachineResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode) {
@@ -174,7 +171,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         dto.setExtraInfo(po.getExtraInfo());
         dto.setOrgName(po.getOrgName());
 
-        int shopCount = getModel(shopMgtService.countByShopGroupCode(po.getTenantCode(), po.getShopGroupCode()));
+        int shopCount = shopAccessor.countByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
         dto.setShopCount(shopCount);
 
         return dto;
@@ -206,10 +203,10 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             throw new IllegalArgumentException("couldn't find login session");
         }
 
-        AdminDTO adminDTO = getModel(adminMgtService.get(tenantCode, adminLoginName));
-        String orgName = adminDTO.getOrgName();
-        List<OrgDTO> orgDTOList = getListModel(orgMgtService.listByParent(tenantCode, orgName));
-        List<String> orgNameList = orgDTOList.stream()
+        AdminPO adminPO = adminAccessor.selectOne(tenantCode, adminLoginName);
+        String orgName = adminPO.getOrgName();
+        List<OrgNode> orgPOList = orgAccessor.selectListByParent(tenantCode, orgName);
+        List<String> orgNameList = orgPOList.stream()
                 .map(orgNode -> orgNode.getOrgName())
                 .collect(Collectors.toList());
         return orgNameList;
