@@ -15,19 +15,24 @@ public class TeaExcel {
     /**
      *
      */
-    private List<ToppingBaseRulePart> toppingBaseRulePartList;
+    private List<TeaUnitPart> teaUnitPartList;
 
     /**
      *
      */
-    private List<TeaUnitPart> teaUnitPartList;
-
-    /**
-     * toppingAdjustRuleExcelList的长度必定是toppingBaseRuleExcelList的长度的teaUnit长度倍数
-     */
     private List<ToppingAdjustRulePart> toppingAdjustRulePartList;
 
-    public void addAll(List<ToppingAdjustRulePart> toppingAdjustRulePartList) {
+    public void addTeaUnit(List<TeaUnitPart> teaUnitPartList) {
+        if (teaUnitPartList == null) {
+            return;
+        }
+        if (this.teaUnitPartList == null) {
+            this.teaUnitPartList = Lists.newArrayList();
+        }
+        this.teaUnitPartList.addAll(teaUnitPartList);
+    }
+
+    public void addAdjustRulePart(List<ToppingAdjustRulePart> toppingAdjustRulePartList) {
         if (toppingAdjustRulePartList == null) {
             return;
         }

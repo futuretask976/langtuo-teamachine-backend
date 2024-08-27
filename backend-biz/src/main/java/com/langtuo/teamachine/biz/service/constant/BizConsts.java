@@ -39,15 +39,11 @@ public class BizConsts {
     public static final String TITLE_STATE = "状态";
     public static final String TITLE_TEA_TYPE_CODE = "茶品类型编码";
     public static final String TITLE_IMG_LINK = "图片链接";
-    public static final String TITLE_BASE_STEP_INDEX = "基础步骤序号";
-    public static final String TITLE_BASE_TOPPING_CODE = "基础物料编码";
-    public static final String TITLE_BASE_AMOUNT = "基础用量";
-    public static final String TITLE_SPEC_GROUP_NAME = "规格组合名称";
-    public static final String TITLE_ADJUST_STEP_INDEX = "调整步骤序号";
-    public static final String TITLE_ADJUST_TOPPING_CODE = "调整物料编码";
-    public static final String TITLE_ADJUST_TYPE = "调整类型";
-    public static final String TITLE_ADJUST_MODE = "调整模式";
-    public static final String TITLE_ADJUST_AMOUNT = "调整用量";
+    public static final String TITLE_TEA_UNIT_NAME = "规格单位名称";
+    public static final String TITLE_STEP_INDEX = "步骤序号";
+    public static final String TITLE_TOPPING_CODE = "物料编码";
+    public static final String TITLE_TOPPING_NAME = "物料名称";
+    public static final String TITLE_ACTUAL_AMOUNT = "实际用量";
 
     /**
      * 茶品导出 - 标题行
@@ -59,15 +55,11 @@ public class BizConsts {
             TITLE_STATE,
             TITLE_TEA_TYPE_CODE,
             TITLE_IMG_LINK,
-            TITLE_BASE_STEP_INDEX,
-            TITLE_BASE_TOPPING_CODE,
-            TITLE_BASE_AMOUNT,
-            TITLE_SPEC_GROUP_NAME,
-            TITLE_ADJUST_STEP_INDEX,
-            TITLE_ADJUST_TOPPING_CODE,
-            TITLE_ADJUST_TYPE,
-            TITLE_ADJUST_MODE,
-            TITLE_ADJUST_AMOUNT);
+            TITLE_TEA_UNIT_NAME,
+            TITLE_STEP_INDEX,
+            TITLE_TOPPING_CODE,
+            TITLE_TOPPING_NAME,
+            TITLE_ACTUAL_AMOUNT);
 
     /**
      * 茶品 - 起始行num
@@ -80,19 +72,14 @@ public class BizConsts {
     public static final int COL_START_NUM_4_TEA_INFO = 0;
 
     /**
-     * 茶品 - 基础规则部分起始列num
+     * 茶品 - 规格部分起始列num
      */
-    public static final int COL_START_NUM_4_BASE_RULE = 6;
-
-    /**
-     * 茶品 - 茶品unit部分起始列num
-     */
-    public static final int COL_START_NUM_4_UNIT = 9;
+    public static final int COL_START_NUM_4_TEA_UNIT = 6;
 
     /**
      * 茶品 - 调整规则部分起始列num
      */
-    public static final int COL_START_NUM_4_ADJUST_RULE = 10;
+    public static final int COL_START_NUM_4_ADJUST_RULE = 7;
 
     /**
      * 部署状态字段通用说明

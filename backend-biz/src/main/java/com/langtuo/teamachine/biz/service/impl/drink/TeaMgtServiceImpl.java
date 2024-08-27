@@ -226,7 +226,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         int rowStartIndex4Tea = BizConsts.ROW_START_NUM_4_TEA;
         for (TeaExcel teaExcel : teaExcelList) {
             TeaInfoPart teaInfoPart = teaExcel.getTeaInfoPart();
-            int size4BaseRuleList = teaExcel.getToppingBaseRulePartList().size();
             int size4AdjustRuleList = teaExcel.getToppingAdjustRulePartList().size();
 
             Row dataRow = ExcelUtils.createRowIfAbsent(sheet, rowStartIndex4Tea);
@@ -257,40 +256,16 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             cell4ImgLink.setCellValue(teaInfoPart.getImgLink());
             addMergedRegion4RowRange(sheet, cell4ImgLink, size4AdjustRuleList);
 
-            List<ToppingBaseRulePart> toppingBaseRulePartList = teaExcel.getToppingBaseRulePartList();
-            int rowRange4BaseRule = size4AdjustRuleList / size4BaseRuleList;
-            int rowIndex4BaseRule = rowStartIndex4Tea;
-            for (ToppingBaseRulePart toppingBaseRulePart : toppingBaseRulePartList) {
-                Row row4BaseRule = ExcelUtils.createRowIfAbsent(sheet, rowIndex4BaseRule);
-                int columnNum4BaseRule = columnNum;
-                // 添加步骤序号
-                Cell cell4StepIndex = row4BaseRule.createCell(columnNum4BaseRule++);
-                cell4StepIndex.setCellValue(toppingBaseRulePart.getStepIndex());
-                addMergedRegion4RowRange(sheet, cell4StepIndex, rowRange4BaseRule);
-                // 添加物料名称
-                Cell cell4ToppingName = row4BaseRule.createCell(columnNum4BaseRule++);
-                cell4ToppingName.setCellValue(toppingBaseRulePart.getToppingName());
-                addMergedRegion4RowRange(sheet, cell4ToppingName, rowRange4BaseRule);
-                // 添加基础用量
-                Cell cell4BaseAmount = row4BaseRule.createCell(columnNum4BaseRule++);
-                cell4BaseAmount.setCellValue(toppingBaseRulePart.getBaseAmount());
-                addMergedRegion4RowRange(sheet, cell4BaseAmount, rowRange4BaseRule);
-
-                rowIndex4BaseRule = row4BaseRule.getRowNum() + rowRange4BaseRule;
-            }
-
             List<TeaUnitPart> teaUnitPartList = teaExcel.getTeaUnitPartList();
             int rowRange4Unit = teaExcel.getToppingAdjustRulePartList().size() / teaExcel.getTeaUnitPartList().size();
             int rowIndex4Unit = rowStartIndex4Tea;
             for (TeaUnitPart teaUnitPart : teaUnitPartList) {
                 Row row4TeaUnit = ExcelUtils.createRowIfAbsent(sheet, rowIndex4Unit);
-                int columnIndex4TeaUnit = BizConsts.COL_START_NUM_4_UNIT;
-
+                int columnIndex4TeaUnit = BizConsts.COL_START_NUM_4_TEA_UNIT;
                 // 添加unit名称
                 Cell cell4UnitName = row4TeaUnit.createCell(columnIndex4TeaUnit++);
                 cell4UnitName.setCellValue(teaUnitPart.getTeaUnitName());
                 addMergedRegion4RowRange(sheet, cell4UnitName, rowRange4Unit);
-
                 rowIndex4Unit = rowIndex4Unit + rowRange4Unit;
             }
 
@@ -302,24 +277,15 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 // 添加步骤序号
                 Cell cell4StepIndex = row4AdjustRule.createCell(columnIndex4AdjustRule++);
                 cell4StepIndex.setCellValue(toppingAdjustRulePart.getStepIndex());
+                // 添加物料编码
+                Cell cell4ToppingCode = row4AdjustRule.createCell(columnIndex4AdjustRule++);
+                cell4ToppingCode.setCellValue(toppingAdjustRulePart.getToppingCode());
                 // 添加物料名称
                 Cell cell4ToppingName = row4AdjustRule.createCell(columnIndex4AdjustRule++);
                 cell4ToppingName.setCellValue(toppingAdjustRulePart.getToppingName());
-                // 添加调整类型
-                Cell cell4AdjustType = row4AdjustRule.createCell(columnIndex4AdjustRule++);
-                cell4AdjustType.setCellValue(
-                        toppingAdjustRulePart.getAdjustType() == BizConsts.TOPPING_ADJUST_TYPE_REDUCE
-                                ? BizConsts.TOPPING_ADJUST_TYPE_REDUCE_LABEL
-                                        : BizConsts.TOPPING_ADJUST_TYPE_INCRESE_LABEL);
-                // 添加调整模式
-                Cell cell4AdjustMode = row4AdjustRule.createCell(columnIndex4AdjustRule++);
-                cell4AdjustMode.setCellValue(
-                        toppingAdjustRulePart.getAdjustMode() == BizConsts.TOPPING_ADJUST_MODE_FIX
-                                ? BizConsts.TOPPING_ADJUST_MODE_FIX_LABEL
-                                        : BizConsts.TOPPING_ADJUST_MODE_PER_LABEL);
-                // 添加调整数量
-                Cell cell4AdjustAmount = row4AdjustRule.createCell(columnIndex4AdjustRule++);
-                cell4AdjustAmount.setCellValue(toppingAdjustRulePart.getAdjustAmount());
+                // 添加实际用量
+                Cell cell4ActualAmount = row4AdjustRule.createCell(columnIndex4AdjustRule++);
+                cell4ActualAmount.setCellValue(toppingAdjustRulePart.getActualAmount());
             }
 
             rowStartIndex4Tea = rowStartIndex4Tea + size4AdjustRuleList;
@@ -354,74 +320,72 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
             List<ToppingBaseRulePO> toppingBaseRulePOList = toppingBaseRuleAccessor.selectListByTeaCode(teaPO.getTenantCode(),
                     teaPO.getTeaCode());
-            teaExcel.setToppingBaseRulePartList(convertToToppingBaseRuleExcel(toppingBaseRulePOList));
+            Map<Integer, Map<String, ToppingBaseRulePO>> baseRuleMapByStepIndex = convertToBaseRuleMap(
+                    toppingBaseRulePOList);
 
-            List<TeaUnitPO> teaUnitPOList = filterTeaUnitPO(teaUnitAccessor.selectListByTeaCode(teaPO.getTenantCode(),
+            List<TeaUnitPart> teaUnitPartList = convertToTeaUnitPart(teaUnitAccessor.selectListByTeaCode(teaPO.getTenantCode(),
                     teaPO.getTeaCode()));
-            teaExcel.setTeaUnitPartList(convertToTeaUnitExcel(teaUnitPOList));
+            teaExcel.addTeaUnit(teaUnitPartList);
 
-            for (TeaUnitPart teaUnitPart : teaExcel.getTeaUnitPartList()) {
+            for (TeaUnitPart teaUnitPart : teaUnitPartList) {
                 List<ToppingAdjustRulePO> toppingAdjustRulePOList = toppingAdjustRuleAccessor.selectListByTeaUnitCode(
                         teaPO.getTenantCode(), teaPO.getTeaCode(), teaUnitPart.getTeaUnitCode());
-                teaExcel.addAll(convertToToppingAdjustRuleExcel(toppingAdjustRulePOList));
+                teaExcel.addAdjustRulePart(convertToAdjustRulePart(baseRuleMapByStepIndex, toppingAdjustRulePOList));
             }
         }
         return teaExcelList;
     }
 
-    private static List<TeaUnitPO> filterTeaUnitPO(List<TeaUnitPO> teaUnitPOList) {
-        Set<TeaUnitPO> result = Sets.newHashSet();
+    private static List<TeaUnitPart> convertToTeaUnitPart(List<TeaUnitPO> teaUnitPOList) {
+        Set<TeaUnitPart> result = Sets.newHashSet();
         for (TeaUnitPO teaUnitPO : teaUnitPOList) {
-            result.add(teaUnitPO);
+            TeaUnitPart teaUnitPart = new TeaUnitPart();
+            teaUnitPart.setTeaUnitName(teaUnitPO.getTeaUnitName());
+            teaUnitPart.setTeaUnitCode(teaUnitPO.getTeaUnitCode());
+            result.add(teaUnitPart);
         }
         return result.stream().collect(Collectors.toList());
     }
 
-    private List<ToppingAdjustRulePart> convertToToppingAdjustRuleExcel(List<ToppingAdjustRulePO> list) {
-        List<ToppingAdjustRulePart> resultList = com.google.common.collect.Lists.newArrayList();
-        for (ToppingAdjustRulePO toppingAdjustRulePO : list) {
-            ToppingAdjustRulePart toppingAdjustRulePart = new ToppingAdjustRulePart();
-            toppingAdjustRulePart.setStepIndex(toppingAdjustRulePO.getStepIndex());
-            toppingAdjustRulePart.setAdjustMode(toppingAdjustRulePO.getAdjustMode());
-            toppingAdjustRulePart.setAdjustType(toppingAdjustRulePO.getAdjustType());
-            toppingAdjustRulePart.setAdjustAmount(toppingAdjustRulePO.getAdjustAmount());
+    private List<ToppingAdjustRulePart> convertToAdjustRulePart(
+            Map<Integer, Map<String, ToppingBaseRulePO>> baseRuleMapByStepIndex,
+            List<ToppingAdjustRulePO> adjustRulePOList) {
+        List<ToppingAdjustRulePart> resultList = Lists.newArrayList();
+        for (ToppingAdjustRulePO adjustRulePO : adjustRulePOList) {
+            ToppingAdjustRulePart adjustRulePart = new ToppingAdjustRulePart();
+            adjustRulePart.setStepIndex(adjustRulePO.getStepIndex());
 
-            ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(toppingAdjustRulePO.getTenantCode(),
-                    toppingAdjustRulePO.getToppingCode());
+            ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(adjustRulePO.getTenantCode(),
+                    adjustRulePO.getToppingCode());
             if (toppingPO != null) {
-                toppingAdjustRulePart.setToppingName(toppingPO.getToppingName());
+                adjustRulePart.setToppingCode(toppingPO.getToppingCode());
+                adjustRulePart.setToppingName(toppingPO.getToppingName());
             }
 
-            resultList.add(toppingAdjustRulePart);
-        }
-        return resultList;
-    }
-
-    private List<TeaUnitPart> convertToTeaUnitExcel(List<TeaUnitPO> list) {
-        Set<TeaUnitPart> resultSet = Sets.newHashSet();
-        for (TeaUnitPO teaUnitPO : list) {
-            TeaUnitPart teaUnitPart = new TeaUnitPart();
-            teaUnitPart.setTeaUnitCode(teaUnitPO.getTeaUnitCode());
-            teaUnitPart.setTeaUnitName(teaUnitPO.getTeaUnitName());
-            resultSet.add(teaUnitPart);
-        }
-        return resultSet.stream().collect(Collectors.toList());
-    }
-
-    private List<ToppingBaseRulePart> convertToToppingBaseRuleExcel(List<ToppingBaseRulePO> list) {
-        List<ToppingBaseRulePart> resultList = Lists.newArrayList();
-        for (ToppingBaseRulePO toppingBaseRulePO : list) {
-            ToppingBaseRulePart toppingBaseRulePart = new ToppingBaseRulePart();
-            toppingBaseRulePart.setStepIndex(toppingBaseRulePO.getStepIndex());
-            toppingBaseRulePart.setBaseAmount(toppingBaseRulePO.getBaseAmount());
-
-            ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(toppingBaseRulePO.getTenantCode(),
-                    toppingBaseRulePO.getToppingCode());
-            if (toppingPO != null) {
-                toppingBaseRulePart.setToppingName(toppingPO.getToppingName());
+            Map<String, ToppingBaseRulePO> baseRuleMapByToppingCode = baseRuleMapByStepIndex.get(
+                    adjustRulePO.getStepIndex());
+            ToppingBaseRulePO baseRulePO = baseRuleMapByToppingCode.get(adjustRulePO.getToppingCode());
+            int baseAmount = baseRulePO.getBaseAmount();
+            int adjustAmount = adjustRulePO.getAdjustAmount();
+            int adjustType = adjustRulePO.getAdjustType();
+            int adjustMode = adjustRulePO.getAdjustMode();
+            int actualAmount = 0;
+            if (BizConsts.TOPPING_ADJUST_TYPE_REDUCE == adjustType) {
+                if (BizConsts.TOPPING_ADJUST_MODE_FIX == adjustMode) {
+                    actualAmount = baseAmount - adjustAmount;
+                } else {
+                    actualAmount = baseAmount * (1 - adjustAmount);
+                }
+            } else {
+                if (BizConsts.TOPPING_ADJUST_MODE_FIX == adjustMode) {
+                    actualAmount = baseAmount + adjustAmount;
+                } else {
+                    actualAmount = baseAmount + (1 - adjustAmount);
+                }
             }
+            adjustRulePart.setActualAmount(actualAmount < 0 ? 0 : actualAmount);
 
-            resultList.add(toppingBaseRulePart);
+            resultList.add(adjustRulePart);
         }
         return resultList;
     }
@@ -773,5 +737,34 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             dto.setState(toppingPO.getState());
         }
         return dto;
+    }
+
+    private Map<Integer, Map<String, ToppingBaseRulePO>> convertToBaseRuleMap(List<ToppingBaseRulePO> poList) {
+        if (poList == null) {
+            return null;
+        }
+
+        Map<Integer, Map<String, ToppingBaseRulePO>> mapByStepIndex = Maps.newHashMap();
+        for (ToppingBaseRulePO po : poList) {
+            int stepIndex = po.getStepIndex();
+            String toppingCode = po.getToppingCode();
+
+            Map<String, ToppingBaseRulePO> mapByToppingCode = mapByStepIndex.get(stepIndex);
+            if (mapByToppingCode == null) {
+                mapByToppingCode = Maps.newHashMap();
+                mapByStepIndex.put(stepIndex, mapByToppingCode);
+            }
+            mapByToppingCode.put(toppingCode, po);
+        }
+        return mapByStepIndex;
+    }
+
+    private ToppingBaseRulePO getBaseRuleByMap(int stepIndex, String toppingCode,
+            Map<Integer, Map<String, ToppingBaseRulePO>> mapByStepIndex) {
+        Map<String, ToppingBaseRulePO> mapByToppingCode = mapByStepIndex.get(stepIndex);
+        if (mapByToppingCode == null) {
+            return null;
+        }
+        return mapByToppingCode.get(toppingCode);
     }
 }

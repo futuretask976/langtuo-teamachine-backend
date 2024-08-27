@@ -20,17 +20,7 @@ public class ToppingAdjustRulePart {
     private String toppingName;
 
     /**
-     * 调整类型，0：减少，1：添加
+     * 实际用量
      */
-    private int adjustType;
-
-    /**
-     * 调整模式，0：固定值，1：百分比
-     */
-    private int adjustMode;
-
-    /**
-     * 调整用量
-     */
-    private int adjustAmount;
+    private int actualAmount;
 }
