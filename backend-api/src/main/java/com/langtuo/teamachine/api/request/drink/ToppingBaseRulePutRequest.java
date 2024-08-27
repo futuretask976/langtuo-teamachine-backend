@@ -21,16 +21,6 @@ public class ToppingBaseRulePutRequest {
     private String toppingName;
 
     /**
-     * 度量单位
-     */
-    private int measureUnit;
-
-    /**
-     *
-     */
-    private int state;
-
-    /**
      * 参数校验
      * @return
      */

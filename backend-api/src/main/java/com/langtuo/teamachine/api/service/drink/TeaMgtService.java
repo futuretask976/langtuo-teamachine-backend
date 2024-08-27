@@ -66,4 +66,11 @@ public interface TeaMgtService {
      * @return
      */
     TeaMachineResult<XSSFWorkbook> exportByExcel(String tenantCode);
+
+    /**
+     *
+     * @param workbook
+     * @return
+     */
+    TeaMachineResult<Void> parseUpload(String tenantCode, XSSFWorkbook workbook);
 }

@@ -1,7 +1,9 @@
 package com.langtuo.teamachine.biz.service.testor.drink;
 
 import com.google.common.collect.Lists;
-import com.langtuo.teamachine.biz.service.excel.*;
+import com.google.common.collect.Maps;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.excel.export.*;
 import com.langtuo.teamachine.biz.service.util.ExcelUtils;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.drink.TeaMapper;
@@ -12,6 +14,7 @@ import com.langtuo.teamachine.dao.po.drink.TeaPO;
 import com.langtuo.teamachine.dao.po.drink.TeaUnitPO;
 import com.langtuo.teamachine.dao.po.drink.ToppingAdjustRulePO;
 import com.langtuo.teamachine.dao.po.drink.ToppingBaseRulePO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,16 +22,150 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.assertj.core.util.Sets;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TeaTestor {
     public static void main(String args[]) {
-        select();
+        insert();
+    }
+
+    public static void insert() {
+        File file = new File("/Users/Miya/Downloads/tea_export.xlsx");
+
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(file);
+
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            Map<String, Integer> titleColumnIndexMap = Maps.newHashMap();
+
+            Sheet sheet = workbook.getSheetAt(0);
+            Row titleRow = sheet.getRow(0);
+            for (int i = 0; i < BizConsts.TITLE_LIST_4_TEA_EXPORT.size(); i++) {
+                Cell cell = titleRow.getCell(i);
+                if (BizConsts.TITLE_TEA_CODE.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_TEA_CODE, i);
+                } else if (BizConsts.TITLE_TEA_NAME.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_TEA_NAME, i);
+                } else if (BizConsts.TITLE_OUTER_TEA_CODE.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_OUTER_TEA_CODE, i);
+                } else if (BizConsts.TITLE_STATE.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_STATE, i);
+                } else if (BizConsts.TITLE_TEA_TYPE_CODE.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_TEA_TYPE_CODE, i);
+                } else if (BizConsts.TITLE_IMG_LINK.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_IMG_LINK, i);
+                } else if (BizConsts.TITLE_BASE_STEP_INDEX.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_BASE_STEP_INDEX, i);
+                } else if (BizConsts.TITLE_BASE_TOPPING_CODE.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_BASE_TOPPING_CODE, i);
+                } else if (BizConsts.TITLE_BASE_AMOUNT.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_BASE_AMOUNT, i);
+                } else if (BizConsts.TITLE_SPEC_GROUP_NAME.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_SPEC_GROUP_NAME, i);
+                } else if (BizConsts.TITLE_ADJUST_STEP_INDEX.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_ADJUST_STEP_INDEX, i);
+                } else if (BizConsts.TITLE_ADJUST_TOPPING_CODE.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_ADJUST_TOPPING_CODE, i);
+                } else if (BizConsts.TITLE_ADJUST_TYPE.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_ADJUST_TYPE, i);
+                } else if (BizConsts.TITLE_ADJUST_MODE.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_ADJUST_MODE, i);
+                } else if (BizConsts.TITLE_ADJUST_AMOUNT.equals(cell.getStringCellValue())) {
+                    titleColumnIndexMap.put(BizConsts.TITLE_ADJUST_AMOUNT, i);
+                }
+            }
+
+            List<TeaExcel> teaExcelList = Lists.newArrayList();
+            TeaInfoPart teaInfoPart = null;
+            List<ToppingBaseRulePart> baseRuleList4Tea = Lists.newArrayList();
+            List<ToppingAdjustRulePart> adjustRuleList4Tea = Lists.newArrayList();
+            int rowIndex4Tea = 1;
+            String lastTeaCode = null;
+            do {
+                Row row = sheet.getRow(rowIndex4Tea);
+                Cell cell4TeaCode = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_TEA_CODE));
+                String teaCode = cell4TeaCode.getStringCellValue();
+                if (StringUtils.isBlank(teaCode)) {
+                    break;
+                }
+                if (!teaCode.equals(lastTeaCode)) {
+                    if (!StringUtils.isBlank(lastTeaCode)) {
+                        TeaExcel teaExcel = new TeaExcel();
+                        teaExcel.setTeaInfoPart(teaInfoPart);
+                        teaExcel.setToppingAdjustRulePartList(adjustRuleList4Tea);
+                        teaExcelList.add(teaExcel);
+                    }
+
+                    lastTeaCode = teaCode;
+
+                    Cell cell4TeaName = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_TEA_CODE));
+                    String teaName = cell4TeaName.getStringCellValue();
+
+                    Cell cell4OuterTeaName = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_OUTER_TEA_CODE));
+                    String outerTeaName = cell4OuterTeaName.getStringCellValue();
+
+                    Cell cell4State = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_STATE));
+                    String state = cell4State.getStringCellValue();
+
+                    Cell cell4TeaTypeCode = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_TEA_TYPE_CODE));
+                    String teaTypeCode = cell4TeaTypeCode.getStringCellValue();
+
+                    Cell cell4ImgLink = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_IMG_LINK));
+                    String imgLink = cell4ImgLink.getStringCellValue();
+
+                    teaInfoPart = new TeaInfoPart();
+                    teaInfoPart.setTeaCode(teaCode);
+                    teaInfoPart.setTeaName(teaName);
+                    teaInfoPart.setOuterTeaCode(outerTeaName);
+                    teaInfoPart.setState("禁用".equals(state) ? 0 : 1);
+                    teaInfoPart.setTeaTypeCode(teaTypeCode);
+                    teaInfoPart.setImgLink(imgLink);
+                }
+
+                Cell cell4AdjustStepIndex = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_ADJUST_STEP_INDEX));
+                int adjustStepIndex = Double.valueOf(cell4AdjustStepIndex.getNumericCellValue()).intValue();
+
+                Cell cell4AdjustToppingCode = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_ADJUST_TOPPING_CODE));
+                String adjustToppingCode = cell4AdjustToppingCode.getStringCellValue();
+
+                Cell cell4AdjustType = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_ADJUST_TYPE));
+                String adjustType = cell4AdjustType.getStringCellValue();
+
+                Cell cell4AdjustMode = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_ADJUST_MODE));
+                String adjustMode = cell4AdjustMode.getStringCellValue();
+
+                Cell cell4AdjustAmount = row.getCell(titleColumnIndexMap.get(BizConsts.TITLE_ADJUST_AMOUNT));
+                int adjustAmount = Double.valueOf(cell4AdjustAmount.getNumericCellValue()).intValue();
+
+                ToppingAdjustRulePart toppingAdjustRulePart = new ToppingAdjustRulePart();
+                toppingAdjustRulePart.setStepIndex(Integer.valueOf(adjustStepIndex));
+                toppingAdjustRulePart.setToppingCode(adjustToppingCode);
+                toppingAdjustRulePart.setAdjustType(adjustType == "减少" ? 0 : 1);
+                toppingAdjustRulePart.setAdjustMode(adjustMode == "固定值" ? 0 : 1);
+                toppingAdjustRulePart.setAdjustAmount(adjustAmount);
+                adjustRuleList4Tea.add(toppingAdjustRulePart);
+
+                rowIndex4Tea++;
+            } while(true);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static void select() {
@@ -42,20 +179,20 @@ public class TeaTestor {
         List<TeaPO> teaPOList = teaMapper.selectList("tenant_001");
         for (TeaPO teaPO : teaPOList) {
             TeaExcel teaExcel = new TeaExcel();
-            teaExcel.setTeaInfoExcel(convertToTeaInfoExcel(teaPO));
+            teaExcel.setTeaInfoPart(convertToTeaInfoExcel(teaPO));
             teaExcelList.add(teaExcel);
 
             List<ToppingBaseRulePO> toppingBaseRulePOList = toppingBaseRuleMapper.selectList(teaPO.getTenantCode(),
                     teaPO.getTeaCode());
-            teaExcel.setToppingBaseRuleExcelList(convertToToppingBaseRuleExcel(toppingBaseRulePOList));
+            teaExcel.setToppingBaseRulePartList(convertToToppingBaseRuleExcel(toppingBaseRulePOList));
 
             List<TeaUnitPO> teaUnitPOList = filterTeaUnitPO(teaUnitMapper.selectList(teaPO.getTenantCode(),
                     teaPO.getTeaCode()));
-            teaExcel.setTeaUnitExcelList(convertToTeaUnitExcel(teaUnitPOList));
+            teaExcel.setTeaUnitPartList(convertToTeaUnitExcel(teaUnitPOList));
 
-            for (TeaUnitExcel teaUnitExcel : teaExcel.getTeaUnitExcelList()) {
+            for (TeaUnitPart teaUnitPart : teaExcel.getTeaUnitPartList()) {
                 List<ToppingAdjustRulePO> toppingAdjustRulePOList = toppingAdjustRuleMapper.selectList(
-                        teaPO.getTenantCode(), teaPO.getTeaCode(), teaUnitExcel.getTeaUnitCode());
+                        teaPO.getTenantCode(), teaPO.getTeaCode(), teaUnitPart.getTeaUnitCode());
                 teaExcel.addAll(convertToToppingAdjustRuleExcel(toppingAdjustRulePOList));
             }
         }
@@ -91,40 +228,40 @@ public class TeaTestor {
 
         int rowStartIndex4Tea = 1;
         for (TeaExcel teaExcel : teaExcelList) {
-            TeaInfoExcel teaInfoExcel = teaExcel.getTeaInfoExcel();
+            TeaInfoPart teaInfoPart = teaExcel.getTeaInfoPart();
             Row dataRow = ExcelUtils.createRowIfAbsent(sheet, rowStartIndex4Tea);
             int columnIndex = 0;
             Cell cell = null;
 
             cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(teaInfoExcel.getTeaCode());
-            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            cell.setCellValue(teaInfoPart.getTeaCode());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRulePartList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(teaInfoExcel.getTeaName());
-            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            cell.setCellValue(teaInfoPart.getTeaName());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRulePartList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(teaInfoExcel.getOuterTeaCode());
-            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            cell.setCellValue(teaInfoPart.getOuterTeaCode());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRulePartList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(teaInfoExcel.getState());
-            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            cell.setCellValue(teaInfoPart.getState());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRulePartList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(teaInfoExcel.getTeaTypeCode());
-            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            cell.setCellValue(teaInfoPart.getTeaTypeCode());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRulePartList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
             cell = dataRow.createCell(columnIndex++);
-            cell.setCellValue(teaInfoExcel.getImgLink());
-            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRuleExcelList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
+            cell.setCellValue(teaInfoPart.getImgLink());
+            ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + teaExcel.getToppingAdjustRulePartList().size() - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
 
-            List<ToppingBaseRuleExcel> ToppingBaseRuleExcelList = teaExcel.getToppingBaseRuleExcelList();
-            int rowRange4BaseRule = teaExcel.getToppingAdjustRuleExcelList().size() / teaExcel.getToppingBaseRuleExcelList().size();
+            List<ToppingBaseRulePart> toppingBaseRulePartList = teaExcel.getToppingBaseRulePartList();
+            int rowRange4BaseRule = teaExcel.getToppingAdjustRulePartList().size() / teaExcel.getToppingBaseRulePartList().size();
             Row row4BaseRule = null;
-            for (ToppingBaseRuleExcel toppingBaseRuleExcel : ToppingBaseRuleExcelList) {
+            for (ToppingBaseRulePart toppingBaseRulePart : toppingBaseRulePartList) {
                 if (row4BaseRule == null) {
                     row4BaseRule = dataRow;
                 } else {
@@ -133,55 +270,55 @@ public class TeaTestor {
                 int columnIndex4BaseRule = columnIndex;
 
                 cell = row4BaseRule.createCell(columnIndex4BaseRule++);
-                cell.setCellValue(toppingBaseRuleExcel.getStepIndex());
+                cell.setCellValue(toppingBaseRulePart.getStepIndex());
                 ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4BaseRule - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
                 cell = row4BaseRule.createCell(columnIndex4BaseRule++);
-                cell.setCellValue(toppingBaseRuleExcel.getToppingName());
+                cell.setCellValue(toppingBaseRulePart.getToppingName());
                 ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4BaseRule - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
                 cell = row4BaseRule.createCell(columnIndex4BaseRule++);
-                cell.setCellValue(toppingBaseRuleExcel.getBaseAmount());
+                cell.setCellValue(toppingBaseRulePart.getBaseAmount());
                 ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4BaseRule - 1, cell.getColumnIndex(), cell.getColumnIndex());
             }
 
-            List<TeaUnitExcel> teaUnitExcelList = teaExcel.getTeaUnitExcelList();
-            int rowRange4TeaUnit = teaExcel.getToppingAdjustRuleExcelList().size() / teaExcel.getTeaUnitExcelList().size();
+            List<TeaUnitPart> teaUnitPartList = teaExcel.getTeaUnitPartList();
+            int rowRange4TeaUnit = teaExcel.getToppingAdjustRulePartList().size() / teaExcel.getTeaUnitPartList().size();
             int rowIndex4TeaUnit = rowStartIndex4Tea;
-            for (TeaUnitExcel teaUnitExcel : teaUnitExcelList) {
+            for (TeaUnitPart teaUnitPart : teaUnitPartList) {
                 Row row4TeaUnit = ExcelUtils.createRowIfAbsent(sheet, rowIndex4TeaUnit);
                 int columnIndex4TeaUnit = 9;
 
                 cell = row4TeaUnit.createCell(columnIndex4TeaUnit++);
-                cell.setCellValue(teaUnitExcel.getTeaUnitName());
+                cell.setCellValue(teaUnitPart.getTeaUnitName());
                 ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange4TeaUnit - 1, cell.getColumnIndex(), cell.getColumnIndex());
 
                 rowIndex4TeaUnit = rowIndex4TeaUnit + rowRange4TeaUnit;
             }
 
-            List<ToppingAdjustRuleExcel> toppingAdjustRuleExcelList = teaExcel.getToppingAdjustRuleExcelList();
+            List<ToppingAdjustRulePart> toppingAdjustRulePartList = teaExcel.getToppingAdjustRulePartList();
             int rowIndex4AdjustRule = rowStartIndex4Tea;
-            for (ToppingAdjustRuleExcel toppingAdjustRuleExcel : toppingAdjustRuleExcelList) {
+            for (ToppingAdjustRulePart toppingAdjustRulePart : toppingAdjustRulePartList) {
                 Row row4AdjustRule = ExcelUtils.createRowIfAbsent(sheet, rowIndex4AdjustRule++);
                 int columnIndex4AdjustRule = 10;
 
                 cell = row4AdjustRule.createCell(columnIndex4AdjustRule++);
-                cell.setCellValue(toppingAdjustRuleExcel.getStepIndex());
+                cell.setCellValue(toppingAdjustRulePart.getStepIndex());
 
                 cell = row4AdjustRule.createCell(columnIndex4AdjustRule++);
-                cell.setCellValue(toppingAdjustRuleExcel.getToppingName());
+                cell.setCellValue(toppingAdjustRulePart.getToppingName());
 
                 cell = row4AdjustRule.createCell(columnIndex4AdjustRule++);
-                cell.setCellValue(toppingAdjustRuleExcel.getAdjustType());
+                cell.setCellValue(toppingAdjustRulePart.getAdjustType());
 
                 cell = row4AdjustRule.createCell(columnIndex4AdjustRule++);
-                cell.setCellValue(toppingAdjustRuleExcel.getAdjustMode());
+                cell.setCellValue(toppingAdjustRulePart.getAdjustMode());
 
                 cell = row4AdjustRule.createCell(columnIndex4AdjustRule++);
-                cell.setCellValue(toppingAdjustRuleExcel.getAdjustAmount());
+                cell.setCellValue(toppingAdjustRulePart.getAdjustAmount());
             }
 
-            rowStartIndex4Tea = rowStartIndex4Tea + teaExcel.getToppingAdjustRuleExcelList().size();
+            rowStartIndex4Tea = rowStartIndex4Tea + teaExcel.getToppingAdjustRulePartList().size();
         }
 
         File exportFile = new File("test/export_test.xlsx");
@@ -214,51 +351,51 @@ public class TeaTestor {
         return result.stream().collect(Collectors.toList());
     }
 
-    private static List<ToppingAdjustRuleExcel> convertToToppingAdjustRuleExcel(List<ToppingAdjustRulePO> list) {
-        List<ToppingAdjustRuleExcel> resultList = Lists.newArrayList();
+    private static List<ToppingAdjustRulePart> convertToToppingAdjustRuleExcel(List<ToppingAdjustRulePO> list) {
+        List<ToppingAdjustRulePart> resultList = Lists.newArrayList();
         for (ToppingAdjustRulePO toppingAdjustRulePO : list) {
-            ToppingAdjustRuleExcel toppingAdjustRuleExcel = new ToppingAdjustRuleExcel();
-            toppingAdjustRuleExcel.setStepIndex(toppingAdjustRulePO.getStepIndex());
-            toppingAdjustRuleExcel.setToppingName(toppingAdjustRulePO.getToppingCode());
-            toppingAdjustRuleExcel.setAdjustMode(toppingAdjustRulePO.getAdjustMode());
-            toppingAdjustRuleExcel.setAdjustType(toppingAdjustRulePO.getAdjustType());
-            toppingAdjustRuleExcel.setAdjustAmount(toppingAdjustRulePO.getAdjustAmount());
-            resultList.add(toppingAdjustRuleExcel);
+            ToppingAdjustRulePart toppingAdjustRulePart = new ToppingAdjustRulePart();
+            toppingAdjustRulePart.setStepIndex(toppingAdjustRulePO.getStepIndex());
+            toppingAdjustRulePart.setToppingName(toppingAdjustRulePO.getToppingCode());
+            toppingAdjustRulePart.setAdjustMode(toppingAdjustRulePO.getAdjustMode());
+            toppingAdjustRulePart.setAdjustType(toppingAdjustRulePO.getAdjustType());
+            toppingAdjustRulePart.setAdjustAmount(toppingAdjustRulePO.getAdjustAmount());
+            resultList.add(toppingAdjustRulePart);
         }
         return resultList;
     }
 
-    private static List<TeaUnitExcel> convertToTeaUnitExcel(List<TeaUnitPO> list) {
-        Set<TeaUnitExcel> resultSet = Sets.newHashSet();
+    private static List<TeaUnitPart> convertToTeaUnitExcel(List<TeaUnitPO> list) {
+        Set<TeaUnitPart> resultSet = Sets.newHashSet();
         for (TeaUnitPO teaUnitPO : list) {
-            TeaUnitExcel teaUnitExcel = new TeaUnitExcel();
-            teaUnitExcel.setTeaUnitCode(teaUnitPO.getTeaUnitCode());
-            teaUnitExcel.setTeaUnitName(teaUnitPO.getTeaUnitName());
-            resultSet.add(teaUnitExcel);
+            TeaUnitPart teaUnitPart = new TeaUnitPart();
+            teaUnitPart.setTeaUnitCode(teaUnitPO.getTeaUnitCode());
+            teaUnitPart.setTeaUnitName(teaUnitPO.getTeaUnitName());
+            resultSet.add(teaUnitPart);
         }
         return resultSet.stream().collect(Collectors.toList());
     }
 
-    private static List<ToppingBaseRuleExcel> convertToToppingBaseRuleExcel(List<ToppingBaseRulePO> list) {
-        List<ToppingBaseRuleExcel> resultList = Lists.newArrayList();
+    private static List<ToppingBaseRulePart> convertToToppingBaseRuleExcel(List<ToppingBaseRulePO> list) {
+        List<ToppingBaseRulePart> resultList = Lists.newArrayList();
         for (ToppingBaseRulePO toppingBaseRulePO : list) {
-            ToppingBaseRuleExcel toppingBaseRuleExcel = new ToppingBaseRuleExcel();
-            toppingBaseRuleExcel.setStepIndex(toppingBaseRulePO.getStepIndex());
-            toppingBaseRuleExcel.setToppingName(toppingBaseRulePO.getToppingCode());
-            toppingBaseRuleExcel.setBaseAmount(toppingBaseRulePO.getBaseAmount());
-            resultList.add(toppingBaseRuleExcel);
+            ToppingBaseRulePart toppingBaseRulePart = new ToppingBaseRulePart();
+            toppingBaseRulePart.setStepIndex(toppingBaseRulePO.getStepIndex());
+            toppingBaseRulePart.setToppingName(toppingBaseRulePO.getToppingCode());
+            toppingBaseRulePart.setBaseAmount(toppingBaseRulePO.getBaseAmount());
+            resultList.add(toppingBaseRulePart);
         }
         return resultList;
     }
 
-    private static TeaInfoExcel convertToTeaInfoExcel(TeaPO teaPO) {
-        TeaInfoExcel teaInfoExcel = new TeaInfoExcel();
-        teaInfoExcel.setTeaCode(teaPO.getTeaCode());
-        teaInfoExcel.setTeaName(teaPO.getTeaName());
-        teaInfoExcel.setTeaTypeCode(teaPO.getTeaTypeCode());
-        teaInfoExcel.setOuterTeaCode(teaPO.getOuterTeaCode());
-        teaInfoExcel.setImgLink(teaPO.getImgLink());
-        teaInfoExcel.setState(teaPO.getState());
-        return teaInfoExcel;
+    private static TeaInfoPart convertToTeaInfoExcel(TeaPO teaPO) {
+        TeaInfoPart teaInfoPart = new TeaInfoPart();
+        teaInfoPart.setTeaCode(teaPO.getTeaCode());
+        teaInfoPart.setTeaName(teaPO.getTeaName());
+        teaInfoPart.setTeaTypeCode(teaPO.getTeaTypeCode());
+        teaInfoPart.setOuterTeaCode(teaPO.getOuterTeaCode());
+        teaInfoPart.setImgLink(teaPO.getImgLink());
+        teaInfoPart.setState(teaPO.getState());
+        return teaInfoPart;
     }
 }

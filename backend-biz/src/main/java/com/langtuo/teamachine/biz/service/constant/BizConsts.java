@@ -31,24 +31,43 @@ public class BizConsts {
     public static final int ROW_NUM_4_TITLE = 0;
 
     /**
+     * 茶品导出 - 列标题
+     */
+    public static final String TITLE_TEA_CODE = "茶品编码";
+    public static final String TITLE_TEA_NAME = "茶品名称";
+    public static final String TITLE_OUTER_TEA_CODE = "外部茶品编码";
+    public static final String TITLE_STATE = "状态";
+    public static final String TITLE_TEA_TYPE_CODE = "茶品类型编码";
+    public static final String TITLE_IMG_LINK = "图片链接";
+    public static final String TITLE_BASE_STEP_INDEX = "基础步骤序号";
+    public static final String TITLE_BASE_TOPPING_CODE = "基础物料编码";
+    public static final String TITLE_BASE_AMOUNT = "基础用量";
+    public static final String TITLE_SPEC_GROUP_NAME = "规格组合名称";
+    public static final String TITLE_ADJUST_STEP_INDEX = "调整步骤序号";
+    public static final String TITLE_ADJUST_TOPPING_CODE = "调整物料编码";
+    public static final String TITLE_ADJUST_TYPE = "调整类型";
+    public static final String TITLE_ADJUST_MODE = "调整模式";
+    public static final String TITLE_ADJUST_AMOUNT = "调整用量";
+
+    /**
      * 茶品导出 - 标题行
      */
     public static List<String> TITLE_LIST_4_TEA_EXPORT = Lists.newArrayList(
-            "茶品编码",
-            "茶品名称",
-            "外部茶品编码",
-            "状态",
-            "茶品类型编码",
-            "图片链接",
-            "步骤序号",
-            "物料编码",
-            "基础用量",
-            "规格名称",
-            "步骤序号",
-            "物料编码",
-            "调整类型",
-            "调整模式",
-            "调整用量");
+            TITLE_TEA_CODE,
+            TITLE_TEA_NAME,
+            TITLE_OUTER_TEA_CODE,
+            TITLE_STATE,
+            TITLE_TEA_TYPE_CODE,
+            TITLE_IMG_LINK,
+            TITLE_BASE_STEP_INDEX,
+            TITLE_BASE_TOPPING_CODE,
+            TITLE_BASE_AMOUNT,
+            TITLE_SPEC_GROUP_NAME,
+            TITLE_ADJUST_STEP_INDEX,
+            TITLE_ADJUST_TOPPING_CODE,
+            TITLE_ADJUST_TYPE,
+            TITLE_ADJUST_MODE,
+            TITLE_ADJUST_AMOUNT);
 
     /**
      * 茶品 - 起始行num

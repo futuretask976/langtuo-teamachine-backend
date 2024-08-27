@@ -1,9 +1,9 @@
-package com.langtuo.teamachine.biz.service.excel;
+package com.langtuo.teamachine.biz.service.excel.export;
 
 import lombok.Data;
 
 @Data
-public class ToppingBaseRuleExcel {
+public class ToppingBaseRulePart {
     /**
      * 步骤序号
      */

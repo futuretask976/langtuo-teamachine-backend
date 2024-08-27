@@ -1,9 +1,9 @@
-package com.langtuo.teamachine.biz.service.excel;
+package com.langtuo.teamachine.biz.service.excel.export;
 
 import lombok.Data;
 
 @Data
-public class TeaInfoExcel {
+public class TeaInfoPart {
     /**
      * 茶编码
      */

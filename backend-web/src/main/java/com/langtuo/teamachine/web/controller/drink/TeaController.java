@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.web.controller.drink;
 
+import com.langtuo.teamachine.api.constant.ErrorEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
@@ -12,10 +13,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
@@ -105,5 +109,34 @@ public class TeaController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(outputStream.toByteArray());
+    }
+
+    @PostMapping("/{tenantcode}/upload")
+    public TeaMachineResult<Void> uploadExcel(@PathVariable(name = "tenantcode") String tenantCode,
+            @RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY);
+        }
+
+        // 获取文件的字节
+        InputStream inputStream = null;
+        try {
+            byte[] bytes = file.getBytes();
+
+            inputStream = new ByteArrayInputStream(bytes);
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            return TeaMachineResult.success();
+        } catch (IOException e) {
+            log.error("parse upload file error: " + e.getMessage(), e);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    log.error("parse upload file error: " + e.getMessage(), e);
+                }
+            }
+        }
+        return TeaMachineResult.error(ErrorEnum.BIZ_ERR_PARSE_UPLOAD_FILE_ERROR);
     }
 }

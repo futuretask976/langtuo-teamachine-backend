@@ -16,29 +16,12 @@ public class SpecItemRulePutRequest {
     private String specItemCode;
 
     /**
-     * 规格项名称
-     */
-    private String specItemName;
-
-    /**
-     * 外部规格项编码
-     */
-    private String outerSpecItemCode;
-
-    /**
-     * 是否选中
-     */
-    private int selected;
-
-    /**
      * 参数校验
      * @return
      */
     public boolean isValid() {
         if (RegexUtils.isValidCode(specCode, true)
-                && RegexUtils.isValidCode(specItemCode, true)
-                && RegexUtils.isValidName(specItemName, true)
-                && RegexUtils.isValidCode(outerSpecItemCode, true)) {
+                && RegexUtils.isValidCode(specItemCode, true)) {
             return true;
         }
         return false;
