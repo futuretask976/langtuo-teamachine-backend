@@ -16,17 +16,11 @@ public class ToppingBaseRulePutRequest {
     private int baseAmount;
 
     /**
-     * 物料名称
-     */
-    private String toppingName;
-
-    /**
      * 参数校验
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(toppingCode, true)
-                && RegexUtils.isValidName(toppingName, true)) {
+        if (RegexUtils.isValidCode(toppingCode, true)) {
             return true;
         }
         return false;

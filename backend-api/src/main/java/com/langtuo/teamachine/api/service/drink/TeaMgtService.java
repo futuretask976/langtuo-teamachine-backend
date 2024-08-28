@@ -55,14 +55,6 @@ public interface TeaMgtService {
     /**
      *
      * @param tenantCode
-     * @param teaTypeCode
-     * @return
-     */
-    TeaMachineResult<Integer> countByTeaTypeCode(String tenantCode, String teaTypeCode);
-
-    /**
-     *
-     * @param tenantCode
      * @return
      */
     TeaMachineResult<XSSFWorkbook> exportByExcel(String tenantCode);
@@ -72,5 +64,5 @@ public interface TeaMgtService {
      * @param workbook
      * @return
      */
-    TeaMachineResult<Void> parseUpload(String tenantCode, XSSFWorkbook workbook);
+    TeaMachineResult<Void> uploadByExcel(String tenantCode, XSSFWorkbook workbook);
 }

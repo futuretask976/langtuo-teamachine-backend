@@ -19,8 +19,7 @@ public interface SpecItemMapper {
      * @param specItemCode
      * @return
      */
-    SpecItemPO selectOne(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode,
-            @Param("specItemCode") String specItemCode);
+    SpecItemPO selectOne(@Param("tenantCode") String tenantCode, @Param("specItemCode") String specItemCode, @Param("specItemName") String specItemName);
 
     /**
      *

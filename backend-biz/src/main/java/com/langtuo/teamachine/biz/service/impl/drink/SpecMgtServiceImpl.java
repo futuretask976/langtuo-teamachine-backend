@@ -145,34 +145,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         return teaMachineResult;
     }
 
-    @Override
-    public TeaMachineResult<SpecItemDTO> getSpecItemBySpecItemCode(String tenantCode, String specCode, String specItemCode) {
-        TeaMachineResult<SpecItemDTO> teaMachineResult;
-        try {
-            SpecItemPO po = specItemAccessor.selectOneBySpecItemCode(tenantCode, specCode, specItemCode);
-            SpecItemDTO dto = convert(po);
-            teaMachineResult = TeaMachineResult.success(dto);
-        } catch (Exception e) {
-            log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
-        }
-        return teaMachineResult;
-    }
-
-    @Override
-    public TeaMachineResult<List<SpecItemDTO>> listSpecItemBySpecCode(String tenantCode, String specCode) {
-        TeaMachineResult<List<SpecItemDTO>> teaMachineResult;
-        try {
-            List<SpecItemPO> poList = specItemAccessor.selectListBySpecCode(tenantCode, specCode);
-            List<SpecItemDTO> dtoList = convertToSpecItemDTO(poList);
-            teaMachineResult = TeaMachineResult.success(dtoList);
-        } catch (Exception e) {
-            log.error("listSpecItemBySpecCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
-        }
-        return teaMachineResult;
-    }
-
     private List<SpecDTO> convert(List<SpecPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;

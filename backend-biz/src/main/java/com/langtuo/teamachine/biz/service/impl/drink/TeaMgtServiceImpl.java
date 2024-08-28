@@ -190,23 +190,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     }
 
     @Override
-    public TeaMachineResult<Integer> countByTeaTypeCode(String tenantCode, String teaTypeCode) {
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(teaTypeCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
-        }
-
-        TeaMachineResult<Integer> teaMachineResult;
-        try {
-            int cnt = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
-            teaMachineResult = TeaMachineResult.success(cnt);
-        } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
-        }
-        return teaMachineResult;
-    }
-
-    @Override
     public TeaMachineResult<XSSFWorkbook> exportByExcel(String tenantCode) {
         // 获取数据
         List<TeaExcel> teaExcelList = fetchData4Export(tenantCode);
@@ -295,18 +278,150 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> parseUpload(String tenantCode, XSSFWorkbook workbook) {
+    public TeaMachineResult<Void> uploadByExcel(String tenantCode, XSSFWorkbook workbook) {
         if (StringUtils.isBlank(tenantCode) || workbook == null) {
             return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
+        Sheet sheet = workbook.getSheetAt(BizConsts.SHEET_NUM_4_DATA);
+
+        List<TeaPutRequest> teaPutRequestList = Lists.newArrayList();
+        TeaPutRequest lastTeaPutRequest = null;
+        TeaUnitPutRequest lastTeaUnitPutRequest = null;
+        int rowIndex4Tea = BizConsts.ROW_START_NUM_4_DATA;
+        while (true) {
+            Row row = sheet.getRow(rowIndex4Tea);
+            if (row == null) {
+                break;
+            }
+
+            Cell cell4TeaCode = row.getCell(BizConsts.TITLE_TEA_CODE_INDEX);
+            if (cell4TeaCode != null) {
+                // 表示来到了新的 tea,开始新的茶品部分
+                lastTeaPutRequest = new TeaPutRequest();
+                lastTeaPutRequest.setTenantCode(tenantCode);
+                teaPutRequestList.add(lastTeaPutRequest);
+
+                // 设置茶品编码
+                String teaCode = cell4TeaCode.getStringCellValue();
+                lastTeaPutRequest.setTeaCode(teaCode);
+                // 设置茶品名称
+                Cell cell4TeaName = row.getCell(BizConsts.TITLE_TEA_CODE_INDEX);
+                String teaName = cell4TeaName.getStringCellValue();
+                lastTeaPutRequest.setTeaName(teaName);
+                // 设置外部茶品编码
+                Cell cell4OuterTeaName = row.getCell(BizConsts.TITLE_OUTER_TEA_CODE_INDEX);
+                String outerTeaCode = cell4OuterTeaName.getStringCellValue();
+                lastTeaPutRequest.setOuterTeaCode(outerTeaCode);
+                // 设置状态
+                Cell cell4State = row.getCell(BizConsts.TITLE_STATE_INDEX);
+                String state = cell4State.getStringCellValue();
+                lastTeaPutRequest.setState(BizConsts.STATE_DISABLED_LABEL.equals(state) ? BizConsts.STATE_DISABLED : BizConsts.STATE_ENABLED);
+                // 设置类型编码
+                Cell cell4TeaTypeCode = row.getCell(BizConsts.TITLE_TEA_TYPE_CODE_INDEX);
+                String teaTypeCode = cell4TeaTypeCode.getStringCellValue();
+                lastTeaPutRequest.setTeaTypeCode(teaTypeCode);
+                // 设置图片链接
+                Cell cell4ImgLink = row.getCell(BizConsts.TITLE_IMG_LINK_INDEX);
+                String imgLink = cell4ImgLink.getStringCellValue();
+                lastTeaPutRequest.setImgLink(imgLink);
+            }
+
+            Cell cell4TeaUnitName = row.getCell(BizConsts.COL_START_NUM_4_TEA_UNIT);
+            if (cell4TeaUnitName != null) {
+                // 表示来到了新的 teaUnit，开始新的 unit 部分
+                lastTeaUnitPutRequest = new TeaUnitPutRequest();
+                lastTeaPutRequest.addTeaUnit(lastTeaUnitPutRequest);
+
+                // 设置 teaUnitName
+                String teaUnitName = cell4TeaUnitName.getStringCellValue();
+                lastTeaUnitPutRequest.setTeaUnitName(teaUnitName);
+            }
+
+            // 设置步骤序号
+            Cell cell4AdjustStepIndex = row.getCell(BizConsts.TITLE_STEP_INDEX_INDEX);
+            if (cell4AdjustStepIndex == null) {
+                break;
+            }
+            int adjustStepIndex = Double.valueOf(cell4AdjustStepIndex.getNumericCellValue()).intValue();
+            // 设置物料编码
+            Cell cell4AdjustToppingCode = row.getCell(BizConsts.TITLE_TOPPING_CODE_INDEX);
+            String adjustToppingCode = cell4AdjustToppingCode.getStringCellValue();
+            // 设置调整用量
+            Cell cell4AdjustAmount = row.getCell(BizConsts.TITLE_ACTUAL_AMOUNT_INDEX);
+            int actualAmount = Double.valueOf(cell4AdjustAmount.getNumericCellValue()).intValue();
+            // 每一行都是单独的 toppingAdjustRulePutRequest
+            ToppingAdjustRulePutRequest adjustRulePutRequest = new ToppingAdjustRulePutRequest();
+            adjustRulePutRequest.setBaseAmount(0);
+            adjustRulePutRequest.setAdjustType(BizConsts.TOPPING_ADJUST_TYPE_INCRESE);
+            adjustRulePutRequest.setAdjustMode(BizConsts.TOPPING_ADJUST_MODE_FIX);
+            adjustRulePutRequest.setStepIndex(adjustStepIndex);
+            adjustRulePutRequest.setToppingCode(adjustToppingCode);
+            adjustRulePutRequest.setAdjustAmount(actualAmount);
+            // 添加到 teaUnit 中
+            lastTeaUnitPutRequest.addToppingAdjustRulePutRequest(adjustRulePutRequest);
+
+            rowIndex4Tea++;
+        }
+        for (TeaPutRequest teaPutRequest : teaPutRequestList) {
+            // 需要构造 actStepList
+            List<TeaUnitPutRequest> teaUnitList = teaPutRequest.getTeaUnitList();
+            for (TeaUnitPutRequest teaUnitPutRequest : teaUnitList) {
+                String teaUnitName = teaUnitPutRequest.getTeaUnitName();
+                String[] teaUnitNameParts = teaUnitName.split("-");
+
+                List<SpecItemPO> specItemPOList = Lists.newArrayList();
+                for (String specItemName : teaUnitNameParts) {
+                    SpecItemPO specItemPO = specItemAccessor.selectOneBySpecItemName(tenantCode, specItemName);
+                    specItemPOList.add(specItemPO);
+                }
+                specItemPOList.sort((o1, o2) -> o1.getSpecCode().compareTo(o2.getSpecCode()));
+                StringBuffer newTeaUnitCode = new StringBuffer();
+                StringBuffer newTeaUnitName = new StringBuffer();
+                List<SpecItemRulePutRequest> specItemRulePutRequestList = Lists.newArrayList();
+                for (SpecItemPO specItemPO : specItemPOList) {
+                    if (newTeaUnitCode.length() > BizConsts.NUM_ZERO) {
+                        newTeaUnitCode.append(BizConsts.STR_HORIZONTAL_BAR);
+                    }
+                    newTeaUnitCode.append(specItemPO.getSpecItemCode());
+                    if (newTeaUnitName.length() > BizConsts.NUM_ZERO) {
+                        newTeaUnitName.append(BizConsts.STR_HORIZONTAL_BAR);
+                    }
+                    newTeaUnitName.append(specItemPO.getSpecItemName());
+
+                    SpecItemRulePutRequest specItemRulePutRequest = new SpecItemRulePutRequest();
+                    specItemRulePutRequest.setSpecCode(specItemPO.getSpecCode());
+                    specItemRulePutRequest.setSpecItemCode(specItemPO.getSpecItemCode());
+                    specItemRulePutRequestList.add(specItemRulePutRequest);
+                }
+                teaUnitPutRequest.setTeaUnitCode(newTeaUnitCode.toString());
+                teaUnitPutRequest.setTeaUnitName(newTeaUnitName.toString());
+                teaUnitPutRequest.setSpecItemRuleList(specItemRulePutRequestList);
+
+                if (teaPutRequest.getActStepList() == null) {
+                    List<ToppingAdjustRulePutRequest> adjustRuleList = teaUnitPutRequest.getToppingAdjustRuleList();
+                    for (ToppingAdjustRulePutRequest adjustRule : adjustRuleList) {
+                        ToppingBaseRulePutRequest baseRulePutRequest = new ToppingBaseRulePutRequest();
+                        baseRulePutRequest.setToppingCode(adjustRule.getToppingCode());
+                        baseRulePutRequest.setBaseAmount(BizConsts.NUM_ZERO);
+                        // 通过添加 toppingBaseRule，会自动构造 actStepList
+                        teaPutRequest.addToppingBaseRule(adjustRule.getStepIndex(), baseRulePutRequest);
+                    }
+                }
+            }
+        }
+
+        for (TeaPutRequest teaPutRequest : teaPutRequestList) {
+            TeaMachineResult<Void> result = this.put(teaPutRequest);
+            if (!result.isSuccess()) {
+                return TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            }
+        }
         return TeaMachineResult.success();
     }
 
-
-
     private void addMergedRegion4RowRange(Sheet sheet, Cell cell, int rowRange) {
-        ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange - 1,
+        ExcelUtils.addMergedRegion(sheet, cell.getRowIndex(), cell.getRowIndex() + rowRange - BizConsts.NUM_ONE,
                 cell.getColumnIndex(), cell.getColumnIndex());
     }
 
@@ -374,16 +489,16 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 if (BizConsts.TOPPING_ADJUST_MODE_FIX == adjustMode) {
                     actualAmount = baseAmount - adjustAmount;
                 } else {
-                    actualAmount = baseAmount * (1 - adjustAmount);
+                    actualAmount = baseAmount * (BizConsts.NUM_ONE - adjustAmount);
                 }
             } else {
                 if (BizConsts.TOPPING_ADJUST_MODE_FIX == adjustMode) {
                     actualAmount = baseAmount + adjustAmount;
                 } else {
-                    actualAmount = baseAmount + (1 - adjustAmount);
+                    actualAmount = baseAmount + (BizConsts.NUM_ONE - adjustAmount);
                 }
             }
-            adjustRulePart.setActualAmount(actualAmount < 0 ? 0 : actualAmount);
+            adjustRulePart.setActualAmount(actualAmount < BizConsts.NUM_ZERO ? BizConsts.NUM_ZERO : actualAmount);
 
             resultList.add(adjustRulePart);
         }
@@ -575,7 +690,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         specItemRuleDTO.setSpecItemCode(teaUnitPO.getSpecItemCode());
 
         SpecItemPO specItemPO = specItemAccessor.selectOneBySpecItemCode(teaUnitPO.getTenantCode(),
-                teaUnitPO.getSpecCode(), teaUnitPO.getSpecItemCode());
+                teaUnitPO.getSpecItemCode());
         if (specItemPO != null) {
             specItemRuleDTO.setSpecItemName(specItemPO.getSpecItemName());
             specItemRuleDTO.setOuterSpecItemCode(specItemPO.getOuterSpecItemCode());

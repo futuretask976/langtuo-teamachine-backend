@@ -51,18 +51,4 @@ public interface SpecMgtService {
      * @return
      */
     TeaMachineResult<Void> delete(String tenantCode, String specCode);
-
-    /**
-     *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<SpecItemDTO> getSpecItemBySpecItemCode(String tenantCode, String specCode, String specItemCode);
-
-    /**
-     *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<List<SpecItemDTO>> listSpecItemBySpecCode(String tenantCode, String specCode);
 }

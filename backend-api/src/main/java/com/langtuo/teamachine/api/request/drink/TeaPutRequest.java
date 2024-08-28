@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.api.request.drink;
 
+import com.google.common.collect.Lists;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
@@ -63,6 +64,39 @@ public class TeaPutRequest {
      * 物料基础规则
      */
     private List<ActStepPutRequest> actStepList;
+
+    public void addTeaUnit(TeaUnitPutRequest request) {
+        if (request == null) {
+            return;
+        }
+        if (this.teaUnitList == null) {
+            this.teaUnitList = Lists.newArrayList();
+        }
+        this.teaUnitList.add(request);
+    }
+
+    public void addToppingBaseRule(int stepIndex, ToppingBaseRulePutRequest request) {
+        if (request == null) {
+            return;
+        }
+        if (this.actStepList == null) {
+            this.actStepList = Lists.newArrayList();
+        }
+        boolean added = false;
+        for (ActStepPutRequest actStepPutRequest : this.actStepList) {
+            if (stepIndex == actStepPutRequest.getStepIndex()) {
+                actStepPutRequest.getToppingBaseRuleList().add(request);
+                added = true;
+                break;
+            }
+        }
+        if (!added) {
+            ActStepPutRequest actStepPutRequest = new ActStepPutRequest();
+            actStepPutRequest.setStepIndex(stepIndex);
+            actStepPutRequest.setToppingBaseRuleList(Lists.newArrayList(request));
+            this.actStepList.add(actStepPutRequest);
+        }
+    }
 
     /**
      * 参数校验

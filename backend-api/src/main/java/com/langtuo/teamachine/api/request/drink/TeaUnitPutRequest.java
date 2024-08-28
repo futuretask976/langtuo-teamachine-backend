@@ -3,6 +3,7 @@ package com.langtuo.teamachine.api.request.drink;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
+import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
 
@@ -27,6 +28,16 @@ public class TeaUnitPutRequest {
      *
      */
     private List<ToppingAdjustRulePutRequest> toppingAdjustRuleList;
+
+    public void addToppingAdjustRulePutRequest(ToppingAdjustRulePutRequest request) {
+        if (request == null) {
+            return;
+        }
+        if (this.toppingAdjustRuleList == null) {
+            this.toppingAdjustRuleList = Lists.newArrayList();
+        }
+        this.toppingAdjustRuleList.add(request);
+    }
 
     /**
      * 参数校验

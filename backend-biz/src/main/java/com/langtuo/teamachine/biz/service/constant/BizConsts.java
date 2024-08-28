@@ -8,12 +8,27 @@ public class BizConsts {
     /**
      * 最小页码
      */
-    public static int MIN_PAGE_NUM = 1;
+    public static final int MIN_PAGE_NUM = 1;
 
     /**
      * 最小每页展示数
      */
-    public static int MIN_PAGE_SIZE = 1;
+    public static final int MIN_PAGE_SIZE = 1;
+
+    /**
+     * 数字 0
+     */
+    public static final int NUM_ZERO = 0;
+
+    /**
+     * 数字 1
+     */
+    public static final int NUM_ONE = 1;
+
+    /**
+     * 横杠
+     */
+    public static final String STR_HORIZONTAL_BAR = "-";
 
     /**
      * 组织架构中最高层次的名称
@@ -26,24 +41,45 @@ public class BizConsts {
     public static final String SHEET_NAME_4_TEA_EXPORT = "茶品信息导出";
 
     /**
+     * sheet索引
+     */
+    public static final int SHEET_NUM_4_DATA = 0;
+
+    /**
      * 标题行索引
      */
     public static final int ROW_NUM_4_TITLE = 0;
 
     /**
+     * 数据行索引
+     */
+    public static final int ROW_START_NUM_4_DATA = 1;
+
+    /**
      * 茶品导出 - 列标题
      */
     public static final String TITLE_TEA_CODE = "茶品编码";
+    public static final int TITLE_TEA_CODE_INDEX = 0;
     public static final String TITLE_TEA_NAME = "茶品名称";
+    public static final int TITLE_TEA_NAME_INDEX = 1;
     public static final String TITLE_OUTER_TEA_CODE = "外部茶品编码";
+    public static final int TITLE_OUTER_TEA_CODE_INDEX = 2;
     public static final String TITLE_STATE = "状态";
+    public static final int TITLE_STATE_INDEX = 3;
     public static final String TITLE_TEA_TYPE_CODE = "茶品类型编码";
+    public static final int TITLE_TEA_TYPE_CODE_INDEX = 4;
     public static final String TITLE_IMG_LINK = "图片链接";
+    public static final int TITLE_IMG_LINK_INDEX = 5;
     public static final String TITLE_TEA_UNIT_NAME = "规格单位名称";
+    public static final int TITLE_TEA_UNIT_NAME_INDEX = 6;
     public static final String TITLE_STEP_INDEX = "步骤序号";
+    public static final int TITLE_STEP_INDEX_INDEX = 7;
     public static final String TITLE_TOPPING_CODE = "物料编码";
+    public static final int TITLE_TOPPING_CODE_INDEX = 8;
     public static final String TITLE_TOPPING_NAME = "物料名称";
+    public static final int TITLE_TOPPING_NAME_INDEX = 9;
     public static final String TITLE_ACTUAL_AMOUNT = "实际用量";
+    public static final int TITLE_ACTUAL_AMOUNT_INDEX = 10;
 
     /**
      * 茶品导出 - 标题行
