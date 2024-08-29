@@ -44,6 +44,7 @@ public class MqttConsts {
      */
     public static final String BIZ_CODE_PREPARE_MODEL = "prepare_model";
     public static final String BIZ_CODE_PREPARE_MACHINE = "prepare_machine";
+    public static final String BIZ_CODE_PREPARE_TENANT = "prepare_tenant";
     public static final String BIZ_CODE_PREPARE_ACCURACY_TPL = "prepare_accuracy";
     public static final String BIZ_CODE_PREPARE_MENU = "prepare_menu";
     public static final String BIZ_CODE_PREPARE_MENU_INIT_LIST = "prepare_menu_init_list";

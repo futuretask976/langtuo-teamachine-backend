@@ -10,6 +10,9 @@ import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.api.service.record.*;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
+import com.langtuo.teamachine.api.service.user.AdminMgtService;
+import com.langtuo.teamachine.api.service.user.PermitActMgtService;
+import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.mqtt.MqttService;
 import org.springframework.context.ApplicationContext;
@@ -31,6 +34,24 @@ public class SpringUtils {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         TenantMgtService tenantMgtService = appContext.getBean(TenantMgtService.class);
         return tenantMgtService;
+    }
+
+    public static RoleMgtService getRoleMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        RoleMgtService roleMgtService = appContext.getBean(RoleMgtService.class);
+        return roleMgtService;
+    }
+
+    public static PermitActMgtService getPermitActMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        PermitActMgtService permitActMgtService = appContext.getBean(PermitActMgtService.class);
+        return permitActMgtService;
+    }
+
+    public static AdminMgtService getAdminMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        AdminMgtService adminMgtService = appContext.getBean(AdminMgtService.class);
+        return adminMgtService;
     }
 
     public static ModelMgtService getModelMgtService() {

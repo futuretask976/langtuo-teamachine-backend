@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.po.user.TenantPO;
+import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
 public class TenantMgtServiceImpl implements TenantMgtService {
     @Resource
     private TenantAccessor tenantAccessor;
+
+    @Resource
+    private MqttPublisher4Console mqttPublisher4Console;
 
     @Override
     public TeaMachineResult<List<TenantDTO>> list() {
@@ -94,6 +98,10 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             log.error("put error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
         }
+
+        // 异步发送消息准备添加超级租户管理角色和超级租户管理员
+        mqttPublisher4Console.send4NewTenant(tenantCode);
+
         return teaMachineResult;
     }
 

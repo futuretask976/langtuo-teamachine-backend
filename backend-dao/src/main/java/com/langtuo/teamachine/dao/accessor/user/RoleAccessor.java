@@ -134,17 +134,19 @@ public class RoleAccessor {
     }
 
     private RolePO getCache(String tenantCode, String roleCode, String roleName) {
-        String key = getCacheKey(tenantCode, roleCode, roleName);
-        Object cached = redisManager.getValue(key);
-        RolePO po = (RolePO) cached;
-        return po;
+        return null;
+//        String key = getCacheKey(tenantCode, roleCode, roleName);
+//        Object cached = redisManager.getValue(key);
+//        RolePO po = (RolePO) cached;
+//        return po;
     }
 
     private List<RolePO> getCacheList(String tenantCode) {
-        String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
-        List<RolePO> poList = (List<RolePO>) cached;
-        return poList;
+        return null;
+//        String key = getCacheListKey(tenantCode);
+//        Object cached = redisManager.getValue(key);
+//        List<RolePO> poList = (List<RolePO>) cached;
+//        return poList;
     }
 
     private void setCacheList(String tenantCode, List<RolePO> poList) {

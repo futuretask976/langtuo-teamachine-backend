@@ -12,6 +12,7 @@ import com.langtuo.teamachine.mqtt.consume.worker.record.*;
 import com.langtuo.teamachine.mqtt.consume.worker.rule.CleanRuleDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.rule.DrainRuleDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.rule.WarningRuleDispatchWorker;
+import com.langtuo.teamachine.mqtt.consume.worker.user.TenantPostWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -63,6 +64,10 @@ public class MqttConsumer {
             ExeService4Consume.getExeService().submit(new CleanRuleDispatchWorker(jsonPayload));
         } else if (MqttConsts.BIZ_CODE_PREPARE_WARNING_RULE.equals(bizCode)) {
             ExeService4Consume.getExeService().submit(new WarningRuleDispatchWorker(jsonPayload));
+        }
+        // user 相关
+        else if (MqttConsts.BIZ_CODE_PREPARE_TENANT.equals(bizCode)) {
+            ExeService4Consume.getExeService().submit(new TenantPostWorker(jsonPayload));
         }
         // 没有 topic 匹配
         else {

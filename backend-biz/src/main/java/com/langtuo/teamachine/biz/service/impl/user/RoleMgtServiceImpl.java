@@ -119,18 +119,32 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            RolePO exist = roleAccessor.selectOneByRoleCode(request.getTenantCode(), request.getRoleCode());
-            if (exist != null) {
-                int updated = roleAccessor.update(rolePO);
+            if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(rolePO.getRoleCode())) {
+                RolePO exist = roleAccessor.selectOneByRoleCode(request.getTenantCode(), request.getRoleCode());
+                if (exist != null) {
+                    teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_TENANT_SUPER_ADMIN_ROLE);
+                } else {
+                    int inserted = roleAccessor.insert(rolePO);
+                    int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(request.getTenantCode(), request.getRoleCode());
+                    roleActRelPOList.stream().forEach(item -> {
+                        int inserted4RoleActRel = roleActRelAccessor.insert(item);
+                    });
+                    teaMachineResult = TeaMachineResult.success();
+                }
             } else {
-                int inserted = roleAccessor.insert(rolePO);
-            }
+                RolePO exist = roleAccessor.selectOneByRoleCode(request.getTenantCode(), request.getRoleCode());
+                if (exist != null) {
+                    int updated = roleAccessor.update(rolePO);
+                } else {
+                    int inserted = roleAccessor.insert(rolePO);
+                }
 
-            int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(request.getTenantCode(), request.getRoleCode());
-            roleActRelPOList.stream().forEach(item -> {
-                int inserted4RoleActRel = roleActRelAccessor.insert(item);
-            });
-            teaMachineResult = TeaMachineResult.success();
+                int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(request.getTenantCode(), request.getRoleCode());
+                roleActRelPOList.stream().forEach(item -> {
+                    int inserted4RoleActRel = roleActRelAccessor.insert(item);
+                });
+                teaMachineResult = TeaMachineResult.success();
+            }
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);

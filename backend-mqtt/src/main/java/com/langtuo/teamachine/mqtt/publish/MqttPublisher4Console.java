@@ -13,6 +13,17 @@ public class MqttPublisher4Console {
     @Resource
     private MqttService mqttService;
 
+    public void send4NewTenant(String tenantCode) {
+        if (StringUtils.isBlank(tenantCode)) {
+            return;
+        }
+
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_PREPARE_TENANT);
+        jsonPayload.put(MqttConsts.SEND_KEY_TENANT_CODE, tenantCode);
+        mqttService.sendConsoleMsg(jsonPayload.toJSONString());
+    }
+
     public void send4Model(String modelCode) {
         if (StringUtils.isBlank(modelCode)) {
             return;
