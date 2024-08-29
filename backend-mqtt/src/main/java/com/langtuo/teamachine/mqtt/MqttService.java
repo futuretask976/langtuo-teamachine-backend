@@ -13,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -76,6 +77,16 @@ public class MqttService implements InitializingBean {
                 log.error("send msg by p2p error: " + e.getMessage(), e);
             }
         });
+    }
+
+    @PreDestroy
+    public void onDestroy() {
+        try {
+            System.out.println("$$$$$ onDestroy entering");
+            mqttClient.close(true);
+        } catch (MqttException e) {
+            log.error("close mqtt client error: " + e.getMessage(), e);
+        }
     }
 
     private void doInitMqttClient() throws MqttException, NoSuchAlgorithmException, InvalidKeyException {
