@@ -2,7 +2,7 @@ package com.langtuo.teamachine.mqtt.constant;
 
 public class MqttConsts {
     /**
-     * 收到的消息中的key关键字
+     * 收到的消息中的 key 关键字
      */
     public static final String RECEIVE_KEY_BIZ_CODE = "bizCode";
     public static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
@@ -18,7 +18,7 @@ public class MqttConsts {
 
 
     /**
-     * 发送的消息中的key关键字
+     * 发送的消息中的 key 关键字
      */
     public static final String SEND_KEY_BIZ_CODE = "bizCode";
     public static final String SEND_KEY_TENANT_CODE = "tenantCode";
@@ -40,7 +40,7 @@ public class MqttConsts {
     public static final String SEND_KEY_WARNING_RULE = "warningRule";
 
     /**
-     * console用的消息title
+     * console 用的消息 bizCode
      */
     public static final String BIZ_CODE_PREPARE_MODEL = "prepare_model";
     public static final String BIZ_CODE_PREPARE_MACHINE = "prepare_machine";
@@ -52,7 +52,7 @@ public class MqttConsts {
     public static final String BIZ_CODE_PREPARE_WARNING_RULE = "prepare_warning_rule";
 
     /**
-     * dispatch用的消息title
+     * dispatch 用的消息 bizCode
      */
     public static final String BIZ_CODE_DISPATCH_ACCURACY = "dispatch_accuracy";
     public static final String BIZ_CODE_DISPATCH_CLEAN_RULE = "dispatch_clean_rule";
@@ -65,14 +65,23 @@ public class MqttConsts {
     public static final String BIZ_CODE_DISPATCH_WARNING_RULE = "dispatch_warning_rule";
 
     /**
-     * topic相关常量
+     * 接受设备端消息用的 bizCode
+     */
+    public static final String BIZ_CODE_INVALID_ACT_RECORD = "invalidActRecord";
+    public static final String BIZ_CODE_SUPPLY_ACT_RECORD = "supplyActRecord";
+    public static final String BIZ_CODE_DRAIN_ACT_RECORD = "drainActRecord";
+    public static final String BIZ_CODE_CLEAN_ACT_RECORD = "cleanActRecord";
+    public static final String BIZ_CODE_ORDER_ACT_RECORD = "orderActRecord";
+
+    /**
+     * topic 相关常量
      */
     public static final String CONSOLE_PARENT_TOPIC = "teamachine";
     public static final String TENANT_PARENT_TOPIC_POSTFIX = "_teamachine";
     public static final String TENANT_PARENT_P2P_TOPIC_POSTFIX = "_teamachine/p2p";
 
     /**
-     * topic分隔符
+     * topic 分隔符
      */
     public static final String TOPIC_SEPERATOR = "/";
 }

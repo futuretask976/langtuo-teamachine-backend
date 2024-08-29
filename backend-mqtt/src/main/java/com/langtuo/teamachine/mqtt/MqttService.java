@@ -24,9 +24,6 @@ public class MqttService implements InitializingBean {
     @Resource
     private MqttConsumer mqttConsumer;
 
-    @Resource
-    private TenantMgtService tenantMgtService;
-
     /**
      * MQTT客户端
      */
