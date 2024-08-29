@@ -12,11 +12,16 @@ import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
+import com.langtuo.teamachine.dao.node.user.OrgNode;
+import com.langtuo.teamachine.dao.po.user.AdminPO;
 import com.langtuo.teamachine.dao.po.user.PermitActPO;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -99,6 +104,18 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         TeaMachineResult<List<RoleDTO>> teaMachineResult;
         try {
             List<RolePO> list = roleAccessor.selectList(tenantCode);
+
+            String adminLoginName = getAdminName();
+            if (!"SYS_SUPER_ADMIN".equals(adminLoginName)) {
+                list = list.stream().filter(rolePO -> {
+                    if ("SYS_SUPER_ROLE".equals(rolePO.getRoleCode())) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }).collect(Collectors.toList());
+            }
+
             List<RoleDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -245,5 +262,19 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             po.setPermitActCode(item);
             return po;
         }).collect(Collectors.toList());
+    }
+
+    private String getAdminName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalArgumentException("couldn't find login session");
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String adminLoginName = userDetails.getUsername();
+        if (StringUtils.isBlank(adminLoginName)) {
+            throw new IllegalArgumentException("couldn't find login session");
+        }
+
+        return adminLoginName;
     }
 }
