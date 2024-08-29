@@ -173,7 +173,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         TeaMachineResult<Void> teaMachineResult;
         try {
             int count = seriesTeaRelAccessor.countByTeaCode(tenantCode, teaCode);
-            if (count == BizConsts.DATABASE_SELECT_NONE) {
+            if (count == BizConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted4Tea = teaAccessor.deleteByTeaCode(tenantCode, teaCode);
                 int deleted4TeaUnit = teaUnitAccessor.deleteByTeaCode(tenantCode, teaCode);
                 int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(tenantCode, teaCode);

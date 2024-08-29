@@ -6,7 +6,6 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.TeaTypeDTO;
 import com.langtuo.teamachine.api.request.drink.TeaTypePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaTypeMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.TeaAccessor;
@@ -20,8 +19,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -127,7 +124,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         TeaMachineResult<Void> teaMachineResult;
         try {
             int countByTeaTypeCode = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
-            if (countByTeaTypeCode == BizConsts.DATABASE_SELECT_NONE) {
+            if (countByTeaTypeCode == BizConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted = accessor.deleteByTeaTypeCode(tenantCode, teaTypeCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {

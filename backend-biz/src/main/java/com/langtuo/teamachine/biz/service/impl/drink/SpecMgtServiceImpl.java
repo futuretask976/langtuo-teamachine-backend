@@ -139,7 +139,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         TeaMachineResult<Void> teaMachineResult;
         try {
             int countBySpecCode = teaUnitAccessor.countBySpecCode(tenantCode, specCode);
-            if (countBySpecCode == BizConsts.DATABASE_SELECT_NONE) {
+            if (countBySpecCode == BizConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
                 int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
                 teaMachineResult = TeaMachineResult.success();

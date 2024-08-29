@@ -125,7 +125,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         TeaMachineResult<Void> teaMachineResult;
         try {
             int countByToppingCode = toppingBaseRuleMapper.countByToppingCode(tenantCode, toppingCode);
-            if (countByToppingCode == BizConsts.DATABASE_SELECT_NONE) {
+            if (countByToppingCode == BizConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted = toppingAccessor.deleteByToppingCode(tenantCode, toppingCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {

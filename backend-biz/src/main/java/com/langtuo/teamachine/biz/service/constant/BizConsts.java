@@ -33,7 +33,7 @@ public class BizConsts {
     /**
      *
      */
-    public static final int DATABASE_SELECT_NONE = 0;
+    public static final int DB_SELECT_RESULT_EMPTY = 0;
 
     /**
      * 组织架构中最高层次的名称

@@ -138,7 +138,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         TeaMachineResult<Void> teaMachineResult;
         try {
             int count = shopAccessor.countByShopGroupCode(tenantCode, shopGroupCode);
-            if (count == BizConsts.DATABASE_SELECT_NONE) {
+            if (count == BizConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted = shopGroupAccessor.deleteByShopGroupCode(tenantCode, shopGroupCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {

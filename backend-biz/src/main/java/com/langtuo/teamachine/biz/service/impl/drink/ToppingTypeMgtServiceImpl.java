@@ -6,7 +6,6 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.ToppingTypeDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingTypePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.api.service.drink.ToppingTypeMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
@@ -19,8 +18,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Component
 @Slf4j
@@ -135,7 +132,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         TeaMachineResult<Void> teaMachineResult;
         try {
             int countByToppingTypeCode = toppingAccessor.countByToppingTypeCode(tenantCode, toppingTypeCode);
-            if (countByToppingTypeCode == BizConsts.DATABASE_SELECT_NONE) {
+            if (countByToppingTypeCode == BizConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted = accessor.delete(tenantCode, toppingTypeCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
