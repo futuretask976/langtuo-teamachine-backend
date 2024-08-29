@@ -82,7 +82,7 @@ public class MqttService implements InitializingBean {
     @PreDestroy
     public void onDestroy() {
         try {
-            System.out.println("$$$$$ onDestroy entering");
+            mqttClient.disconnect();
             mqttClient.close(true);
         } catch (MqttException e) {
             log.error("close mqtt client error: " + e.getMessage(), e);
