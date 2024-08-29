@@ -14,6 +14,7 @@ public class MqttConsts {
     public static final String RECEIVE_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
     public static final String RECEIVE_KEY_DRAIN_RULE_CODE = "drainRuleCode";
     public static final String RECEIVE_KEY_WARNING_RULE_CODE = "warningRuleCode";
+    public static final String RECEIVE_KEY_LIST = "list";
 
 
     /**

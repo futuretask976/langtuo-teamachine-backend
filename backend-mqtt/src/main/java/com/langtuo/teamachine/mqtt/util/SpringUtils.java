@@ -7,6 +7,7 @@ import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
+import com.langtuo.teamachine.api.service.record.*;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
@@ -79,5 +80,35 @@ public class SpringUtils {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         CleanRuleMgtService cleanRuleMgtService = appContext.getBean(CleanRuleMgtService.class);
         return cleanRuleMgtService;
+    }
+
+    public static InvalidActRecordMgtService getInvalidActRecordMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        InvalidActRecordMgtService invalidActRecordMgtService = appContext.getBean(InvalidActRecordMgtService.class);
+        return invalidActRecordMgtService;
+    }
+
+    public static SupplyActRecordMgtService getSupplyActRecordMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        SupplyActRecordMgtService supplyActRecordMgtService = appContext.getBean(SupplyActRecordMgtService.class);
+        return supplyActRecordMgtService;
+    }
+
+    public static CleanActRecordMgtService getCleanActRecordMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        CleanActRecordMgtService cleanActRecordMgtService = appContext.getBean(CleanActRecordMgtService.class);
+        return cleanActRecordMgtService;
+    }
+
+    public static DrainActRecordMgtService getDrainActRecordMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        DrainActRecordMgtService drainActRecordMgtService = appContext.getBean(DrainActRecordMgtService.class);
+        return drainActRecordMgtService;
+    }
+
+    public static OrderActRecordMgtService getOrderActRecordMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        OrderActRecordMgtService orderActRecordMgtService = appContext.getBean(OrderActRecordMgtService.class);
+        return orderActRecordMgtService;
     }
 }

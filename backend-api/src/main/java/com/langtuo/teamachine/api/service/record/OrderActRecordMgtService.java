@@ -2,6 +2,8 @@ package com.langtuo.teamachine.api.service.record;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.OrderActRecordDTO;
+import com.langtuo.teamachine.api.request.record.InvalidActRecordPutRequest;
+import com.langtuo.teamachine.api.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
@@ -29,4 +31,11 @@ public interface OrderActRecordMgtService {
      * @return
      */
     TeaMachineResult<Void> delete(String tenantCode, String idempotentMark);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    TeaMachineResult<Void> put(OrderActRecordPutRequest request);
 }

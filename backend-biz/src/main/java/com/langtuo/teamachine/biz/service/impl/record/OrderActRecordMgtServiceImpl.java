@@ -7,6 +7,8 @@ import com.langtuo.teamachine.api.model.record.OrderActRecordDTO;
 import com.langtuo.teamachine.api.model.record.OrderSpecItemActRecordDTO;
 import com.langtuo.teamachine.api.model.record.OrderToppingActRecordDTO;
 import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
+import com.langtuo.teamachine.api.request.record.InvalidActRecordPutRequest;
+import com.langtuo.teamachine.api.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
@@ -22,6 +24,7 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
 import com.langtuo.teamachine.dao.po.drink.SpecPO;
 import com.langtuo.teamachine.dao.po.drink.ToppingPO;
+import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
@@ -126,6 +129,45 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         return teaMachineResult;
     }
 
+    @Override
+    public TeaMachineResult<Void> put(OrderActRecordPutRequest request) {
+        if (request == null) {
+            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+        }
+
+        OrderActRecordPO po = convertToOrderActRecordPO(request);
+        List<OrderSpecItemActRecordPO> orderSpecItemActRecordPOList = convertToSpecItemActRecordPO(request);
+        List<OrderToppingActRecordPO> orderToppingActRecordPOList = convertToOrderToppingActRecordPO(request);
+
+        TeaMachineResult<Void> teaMachineResult;
+        try {
+            OrderActRecordPO exist = orderActRecordAccessor.selectOne(po.getTenantCode(),
+                    po.getIdempotentMark());
+            if (exist != null) {
+                int updated = orderActRecordAccessor.delete(po.getTenantCode(), po.getIdempotentMark());
+            }
+            int inserted = orderActRecordAccessor.insert(po);
+
+            int deleted4SpecItemActRec = orderSpecItemActRecordAccessor.delete(po.getTenantCode(),
+                    po.getIdempotentMark());
+            for (OrderSpecItemActRecordPO orderSpecItemActRecordPO : orderSpecItemActRecordPOList) {
+                int inserted4SpecItemActRec = orderSpecItemActRecordAccessor.insert(orderSpecItemActRecordPO);
+            }
+
+            int deleted4ToppingActRec = orderToppingActRecordAccessor.delete(po.getTenantCode(),
+                    po.getIdempotentMark());
+            for (OrderToppingActRecordPO orderToppingActRecordPO : orderToppingActRecordPOList) {
+                int inserted4ToppingActRec = orderToppingActRecordAccessor.insert(orderToppingActRecordPO);
+            }
+
+            teaMachineResult = TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("put error: " + e.getMessage(), e);
+            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+        }
+        return teaMachineResult;
+    }
+
     private List<OrderActRecordDTO> convert(List<OrderActRecordPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
@@ -222,5 +264,58 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
         dto.setToppingName(toppingPO.getToppingName());
         return dto;
+    }
+
+    private OrderActRecordPO convertToOrderActRecordPO(OrderActRecordPutRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        OrderActRecordPO po = new OrderActRecordPO();
+        po.setTenantCode(request.getTenantCode());
+        po.setExtraInfo(request.getExtraInfo());
+        po.setIdempotentMark(request.getIdempotentMark());
+        po.setMachineCode(request.getMachineCode());
+        po.setShopCode(request.getShopCode());
+        po.setShopGroupCode(request.getShopGroupCode());
+        po.setOrderGmtCreated(request.getOrderGmtCreated());
+        po.setOuterOrderId(request.getOuterOrderId());
+        po.setState(request.getState());
+        return po;
+    }
+
+    private List<OrderSpecItemActRecordPO> convertToSpecItemActRecordPO(OrderActRecordPutRequest request) {
+        if (request == null || CollectionUtils.isEmpty(request.getSpecItemList())) {
+            return null;
+        }
+
+        List<OrderSpecItemActRecordPO> specItemList = request.getSpecItemList().stream()
+                .map(orderSpecItemActRecordPutRequest -> {
+                    OrderSpecItemActRecordPO po = new OrderSpecItemActRecordPO();
+                    po.setTenantCode(request.getTenantCode());
+                    po.setIdempotentMark(request.getIdempotentMark());
+                    po.setSpecCode(orderSpecItemActRecordPutRequest.getSpecCode());
+                    po.setSpecItemCode(orderSpecItemActRecordPutRequest.getSpecItemCode());
+                    return po;
+                }).collect(Collectors.toList());
+        return specItemList;
+    }
+
+    private static List<OrderToppingActRecordPO> convertToOrderToppingActRecordPO(OrderActRecordPutRequest request) {
+        if (request == null || CollectionUtils.isEmpty(request.getSpecItemList())) {
+            return null;
+        }
+
+        List<OrderToppingActRecordPO> specItemList = request.getToppingList().stream()
+                .map(orderToppingActRecordPutRequest -> {
+                    OrderToppingActRecordPO po = new OrderToppingActRecordPO();
+                    po.setTenantCode(request.getTenantCode());
+                    po.setIdempotentMark(request.getIdempotentMark());
+                    po.setStepIndex(orderToppingActRecordPutRequest.getStepIndex());
+                    po.setToppingCode(orderToppingActRecordPutRequest.getToppingCode());
+                    po.setActualAmount(orderToppingActRecordPutRequest.getActualAmount());
+                    return po;
+                }).collect(Collectors.toList());
+        return specItemList;
     }
 }
