@@ -121,11 +121,10 @@ public class TeaController {
         // 获取文件的字节
         InputStream inputStream = null;
         try {
-            byte[] bytes = file.getBytes();
-
-            inputStream = new ByteArrayInputStream(bytes);
+            inputStream = new ByteArrayInputStream(file.getBytes());
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            return TeaMachineResult.success();
+            TeaMachineResult<Void> uploadResult = service.uploadByExcel(tenantCode, workbook);
+            return uploadResult;
         } catch (IOException e) {
             log.error("parse upload file error: " + e.getMessage(), e);
         } finally {

@@ -89,7 +89,6 @@ public class MqttService implements InitializingBean {
         mqttClient.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
-                log.info("$$$$$ mqtt connnect success: " + serverURI);
                 // 客户端连接成功后就需要尽快订阅需要的 topic
                 try {
                     String[] topicFilters = getTopicFilters();
