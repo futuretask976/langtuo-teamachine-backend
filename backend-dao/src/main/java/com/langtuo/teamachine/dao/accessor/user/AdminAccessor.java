@@ -8,6 +8,7 @@ import com.langtuo.teamachine.dao.mapper.user.AdminMapper;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
 import com.langtuo.teamachine.dao.query.user.AdminQuery;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -84,6 +85,15 @@ public class AdminAccessor {
             deleteCacheOne(po.getTenantCode(), po.getLoginName());
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(po.getTenantCode(), po.getRoleCode());
+        }
+        return updated;
+    }
+
+    public int updatePassword(String tenantCode, String loginName, String loginPass) {
+        int updated = mapper.updatePassword(tenantCode, loginName, loginPass);
+        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
+            deleteCacheOne(tenantCode, loginName);
+            deleteCacheList(tenantCode);
         }
         return updated;
     }

@@ -54,6 +54,16 @@ public interface AdminMapper {
      *
      * @param tenantCode
      * @param loginName
+     * @param loginPass
+     * @return
+     */
+    int updatePassword(@Param("tenantCode") String tenantCode, @Param("loginName") String loginName,
+            @Param("loginPass") String loginPass);
+
+    /**
+     *
+     * @param tenantCode
+     * @param loginName
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("loginName") String loginName);

@@ -55,16 +55,16 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.user.AdminPO">
-        INSERT INTO `admin` (
-            `gmt_created`
-            , `gmt_modified`
-            , `login_name`
-            , `login_pass`
-            , `role_code`
-            , `org_name`
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO admin (
+            gmt_created
+            , gmt_modified
+            , login_name
+            , login_pass
+            , role_code
+            , org_name
+            , tenant_code
+            , comment
+            , extra_info
         ) VALUES (
             now()
             , now()
@@ -93,6 +93,18 @@
             </if>
             <if test="extraInfo != null">
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
+        WHERE 1 = 1
+            and tenant_code = #{tenantCode}
+            and login_name = #{loginName}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE admin
+        SET
+            gmt_modified = now()
+            <if test="loginPass != null">
+                , login_pass = #{loginPass}
             </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
