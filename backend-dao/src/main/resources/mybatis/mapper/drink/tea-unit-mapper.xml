@@ -39,6 +39,15 @@
             AND tea_code = #{teaCode}
     </select>
 
+    <select id="countBySpecCode" resultType="int">
+        SELECT COUNT(1) FROM tea_unit
+        WHERE 1 = 1
+        AND tenant_code = #{tenantCode}
+        <if test="toppingTypeCode != null">
+            AND spec_code = #{specCode}
+        </if>
+    </select>
+
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.TeaUnitPO">
         INSERT INTO tea_unit (
             gmt_created

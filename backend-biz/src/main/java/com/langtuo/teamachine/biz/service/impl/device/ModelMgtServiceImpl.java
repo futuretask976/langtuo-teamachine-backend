@@ -135,8 +135,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int count = machineAccessor.countByModelCode(modelCode);
-            if (count == 0) {
+            int countByModelCode = machineAccessor.countByModelCode(modelCode);
+            if (countByModelCode == BizConsts.DATABASE_SELECT_NONE) {
                 int deleted4ModelCode = modelAccessor.deleteByModelCode(modelCode);
                 int deleted4Pipeline = modelPipelineAccessor.deleteByModelCode(modelCode);
                 teaMachineResult = TeaMachineResult.success();

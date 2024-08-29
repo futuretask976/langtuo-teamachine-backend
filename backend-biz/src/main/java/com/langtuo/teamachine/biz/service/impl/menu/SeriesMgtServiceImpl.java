@@ -140,7 +140,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         TeaMachineResult<Void> teaMachineResult;
         try {
             int count = menuSeriesRelAccessor.countBySeriesCode(tenantCode, seriesCode);
-            if (count == 0) {
+            if (count == BizConsts.DATABASE_SELECT_NONE) {
                 int deleted4Series = seriesAccessor.deleteBySeriesCode(tenantCode, seriesCode);
                 int deleted4SeriesTeaRel = seriesTeaRelAccessor.deleteBySeriesCode(tenantCode, seriesCode);
                 teaMachineResult = TeaMachineResult.success();

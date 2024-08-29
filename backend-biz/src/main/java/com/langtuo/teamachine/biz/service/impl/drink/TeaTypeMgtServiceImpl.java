@@ -126,8 +126,13 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = accessor.deleteByTeaTypeCode(tenantCode, teaTypeCode);
-            teaMachineResult = TeaMachineResult.success();
+            int countByTeaTypeCode = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
+            if (countByTeaTypeCode == BizConsts.DATABASE_SELECT_NONE) {
+                int deleted = accessor.deleteByTeaTypeCode(tenantCode, teaTypeCode);
+                teaMachineResult = TeaMachineResult.success();
+            } else {
+                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_TEA_TYPE);
+            }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);

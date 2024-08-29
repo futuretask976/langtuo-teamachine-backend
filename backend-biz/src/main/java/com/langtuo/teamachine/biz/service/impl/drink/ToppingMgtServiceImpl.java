@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
+import com.langtuo.teamachine.dao.mapper.drink.ToppingBaseRuleMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,13 +24,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ToppingMgtServiceImpl implements ToppingMgtService {
     @Resource
-    private ToppingAccessor accessor;
+    private ToppingAccessor toppingAccessor;
+
+    @Resource
+    private ToppingBaseRuleMapper toppingBaseRuleMapper;
 
     @Override
     public TeaMachineResult<List<ToppingDTO>> list(String tenantCode) {
         TeaMachineResult<List<ToppingDTO>> teaMachineResult;
         try {
-            List<ToppingPO> list = accessor.selectList(tenantCode);
+            List<ToppingPO> list = toppingAccessor.selectList(tenantCode);
             List<ToppingDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -47,7 +51,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
         TeaMachineResult<PageDTO<ToppingDTO>> teaMachineResult;
         try {
-            PageInfo<ToppingPO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
+            PageInfo<ToppingPO> pageInfo = toppingAccessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
             List<ToppingDTO> dtoList = convert(pageInfo.getList());
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
@@ -63,7 +67,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     public TeaMachineResult<ToppingDTO> getByCode(String tenantCode, String toppingTypeCode) {
         TeaMachineResult<ToppingDTO> teaMachineResult;
         try {
-            ToppingPO toppingTypePO = accessor.selectOneByToppingCode(tenantCode, toppingTypeCode);
+            ToppingPO toppingTypePO = toppingAccessor.selectOneByToppingCode(tenantCode, toppingTypeCode);
             ToppingDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -77,7 +81,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     public TeaMachineResult<ToppingDTO> getByName(String tenantCode, String toppingTypeName) {
         TeaMachineResult<ToppingDTO> teaMachineResult;
         try {
-            ToppingPO toppingTypePO = accessor.selectOneByToppingName(tenantCode, toppingTypeName);
+            ToppingPO toppingTypePO = toppingAccessor.selectOneByToppingName(tenantCode, toppingTypeName);
             ToppingDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -97,12 +101,12 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            ToppingPO exist = accessor.selectOneByToppingCode(toppingTypePO.getTenantCode(),
+            ToppingPO exist = toppingAccessor.selectOneByToppingCode(toppingTypePO.getTenantCode(),
                     toppingTypePO.getToppingCode());
             if (exist != null) {
-                int updated = accessor.update(toppingTypePO);
+                int updated = toppingAccessor.update(toppingTypePO);
             } else {
-                int inserted = accessor.insert(toppingTypePO);
+                int inserted = toppingAccessor.insert(toppingTypePO);
             }
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
@@ -113,15 +117,20 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String toppingTypeCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String toppingCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
         }
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = accessor.deleteByToppingCode(tenantCode, toppingTypeCode);
-            teaMachineResult = TeaMachineResult.success();
+            int countByToppingCode = toppingBaseRuleMapper.countByToppingCode(tenantCode, toppingCode);
+            if (countByToppingCode == ) {
+                int deleted = toppingAccessor.deleteByToppingCode(tenantCode, toppingCode);
+                teaMachineResult = TeaMachineResult.success();
+            } else {
+                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_TOPPING);
+            }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
@@ -137,7 +146,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
         TeaMachineResult<Integer> teaMachineResult;
         try {
-            int cnt = accessor.countByToppingTypeCode(tenantCode, toppingTypeCode);
+            int cnt = toppingAccessor.countByToppingTypeCode(tenantCode, toppingTypeCode);
             teaMachineResult = TeaMachineResult.success(cnt);
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

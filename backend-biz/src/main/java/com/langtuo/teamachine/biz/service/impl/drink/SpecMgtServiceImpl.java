@@ -11,6 +11,7 @@ import com.langtuo.teamachine.api.service.drink.SpecMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.SpecItemAccessor;
+import com.langtuo.teamachine.dao.accessor.drink.TeaUnitAccessor;
 import com.langtuo.teamachine.dao.po.drink.SpecPO;
 import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,9 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     @Resource
     private SpecItemAccessor specItemAccessor;
+
+    @Resource
+    private TeaUnitAccessor teaUnitAccessor;
 
     @Override
     public TeaMachineResult<List<SpecDTO>> list(String tenantCode) {
@@ -134,10 +138,14 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
-            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
-
-            teaMachineResult = TeaMachineResult.success();
+            int countBySpecCode = teaUnitAccessor.countBySpecCode(tenantCode, specCode);
+            if (countBySpecCode == BizConsts.DATABASE_SELECT_NONE) {
+                int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
+                int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
+                teaMachineResult = TeaMachineResult.success();
+            } else {
+                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_SPEC);
+            }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);

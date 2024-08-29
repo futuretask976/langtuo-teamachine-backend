@@ -42,8 +42,37 @@ public class TeaUnitAccessor {
         return deleted;
     }
 
+    public int countBySpecCode(String tenantCode, String specCode) {
+        // 首先访问缓存
+        Integer cached = getCacheCount(tenantCode, specCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countBySpecCode(tenantCode, specCode);
+
+        setCacheCount(tenantCode, specCode, count);
+        return count;
+    }
+
     private String getCacheListKey(String tenantCode, String teaCode) {
         return "teaUnitAcc-" + tenantCode + "-" + teaCode;
+    }
+
+    private String getCacheCountKey(String tenantCode, String specCode) {
+        return "teaUnitAcc-cnt-" + tenantCode + "-" + specCode;
+    }
+
+    private Integer getCacheCount(String tenantCode, String specCode) {
+        String key = getCacheCountKey(tenantCode, specCode);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCount(String tenantCode, String specCode, Integer count) {
+        String key = getCacheCountKey(tenantCode, specCode);
+        redisManager.setValue(key, count);
     }
 
     private List<TeaUnitPO> getCacheList(String tenantCode, String teaCode) {

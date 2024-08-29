@@ -34,4 +34,12 @@ public interface ToppingBaseRuleMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param toppingCode
+     * @return
+     */
+    int countByToppingCode(@Param("tenantCode") String tenantCode, @Param("toppingCode") String toppingCode);
 }

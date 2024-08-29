@@ -130,8 +130,8 @@ public class ToppingAccessor {
         return "toppingAcc-" + tenantCode;
     }
 
-    private String getCacheCountKey(String tenantCode, String shopGroupCode) {
-        return "toppingAcc-cnt-" + tenantCode + "-" + shopGroupCode;
+    private String getCacheCountKey(String tenantCode, String toppingTypeCode) {
+        return "toppingAcc-cnt-" + tenantCode + "-" + toppingTypeCode;
     }
 
     private Integer getCacheCount(String tenantCode, String toppingTypeCode) {

@@ -46,8 +46,37 @@ public class ToppingBaseRuleAccessor {
         return deleted;
     }
 
+    public int countByToppingCode(String tenantCode, String toppingCode) {
+        // 首先访问缓存
+        Integer cached = getCacheCount(tenantCode, toppingCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByToppingCode(tenantCode, toppingCode);
+
+        setCacheCount(tenantCode, toppingCode, count);
+        return count;
+    }
+
     private String getCacheListKey(String tenantCode, String teaCode) {
         return "toppingBaseRuleAcc-" + tenantCode + "-" + teaCode;
+    }
+
+    private String getCacheCountKey(String tenantCode, String toppingCode) {
+        return "toppingBaseRuleAcc-cnt-" + tenantCode + "-" + toppingCode;
+    }
+
+    private Integer getCacheCount(String tenantCode, String toppingCode) {
+        String key = getCacheCountKey(tenantCode, toppingCode);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCount(String tenantCode, String toppingCode, Integer count) {
+        String key = getCacheCountKey(tenantCode, toppingCode);
+        redisManager.setValue(key, count);
     }
 
     private List<ToppingBaseRulePO> getCacheList(String tenantCode, String teaCode) {

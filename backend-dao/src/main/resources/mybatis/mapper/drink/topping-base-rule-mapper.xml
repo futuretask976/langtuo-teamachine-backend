@@ -40,6 +40,15 @@
             </if>
     </select>
 
+    <select id="countByToppingCode" resultType="int">
+        SELECT COUNT(1) FROM topping_base_rule
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="toppingCode != null">
+                AND topping_code = #{toppingCode}
+            </if>
+    </select>
+
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.ToppingBaseRulePO">
         INSERT INTO topping_base_rule (
             gmt_created

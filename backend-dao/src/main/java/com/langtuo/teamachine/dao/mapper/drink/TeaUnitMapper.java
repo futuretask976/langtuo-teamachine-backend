@@ -43,4 +43,12 @@ public interface TeaUnitMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param specCode
+     * @return
+     */
+    int countBySpecCode(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode);
 }

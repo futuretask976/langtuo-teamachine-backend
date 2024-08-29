@@ -134,8 +134,13 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = accessor.delete(tenantCode, toppingTypeCode);
-            teaMachineResult = TeaMachineResult.success();
+            int countByToppingTypeCode = toppingAccessor.countByToppingTypeCode(tenantCode, toppingTypeCode);
+            if (countByToppingTypeCode == BizConsts.DATABASE_SELECT_NONE) {
+                int deleted = accessor.delete(tenantCode, toppingTypeCode);
+                teaMachineResult = TeaMachineResult.success();
+            } else {
+                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_TOPPING_TYPE);
+            }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
