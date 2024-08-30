@@ -148,7 +148,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <warName>gxsp3demo</warName>
+                    <warName>teamachineconsole</warName>
 <!--                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>-->
                 </configuration>
             </plugin>

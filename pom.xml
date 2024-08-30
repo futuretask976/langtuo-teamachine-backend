@@ -298,7 +298,7 @@
                         <images>
                             <image>
                                 <!--定义镜像名称-->
-                                <name>gx-springboot3-demo/${project.name}:${project.version}</name>
+                                <name>langtuo-teamachine-backend/${project.name}:${project.version}</name>
 <!--                                <run>-->
 <!--                                    <cmd>-->
 <!--                                        <exec>-->
@@ -311,7 +311,7 @@
                                 <!--定义镜像构建行为-->
                                 <build>
                                     <!--定义基础镜像-->
-                                    <from>openjdk:17</from>
+                                    <from>openjdk:11</from>
                                     <args>
                                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                                     </args>
