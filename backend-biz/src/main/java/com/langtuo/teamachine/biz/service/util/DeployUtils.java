@@ -3,7 +3,7 @@ package com.langtuo.teamachine.biz.service.util;
 import java.security.SecureRandom;
 
 public class DeployUtils {
-    private static final String CHAR_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final String CHAR_SET = "abcdefghijklmnopqrstuvwxyz0123456789";
 
     public static String genRandomStr(int length) {
         SecureRandom random = new SecureRandom();

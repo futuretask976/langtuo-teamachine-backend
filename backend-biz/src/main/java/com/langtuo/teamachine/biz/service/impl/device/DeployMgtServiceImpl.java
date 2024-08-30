@@ -135,7 +135,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     public TeaMachineResult<String> generateDeployCode() {
         TeaMachineResult<String> teaMachineResult;
         try {
-            String deployCode = DeployUtils.genRandomStr(20);
+            String deployCode = DeployUtils.genRandomStr(6);
             teaMachineResult = TeaMachineResult.success(deployCode);
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
