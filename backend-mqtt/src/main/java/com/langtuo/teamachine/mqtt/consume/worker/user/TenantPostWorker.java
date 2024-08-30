@@ -40,13 +40,13 @@ public class TenantPostWorker implements Runnable {
     @Override
     public void run() {
         RoleMgtService roleMgtService = SpringUtils.getRoleMgtService();
-        RoleDTO superRole4Tenant = getModel(roleMgtService.getByCode(tenantCode, DaoConsts.ROLE_TENANT_SUPER));
+        RoleDTO superRole4Tenant = getModel(roleMgtService.getByCode(tenantCode, DaoConsts.ROLE_CODE_TENANT_SUPER));
         if (superRole4Tenant == null) {
             RolePutRequest rolePutRequest = new RolePutRequest();
             rolePutRequest.setTenantCode(tenantCode);
-            rolePutRequest.setRoleCode(DaoConsts.ROLE_TENANT_SUPER);
-            rolePutRequest.setRoleName(DaoConsts.ROLE_TENANT_SUPER);
-            rolePutRequest.setSysReserved(1);
+            rolePutRequest.setRoleCode(DaoConsts.ROLE_CODE_TENANT_SUPER);
+            rolePutRequest.setRoleName(DaoConsts.ROLE_NAME_TENANT_SUPER);
+            rolePutRequest.setSysReserved(DaoConsts.ROLE_SYS_RESERVED);
 
             PermitActMgtService permitActMgtService = SpringUtils.getPermitActMgtService();
             List<PermitActDTO> permitActDTOList = getListModel(permitActMgtService.listPermitAct());

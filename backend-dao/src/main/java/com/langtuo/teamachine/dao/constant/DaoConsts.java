@@ -35,12 +35,14 @@ public class DaoConsts {
     /**
      * 系统超级管理员角色
      */
-    public static final String ROLE_SYS_SUPER = "SYS_SUPER_ROLE";
+    public static final String ROLE_CODE_SYS_SUPER = "SYS_SUPER_ROLE";
+    public static final String ROLE_NAME_SYS_SUPER = "系统超级管理员";
 
     /**
      * 租户超级管理员角色
      */
-    public static final String ROLE_TENANT_SUPER = "TENANT_SUPER_ROLE";
+    public static final String ROLE_CODE_TENANT_SUPER = "TENANT_SUPER_ROLE";
+    public static final String ROLE_NAME_TENANT_SUPER = "租户超级管理员";
 
     /**
      *  系统保留角色

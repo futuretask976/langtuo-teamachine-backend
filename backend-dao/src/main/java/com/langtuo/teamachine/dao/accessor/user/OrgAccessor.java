@@ -47,8 +47,12 @@ public class OrgAccessor {
         }
 
         Map<String, OrgNode> orgNodeMap = orgNodeMapByTenant.get(tenantCode);
-        OrgNode orgNode = orgNodeMap.get(orgName);
-        return orgNode;
+        if (orgNodeMap == null) {
+            return null;
+        } else {
+            OrgNode orgNode = orgNodeMap.get(orgName);
+            return orgNode;
+        }
     }
 
     public List<OrgNode> selectList(String tenantCode) {

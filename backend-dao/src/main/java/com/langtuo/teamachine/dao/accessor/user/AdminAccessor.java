@@ -195,7 +195,7 @@ public class AdminAccessor {
         po.setLoginName(DaoConsts.ADMIN_SYS_SUPER_LOGIN_NAME);
         po.setLoginPass(DaoConsts.ADMIN_SYS_SUPER_PASSWORD);
         po.setOrgName(DaoConsts.ORG_NAME_TOP);
-        po.setRoleCode(DaoConsts.ROLE_SYS_SUPER);
+        po.setRoleCode(DaoConsts.ROLE_CODE_SYS_SUPER);
         return po;
     }
 }

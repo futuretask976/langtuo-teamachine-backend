@@ -164,13 +164,13 @@ public class RoleAccessor {
     }
 
     private RolePO getSysSuperRole(String tenantCode, String roleCode) {
-        if (!DaoConsts.ROLE_SYS_SUPER.equals(roleCode)) {
+        if (!DaoConsts.ROLE_CODE_SYS_SUPER.equals(roleCode)) {
             return null;
         }
 
         RolePO po = new RolePO();
-        po.setRoleCode(DaoConsts.ROLE_SYS_SUPER);
-        po.setRoleName(DaoConsts.ROLE_SYS_SUPER);
+        po.setRoleCode(DaoConsts.ROLE_CODE_SYS_SUPER);
+        po.setRoleName(DaoConsts.ROLE_NAME_SYS_SUPER);
         po.setSysReserved(DaoConsts.ROLE_SYS_RESERVED);
         return po;
     }

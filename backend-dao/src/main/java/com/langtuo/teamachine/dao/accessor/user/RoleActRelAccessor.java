@@ -76,7 +76,7 @@ public class RoleActRelAccessor {
     }
 
     public List<RoleActRelPO> getSysSuperRoleActRel(String tenantCode, String roleCode) {
-        if (!DaoConsts.ROLE_SYS_SUPER.equals(roleCode)) {
+        if (!DaoConsts.ROLE_CODE_SYS_SUPER.equals(roleCode)) {
             return null;
         }
 
