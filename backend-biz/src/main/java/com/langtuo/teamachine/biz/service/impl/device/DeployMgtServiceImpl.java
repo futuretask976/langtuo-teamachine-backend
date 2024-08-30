@@ -159,7 +159,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             // 获取当前日期
             Calendar calendar = Calendar.getInstance();
             // 创建一个SimpleDateFormat对象，指定目标格式
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat sdf = new SimpleDateFormat(BizConsts.DATE_FORMAT_SIMPLE);
             // 格式化日期
             String formattedDate = sdf.format(calendar.getTime());
             machineCode = formattedDate + machineCode;
@@ -282,7 +282,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     public static String transform(Date date) {
-        DateFormat format = new SimpleDateFormat(BizConsts.DATE_FORMAT);
+        DateFormat format = new SimpleDateFormat(BizConsts.DATE_FORMAT_FULL);
         return format.format(date);
     }
 }

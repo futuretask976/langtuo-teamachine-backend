@@ -197,7 +197,12 @@ public class BizConsts {
     public static final String DEPLOY_CODE_COVERING_NUM = "0";
 
     /**
-     * 日期格式
+     * 日期格式完整格式
      */
-    public static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+    public static final String DATE_FORMAT_FULL = "yyyy-MM-dd hh:mm:ss";
+
+    /**
+     * 日期格式简略格式
+     */
+    public static final String DATE_FORMAT_SIMPLE = "yyyyMMdd";
 }
