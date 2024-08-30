@@ -19,7 +19,7 @@ public class MQTTController {
     private MqttService mqttService;
 
     /**
-     * url: http://localhost:8080/teamachine/mqtt/test
+     * url: http://localhost:8080/teamachinebackend/mqtt/test
      * @return
      */
     @GetMapping(value = "/test")
