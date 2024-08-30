@@ -150,10 +150,10 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         try {
             long machineCodeSeqVal = deployAccessor.selectNextSeqVal4MachineCode();
             String machineCode = String.valueOf(machineCodeSeqVal);
-            long needSupplyCnt = 6 - machineCode.length();
-            if (machineCode.length() < 6) {
+            long needSupplyCnt = BizConsts.DEPLOY_CODE_LENGTH - machineCode.length();
+            if (machineCode.length() < BizConsts.DEPLOY_CODE_LENGTH) {
                 for (int i = 0; i < needSupplyCnt; i++) {
-                    machineCode = "0" + machineCode;
+                    machineCode = BizConsts.DEPLOY_CODE_COVERING_NUM + machineCode;
                 }
             }
             // 获取当前日期
@@ -282,7 +282,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     public static String transform(Date date) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        DateFormat format = new SimpleDateFormat(BizConsts.DATE_FORMAT);
         return format.format(date);
     }
 }

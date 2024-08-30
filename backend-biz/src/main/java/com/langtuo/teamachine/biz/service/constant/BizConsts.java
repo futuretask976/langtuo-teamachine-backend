@@ -180,4 +180,24 @@ public class BizConsts {
      * 部署导出 - 起始列num
      */
     public static final int COL_START_NUM_4_DEPLOY = 0;
+
+    /**
+     * 部署码生成用 char_set
+     */
+    public static final String DEPLOY_CHAR_SET = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+    /**
+     * 部署码长度
+     */
+    public static final int DEPLOY_CODE_LENGTH = 6;
+
+    /**
+     * 部署码补位用数字
+     */
+    public static final String DEPLOY_CODE_COVERING_NUM = "0";
+
+    /**
+     * 日期格式
+     */
+    public static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
 }
