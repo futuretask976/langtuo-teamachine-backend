@@ -35,10 +35,7 @@ public class BizConsts {
      */
     public static final int DB_SELECT_RESULT_EMPTY = 0;
 
-    /**
-     * 组织架构中最高层次的名称
-     */
-    public static final String ORG_NAME_TOP = "总公司";
+
 
     /**
      * 茶品导出 - sheet名称

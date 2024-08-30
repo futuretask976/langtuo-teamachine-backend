@@ -3,7 +3,7 @@ package com.langtuo.teamachine.dao.accessor.rule;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.rule.DrainRuleMapper;
 import com.langtuo.teamachine.dao.po.rule.DrainRulePO;
 import com.langtuo.teamachine.dao.query.rule.DrainRuleQuery;
@@ -79,7 +79,7 @@ public class DrainRuleAccessor {
 
     public int update(DrainRulePO po) {
         int updated = mapper.update(po);
-        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
+        if (updated == DaoConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDrainRuleCode(), po.getDrainRuleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -88,7 +88,7 @@ public class DrainRuleAccessor {
 
     public int insert(DrainRulePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
+        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDrainRuleCode(), po.getDrainRuleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -98,11 +98,11 @@ public class DrainRuleAccessor {
     public int deleteByDrainRuleCode(String tenantCode, String drainRuleCode) {
         DrainRulePO po = selectOneByDrainRuleCode(tenantCode, drainRuleCode);
         if (po == null) {
-            return DBOpeConts.DELETED_ZERO_ROW;
+            return DaoConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, drainRuleCode);
-        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
+        if (deleted == DaoConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getDrainRuleCode(), po.getDrainRuleName());
             deleteCacheList(tenantCode);
         }

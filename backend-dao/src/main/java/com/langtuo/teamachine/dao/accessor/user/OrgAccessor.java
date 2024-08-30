@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.user;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
-import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.user.OrgMapper;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.user.OrgPO;
@@ -98,7 +98,7 @@ public class OrgAccessor {
 
     public int insert(OrgNode node) {
         int inserted = mapper.insert(convert(node));
-        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
+        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
             orgNodeMapByTenant.remove(node.getTenantCode());
         }
         return inserted;
@@ -106,7 +106,7 @@ public class OrgAccessor {
 
     public int update(OrgNode node) {
         int updated = mapper.update(convert(node));
-        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
+        if (updated == DaoConsts.UPDATED_ONE_ROW) {
             orgNodeMapByTenant.remove(node.getTenantCode());
         }
         return updated;
@@ -114,7 +114,7 @@ public class OrgAccessor {
 
     public int delete(String tenantCode, String orgName) {
         int deleted = mapper.delete(tenantCode, orgName);
-        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
+        if (deleted == DaoConsts.DELETED_ONE_ROW) {
             orgNodeMapByTenant.remove(tenantCode);
         }
         return deleted;

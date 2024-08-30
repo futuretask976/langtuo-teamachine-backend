@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.drink.TeaUnitMapper;
 import com.langtuo.teamachine.dao.po.drink.TeaUnitPO;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ public class TeaUnitAccessor {
 
     public int deleteByTeaCode(String tenantCode, String teaCode) {
         int deleted = mapper.delete(tenantCode, teaCode);
-        if (deleted > DBOpeConts.DELETED_ZERO_ROW) {
+        if (deleted > DaoConsts.DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, teaCode);
         }
         return deleted;

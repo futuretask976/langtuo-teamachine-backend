@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.drink.ToppingBaseRuleMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingBaseRulePO;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class ToppingBaseRuleAccessor {
 
     public int insert(ToppingBaseRulePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
+        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getTeaCode());
         }
         return inserted;
@@ -40,7 +40,7 @@ public class ToppingBaseRuleAccessor {
 
     public int deleteByTeaCode(String tenantCode, String teaCode) {
         int deleted = mapper.delete(tenantCode, teaCode);
-        if (deleted > DBOpeConts.DELETED_ZERO_ROW) {
+        if (deleted > DaoConsts.DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, teaCode);
         }
         return deleted;

@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.device;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.device.ModelPipelineMapper;
 import com.langtuo.teamachine.dao.po.device.ModelPipelinePO;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ public class ModelPipelineAccessor {
 
     public int insert(ModelPipelinePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
+        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getModelCode());
             deleteCacheList();
         }
@@ -42,7 +42,7 @@ public class ModelPipelineAccessor {
 
     public int deleteByModelCode(String modelCode) {
         int deleted = mapper.delete(modelCode);
-        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
+        if (deleted == DaoConsts.DELETED_ONE_ROW) {
             deleteCacheOne(modelCode);
             deleteCacheList();
         }

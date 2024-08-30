@@ -3,7 +3,7 @@ package com.langtuo.teamachine.dao.accessor.device;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.device.DeployMapper;
 import com.langtuo.teamachine.dao.mapper.record.MachineCodeSeqMapper;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
@@ -99,7 +99,7 @@ public class DeployAccessor {
 
     public int insert(DeployPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
+        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode());
         }
@@ -108,7 +108,7 @@ public class DeployAccessor {
 
     public int update(DeployPO po) {
         int updated = mapper.update(po);
-        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
+        if (updated == DaoConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode());
         }
@@ -118,11 +118,11 @@ public class DeployAccessor {
     public int deleteByDeployCode(String tenantCode, String deployCode) {
         DeployPO po = selectOneByDeployCode(tenantCode, deployCode);
         if (po == null) {
-            return DBOpeConts.DELETED_ZERO_ROW;
+            return DaoConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, deployCode);
-        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
+        if (deleted == DaoConsts.DELETED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(tenantCode);
         }

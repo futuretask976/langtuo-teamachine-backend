@@ -3,7 +3,7 @@ package com.langtuo.teamachine.dao.accessor.drink;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.drink.SpecMapper;
 import com.langtuo.teamachine.dao.po.drink.SpecPO;
 import com.langtuo.teamachine.dao.query.drink.SpecQuery;
@@ -79,7 +79,7 @@ public class SpecAccessor {
 
     public int insert(SpecPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
+        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecName());
             deleteCacheList(po.getTenantCode());
         }
@@ -88,7 +88,7 @@ public class SpecAccessor {
 
     public int update(SpecPO po) {
         int updated = mapper.update(po);
-        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
+        if (updated == DaoConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecName());
             deleteCacheList(po.getTenantCode());
         }
@@ -98,11 +98,11 @@ public class SpecAccessor {
     public int deleteBySpecCode(String tenantCode, String specCode) {
         SpecPO po = selectOneBySpecCode(tenantCode, specCode);
         if (po == null) {
-            return DBOpeConts.DELETED_ZERO_ROW;
+            return DaoConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, specCode);
-        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
+        if (deleted == DaoConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getSpecCode(), po.getSpecName());
             deleteCacheList(tenantCode);
         }

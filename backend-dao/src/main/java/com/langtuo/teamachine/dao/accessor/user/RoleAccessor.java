@@ -3,10 +3,8 @@ package com.langtuo.teamachine.dao.accessor.user;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.user.RoleMapper;
-import com.langtuo.teamachine.dao.po.user.AdminPO;
-import com.langtuo.teamachine.dao.po.user.PermitActPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import com.langtuo.teamachine.dao.query.user.AdminRoleQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class RoleAccessor {
@@ -95,7 +92,7 @@ public class RoleAccessor {
 
     public int insert(RolePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
+        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getRoleCode(), po.getRoleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -104,7 +101,7 @@ public class RoleAccessor {
 
     public int update(RolePO po) {
         int updated = mapper.update(po);
-        if (updated == DBOpeConts.UPDATED_ONE_ROW) {
+        if (updated == DaoConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getRoleCode(), po.getRoleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -114,11 +111,11 @@ public class RoleAccessor {
     public int deleteByRoleCode(String tenantCode, String roleCode) {
         RolePO po = selectOneByRoleCode(tenantCode, roleCode);
         if (po == null) {
-            return DBOpeConts.DELETED_ZERO_ROW;
+            return DaoConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, roleCode);
-        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
+        if (deleted == DaoConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getRoleCode(), po.getRoleName());
             deleteCacheList(tenantCode);
         }
@@ -167,14 +164,14 @@ public class RoleAccessor {
     }
 
     public RolePO getSysSuperRole(String tenantCode, String roleCode) {
-        if (!"SYS_SUPER_ROLE".equals(roleCode)) {
+        if (!DaoConsts.ROLE_SYS_SUPER.equals(roleCode)) {
             return null;
         }
 
         RolePO po = new RolePO();
-        po.setRoleCode("SYS_SUPER_ROLE");
-        po.setRoleName("SYS_SUPER_ROLE");
-        po.setSysReserved(1);
+        po.setRoleCode(DaoConsts.ROLE_SYS_SUPER);
+        po.setRoleName(DaoConsts.ROLE_SYS_SUPER);
+        po.setSysReserved(DaoConsts.ROLE_SYS_RESERVED);
         return po;
     }
 }

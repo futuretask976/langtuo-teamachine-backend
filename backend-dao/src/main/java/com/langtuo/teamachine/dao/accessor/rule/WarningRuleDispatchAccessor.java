@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.rule;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DBOpeConts;
+import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.rule.WarningRuleDispatchMapper;
 import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
 import org.springframework.stereotype.Component;
@@ -44,7 +44,7 @@ public class WarningRuleDispatchAccessor {
 
     public int insert(WarningRuleDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DBOpeConts.INSERTED_ONE_ROW) {
+        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getWarningRuleCode(), po.getShopGroupCode());
         }
         return inserted;
@@ -53,12 +53,12 @@ public class WarningRuleDispatchAccessor {
     public int deleteByWarningRuleCode(String tenantCode, String warningRuleCode) {
         List<WarningRuleDispatchPO> existList = selectListByWarningRuleCode(tenantCode, warningRuleCode);
         if (CollectionUtils.isEmpty(existList)) {
-            return DBOpeConts.DELETED_ZERO_ROW;
+            return DaoConsts.DELETED_ZERO_ROW;
         }
         String shopGroupCode = existList.get(0).getShopGroupCode();
 
         int deleted = mapper.delete(tenantCode, warningRuleCode);
-        if (deleted == DBOpeConts.DELETED_ONE_ROW) {
+        if (deleted == DaoConsts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, warningRuleCode, shopGroupCode);
         }
         return deleted;
