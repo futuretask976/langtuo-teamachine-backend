@@ -4,11 +4,11 @@ public class MqttConfig {
     /**
      * MQ4IOT 实例 ID，购买后控制台获取
      */
-    public static final String INSTANCE_ID = "post-cn-apg3uwnk901";
+    public static final String INSTANCE_ID = "post-cn-kvw3w72ds01";
     /**
      * 接入点地址，购买 MQ4IOT 实例，且配置完成后即可获取，接入点地址必须填写分配的域名，不得使用 IP 地址直接连接，否则可能会导致客户端异常。
      */
-    public static final String ENDPOINT = "post-cn-apg3uwnk901.mqtt.aliyuncs.com";
+    public static final String ENDPOINT = "post-cn-kvw3w72ds01.mqtt.aliyuncs.com";
 
     /**
      * 账号 accesskey，从账号系统控制台获取
@@ -35,7 +35,7 @@ public class MqttConfig {
      * MQ4IOT clientId，由业务系统分配，需要保证每个 tcp 连接都不一样，保证全局唯一，如果不同的客户端对象（tcp 连接）使用了相同的 clientId 会导致连接异常断开。
      * clientId 由两部分组成，格式为 GroupID@@@DeviceId，其中 groupId 在 MQ4IOT 控制台申请，DeviceId 由业务方自己设置，clientId 总长度不得超过64个字符。
      */
-    public static final String CLIENT_ID = "GID_Broadcast@@@teaMachine";
+    public static final String CLIENT_ID = "GID_TEAMACHINE_MACHINE@@@console";
 
     /**
      * 超时时长

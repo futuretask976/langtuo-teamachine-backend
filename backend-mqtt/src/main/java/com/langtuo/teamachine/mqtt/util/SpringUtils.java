@@ -10,10 +10,7 @@ import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.api.service.record.*;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.api.service.user.AdminMgtService;
-import com.langtuo.teamachine.api.service.user.PermitActMgtService;
-import com.langtuo.teamachine.api.service.user.RoleMgtService;
-import com.langtuo.teamachine.api.service.user.TenantMgtService;
+import com.langtuo.teamachine.api.service.user.*;
 import com.langtuo.teamachine.mqtt.MqttService;
 import org.springframework.context.ApplicationContext;
 
@@ -40,6 +37,12 @@ public class SpringUtils {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         RoleMgtService roleMgtService = appContext.getBean(RoleMgtService.class);
         return roleMgtService;
+    }
+
+    public static OrgMgtService getOrgMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        OrgMgtService orgMgtService = appContext.getBean(OrgMgtService.class);
+        return orgMgtService;
     }
 
     public static PermitActMgtService getPermitActMgtService() {

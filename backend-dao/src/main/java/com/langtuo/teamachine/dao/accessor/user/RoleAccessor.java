@@ -163,7 +163,7 @@ public class RoleAccessor {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 
-    public RolePO getSysSuperRole(String tenantCode, String roleCode) {
+    private RolePO getSysSuperRole(String tenantCode, String roleCode) {
         if (!DaoConsts.ROLE_SYS_SUPER.equals(roleCode)) {
             return null;
         }

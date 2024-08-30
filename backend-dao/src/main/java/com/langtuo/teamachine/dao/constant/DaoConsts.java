@@ -24,7 +24,7 @@ public class DaoConsts {
     /**
      * 系统超级管理员登录名
      */
-    public static final String ADMIN_SYS_SUPER_LOGIN_NAME = "sys_super_admin";
+    public static final String ADMIN_SYS_SUPER_LOGIN_NAME = "SYS_SUPER_ADMIN";
 
     /**
      * 系统超级管理员登录密码
@@ -38,6 +38,11 @@ public class DaoConsts {
     public static final String ROLE_SYS_SUPER = "SYS_SUPER_ROLE";
 
     /**
+     * 租户超级管理员角色
+     */
+    public static final String ROLE_TENANT_SUPER = "TENANT_SUPER_ROLE";
+
+    /**
      *  系统保留角色
      */
     public static final int ROLE_SYS_RESERVED = 1;
@@ -47,5 +52,8 @@ public class DaoConsts {
      */
     public static final String ORG_NAME_TOP = "总公司";
 
+    /**
+     * 租户管理的权限点，单独配置，不会在列表中出现
+     */
     public static final String PERMIT_ACT_CODE_TENANT = "tenant_mgt";
 }
