@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.dao.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@Slf4j
 public class RedisConfig {
     @Value("${spring.redis.host}")
     private String redisHost;
@@ -18,8 +20,8 @@ public class RedisConfig {
     @Value("${spring.redis.port}")
     private int redisPort;
 
-    @Value("${spring.redis.username}")
-    private String userName;
+    // @Value("${spring.redis.username}")
+    // private String userName;
 
     @Value("${spring.redis.password}")
     private String password;
@@ -31,9 +33,11 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(redisHost, redisPort);
-        configuration.setUsername(userName);
+        // configuration.setUsername(userName);
         configuration.setPassword(password);
-        return new LettuceConnectionFactory(configuration);
+        log.info("$$$$$ redisConnectionFactory password=" + password);
+        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(configuration);
+        return lettuceConnectionFactory;
     }
 
     @Bean

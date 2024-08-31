@@ -7,10 +7,10 @@ spring:
   profiles:
     active: dev # 默认为开发环境
   redis:
-    host: r-bp13wg6c4rk6hn0riopd.redis.rds.aliyuncs.com
+    host: 47.102.144.19
     port: 6379
-    username: r-bp13wg6c4rk6hn0rio
-    password: password@1
+    # username: r-bp13wg6c4rk6hn0rio
+    password: langtuopassword
   servlet:
     multipart:
       enabled: true # 开启文件上传
