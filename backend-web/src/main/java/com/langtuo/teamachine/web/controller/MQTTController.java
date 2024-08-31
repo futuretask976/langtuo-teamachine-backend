@@ -23,13 +23,15 @@ public class MQTTController {
      * @return
      */
     @GetMapping(value = "/test")
-    public TeaMachineResult<Void> index(Model model) {
+    public TeaMachineResult<Void> test(Model model) {
+        log.info("/mqtt/test entering: " + (model == null ? null : model.toString()));
         try {
             // mqttService.sendMsgByTopic("tenant_001", "testMq4Iot", "here is testMq4Iot test: " + System.currentTimeMillis());
             // mqttService.sendMsgByP2P("tenant_001", MQTTConfig.CLIENT_ID, "here is p2p test: " + System.currentTimeMillis());
         } catch (Exception e) {
             log.error("test error: " + e.getMessage(), e);
         }
+        log.info("/mqtt/test exiting");
         return TeaMachineResult.error(ErrorEnum.TEST_ERR_ONLY_TEST);
     }
 }
