@@ -78,8 +78,8 @@ public class MqttConsts {
      * topic 相关常量
      */
     public static final String CONSOLE_PARENT_TOPIC = "teamachine";
-    public static final String TENANT_PARENT_TOPIC_POSTFIX = "_teamachine";
-    public static final String TENANT_PARENT_P2P_TOPIC_POSTFIX = "_teamachine/p2p";
+    public static final String TENANT_PARENT_TOPIC_POSTFIX = "-teamachine";
+    public static final String TENANT_PARENT_P2P_TOPIC_POSTFIX = "-teamachine/p2p";
 
     /**
      * topic 分隔符
