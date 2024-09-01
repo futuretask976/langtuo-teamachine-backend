@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.biz.service.impl.drink;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.SpecDTO;
 import com.langtuo.teamachine.api.model.drink.SpecItemDTO;
@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.request.drink.SpecPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.SpecMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.SpecItemAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.TeaUnitAccessor;
@@ -16,6 +17,8 @@ import com.langtuo.teamachine.dao.po.drink.SpecPO;
 import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -34,6 +37,9 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     @Resource
     private TeaUnitAccessor teaUnitAccessor;
+    
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<List<SpecDTO>> list(String tenantCode) {
@@ -44,7 +50,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -64,7 +71,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -78,7 +86,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -92,7 +101,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -100,7 +110,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     @Override
     public TeaMachineResult<Void> put(SpecPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         SpecPO specPO = convert(request);
@@ -125,7 +136,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -133,7 +145,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String specCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -144,11 +157,13 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                 int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_SPEC);
+                teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_SPEC,
+                    messageSource));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

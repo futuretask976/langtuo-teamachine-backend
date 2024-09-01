@@ -1,9 +1,12 @@
 package com.langtuo.teamachine.web.controller;
 
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.mqtt.MqttService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,9 @@ import javax.annotation.Resource;
 public class MQTTController {
     @Resource
     private MqttService mqttService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * url: http://localhost:8080/teamachinebackend/mqtt/test
@@ -32,6 +38,6 @@ public class MQTTController {
             log.error("test error: " + e.getMessage(), e);
         }
         log.info("/mqtt/test exiting");
-        return TeaMachineResult.error(ErrorEnum.TEST_ERR_ONLY_TEST);
+        return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST, messageSource));
     }
 }

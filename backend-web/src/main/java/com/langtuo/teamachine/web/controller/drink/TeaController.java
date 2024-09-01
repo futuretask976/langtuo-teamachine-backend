@@ -1,14 +1,17 @@
 package com.langtuo.teamachine.web.controller.drink;
 
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.web.constant.WebConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,9 @@ import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 public class TeaController {
     @Resource
     private TeaMgtService service;
+
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * url: http://localhost:8080/teamachine/drinkset/tea/{tenantcode}/{teacode}/get
@@ -115,7 +121,8 @@ public class TeaController {
     public TeaMachineResult<Void> uploadExcel(@PathVariable(name = "tenantcode") String tenantCode,
             @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY,
+                    messageSource));
         }
 
         // 获取文件的字节
@@ -136,6 +143,7 @@ public class TeaController {
                 }
             }
         }
-        return TeaMachineResult.error(ErrorEnum.BIZ_ERR_PARSE_UPLOAD_FILE_ERROR);
+        return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_PARSE_UPLOAD_FILE_ERROR,
+                messageSource));
     }
 }

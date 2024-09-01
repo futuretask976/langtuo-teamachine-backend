@@ -78,6 +78,11 @@
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>2.4.13</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.context.support</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>5.3.13</version>
+            </dependency>
             <!-- spring end -->
 
             <!-- alibaba start -->

@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.biz.service.impl.rule;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
@@ -11,6 +11,7 @@ import com.langtuo.teamachine.api.request.rule.CleanRulePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleExceptAccessor;
@@ -24,6 +25,8 @@ import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -53,6 +56,9 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public TeaMachineResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
         TeaMachineResult<CleanRuleDTO> teaMachineResult;
@@ -62,7 +68,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -76,7 +83,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -90,7 +98,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             teaMachineResult = TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -119,7 +128,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             teaMachineResult = TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -139,7 +149,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -147,7 +158,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     @Override
     public TeaMachineResult<Void> put(CleanRulePutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         CleanRulePO cleanRulePO = convertToCleanRulePO(request);
@@ -181,7 +193,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -189,7 +202,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String cleanRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -200,7 +214,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -208,7 +223,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     @Override
     public TeaMachineResult<Void> putDispatch(CleanRuleDispatchPutRequest request) {
         if (request == null) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         List<CleanRuleDispatchPO> poList = convert(request);
@@ -223,7 +239,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("putDispatch error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
 
         // 异步发送消息准备配置信息分发
@@ -250,7 +267,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getDispatchByCleanRuleCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

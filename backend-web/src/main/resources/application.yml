@@ -1,6 +1,9 @@
 spring:
   application:
     name: teamachine-backend
+  messages:
+    basename: messages
+    encoding: UTF-8
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

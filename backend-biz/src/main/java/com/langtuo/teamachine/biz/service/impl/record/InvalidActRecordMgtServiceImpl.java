@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.biz.service.impl.record;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.InvalidActRecordDTO;
 import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.InvalidActRecordMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
@@ -20,6 +21,8 @@ import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -47,6 +50,9 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
     @Resource
     private ShopGroupMgtService shopGroupMgtService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public TeaMachineResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<InvalidActRecordDTO> teaMachineResult;
@@ -56,7 +62,8 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -89,7 +96,8 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -97,7 +105,8 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
     @Override
     public TeaMachineResult<Void> put(InvalidActRecordPutRequest request) {
         if (request == null) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         InvalidActRecordPO po = convert(request);
@@ -114,7 +123,8 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -122,7 +132,8 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String warningRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -131,7 +142,8 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

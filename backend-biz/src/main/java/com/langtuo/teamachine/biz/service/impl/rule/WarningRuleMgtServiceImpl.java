@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.biz.service.impl.rule;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.request.rule.WarningRulePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
@@ -19,6 +20,8 @@ import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -41,6 +44,9 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public TeaMachineResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
         TeaMachineResult<WarningRuleDTO> teaMachineResult;
@@ -50,7 +56,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -64,7 +71,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -78,7 +86,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -107,7 +116,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             teaMachineResult = TeaMachineResult.success(drainRuleDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -126,7 +136,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -134,7 +145,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     @Override
     public TeaMachineResult<Void> put(WarningRulePutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         WarningRulePO warningRulePO = convertToWarningRuleDTO(request);
@@ -152,7 +164,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -160,7 +173,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String warningRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -169,7 +183,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -177,7 +192,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     @Override
     public TeaMachineResult<Void> putDispatch(WarningRuleDispatchPutRequest request) {
         if (request == null) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         List<WarningRuleDispatchPO> poList = convertToWarningRuleDTO(request);
@@ -192,7 +208,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("putDispatch error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
 
         // 异步发送消息准备配置信息分发
@@ -219,7 +236,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getDispatchByWarningRuleCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

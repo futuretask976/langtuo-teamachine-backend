@@ -8,8 +8,9 @@ import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
 import com.langtuo.teamachine.api.request.device.ModelPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelPipelineAccessor;
@@ -18,6 +19,8 @@ import com.langtuo.teamachine.dao.po.device.ModelPipelinePO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -40,6 +43,9 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public TeaMachineResult<List<ModelDTO>> list() {
         TeaMachineResult<List<ModelDTO>> teaMachineResult;
@@ -49,7 +55,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -68,7 +75,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -87,7 +95,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             teaMachineResult = TeaMachineResult.success(modelDTO);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -95,7 +104,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     @Override
     public TeaMachineResult<Void> put(ModelPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         String modelCode = request.getModelCode();
@@ -118,7 +128,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
 
         // 异步发送消息准备配置信息分发
@@ -130,7 +141,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     @Override
     public TeaMachineResult<Void> delete(String modelCode) {
         if (StringUtils.isEmpty(modelCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -141,11 +153,13 @@ public class ModelMgtServiceImpl implements ModelMgtService {
                 int deleted4Pipeline = modelPipelineAccessor.deleteByModelCode(modelCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_MODEL);
+                teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_MODEL, messageSource));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

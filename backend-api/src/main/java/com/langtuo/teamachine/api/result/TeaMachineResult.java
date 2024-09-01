@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.api.result;
 
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.api.model.ErrorMsgDTO;
 import lombok.Data;
 
 import java.util.List;
@@ -28,11 +28,19 @@ public class TeaMachineResult<T> {
         return teaMachineResult;
     }
 
-    public static <U> TeaMachineResult error(ErrorEnum errorEnum) {
+    public static <U> TeaMachineResult error(String errorCode, String errorMsg) {
         TeaMachineResult<U> teaMachineResult = new TeaMachineResult<>();
         teaMachineResult.setSuccess(false);
-        teaMachineResult.setErrorCode(errorEnum.getErrorCode());
-        teaMachineResult.setErrorMsg(errorEnum.getErrorMsg());
+        teaMachineResult.setErrorCode(errorCode);
+        teaMachineResult.setErrorMsg(errorMsg);
+        return teaMachineResult;
+    }
+
+    public static <U> TeaMachineResult error(ErrorMsgDTO errorMsgDTO) {
+        TeaMachineResult<U> teaMachineResult = new TeaMachineResult<>();
+        teaMachineResult.setSuccess(false);
+        teaMachineResult.setErrorCode(errorMsgDTO.getErrorCode());
+        teaMachineResult.setErrorMsg(errorMsgDTO.getErrorMsg());
         return teaMachineResult;
     }
 

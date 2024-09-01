@@ -1,18 +1,21 @@
 package com.langtuo.teamachine.biz.service.impl.user;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.OrgPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -25,6 +28,9 @@ import java.util.stream.Collectors;
 public class OrgMgtServiceImpl implements OrgMgtService {
     @Resource
     private OrgAccessor orgAccessor;
+    
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<OrgDTO> getTop(String tenantCode) {
@@ -34,7 +40,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             teaMachineResult = TeaMachineResult.success(convert(orgNode));
         } catch (Exception e) {
             log.error("listByDepth error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -47,7 +54,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             teaMachineResult = TeaMachineResult.success(convert(orgNodeList));
         } catch (Exception e) {
             log.error("listByDepth error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -61,7 +69,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -80,7 +89,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -94,7 +104,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             teaMachineResult = TeaMachineResult.success(orgDTO);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -102,7 +113,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     @Override
     public TeaMachineResult<Void> put(OrgPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         String tenantCode = request.getTenantCode();
@@ -120,7 +132,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -128,7 +141,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String orgName) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -137,7 +151,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

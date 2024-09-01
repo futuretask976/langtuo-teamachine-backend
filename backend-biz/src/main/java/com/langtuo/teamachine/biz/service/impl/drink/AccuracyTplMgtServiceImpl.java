@@ -1,13 +1,14 @@
 package com.langtuo.teamachine.biz.service.impl.drink;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.request.drink.AccuracyTplPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplToppingAccessor;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
@@ -16,6 +17,8 @@ import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -35,6 +38,9 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public TeaMachineResult<List<AccuracyTplDTO>> list(String tenantCode) {
         TeaMachineResult<List<AccuracyTplDTO>> teaMachineResult;
@@ -46,7 +52,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -68,7 +75,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -82,7 +90,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -96,7 +105,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -104,7 +114,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     @Override
     public TeaMachineResult<Void> put(AccuracyTplPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
         AccuracyTplPO po = convertToAccuracyTplPO(request);
         List<AccuracyTplToppingPO> toppingPOList = convertToAccuracyTplToppingPO(request);
@@ -127,7 +138,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
 
         // 异步发送消息准备配置信息分发
@@ -139,7 +151,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String templateCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -148,7 +161,8 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

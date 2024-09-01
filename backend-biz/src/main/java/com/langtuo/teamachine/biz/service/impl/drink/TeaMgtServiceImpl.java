@@ -4,7 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.*;
 import com.langtuo.teamachine.api.model.drink.*;
 import com.langtuo.teamachine.api.request.drink.*;
@@ -12,6 +12,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.excel.export.*;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.biz.service.util.ExcelUtils;
 import com.langtuo.teamachine.dao.accessor.drink.*;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesTeaRelAccessor;
@@ -22,6 +23,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -58,6 +61,9 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     @Resource
     private SeriesTeaRelAccessor seriesTeaRelAccessor;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public TeaMachineResult<TeaDTO> getByCode(String tenantCode, String teaCode) {
         TeaMachineResult<TeaDTO> teaMachineResult;
@@ -67,7 +73,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -81,7 +88,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -95,7 +103,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             teaMachineResult = TeaMachineResult.success(teaDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -115,7 +124,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -123,7 +133,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     @Override
     public TeaMachineResult<Void> put(TeaPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaPO teaPO = convertToTeaPO(request);
@@ -159,7 +170,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -167,7 +179,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String teaCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -180,11 +193,13 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.deleteByTeaCode(tenantCode, teaCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_TEA);
+                teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_TEA,
+                    messageSource));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -280,7 +295,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     @Override
     public TeaMachineResult<Void> uploadByExcel(String tenantCode, XSSFWorkbook workbook) {
         if (StringUtils.isBlank(tenantCode) || workbook == null) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         Sheet sheet = workbook.getSheetAt(BizConsts.SHEET_NUM_4_DATA);
@@ -414,7 +430,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         for (TeaPutRequest teaPutRequest : teaPutRequestList) {
             TeaMachineResult<Void> result = this.put(teaPutRequest);
             if (!result.isSuccess()) {
-                return TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+                return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
             }
         }
         return TeaMachineResult.success();

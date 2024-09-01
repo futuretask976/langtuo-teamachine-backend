@@ -1,19 +1,22 @@
 package com.langtuo.teamachine.biz.service.impl.user;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.AdminPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -29,6 +32,9 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
     @Resource
     private RoleAccessor roleAccessor;
+    
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<AdminDTO> get(String tenantCode, String loginName) {
@@ -65,7 +71,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -82,7 +89,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -90,7 +98,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     @Override
     public TeaMachineResult<Void> put(AdminPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         AdminPO adminPO = convert(request);
@@ -106,7 +115,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -114,7 +124,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String loginName) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(loginName)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -123,7 +134,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -131,7 +143,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     @Override
     public TeaMachineResult<Integer> countByRoleCode(String tenantCode, String roleCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(roleCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Integer> teaMachineResult;
@@ -140,7 +153,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             teaMachineResult = TeaMachineResult.success(cnt);
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

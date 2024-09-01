@@ -1,13 +1,14 @@
 package com.langtuo.teamachine.biz.service.impl.shop;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.shop.ShopPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
@@ -16,6 +17,8 @@ import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -37,6 +40,9 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     @Resource
     private ShopGroupAccessor shopGroupAccessor;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<ShopDTO> getByCode(String tenantCode, String shopCode) {
@@ -77,7 +83,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
 
         return teaMachineResult;
@@ -92,7 +99,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -106,7 +114,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -124,7 +133,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -132,7 +142,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     @Override
     public TeaMachineResult<Void> put(ShopPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         ShopPO shopPO = convert(request);
@@ -148,7 +159,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -156,7 +168,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String shopGroupCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -165,7 +178,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -173,7 +187,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     @Override
     public TeaMachineResult<Integer> countByShopGroupCode(String tenantCode, String shopGroupCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Integer> teaMachineResult;
@@ -182,7 +197,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             teaMachineResult = TeaMachineResult.success(cnt);
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

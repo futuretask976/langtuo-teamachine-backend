@@ -1,13 +1,15 @@
 package com.langtuo.teamachine.biz.service.impl.shop;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.google.protobuf.Message;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.shop.ShopGroupPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
@@ -17,6 +19,8 @@ import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,6 +45,9 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
     @Resource
     private OrgAccessor orgAccessor;
+    
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode) {
@@ -71,7 +78,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -85,7 +93,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -100,7 +109,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -108,7 +118,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     @Override
     public TeaMachineResult<Void> put(ShopGroupPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         ShopGroupPO shopGroupPO = convert(request);
@@ -124,7 +135,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -132,7 +144,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String shopGroupCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -142,11 +155,13 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
                 int deleted = shopGroupAccessor.deleteByShopGroupCode(tenantCode, shopGroupCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_SHOP_GROUP);
+                teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_SHOP_GROUP,
+                    messageSource));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.biz.service.impl.device;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.device.MachineActivatePutRequest;
@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.request.device.MachineUpdatePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
@@ -18,6 +19,8 @@ import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -39,6 +42,9 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Resource
     private MqttPublisher4Console mqttPublisher4Console;
+    
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<MachineDTO> getByCode(String tenantCode, String machineCode) {
@@ -71,7 +77,8 @@ public class MachineMgtServiceImpl implements MachineMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -88,7 +95,8 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -105,7 +113,8 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -113,7 +122,8 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     @Override
     public TeaMachineResult<MachineDTO> activate(MachineActivatePutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<MachineDTO> teaMachineResult;
@@ -121,23 +131,27 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             DeployPO deployPO = convert(request);
             int updated = deployAccessor.update(deployPO);
             if (updated != 1) {
-                return TeaMachineResult.error(ErrorEnum.DB_ERR_UPDATE_FAIL);
+                return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL,
+                    messageSource));
             }
 
             DeployPO exist = deployAccessor.selectOneByDeployCode(deployPO.getTenantCode(), deployPO.getDeployCode());
             if (exist == null) {
-                return TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+                return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
             }
 
             MachinePO machinePO = convertToMachinePO(request, exist);
             int inserted = machineAccessor.insert(machinePO);
             if (inserted != 1) {
-                return TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+                return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                        messageSource));
             }
             teaMachineResult = TeaMachineResult.success(convert(machinePO));
         } catch (Exception e) {
             log.error("activate error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -145,7 +159,8 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     @Override
     public TeaMachineResult<Void> put(MachineUpdatePutRequest request) {
         if (request == null) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -160,7 +175,8 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("update error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
 
         // 异步发送消息准备配置信息分发
@@ -172,7 +188,8 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String machineCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -181,7 +198,8 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }

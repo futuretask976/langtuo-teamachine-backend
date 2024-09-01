@@ -1,10 +1,12 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -17,6 +19,9 @@ public class TeaMachineAuthFailureHandler implements AuthenticationFailureHandle
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException e) throws IOException, ServletException {
@@ -24,7 +29,8 @@ public class TeaMachineAuthFailureHandler implements AuthenticationFailureHandle
         response.addHeader("Access-Control-Allow-Credentials", "true");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        TeaMachineResult<Void> result = TeaMachineResult.error(ErrorEnum.LOGIN_ERR_UNAUTHENTICATED);
+        TeaMachineResult<Void> result = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.LOGIN_ERR_UNAUTHENTICATED,
+                messageSource));
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();
     }

@@ -1,18 +1,21 @@
 package com.langtuo.teamachine.biz.service.impl.drink;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.constant.ErrorEnum;
+import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.ToppingTypeDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingTypePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.ToppingTypeMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingTypeAccessor;
 import com.langtuo.teamachine.dao.po.drink.ToppingTypePO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -28,6 +31,9 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     @Resource
     private ToppingAccessor toppingAccessor;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public TeaMachineResult<List<ToppingTypeDTO>> list(String tenantCode) {
         TeaMachineResult<List<ToppingTypeDTO>> teaMachineResult;
@@ -40,7 +46,8 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -63,7 +70,8 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -78,7 +86,8 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -93,7 +102,8 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_SELECT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -101,7 +111,8 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     @Override
     public TeaMachineResult<Void> put(ToppingTypePutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         ToppingTypePO toppingTypePO = convert(request);
@@ -118,7 +129,8 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
@@ -126,7 +138,8 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String toppingTypeCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ErrorEnum.BIZ_ERR_ILLEGAL_ARGUMENT);
+            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+                    messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -136,11 +149,13 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
                 int deleted = accessor.delete(tenantCode, toppingTypeCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(ErrorEnum.BIZ_ERR_CANNOT_DELETE_USING_TOPPING_TYPE);
+                teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_TOPPING_TYPE,
+                        messageSource));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ErrorEnum.DB_ERR_INSERT_FAIL);
+            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                    messageSource));
         }
         return teaMachineResult;
     }
