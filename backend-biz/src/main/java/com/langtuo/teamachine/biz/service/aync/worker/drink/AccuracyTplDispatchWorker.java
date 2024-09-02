@@ -1,9 +1,9 @@
-package com.langtuo.teamachine.mqtt.consume.worker.drink;
+package com.langtuo.teamachine.biz.service.aync.worker.drink;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +24,8 @@ public class AccuracyTplDispatchWorker implements Runnable {
     private String templateCode;
 
     public AccuracyTplDispatchWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
-        this.templateCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TEMPLATE_CODE);
+        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
+        this.templateCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TEMPLATE_CODE);
         if (StringUtils.isBlank(tenantCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
@@ -40,8 +40,8 @@ public class AccuracyTplDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_ACCURACY);
-        jsonMsg.put(MqttConsts.SEND_KEY_ACCURACY_TPL, jsonDispatchCont);
+        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_ACCURACY);
+        jsonMsg.put(BizConsts.SEND_KEY_ACCURACY_TPL, jsonDispatchCont);
         log.info("$$$$$ AccuracyDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         MqttProducer mqttProducer = SpringUtils.getMqttProducer();

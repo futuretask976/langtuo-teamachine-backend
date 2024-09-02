@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.mqtt.consume.worker.user;
+package com.langtuo.teamachine.biz.service.aync.worker.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.user.OrgDTO;
@@ -7,12 +7,11 @@ import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.request.user.OrgPutRequest;
 import com.langtuo.teamachine.api.request.user.RolePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import com.langtuo.teamachine.api.service.user.PermitActMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.constant.DaoConsts;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +30,7 @@ public class TenantPostWorker implements Runnable {
     private String tenantCode;
 
     public TenantPostWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
+        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
         if (StringUtils.isBlank(tenantCode)) {
             throw new IllegalArgumentException("tenantCode is blank");
         }

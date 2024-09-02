@@ -20,6 +20,9 @@ import java.util.concurrent.TimeoutException;
 @Component
 @Slf4j
 public class MqttProducer implements InitializingBean {
+    /**
+     * MQTT 发送者实例
+     */
     private ServerProducer serverProducer;
 
     @Override

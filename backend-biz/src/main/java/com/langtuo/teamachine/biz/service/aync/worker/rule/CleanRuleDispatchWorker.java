@@ -1,21 +1,19 @@
-package com.langtuo.teamachine.mqtt.consume.worker.rule;
+package com.langtuo.teamachine.biz.service.aync.worker.rule;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
-import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
-import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
+import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
+import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
-import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
+import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -26,22 +24,22 @@ import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
 import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
-public class WarningRuleDispatchWorker implements Runnable {
+public class CleanRuleDispatchWorker implements Runnable {
     /**
      * 租户编码
      */
     private String tenantCode;
 
     /**
-     * 预警规则编码
+     * 清洁规则编码
      */
-    private String warningRuleCode;
+    private String cleanRuleCode;
 
-    public WarningRuleDispatchWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
-        this.warningRuleCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_WARNING_RULE_CODE);
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(warningRuleCode)) {
-            throw new IllegalArgumentException("tenantCode or warningRuleCode is blank");
+    public CleanRuleDispatchWorker(JSONObject jsonPayload) {
+        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
+        this.cleanRuleCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_CLEAN_RULE_CODE);
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(cleanRuleCode)) {
+            throw new IllegalArgumentException("tenantCode or cleanRuleCode is blank");
         }
     }
 
@@ -50,9 +48,9 @@ public class WarningRuleDispatchWorker implements Runnable {
         JSONObject jsonDispatchCont = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_WARNING_RULE);
-        jsonMsg.put(MqttConsts.SEND_KEY_WARNING_RULE, jsonDispatchCont);
-        log.info("$$$$$ WarningRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
+        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_CLEAN_RULE);
+        jsonMsg.put(BizConsts.SEND_KEY_CLEAN_RULE, jsonDispatchCont);
+        log.info("$$$$$ CleanRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
@@ -66,46 +64,28 @@ public class WarningRuleDispatchWorker implements Runnable {
         });
     }
 
-    private WarningRuleMgtService getWarningRuleMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        WarningRuleMgtService warningRuleMgtService = appContext.getBean(WarningRuleMgtService.class);
-        return warningRuleMgtService;
-    }
-
-    private ShopMgtService getShopMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        ShopMgtService shopMgtService = appContext.getBean(ShopMgtService.class);
-        return shopMgtService;
-    }
-
-    private MachineMgtService getMachineMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MachineMgtService machineMgtService = appContext.getBean(MachineMgtService.class);
-        return machineMgtService;
-    }
-
     private JSONObject getDispatchCont() {
-        WarningRuleMgtService warningRuleMgtService = getWarningRuleMgtService();
-        WarningRuleDTO warningRuleDTO = getModel(warningRuleMgtService.getByCode(tenantCode, warningRuleCode));
-        if (warningRuleDTO == null) {
-            log.info("warning rule error, stop worker");
+        CleanRuleMgtService cleanRuleMgtService = SpringUtils.getCleanRuleMgtService();
+        CleanRuleDTO cleanRuleDTO = getModel(cleanRuleMgtService.getByCode(tenantCode, cleanRuleCode));
+        if (cleanRuleDTO == null) {
+            log.info("clean rule error, stop worker");
             return null;
         }
 
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(warningRuleDTO);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(cleanRuleDTO);
         return jsonObject;
     }
 
     private List<String> getMachineCodeList() {
-        WarningRuleMgtService warningRuleMgtService = getWarningRuleMgtService();
-        WarningRuleDispatchDTO drainRuleDispatchDTO = getModel(warningRuleMgtService.getDispatchByWarningRuleCode(tenantCode, warningRuleCode));
-        if (drainRuleDispatchDTO == null) {
-            log.info("warning rule dispatch is null");
+        CleanRuleMgtService cleanRuleMgtService = SpringUtils.getCleanRuleMgtService();
+        CleanRuleDispatchDTO cleanRuleDispatchDTO = getModel(cleanRuleMgtService.getDispatchByCleanRuleCode(tenantCode, cleanRuleCode));
+        if (cleanRuleDispatchDTO == null) {
+            log.info("clean rule dispatch is null");
             return null;
         }
 
-        ShopMgtService shopMgtService = getShopMgtService();
-        List<String> shopCodeList = drainRuleDispatchDTO.getShopGroupCodeList().stream()
+        ShopMgtService shopMgtService = SpringUtils.getShopMgtService();
+        List<String> shopCodeList = cleanRuleDispatchDTO.getShopGroupCodeList().stream()
                 .map(shopGroupCode -> {
                     List<ShopDTO> shopList = getListModel(shopMgtService.listByShopGroupCode(
                             tenantCode, shopGroupCode));
@@ -125,7 +105,7 @@ public class WarningRuleDispatchWorker implements Runnable {
             return null;
         }
 
-        MachineMgtService machineMgtService = getMachineMgtService();
+        MachineMgtService machineMgtService = SpringUtils.getMachineMgtService();
         List<String> machineCodeList = shopCodeList.stream()
                 .map(shopCode -> {
                     List<MachineDTO> machineList = getListModel(machineMgtService.listByShopCode(

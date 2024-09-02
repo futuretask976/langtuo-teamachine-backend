@@ -27,34 +27,26 @@ public class MqttConsts {
     public static final String ACCESS_KEY_SECRET = "MammwnIOPrHe9AAO4CnaUJwmIG96Kc"; // System.getenv("MQTT_SK_ENV");
 
     /**
-     * QoS参数代表传输质量，可选0，1，2，根据实际需求合理设置，具体参考 https://help.aliyun.com/document_detail/42420.html?spm=a2c4g.11186623.6.544.1ea529cfAO5zV3
-     */
-    public static final int QOS_LEVEL = 0;
-
-    /**
-     * MQ4IOT clientId，由业务系统分配，需要保证每个 tcp 连接都不一样，保证全局唯一，如果不同的客户端对象（tcp 连接）使用了相同的 clientId 会导致连接异常断开。
-     * clientId 由两部分组成，格式为 GroupID@@@DeviceId，其中 groupId 在 MQ4IOT 控制台申请，DeviceId 由业务方自己设置，clientId 总长度不得超过64个字符。
-     */
-    public static final String CLIENT_ID = "GID_TEAMACHINE_CONSOLE@@@console4local";
-
-    /**
      * 超时时长
      */
     public static final int TIME_TO_WAIT = 5000;
 
     /**
+     * topic 相关常量
+     */
+    public static final String CONSOLE_PARENT_TOPIC = "teamachine";
+    public static final String TENANT_PARENT_TOPIC_POSTFIX = "-teamachine";
+    public static final String TENANT_PARENT_P2P_TOPIC_POSTFIX = "-teamachine/p2p";
+
+    /**
+     * topic 分隔符
+     */
+    public static final String TOPIC_SEPERATOR = "/";
+
+    /**
      * 收到的消息中的 key 关键字
      */
     public static final String RECEIVE_KEY_BIZ_CODE = "bizCode";
-    public static final String RECEIVE_KEY_TENANT_CODE = "tenantCode";
-    public static final String RECEIVE_KEY_MODEL_CODE = "modelCode";
-    public static final String RECEIVE_KEY_MACHINE_CODE = "machineCode";
-    public static final String RECEIVE_KEY_SHOP_CODE = "shopCode";
-    public static final String RECEIVE_KEY_TEMPLATE_CODE = "templateCode";
-    public static final String RECEIVE_KEY_MENU_CODE = "menuCode";
-    public static final String RECEIVE_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
-    public static final String RECEIVE_KEY_DRAIN_RULE_CODE = "drainRuleCode";
-    public static final String RECEIVE_KEY_WARNING_RULE_CODE = "warningRuleCode";
     public static final String RECEIVE_KEY_LIST = "list";
 
 
@@ -64,21 +56,13 @@ public class MqttConsts {
     public static final String SEND_KEY_BIZ_CODE = "bizCode";
     public static final String SEND_KEY_TENANT_CODE = "tenantCode";
     public static final String SEND_KEY_MODEL_CODE = "modelCode";
-    public static final String SEND_KEY_MODEL = "model";
     public static final String SEND_KEY_MACHINE_CODE = "machineCode";
-    public static final String SEND_KEY_MACHINE = "machine";
-    public static final String SEND_KEY_MD5_AS_HEX = "md5AsHex";
-    public static final String SEND_KEY_OSS_PATH = "ossPath";
     public static final String SEND_KEY_TEMPLATE_CODE = "templateCode";
-    public static final String SEND_KEY_ACCURACY_TPL = "accuracyTpl";
     public static final String SEND_KEY_SHOP_CODE = "shopCode";
     public static final String SEND_KEY_MENU_CODE = "menuCode";
     public static final String SEND_KEY_DRAIN_RULE_CODE = "openRuleCode";
-    public static final String SEND_KEY_OPEN_RULE = "openRule";
     public static final String SEND_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
-    public static final String SEND_KEY_CLEAN_RULE = "cleanRule";
     public static final String SEND_KEY_WARNING_RULE_CODE = "warningRuleCode";
-    public static final String SEND_KEY_WARNING_RULE = "warningRule";
 
     /**
      * console 用的消息 bizCode
@@ -94,19 +78,6 @@ public class MqttConsts {
     public static final String BIZ_CODE_PREPARE_WARNING_RULE = "prepare_warning_rule";
 
     /**
-     * dispatch 用的消息 bizCode
-     */
-    public static final String BIZ_CODE_DISPATCH_ACCURACY = "dispatch_accuracy";
-    public static final String BIZ_CODE_DISPATCH_CLEAN_RULE = "dispatch_clean_rule";
-    public static final String BIZ_CODE_DISPATCH_CLOSE_RULE = "dispatch_close_rule";
-    public static final String BIZ_CODE_DISPATCH_MACHINE = "dispatch_machine";
-    public static final String BIZ_CODE_DISPATCH_MENU = "dispatch_menu";
-    public static final String BIZ_CODE_DISPATCH_MENU_INIT_LIST = "dispatch_menu_init_list";
-    public static final String BIZ_CODE_DISPATCH_MODEL = "dispatch_model";
-    public static final String BIZ_CODE_DISPATCH_OPEN_RULE = "dispatch_open_rule";
-    public static final String BIZ_CODE_DISPATCH_WARNING_RULE = "dispatch_warning_rule";
-
-    /**
      * 接受设备端消息用的 bizCode
      */
     public static final String BIZ_CODE_INVALID_ACT_RECORD = "invalidActRecord";
@@ -114,16 +85,4 @@ public class MqttConsts {
     public static final String BIZ_CODE_DRAIN_ACT_RECORD = "drainActRecord";
     public static final String BIZ_CODE_CLEAN_ACT_RECORD = "cleanActRecord";
     public static final String BIZ_CODE_ORDER_ACT_RECORD = "orderActRecord";
-
-    /**
-     * topic 相关常量
-     */
-    public static final String CONSOLE_PARENT_TOPIC = "teamachine";
-    public static final String TENANT_PARENT_TOPIC_POSTFIX = "-teamachine";
-    public static final String TENANT_PARENT_P2P_TOPIC_POSTFIX = "-teamachine/p2p";
-
-    /**
-     * topic 分隔符
-     */
-    public static final String TOPIC_SEPERATOR = "/";
 }

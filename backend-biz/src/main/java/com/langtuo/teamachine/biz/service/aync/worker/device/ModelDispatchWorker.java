@@ -1,11 +1,11 @@
-package com.langtuo.teamachine.mqtt.consume.worker.device;
+package com.langtuo.teamachine.biz.service.aync.worker.device;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.ModelDTO;
 import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class ModelDispatchWorker implements Runnable {
     private String modelCode;
 
     public ModelDispatchWorker(JSONObject jsonPayload) {
-        this.modelCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_MODEL_CODE);
+        this.modelCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_MODEL_CODE);
         if (StringUtils.isBlank(modelCode)) {
             throw new IllegalArgumentException("modelCode is blank");
         }
@@ -40,8 +40,8 @@ public class ModelDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_MODEL);
-        jsonMsg.put(MqttConsts.SEND_KEY_MODEL, jsonDispatchCont);
+        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MODEL);
+        jsonMsg.put(BizConsts.SEND_KEY_MODEL, jsonDispatchCont);
         log.info("$$$$$ ModelDispatchWorker jsonMsg: " + jsonMsg);
 
         TenantMgtService tenantMgtService = SpringUtils.getTenantMgtService();

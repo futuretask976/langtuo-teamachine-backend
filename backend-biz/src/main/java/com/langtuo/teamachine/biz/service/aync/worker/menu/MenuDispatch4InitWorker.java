@@ -1,28 +1,22 @@
-package com.langtuo.teamachine.mqtt.consume.worker.menu;
+package com.langtuo.teamachine.biz.service.aync.worker.menu;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDTO;
-import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
-import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
+import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
@@ -34,36 +28,42 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.TeaMachineResult.*;
+import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
-public class MenuDispatchWorker implements Runnable {
+public class MenuDispatch4InitWorker implements Runnable {
     /**
      * 租户编码
      */
     private String tenantCode;
 
     /**
-     * 菜单编码
+     * 机器编码
      */
-    private String menuCode;
+    private String machineCode;
 
-    public MenuDispatchWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_TENANT_CODE);
-        this.menuCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_MENU_CODE);
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)) {
+    /**
+     * 店铺编码
+     */
+    private String shopCode;
+
+    public MenuDispatch4InitWorker(JSONObject jsonPayload) {
+        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
+        this.shopCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_SHOP_CODE);
+        this.machineCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_MACHINE_CODE);
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode) || StringUtils.isBlank(shopCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
     }
 
     @Override
     public void run() {
-        JSONObject dispatchCont = getDispatchCont();
+        JSONArray dispatchCont = getDispatchCont();
         if (dispatchCont == null) {
             log.info("dispatch content error, stop worker");
             return;
         }
-        File outputFile = new File("dispatch/menu_output.json");
+        File outputFile = new File("dispatch4Init/output.json");
         boolean wrote = MqttUtils.writeStrToFile(dispatchCont.toJSONString(), outputFile);
         if (!wrote) {
             log.info("write file error, stop worker");
@@ -81,24 +81,33 @@ public class MenuDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(MqttConsts.SEND_KEY_BIZ_CODE, MqttConsts.BIZ_CODE_DISPATCH_MENU);
-        jsonMsg.put(MqttConsts.SEND_KEY_MD5_AS_HEX, md5AsHex);
-        jsonMsg.put(MqttConsts.SEND_KEY_OSS_PATH, ossPath);
-        System.out.println(jsonMsg.toJSONString());
+        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MENU_INIT_LIST);
+        jsonMsg.put(BizConsts.SEND_KEY_MD5_AS_HEX, md5AsHex);
+        jsonMsg.put(BizConsts.SEND_KEY_OSS_PATH, ossPath);
+        log.info("$$$$$ MenuDispatch4InitWorker jsonMsg=" + jsonMsg.toJSONString());
 
         // 准备发送
-        List<String> machineCodeList = getMachineCodeList();
-        if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.info("machine code list is empty, stop worker");
-        }
-
         MqttProducer mqttProducer = SpringUtils.getMqttProducer();
-        machineCodeList.stream().forEach(machineCode -> {
-            mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
-        });
+        mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
     }
 
-    private JSONObject getDispatchCont() {
+    private JSONArray getDispatchCont() {
+        MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
+        List<MenuDTO> menuDTOList = getModel(menuMgtService.listByShopCode(tenantCode, shopCode));
+        if (CollectionUtils.isEmpty(menuDTOList)) {
+            log.info("list menu error, stop worker");
+            return null;
+        }
+
+        JSONArray arr = new JSONArray();
+        menuDTOList.forEach(menuDTO -> {
+            JSONObject menuDispatchCont = getDispatchCont4Menu(menuDTO.getMenuCode());
+            arr.add(menuDispatchCont);
+        });
+        return arr;
+    }
+
+    private JSONObject getDispatchCont4Menu(String menuCode) {
         MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
         MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
         if (menuDTO == null) {
@@ -161,54 +170,6 @@ public class MenuDispatchWorker implements Runnable {
         });
 
         return jsonMenu;
-    }
-
-    private List<String> getMachineCodeList() {
-        MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
-        MenuDispatchDTO menuDispatchDTO = getModel(menuMgtService.getDispatchByMenuCode(tenantCode, menuCode));
-        if (menuDispatchDTO == null) {
-            log.info("menu dispatch is null");
-            return null;
-        }
-
-        ShopMgtService shopMgtService = SpringUtils.getShopMgtService();
-        List<String> shopCodeList = menuDispatchDTO.getShopGroupCodeList().stream()
-                .map(shopGroupCode -> {
-                    List<ShopDTO> shopList = getListModel(shopMgtService.listByShopGroupCode(
-                            tenantCode, shopGroupCode));
-                    if (shopList == null) {
-                        return null;
-                    }
-
-                    return shopList.stream()
-                            .map(shop -> shop.getShopCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(shopCodeList)) {
-            log.info("shop code list is empty");
-            return null;
-        }
-
-        MachineMgtService machineMgtService = SpringUtils.getMachineMgtService();
-        List<String> machineCodeList = shopCodeList.stream()
-                .map(shopCode -> {
-                    List<MachineDTO> machineList = getListModel(machineMgtService.listByShopCode(
-                            tenantCode, shopCode));
-                    if (machineList == null) {
-                        return null;
-                    }
-
-                    return machineList.stream()
-                            .map(shop -> shop.getMachineCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        return machineCodeList;
     }
 
     private String uploadOSS(File file) {

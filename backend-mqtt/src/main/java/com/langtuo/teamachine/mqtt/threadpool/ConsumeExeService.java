@@ -1,13 +1,13 @@
-package com.langtuo.teamachine.mqtt.concurrent;
+package com.langtuo.teamachine.mqtt.threadpool;
 
 import java.util.concurrent.*;
 
-public class ExeService4Consume {
+public class ConsumeExeService {
     private static ExecutorService executorService = null;
 
     public static ExecutorService getExeService() {
         if (executorService == null) {
-            synchronized (ExeService4Consume.class) {
+            synchronized (ConsumeExeService.class) {
                 if (executorService == null) {
                     executorService = new ThreadPoolExecutor(10, Integer.MAX_VALUE,
                             100L, TimeUnit.SECONDS,
