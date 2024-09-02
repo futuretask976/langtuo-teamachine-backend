@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.mqtt.consume.worker.menu;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -17,8 +16,8 @@ import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
-import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -93,9 +92,9 @@ public class MenuDispatchWorker implements Runnable {
             log.info("machine code list is empty, stop worker");
         }
 
-        MqttService mqttService = SpringUtils.getMQTTService();
+        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
+            mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 

@@ -22,7 +22,7 @@ import com.langtuo.teamachine.dao.po.rule.CleanRuleExceptPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRulePO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleStepPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
-import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     private ShopAccessor shopAccessor;
 
     @Resource
-    private MqttPublisher4Console mqttPublisher4Console;
+    private MqttProducer mqttProducer;
 
     @Autowired
     private MessageSource messageSource;
@@ -244,7 +244,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttPublisher4Console.send4CleanRule(
+        mqttProducer.sendToConsole4CleanRule(
                 request.getTenantCode(), request.getCleanRuleCode());
 
         return teaMachineResult;

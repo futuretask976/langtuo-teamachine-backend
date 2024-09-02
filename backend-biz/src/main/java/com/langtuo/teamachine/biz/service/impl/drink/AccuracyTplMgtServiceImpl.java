@@ -13,7 +13,7 @@ import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplToppingAccessor;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplToppingPO;
-import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
@@ -36,7 +36,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     private AccuracyTplToppingAccessor accuracyTplToppingAccessor;
 
     @Resource
-    private MqttPublisher4Console mqttPublisher4Console;
+    private MqttProducer mqttProducer;
 
     @Autowired
     private MessageSource messageSource;
@@ -143,7 +143,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttPublisher4Console.send4AccuracyTpl(request.getTenantCode(), request.getTemplateCode());
+        mqttProducer.sendToConsole4AccuracyTpl(request.getTenantCode(), request.getTemplateCode());
 
         return teaMachineResult;
     }

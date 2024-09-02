@@ -17,7 +17,7 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
-import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     private ShopAccessor shopAccessor;
 
     @Resource
-    private MqttPublisher4Console mqttPublisher4Console;
+    private MqttProducer mqttProducer;
 
     @Autowired
     private MessageSource messageSource;
@@ -213,7 +213,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttPublisher4Console.send4WarningRule(
+        mqttProducer.sendToConsole4WarningRule(
                 request.getTenantCode(), request.getWarningRuleCode());
 
         return teaMachineResult;

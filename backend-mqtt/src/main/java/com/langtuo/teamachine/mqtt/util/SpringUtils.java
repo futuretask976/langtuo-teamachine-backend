@@ -11,14 +11,14 @@ import com.langtuo.teamachine.api.service.record.*;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.api.service.user.*;
-import com.langtuo.teamachine.mqtt.MqttService;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import org.springframework.context.ApplicationContext;
 
 public class SpringUtils {
-    public static MqttService getMQTTService() {
+    public static MqttProducer getMqttProducer() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MqttService mqttService = appContext.getBean(MqttService.class);
-        return mqttService;
+        MqttProducer mqttProducer = appContext.getBean(MqttProducer.class);
+        return mqttProducer;
     }
 
     public static MachineMgtService getMachineMgtService() {

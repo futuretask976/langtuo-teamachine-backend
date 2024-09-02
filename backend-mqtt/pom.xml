@@ -71,8 +71,8 @@
             <artifactId>fastjson</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-onsmqtt</artifactId>
+            <groupId>com.alibaba.mqtt</groupId>
+            <artifactId>server-sdk</artifactId>
         </dependency>
         <dependency>
             <groupId>com.aliyun</groupId>

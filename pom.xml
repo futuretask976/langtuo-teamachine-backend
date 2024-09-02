@@ -92,9 +92,9 @@
                 <version>1.1.46.sec01</version>
             </dependency>
             <dependency>
-                <groupId>com.aliyun</groupId>
-                <artifactId>aliyun-java-sdk-onsmqtt</artifactId>
-                <version>1.0.3</version>
+                <groupId>com.alibaba.mqtt</groupId>
+                <artifactId>server-sdk</artifactId>
+                <version>1.0.0.Final</version>
             </dependency>
             <dependency>
                 <groupId>com.aliyun</groupId>

@@ -16,7 +16,7 @@ import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelPipelineAccessor;
 import com.langtuo.teamachine.dao.po.device.ModelPO;
 import com.langtuo.teamachine.dao.po.device.ModelPipelinePO;
-import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     private MachineAccessor machineAccessor;
 
     @Resource
-    private MqttPublisher4Console mqttPublisher4Console;
+    private MqttProducer mqttProducer;
 
     @Autowired
     private MessageSource messageSource;
@@ -133,7 +133,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttPublisher4Console.send4Model(request.getModelCode());
+        mqttProducer.sendToConsole4Model(request.getModelCode());
 
         return teaMachineResult;
     }

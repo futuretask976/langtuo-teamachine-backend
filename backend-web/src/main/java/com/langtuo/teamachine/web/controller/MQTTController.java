@@ -3,7 +3,6 @@ package com.langtuo.teamachine.web.controller;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
-import com.langtuo.teamachine.mqtt.MqttService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -18,9 +17,6 @@ import javax.annotation.Resource;
 @RequestMapping("/mqtt")
 @Slf4j
 public class MQTTController {
-    @Resource
-    private MqttService mqttService;
-
     @Autowired
     private MessageSource messageSource;
 

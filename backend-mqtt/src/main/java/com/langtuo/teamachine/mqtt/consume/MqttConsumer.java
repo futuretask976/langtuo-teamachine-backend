@@ -1,6 +1,11 @@
 package com.langtuo.teamachine.mqtt.consume;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.mqtt.server.ServerConsumer;
+import com.alibaba.mqtt.server.callback.MessageListener;
+import com.alibaba.mqtt.server.config.ChannelConfig;
+import com.alibaba.mqtt.server.config.ConsumerConfig;
+import com.alibaba.mqtt.server.model.MessageProperties;
 import com.langtuo.teamachine.mqtt.concurrent.ExeService4Consume;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.consume.worker.device.MachineDispatchWorker;
@@ -13,13 +18,59 @@ import com.langtuo.teamachine.mqtt.consume.worker.rule.CleanRuleDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.rule.DrainRuleDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.rule.WarningRuleDispatchWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.user.TenantPostWorker;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
+import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PreDestroy;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 @Component
 @Slf4j
-public class MqttConsumer {
+public class MqttConsumer implements InitializingBean {
+    private ServerConsumer serverConsumer;
+
+    @Override
+    public void afterPropertiesSet() throws IOException, TimeoutException {
+        if (serverConsumer == null) {
+            synchronized (MqttConsumer.class) {
+                if (serverConsumer == null) {
+                    init();
+                }
+            }
+        }
+    }
+
+    @PreDestroy
+    public void onDestroy() {
+        if (serverConsumer != null) {
+            try {
+                log.info("$$$$$ MqttConsumer#onDestroy entering");
+                serverConsumer.stop();
+            } catch (IOException e) {
+                log.error("MqttConsumer|stopServerConsumer|fatal|" + e.getMessage(), e);
+            }
+        }
+    }
+
+    public void init() throws IOException, TimeoutException {
+        ChannelConfig channelConfig = MqttUtils.getChannelConfig();
+        serverConsumer = new ServerConsumer(channelConfig, new ConsumerConfig());
+        serverConsumer.start();
+        serverConsumer.subscribeTopic(MqttConsts.CONSOLE_PARENT_TOPIC, new MessageListener() {
+            @Override
+            public void process(String msgId, MessageProperties messageProperties, byte[] payload) {
+                String firstTopic = messageProperties.getFirstTopic();
+                String strPayload = new String(payload);
+                consume(firstTopic, strPayload);
+            }
+        });
+    }
+
     public void consume(String topic, String payload) {
         if (StringUtils.isBlank(topic) || StringUtils.isBlank(payload)) {
             log.error("receive msg error, topic=" + topic + ", payload=" + payload);

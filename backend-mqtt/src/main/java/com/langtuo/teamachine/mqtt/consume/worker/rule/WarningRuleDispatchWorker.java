@@ -4,17 +4,15 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
-import com.langtuo.teamachine.api.model.rule.DrainRuleDTO;
-import com.langtuo.teamachine.api.model.rule.DrainRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
-import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
+import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -62,9 +60,9 @@ public class WarningRuleDispatchWorker implements Runnable {
             log.info("machine code list is empty, stop worker");
         }
 
-        MqttService mqttService = getMQTTService();
+        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
+            mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 
@@ -72,12 +70,6 @@ public class WarningRuleDispatchWorker implements Runnable {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         WarningRuleMgtService warningRuleMgtService = appContext.getBean(WarningRuleMgtService.class);
         return warningRuleMgtService;
-    }
-
-    private MqttService getMQTTService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MqttService mqttService = appContext.getBean(MqttService.class);
-        return mqttService;
     }
 
     private ShopMgtService getShopMgtService() {

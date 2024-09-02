@@ -10,12 +10,11 @@ import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -60,9 +59,9 @@ public class CleanRuleDispatchWorker implements Runnable {
             log.info("machine code list is empty, stop worker");
         }
 
-        MqttService mqttService = SpringUtils.getMQTTService();
+        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
         machineCodeList.stream().forEach(machineCode -> {
-            mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
+            mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 

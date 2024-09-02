@@ -16,7 +16,7 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
-import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     private ShopAccessor shopAccessor;
 
     @Resource
-    private MqttPublisher4Console mqttPublisher4Console;
+    private MqttProducer mqttProducer;
     
     @Autowired
     private MessageSource messageSource;
@@ -180,7 +180,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttPublisher4Console.send4Machine(request.getTenantCode(), request.getMachineCode());
+        mqttProducer.sendToConsole4Machine(request.getTenantCode(), request.getMachineCode());
 
         return teaMachineResult;
     }

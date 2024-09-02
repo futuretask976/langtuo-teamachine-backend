@@ -11,7 +11,7 @@ import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.po.user.TenantPO;
-import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
     private TenantAccessor tenantAccessor;
 
     @Resource
-    private MqttPublisher4Console mqttPublisher4Console;
+    private MqttProducer mqttProducer;
     
     @Autowired
     private MessageSource messageSource;
@@ -111,7 +111,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         }
 
         // 异步发送消息准备添加超级租户管理角色和超级租户管理员
-        mqttPublisher4Console.send4NewTenant(tenantCode);
+        mqttProducer.sendToConsole4NewTenant(tenantCode);
 
         return teaMachineResult;
     }

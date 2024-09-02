@@ -20,7 +20,7 @@ import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
-import com.langtuo.teamachine.mqtt.publish.MqttPublisher4Console;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     private ShopAccessor shopAccessor;
 
     @Resource
-    private MqttPublisher4Console mqttPublisher4Console;
+    private MqttProducer mqttProducer;
 
     @Autowired
     private MessageSource messageSource;
@@ -100,7 +100,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Override
     public TeaMachineResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode) {
-        mqttPublisher4Console.send4MenuInitList(tenantCode, shopCode, machineCode);
+        mqttProducer.sendToConsole4MenuInitList(tenantCode, shopCode, machineCode);
         return TeaMachineResult.success();
     }
 
@@ -236,7 +236,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttPublisher4Console.send4Menu(
+        mqttProducer.sendToConsole4Menu(
                 request.getTenantCode(), request.getMenuCode());
 
         return teaMachineResult;

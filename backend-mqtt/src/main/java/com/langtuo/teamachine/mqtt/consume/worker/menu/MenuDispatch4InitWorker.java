@@ -11,8 +11,8 @@ import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
-import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -87,8 +87,8 @@ public class MenuDispatch4InitWorker implements Runnable {
         log.info("$$$$$ MenuDispatch4InitWorker jsonMsg=" + jsonMsg.toJSONString());
 
         // 准备发送
-        MqttService mqttService = SpringUtils.getMQTTService();
-        mqttService.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
+        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
+        mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
     }
 
     private JSONArray getDispatchCont() {

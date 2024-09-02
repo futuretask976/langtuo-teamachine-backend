@@ -3,8 +3,8 @@ package com.langtuo.teamachine.mqtt.consume.worker.drink;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
-import com.langtuo.teamachine.mqtt.MqttService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -44,8 +44,8 @@ public class AccuracyTplDispatchWorker implements Runnable {
         jsonMsg.put(MqttConsts.SEND_KEY_ACCURACY_TPL, jsonDispatchCont);
         log.info("$$$$$ AccuracyDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
-        MqttService mqttService = SpringUtils.getMQTTService();
-        mqttService.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
+        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
+        mqttProducer.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
     }
 
     private JSONObject getDispatchCont() {
