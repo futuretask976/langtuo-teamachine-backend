@@ -54,28 +54,6 @@ public class MqttConsts {
      * 发送的消息中的 key 关键字
      */
     public static final String SEND_KEY_BIZ_CODE = "bizCode";
-    public static final String SEND_KEY_TENANT_CODE = "tenantCode";
-    public static final String SEND_KEY_MODEL_CODE = "modelCode";
-    public static final String SEND_KEY_MACHINE_CODE = "machineCode";
-    public static final String SEND_KEY_TEMPLATE_CODE = "templateCode";
-    public static final String SEND_KEY_SHOP_CODE = "shopCode";
-    public static final String SEND_KEY_MENU_CODE = "menuCode";
-    public static final String SEND_KEY_DRAIN_RULE_CODE = "openRuleCode";
-    public static final String SEND_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
-    public static final String SEND_KEY_WARNING_RULE_CODE = "warningRuleCode";
-
-    /**
-     * console 用的消息 bizCode
-     */
-    public static final String BIZ_CODE_PREPARE_MODEL = "prepare_model";
-    public static final String BIZ_CODE_PREPARE_MACHINE = "prepare_machine";
-    public static final String BIZ_CODE_PREPARE_TENANT = "prepare_tenant";
-    public static final String BIZ_CODE_PREPARE_ACCURACY_TPL = "prepare_accuracy";
-    public static final String BIZ_CODE_PREPARE_MENU = "prepare_menu";
-    public static final String BIZ_CODE_PREPARE_MENU_INIT_LIST = "prepare_menu_init_list";
-    public static final String BIZ_CODE_PREPARE_DRAIN_RULE = "prepare_open_rule";
-    public static final String BIZ_CODE_PREPARE_CLEAN_RULE = "prepare_clean_rule";
-    public static final String BIZ_CODE_PREPARE_WARNING_RULE = "prepare_warning_rule";
 
     /**
      * 接受设备端消息用的 bizCode

@@ -50,7 +50,7 @@ public class DrainRuleDispatchWorker implements Runnable {
         JSONObject jsonDispatchCont = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_OPEN_RULE);
+        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_DRAIN_RULE);
         jsonMsg.put(BizConsts.SEND_KEY_OPEN_RULE, jsonDispatchCont);
         log.info("$$$$$ OpenRuleDispatchWorker jsonMsg: " + jsonMsg.toJSONString());
 

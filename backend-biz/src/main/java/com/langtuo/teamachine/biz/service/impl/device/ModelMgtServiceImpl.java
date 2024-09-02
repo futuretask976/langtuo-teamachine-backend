@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.biz.service.impl.device;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.model.device.ModelDTO;
 import com.langtuo.teamachine.api.model.device.ModelPipelineDTO;
@@ -8,6 +9,7 @@ import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
 import com.langtuo.teamachine.api.request.device.ModelPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
+import com.langtuo.teamachine.biz.service.aync.AsyncDispatcher;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
@@ -16,6 +18,7 @@ import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelPipelineAccessor;
 import com.langtuo.teamachine.dao.po.device.ModelPO;
 import com.langtuo.teamachine.dao.po.device.ModelPipelinePO;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +44,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     private MachineAccessor machineAccessor;
 
     @Resource
-    private MqttProducer mqttProducer;
+    private AsyncDispatcher asyncDispatcher;
 
     @Autowired
     private MessageSource messageSource;
@@ -133,7 +136,10 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttProducer.sendToConsole4Model(request.getModelCode());
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_MODEL);
+        jsonPayload.put(BizConsts.SEND_KEY_MODEL_CODE, request.getModelCode());
+        asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;
     }

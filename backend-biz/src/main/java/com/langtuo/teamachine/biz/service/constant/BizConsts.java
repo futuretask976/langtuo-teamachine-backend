@@ -224,6 +224,15 @@ public class BizConsts {
      * 发送的消息中的 key 关键字
      */
     public static final String SEND_KEY_BIZ_CODE = "bizCode";
+    public static final String SEND_KEY_TENANT_CODE = "tenantCode";
+    public static final String SEND_KEY_MODEL_CODE = "modelCode";
+    public static final String SEND_KEY_MACHINE_CODE = "machineCode";
+    public static final String SEND_KEY_TEMPLATE_CODE = "templateCode";
+    public static final String SEND_KEY_SHOP_CODE = "shopCode";
+    public static final String SEND_KEY_MENU_CODE = "menuCode";
+    public static final String SEND_KEY_DRAIN_RULE_CODE = "drainRuleCode";
+    public static final String SEND_KEY_CLEAN_RULE_CODE = "cleanRuleCode";
+    public static final String SEND_KEY_WARNING_RULE_CODE = "warningRuleCode";
     public static final String SEND_KEY_MODEL = "model";
     public static final String SEND_KEY_MACHINE = "machine";
     public static final String SEND_KEY_MD5_AS_HEX = "md5AsHex";
@@ -236,25 +245,25 @@ public class BizConsts {
     /**
      * console 用的消息 bizCode
      */
-    public static final String BIZ_CODE_PREPARE_MODEL = "prepare_model";
-    public static final String BIZ_CODE_PREPARE_MACHINE = "prepare_machine";
-    public static final String BIZ_CODE_PREPARE_TENANT = "prepare_tenant";
-    public static final String BIZ_CODE_PREPARE_ACCURACY_TPL = "prepare_accuracy";
-    public static final String BIZ_CODE_PREPARE_MENU = "prepare_menu";
-    public static final String BIZ_CODE_PREPARE_MENU_INIT_LIST = "prepare_menu_init_list";
-    public static final String BIZ_CODE_PREPARE_DRAIN_RULE = "prepare_open_rule";
-    public static final String BIZ_CODE_PREPARE_CLEAN_RULE = "prepare_clean_rule";
-    public static final String BIZ_CODE_PREPARE_WARNING_RULE = "prepare_warning_rule";
+    public static final String BIZ_CODE_PREPARE_MODEL = "prepareModel";
+    public static final String BIZ_CODE_PREPARE_MACHINE = "prepareMachine";
+    public static final String BIZ_CODE_PREPARE_TENANT = "prepareTenant";
+    public static final String BIZ_CODE_PREPARE_ACCURACY_TPL = "prepareAccuracy";
+    public static final String BIZ_CODE_PREPARE_MENU = "prepareMenu";
+    public static final String BIZ_CODE_PREPARE_MENU_INIT_LIST = "prepareMenuInitIist";
+    public static final String BIZ_CODE_PREPARE_DRAIN_RULE = "prepareOpenRule";
+    public static final String BIZ_CODE_PREPARE_CLEAN_RULE = "prepareCleanRule";
+    public static final String BIZ_CODE_PREPARE_WARNING_RULE = "prepareWarningRule";
 
     /**
      * dispatch 用的消息 bizCode
      */
-    public static final String BIZ_CODE_DISPATCH_ACCURACY = "dispatch_accuracy";
-    public static final String BIZ_CODE_DISPATCH_CLEAN_RULE = "dispatch_clean_rule";
-    public static final String BIZ_CODE_DISPATCH_MACHINE = "dispatch_machine";
-    public static final String BIZ_CODE_DISPATCH_MENU = "dispatch_menu";
-    public static final String BIZ_CODE_DISPATCH_MENU_INIT_LIST = "dispatch_menu_init_list";
-    public static final String BIZ_CODE_DISPATCH_MODEL = "dispatch_model";
-    public static final String BIZ_CODE_DISPATCH_OPEN_RULE = "dispatch_open_rule";
-    public static final String BIZ_CODE_DISPATCH_WARNING_RULE = "dispatch_warning_rule";
+    public static final String BIZ_CODE_DISPATCH_ACCURACY = "dispatchAccuracy";
+    public static final String BIZ_CODE_DISPATCH_CLEAN_RULE = "dispatchCleanRule";
+    public static final String BIZ_CODE_DISPATCH_MACHINE = "dispatchMachine";
+    public static final String BIZ_CODE_DISPATCH_MENU = "dispatchMenu";
+    public static final String BIZ_CODE_DISPATCH_MENU_INIT_LIST = "dispatchMenuInitList";
+    public static final String BIZ_CODE_DISPATCH_MODEL = "dispatchModel";
+    public static final String BIZ_CODE_DISPATCH_DRAIN_RULE = "dispatchDrainRule";
+    public static final String BIZ_CODE_DISPATCH_WARNING_RULE = "dispatchWarningRule";
 }

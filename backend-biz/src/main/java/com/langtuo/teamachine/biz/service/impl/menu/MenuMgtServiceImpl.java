@@ -1,6 +1,8 @@
 package com.langtuo.teamachine.biz.service.impl.menu;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.langtuo.teamachine.biz.service.aync.AsyncDispatcher;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDTO;
@@ -20,6 +22,7 @@ import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +51,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     private ShopAccessor shopAccessor;
 
     @Resource
-    private MqttProducer mqttProducer;
+    private AsyncDispatcher asyncDispatcher;
 
     @Autowired
     private MessageSource messageSource;
@@ -100,7 +103,13 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Override
     public TeaMachineResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode) {
-        mqttProducer.sendToConsole4MenuInitList(tenantCode, shopCode, machineCode);
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_MENU_INIT_LIST);
+        jsonPayload.put(BizConsts.SEND_KEY_TENANT_CODE, tenantCode);
+        jsonPayload.put(BizConsts.SEND_KEY_SHOP_CODE, shopCode);
+        jsonPayload.put(BizConsts.SEND_KEY_MACHINE_CODE, machineCode);
+        asyncDispatcher.dispatch(jsonPayload);
+
         return TeaMachineResult.success();
     }
 
@@ -236,8 +245,11 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttProducer.sendToConsole4Menu(
-                request.getTenantCode(), request.getMenuCode());
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_MENU);
+        jsonPayload.put(BizConsts.SEND_KEY_TENANT_CODE, request.getTenantCode());
+        jsonPayload.put(BizConsts.SEND_KEY_MENU_CODE, request.getMenuCode());
+        asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;
     }

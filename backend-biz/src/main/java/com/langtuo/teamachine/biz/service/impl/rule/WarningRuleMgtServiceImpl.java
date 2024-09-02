@@ -1,6 +1,8 @@
 package com.langtuo.teamachine.biz.service.impl.rule;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.langtuo.teamachine.biz.service.aync.AsyncDispatcher;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
@@ -17,6 +19,7 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +45,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     private ShopAccessor shopAccessor;
 
     @Resource
-    private MqttProducer mqttProducer;
+    private AsyncDispatcher asyncDispatcher;
 
     @Autowired
     private MessageSource messageSource;
@@ -213,8 +216,11 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttProducer.sendToConsole4WarningRule(
-                request.getTenantCode(), request.getWarningRuleCode());
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_WARNING_RULE);
+        jsonPayload.put(BizConsts.SEND_KEY_TENANT_CODE, request.getTenantCode());
+        jsonPayload.put(BizConsts.SEND_KEY_WARNING_RULE_CODE, request.getWarningRuleCode());
+        asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;
     }

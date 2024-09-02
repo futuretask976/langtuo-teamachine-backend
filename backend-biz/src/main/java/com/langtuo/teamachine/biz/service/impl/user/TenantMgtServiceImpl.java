@@ -1,6 +1,8 @@
 package com.langtuo.teamachine.biz.service.impl.user;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.langtuo.teamachine.biz.service.aync.AsyncDispatcher;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.user.TenantDTO;
@@ -11,6 +13,7 @@ import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.po.user.TenantPO;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +33,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
     private TenantAccessor tenantAccessor;
 
     @Resource
-    private MqttProducer mqttProducer;
+    private AsyncDispatcher asyncDispatcher;
     
     @Autowired
     private MessageSource messageSource;
@@ -111,7 +114,10 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         }
 
         // 异步发送消息准备添加超级租户管理角色和超级租户管理员
-        mqttProducer.sendToConsole4NewTenant(tenantCode);
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_TENANT);
+        jsonPayload.put(BizConsts.SEND_KEY_TENANT_CODE, request.getTenantCode());
+        asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;
     }

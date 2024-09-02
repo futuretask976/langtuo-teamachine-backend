@@ -1,6 +1,8 @@
 package com.langtuo.teamachine.biz.service.impl.drink;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.langtuo.teamachine.biz.service.aync.AsyncDispatcher;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
@@ -13,6 +15,7 @@ import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplToppingAccessor;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplToppingPO;
+import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +39,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     private AccuracyTplToppingAccessor accuracyTplToppingAccessor;
 
     @Resource
-    private MqttProducer mqttProducer;
+    private AsyncDispatcher asyncDispatcher;
 
     @Autowired
     private MessageSource messageSource;
@@ -143,7 +146,11 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         }
 
         // 异步发送消息准备配置信息分发
-        mqttProducer.sendToConsole4AccuracyTpl(request.getTenantCode(), request.getTemplateCode());
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_ACCURACY_TPL);
+        jsonPayload.put(BizConsts.SEND_KEY_TENANT_CODE, request.getTenantCode());
+        jsonPayload.put(BizConsts.SEND_KEY_TEMPLATE_CODE, request.getTemplateCode());
+        asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;
     }
