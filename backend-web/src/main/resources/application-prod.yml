@@ -5,7 +5,7 @@ server:
 
 spring:
   redis:
-    host: 47.102.144.19
+    host: 127.0.0.1
     port: 6379
     # username: r-bp13wg6c4rk6hn0rio
     password: langtuopassword
