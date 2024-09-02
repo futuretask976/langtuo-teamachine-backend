@@ -79,7 +79,6 @@ public class MqttService implements InitializingBean {
     @PreDestroy
     public void onDestroy() {
         try {
-            log.error("$$$$$ mqtt onDestroy entering");
             mqttClient.disconnect();
         } catch (MqttException e) {
             log.error("close mqtt client error: " + e.getMessage(), e);
@@ -100,9 +99,6 @@ public class MqttService implements InitializingBean {
                 // 客户端连接成功后就需要尽快订阅需要的 topic
                 try {
                     String[] topicFilters = getTopicFilters();
-                    for (String topicFilter : topicFilters) {
-                        log.info("$$$$$ topicFilter = " + topicFilter);
-                    }
                     int[] qos = getQos();
                     mqttClient.subscribe(topicFilters, qos);
                 } catch (MqttException e) {

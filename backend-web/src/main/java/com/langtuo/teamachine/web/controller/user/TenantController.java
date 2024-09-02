@@ -40,8 +40,6 @@ public class TenantController {
      */
     @GetMapping(value = "/list")
     public TeaMachineResult<List<TenantDTO>> list() {
-        String greeting = messageSource.getMessage("greeting", null, Locale.getDefault());
-        log.info("$$$$$ list greeting=" + greeting);
         TeaMachineResult<List<TenantDTO>> rtn = service.list();
         return rtn;
     }
