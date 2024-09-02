@@ -7,11 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 public class MqttSendCallback implements SendCallback {
     @Override
     public void onSuccess(String msgId) {
-        log.info("MqttSendCallback|sendMsg|onSuccess|" + msgId);
+        log.info("mqttSendCallback|sendMsg|onSuccess|" + msgId);
     }
 
     @Override
     public void onFail() {
-        log.error("MqttSendCallback|sendMsg|onFail|");
+        log.error("mqttSendCallback|sendMsg|onFail|");
     }
 }

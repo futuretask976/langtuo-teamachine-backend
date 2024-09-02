@@ -56,7 +56,7 @@ public class MqttProducer implements InitializingBean {
 
     public void sendToConsole(String topic, String payload) {
         try {
-            log.error("$$$$$ mqttProducer|sendToConsole|prepare|" + topic + "|" + payload);
+            log.info("$$$$$ mqttProducer|sendToConsole|prepare|" + topic + "|" + payload);
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new MqttSendCallback());
         } catch (IOException e) {
             log.error("mqttProducer|sendToConsole|fatal|" + e.getMessage(), e);
