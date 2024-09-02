@@ -3,7 +3,6 @@ package com.langtuo.teamachine.mqtt.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.mqtt.server.config.ChannelConfig;
-import com.langtuo.teamachine.mqtt.config.MqttConfig;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -44,7 +43,7 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 
 /**
- * Created by alvin on 17-3-29.
+ * @author miya
  */
 @Slf4j
 public class MqttUtils {
@@ -299,19 +298,19 @@ public class MqttUtils {
     public static ChannelConfig getChannelConfig() {
         // 此处参数内容为示意。接入点地址，购买实例，且配置完成后即可获取，接入点地址必须填写分配的域名，
         // 不得使用 IP 地址直接连接，否则可能会导致客户端异常
-        String domain = MqttConfig.ENDPOINT;
+        String domain = MqttConsts.ENDPOINT;
 
         // 使用的协议和端口必须匹配，为5672
         int port = 5672;
 
         // 此处参数内容为示意。MQTT 实例 ID，购买后控制台获取
-        String instanceId = MqttConfig.INSTANCE_ID;
+        String instanceId = MqttConsts.INSTANCE_ID;
 
         // 此处参数内容为示意。账号 accesskey，从账号系统控制台获取
-        String accessKey = MqttConfig.ACCESS_KEY; // "accessKey";
+        String accessKey = MqttConsts.ACCESS_KEY; // "accessKey";
 
         // 此处参数内容为示意。账号 secretKey，从账号系统控制台获取，仅在Signature鉴权模式下需要设置
-        String secretKey = MqttConfig.ACCESS_KEY_SECRET; // "secretKey";
+        String secretKey = MqttConsts.ACCESS_KEY_SECRET; // "secretKey";
 
         ChannelConfig channelConfig = new ChannelConfig();
         channelConfig.setDomain(domain);
