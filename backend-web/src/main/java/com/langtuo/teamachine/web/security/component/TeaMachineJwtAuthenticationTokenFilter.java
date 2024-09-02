@@ -28,13 +28,13 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
 
-    @Value("${jwt.tokenHeader}")
+    @Value("${teamachine.jwt.tokenHeader}")
     private String tokenHeader;
 
-    @Value("${jwt.tokenHead4Admin}")
+    @Value("${teamachine.jwt.tokenHead4Admin}")
     private String tokenHead4Admin;
 
-    @Value("${jwt.tokenHead4Machine}")
+    @Value("${teamachine.jwt.tokenHead4Machine}")
     private String tokenHead4Machine;
 
     @Override

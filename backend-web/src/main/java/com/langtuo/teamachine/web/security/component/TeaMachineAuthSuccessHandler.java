@@ -17,10 +17,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandler {
-    @Value("${jwt.tokenHead4Admin}")
+    @Value("${teamachine.jwt.tokenHead4Admin}")
     private String tokenHead4Admin;
 
-    @Value("${jwt.tokenHead4Machine}")
+    @Value("${teamachine.jwt.tokenHead4Machine}")
     private String tokenHead4Machine;
 
     @Autowired

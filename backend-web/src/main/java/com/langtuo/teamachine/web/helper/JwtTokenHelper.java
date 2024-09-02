@@ -35,13 +35,13 @@ public class JwtTokenHelper {
     private static final String CLAIM_KEY_TENANT_CODE = "aud";
     private static final String CLAIM_KEY_GMT_CREATED = "created";
 
-    @Value("${jwt.secret}")
+    @Value("${teamachine.jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}")
+    @Value("${teamachine.jwt.expiration}")
     private Long expiration;
 
-    @Value("${jwt.tokenHead4Admin}")
+    @Value("${teamachine.jwt.tokenHead4Admin}")
     private String tokenHead4Admin;
 
     /**

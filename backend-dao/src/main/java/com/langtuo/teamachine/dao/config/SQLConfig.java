@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,19 +36,34 @@ public class SQLConfig {
     public static final String SESSION_FACTORY_NAME = "teaMachineSessionFactory";
     public static final String TABLE_SHARD_INTERCEPTOR_NAME = "teaMachineTableShardInterceptor";
 
+    @Value("${teamachine.database.host}")
+    private String host;
+
+    @Value("${teamachine.database.port}")
+    private String port;
+
+    @Value("${teamachine.database.dbname}")
+    private String dbName;
+
+    @Value("${teamachine.database.username}")
+    private String userName;
+
+    @Value("${teamachine.database.password}")
+    private String password;
+
     @Bean(name = DATA_SOURCE_NAME)
     @Primary
-    public DataSource gxSQLDatasource() {
+    public DataSource getSQLDatasource() {
         return DataSourceBuilder.create()
-                .url("jdbc:mysql://rm-cn-28t3ppz9e0001yho.rwlb.rds.aliyuncs.com:3306/gx_mysql_demo?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true")
-                .username("miya")
-                .password("password@1")
+                .url("jdbc:mysql://" + host + ":" + port + "/" + dbName + "?useSSL=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true")
+                .username(userName)
+                .password(password)
                 .build();
     }
 
     @Bean(name = SESSION_FACTORY_NAME)
     @Primary
-    public SqlSessionFactory gxSQLSessionFactory(@Qualifier(DATA_SOURCE_NAME) DataSource mysqlDataSource)
+    public SqlSessionFactory getSQLSessionFactory(@Qualifier(DATA_SOURCE_NAME) DataSource mysqlDataSource)
             throws Exception {
         SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
         factory.setDataSource(mysqlDataSource);
@@ -59,12 +75,12 @@ public class SQLConfig {
     }
 
     @Bean(name = JDBC_TEMPLATE_NAME)
-    public JdbcTemplate gxSQLJdbcTemplate(@Qualifier(DATA_SOURCE_NAME) DataSource mysqlDataSource) {
+    public JdbcTemplate getSQLJdbcTemplate(@Qualifier(DATA_SOURCE_NAME) DataSource mysqlDataSource) {
         return new JdbcTemplate(mysqlDataSource);
     }
 
     @Bean(name = TABLE_SHARD_INTERCEPTOR_NAME)
-    public Interceptor gxTableShardInterceptor() {
+    public Interceptor getTableShardInterceptor() {
         return new LangTuoTableShardInterceptor();
     }
 }

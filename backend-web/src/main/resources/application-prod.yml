@@ -1,68 +1,42 @@
+server:
+  servlet:
+    context-path: /teamachinebackend
+  port: 80
+
 spring:
-  application:
-    name: teamachine-backend
-  messages:
-    basename: messages
-    encoding: UTF-8
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  profiles:
-    active: dev # 默认为开发环境
   redis:
     host: 47.102.144.19
     port: 6379
     # username: r-bp13wg6c4rk6hn0rio
     password: langtuopassword
-  servlet:
-    multipart:
-      enabled: true # 开启文件上传
-      max-file-size: 10MB # 限制文件上传大小为10M
-      max-request-size: 10MB # 设置请求的最大尺寸
-  security:
-    user:
-      name: root
-      password: root
-      role: admin
-  thymeleaf:
-    content-type: text/html
-    cache: false
-    mode: HTML
 
-jwt:
-  tokenHeader: Authorization # JWT 存储的请求头
-  secret: teamachine-secret # JWT 加解密使用的密钥
-  expiration: 604800 # JWT 的超期限时间，单位分钟(60*60*24*7)
-  tokenHead4Admin: 'AdminBearer '  # JWT 负载中拿到开头
-  tokenHead4Machine: 'MachineBearer '  # JWT 负载中拿到开头
-
-mybatis:
-  configuration:
-    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
-  mapper-locations:
-    - classpath:dao/*.xml
-    - classpath*:com/**/mapper/*.xml
-
-secure:
-  ignored:
-    urls: # 安全路径白名单，不包含 tomcat 中 context 的 path（从之后开始算）
-      - /swagger-ui/
-      - /swagger-resources/**
-      - /**/*.html
-      - /**/*.js
-      - /**/*.css
-      - /**/*.png
-      - /**/*.map
-      - /favicon.ico
-      - /actuator/**
-      - /druid/**
-      - /login/**
-      - /logout/**
-      - /userset/tenant/list/**
-      - /mqtt/**
-
-server:
-  servlet:
-    context-path: /teamachinebackend
-  port: 8080
-
+teamachine:
+  database:
+    host: rm-cn-28t3ppz9e0001yho.rwlb.rds.aliyuncs.com
+    port: 3306
+    dbname: gx_mysql_demo
+    username: miya
+    password: password@1
+  jwt:
+    tokenHeader: Authorization # JWT 存储的请求头
+    secret: teamachine-secret # JWT 加解密使用的密钥
+    expiration: 604800 # JWT 的超期限时间，单位分钟(60*60*24*7)
+    tokenHead4Admin: 'AdminBearer '  # JWT 负载中拿到开头
+    tokenHead4Machine: 'MachineBearer '  # JWT 负载中拿到开头
+  secure:
+    ignored:
+      urls: # 安全路径白名单，不包含 tomcat 中 context 的 path（从之后开始算）
+        - /swagger-ui/
+        - /swagger-resources/**
+        - /**/*.html
+        - /**/*.js
+        - /**/*.css
+        - /**/*.png
+        - /**/*.map
+        - /favicon.ico
+        - /actuator/**
+        - /druid/**
+        - /login/**
+        - /logout/**
+        - /userset/tenant/list/**
+        - /mqtt/**
