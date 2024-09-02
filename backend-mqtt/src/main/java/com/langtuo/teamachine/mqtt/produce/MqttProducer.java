@@ -43,7 +43,7 @@ public class MqttProducer implements InitializingBean {
                 log.info("$$$$$ MqttProducer#onDestroy entering");
                 serverProducer.stop();
             } catch (IOException e) {
-                log.error("MqttProducer|stopServerProducer|fatal|" + e.getMessage(), e);
+                log.error("mqttProducer|stopServerProducer|fatal|" + e.getMessage(), e);
             }
         }
     }
@@ -56,9 +56,10 @@ public class MqttProducer implements InitializingBean {
 
     public void sendToConsole(String topic, String payload) {
         try {
+            log.error("mqttProducer|sendToConsole|prepare|" + topic + "|" + payload);
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new MqttSendCallback());
         } catch (IOException e) {
-            log.error("MqttProducer|sendToConsole|fatal|" + e.getMessage(), e);
+            log.error("mqttProducer|sendToConsole|fatal|" + e.getMessage(), e);
         }
     }
 
@@ -175,7 +176,7 @@ public class MqttProducer implements InitializingBean {
         try {
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new MqttSendCallback());
         } catch (IOException e) {
-            log.error("MqttProducer|sendP2PMsgByTenant|fatal|" + e.getMessage(), e);
+            log.error("mqttProducer|sendP2PMsgByTenant|fatal|" + e.getMessage(), e);
         }
     }
 
@@ -184,7 +185,7 @@ public class MqttProducer implements InitializingBean {
         try {
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new MqttSendCallback());
         } catch (IOException e) {
-            log.error("MqttProducer|sendBroadcastMsgByTenant|fatal|" + e.getMessage(), e);
+            log.error("mqttProducer|sendBroadcastMsgByTenant|fatal|" + e.getMessage(), e);
         }
     }
 }
