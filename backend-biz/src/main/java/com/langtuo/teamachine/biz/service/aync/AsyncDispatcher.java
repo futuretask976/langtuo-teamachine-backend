@@ -13,19 +13,34 @@ import com.langtuo.teamachine.biz.service.aync.worker.rule.DrainRuleDispatchWork
 import com.langtuo.teamachine.biz.service.aync.worker.rule.WarningRuleDispatchWorker;
 import com.langtuo.teamachine.biz.service.aync.worker.user.TenantPostWorker;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.mqtt.consume.MqttConsumer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 @Component
 @Slf4j
-public class AsyncDispatcher {
+public class AsyncDispatcher implements InitializingBean {
     /**
      * 存放需要异步执行的 woker
      */
     private Map<String, Function<JSONObject, Runnable>> workerMap;
+
+    @Override
+    public void afterPropertiesSet() {
+        if (workerMap == null) {
+            synchronized (MqttConsumer.class) {
+                if (workerMap == null) {
+                    initWorkerMap();
+                }
+            }
+        }
+    }
 
     public void dispatch(JSONObject jsonPayload) {
         if (jsonPayload == null) {
@@ -44,16 +59,6 @@ public class AsyncDispatcher {
     }
 
     private void initWorkerMap() {
-        if (workerMap == null) {
-            synchronized (AsyncDispatcher.class) {
-                if (workerMap == null) {
-                    doInitWorkerMap();
-                }
-            }
-        }
-    }
-
-    private void doInitWorkerMap() {
         workerMap = Maps.newHashMap();
         // device 相关
         workerMap.put(BizConsts.BIZ_CODE_PREPARE_MODEL, jsonPayload -> new ModelDispatchWorker(jsonPayload));

@@ -12,7 +12,7 @@ public class AsyncExeService {
         if (executorService == null) {
             synchronized (AsyncExeService.class) {
                 if (executorService == null) {
-                    executorService = new ThreadPoolExecutor(1, Integer.MAX_VALUE,
+                    executorService = new ThreadPoolExecutor(10, Integer.MAX_VALUE,
                             10L, TimeUnit.SECONDS,
                             new SynchronousQueue<Runnable>());
                 }

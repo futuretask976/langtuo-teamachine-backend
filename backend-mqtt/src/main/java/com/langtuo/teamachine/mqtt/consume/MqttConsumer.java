@@ -40,7 +40,15 @@ public class MqttConsumer implements InitializingBean {
         if (serverConsumer == null) {
             synchronized (MqttConsumer.class) {
                 if (serverConsumer == null) {
-                    init();
+                    initServerConsumer();
+                }
+            }
+        }
+
+        if (workerMap == null) {
+            synchronized (MqttConsumer.class) {
+                if (workerMap == null) {
+                    initWorkerMap();
                 }
             }
         }
@@ -58,7 +66,7 @@ public class MqttConsumer implements InitializingBean {
         }
     }
 
-    public void init() throws IOException, TimeoutException {
+    public void initServerConsumer() throws IOException, TimeoutException {
         ChannelConfig channelConfig = MqttUtils.getChannelConfig();
         serverConsumer = new ServerConsumer(channelConfig, new ConsumerConfig());
         serverConsumer.start();
@@ -71,12 +79,19 @@ public class MqttConsumer implements InitializingBean {
         });
     }
 
+    private void initWorkerMap() {
+        workerMap = Maps.newHashMap();
+        // record 相关
+        workerMap.put(MqttConsts.BIZ_CODE_INVALID_ACT_RECORD, jsonPayload -> new InvalidActRecordWorker(jsonPayload));
+        workerMap.put(MqttConsts.BIZ_CODE_SUPPLY_ACT_RECORD, jsonPayload -> new SupplyActRecordWorker(jsonPayload));
+        workerMap.put(MqttConsts.BIZ_CODE_DRAIN_ACT_RECORD, jsonPayload -> new DrainActRecordWorker(jsonPayload));
+        workerMap.put(MqttConsts.BIZ_CODE_CLEAN_ACT_RECORD, jsonPayload -> new CleanActRecordWorker(jsonPayload));
+        workerMap.put(MqttConsts.BIZ_CODE_ORDER_ACT_RECORD, jsonPayload -> new OrderActRecordWorker(jsonPayload));
+    }
+
     public void dispatch(String payload) {
         if (StringUtils.isBlank(payload)) {
             return;
-        }
-        if (workerMap == null) {
-            initWorkerMap();
         }
 
         JSONObject jsonPayload = JSONObject.parseObject(payload);
@@ -88,25 +103,5 @@ public class MqttConsumer implements InitializingBean {
             log.info("mqttConsumer|dispatch|noMatch|" + bizCode);
         }
         ConsumeExeService.getExeService().submit(function.apply(jsonPayload));
-    }
-
-    private void initWorkerMap() {
-        if (workerMap == null) {
-            synchronized (MqttConsumer.class) {
-                if (workerMap == null) {
-                    doInitWorkerMap();
-                }
-            }
-        }
-    }
-
-    private void doInitWorkerMap() {
-        workerMap = Maps.newHashMap();
-        // record 相关
-        workerMap.put(MqttConsts.BIZ_CODE_INVALID_ACT_RECORD, jsonPayload -> new InvalidActRecordWorker(jsonPayload));
-        workerMap.put(MqttConsts.BIZ_CODE_SUPPLY_ACT_RECORD, jsonPayload -> new SupplyActRecordWorker(jsonPayload));
-        workerMap.put(MqttConsts.BIZ_CODE_DRAIN_ACT_RECORD, jsonPayload -> new DrainActRecordWorker(jsonPayload));
-        workerMap.put(MqttConsts.BIZ_CODE_CLEAN_ACT_RECORD, jsonPayload -> new CleanActRecordWorker(jsonPayload));
-        workerMap.put(MqttConsts.BIZ_CODE_ORDER_ACT_RECORD, jsonPayload -> new OrderActRecordWorker(jsonPayload));
     }
 }
