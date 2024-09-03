@@ -43,6 +43,7 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
         // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录成功
         LoginSuccessDTO dto = new LoginSuccessDTO();
         dto.setJwtToken(tokenHead4Admin + jwtTokenHelper.generateToken(authUser));
+        dto.setLoginName(authUser.getUsername());
         TeaMachineResult<LoginSuccessDTO> result = TeaMachineResult.success(dto);
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();
