@@ -67,6 +67,7 @@ public class MqttProducer implements InitializingBean {
     public void sendBroadcastMsgByTenant(String tenantCode, String payload) {
         String topic = tenantCode + MqttConsts.TENANT_PARENT_TOPIC_POSTFIX;
         try {
+            log.info("$$$$$ MqttProducer#sendBroadcastMsgByTenant topic=" + topic + ", payload=" + payload);
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new MqttSendCallback());
         } catch (IOException e) {
             log.error("mqttProducer|sendBroadcastMsgByTenant|fatal|" + e.getMessage(), e);
