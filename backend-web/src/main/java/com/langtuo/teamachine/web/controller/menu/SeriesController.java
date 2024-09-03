@@ -17,7 +17,7 @@ public class SeriesController {
     private SeriesMgtService service;
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/menuset/series/tenant_001/shopGroup_001/get
+     * url: http://{host}:{port}/teamachinebackend/menuset/series/{tenantcode}/{seriescode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{seriescode}/get")
@@ -28,7 +28,7 @@ public class SeriesController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/menuset/series/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/menuset/series/list?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -39,7 +39,7 @@ public class SeriesController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/menuset/series/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/menuset/series/search?tenantCode={tenantCode}&seriesCode={seriesCode}&seriesName={seriesName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")

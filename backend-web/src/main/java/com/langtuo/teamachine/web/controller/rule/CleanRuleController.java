@@ -19,7 +19,7 @@ public class CleanRuleController {
     private CleanRuleMgtService service;
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/tenant_001/shopGroup_001/get
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/{tenantcode}/{cleanrulecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{cleanrulecode}/get")
@@ -30,7 +30,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/list?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -41,7 +41,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/listbyshop?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/listbyshop?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -53,7 +53,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/search?tenantCode={tenantCode}&cleanRuleCode={cleanRuleCode}&cleanRuleName={cleanRuleName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")

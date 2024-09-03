@@ -41,7 +41,7 @@ public class DrainRuleController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/listbyshop?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/listbyshop?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
