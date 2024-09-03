@@ -80,8 +80,8 @@ public class ToppingAccessor {
     public int insert(ToppingPO po) {
         int inserted = mapper.insert(po);
         if (inserted == DaoConsts.INSERTED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCount(po.getTenantCode(), po.getToppingTypeCode());
         }
         return inserted;
     }
@@ -91,6 +91,7 @@ public class ToppingAccessor {
         if (updated == DaoConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCount(po.getTenantCode(), po.getToppingTypeCode());
         }
         return updated;
     }
@@ -103,8 +104,9 @@ public class ToppingAccessor {
 
         int deleted = mapper.delete(tenantCode, toppingCode);
         if (deleted == DaoConsts.DELETED_ONE_ROW) {
-            deleteCacheOne(tenantCode, po.getToppingCode(), po.getToppingName());
-            deleteCacheList(tenantCode);
+            deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
+            deleteCacheList(po.getTenantCode());
+            deleteCacheCount(po.getTenantCode(), po.getToppingTypeCode());
         }
         return deleted;
     }
@@ -177,5 +179,9 @@ public class ToppingAccessor {
 
     private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
+    }
+
+    private void deleteCacheCount(String tenantCode, String toppingTypeCode) {
+        redisManager.deleteKey(getCacheCountKey(tenantCode, toppingTypeCode));
     }
 }

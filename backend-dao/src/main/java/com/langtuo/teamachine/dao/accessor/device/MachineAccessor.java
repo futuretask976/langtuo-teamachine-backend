@@ -95,8 +95,8 @@ public class MachineAccessor {
     public int insert(MachinePO po) {
         int inserted = mapper.insert(po);
         if (inserted == DaoConsts.INSERTED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode(), po.getShopCode());
+            deleteCacheCount(po.getModelCode());
         }
         return inserted;
     }
@@ -106,6 +106,7 @@ public class MachineAccessor {
         if (updated == DaoConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode(), po.getShopCode());
+            deleteCacheCount(po.getModelCode());
         }
         return updated;
     }
@@ -120,6 +121,7 @@ public class MachineAccessor {
         if (deleted == DaoConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, machineCode);
             deleteCacheList(tenantCode, po.getShopCode());
+            deleteCacheCount(po.getModelCode());
         }
         return deleted;
     }
@@ -179,5 +181,9 @@ public class MachineAccessor {
     private void deleteCacheList(String tenantCode, String shopCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, shopCode));
         redisManager.deleteKey(getCacheListKey(tenantCode, null));
+    }
+
+    private void deleteCacheCount(String modelCode) {
+        redisManager.deleteKey(getCacheCountKey(modelCode));
     }
 }

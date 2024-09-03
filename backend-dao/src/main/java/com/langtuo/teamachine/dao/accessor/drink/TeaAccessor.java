@@ -81,6 +81,7 @@ public class TeaAccessor {
         int inserted = mapper.insert(po);
         if (inserted == DaoConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode());
+            deleteCacheCount(po.getTenantCode(), po.getTeaTypeCode());
         }
         return inserted;
     }
@@ -90,6 +91,7 @@ public class TeaAccessor {
         if (updated == DaoConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getTeaCode(), po.getTeaName());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCount(po.getTenantCode(), po.getTeaTypeCode());
         }
         return updated;
     }
@@ -102,8 +104,9 @@ public class TeaAccessor {
 
         int deleted = mapper.delete(tenantCode, teaCode);
         if (deleted == DaoConsts.DELETED_ONE_ROW) {
-            deleteCacheOne(tenantCode, po.getTeaCode(), po.getTeaName());
-            deleteCacheList(tenantCode);
+            deleteCacheOne(po.getTenantCode(), po.getTeaCode(), po.getTeaName());
+            deleteCacheList(po.getTenantCode());
+            deleteCacheCount(po.getTenantCode(), po.getTeaTypeCode());
         }
         return deleted;
     }
@@ -176,5 +179,9 @@ public class TeaAccessor {
 
     private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
+    }
+
+    private void deleteCacheCount(String tenantCode, String teaTypeCode) {
+        redisManager.deleteKey(getCacheCountKey(tenantCode, teaTypeCode));
     }
 }

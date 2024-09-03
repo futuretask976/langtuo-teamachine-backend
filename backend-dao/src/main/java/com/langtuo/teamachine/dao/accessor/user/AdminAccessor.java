@@ -71,7 +71,6 @@ public class AdminAccessor {
     public int insert(AdminPO po) {
         int inserted = mapper.insert(po);
         if (inserted == DaoConsts.INSERTED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getLoginName());
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(po.getTenantCode(), po.getRoleCode());
         }

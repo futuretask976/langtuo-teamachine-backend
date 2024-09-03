@@ -107,8 +107,8 @@ public class ShopAccessor {
     public int insert(ShopPO po) {
         int inserted = mapper.insert(po);
         if (inserted == DaoConsts.INSERTED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
             deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
+            deleteCacheCount(po.getTenantCode(), po.getShopGroupCode());
         }
         return inserted;
     }
@@ -118,6 +118,7 @@ public class ShopAccessor {
         if (updated == DaoConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
             deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
+            deleteCacheCount(po.getTenantCode(), po.getShopGroupCode());
         }
         return updated;
     }
@@ -132,6 +133,7 @@ public class ShopAccessor {
         if (deleted == DaoConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getShopCode(), po.getShopName());
             deleteCacheList(tenantCode, po.getShopGroupCode());
+            deleteCacheCount(po.getTenantCode(), po.getShopGroupCode());
         }
         return deleted;
     }
@@ -225,5 +227,9 @@ public class ShopAccessor {
     private void deleteCacheList(String tenantCode, String shopGroupCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, shopGroupCode));
         redisManager.deleteKey(getCacheListKey(tenantCode, null));
+    }
+
+    private void deleteCacheCount(String tenantCode, String shopGroupCode) {
+        redisManager.deleteKey(getCacheCountKey(tenantCode, shopGroupCode));
     }
 }
