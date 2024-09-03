@@ -113,7 +113,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
         // 异步发送消息准备添加超级租户管理角色和超级租户管理员
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_TENANT);
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_TENANT_UPDATED);
         jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
         asyncDispatcher.dispatch(jsonPayload);
 

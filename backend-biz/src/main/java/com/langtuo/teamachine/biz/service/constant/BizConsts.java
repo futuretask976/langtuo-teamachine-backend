@@ -231,15 +231,15 @@ public class BizConsts {
     /**
      * console 用的消息 bizCode
      */
-    public static final String BIZ_CODE_PREPARE_MODEL = "prepareModel";
-    public static final String BIZ_CODE_PREPARE_MACHINE = "prepareMachine";
-    public static final String BIZ_CODE_PREPARE_TENANT = "prepareTenant";
-    public static final String BIZ_CODE_PREPARE_ACCURACY_TPL = "prepareAccuracy";
-    public static final String BIZ_CODE_PREPARE_MENU = "prepareMenu";
-    public static final String BIZ_CODE_PREPARE_MENU_INIT_LIST = "prepareMenuInitIist";
-    public static final String BIZ_CODE_PREPARE_DRAIN_RULE = "prepareOpenRule";
-    public static final String BIZ_CODE_PREPARE_CLEAN_RULE = "prepareCleanRule";
-    public static final String BIZ_CODE_PREPARE_WARNING_RULE = "prepareWarningRule";
+    public static final String BIZ_CODE_MODEL_UPDATED = "modelUpdated";
+    public static final String BIZ_CODE_MACHINE_UPDATED = "machineUpdated";
+    public static final String BIZ_CODE_TENANT_UPDATED = "tenantUpdated";
+    public static final String BIZ_CODE_ACCURACY_TPL_UPDATED = "accuracyTplUpdated";
+    public static final String BIZ_CODE_MENU_UPDATED = "menuUpdated";
+    public static final String BIZ_CODE_MENU_LIST_REQUESTED = "menuListRequested";
+    public static final String BIZ_CODE_DRAIN_RULE_DISPATCHED = "drainRuleDispatched";
+    public static final String BIZ_CODE_CLEAN_RULE_DISPATCHED = "cleanRuleDispatched";
+    public static final String BIZ_CODE_WARNING_RULE_DISPATCHED = "warningRuleDispatched";
 
     /**
      * dispatch 用的消息 bizCode
@@ -248,7 +248,7 @@ public class BizConsts {
     public static final String BIZ_CODE_DISPATCH_CLEAN_RULE = "dispatchCleanRule";
     public static final String BIZ_CODE_DISPATCH_MACHINE = "dispatchMachine";
     public static final String BIZ_CODE_DISPATCH_MENU = "dispatchMenu";
-    public static final String BIZ_CODE_DISPATCH_MENU_INIT_LIST = "dispatchMenuInitList";
+    public static final String BIZ_CODE_DISPATCH_MENU_LIST = "dispatchMenuList";
     public static final String BIZ_CODE_DISPATCH_MODEL = "dispatchModel";
     public static final String BIZ_CODE_DISPATCH_DRAIN_RULE = "dispatchDrainRule";
     public static final String BIZ_CODE_DISPATCH_WARNING_RULE = "dispatchWarningRule";

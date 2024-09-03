@@ -18,9 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 @Component
@@ -61,18 +59,18 @@ public class AsyncDispatcher implements InitializingBean {
     private void initWorkerMap() {
         workerMap = Maps.newHashMap();
         // device 相关
-        workerMap.put(BizConsts.BIZ_CODE_PREPARE_MODEL, jsonPayload -> new ModelDispatchWorker(jsonPayload));
-        workerMap.put(BizConsts.BIZ_CODE_PREPARE_MACHINE, jsonPayload -> new MachineDispatchWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_MODEL_UPDATED, jsonPayload -> new ModelDispatchWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_MACHINE_UPDATED, jsonPayload -> new MachineDispatchWorker(jsonPayload));
         // drink 相关
-        workerMap.put(BizConsts.BIZ_CODE_PREPARE_ACCURACY_TPL, jsonPayload -> new AccuracyTplDispatchWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_ACCURACY_TPL_UPDATED, jsonPayload -> new AccuracyTplDispatchWorker(jsonPayload));
         // menu 相关
-        workerMap.put(BizConsts.BIZ_CODE_PREPARE_MENU, jsonPayload -> new MenuDispatchWorker(jsonPayload));
-        workerMap.put(BizConsts.BIZ_CODE_PREPARE_MENU_INIT_LIST, jsonPayload -> new MenuDispatch4InitWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_MENU_UPDATED, jsonPayload -> new MenuDispatchWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_MENU_LIST_REQUESTED, jsonPayload -> new MenuDispatch4InitWorker(jsonPayload));
         // rule 相关
-        workerMap.put(BizConsts.BIZ_CODE_PREPARE_DRAIN_RULE, jsonPayload -> new DrainRuleDispatchWorker(jsonPayload));
-        workerMap.put(BizConsts.BIZ_CODE_PREPARE_CLEAN_RULE, jsonPayload -> new CleanRuleDispatchWorker(jsonPayload));
-        workerMap.put(BizConsts.BIZ_CODE_PREPARE_WARNING_RULE, jsonPayload -> new WarningRuleDispatchWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_DRAIN_RULE_DISPATCHED, jsonPayload -> new DrainRuleDispatchWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_CLEAN_RULE_DISPATCHED, jsonPayload -> new CleanRuleDispatchWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_WARNING_RULE_DISPATCHED, jsonPayload -> new WarningRuleDispatchWorker(jsonPayload));
         // user 相关
-        workerMap.put(BizConsts.BIZ_CODE_PREPARE_TENANT, jsonPayload -> new TenantPostWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_TENANT_UPDATED, jsonPayload -> new TenantPostWorker(jsonPayload));
     }
 }

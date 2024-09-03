@@ -81,7 +81,7 @@ public class MenuDispatch4InitWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MENU_INIT_LIST);
+        jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MENU_LIST);
         jsonMsg.put(BizConsts.JSON_KEY_MD5_AS_HEX, md5AsHex);
         jsonMsg.put(BizConsts.JSON_KEY_OSS_PATH, ossPath);
         log.info("$$$$$ MenuDispatch4InitWorker jsonMsg=" + jsonMsg.toJSONString());

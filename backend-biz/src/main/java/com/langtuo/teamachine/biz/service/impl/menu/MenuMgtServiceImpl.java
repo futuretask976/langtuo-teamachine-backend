@@ -102,7 +102,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     @Override
     public TeaMachineResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode) {
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_MENU_INIT_LIST);
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_MENU_LIST_REQUESTED);
         jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, tenantCode);
         jsonPayload.put(BizConsts.JSON_KEY_SHOP_CODE, shopCode);
         jsonPayload.put(BizConsts.JSON_KEY_MACHINE_CODE, machineCode);
@@ -244,7 +244,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_MENU);
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_MENU_UPDATED);
         jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
         jsonPayload.put(BizConsts.JSON_KEY_MENU_CODE, request.getMenuCode());
         asyncDispatcher.dispatch(jsonPayload);

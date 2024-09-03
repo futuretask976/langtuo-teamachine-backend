@@ -233,7 +233,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_DRAIN_RULE);
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DRAIN_RULE_DISPATCHED);
         jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
         jsonPayload.put(BizConsts.JSON_KEY_DRAIN_RULE_CODE, request.getDrainRuleCode());
         asyncDispatcher.dispatch(jsonPayload);

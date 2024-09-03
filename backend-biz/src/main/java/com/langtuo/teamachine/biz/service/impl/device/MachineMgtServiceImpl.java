@@ -182,7 +182,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_MACHINE);
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_MACHINE_UPDATED);
         jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
         jsonPayload.put(BizConsts.JSON_KEY_MACHINE_CODE, request.getMachineCode());
         asyncDispatcher.dispatch(jsonPayload);

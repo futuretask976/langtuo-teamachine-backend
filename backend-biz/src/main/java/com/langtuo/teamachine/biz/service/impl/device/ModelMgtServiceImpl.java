@@ -135,7 +135,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_MODEL);
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_MODEL_UPDATED);
         jsonPayload.put(BizConsts.JSON_KEY_MODEL_CODE, request.getModelCode());
         asyncDispatcher.dispatch(jsonPayload);
 

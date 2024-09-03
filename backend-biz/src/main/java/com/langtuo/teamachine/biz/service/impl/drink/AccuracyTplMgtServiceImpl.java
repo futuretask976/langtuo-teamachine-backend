@@ -145,7 +145,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_ACCURACY_TPL);
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_ACCURACY_TPL_UPDATED);
         jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
         jsonPayload.put(BizConsts.JSON_KEY_TEMPLATE_CODE, request.getTemplateCode());
         asyncDispatcher.dispatch(jsonPayload);

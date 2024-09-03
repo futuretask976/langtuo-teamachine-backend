@@ -215,7 +215,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_WARNING_RULE);
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_WARNING_RULE_DISPATCHED);
         jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
         jsonPayload.put(BizConsts.JSON_KEY_WARNING_RULE_CODE, request.getWarningRuleCode());
         asyncDispatcher.dispatch(jsonPayload);
