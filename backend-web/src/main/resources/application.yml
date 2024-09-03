@@ -1,6 +1,7 @@
 spring:
   application:
     name: teamachine-backend
+  locale: zh_CN
   messages:
     basename: messages
     encoding: UTF-8
