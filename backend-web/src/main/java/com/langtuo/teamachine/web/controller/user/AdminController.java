@@ -18,7 +18,7 @@ public class AdminController {
     private AdminMgtService service;
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/admin/tenant_001/jiaqing001/get
+     * url: http://{host}:{port}/teamachinebackend/admin/{tenantcode}/{loginname}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{loginname}/get")
@@ -29,7 +29,7 @@ public class AdminController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/admin/list?tenantCode=tenant_001&roleName=系统超级管理员&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/admin/list?tenantCode={tenantcode}&loginName={loginName}&roleName={roleName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")

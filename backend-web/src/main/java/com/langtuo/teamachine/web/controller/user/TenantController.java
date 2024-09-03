@@ -45,7 +45,7 @@ public class TenantController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/tenant/search?tenantName=&contactPerson=&pageNum=1&pageSize=2
+     * url: http://{host}:{port}/teamachinebackend/tenant/search?tenantName={tenantName}&contactPerson={contactPerson}&pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/search")

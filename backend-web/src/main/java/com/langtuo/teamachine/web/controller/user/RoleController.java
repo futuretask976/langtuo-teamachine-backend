@@ -17,7 +17,7 @@ public class RoleController {
     private RoleMgtService service;
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/role/tenant_001/{rolecode}/get
+     * url: http://{host}:{port}/teamachinebackend/role/{tenantcode}/{rolecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{rolecode}/get")
@@ -28,7 +28,7 @@ public class RoleController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/role/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/role/list?tenantCode={tenantCode}
      * @return
      */
     @GetMapping(value = "/list")
@@ -38,7 +38,7 @@ public class RoleController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/role/list?tenantCode=tenant_001&roleName=系统超级管理员&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/role/list?tenantCode={tenantCode}&roleName={roleName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
