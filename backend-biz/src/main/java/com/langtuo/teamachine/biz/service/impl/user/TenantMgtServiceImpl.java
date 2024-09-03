@@ -13,8 +13,6 @@ import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.po.user.TenantPO;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
-import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,8 +113,8 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
         // 异步发送消息准备添加超级租户管理角色和超级租户管理员
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_TENANT);
-        jsonPayload.put(BizConsts.SEND_KEY_TENANT_CODE, request.getTenantCode());
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_TENANT);
+        jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
         asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;

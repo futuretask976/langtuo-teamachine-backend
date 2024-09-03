@@ -38,8 +38,8 @@ public class WarningRuleDispatchWorker implements Runnable {
     private String warningRuleCode;
 
     public WarningRuleDispatchWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
-        this.warningRuleCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_WARNING_RULE_CODE);
+        this.tenantCode = jsonPayload.getString(BizConsts.JSON_KEY_TENANT_CODE);
+        this.warningRuleCode = jsonPayload.getString(BizConsts.JSON_KEY_WARNING_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(warningRuleCode)) {
             throw new IllegalArgumentException("tenantCode or warningRuleCode is blank");
         }
@@ -50,8 +50,8 @@ public class WarningRuleDispatchWorker implements Runnable {
         JSONObject jsonDispatchCont = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_WARNING_RULE);
-        jsonMsg.put(BizConsts.SEND_KEY_WARNING_RULE, jsonDispatchCont);
+        jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_WARNING_RULE);
+        jsonMsg.put(BizConsts.JSON_KEY_WARNING_RULE, jsonDispatchCont);
         log.info("$$$$$ WarningRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         // 准备发送

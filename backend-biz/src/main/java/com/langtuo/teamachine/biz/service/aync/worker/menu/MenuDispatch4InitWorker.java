@@ -48,9 +48,9 @@ public class MenuDispatch4InitWorker implements Runnable {
     private String shopCode;
 
     public MenuDispatch4InitWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
-        this.shopCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_SHOP_CODE);
-        this.machineCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_MACHINE_CODE);
+        this.tenantCode = jsonPayload.getString(BizConsts.JSON_KEY_TENANT_CODE);
+        this.shopCode = jsonPayload.getString(BizConsts.JSON_KEY_SHOP_CODE);
+        this.machineCode = jsonPayload.getString(BizConsts.JSON_KEY_MACHINE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode) || StringUtils.isBlank(shopCode)) {
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
@@ -81,9 +81,9 @@ public class MenuDispatch4InitWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MENU_INIT_LIST);
-        jsonMsg.put(BizConsts.SEND_KEY_MD5_AS_HEX, md5AsHex);
-        jsonMsg.put(BizConsts.SEND_KEY_OSS_PATH, ossPath);
+        jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MENU_INIT_LIST);
+        jsonMsg.put(BizConsts.JSON_KEY_MD5_AS_HEX, md5AsHex);
+        jsonMsg.put(BizConsts.JSON_KEY_OSS_PATH, ossPath);
         log.info("$$$$$ MenuDispatch4InitWorker jsonMsg=" + jsonMsg.toJSONString());
 
         // 准备发送

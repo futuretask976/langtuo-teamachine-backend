@@ -18,8 +18,6 @@ import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelPipelineAccessor;
 import com.langtuo.teamachine.dao.po.device.ModelPO;
 import com.langtuo.teamachine.dao.po.device.ModelPipelinePO;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
-import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,8 +135,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_MODEL);
-        jsonPayload.put(BizConsts.SEND_KEY_MODEL_CODE, request.getModelCode());
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_MODEL);
+        jsonPayload.put(BizConsts.JSON_KEY_MODEL_CODE, request.getModelCode());
         asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;

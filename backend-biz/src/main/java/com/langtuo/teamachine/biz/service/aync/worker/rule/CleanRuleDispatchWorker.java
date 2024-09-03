@@ -36,8 +36,8 @@ public class CleanRuleDispatchWorker implements Runnable {
     private String cleanRuleCode;
 
     public CleanRuleDispatchWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
-        this.cleanRuleCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_CLEAN_RULE_CODE);
+        this.tenantCode = jsonPayload.getString(BizConsts.JSON_KEY_TENANT_CODE);
+        this.cleanRuleCode = jsonPayload.getString(BizConsts.JSON_KEY_CLEAN_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(cleanRuleCode)) {
             throw new IllegalArgumentException("tenantCode or cleanRuleCode is blank");
         }
@@ -48,8 +48,8 @@ public class CleanRuleDispatchWorker implements Runnable {
         JSONObject jsonDispatchCont = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_CLEAN_RULE);
-        jsonMsg.put(BizConsts.SEND_KEY_CLEAN_RULE, jsonDispatchCont);
+        jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_CLEAN_RULE);
+        jsonMsg.put(BizConsts.JSON_KEY_CLEAN_RULE, jsonDispatchCont);
         log.info("$$$$$ CleanRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         // 准备发送

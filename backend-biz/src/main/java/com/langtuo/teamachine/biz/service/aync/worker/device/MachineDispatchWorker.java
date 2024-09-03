@@ -25,8 +25,8 @@ public class MachineDispatchWorker implements Runnable {
     private String machineCode;
 
     public MachineDispatchWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
-        this.machineCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_MACHINE_CODE);
+        this.tenantCode = jsonPayload.getString(BizConsts.JSON_KEY_TENANT_CODE);
+        this.machineCode = jsonPayload.getString(BizConsts.JSON_KEY_MACHINE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode)) {
             throw new IllegalArgumentException("tenantCode or machineCode is blank");
         }
@@ -41,8 +41,8 @@ public class MachineDispatchWorker implements Runnable {
         }
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MACHINE);
-        jsonMsg.put(BizConsts.SEND_KEY_MACHINE, jsonDispatchCont);
+        jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MACHINE);
+        jsonMsg.put(BizConsts.JSON_KEY_MACHINE, jsonDispatchCont);
         log.info("$$$$$ MachineDispatchWorker jsonMsg: " + jsonMsg);
 
         MqttProducer mqttProducer = SpringUtils.getMqttProducer();

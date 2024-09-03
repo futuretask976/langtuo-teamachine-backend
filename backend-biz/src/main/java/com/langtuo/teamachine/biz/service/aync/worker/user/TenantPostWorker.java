@@ -30,7 +30,7 @@ public class TenantPostWorker implements Runnable {
     private String tenantCode;
 
     public TenantPostWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
+        this.tenantCode = jsonPayload.getString(BizConsts.JSON_KEY_TENANT_CODE);
         if (StringUtils.isBlank(tenantCode)) {
             throw new IllegalArgumentException("tenantCode is blank");
         }

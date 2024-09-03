@@ -24,8 +24,6 @@ import com.langtuo.teamachine.dao.po.rule.CleanRuleExceptPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRulePO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleStepPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
-import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -248,9 +246,9 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_CLEAN_RULE);
-        jsonPayload.put(BizConsts.SEND_KEY_TENANT_CODE, request.getTenantCode());
-        jsonPayload.put(BizConsts.SEND_KEY_CLEAN_RULE_CODE, request.getCleanRuleCode());
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_PREPARE_CLEAN_RULE);
+        jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
+        jsonPayload.put(BizConsts.JSON_KEY_CLEAN_RULE_CODE, request.getCleanRuleCode());
         asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;

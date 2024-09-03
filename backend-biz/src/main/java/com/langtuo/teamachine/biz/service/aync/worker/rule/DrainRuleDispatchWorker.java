@@ -38,8 +38,8 @@ public class DrainRuleDispatchWorker implements Runnable {
     private String drainRuleCode;
 
     public DrainRuleDispatchWorker(JSONObject jsonPayload) {
-        this.tenantCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_TENANT_CODE);
-        this.drainRuleCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_DRAIN_RULE_CODE);
+        this.tenantCode = jsonPayload.getString(BizConsts.JSON_KEY_TENANT_CODE);
+        this.drainRuleCode = jsonPayload.getString(BizConsts.JSON_KEY_DRAIN_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(drainRuleCode)) {
             throw new IllegalArgumentException("tenantCode is blank");
         }
@@ -50,8 +50,8 @@ public class DrainRuleDispatchWorker implements Runnable {
         JSONObject jsonDispatchCont = getDispatchCont();
 
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(BizConsts.SEND_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_DRAIN_RULE);
-        jsonMsg.put(BizConsts.SEND_KEY_OPEN_RULE, jsonDispatchCont);
+        jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_DRAIN_RULE);
+        jsonMsg.put(BizConsts.JSON_KEY_OPEN_RULE, jsonDispatchCont);
         log.info("$$$$$ OpenRuleDispatchWorker jsonMsg: " + jsonMsg.toJSONString());
 
         // 准备发送

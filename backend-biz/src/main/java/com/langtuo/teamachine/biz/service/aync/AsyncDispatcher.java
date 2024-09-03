@@ -50,7 +50,7 @@ public class AsyncDispatcher implements InitializingBean {
             initWorkerMap();
         }
 
-        String bizCode = jsonPayload.getString(BizConsts.RECEIVE_KEY_BIZ_CODE);
+        String bizCode = jsonPayload.getString(BizConsts.JSON_KEY_BIZ_CODE);
         Function<JSONObject, Runnable> function = workerMap.get(bizCode);
         if (function == null) {
             log.info("AsyncDispatcher|dispatch|noMatch|" + bizCode);
