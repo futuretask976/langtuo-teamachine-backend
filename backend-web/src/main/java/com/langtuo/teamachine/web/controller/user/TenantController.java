@@ -25,7 +25,7 @@ public class TenantController {
     private MessageSource messageSource;
 
     /**
-     * url: http://localhost:8080/teamachine/tenant/{tenantcode}/get
+     * url: http://{host}:{port}/teamachinebackend/tenant/{tenantcode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/get")
@@ -35,7 +35,7 @@ public class TenantController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/userset/tenant/list
+     * url: http://{host}:{port}/teamachinebackend/userset/tenant/list
      * @return
      */
     @GetMapping(value = "/list")
@@ -45,7 +45,7 @@ public class TenantController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/tenant/search?tenantName=&contactPerson=&pageNum=1&pageSize=2
+     * url: http://{host}:{port}/teamachinebackend/tenant/search?tenantName=&contactPerson=&pageNum=1&pageSize=2
      * @return
      */
     @GetMapping(value = "/search")
@@ -57,7 +57,7 @@ public class TenantController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/tenant/put
+     * url: http://{host}:{port}/teamachinebackend/tenant/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -67,7 +67,7 @@ public class TenantController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/tenant/{tenantcode}/delete
+     * url: http://{host}:{port}/teamachinebackend/tenant/{tenantcode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/delete")

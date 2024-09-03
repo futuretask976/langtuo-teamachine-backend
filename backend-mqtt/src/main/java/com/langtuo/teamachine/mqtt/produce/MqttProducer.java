@@ -55,9 +55,11 @@ public class MqttProducer implements InitializingBean {
     }
 
     public void sendP2PMsgByTenant(String tenantCode, String machineCode, String payload) {
+        machineCode = "machine_333";
         String topic = tenantCode + MqttConsts.TENANT_PARENT_P2P_TOPIC_POSTFIX
                 + MqttConsts.TOPIC_SEPERATOR + machineCode;
         try {
+            log.info("$$$$$ MqttProducer#sendP2PMsgByTenant topic=" + topic + ", payload=" + payload);
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new MqttSendCallback());
         } catch (IOException e) {
             log.error("mqttProducer|sendP2PMsgByTenant|fatal|" + e.getMessage(), e);
@@ -65,7 +67,7 @@ public class MqttProducer implements InitializingBean {
     }
 
     public void sendBroadcastMsgByTenant(String tenantCode, String payload) {
-        String topic = tenantCode + MqttConsts.TENANT_PARENT_TOPIC_POSTFIX;
+        String topic = tenantCode + MqttConsts.TENANT_PARENT_TOPIC_POSTFIX + MqttConsts.TOPIC_SEPERATOR + "broadcast";
         try {
             log.info("$$$$$ MqttProducer#sendBroadcastMsgByTenant topic=" + topic + ", payload=" + payload);
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new MqttSendCallback());

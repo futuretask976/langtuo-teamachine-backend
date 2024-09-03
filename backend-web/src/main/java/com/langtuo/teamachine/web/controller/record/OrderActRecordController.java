@@ -16,7 +16,7 @@ public class OrderActRecordController {
     private OrderActRecordMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/warning/tenant_001/shopGroup_001/get
+     * url: http://{host}:{port}/teamachinebackend/recordset/warning/tenant_001/shopGroup_001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{idempotentmark}/get")
@@ -27,7 +27,7 @@ public class OrderActRecordController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/warning/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/recordset/warning/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -41,7 +41,7 @@ public class OrderActRecordController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/warning/{tenantcode}/{cleanrulecode}/delete
+     * url: http://{host}:{port}/teamachinebackend/recordset/warning/{tenantcode}/{cleanrulecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{idempotentmark}/delete")

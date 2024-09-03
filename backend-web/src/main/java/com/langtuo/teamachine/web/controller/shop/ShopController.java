@@ -17,7 +17,7 @@ public class ShopController {
     private ShopMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/shop/tenant_001/shop_001/get
+     * url: http://{host}:{port}/teamachinebackend/shop/tenant_001/shop_001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{shopcode}/get")
@@ -28,7 +28,7 @@ public class ShopController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/shop/list?tenantCode=tenant_001
      * @return
      */
     @GetMapping(value = "/list")
@@ -38,7 +38,7 @@ public class ShopController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/shop/list?tenantCode=tenant_001
      * @return
      */
     @GetMapping(value = "/listbyadminorg")
@@ -48,7 +48,7 @@ public class ShopController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/search?tenantCode=tenant_001&shopName=&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/shop/search?tenantCode=tenant_001&shopName=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -60,7 +60,7 @@ public class ShopController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/put
+     * url: http://{host}:{port}/teamachinebackend/shop/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -70,7 +70,7 @@ public class ShopController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop//{tenantcode}/{shopcode}/delete
+     * url: http://{host}:{port}/teamachinebackend/shop//{tenantcode}/{shopcode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{shopcode}/delete")

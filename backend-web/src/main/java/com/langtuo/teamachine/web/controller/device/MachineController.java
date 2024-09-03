@@ -18,7 +18,7 @@ public class MachineController {
     private MachineMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/machine/{tenantcode}/{machinecode}/get
+     * url: http://{host}:{port}/teamachinebackend/machine/{tenantcode}/{machinecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{machinecode}/get")
@@ -29,7 +29,7 @@ public class MachineController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/list?tenantCode={tenantCode}
+     * url: http://{host}:{port}/teamachinebackend/machine/list?tenantCode={tenantCode}
      * @return
      */
     @GetMapping(value = "/list")
@@ -39,7 +39,7 @@ public class MachineController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/search?tenantCode={tenantCode}&screenCode={screenCode}&elecBoardCode={elecBoardCode}&modelCode={modelCode}&shopName={shopName}&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/machine/search?tenantCode={tenantCode}&screenCode={screenCode}&elecBoardCode={elecBoardCode}&modelCode={modelCode}&shopName={shopName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -53,7 +53,7 @@ public class MachineController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/activate
+     * url: http://{host}:{port}/teamachinebackend/machine/activate
      * @return
      */
     @PutMapping(value = "/activate")
@@ -63,7 +63,7 @@ public class MachineController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/update
+     * url: http://{host}:{port}/teamachinebackend/machine/update
      * @return
      */
     @PutMapping(value = "/update")
@@ -73,7 +73,7 @@ public class MachineController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/machine/{tenantcode}/{machinecode}/delete
+     * url: http://{host}:{port}/teamachinebackend/machine/{tenantcode}/{machinecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{machinecode}/delete")

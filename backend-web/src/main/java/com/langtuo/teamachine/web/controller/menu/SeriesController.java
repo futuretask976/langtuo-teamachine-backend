@@ -17,7 +17,7 @@ public class SeriesController {
     private SeriesMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/series/tenant_001/shopGroup_001/get
+     * url: http://{host}:{port}/teamachinebackend/menuset/series/tenant_001/shopGroup_001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{seriescode}/get")
@@ -28,7 +28,7 @@ public class SeriesController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/series/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/menuset/series/list?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */
@@ -39,7 +39,7 @@ public class SeriesController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/series/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/menuset/series/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -52,7 +52,7 @@ public class SeriesController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/series/put
+     * url: http://{host}:{port}/teamachinebackend/menuset/series/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -62,7 +62,7 @@ public class SeriesController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/menuset/series/{tenantcode}/{seriescode}/delete
+     * url: http://{host}:{port}/teamachinebackend/menuset/series/{tenantcode}/{seriescode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{seriescode}/delete")

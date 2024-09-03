@@ -17,7 +17,7 @@ public class AccuracyTplController {
     private AccuracyTplMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/accuracy/{tenantcode}/{templatecode}/get
+     * url: http://{host}:{port}/teamachinebackend/drinkset/accuracy/{tenantcode}/{templatecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{templatecode}/get")
@@ -28,7 +28,7 @@ public class AccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/accuracy/list?tenantCode={tenantCode}
+     * url: http://{host}:{port}/teamachinebackend/drinkset/accuracy/list?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -39,7 +39,7 @@ public class AccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/accuracy/search?tenantCode={tenantCode}&templateCode={templateCode}&templateName={templateName}&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/drinkset/accuracy/search?tenantCode={tenantCode}&templateCode={templateCode}&templateName={templateName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -52,7 +52,7 @@ public class AccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/accuracy/put
+     * url: http://{host}:{port}/teamachinebackend/drinkset/accuracy/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -62,7 +62,7 @@ public class AccuracyTplController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/drinkset/accuracy/{tenantcode}/{templatecode}/delete
+     * url: http://{host}:{port}/teamachinebackend/drinkset/accuracy/{tenantcode}/{templatecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{templatecode}/delete")

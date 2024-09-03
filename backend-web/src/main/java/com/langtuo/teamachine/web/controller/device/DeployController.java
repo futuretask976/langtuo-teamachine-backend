@@ -28,7 +28,7 @@ public class DeployController {
     private DeployMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/{tenantcode}/{deploycode}/get
+     * url: http://{host}:{port}/teamachinebackend/deploy/{tenantcode}/{deploycode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{deploycode}/get")
@@ -39,7 +39,7 @@ public class DeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/search?tenantCode={tenantCode}&deployCode={deployCode}&machineCode={machineCode}&shopName={shopName}&state={state}&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/deploy/search?tenantCode={tenantCode}&deployCode={deployCode}&machineCode={machineCode}&shopName={shopName}&state={state}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -53,7 +53,7 @@ public class DeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/put
+     * url: http://{host}:{port}/teamachinebackend/deploy/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -63,7 +63,7 @@ public class DeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/{tenantcode}/{deploycode}/delete
+     * url: http://{host}:{port}/teamachinebackend/deploy/{tenantcode}/{deploycode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{deploycode}/delete")
@@ -74,7 +74,7 @@ public class DeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/deploycode/generate?tenantCode={tenantCode}
+     * url: http://{host}:{port}/teamachinebackend/deploy/deploycode/generate?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -85,7 +85,7 @@ public class DeployController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/deploy/machinecode/generate?tenantCode={tenantCode}
+     * url: http://{host}:{port}/teamachinebackend/deploy/machinecode/generate?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */

@@ -19,7 +19,7 @@ public class CleanRuleController {
     private CleanRuleMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/tenant_001/shopGroup_001/get
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/tenant_001/shopGroup_001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{cleanrulecode}/get")
@@ -30,7 +30,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/list?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */
@@ -41,7 +41,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/listbyshop?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/listbyshop?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */
@@ -53,7 +53,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -66,7 +66,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/put
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -76,7 +76,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/{tenantcode}/{cleanrulecode}/delete
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/{tenantcode}/{cleanrulecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{cleanrulecode}/delete")
@@ -87,7 +87,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/put
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/put
      * @return
      */
     @PutMapping(value = "/dispatch/put")
@@ -97,7 +97,7 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/clean/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/list?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */

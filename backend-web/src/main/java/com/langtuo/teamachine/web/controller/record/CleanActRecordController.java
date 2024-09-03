@@ -16,7 +16,7 @@ public class CleanActRecordController {
     private CleanActRecordMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/clean/tenant_001/shopGroup_001/get
+     * url: http://{host}:{port}/teamachinebackend/recordset/clean/tenant_001/shopGroup_001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{idempotentmark}/get")
@@ -27,7 +27,7 @@ public class CleanActRecordController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/clean/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/recordset/clean/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -41,7 +41,7 @@ public class CleanActRecordController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/recordset/clean/{tenantcode}/{cleanrulecode}/delete
+     * url: http://{host}:{port}/teamachinebackend/recordset/clean/{tenantcode}/{cleanrulecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{idempotentmark}/delete")

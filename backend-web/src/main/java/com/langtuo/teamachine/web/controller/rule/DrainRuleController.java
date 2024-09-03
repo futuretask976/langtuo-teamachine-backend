@@ -19,7 +19,7 @@ public class DrainRuleController {
     private DrainRuleMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/drain/{tenantcode}/{drainrulecode}/get
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/{tenantcode}/{drainrulecode}/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{drainrulecode}/get")
@@ -30,7 +30,7 @@ public class DrainRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/drain/list?tenantCode={tenantCode}
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/list?tenantCode={tenantCode}
      * @param tenantCode
      * @return
      */
@@ -41,7 +41,7 @@ public class DrainRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/drain/listbyshop?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/listbyshop?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */
@@ -53,7 +53,7 @@ public class DrainRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/drain/search?tenantCode={tenantCode}&drainRuleCode={drainRuleCode}&drainRuleName={drainRuleName}&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/search?tenantCode={tenantCode}&drainRuleCode={drainRuleCode}&drainRuleName={drainRuleName}&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -66,7 +66,7 @@ public class DrainRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/drain/put
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -76,7 +76,7 @@ public class DrainRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/drain/{tenantcode}/{drainrulecode}/delete
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/{tenantcode}/{drainrulecode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{drainrulecode}/delete")
@@ -87,7 +87,7 @@ public class DrainRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/drain/dispatch/put
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/dispatch/put
      * @return
      */
     @PutMapping(value = "/dispatch/put")
@@ -97,7 +97,7 @@ public class DrainRuleController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/ruleset/drain/dispatch/{tenantcode}/{drainrulecode}/get
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/dispatch/{tenantcode}/{drainrulecode}/get
      * @param tenantCode
      * @return
      */

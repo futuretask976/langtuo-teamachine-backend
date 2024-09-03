@@ -17,7 +17,7 @@ public class ShopGroupController {
     private ShopGroupMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/shop/group/tenant_001/shopGroup_001/get
+     * url: http://{host}:{port}/teamachinebackend/shop/group/tenant_001/shopGroup_001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{shopgroupcode}/get")
@@ -28,7 +28,7 @@ public class ShopGroupController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/group/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/shop/group/list?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */
@@ -39,7 +39,7 @@ public class ShopGroupController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/group/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/shop/group/list?tenantCode=tenant_001
      * @param tenantCode
      * @return
      */
@@ -50,7 +50,7 @@ public class ShopGroupController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/group/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/shop/group/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -62,7 +62,7 @@ public class ShopGroupController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/group/put
+     * url: http://{host}:{port}/teamachinebackend/shop/group/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -72,7 +72,7 @@ public class ShopGroupController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/shop/group/{tenantcode}/{shopgroupcode}/delete
+     * url: http://{host}:{port}/teamachinebackend/shop/group/{tenantcode}/{shopgroupcode}/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{shopgroupcode}/delete")

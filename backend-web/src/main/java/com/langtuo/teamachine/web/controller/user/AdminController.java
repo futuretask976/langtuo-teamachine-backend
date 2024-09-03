@@ -18,7 +18,7 @@ public class AdminController {
     private AdminMgtService service;
 
     /**
-     * url: http://localhost:8080/teamachine/admin/tenant_001/jiaqing001/get
+     * url: http://{host}:{port}/teamachinebackend/admin/tenant_001/jiaqing001/get
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{loginname}/get")
@@ -29,7 +29,7 @@ public class AdminController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/admin/list?tenantCode=tenant_001&roleName=系统超级管理员&pageNum=1&pageSize=10
+     * url: http://{host}:{port}/teamachinebackend/admin/list?tenantCode=tenant_001&roleName=系统超级管理员&pageNum=1&pageSize=10
      * @return
      */
     @GetMapping(value = "/search")
@@ -41,7 +41,7 @@ public class AdminController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/admin/role/put
+     * url: http://{host}:{port}/teamachinebackend/admin/role/put
      * @return
      */
     @PutMapping(value = "/put")
@@ -51,7 +51,7 @@ public class AdminController {
     }
 
     /**
-     * url: http://localhost:8080/teamachine/admin/role/delete
+     * url: http://{host}:{port}/teamachinebackend/admin/role/delete
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{loginname}/delete")
