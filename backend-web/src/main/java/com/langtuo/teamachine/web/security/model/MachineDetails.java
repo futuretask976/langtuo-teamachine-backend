@@ -26,6 +26,7 @@ public class MachineDetails implements UserDetails {
     private DeployDTO deployDTO;
 
     public MachineDetails(DeployDTO deployDTO, MachineDTO machineDTO) {
+        this.deployDTO = deployDTO;
         this.machineDTO = machineDTO;
     }
 
@@ -34,19 +35,19 @@ public class MachineDetails implements UserDetails {
         List<GrantedAuthority> grantedAuthorityList = Lists.newArrayList();
         grantedAuthorityList.add((GrantedAuthority) () -> {
             // 系统在外面比较时，会加上ROLE_前缀，所以这里返回时需要加上
-            return "ROLE_MACHINE";
+            return "ROLE_machine";
         });
         return grantedAuthorityList;
     }
 
     @Override
     public String getPassword() {
-        return machineDTO.getElecBoardCode();
+        return deployDTO.getDeployCode();
     }
 
     @Override
     public String getUsername() {
-        return deployDTO.getDeployCode();
+        return machineDTO.getMachineCode();
     }
 
     @Override

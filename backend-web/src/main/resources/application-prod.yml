@@ -21,8 +21,7 @@ teamachine:
     tokenHeader: Authorization # JWT 存储的请求头
     secret: teamachine-secret # JWT 加解密使用的密钥
     expiration: 604800 # JWT 的超期限时间，单位分钟(60*60*24*7)
-    tokenHead4Admin: 'AdminBearer '  # JWT 负载中拿到开头
-    tokenHead4Machine: 'MachineBearer '  # JWT 负载中拿到开头
+    tokenHead: 'Bearer '  # JWT 负载中拿到开头
   secure:
     ignored:
       urls: # 安全路径白名单，不包含 tomcat 中 context 的 path（从之后开始算）

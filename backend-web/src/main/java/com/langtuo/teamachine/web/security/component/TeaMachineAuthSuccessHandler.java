@@ -17,11 +17,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandler {
-    @Value("${teamachine.jwt.tokenHead4Admin}")
-    private String tokenHead4Admin;
-
-    @Value("${teamachine.jwt.tokenHead4Machine}")
-    private String tokenHead4Machine;
+    @Value("${teamachine.jwt.tokenHead}")
+    private String tokenHead;
 
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
@@ -42,7 +39,7 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
 
         // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录成功
         LoginSuccessDTO dto = new LoginSuccessDTO();
-        dto.setJwtToken(tokenHead4Admin + jwtTokenHelper.generateToken(authUser));
+        dto.setJwtToken(tokenHead + jwtTokenHelper.generateToken(authUser));
         dto.setLoginName(authUser.getUsername());
         TeaMachineResult<LoginSuccessDTO> result = TeaMachineResult.success(dto);
         response.getWriter().println(JSONObject.toJSONString(result));

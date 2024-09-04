@@ -16,7 +16,6 @@ public class TeaMachineAuthenticationEntryPoint implements AuthenticationEntryPo
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException e) throws IOException {
-        System.out.printf("!!! TeaMachineAuthenticationEntryPoint#commence login failed: %s， %s\n", e.getMessage(), e.toString());
         // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录失败
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         response.setHeader("Access-Control-Allow-Credentials", "true");

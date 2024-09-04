@@ -41,13 +41,13 @@ public class MenuController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachine/menuset/menu/trigger?tenantCode={tenantCode}
+     * url: http://{host}:{port}/teamachine/menuset/menu/{tenantCode}/{shopCode}/trigger
      * @param tenantCode
      * @return
      */
-    @GetMapping(value = "/trigger")
-    public TeaMachineResult<Void> trigger(@RequestParam("tenantCode") String tenantCode
-            , @RequestParam("shopCode") String shopCode, @RequestParam("machineCode") String machineCode) {
+    @GetMapping(value = "/{tenantcode}/{shopcode}/{machinecode}/trigger")
+    public TeaMachineResult<Void> trigger(@PathVariable("tenantcode") String tenantCode
+            , @PathVariable("shopcode") String shopCode, @PathVariable("machinecode") String machineCode) {
         TeaMachineResult<Void> rtn = service.triggerDispatchByShopCode(tenantCode, shopCode, machineCode);
         return rtn;
     }

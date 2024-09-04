@@ -30,24 +30,13 @@ public class DrainRuleController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/list?tenantCode={tenantCode}
+     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/{tenantCode}/{shopcode}/listbyshop
      * @param tenantCode
      * @return
      */
-    @GetMapping(value = "/list")
-    public TeaMachineResult<List<DrainRuleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        TeaMachineResult<List<DrainRuleDTO>> rtn = service.list(tenantCode);
-        return rtn;
-    }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/drain/listbyshop?tenantCode={tenantCode}
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/listbyshop")
-    public TeaMachineResult<List<DrainRuleDTO>> list(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopCode") String shopCode) {
+    @GetMapping(value = "/{tenantcode}/{shopcode}/listbyshop")
+    public TeaMachineResult<List<DrainRuleDTO>> listByShop(@PathVariable("tenantcode") String tenantCode,
+            @PathVariable("shopcode") String shopCode) {
         TeaMachineResult<List<DrainRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
         return rtn;
     }

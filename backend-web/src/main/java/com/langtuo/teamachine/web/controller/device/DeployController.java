@@ -34,7 +34,7 @@ public class DeployController {
     @GetMapping(value = "/{tenantcode}/{deploycode}/get")
     public TeaMachineResult<DeployDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
             @PathVariable(name = "deploycode") String deployCode) {
-        TeaMachineResult<DeployDTO> rtn = service.getByDeployCode(tenantCode, deployCode);
+        TeaMachineResult<DeployDTO> rtn = service.getByCode(tenantCode, deployCode);
         return rtn;
     }
 

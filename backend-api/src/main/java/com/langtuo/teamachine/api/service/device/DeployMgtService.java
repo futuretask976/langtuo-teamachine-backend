@@ -13,7 +13,7 @@ public interface DeployMgtService {
      * @param deployCode
      * @return
      */
-    TeaMachineResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode);
+    TeaMachineResult<DeployDTO> getByCode(String tenantCode, String deployCode);
 
     /**
      *

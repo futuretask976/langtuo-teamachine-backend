@@ -28,12 +28,12 @@ public class AccuracyTplController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/accuracy/list?tenantCode={tenantCode}
+     * url: http://{host}:{port}/teamachinebackend/drinkset/accuracy/{tenantCode}/list
      * @param tenantCode
      * @return
      */
-    @GetMapping(value = "/list")
-    public TeaMachineResult<List<AccuracyTplDTO>> list(@RequestParam("tenantCode") String tenantCode) {
+    @GetMapping(value = "/{tenantcode}/list")
+    public TeaMachineResult<List<AccuracyTplDTO>> list(@PathVariable("tenantcode") String tenantCode) {
         TeaMachineResult<List<AccuracyTplDTO>> rtn = service.list(tenantCode);
         return rtn;
     }

@@ -72,7 +72,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     @Override
-    public TeaMachineResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode) {
+    public TeaMachineResult<DeployDTO> getByCode(String tenantCode, String deployCode) {
         TeaMachineResult<DeployDTO> teaMachineResult;
         try {
             DeployDTO dto = convertToDeployDTO(deployAccessor.selectOneByDeployCode(tenantCode, deployCode));

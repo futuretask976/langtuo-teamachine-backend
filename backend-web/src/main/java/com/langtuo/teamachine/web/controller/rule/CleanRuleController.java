@@ -41,13 +41,13 @@ public class CleanRuleController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/listbyshop?tenantCode={tenantCode}
+     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/{tenantCode}/{shopcode}/listbyshop
      * @param tenantCode
      * @return
      */
-    @GetMapping(value = "/listbyshop")
-    public TeaMachineResult<List<CleanRuleDTO>> list(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopCode") String shopCode) {
+    @GetMapping(value = "/{tenantcode}/{shopcode}/listbyshop")
+    public TeaMachineResult<List<CleanRuleDTO>> listByShop(@PathVariable("tenantcode") String tenantCode,
+            @PathVariable("shopcode") String shopCode) {
         TeaMachineResult<List<CleanRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
         return rtn;
     }

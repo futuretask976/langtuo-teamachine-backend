@@ -91,7 +91,7 @@ public class SecurityChainConfig {
         // 配置授权处理，授权管理器可以配置多个
         httpSecurity.authorizeRequests()
                 // 设备
-                .antMatchers("/deviceset/model/**").hasAnyRole("model_mgt")
+                .antMatchers("/deviceset/model/**").hasAnyRole("model_mgt", "machine")
                 .antMatchers("/deviceset/deploy/**").hasAnyRole("deploy_mgt")
                 .antMatchers("/deviceset/machine/**").hasAnyRole("machine_mgt")
                 // 用户
@@ -115,16 +115,15 @@ public class SecurityChainConfig {
                 .antMatchers("/drinkset/spec/**").hasAnyRole("spec_mgt")
                 .antMatchers("/drinkset/tea/type/**").hasAnyRole("tea_type_mgt")
                 .antMatchers("/drinkset/tea/**").hasAnyRole("tea_mgt")
-                .antMatchers("/drinkset/accuracy/**").hasAnyRole("accuracy_mgt")
+                .antMatchers("/drinkset/accuracy/**").hasAnyRole("accuracy_mgt", "machine")
                 // 菜单
                 .antMatchers("/menuset/series/list/**").hasAnyRole("series_mgt", "menu_mgt")
                 .antMatchers("/menuset/series/**").hasAnyRole("series_mgt")
-                .antMatchers("/menuset/menu/**").hasAnyRole("menu_mgt")
+                .antMatchers("/menuset/menu/**").hasAnyRole("menu_mgt", "machine")
                 // 食安规则
-                .antMatchers("/ruleset/open/**").hasAnyRole("open_rule_mgt")
-                .antMatchers("/ruleset/close/**").hasAnyRole("close_rule_mgt")
-                .antMatchers("/ruleset/clean/**").hasAnyRole("clean_rule_mgt")
-                .antMatchers("/ruleset/warning/**").hasAnyRole("warning_rule_mgt")
+                .antMatchers("/ruleset/drain/**").hasAnyRole("drain_rule_mgt", "machine")
+                .antMatchers("/ruleset/clean/**").hasAnyRole("clean_rule_mgt", "machine")
+                .antMatchers("/ruleset/warning/**").hasAnyRole("warning_rule_mgt", "machine")
                 // 日常记录
                 .antMatchers("/recordset/clean/**").hasAnyRole("clean_rec_mgt")
                 .antMatchers("/recordset/invalid/**").hasAnyRole("invalid_rec_mgt")

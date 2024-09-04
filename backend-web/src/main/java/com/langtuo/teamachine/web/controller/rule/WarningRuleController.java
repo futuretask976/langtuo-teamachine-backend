@@ -30,24 +30,13 @@ public class WarningRuleController {
     }
 
     /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/warning/list?tenantCode=tenant_001
+     * url: http://{host}:{port}/teamachinebackend/ruleset/warning/{tenantCode}/{shopcode}/listbyshop
      * @param tenantCode
      * @return
      */
-    @GetMapping(value = "/list")
-    public TeaMachineResult<List<WarningRuleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        TeaMachineResult<List<WarningRuleDTO>> rtn = service.list(tenantCode);
-        return rtn;
-    }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/warning/listbyshop?tenantCode=tenant_001
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/listbyshop")
-    public TeaMachineResult<List<WarningRuleDTO>> list(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopCode") String shopCode) {
+    @GetMapping(value = "/{tenantcode}/{shopcode}/listbyshop")
+    public TeaMachineResult<List<WarningRuleDTO>> listByShop(@PathVariable("tenantcode") String tenantCode,
+            @PathVariable("shopcode") String shopCode) {
         TeaMachineResult<List<WarningRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
         return rtn;
     }

@@ -30,8 +30,7 @@ public enum PermitActEnum {
     MENU_MGT("menu_mgt", "菜单管理", "menu_set"),
 
     // 食安规则
-    OPEN_RULE_RULE_MGT("open_rule_mgt", "营业准备管理", "rule_set"),
-    CLOSE_RULE_MGT("close_rule_mgt", "打烊准备管理", "rule_set"),
+    OPEN_RULE_RULE_MGT("drain_rule_mgt", "营业准备管理", "rule_set"),
     CLEAN_RULE_MGT("clean_rule_mgt", "清洗规则管理", "rule_set"),
     WARNING_RULE_MGT("warning_rule_mgt", "预警规则管理", "rule_set"),
 

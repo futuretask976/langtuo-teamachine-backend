@@ -47,16 +47,18 @@ public class TeaMachineUserDetailService implements UserDetailsService {
         if (StringUtils.isBlank(tenantCode)) {
             throw new IllegalArgumentException("tenantCode is blank");
         }
-        String from = request.getParameter("from");
-        if ("MACHINE".equals(from)) {
-            return loadMachineUserDetails(tenantCode, userName);
-        } else {
+
+        String deployCode = request.getHeader("machineCode");
+        String machineCode = userName;
+        if (StringUtils.isBlank(deployCode) || StringUtils.isBlank(machineCode)) {
             return loadAdminUserDetails(tenantCode, userName);
+        } else {
+            return loadMachineUserDetails(tenantCode, deployCode, machineCode);
         }
     }
 
-    public UserDetails loadMachineUserDetails(String tenantCode, String machineCode) {
-        DeployDTO deployDTO = getModel(deployMgtService.getByDeployCode(tenantCode, machineCode));
+    public UserDetails loadMachineUserDetails(String tenantCode, String deployCode, String machineCode) {
+        DeployDTO deployDTO = getModel(deployMgtService.getByCode(tenantCode, deployCode));
         MachineDTO machineDTO = getModel(machineMgtService.getByCode(tenantCode, machineCode));
         if (deployDTO == null || machineDTO == null) {
             return null;
