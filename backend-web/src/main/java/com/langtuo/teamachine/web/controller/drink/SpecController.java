@@ -16,32 +16,19 @@ public class SpecController {
     @Resource
     private SpecMgtService service;
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/spec/{tenantcode}/{speccode}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{speccode}/get")
-    public TeaMachineResult<SpecDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "speccode") String specCode) {
+    @GetMapping(value = "/get")
+    public TeaMachineResult<SpecDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "specCode") String specCode) {
         TeaMachineResult<SpecDTO> rtn = service.getByCode(tenantCode, specCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/spec/list?tenantCode={tenantCode}
-     * @param tenantCode
-     * @return
-     */
     @GetMapping(value = "/list")
     public TeaMachineResult<List<SpecDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<SpecDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/spec/search?tenantCode={tenantCode}&specCode={specCode}&specName={specName}&pageNum=1&pageSize=10
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<SpecDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("specCode") String specCode, @RequestParam("specName") String specName,
@@ -51,23 +38,15 @@ public class SpecController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/spec/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody SpecPutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/spec/{tenantcode}/{speccode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{speccode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "speccode") String specCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "specCode") String specCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, specCode);
         return rtn;
     }

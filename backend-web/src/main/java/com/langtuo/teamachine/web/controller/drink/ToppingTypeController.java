@@ -16,32 +16,19 @@ public class ToppingTypeController {
     @Resource
     private ToppingTypeMgtService service;
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/topping/type//{tenantcode}/{toppingtypecode}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{toppingtypecode}/get")
-    public TeaMachineResult<ToppingTypeDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "toppingtypecode") String toppingTypeCode) {
+    @GetMapping(value = "/get")
+    public TeaMachineResult<ToppingTypeDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "toppingTypeCode") String toppingTypeCode) {
         TeaMachineResult<ToppingTypeDTO> rtn = service.getByCode(tenantCode, toppingTypeCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/topping/type/list?tenantCode={tenantCode}
-     * @param tenantCode
-     * @return
-     */
     @GetMapping(value = "/list")
     public TeaMachineResult<List<ToppingTypeDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<ToppingTypeDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/topping/type/search?tenantCode={tenantCode}&toppingTypeCode={toppingTypeCode}&toppingTypeName={toppingTypeName}&pageNum=1&pageSize=10
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<ToppingTypeDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("toppingTypeCode") String toppingTypeCode,
@@ -52,23 +39,15 @@ public class ToppingTypeController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/topping/type/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody ToppingTypePutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/topping/type/{tenantcode}/{toppingtypecode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{toppingtypecode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "toppingtypecode") String toppingTypeCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "toppingTypeCode") String toppingTypeCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, toppingTypeCode);
         return rtn;
     }

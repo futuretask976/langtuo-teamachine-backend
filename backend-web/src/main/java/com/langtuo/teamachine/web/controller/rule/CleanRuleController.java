@@ -17,45 +17,27 @@ import java.util.List;
 public class CleanRuleController {
     @Resource
     private CleanRuleMgtService service;
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/{tenantcode}/{cleanrulecode}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{cleanrulecode}/get")
-    public TeaMachineResult<CleanRuleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "cleanrulecode") String cleanRuleCode) {
+    
+    @GetMapping(value = "/get")
+    public TeaMachineResult<CleanRuleDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "cleanRuleCode") String cleanRuleCode) {
         TeaMachineResult<CleanRuleDTO> rtn = service.getByCode(tenantCode, cleanRuleCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/list?tenantCode={tenantCode}
-     * @param tenantCode
-     * @return
-     */
+    
     @GetMapping(value = "/list")
     public TeaMachineResult<List<CleanRuleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<CleanRuleDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/{tenantCode}/{shopcode}/listbyshop
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{shopcode}/listbyshop")
-    public TeaMachineResult<List<CleanRuleDTO>> listByShop(@PathVariable("tenantcode") String tenantCode,
-            @PathVariable("shopcode") String shopCode) {
+    
+    @GetMapping(value = "/listbyshop")
+    public TeaMachineResult<List<CleanRuleDTO>> listByShop(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("shopCode") String shopCode) {
         TeaMachineResult<List<CleanRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/search?tenantCode={tenantCode}&cleanRuleCode={cleanRuleCode}&cleanRuleName={cleanRuleName}&pageNum=1&pageSize=10
-     * @return
-     */
+    
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<CleanRuleDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("cleanRuleCode") String cleanRuleCode, @RequestParam("cleanRuleName") String cleanRuleName,
@@ -65,45 +47,28 @@ public class CleanRuleController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody CleanRulePutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/{tenantcode}/{cleanrulecode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{cleanrulecode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "cleanrulecode") String cleanRuleCode) {
+    
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "cleanRuleCode") String cleanRuleCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, cleanRuleCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/put
-     * @return
-     */
+    
     @PutMapping(value = "/dispatch/put")
     public TeaMachineResult<Void> putDispatch(@RequestBody CleanRuleDispatchPutRequest request) {
         TeaMachineResult<Void> rtn = service.putDispatch(request);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/list?tenantCode=tenant_001
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/dispatch/{tenantcode}/{cleanrulecode}/get")
-    public TeaMachineResult<CleanRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "cleanrulecode") String cleanRuleCode) {
+    
+    @GetMapping(value = "/dispatch/get")
+    public TeaMachineResult<CleanRuleDispatchDTO> getDispatchByMenuCode(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "cleanRuleCode") String cleanRuleCode) {
         TeaMachineResult<CleanRuleDispatchDTO> rtn = service.getDispatchByCleanRuleCode(tenantCode, cleanRuleCode);
         return rtn;
     }

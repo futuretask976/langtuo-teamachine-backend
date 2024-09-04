@@ -37,32 +37,19 @@ public class TeaController {
     @Autowired
     private MessageSource messageSource;
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/tea/{tenantcode}/{teacode}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{teacode}/get")
-    public TeaMachineResult<TeaDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "teacode") String teaCode) {
+    @GetMapping(value = "/get")
+    public TeaMachineResult<TeaDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "teaCode") String teaCode) {
         TeaMachineResult<TeaDTO> rtn = service.getByCode(tenantCode, teaCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/tea/list?tenantCode={tenantCode}
-     * @param tenantCode
-     * @return
-     */
     @GetMapping(value = "/list")
     public TeaMachineResult<List<TeaDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<TeaDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/topping/type/search?tenantCode={tenantCode}&teaCode={teaCode}&teaName={teaName}&pageNum=1&pageSize=10
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<TeaDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("teaCode") String teaCode, @RequestParam("teaName") String teaName,
@@ -72,29 +59,21 @@ public class TeaController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/tea/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody TeaPutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/drinkset/tea/{tenantcode}/{teacode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{teacode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "teacode") String teaCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "teaCode") String teaCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, teaCode);
         return rtn;
     }
 
-    @GetMapping("/{tenantcode}/export")
-    public ResponseEntity<byte[]> exportExcel(@PathVariable(name = "tenantcode") String tenantCode) {
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportExcel(@RequestParam(name = "tenantCode") String tenantCode) {
         TeaMachineResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
         XSSFWorkbook xssfWorkbook = getModel(rtn);
 
@@ -117,8 +96,8 @@ public class TeaController {
                 .body(outputStream.toByteArray());
     }
 
-    @PostMapping("/{tenantcode}/upload")
-    public TeaMachineResult<Void> uploadExcel(@PathVariable(name = "tenantcode") String tenantCode,
+    @PostMapping("/upload")
+    public TeaMachineResult<Void> uploadExcel(@RequestParam(name = "tenantCode") String tenantCode,
             @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY,

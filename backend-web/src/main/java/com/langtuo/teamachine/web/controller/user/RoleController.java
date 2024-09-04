@@ -15,32 +15,20 @@ import java.util.List;
 public class RoleController {
     @Resource
     private RoleMgtService service;
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/role/{tenantcode}/{rolecode}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{rolecode}/get")
-    public TeaMachineResult<RoleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "rolecode") String roleCode) {
+    
+    @GetMapping(value = "/get")
+    public TeaMachineResult<RoleDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "roleCode") String roleCode) {
         TeaMachineResult<RoleDTO> rtn = service.getByCode(tenantCode, roleCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/role/list?tenantCode={tenantCode}
-     * @return
-     */
+    
     @GetMapping(value = "/list")
     public TeaMachineResult<List<RoleDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<RoleDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/role/list?tenantCode={tenantCode}&roleName={roleName}&pageNum=1&pageSize=10
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<RoleDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("roleName") String roleName, @RequestParam("pageNum") int pageNum,
@@ -48,24 +36,16 @@ public class RoleController {
         TeaMachineResult<PageDTO<RoleDTO>> rtn = service.search(tenantCode, roleName, pageNum, pageSize);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/role/put
-     * @return
-     */
+    
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody RolePutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/role/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{rolecode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "rolecode") String roleCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "roleCode") String roleCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, roleCode);
         return rtn;
     }

@@ -16,30 +16,18 @@ public class ModelController {
     @Resource
     private ModelMgtService service;
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/model/{modelcode}/get
-     * @return
-     */
-    @GetMapping(value = "/{modelcode}/get")
-    public TeaMachineResult<ModelDTO> get(@PathVariable(name = "modelcode") String modelCode) {
+    @GetMapping(value = "/get")
+    public TeaMachineResult<ModelDTO> get(@RequestParam(name = "modelCode") String modelCode) {
         TeaMachineResult<ModelDTO> rtn = service.get(modelCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/model/list
-     * @return
-     */
     @GetMapping(value = "/list")
     public TeaMachineResult<List<ModelDTO>> list() {
         TeaMachineResult<List<ModelDTO>> rtn = service.list();
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/model/search?modelCode={modelCode}&pageNum=1&pageSize=2
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<ModelDTO>> search(@RequestParam("modelCode") String modelCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
@@ -47,22 +35,14 @@ public class ModelController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/model/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody ModelPutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/model/{modelcode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{modelcode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "modelcode") String modelCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "modelCode") String modelCode) {
         TeaMachineResult<Void> rtn = service.delete(modelCode);
         return rtn;
     }

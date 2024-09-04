@@ -15,44 +15,26 @@ import java.util.List;
 public class ShopGroupController {
     @Resource
     private ShopGroupMgtService service;
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/group/tenant_001/shopGroup_001/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{shopgroupcode}/get")
-    public TeaMachineResult<ShopGroupDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "shopgroupcode") String shopGroupCode) {
+    
+    @GetMapping(value = "/get")
+    public TeaMachineResult<ShopGroupDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "shopGroupCode") String shopGroupCode) {
         TeaMachineResult<ShopGroupDTO> rtn = service.getByCode(tenantCode, shopGroupCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/group/list?tenantCode=tenant_001
-     * @param tenantCode
-     * @return
-     */
+    
     @GetMapping(value = "/list")
     public TeaMachineResult<List<ShopGroupDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<ShopGroupDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/group/list?tenantCode=tenant_001
-     * @param tenantCode
-     * @return
-     */
+    
     @GetMapping(value = "/listbyadminorg")
     public TeaMachineResult<List<ShopGroupDTO>> listByAdminOrg(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<ShopGroupDTO>> rtn = service.listByAdminOrg(tenantCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/group/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
-     * @return
-     */
+    
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<ShopGroupDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopGroupName") String shopGroupName, @RequestParam("pageNum") int pageNum,
@@ -61,23 +43,15 @@ public class ShopGroupController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/group/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody ShopGroupPutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/group/{tenantcode}/{shopgroupcode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{shopgroupcode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "shopgroupcode") String shopGroupCode) {
+    
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "shopGroupCode") String shopGroupCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, shopGroupCode);
         return rtn;
     }

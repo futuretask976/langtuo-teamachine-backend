@@ -20,8 +20,8 @@ public class CleanActRecordController {
      * @return
      */
     @GetMapping(value = "/{tenantcode}/{idempotentmark}/get")
-    public TeaMachineResult<CleanActRecordDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "idempotentmark") String idempotentMark) {
+    public TeaMachineResult<CleanActRecordDTO> get(@RequestParam(name = "tenantcode") String tenantCode,
+            @RequestParam(name = "idempotentmark") String idempotentMark) {
         TeaMachineResult<CleanActRecordDTO> rtn = service.get(tenantCode, idempotentMark);
         return rtn;
     }
@@ -45,8 +45,8 @@ public class CleanActRecordController {
      * @return
      */
     @DeleteMapping(value = "/{tenantcode}/{idempotentmark}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "idempotentmark") String idempotentMark) {
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "idempotentMark") String idempotentMark) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, idempotentMark);
         return rtn;
     }

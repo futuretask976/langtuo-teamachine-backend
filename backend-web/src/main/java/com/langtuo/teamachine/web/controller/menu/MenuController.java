@@ -18,44 +18,26 @@ public class MenuController {
     @Resource
     private MenuMgtService service;
 
-    /**
-     * url: http://{host}:{port}/teamachine/menuset/menu/{tenantcode}/{menucode}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{menucode}/get")
-    public TeaMachineResult<MenuDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "menucode") String menuCode) {
+    @GetMapping(value = "/get")
+    public TeaMachineResult<MenuDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "menuCode") String menuCode) {
         TeaMachineResult<MenuDTO> rtn = service.getByCode(tenantCode, menuCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachine/menuset/menu/list?tenantCode={tenantCode}
-     * @param tenantCode
-     * @return
-     */
     @GetMapping(value = "/list")
     public TeaMachineResult<List<MenuDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<MenuDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachine/menuset/menu/{tenantCode}/{shopCode}/trigger
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{shopcode}/{machinecode}/trigger")
-    public TeaMachineResult<Void> trigger(@PathVariable("tenantcode") String tenantCode
-            , @PathVariable("shopcode") String shopCode, @PathVariable("machinecode") String machineCode) {
+    @GetMapping(value = "/trigger")
+    public TeaMachineResult<Void> trigger(@RequestParam("tenantCode") String tenantCode
+            , @RequestParam("shopCode") String shopCode, @RequestParam("machineCode") String machineCode) {
         TeaMachineResult<Void> rtn = service.triggerDispatchByShopCode(tenantCode, shopCode, machineCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachine/menuset/menu/search?tenantCode={tenantCode}&menuCode={menuCode}&menuName={menuName}&pageNum=1&pageSize=10
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<MenuDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("menuCode") String menuCode, @RequestParam("menuName") String menuName,
@@ -65,45 +47,28 @@ public class MenuController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachine/menuset/menu/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody MenuPutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachine/menuset/menu/{tenantcode}/{menucode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{menucode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "menucode") String menuCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "menuCode") String menuCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, menuCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachine/menuset/menu/dispatch/put
-     * @return
-     */
     @PutMapping(value = "/dispatch/put")
     public TeaMachineResult<Void> putDispatch(@RequestBody MenuDispatchPutRequest request) {
         TeaMachineResult<Void> rtn = service.putDispatch(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachine/menuset/menu/dispatch/{tenantcode}/{menucode}/get
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/dispatch/{tenantcode}/{menucode}/get")
-    public TeaMachineResult<MenuDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "menucode") String menuCode) {
+    @GetMapping(value = "/dispatch/get")
+    public TeaMachineResult<MenuDispatchDTO> getDispatchByMenuCode(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "menuCode") String menuCode) {
         TeaMachineResult<MenuDispatchDTO> rtn = service.getDispatchByMenuCode(tenantCode, menuCode);
         return rtn;
     }

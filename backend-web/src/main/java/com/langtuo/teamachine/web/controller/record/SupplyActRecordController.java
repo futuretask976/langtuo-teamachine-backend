@@ -15,21 +15,13 @@ public class SupplyActRecordController {
     @Resource
     private SupplyActRecordMgtService service;
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/recordset/warning/{tenantcode}/{idempotentmark}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{idempotentmark}/get")
-    public TeaMachineResult<SupplyActRecordDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "idempotentmark") String idempotentMark) {
+    @GetMapping(value = "/get")
+    public TeaMachineResult<SupplyActRecordDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "idempotentMark") String idempotentMark) {
         TeaMachineResult<SupplyActRecordDTO> rtn = service.get(tenantCode, idempotentMark);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/recordset/warning/search?tenantCode={tenantCode}&shopGroupName=&pageNum=1&pageSize=10
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<SupplyActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopGroupCodeList") List<String> shopGroupCodeList,
@@ -44,9 +36,9 @@ public class SupplyActRecordController {
      * url: http://{host}:{port}/teamachinebackend/recordset/warning/{tenantcode}/{cleanrulecode}/delete
      * @return
      */
-    @DeleteMapping(value = "/{tenantcode}/{idempotentmark}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "idempotentmark") String idempotentMark) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "idempotentMark") String idempotentMark) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, idempotentMark);
         return rtn;
     }

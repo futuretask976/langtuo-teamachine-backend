@@ -23,31 +23,19 @@ public class TenantController {
 
     @Autowired
     private MessageSource messageSource;
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/tenant/{tenantcode}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/get")
-    public TeaMachineResult<TenantDTO> get(@PathVariable(name = "tenantcode") String tenantCode) {
+    
+    @GetMapping(value = "/get")
+    public TeaMachineResult<TenantDTO> get(@RequestParam(name = "tenantCode") String tenantCode) {
         TeaMachineResult<TenantDTO> rtn = service.get(tenantCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/userset/tenant/list
-     * @return
-     */
+    
     @GetMapping(value = "/list")
     public TeaMachineResult<List<TenantDTO>> list() {
         TeaMachineResult<List<TenantDTO>> rtn = service.list();
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/tenant/search?tenantName={tenantName}&contactPerson={contactPerson}&pageNum=1&pageSize=2
-     * @return
-     */
+    
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<TenantDTO>> search(@RequestParam("tenantName") String tenantName,
             @RequestParam("contactPerson") String contactPerson, @RequestParam("pageNum") int pageNum,
@@ -56,22 +44,14 @@ public class TenantController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/tenant/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody TenantPutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/tenant/{tenantcode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode);
         return rtn;
     }

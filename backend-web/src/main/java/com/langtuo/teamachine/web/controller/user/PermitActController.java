@@ -23,7 +23,6 @@ public class PermitActController {
     @GetMapping(value = "/list")
     public TeaMachineResult<List<PermitActGroupDTO>> list() {
         TeaMachineResult<List<PermitActGroupDTO>> rtn = service.listPermitActGroup();
-        log.info("$$$$$ PermitActController#LangTuoResult entering");
         return rtn;
     }
 }

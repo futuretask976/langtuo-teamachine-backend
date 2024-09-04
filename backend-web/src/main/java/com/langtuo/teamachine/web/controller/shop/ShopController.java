@@ -15,42 +15,26 @@ import java.util.List;
 public class ShopController {
     @Resource
     private ShopMgtService service;
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/tenant_001/shop_001/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{shopcode}/get")
-    public TeaMachineResult<ShopDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "shopcode") String shopCode) {
+    
+    @GetMapping(value = "/get")
+    public TeaMachineResult<ShopDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "shopCode") String shopCode) {
         TeaMachineResult<ShopDTO> rtn = service.getByCode(tenantCode, shopCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/list?tenantCode=tenant_001
-     * @return
-     */
     @GetMapping(value = "/list")
     public TeaMachineResult<List<ShopDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<ShopDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/list?tenantCode=tenant_001
-     * @return
-     */
     @GetMapping(value = "/listbyadminorg")
     public TeaMachineResult<List<ShopDTO>> listByAdminOrg(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<ShopDTO>> rtn = service.listByAdminOrg(tenantCode);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/search?tenantCode=tenant_001&shopName=&pageNum=1&pageSize=10
-     * @return
-     */
+    
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<ShopDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopName") String shopName, @RequestParam("shopGroupName") String shopGroupName,
@@ -59,23 +43,15 @@ public class ShopController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody ShopPutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/shop//{tenantcode}/{shopcode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{shopcode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "shopcode") String shopCode) {
+    
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "shopCode") String shopCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, shopCode);
         return rtn;
     }

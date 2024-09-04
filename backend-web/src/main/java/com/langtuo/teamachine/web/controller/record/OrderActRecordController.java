@@ -14,22 +14,14 @@ import java.util.List;
 public class OrderActRecordController {
     @Resource
     private OrderActRecordMgtService service;
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/recordset/warning/tenant_001/shopGroup_001/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{idempotentmark}/get")
-    public TeaMachineResult<OrderActRecordDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "idempotentmark") String idempotentMark) {
+    
+    @GetMapping(value = "/get")
+    public TeaMachineResult<OrderActRecordDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "idempotentMark") String idempotentMark) {
         TeaMachineResult<OrderActRecordDTO> rtn = service.get(tenantCode, idempotentMark);
         return rtn;
     }
-
-    /**
-     * url: http://{host}:{port}/teamachinebackend/recordset/warning/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
-     * @return
-     */
+    
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<OrderActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopGroupCodeList") List<String> shopGroupCodeList,
@@ -40,13 +32,9 @@ public class OrderActRecordController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/recordset/warning/{tenantcode}/{cleanrulecode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{idempotentmark}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "idempotentmark") String idempotentMark) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "idempotentMark") String idempotentMark) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, idempotentMark);
         return rtn;
     }

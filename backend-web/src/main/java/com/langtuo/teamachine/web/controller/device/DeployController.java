@@ -27,21 +27,13 @@ public class DeployController {
     @Resource
     private DeployMgtService service;
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/deploy/{tenantcode}/{deploycode}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{deploycode}/get")
-    public TeaMachineResult<DeployDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "deploycode") String deployCode) {
+    @GetMapping(value = "/get")
+    public TeaMachineResult<DeployDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "deployCode") String deployCode) {
         TeaMachineResult<DeployDTO> rtn = service.getByCode(tenantCode, deployCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/deploy/search?tenantCode={tenantCode}&deployCode={deployCode}&machineCode={machineCode}&shopName={shopName}&state={state}&pageNum=1&pageSize=10
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<DeployDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("deployCode") String deployCode, @RequestParam("machineCode") String machineCode,
@@ -52,51 +44,33 @@ public class DeployController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/deploy/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody DeployPutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/deploy/{tenantcode}/{deploycode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{deploycode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "deploycode") String deployCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "tenantCode") String deployCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, deployCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/deploy/deploycode/generate?tenantCode={tenantCode}
-     * @param tenantCode
-     * @return
-     */
     @GetMapping(value = "/deploycode/generate")
     public TeaMachineResult<String> generateDeployCode(@RequestParam(name = "tenantCode") String tenantCode) {
         TeaMachineResult<String> rtn = service.generateDeployCode();
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/deploy/machinecode/generate?tenantCode={tenantCode}
-     * @param tenantCode
-     * @return
-     */
     @GetMapping(value = "/machinecode/generate")
     public TeaMachineResult<String> generateMachineCode(@RequestParam(name = "tenantCode") String tenantCode) {
         TeaMachineResult<String> rtn = service.generateMachineCode();
         return rtn;
     }
 
-    @GetMapping("/{tenantcode}/export")
-    public ResponseEntity<byte[]> exportExcel(@PathVariable(name = "tenantcode") String tenantCode) {
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportExcel(@RequestParam(name = "tenantCode") String tenantCode) {
         TeaMachineResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
         XSSFWorkbook xssfWorkbook = getModel(rtn);
 

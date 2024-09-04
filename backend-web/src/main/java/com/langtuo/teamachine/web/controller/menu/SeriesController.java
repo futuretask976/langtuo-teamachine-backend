@@ -16,32 +16,19 @@ public class SeriesController {
     @Resource
     private SeriesMgtService service;
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/menuset/series/{tenantcode}/{seriescode}/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{seriescode}/get")
-    public TeaMachineResult<SeriesDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "seriescode") String seriesCode) {
+    @GetMapping(value = "/get")
+    public TeaMachineResult<SeriesDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "seriesCode") String seriesCode) {
         TeaMachineResult<SeriesDTO> rtn = service.getByCode(tenantCode, seriesCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/menuset/series/list?tenantCode={tenantCode}
-     * @param tenantCode
-     * @return
-     */
     @GetMapping(value = "/list")
     public TeaMachineResult<List<SeriesDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<SeriesDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/menuset/series/search?tenantCode={tenantCode}&seriesCode={seriesCode}&seriesName={seriesName}&pageNum=1&pageSize=10
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<SeriesDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("seriesCode") String seriesCode, @RequestParam("seriesName") String seriesName,
@@ -51,23 +38,15 @@ public class SeriesController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/menuset/series/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody SeriesPutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/menuset/series/{tenantcode}/{seriescode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{seriescode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "seriescode") String seriesCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "seriesCode") String seriesCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, seriesCode);
         return rtn;
     }

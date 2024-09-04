@@ -18,33 +18,20 @@ public class WarningRuleController {
     @Resource
     private WarningRuleMgtService service;
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/warning/tenant_001/shopGroup_001/get
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{warningrulecode}/get")
-    public TeaMachineResult<WarningRuleDTO> get(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "warningrulecode") String warningRuleCode) {
+    @GetMapping(value = "/get")
+    public TeaMachineResult<WarningRuleDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "warningRuleCode") String warningRuleCode) {
         TeaMachineResult<WarningRuleDTO> rtn = service.getByCode(tenantCode, warningRuleCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/warning/{tenantCode}/{shopcode}/listbyshop
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/{tenantcode}/{shopcode}/listbyshop")
-    public TeaMachineResult<List<WarningRuleDTO>> listByShop(@PathVariable("tenantcode") String tenantCode,
-            @PathVariable("shopcode") String shopCode) {
+    @GetMapping(value = "/listbyshop")
+    public TeaMachineResult<List<WarningRuleDTO>> listByShop(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("shopCode") String shopCode) {
         TeaMachineResult<List<WarningRuleDTO>> rtn = service.listByShopCode(tenantCode, shopCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/warning/search?tenantCode=tenant_001&shopGroupName=&pageNum=1&pageSize=10
-     * @return
-     */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<WarningRuleDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("warningRuleCode") String warningRuleCode, @RequestParam("warningRuleName") String warningRuleName,
@@ -54,45 +41,28 @@ public class WarningRuleController {
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/warning/put
-     * @return
-     */
     @PutMapping(value = "/put")
     public TeaMachineResult<Void> put(@RequestBody WarningRulePutRequest request) {
         TeaMachineResult<Void> rtn = service.put(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/warning/{tenantcode}/{cleanrulecode}/delete
-     * @return
-     */
-    @DeleteMapping(value = "/{tenantcode}/{warningrulecode}/delete")
-    public TeaMachineResult<Void> delete(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "warningrulecode") String warningRuleCode) {
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "warningRuleCode") String warningRuleCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, warningRuleCode);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/put
-     * @return
-     */
     @PutMapping(value = "/dispatch/put")
     public TeaMachineResult<Void> putDispatch(@RequestBody WarningRuleDispatchPutRequest request) {
         TeaMachineResult<Void> rtn = service.putDispatch(request);
         return rtn;
     }
 
-    /**
-     * url: http://{host}:{port}/teamachinebackend/ruleset/clean/list?tenantCode=tenant_001
-     * @param tenantCode
-     * @return
-     */
-    @GetMapping(value = "/dispatch/{tenantcode}/{warningrulecode}/get")
-    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByMenuCode(@PathVariable(name = "tenantcode") String tenantCode,
-            @PathVariable(name = "warningrulecode") String warningRuleCode) {
+    @GetMapping(value = "/dispatch/get")
+    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByMenuCode(@RequestParam(name = "tenantCode") String tenantCode,
+            @RequestParam(name = "warningRuleCode") String warningRuleCode) {
         TeaMachineResult<WarningRuleDispatchDTO> rtn = service.getDispatchByWarningRuleCode(tenantCode, warningRuleCode);
         return rtn;
     }
