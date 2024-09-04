@@ -52,7 +52,7 @@ public class DeployController {
 
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "tenantCode") String deployCode) {
+            @RequestParam(name = "deployCode") String deployCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, deployCode);
         return rtn;
     }
