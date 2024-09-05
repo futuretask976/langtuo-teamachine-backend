@@ -293,7 +293,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> uploadByExcel(String tenantCode, XSSFWorkbook workbook) {
+    public TeaMachineResult<Void> importByExcel(String tenantCode, XSSFWorkbook workbook) {
         if (StringUtils.isBlank(tenantCode) || workbook == null) {
             return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
                     messageSource));
@@ -322,7 +322,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 String teaCode = cell4TeaCode.getStringCellValue();
                 lastTeaPutRequest.setTeaCode(teaCode);
                 // 设置茶品名称
-                Cell cell4TeaName = row.getCell(BizConsts.TITLE_TEA_CODE_INDEX);
+                Cell cell4TeaName = row.getCell(BizConsts.TITLE_TEA_NAME_INDEX);
                 String teaName = cell4TeaName.getStringCellValue();
                 lastTeaPutRequest.setTeaName(teaName);
                 // 设置外部茶品编码

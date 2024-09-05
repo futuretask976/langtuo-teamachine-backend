@@ -109,7 +109,7 @@ public class TeaController {
         try {
             inputStream = new ByteArrayInputStream(file.getBytes());
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            TeaMachineResult<Void> uploadResult = service.uploadByExcel(tenantCode, workbook);
+            TeaMachineResult<Void> uploadResult = service.importByExcel(tenantCode, workbook);
             return uploadResult;
         } catch (IOException e) {
             log.error("parse upload file error: " + e.getMessage(), e);

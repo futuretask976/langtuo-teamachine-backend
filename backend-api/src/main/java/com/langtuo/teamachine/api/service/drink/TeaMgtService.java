@@ -64,5 +64,5 @@ public interface TeaMgtService {
      * @param workbook
      * @return
      */
-    TeaMachineResult<Void> uploadByExcel(String tenantCode, XSSFWorkbook workbook);
+    TeaMachineResult<Void> importByExcel(String tenantCode, XSSFWorkbook workbook);
 }
