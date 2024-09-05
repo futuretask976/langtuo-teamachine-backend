@@ -21,7 +21,9 @@
     <select id="selectOne" resultMap="machineDeployPOMap">
         SELECT * FROM deploy
         WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
+            <if test="tenantCode != null">
+                AND tenant_code = #{tenantCode}
+            </if>
             <if test="deployCode != null">
                 AND deploy_code = #{deployCode}
             </if>
@@ -100,7 +102,9 @@
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
             </if>
         WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
+            <if test="tenantCode != null">
+                AND tenant_code = #{tenantCode}
+            </if>
             AND deploy_code = #{deployCode}
     </update>
 

@@ -38,4 +38,5 @@ teamachine:
         - /login/**
         - /logout/**
         - /userset/tenant/list/**
+        - /deviceset/machine/activate/**
         - /mqtt/**
