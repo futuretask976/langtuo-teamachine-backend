@@ -16,18 +16,12 @@ import java.util.List;
  */
 public class MachineDetails implements UserDetails {
     /**
-     * 机器信息
-     */
-    private MachineDTO machineDTO;
-
-    /**
      * 部署信息
      */
     private DeployDTO deployDTO;
 
-    public MachineDetails(DeployDTO deployDTO, MachineDTO machineDTO) {
+    public MachineDetails(DeployDTO deployDTO) {
         this.deployDTO = deployDTO;
-        this.machineDTO = machineDTO;
     }
 
     @Override
@@ -47,7 +41,7 @@ public class MachineDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return machineDTO.getMachineCode();
+        return deployDTO.getMachineCode();
     }
 
     @Override
@@ -71,10 +65,10 @@ public class MachineDetails implements UserDetails {
     }
 
     /**
-     *
+     * 返回租户编码
      * @return
      */
     public String getTenantCode() {
-        return machineDTO.getTenantCode();
+        return deployDTO.getTenantCode();
     }
 }

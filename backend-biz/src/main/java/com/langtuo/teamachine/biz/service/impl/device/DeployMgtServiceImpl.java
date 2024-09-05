@@ -282,6 +282,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         DeployDTO dto = new DeployDTO();
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
+        dto.setTenantCode(po.getTenantCode());
         dto.setDeployCode(po.getDeployCode());
         dto.setMachineCode(po.getMachineCode());
         dto.setModelCode(po.getModelCode());
