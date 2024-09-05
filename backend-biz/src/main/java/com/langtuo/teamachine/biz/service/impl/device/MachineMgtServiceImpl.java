@@ -136,6 +136,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
                     messageSource));
             }
 
+            // 激活时，设备端是不知道 tenantCode 的，只能通过 deployCode 查找和更新
             DeployPO exist = deployAccessor.selectOneByDeployCode(deployPO.getTenantCode(), deployPO.getDeployCode());
             if (exist == null) {
                 return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,

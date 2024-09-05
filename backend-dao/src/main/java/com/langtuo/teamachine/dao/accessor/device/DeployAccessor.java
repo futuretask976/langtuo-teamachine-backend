@@ -40,6 +40,16 @@ public class DeployAccessor {
      */
     private long machineCodeSeqCurVal;
 
+    /**
+     * 用于机器首次激活使用，此时机器并不知道 tenantCode
+     * @param deployCode
+     * @return
+     */
+    public DeployPO selectOneByDeployCode(String deployCode) {
+        DeployPO po = mapper.selectOne(null, deployCode, null);
+        return po;
+    }
+
     public DeployPO selectOneByDeployCode(String tenantCode, String deployCode) {
         // 首先访问缓存
         DeployPO cached = getCache(tenantCode, deployCode, null);
