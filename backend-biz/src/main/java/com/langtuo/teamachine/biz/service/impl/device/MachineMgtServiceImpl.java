@@ -149,7 +149,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
             MachinePO existMachinePO = machineAccessor.selectOneByMachineCode(existDeployPO.getTenantCode(),
                     existDeployPO.getMachineCode());
-            if (existMachinePO != null) {
+            if (existMachinePO == null) {
                 MachinePO machinePO = convertToMachinePO(request, existDeployPO);
                 int inserted = machineAccessor.insert(machinePO);
                 if (inserted != 1) {
