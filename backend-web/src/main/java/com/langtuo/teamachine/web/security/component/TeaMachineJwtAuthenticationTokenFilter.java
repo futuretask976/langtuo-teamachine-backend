@@ -60,7 +60,7 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
             String deployCode = request.getHeader("Deploy-Code");
             UserDetails machineDetails = this.teaMachineUserDetailService.loadMachineUserDetails(tenantCode,
                     deployCode, machineCode);
-            if (machineDetails.getPassword().equals(deployCode)) {
+            if (machineDetails != null) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         machineDetails, null, machineDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

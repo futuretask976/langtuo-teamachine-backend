@@ -129,27 +129,37 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
         TeaMachineResult<MachineDTO> teaMachineResult;
         try {
-            DeployPO deployPO = convert(request);
-            int updated = deployAccessor.update(deployPO);
+            // 激活时，设备端是不知道 tenantCode 的，只能通过 deployCode 查找和更新
+            DeployPO existDeployPO = deployAccessor.selectOneByDeployCode(request.getDeployCode());
+            if (existDeployPO == null) {
+                return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+                        messageSource));
+            }
+            if (!existDeployPO.getMachineCode().equals(request.getMachineCode())) {
+                return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_DEPLOY_MACHINE_NOT_MATCH,
+                        messageSource));
+            }
+
+            existDeployPO.setState(1);
+            int updated = deployAccessor.update(existDeployPO);
             if (updated != 1) {
                 return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL,
                     messageSource));
             }
 
-            // 激活时，设备端是不知道 tenantCode 的，只能通过 deployCode 查找和更新
-            DeployPO exist = deployAccessor.selectOneByDeployCode(deployPO.getTenantCode(), deployPO.getDeployCode());
-            if (exist == null) {
-                return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
+            MachinePO existMachinePO = machineAccessor.selectOneByMachineCode(existDeployPO.getTenantCode(),
+                    existDeployPO.getMachineCode());
+            if (existMachinePO != null) {
+                MachinePO machinePO = convertToMachinePO(request, existDeployPO);
+                int inserted = machineAccessor.insert(machinePO);
+                if (inserted != 1) {
+                    return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+                            messageSource));
+                }
+                teaMachineResult = TeaMachineResult.success(convert(machinePO));
+            } else {
+                teaMachineResult = TeaMachineResult.success(convert(existMachinePO));
             }
-
-            MachinePO machinePO = convertToMachinePO(request, exist);
-            int inserted = machineAccessor.insert(machinePO);
-            if (inserted != 1) {
-                return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
-                        messageSource));
-            }
-            teaMachineResult = TeaMachineResult.success(convert(machinePO));
         } catch (Exception e) {
             log.error("activate error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
@@ -246,19 +256,6 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             dto.setShopName(shopPO.getShopName());
         }
         return dto;
-    }
-
-    private DeployPO convert(MachineActivatePutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        DeployPO po = new DeployPO();
-        po.setDeployCode(request.getDeployCode());
-        po.setMachineCode(request.getMachineCode());
-        po.setState(1);
-        po.setExtraInfo(request.getExtraInfo());
-        return po;
     }
 
     private MachinePO convertToMachinePO(MachineActivatePutRequest request, DeployPO deployPO) {

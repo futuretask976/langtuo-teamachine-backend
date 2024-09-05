@@ -63,6 +63,9 @@ public class TeaMachineUserDetailService implements UserDetailsService {
         if (deployDTO == null || machineDTO == null) {
             return null;
         }
+        if (!deployDTO.getMachineCode().equals(machineDTO.getMachineCode())) {
+            return null;
+        }
 
         MachineDetails adminDetails = new MachineDetails(deployDTO, machineDTO);
         return adminDetails;
