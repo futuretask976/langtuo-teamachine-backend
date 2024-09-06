@@ -86,22 +86,4 @@ public class SecurityBeanConfig {
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new TeaMachineLogoutSuccessHandler();
     }
-
-//    @Bean
-//    public JwtTokenHelper jwtTokenUtil() {
-//        System.out.printf("$$$$$ SecurityBaseConfig#jwtTokenUtil entering\n");
-//        return new JwtTokenHelper();
-//    }
-
-//    @Bean
-//    public GxAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
-//        System.out.printf("$$$$$ SecurityBaseConfig#jwtAuthenticationTokenFilter entering\n");
-//        return new GxAuthenticationTokenFilter();
-//    }
-
-//    @Bean
-//    public AuthenticationProvider authenticationProvider() {
-//        System.out.printf("$$$$$ SecurityBaseConfig#authenticationProvider entering\n");
-//        return new GxAuthenticationProvider();
-//    }
 }
