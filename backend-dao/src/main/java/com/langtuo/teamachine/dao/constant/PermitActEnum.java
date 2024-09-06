@@ -30,13 +30,14 @@ public enum PermitActEnum {
     MENU_MGT("menu_mgt", "菜单管理", "menu_set"),
 
     // 食安规则
-    OPEN_RULE_RULE_MGT("drain_rule_mgt", "营业准备管理", "rule_set"),
+    DRAIN_RULE_RULE_MGT("drain_rule_mgt", "排空管理", "rule_set"),
     CLEAN_RULE_MGT("clean_rule_mgt", "清洗规则管理", "rule_set"),
     WARNING_RULE_MGT("warning_rule_mgt", "预警规则管理", "rule_set"),
 
     // 报表
     INVALID_REC_MGT("invalid_rec_mgt", "废料记录管理", "report_set"),
     SUPPLY_REC_MGT("supply_rec_mgt", "补料记录管理", "report_set"),
+    DRAIN_REC_MGT("drain_rec_mgt", "排空记录管理", "report_set"),
     CLEAN_REC_MGT("clean_rec_mgt", "清洗记录管理", "report_set"),
     ORDER_REC_MGT("order_rec_mgt", "订单记录管理", "report_set"),
     ;

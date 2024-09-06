@@ -56,4 +56,55 @@ public class WebConsts {
     public static final String JSON_KEY_ACCESS_SUCCESS = "accessSuccess";
     public static final String JSON_VAL_TRUE = "true";
     public static final String JSON_VAL_FALSE = "false";
+
+    /**
+     * 授权处理路径
+     */
+    // 设备
+    public static final String ANT_PATTERN_MODEL_PATH = "/deviceset/model/**";
+    public static final String ANT_PATTERN_DEPLOY_PATH = "/deviceset/deploy/**";
+    public static final String ANT_PATTERN_MACHINE_PATH = "/deviceset/machine/**";
+    // 用户
+    public static final String ANT_PATTERN_ROLE_LIST_PATH = "/userset/role/list/**";
+    public static final String ANT_PATTERN_PERMITACT_LIST_PATH = "/userset/permitact/list/**";
+    public static final String ANT_PATTERN_ORG_LIST_PATH = "/userset/org/list/**";
+    public static final String ANT_PATTERN_TENANT_PATH = "/userset/tenant/**";
+    public static final String ANT_PATTERN_ORG_PATH = "/userset/org/**";
+    public static final String ANT_PATTERN_PERMITACT_PATH = "/userset/permitact/**";
+    public static final String ANT_PATTERN_ROLE_PATH = "/userset/role/**";
+    public static final String ANT_PATTERN_ADMIN_PATH = "/userset/admin/**";
+    // 店铺
+    public static final String ANT_PATTERN_SHOP_GROUP_LIST_PATH = "/shopset/group/list/**";
+    public static final String ANT_PATTERN_SHOP_GROUP_PATH = "/shopset/group/**";
+    public static final String ANT_PATTERN_SHOP_PATH = "/shopset/**";
+    // 饮品生产
+    public static final String ANT_PATTERN_TOPPING_TYPE_LIST_PATH = "/drinkset/topping/type/list/**";
+    public static final String ANT_PATTERN_TEA_TYPE_LIST_PATH = "/drinkset/tea/type/list/**";
+    public static final String ANT_PATTERN_TOPPING_TYPE_PATH = "/drinkset/topping/type/**";
+    public static final String ANT_PATTERN_TOPPING_PATH = "/drinkset/topping/**";
+    public static final String ANT_PATTERN_SEPC_PATH = "/drinkset/spec/**";
+    public static final String ANT_PATTERN_TEA_TYPE_PATH = "/drinkset/tea/type/**";
+    public static final String ANT_PATTERN_TEA_PATH = "/drinkset/tea/**";
+    public static final String ANT_PATTERN_ACCURACY_PATH = "/drinkset/accuracy/**";
+    // 菜单
+    public static final String ANT_PATTERN_SERIES_LIST_PATH = "/menuset/series/list/**";
+    public static final String ANT_PATTERN_SERIES_PATH = "/menuset/series/**";
+    public static final String ANT_PATTERN_MENU_PATH = "/menuset/menu/**";
+    // 食安规则
+    public static final String ANT_PATTERN_DRAIN_PATH = "/ruleset/drain/**";
+    public static final String ANT_PATTERN_CLEAN_PATH = "/ruleset/clean/**";
+    public static final String ANT_PATTERN_WARNING_PATH = "/ruleset/warning/**";
+    // 日常记录
+    public static final String ANT_PATTERN_DRAIN_ACT_PATH = "/recordset/drain/**";
+    public static final String ANT_PATTERN_CLEAN_ACT_PATH = "/recordset/clean/**";
+    public static final String ANT_PATTERN_INVALID_ACT_PATH = "/recordset/invalid/**";
+    public static final String ANT_PATTERN_SUPPLY_ACT_PATH = "/recordset/supply/**";
+    public static final String ANT_PATTERN_ORDER_ACT_PATH = "/recordset/order/**";
+
+    /**
+     * 特殊角色-权限点
+     */
+    public static final String ROLE_MATCH_PREFIX = "ROLE_";
+    public static final String SPECIAL_PERMIT_ACT_CODE_MACHINE = "machine";
+    public static final String SPECIAL_PERMIT_ACT_CODE_TENANT_MGT = "tenant_mgt";
 }

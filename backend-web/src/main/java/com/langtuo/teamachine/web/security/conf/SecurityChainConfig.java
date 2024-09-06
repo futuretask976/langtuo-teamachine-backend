@@ -1,5 +1,7 @@
 package com.langtuo.teamachine.web.security.conf;
 
+import com.langtuo.teamachine.dao.constant.PermitActEnum;
+import com.langtuo.teamachine.web.constant.WebConsts;
 import com.langtuo.teamachine.web.security.component.TeaMachineJwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -91,44 +93,94 @@ public class SecurityChainConfig {
         // 配置授权处理，授权管理器可以配置多个
         httpSecurity.authorizeRequests()
                 // 设备
-                .antMatchers("/deviceset/model/**").hasAnyRole("model_mgt", "machine")
-                .antMatchers("/deviceset/deploy/**").hasAnyRole("deploy_mgt")
-                .antMatchers("/deviceset/machine/**").hasAnyRole("machine_mgt")
+                .antMatchers(WebConsts.ANT_PATTERN_MODEL_PATH).hasAnyRole(
+                        PermitActEnum.MODEL_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
+                .antMatchers(WebConsts.ANT_PATTERN_DEPLOY_PATH).hasAnyRole(
+                        PermitActEnum.DEPLOY_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_MACHINE_PATH).hasAnyRole(
+                        PermitActEnum.MACHINE_MGT.getPermitActCode())
                 // 用户
-                .antMatchers("/userset/role/list/**").hasAnyRole("role_mgt", "org_mgt", "admin_mgt")
-                .antMatchers("/userset/permitact/list/**").hasAnyRole("role_mgt", "org_mgt", "admin_mgt")
-                .antMatchers("/userset/org/list/**").hasAnyRole("role_mgt", "org_mgt", "admin_mgt")
-                .antMatchers("/userset/tenant/**").hasAnyRole("tenant_mgt")
-                .antMatchers("/userset/org/**").hasAnyRole("org_mgt")
-                .antMatchers("/userset/permitact/**").hasAnyRole("permit_act_mgt")
-                .antMatchers("/userset/role/**").hasAnyRole("role_mgt")
-                .antMatchers("/userset/admin/**").hasAnyRole("admin_mgt")
+                .antMatchers(WebConsts.ANT_PATTERN_ROLE_LIST_PATH).hasAnyRole(
+                        PermitActEnum.ROLE_MGT.getPermitActCode(),
+                        PermitActEnum.ORG_MGT.getPermitActCode(),
+                        PermitActEnum.ADMIN_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_PERMITACT_LIST_PATH).hasAnyRole(
+                        PermitActEnum.ROLE_MGT.getPermitActCode(),
+                        PermitActEnum.ORG_MGT.getPermitActCode(),
+                        PermitActEnum.ADMIN_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_ORG_LIST_PATH).hasAnyRole(
+                        PermitActEnum.ROLE_MGT.getPermitActCode(),
+                        PermitActEnum.ORG_MGT.getPermitActCode(),
+                        PermitActEnum.ADMIN_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_TENANT_PATH).hasAnyRole(
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_TENANT_MGT)
+                .antMatchers(WebConsts.ANT_PATTERN_ORG_PATH).hasAnyRole(
+                        PermitActEnum.ORG_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_PERMITACT_PATH).hasAnyRole(
+                        PermitActEnum.PERMIT_ACT_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_ROLE_PATH).hasAnyRole(
+                        PermitActEnum.ROLE_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_ADMIN_PATH).hasAnyRole(
+                        PermitActEnum.ADMIN_MGT.getPermitActCode())
                 // 店铺
-                .antMatchers("/shopset/group/list/**").hasAnyRole("shop_group_mgt", "shop_mgt")
-                .antMatchers("/shopset/group/**").hasAnyRole("shop_group_mgt")
-                .antMatchers("/shopset/shop/**").hasAnyRole("shop_mgt")
+                .antMatchers(WebConsts.ANT_PATTERN_SHOP_GROUP_LIST_PATH).hasAnyRole(
+                        PermitActEnum.SHOP_GROUP_MGT.getPermitActCode(),
+                        PermitActEnum.SHOP_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_SHOP_GROUP_PATH).hasAnyRole(
+                        PermitActEnum.SHOP_GROUP_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_SHOP_PATH).hasAnyRole(
+                        PermitActEnum.SHOP_MGT.getPermitActCode())
                 // 饮品生产
-                .antMatchers("/drinkset/topping/type/list/**").hasAnyRole("topping_type_mgt", "topping_mgt")
-                .antMatchers("/drinkset/tea/type/list/**").hasAnyRole("tea_type_mgt", "tea_mgt")
-                .antMatchers("/drinkset/topping/type/**").hasAnyRole("topping_type_mgt")
-                .antMatchers("/drinkset/topping/**").hasAnyRole("topping_mgt")
-                .antMatchers("/drinkset/spec/**").hasAnyRole("spec_mgt")
-                .antMatchers("/drinkset/tea/type/**").hasAnyRole("tea_type_mgt")
-                .antMatchers("/drinkset/tea/**").hasAnyRole("tea_mgt")
-                .antMatchers("/drinkset/accuracy/**").hasAnyRole("accuracy_mgt", "machine")
+                .antMatchers(WebConsts.ANT_PATTERN_TOPPING_TYPE_LIST_PATH).hasAnyRole(
+                        PermitActEnum.TOPPING_TYPE_MGT.getPermitActCode(),
+                        PermitActEnum.TOPPING_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_TEA_TYPE_LIST_PATH).hasAnyRole(
+                        PermitActEnum.TEA_TYPE_MGT.getPermitActCode(),
+                        PermitActEnum.TEA_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_TOPPING_TYPE_PATH).hasAnyRole(
+                        PermitActEnum.TOPPING_TYPE_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_TOPPING_PATH).hasAnyRole(
+                        PermitActEnum.TOPPING_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_SEPC_PATH).hasAnyRole(
+                        PermitActEnum.SPEC_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_TEA_TYPE_PATH).hasAnyRole(
+                        PermitActEnum.TEA_TYPE_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_TEA_PATH).hasAnyRole(
+                        PermitActEnum.TEA_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_ACCURACY_PATH).hasAnyRole(
+                        PermitActEnum.ACCURACY_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
                 // 菜单
-                .antMatchers("/menuset/series/list/**").hasAnyRole("series_mgt", "menu_mgt")
-                .antMatchers("/menuset/series/**").hasAnyRole("series_mgt")
-                .antMatchers("/menuset/menu/**").hasAnyRole("menu_mgt", "machine")
+                .antMatchers(WebConsts.ANT_PATTERN_SERIES_LIST_PATH).hasAnyRole(
+                        PermitActEnum.SERIES_MGT.getPermitActCode(),
+                        PermitActEnum.MENU_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_SERIES_PATH).hasAnyRole(
+                        PermitActEnum.SERIES_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_MENU_PATH).hasAnyRole(
+                        PermitActEnum.MENU_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
                 // 食安规则
-                .antMatchers("/ruleset/drain/**").hasAnyRole("drain_rule_mgt", "machine")
-                .antMatchers("/ruleset/clean/**").hasAnyRole("clean_rule_mgt", "machine")
-                .antMatchers("/ruleset/warning/**").hasAnyRole("warning_rule_mgt", "machine")
+                .antMatchers(WebConsts.ANT_PATTERN_DRAIN_PATH).hasAnyRole(
+                        PermitActEnum.DRAIN_RULE_RULE_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
+                .antMatchers(WebConsts.ANT_PATTERN_CLEAN_PATH).hasAnyRole(
+                        PermitActEnum.CLEAN_RULE_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
+                .antMatchers(WebConsts.ANT_PATTERN_WARNING_PATH).hasAnyRole(
+                        PermitActEnum.WARNING_RULE_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
                 // 日常记录
-                .antMatchers("/recordset/clean/**").hasAnyRole("clean_rec_mgt")
-                .antMatchers("/recordset/invalid/**").hasAnyRole("invalid_rec_mgt")
-                .antMatchers("/recordset/order/**").hasAnyRole("order_rec_mgt")
-                .antMatchers("/recordset/supply/**").hasAnyRole("supply_rec_mgt")
+                .antMatchers(WebConsts.ANT_PATTERN_DRAIN_ACT_PATH).hasAnyRole(
+                        PermitActEnum.DRAIN_REC_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_CLEAN_ACT_PATH).hasAnyRole(
+                        PermitActEnum.CLEAN_REC_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_INVALID_ACT_PATH).hasAnyRole(
+                        PermitActEnum.INVALID_REC_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_SUPPLY_ACT_PATH).hasAnyRole(
+                        PermitActEnum.SUPPLY_REC_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_ORDER_ACT_PATH).hasAnyRole(
+                        PermitActEnum.ORDER_REC_MGT.getPermitActCode())
                 .anyRequest().authenticated();
 
         // 异常处理
