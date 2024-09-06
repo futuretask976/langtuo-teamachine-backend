@@ -26,7 +26,7 @@ public class TeaMachineAuthenticationEntryPoint implements AuthenticationEntryPo
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         JSONObject responseBody = new JSONObject();
-        responseBody.put("loginSuccess", "false");
+        responseBody.put(WebConsts.JSON_KEY_LOGIN_SUCCESS, WebConsts.JSON_VAL_FALSE);
         response.getWriter().println(responseBody.toJSONString());
         response.getWriter().flush();
         // 如果不是前后端分离项目，这里返回/login渲染thymeleaf模板

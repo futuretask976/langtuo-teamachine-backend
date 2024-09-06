@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
+import com.langtuo.teamachine.web.constant.WebConsts;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -17,15 +18,15 @@ public class TeaMachineAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException e) throws IOException {
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Cache-Control","no-cache");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
+        response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, WebConsts.RESP_HEADER_VAL_ALL);
+        response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, WebConsts.RESP_HEADER_VAL_TRUE);
+        response.setHeader(WebConsts.RESP_HEADER_CACHE_CONTROL,WebConsts.RESP_HEADER_VAL_NO_CACHE);
+        response.setCharacterEncoding(WebConsts.RESP_HEADER_VAL_ENCODING_UTF8);
+        response.setContentType(WebConsts.RESP_HEADER_VAL_CONT_TYPE_APPLICATIONJSON);
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
         JSONObject responseBody = new JSONObject();
-        responseBody.put("accessSuccess", "false");
+        responseBody.put(WebConsts.JSON_KEY_ACCESS_SUCCESS, WebConsts.JSON_VAL_FALSE);
         response.getWriter().println(responseBody.toJSONString());
         response.getWriter().flush();
     }

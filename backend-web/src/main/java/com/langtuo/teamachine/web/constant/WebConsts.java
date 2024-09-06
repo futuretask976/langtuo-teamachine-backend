@@ -48,4 +48,12 @@ public class WebConsts {
     public static final String SESSION_ATTR_USER = "user";
     public static final String SESSION_ATTR_USERNAME = "username";
     public static final String SESSION_ATTR_AUTHORITIES = "authorities";
+
+    /**
+     * JSON 字段相关
+     */
+    public static final String JSON_KEY_LOGIN_SUCCESS = "loginSuccess";
+    public static final String JSON_KEY_ACCESS_SUCCESS = "accessSuccess";
+    public static final String JSON_VAL_TRUE = "true";
+    public static final String JSON_VAL_FALSE = "false";
 }
