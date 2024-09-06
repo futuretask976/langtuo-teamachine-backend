@@ -11,6 +11,7 @@ import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.dao.config.OSSConfig;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
@@ -60,23 +61,23 @@ public class MenuDispatch4InitWorker implements Runnable {
     public void run() {
         JSONArray dispatchCont = getDispatchCont();
         if (dispatchCont == null) {
-            log.info("dispatch content error, stop worker");
+            log.info("menuDispatch4InitWorker|getDispatchCont|dispatchContEmpty|stopWorker");
             return;
         }
         File outputFile = new File("dispatch4Init/output.json");
         boolean wrote = MqttUtils.writeStrToFile(dispatchCont.toJSONString(), outputFile);
         if (!wrote) {
-            log.info("write file error, stop worker");
+            log.info("menuDispatch4InitWorker|writeStrToFile|failed|stopWorker");
             return;
         }
         String ossPath = uploadOSS(outputFile);
         if (StringUtils.isBlank(ossPath)) {
-            log.info("upload oss error, stop worker");
+            log.info("menuDispatch4InitWorker|uploadOSS|failed|stopWorker");
             return;
         }
         String md5AsHex = calcMD5Hex(outputFile);
         if (StringUtils.isBlank(md5AsHex)) {
-            log.info("calc md5 as hex error, stop worker");
+            log.info("menuDispatch4InitWorker|calcMD5Hex|failed|stopWorker");
             return;
         }
 
@@ -84,7 +85,6 @@ public class MenuDispatch4InitWorker implements Runnable {
         jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MENU_LIST);
         jsonMsg.put(BizConsts.JSON_KEY_MD5_AS_HEX, md5AsHex);
         jsonMsg.put(BizConsts.JSON_KEY_OSS_PATH, ossPath);
-        log.info("$$$$$ MenuDispatch4InitWorker jsonMsg=" + jsonMsg.toJSONString());
 
         // 准备发送
         MqttProducer mqttProducer = SpringUtils.getMqttProducer();
@@ -95,7 +95,7 @@ public class MenuDispatch4InitWorker implements Runnable {
         MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
         List<MenuDTO> menuDTOList = getModel(menuMgtService.listByShopCode(tenantCode, shopCode));
         if (CollectionUtils.isEmpty(menuDTOList)) {
-            log.info("list menu error, stop worker");
+            log.info("menuDispatch4InitWorker|getMenu|empty|stopWorker");
             return null;
         }
 
@@ -111,7 +111,7 @@ public class MenuDispatch4InitWorker implements Runnable {
         MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
         MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
         if (menuDTO == null) {
-            log.info("list menu error, stop worker");
+            log.info("menuDispatch4InitWorker|getMenu|null|stopWorker");
             return null;
         }
 
@@ -125,7 +125,7 @@ public class MenuDispatch4InitWorker implements Runnable {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(seriesList)) {
-            log.info("series list is empty, stop worker");
+            log.info("menuDispatch4InitWorker|getSeriesList|empty|stopWorker");
             return null;
         }
         List<String> teaCodeList = seriesList.stream()
@@ -142,7 +142,7 @@ public class MenuDispatch4InitWorker implements Runnable {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(teaCodeList)) {
-            log.info("tea code list is empty, stop worker");
+            log.info("menuDispatch4InitWorker|getTeaList|empty|stopWorker");
             return null;
         }
 
@@ -175,9 +175,9 @@ public class MenuDispatch4InitWorker implements Runnable {
     private String uploadOSS(File file) {
         String ossPath = null;
         try {
-            ossPath = OSSUtils.uploadFile(file);
+            ossPath = OSSUtils.uploadFile(file, OSSConfig.OSS_MENU_PATH);
         } catch (FileNotFoundException e) {
-            log.info("upload oss error, stop worker");
+            log.info("menuDispatch4InitWorker|uploadFileToOSS|fatal|" + e.getMessage());
         }
         return ossPath;
     }
@@ -189,13 +189,13 @@ public class MenuDispatch4InitWorker implements Runnable {
             fileInputStream = new FileInputStream(file);
             md5AsHex = DigestUtils.md5DigestAsHex(fileInputStream);
         } catch (IOException e) {
-            log.info("calc md5 error, stop worker");
+            log.info("menuDispatch4InitWorker|calcMD5Hex|fatal|" + e.getMessage());
         } finally {
             if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    log.info("close file input stream error, stop worker");
+                    log.info("menuDispatch4InitWorker|closeFileInputStream|fatal|" + e.getMessage());
                 }
             }
         }

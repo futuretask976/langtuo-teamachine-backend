@@ -29,7 +29,12 @@ public class OSSConfig {
     /**
      *
      */
-    public static final String STORAGE_PATH_PREFIX = "teamachine/";
+    public static final String OSS_MENU_PATH = "teamachine/menu";
+
+    /**
+     *
+     */
+    public static final String OSS_PATH_SEPARATOR = "/";
 
     /**
      *
