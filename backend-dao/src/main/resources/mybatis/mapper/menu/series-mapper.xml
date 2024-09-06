@@ -11,7 +11,6 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="seriesCode" column="series_code"/>
         <result property="seriesName" column="series_name"/>
-        <result property="imgLink" column="img_link"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
@@ -53,7 +52,6 @@
             , gmt_modified
             , series_code
             , series_name
-            , img_link
             , tenant_code
             , comment
             , extra_info
@@ -62,7 +60,6 @@
             , now()
             , #{seriesCode}
             , #{seriesName}
-            , #{imgLink}
             , #{tenantCode}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
@@ -75,9 +72,6 @@
             gmt_modified = now()
             <if test="seriesName != null">
                 , series_name = #{seriesName}
-            </if>
-            <if test="imgLink != null">
-                , img_link = #{imgLink}
             </if>
             <if test="tenantCode != null">
                 , tenant_code = #{tenantCode}
