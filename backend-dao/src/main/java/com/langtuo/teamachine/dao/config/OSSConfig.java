@@ -9,6 +9,11 @@ public class OSSConfig {
     /**
      *
      */
+    public static final String REGION = "oss-cn-hangzhou";
+
+    /**
+     *
+     */
     public static final String BUCKET_NAME = "miya-bucket2";
 
     /**

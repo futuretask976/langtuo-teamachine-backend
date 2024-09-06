@@ -64,6 +64,8 @@ public class OSSUtils {
             AssumeRoleResponse.Credentials credentials = response.getCredentials();
 
             stsPO = new OSSTokenPO();
+            stsPO.setRegion(OSSConfig.REGION);
+            stsPO.setBucketName(OSSConfig.BUCKET_NAME);
             stsPO.setExpiration(credentials.getExpiration());
             stsPO.setAccessKeyId(credentials.getAccessKeyId());
             stsPO.setAccessKeySecret(credentials.getAccessKeySecret());

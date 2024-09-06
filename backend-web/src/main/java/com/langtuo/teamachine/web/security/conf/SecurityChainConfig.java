@@ -151,6 +151,8 @@ public class SecurityChainConfig {
                 .antMatchers(WebConsts.ANT_PATTERN_ACCURACY_PATH).hasAnyRole(
                         PermitActEnum.ACCURACY_MGT.getPermitActCode(),
                         WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
+                .antMatchers(WebConsts.ANT_PATTERN_OSS_PATH).hasAnyRole(
+                        PermitActEnum.TEA_MGT.getPermitActCode())
                 // 菜单
                 .antMatchers(WebConsts.ANT_PATTERN_SERIES_LIST_PATH).hasAnyRole(
                         PermitActEnum.SERIES_MGT.getPermitActCode(),

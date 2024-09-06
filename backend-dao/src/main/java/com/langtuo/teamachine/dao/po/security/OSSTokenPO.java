@@ -7,6 +7,16 @@ public class OSSTokenPO {
     /**
      *
      */
+    private String region;
+
+    /**
+     *
+     */
+    private String bucketName;
+
+    /**
+     *
+     */
     private String accessKeyId;
 
     /**

@@ -7,6 +7,16 @@ public class OSSTokenDTO {
     /**
      *
      */
+    private String region;
+
+    /**
+     *
+     */
+    private String bucketName;
+
+    /**
+     *
+     */
     private String accessKeyId;
 
     /**

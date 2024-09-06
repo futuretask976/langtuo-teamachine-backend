@@ -11,7 +11,16 @@ import org.springframework.stereotype.Component;
 public class OSSServiceImpl implements OSSService {
     @Override
     public TeaMachineResult<OSSTokenDTO> getOSSToken() {
-        OSSTokenPO ossTokenPO = OSSUtils.getSTS();
-        return TeaMachineResult.success(ossTokenPO);
+        OSSTokenPO po = OSSUtils.getSTS();
+
+        OSSTokenDTO dto = new OSSTokenDTO();
+        dto.setRegion(po.getRegion());
+        dto.setBucketName(po.getBucketName());
+        dto.setAccessKeyId(po.getAccessKeyId());
+        dto.setAccessKeySecret(po.getAccessKeySecret());
+        dto.setSecurityToken(po.getSecurityToken());
+        dto.setRequestId(po.getRequestId());
+        dto.setExpiration(po.getExpiration());
+        return TeaMachineResult.success(po);
     }
 }
