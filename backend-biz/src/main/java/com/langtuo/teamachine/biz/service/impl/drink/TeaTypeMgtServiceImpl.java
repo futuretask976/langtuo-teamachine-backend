@@ -141,8 +141,8 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
                 int deleted = accessor.deleteByTeaTypeCode(tenantCode, teaTypeCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
+                teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_TEA_TYPE, messageSource));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

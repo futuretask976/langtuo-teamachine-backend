@@ -89,4 +89,8 @@ public class AccuracyTplPutRequest {
         }
         return isValid;
     }
+
+    public static void main(String args[]) {
+        System.out.println(RegexUtils.isValidCode("TPL_01", true));
+    }
 }

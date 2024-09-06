@@ -52,8 +52,8 @@ public interface AccuracyTplMapper {
 
     /**
      *
-     * @param specCode
+     * @param templateCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode);
 }
