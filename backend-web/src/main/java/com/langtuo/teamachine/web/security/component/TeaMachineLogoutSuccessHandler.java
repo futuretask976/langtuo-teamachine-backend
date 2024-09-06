@@ -2,6 +2,7 @@ package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
+import com.langtuo.teamachine.web.constant.WebConsts;
 import com.langtuo.teamachine.web.model.LogoutSuccessDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -19,13 +20,13 @@ public class TeaMachineLogoutSuccessHandler implements LogoutSuccessHandler {
         request.getSession().invalidate();
 
         // 删除cookie
-        Cookie cookie = new Cookie("JSESSIONID", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
+        Cookie cookie = new Cookie(WebConsts.COOKIE_NAME_JSESSION_ID, null);
+        cookie.setMaxAge(WebConsts.COOKIE_MAX_AGE);
+        cookie.setPath(WebConsts.COOKIE_PATH);
         response.addCookie(cookie);
 
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, WebConsts.RESP_HEADER_VAL_ALL);
+        response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, WebConsts.RESP_HEADER_VAL_TRUE);
         response.setStatus(HttpServletResponse.SC_OK);
 
         // 如果是前后端分离项目，这里可以返回JSON字符串提示前端注销成功

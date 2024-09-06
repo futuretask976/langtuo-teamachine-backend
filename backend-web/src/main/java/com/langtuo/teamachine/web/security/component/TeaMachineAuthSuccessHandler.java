@@ -2,6 +2,7 @@ package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
+import com.langtuo.teamachine.web.constant.WebConsts;
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import com.langtuo.teamachine.web.model.LoginSuccessDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,13 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
             Authentication authentication) throws IOException {
         HttpSession session = request.getSession();
         UserDetails authUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        session.setAttribute("user", authUser);
-        session.setAttribute("username", authUser.getUsername());
-        session.setAttribute("authorities", authentication.getAuthorities());
+        session.setAttribute(WebConsts.SESSION_ATTR_USER, authUser);
+        session.setAttribute(WebConsts.SESSION_ATTR_USERNAME, authUser.getUsername());
+        session.setAttribute(WebConsts.SESSION_ATTR_AUTHORITIES, authentication.getAuthorities());
 
         // Set our response to OK status
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, WebConsts.RESP_HEADER_VAL_ALL);
+        response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, WebConsts.RESP_HEADER_VAL_TRUE);
         response.setStatus(HttpServletResponse.SC_OK);
 
         // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录成功

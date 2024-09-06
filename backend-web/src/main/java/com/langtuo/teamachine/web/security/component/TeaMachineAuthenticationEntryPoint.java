@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
+import com.langtuo.teamachine.web.constant.WebConsts;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -17,11 +18,11 @@ public class TeaMachineAuthenticationEntryPoint implements AuthenticationEntryPo
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException e) throws IOException {
         // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录失败
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Cache-Control","no-cache");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
+        response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, WebConsts.RESP_HEADER_VAL_ALL);
+        response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, WebConsts.RESP_HEADER_VAL_TRUE);
+        response.setHeader(WebConsts.RESP_HEADER_CACHE_CONTROL,WebConsts.RESP_HEADER_VAL_NO_CACHE);
+        response.setCharacterEncoding(WebConsts.RESP_HEADER_VAL_ENCODING_UTF8);
+        response.setContentType(WebConsts.RESP_HEADER_VAL_CONT_TYPE_APPLICATIONJSON);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         JSONObject responseBody = new JSONObject();

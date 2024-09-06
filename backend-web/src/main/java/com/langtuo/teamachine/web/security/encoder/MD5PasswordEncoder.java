@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 public class MD5PasswordEncoder implements PasswordEncoder {
-    private static final String SALT = "TEA_MACHINE";
+    private static final String SALT = "TEAMACHINE";
 
     @Override
     public String encode(CharSequence rawPassword) {

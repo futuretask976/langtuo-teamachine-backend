@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.web.security.component;
 
+import com.langtuo.teamachine.web.constant.WebConsts;
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import com.langtuo.teamachine.web.security.service.TeaMachineUserDetailService;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String machineCode = request.getHeader("Machine-Code");
+        String machineCode = request.getHeader(WebConsts.REQ_HEADER_MACHINE_CODE);
         if (StringUtils.isBlank(machineCode)) {
             // 判断是管理员登录，走正常流程
             String authHeader = request.getHeader(this.tokenHeader);
@@ -56,8 +57,8 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
             }
         } else {
             // 判断是设备登录，走特殊路程
-            String tenantCode = request.getHeader("Tenant-Code");
-            String deployCode = request.getHeader("Deploy-Code");
+            String tenantCode = request.getHeader(WebConsts.REQ_HEADER_TENANT_CODE);
+            String deployCode = request.getHeader(WebConsts.REQ_HEADER_DEPLOY_CODE);
             UserDetails machineDetails = this.teaMachineUserDetailService.loadMachineUserDetails(tenantCode,
                     deployCode, machineCode);
             if (machineDetails != null) {
