@@ -17,7 +17,7 @@ public class TeaMachineAuthenticationEntryPoint implements AuthenticationEntryPo
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException e) throws IOException {
-        // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录失败
+        // 设置 resp 头部信息
         response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, WebConsts.RESP_HEADER_VAL_ALL);
         response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, WebConsts.RESP_HEADER_VAL_TRUE);
         response.setHeader(WebConsts.RESP_HEADER_CACHE_CONTROL,WebConsts.RESP_HEADER_VAL_NO_CACHE);
@@ -25,14 +25,10 @@ public class TeaMachineAuthenticationEntryPoint implements AuthenticationEntryPo
         response.setContentType(WebConsts.RESP_HEADER_VAL_CONT_TYPE_APPLICATIONJSON);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
+        // 构建返回内容
         JSONObject responseBody = new JSONObject();
         responseBody.put(WebConsts.JSON_KEY_LOGIN_SUCCESS, WebConsts.JSON_VAL_FALSE);
         response.getWriter().println(responseBody.toJSONString());
         response.getWriter().flush();
-        // 如果不是前后端分离项目，这里返回/login渲染thymeleaf模板
-        // 设置状态码为302
-        // response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-        // 设置Location头部，指定重定向的URL
-        // response.setHeader("Location", request.getContextPath() + "/login");
     }
 }

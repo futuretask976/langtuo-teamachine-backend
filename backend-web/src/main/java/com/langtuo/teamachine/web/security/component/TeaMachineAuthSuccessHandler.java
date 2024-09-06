@@ -33,22 +33,17 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
         session.setAttribute(WebConsts.SESSION_ATTR_USERNAME, authUser.getUsername());
         session.setAttribute(WebConsts.SESSION_ATTR_AUTHORITIES, authentication.getAuthorities());
 
-        // Set our response to OK status
+        // 设置 resp 头部信息
         response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, WebConsts.RESP_HEADER_VAL_ALL);
         response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, WebConsts.RESP_HEADER_VAL_TRUE);
         response.setStatus(HttpServletResponse.SC_OK);
 
-        // 如果是前后端分离项目，这里可以返回JSON字符串提示前端登录成功
+        // 构建返回内容
         LoginSuccessDTO dto = new LoginSuccessDTO();
         dto.setJwtToken(tokenHead + jwtTokenHelper.generateToken(authUser));
         dto.setLoginName(authUser.getUsername());
         TeaMachineResult<LoginSuccessDTO> result = TeaMachineResult.success(dto);
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();
-        // 如果不是前后端分离项目，这里返回/welcome渲染thymeleaf模板
-        // Since we have created our custom success handler, its up to us,
-        // to where we will redirect the user after successfully login
-        // SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
-        // response.sendRedirect(savedRequest == null || savedRequest.getRedirectUrl().isEmpty() ? "/welcome" : savedRequest.getRedirectUrl()); //requestUrl!=null?requestUrl:
     }
 }

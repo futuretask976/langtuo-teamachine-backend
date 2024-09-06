@@ -34,10 +34,5 @@ public class TeaMachineLogoutSuccessHandler implements LogoutSuccessHandler {
         TeaMachineResult<LogoutSuccessDTO> result = TeaMachineResult.success(dto);
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();
-        // 如果不是前后端分离项目，这里返回/bye渲染thymeleaf模板
-        // Since we have created our custom success handler, its up to us,
-        // to where we will redirect the user after successfully login
-        // SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
-        // response.sendRedirect("/bye");
     }
 }
