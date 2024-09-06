@@ -21,8 +21,8 @@ public class MD5PasswordEncoder implements PasswordEncoder {
 
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        // rawPassword是需要验证的原密码，encodedPassword是加密后数据库中保存的密码，
-        // 这个方法不需要我们手动调用，而是由Spring Security调用，这里写好规则即可
+        // rawPassword 是需要验证的原密码，encodedPassword 是加密后数据库中保存的密码，
+        // 这个方法不需要手动调用，而是由 Spring Security 调用，这里写好规则即可
         if (rawPassword != null && encodedPassword != null) {
             return encode(rawPassword).equals(encodedPassword)
                     || rawPassword.equals(encodedPassword);
