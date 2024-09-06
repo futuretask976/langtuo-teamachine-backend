@@ -39,8 +39,11 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String machineCode = request.getHeader(WebConsts.REQ_HEADER_MACHINE_CODE);
-        if (StringUtils.isBlank(machineCode)) {
+        String tenantCodeFromHeader = request.getHeader(WebConsts.REQ_HEADER_TENANT_CODE);
+        String deployCodeFromHeader = request.getHeader(WebConsts.REQ_HEADER_DEPLOY_CODE);
+        String machineCodeFromHeader = request.getHeader(WebConsts.REQ_HEADER_MACHINE_CODE);
+        if (StringUtils.isBlank(machineCodeFromHeader) || StringUtils.isBlank(tenantCodeFromHeader)
+                || StringUtils.isBlank(deployCodeFromHeader)) {
             // 判断是管理员登录，走正常流程
             String authHeader = request.getHeader(this.tokenHeader);
             if (authHeader != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -57,10 +60,8 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
             }
         } else {
             // 判断是设备登录，走特殊路程
-            String tenantCode = request.getHeader(WebConsts.REQ_HEADER_TENANT_CODE);
-            String deployCode = request.getHeader(WebConsts.REQ_HEADER_DEPLOY_CODE);
-            UserDetails machineDetails = this.teaMachineUserDetailService.loadMachineUserDetails(tenantCode,
-                    deployCode, machineCode);
+            UserDetails machineDetails = this.teaMachineUserDetailService.loadMachineUserDetails(tenantCodeFromHeader,
+                    deployCodeFromHeader, machineCodeFromHeader);
             if (machineDetails != null) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         machineDetails, null, machineDetails.getAuthorities());
