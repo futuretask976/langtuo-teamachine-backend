@@ -8,6 +8,7 @@ import com.langtuo.teamachine.api.request.device.DeployPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
+import com.langtuo.teamachine.biz.service.excel.ExcelHandlerFactory;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.biz.service.util.DeployUtils;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
@@ -46,6 +47,9 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
     @Resource
     private ShopAccessor shopAccessor;
+
+    @Resource
+    private ExcelHandlerFactory excelHandlerFactory;
 
     @Autowired
     private MessageSource messageSource;
@@ -188,63 +192,10 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     public TeaMachineResult<XSSFWorkbook> exportByExcel(String tenantCode) {
-        // 创建一个新的工作簿
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        // 创建一个工作表
-        Sheet sheet = workbook.createSheet(BizConsts.SHEET_NAME_4_DEPLOY_EXPORT);
-        // 创建标题行（0基索引）
-        Row row = sheet.createRow(BizConsts.ROW_NUM_4_TITLE);
-        // 创建单元格并设置值
-        for (int i = 0; i < BizConsts.TITLE_LIST_4_DEPLOY_EXPORT.size(); i++) {
-            Cell cell = row.createCell(i);
-            cell.setCellValue(BizConsts.TITLE_LIST_4_DEPLOY_EXPORT.get(i));
-        }
-
-        List<DeployPO> deployPOList = deployAccessor.selectList(tenantCode);
-        int lineIndex = BizConsts.ROW_START_NUM_4_DEPLOY;
-        for (DeployPO deployPO : deployPOList) {
-            Row dataRow = sheet.createRow(lineIndex++);
-            int columnIndex = BizConsts.COL_START_NUM_4_DEPLOY;
-
-            // 添加创建日期
-            Cell cell4GmtCreated = dataRow.createCell(columnIndex++);
-            cell4GmtCreated.setCellValue(transform(deployPO.getGmtCreated()));
-            // 添加修改日期
-            Cell cell4GmtModified = dataRow.createCell(columnIndex++);
-            cell4GmtModified.setCellValue(transform(deployPO.getGmtModified()));
-            // 添加商户编码
-            Cell cell4TenantCode = dataRow.createCell(columnIndex++);
-            cell4TenantCode.setCellValue(deployPO.getTenantCode());
-            // 添加商户名称
-            Cell cell4TenantName = dataRow.createCell(columnIndex++);
-            TenantPO tenantPO = tenantAccessor.selectOneByTenantCode(tenantCode);
-            if (tenantPO != null) {
-                cell4TenantName.setCellValue(tenantPO.getTenantName());
-            }
-            // 添加部署编码
-            Cell cell4DeployCode = dataRow.createCell(columnIndex++);
-            cell4DeployCode.setCellValue(deployPO.getDeployCode());
-            // 添加机器编码
-            Cell cell4MachineCode = dataRow.createCell(columnIndex++);
-            cell4MachineCode.setCellValue(deployPO.getMachineCode());
-            // 添加型号编码
-            Cell cell4ModelCode = dataRow.createCell(columnIndex++);
-            cell4ModelCode.setCellValue(deployPO.getModelCode());
-            // 添加店铺编码
-            Cell cell4ShopCode = dataRow.createCell(columnIndex++);
-            cell4ShopCode.setCellValue(deployPO.getShopCode());
-            // 添加店铺名称
-            Cell cell4ShopName = dataRow.createCell(columnIndex++);
-            ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, deployPO.getShopCode());
-            if (shopPO != null) {
-                cell4ShopName.setCellValue(shopPO.getShopName());
-            }
-            // 添加部署状态
-            Cell cell4State = dataRow.createCell(columnIndex++);
-            cell4State.setCellValue(deployPO.getState() == BizConsts.DEPLOY_STATE_DISABLED ?
-                    BizConsts.DEPLOY_STATE_DISABLED_LABEL : BizConsts.DEPLOY_STATE_ENABLED_LABEL);
-        }
-        return TeaMachineResult.success(workbook);
+        XSSFWorkbook xssfWorkbook = excelHandlerFactory.getExcelHandler(tenantCode)
+                .getDeployHandler()
+                .export(tenantCode);
+        return TeaMachineResult.success(xssfWorkbook);
     }
 
     private DeployPO convertToDeployDTO(DeployPutRequest request) {
@@ -295,10 +246,5 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             dto.setShopName(shopPO.getShopName());
         }
         return dto;
-    }
-
-    public static String transform(Date date) {
-        DateFormat format = new SimpleDateFormat(BizConsts.DATE_FORMAT_FULL);
-        return format.format(date);
     }
 }

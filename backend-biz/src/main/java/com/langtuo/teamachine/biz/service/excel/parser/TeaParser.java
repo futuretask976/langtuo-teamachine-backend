@@ -3,6 +3,8 @@ package com.langtuo.teamachine.biz.service.excel.parser;
 import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.util.List;
+
 public interface TeaParser {
     /**
      * 导出茶品信息
@@ -16,5 +18,5 @@ public interface TeaParser {
      * @param tenantCode
      * @return
      */
-    TeaPutRequest upload(String tenantCode, XSSFWorkbook workbook);
+    List<TeaPutRequest> upload(String tenantCode, XSSFWorkbook workbook);
 }
