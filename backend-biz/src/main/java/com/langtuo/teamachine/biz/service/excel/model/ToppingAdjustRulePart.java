@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.biz.service.excel.export;
+package com.langtuo.teamachine.biz.service.excel.model;
 
 import lombok.Data;
 

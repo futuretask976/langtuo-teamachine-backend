@@ -82,12 +82,6 @@ public class SpringUtils {
         return shopMgtService;
     }
 
-    public static ShopMgtService getShopGrouMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        ShopMgtService shopMgtService = appContext.getBean(ShopMgtService.class);
-        return shopMgtService;
-    }
-
     public static SeriesMgtService getSeriesMgtService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         SeriesMgtService seriesMgtService = appContext.getBean(SeriesMgtService.class);
