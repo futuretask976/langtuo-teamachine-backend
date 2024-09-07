@@ -24,8 +24,9 @@ public class ShopController {
     }
 
     @GetMapping(value = "/list")
-    public TeaMachineResult<List<ShopDTO>> list(@RequestParam("tenantCode") String tenantCode) {
-        TeaMachineResult<List<ShopDTO>> rtn = service.list(tenantCode);
+    public TeaMachineResult<List<ShopDTO>> list(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam(name="shopGroupCode", required = false) String shopGroupCode) {
+        TeaMachineResult<List<ShopDTO>> rtn = service.listByShopGroupCode(tenantCode, shopGroupCode);
         return rtn;
     }
 

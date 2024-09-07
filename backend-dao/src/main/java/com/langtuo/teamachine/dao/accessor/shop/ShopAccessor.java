@@ -49,20 +49,6 @@ public class ShopAccessor {
         return po;
     }
 
-    public List<ShopPO> selectList(String tenantCode) {
-        // 首先访问缓存
-        List<ShopPO> cachedList = getCacheList(tenantCode, null);
-        if (cachedList != null) {
-            return cachedList;
-        }
-
-        List<ShopPO> list = mapper.selectList(tenantCode, null);
-
-        // 设置缓存
-        setCacheList(tenantCode, null, list);
-        return list;
-    }
-
     public List<ShopPO> selectListByShopGroupCode(String tenantCode, String shopGroupCode) {
         // 首先访问缓存
         List<ShopPO> cachedList = getCacheList(tenantCode, shopGroupCode);

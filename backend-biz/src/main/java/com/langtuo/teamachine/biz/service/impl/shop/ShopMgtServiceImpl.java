@@ -91,21 +91,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
-    public TeaMachineResult<List<ShopDTO>> list(String tenantCode) {
-        TeaMachineResult<List<ShopDTO>> teaMachineResult;
-        try {
-            List<ShopPO> list = shopAccessor.selectList(tenantCode);
-            List<ShopDTO> dtoList = convert(list);
-            teaMachineResult = TeaMachineResult.success(dtoList);
-        } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
-        }
-        return teaMachineResult;
-    }
-
-    @Override
     public TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {

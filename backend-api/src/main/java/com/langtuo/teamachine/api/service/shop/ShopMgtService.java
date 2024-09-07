@@ -33,13 +33,6 @@ public interface ShopMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<List<ShopDTO>> list(String tenantCode);
-
-    /**
-     *
-     * @param tenantCode
-     * @return
-     */
     TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode);
 
     /**
