@@ -1,8 +1,8 @@
-package com.langtuo.teamachine.biz.service.excel.handler;
+package com.langtuo.teamachine.biz.service.excel.parser;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public interface DeployExportHandler {
+public interface DeployParser {
     /**
      * 导出部署信息
      * @param tenantCode

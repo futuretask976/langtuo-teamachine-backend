@@ -1,8 +1,8 @@
-package com.langtuo.teamachine.biz.service.excel.handler;
+package com.langtuo.teamachine.biz.service.excel.parser;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class DefaultTeaExportHandler implements TeaExportHandler {
+public class DefaultDeployParser implements DeployParser {
     @Override
     public XSSFWorkbook export(String tenantCode) {
         return null;
