@@ -17,6 +17,11 @@ import java.time.Duration;
 @Configuration
 @Slf4j
 public class RedisConfig {
+    /**
+     * redis 命令超时时间
+     */
+    private static final int REDIS_COMMAND_TIMEOUT = 2;
+
     @Value("${spring.redis.host}")
     private String redisHost;
 
@@ -40,7 +45,7 @@ public class RedisConfig {
         serverConfig.setPassword(password);
 
         LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
-                .commandTimeout(Duration.ofSeconds(2))
+                .commandTimeout(Duration.ofSeconds(REDIS_COMMAND_TIMEOUT))
                 .shutdownTimeout(Duration.ZERO)
                 .useSsl()
                 .disablePeerVerification()
