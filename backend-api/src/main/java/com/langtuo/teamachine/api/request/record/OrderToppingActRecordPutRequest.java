@@ -26,12 +26,18 @@ public class OrderToppingActRecordPutRequest {
     private int actualAmount;
 
     public boolean isValid() {
-        if (RegexUtils.isValidCode(toppingCode, true)
-                && RegexUtils.isValidName(toppingName, true)
-                && stepIndex > 0
-                && actualAmount > 0) {
-            return true;
+        if (!RegexUtils.isValidCode(toppingCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidName(toppingName, true)) {
+            return false;
+        }
+        if (stepIndex <= 0) {
+            return false;
+        }
+        if (actualAmount <= 0) {
+            return false;
+        }
+        return true;
     }
 }

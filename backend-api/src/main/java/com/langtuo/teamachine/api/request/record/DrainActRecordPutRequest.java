@@ -83,15 +83,27 @@ public class DrainActRecordPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(idempotentMark, true)
-                && RegexUtils.isValidCode(machineCode, true)
-                && RegexUtils.isValidCode(shopCode, true)
-                && RegexUtils.isValidCode(shopGroupCode, true)
-                && drainStartTime != null
-                && drainEndTime != null) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(idempotentMark, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(machineCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopGroupCode, true)) {
+            return false;
+        }
+        if (drainStartTime == null) {
+            return false;
+        }
+        if (drainEndTime == null) {
+            return false;
+        }
+        return true;
     }
 }

@@ -80,48 +80,60 @@ public class OrderActRecordPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(idempotentMark, true)
-                && RegexUtils.isValidCode(machineCode, true)
-                && RegexUtils.isValidCode(shopCode, true)
-                && RegexUtils.isValidName(shopName, true)
-                && RegexUtils.isValidCode(shopGroupCode, true)
-                && RegexUtils.isValidName(shopGroupName, true)
-                && RegexUtils.isValidCode(outerOrderId, true)
-                && isValidSpecItemList()
-                && isValidToppingList()) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(idempotentMark, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(machineCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopName, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopGroupCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopGroupName, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(outerOrderId, true)) {
+            return false;
+        }
+        if (!isValidSpecItemList()) {
+            return false;
+        }
+        if (!isValidToppingList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidSpecItemList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(specItemList)) {
-            isValid = false;
-        } else {
-            for (OrderSpecItemActRecordPutRequest m : specItemList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (OrderSpecItemActRecordPutRequest m : specItemList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 
     private boolean isValidToppingList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(toppingList)) {
-            isValid = false;
-        } else {
-            for (OrderToppingActRecordPutRequest m : toppingList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (OrderToppingActRecordPutRequest m : toppingList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

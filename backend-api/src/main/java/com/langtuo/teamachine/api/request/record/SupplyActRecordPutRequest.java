@@ -63,16 +63,30 @@ public class SupplyActRecordPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(idempotentMark, true)
-                && RegexUtils.isValidCode(machineCode, true)
-                && RegexUtils.isValidCode(shopCode, true)
-                && RegexUtils.isValidCode(shopGroupCode, true)
-                && RegexUtils.isValidCode(toppingCode, true)
-                && supplyTime != null
-                && pipelineNum > 0) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(idempotentMark, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(machineCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopGroupCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(toppingCode, true)) {
+            return false;
+        }
+        if (supplyTime == null) {
+            return false;
+        }
+        if (pipelineNum <= 0) {
+            return false;
+        }
+        return true;
     }
 }

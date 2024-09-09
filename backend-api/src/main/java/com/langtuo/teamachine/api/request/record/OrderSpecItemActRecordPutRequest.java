@@ -26,12 +26,18 @@ public class OrderSpecItemActRecordPutRequest {
     private String specItemName;
 
     public boolean isValid() {
-        if (RegexUtils.isValidCode(specCode, true)
-                && RegexUtils.isValidName(specName, true)
-                && RegexUtils.isValidCode(specItemCode, true)
-                && RegexUtils.isValidName(specItemName, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(specCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidName(specName, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(specItemCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(specItemName, true)) {
+            return false;
+        }
+        return true;
     }
 }
