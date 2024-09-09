@@ -23,11 +23,13 @@ public class ActStepPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (stepIndex > 0
-                && isValidToppingBaseRuleList()) {
-            return true;
+        if (stepIndex <= 0) {
+            return false;
         }
-        return false;
+        if (!isValidToppingBaseRuleList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidToppingBaseRuleList() {

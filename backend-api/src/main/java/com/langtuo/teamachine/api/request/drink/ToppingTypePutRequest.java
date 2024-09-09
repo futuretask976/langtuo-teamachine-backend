@@ -37,16 +37,16 @@ public class ToppingTypePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)) {
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
             return false;
         }
-        if (RegexUtils.isValidComment(comment, false)) {
+        if (!RegexUtils.isValidComment(comment, false)) {
             return false;
         }
-        if (RegexUtils.isValidCode(toppingTypeCode, true)) {
+        if (!RegexUtils.isValidCode(toppingTypeCode, true)) {
             return false;
         }
-        if (RegexUtils.isValidName(toppingTypeName, true)) {
+        if (!RegexUtils.isValidName(toppingTypeName, true)) {
             return false;
         }
         return true;

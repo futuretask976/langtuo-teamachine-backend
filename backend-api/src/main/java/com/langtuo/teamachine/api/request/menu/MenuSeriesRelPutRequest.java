@@ -20,10 +20,12 @@ public class MenuSeriesRelPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(menuCode, true)
-                && RegexUtils.isValidCode(seriesCode, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(menuCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(seriesCode, true)) {
+            return false;
+        }
+        return true;
     }
 }

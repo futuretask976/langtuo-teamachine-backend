@@ -44,27 +44,33 @@ public class SeriesPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidComment(comment, false)
-                && RegexUtils.isValidCode(seriesCode, true)
-                && RegexUtils.isValidName(seriesName, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidComment(comment, false)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(seriesCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(seriesName, true)) {
+            return false;
+        }
+        if (!isValidPipelineList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidPipelineList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(seriesTeaRelList)) {
-            isValid = false;
-        } else {
-            for (SeriesTeaRelPutRequest m : seriesTeaRelList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (SeriesTeaRelPutRequest m : seriesTeaRelList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

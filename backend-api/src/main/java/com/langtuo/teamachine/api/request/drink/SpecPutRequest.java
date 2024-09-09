@@ -44,14 +44,22 @@ public class SpecPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidComment(comment, false)
-                && RegexUtils.isValidCode(specCode, true)
-                && RegexUtils.isValidName(specName, true)
-                && isValidSpecItem()) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidComment(comment, false)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(specCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(specName, true)) {
+            return false;
+        }
+        if (!isValidSpecItem()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidSpecItem() {

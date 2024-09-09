@@ -103,22 +103,22 @@ public class TeaPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)) {
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
             return false;
         }
-        if (RegexUtils.isValidComment(comment, false)) {
+        if (!RegexUtils.isValidComment(comment, false)) {
             return false;
         }
-        if (RegexUtils.isValidCode(teaCode, true)) {
+        if (!RegexUtils.isValidCode(teaCode, true)) {
             return false;
         }
-        if (RegexUtils.isValidName(teaName, true)) {
+        if (!RegexUtils.isValidName(teaName, true)) {
             return false;
         }
-        if (RegexUtils.isValidCode(outerTeaCode, true)) {
+        if (!RegexUtils.isValidCode(outerTeaCode, true)) {
             return false;
         }
-        if (RegexUtils.isValidCode(teaTypeCode, true)) {
+        if (!RegexUtils.isValidCode(teaTypeCode, true)) {
             return false;
         }
         if (!isValidTeaUnitList()) {

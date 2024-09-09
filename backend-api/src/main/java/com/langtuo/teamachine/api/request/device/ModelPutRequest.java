@@ -34,11 +34,13 @@ public class ModelPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(modelCode, true)
-                && isValidPipelineList()) {
-            return true;
+        if (!RegexUtils.isValidCode(modelCode, true)) {
+            return false;
         }
-        return false;
+        if (!isValidPipelineList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidPipelineList() {

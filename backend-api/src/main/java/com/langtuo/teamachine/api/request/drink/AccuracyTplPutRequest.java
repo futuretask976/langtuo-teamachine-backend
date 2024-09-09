@@ -65,14 +65,19 @@ public class AccuracyTplPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                // && RegexUtils.isValidCode(comment, false)
-                && RegexUtils.isValidCode(templateCode, true)
-                && RegexUtils.isValidName(templateName, true)
-                && isValidToppingCodeList()) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(templateCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(templateName, true)) {
+            return false;
+        }
+        if (!isValidToppingCodeList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidToppingCodeList() {

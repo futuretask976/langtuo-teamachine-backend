@@ -20,10 +20,12 @@ public class SeriesTeaRelPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(seriesCode, true)
-                && RegexUtils.isValidCode(teaCode, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(seriesCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(teaCode, true)) {
+            return false;
+        }
+        return true;
     }
 }

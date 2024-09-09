@@ -50,29 +50,36 @@ public class MenuPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidComment(comment, false)
-                && RegexUtils.isValidCode(menuCode, true)
-                && RegexUtils.isValidName(menuName, true)
-                && isValidPipelineList()
-                && validFrom != null) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidComment(comment, false)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(menuCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(menuName, true)) {
+            return false;
+        }
+        if (!isValidPipelineList()) {
+            return false;
+        }
+        if (validFrom == null) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidPipelineList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(menuSeriesRelList)) {
-            isValid = false;
-        } else {
-            for (MenuSeriesRelPutRequest m : menuSeriesRelList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (MenuSeriesRelPutRequest m : menuSeriesRelList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

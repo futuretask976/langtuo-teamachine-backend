@@ -37,16 +37,16 @@ public class TeaTypePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)) {
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
             return false;
         }
-        if (RegexUtils.isValidComment(comment, false)) {
+        if (!RegexUtils.isValidComment(comment, false)) {
             return false;
         }
-        if (RegexUtils.isValidCode(teaTypeCode, true)) {
+        if (!RegexUtils.isValidCode(teaTypeCode, true)) {
             return false;
         }
-        if (RegexUtils.isValidName(teaTypeName, true)) {
+        if (!RegexUtils.isValidName(teaTypeName, true)) {
             return false;
         }
         return true;

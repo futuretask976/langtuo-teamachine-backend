@@ -25,13 +25,13 @@ public class SpecItemPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(specItemCode, true)) {
+        if (!RegexUtils.isValidCode(specItemCode, true)) {
             return false;
         }
-        if (RegexUtils.isValidName(specItemName, true)) {
+        if (!RegexUtils.isValidName(specItemName, true)) {
             return false;
         }
-        if (RegexUtils.isValidCode(outerSpecItemCode, true)) {
+        if (!RegexUtils.isValidCode(outerSpecItemCode, true)) {
             return false;
         }
         return true;

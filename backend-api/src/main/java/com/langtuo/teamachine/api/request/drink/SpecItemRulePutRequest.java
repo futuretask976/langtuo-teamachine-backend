@@ -20,10 +20,10 @@ public class SpecItemRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(specCode, true)) {
+        if (!RegexUtils.isValidCode(specCode, true)) {
             return false;
         }
-        if (RegexUtils.isValidCode(specItemCode, true)) {
+        if (!RegexUtils.isValidCode(specItemCode, true)) {
             return false;
         }
         return true;
