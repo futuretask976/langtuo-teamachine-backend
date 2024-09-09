@@ -28,26 +28,27 @@ public class WarningRuleDispatchPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(warningRuleCode, true)
-                && isValidShopGroupCodeList()) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(warningRuleCode, true)) {
+            return false;
+        }
+        if (!isValidShopGroupCodeList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidShopGroupCodeList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(shopGroupCodeList)) {
-            isValid = false;
-        } else {
-            for (String m : shopGroupCodeList) {
-                if (!RegexUtils.isValidCode(m, true)) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (String m : shopGroupCodeList) {
+            if (!RegexUtils.isValidCode(m, true)) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

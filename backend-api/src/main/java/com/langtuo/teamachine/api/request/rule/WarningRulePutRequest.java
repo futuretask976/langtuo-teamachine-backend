@@ -57,12 +57,18 @@ public class WarningRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidComment(comment, false)
-                && RegexUtils.isValidCode(warningRuleCode, true)
-                && RegexUtils.isValidName(warningRuleName, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidComment(comment, false)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(warningRuleCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(warningRuleName, true)) {
+            return false;
+        }
+        return true;
     }
 }

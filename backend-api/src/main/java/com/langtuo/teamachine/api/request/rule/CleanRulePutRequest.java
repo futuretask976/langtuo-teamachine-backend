@@ -54,43 +54,45 @@ public class CleanRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(cleanRuleCode, true)
-                && RegexUtils.isValidName(cleanRuleName, true)
-                && isValidExceptToppingCodeList()
-                && isValidCleanRuleStepList()) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(cleanRuleCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(cleanRuleName, true)) {
+            return false;
+        }
+        if (!isValidExceptToppingCodeList()) {
+            return false;
+        }
+        if (!isValidCleanRuleStepList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidExceptToppingCodeList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(exceptToppingCodeList)) {
-            isValid = false;
-        } else {
-            for (String m : exceptToppingCodeList) {
-                if (!RegexUtils.isValidCode(m, true)) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (String m : exceptToppingCodeList) {
+            if (!RegexUtils.isValidCode(m, true)) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 
     private boolean isValidCleanRuleStepList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(cleanRuleStepList)) {
-            isValid = false;
-        } else {
-            for (CleanRuleStepPutRequest m : cleanRuleStepList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (CleanRuleStepPutRequest m : cleanRuleStepList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

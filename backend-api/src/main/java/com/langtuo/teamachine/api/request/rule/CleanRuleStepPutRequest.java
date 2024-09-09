@@ -60,16 +60,22 @@ public class CleanRuleStepPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (stepIndex > 0
-                && isValid4NeedConfirm()) {
-            return true;
+        if (stepIndex <= 0) {
+            return false;
         }
-        return false;
+        if (!isValid4NeedConfirm()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValid4NeedConfirm () {
-        boolean isValid4NoNeedRemind = needConfirm == 0 ? true : false;
-        boolean isValid4NeedRemind = (needConfirm == 1 && RegexUtils.isValidName(remindTitle, true) && RegexUtils.isValidComment(remindContent, true));
-        return isValid4NoNeedRemind || isValid4NeedRemind;
+        if (needConfirm == 1) {
+            if (!RegexUtils.isValidName(remindTitle, true)
+                    || !RegexUtils.isValidComment(remindContent, true)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -44,27 +44,30 @@ public class DrainRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(drainRuleCode, true)
-                && RegexUtils.isValidName(drainRuleName, true)
-                && isValidToppingRuleList()) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(drainRuleCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(drainRuleName, true)) {
+            return false;
+        }
+        if (!isValidToppingRuleList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidToppingRuleList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(toppingRuleList)) {
-            isValid = false;
-        } else {
-            for (DrainRuleToppingPutRequest m : toppingRuleList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (DrainRuleToppingPutRequest m : toppingRuleList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

@@ -28,26 +28,27 @@ public class DrainRuleDispatchPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(drainRuleCode, true)
-                && isValidShopGroupCodeList()) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(drainRuleCode, true)) {
+            return false;
+        }
+        if (!isValidShopGroupCodeList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidShopGroupCodeList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(shopGroupCodeList)) {
-            isValid = false;
-        } else {
-            for (String m : shopGroupCodeList) {
-                if (!RegexUtils.isValidCode(m, true)) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (String m : shopGroupCodeList) {
+            if (!RegexUtils.isValidCode(m, true)) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

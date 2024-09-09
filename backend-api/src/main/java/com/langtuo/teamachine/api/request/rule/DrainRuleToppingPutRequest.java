@@ -25,11 +25,15 @@ public class DrainRuleToppingPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(toppingCode, true)
-                && flushSec > 0
-                && flushWeight > 0) {
-            return true;
+        if (!RegexUtils.isValidCode(toppingCode, true)) {
+            return false;
         }
-        return false;
+        if (flushSec <= 0) {
+            return false;
+        }
+        if (flushWeight <= 0) {
+            return false;
+        }
+        return true;
     }
 }
