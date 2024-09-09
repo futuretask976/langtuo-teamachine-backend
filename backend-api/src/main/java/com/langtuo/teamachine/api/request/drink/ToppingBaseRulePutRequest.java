@@ -20,9 +20,9 @@ public class ToppingBaseRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(toppingCode, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(toppingCode, true)) {
+            return false;
         }
-        return false;
+        return true;
     }
 }

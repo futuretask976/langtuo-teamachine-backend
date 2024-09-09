@@ -24,9 +24,9 @@ public class ModelPipelinePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (pipelineNum != 0) {
-            return true;
+        if (pipelineNum == 0) {
+            return false;
         }
-        return false;
+        return true;
     }
 }

@@ -103,47 +103,54 @@ public class TeaPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidComment(comment, false)
-                && RegexUtils.isValidCode(teaCode, true)
-                && RegexUtils.isValidName(teaName, true)
-                && RegexUtils.isValidCode(outerTeaCode, true)
-                && RegexUtils.isValidCode(teaTypeCode, true)
-                // && RegexUtils.isValidCode(imgLink, true)
-                && isValidTeaUnitList()
-                && isValidActStepList()) {
-            return true;
+        if (RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (RegexUtils.isValidComment(comment, false)) {
+            return false;
+        }
+        if (RegexUtils.isValidCode(teaCode, true)) {
+            return false;
+        }
+        if (RegexUtils.isValidName(teaName, true)) {
+            return false;
+        }
+        if (RegexUtils.isValidCode(outerTeaCode, true)) {
+            return false;
+        }
+        if (RegexUtils.isValidCode(teaTypeCode, true)) {
+            return false;
+        }
+        if (!isValidTeaUnitList()) {
+            return false;
+        }
+        if (!isValidActStepList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidTeaUnitList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(teaUnitList)) {
-            isValid = false;
-        } else {
-            for (TeaUnitPutRequest s : teaUnitList) {
-                if (!s.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (TeaUnitPutRequest s : teaUnitList) {
+            if (!s.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 
     private boolean isValidActStepList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(actStepList)) {
-            isValid = false;
-        } else {
-            for (ActStepPutRequest s : actStepList) {
-                if (!s.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (ActStepPutRequest s : actStepList) {
+            if (!s.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

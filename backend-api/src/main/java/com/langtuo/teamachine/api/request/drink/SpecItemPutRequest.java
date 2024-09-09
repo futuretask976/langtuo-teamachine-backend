@@ -25,11 +25,15 @@ public class SpecItemPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(specItemCode, true)
-                && RegexUtils.isValidName(specItemName, true)
-                && RegexUtils.isValidCode(outerSpecItemCode, true)) {
-            return true;
+        if (RegexUtils.isValidCode(specItemCode, true)) {
+            return false;
         }
-        return false;
+        if (RegexUtils.isValidName(specItemName, true)) {
+            return false;
+        }
+        if (RegexUtils.isValidCode(outerSpecItemCode, true)) {
+            return false;
+        }
+        return true;
     }
 }

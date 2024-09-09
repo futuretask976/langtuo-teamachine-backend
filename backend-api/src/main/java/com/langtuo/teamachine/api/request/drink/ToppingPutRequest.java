@@ -72,12 +72,18 @@ public class ToppingPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidComment(comment, false)
-                && RegexUtils.isValidName(toppingName, true)
-                && RegexUtils.isValidCode(toppingTypeCode, true)) {
-            return true;
+        if (RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (RegexUtils.isValidComment(comment, false)) {
+            return false;
+        }
+        if (RegexUtils.isValidName(toppingName, true)) {
+            return false;
+        }
+        if (RegexUtils.isValidCode(toppingTypeCode, true)) {
+            return false;
+        }
+        return true;
     }
 }

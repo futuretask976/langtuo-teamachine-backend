@@ -76,21 +76,14 @@ public class AccuracyTplPutRequest {
     }
 
     private boolean isValidToppingCodeList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(toppingCodeList)) {
-            isValid = false;
-        } else {
-            for (String m : toppingCodeList) {
-                if (!RegexUtils.isValidCode(m, true)) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (String m : toppingCodeList) {
+            if (!RegexUtils.isValidCode(m, true)) {
+                return false;
             }
         }
-        return isValid;
-    }
-
-    public static void main(String args[]) {
-        System.out.println(RegexUtils.isValidCode("TPL_01", true));
+        return true;
     }
 }

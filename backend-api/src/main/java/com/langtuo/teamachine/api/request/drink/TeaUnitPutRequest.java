@@ -44,42 +44,42 @@ public class TeaUnitPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(teaUnitCode, true)
-                && RegexUtils.isValidName(teaUnitName, true)
-                && isValidSpecItemRuleList()
-                && isValidToppingAdjustRuleList()) {
-            return true;
+        if (RegexUtils.isValidCode(teaUnitCode, true)) {
+            return false;
         }
-        return false;
+        if (RegexUtils.isValidName(teaUnitName, true)) {
+            return false;
+        }
+        if (isValidSpecItemRuleList()) {
+            return false;
+        }
+        if (isValidToppingAdjustRuleList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidSpecItemRuleList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(specItemRuleList)) {
-            isValid = false;
-        } else {
-            for (SpecItemRulePutRequest m : specItemRuleList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (SpecItemRulePutRequest m : specItemRuleList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 
     private boolean isValidToppingAdjustRuleList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(toppingAdjustRuleList)) {
-            isValid = false;
-        } else {
-            for (ToppingAdjustRulePutRequest m : toppingAdjustRuleList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (ToppingAdjustRulePutRequest m : toppingAdjustRuleList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

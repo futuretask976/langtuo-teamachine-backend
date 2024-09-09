@@ -40,10 +40,12 @@ public class ToppingAdjustRulePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (stepIndex > 0
-                && RegexUtils.isValidCode(toppingCode, true)) {
-            return true;
+        if (stepIndex <= 0) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(toppingCode, true)) {
+            return false;
+        }
+        return true;
     }
 }

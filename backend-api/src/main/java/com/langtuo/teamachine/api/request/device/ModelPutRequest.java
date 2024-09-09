@@ -42,17 +42,14 @@ public class ModelPutRequest {
     }
 
     private boolean isValidPipelineList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(pipelineList)) {
-            isValid = false;
-        } else {
-            for (ModelPipelinePutRequest m : pipelineList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (ModelPipelinePutRequest m : pipelineList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

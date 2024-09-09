@@ -47,13 +47,21 @@ public class DeployPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(deployCode, true)
-                && RegexUtils.isValidCode(modelCode, true)
-                && RegexUtils.isValidCode(machineCode, true)
-                && RegexUtils.isValidCode(shopCode, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(deployCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(modelCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(machineCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopCode, true)) {
+            return false;
+        }
+        return true;
     }
 }

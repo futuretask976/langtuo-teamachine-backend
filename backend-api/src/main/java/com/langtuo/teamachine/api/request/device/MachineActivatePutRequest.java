@@ -37,12 +37,18 @@ public class MachineActivatePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(deployCode, true)
-                && RegexUtils.isValidCode(machineCode, true)
-                && RegexUtils.isValidCode(screenCode, true)
-                && RegexUtils.isValidCode(elecBoardCode, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(deployCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(machineCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(screenCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(elecBoardCode, true)) {
+            return false;
+        }
+        return true;
     }
 }

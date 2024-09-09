@@ -31,17 +31,14 @@ public class ActStepPutRequest {
     }
 
     private boolean isValidToppingBaseRuleList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(toppingBaseRuleList)) {
-            isValid = false;
-        } else {
-            for (ToppingBaseRulePutRequest m : toppingBaseRuleList) {
-                if (!m.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (ToppingBaseRulePutRequest m : toppingBaseRuleList) {
+            if (!m.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

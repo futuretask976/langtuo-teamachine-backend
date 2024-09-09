@@ -63,16 +63,30 @@ public class MachineUpdatePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(machineCode, true)
-                && RegexUtils.isValidName(machineName, true)
-                && RegexUtils.isValidCode(screenCode, true)
-                && RegexUtils.isValidCode(elecBoardCode, true)
-                && RegexUtils.isValidCode(shopCode, true)
-                && validUntil != null
-                && maintainUntil != null) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(machineCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(machineName, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(screenCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(elecBoardCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopCode, true)) {
+            return false;
+        }
+        if (validUntil == null) {
+            return false;
+        }
+        if (maintainUntil == null) {
+            return false;
+        }
+        return true;
     }
 }

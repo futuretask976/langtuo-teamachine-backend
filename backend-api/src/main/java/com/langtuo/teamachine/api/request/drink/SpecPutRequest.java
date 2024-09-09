@@ -55,17 +55,14 @@ public class SpecPutRequest {
     }
 
     private boolean isValidSpecItem() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(specItemList)) {
-            isValid = false;
-        } else {
-            for (SpecItemPutRequest s : specItemList) {
-                if (!s.isValid()) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (SpecItemPutRequest s : specItemList) {
+            if (!s.isValid()) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }
