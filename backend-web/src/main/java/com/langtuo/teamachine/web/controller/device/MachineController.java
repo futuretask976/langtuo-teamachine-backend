@@ -32,11 +32,11 @@ public class MachineController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<MachineDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("screenCode") String screenCode, @RequestParam("elecBoardCode") String elecBoardCode,
-            @RequestParam("modelCode") String modelCode, @RequestParam("shopName") String shopName,
+            @RequestParam("machineCode") String machineCode, @RequestParam("screenCode") String screenCode,
+            @RequestParam("elecBoardCode") String elecBoardCode, @RequestParam("shopCode") String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        TeaMachineResult<PageDTO<MachineDTO>> rtn = service.search(tenantCode, screenCode, elecBoardCode, modelCode,
-                shopName, pageNum, pageSize);
+        TeaMachineResult<PageDTO<MachineDTO>> rtn = service.search(tenantCode, machineCode, screenCode, elecBoardCode,
+                shopCode, pageNum, pageSize);
         return rtn;
     }
 

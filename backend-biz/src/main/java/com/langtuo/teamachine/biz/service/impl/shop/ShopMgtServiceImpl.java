@@ -59,23 +59,13 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
-    public TeaMachineResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, String shopGroupName,
+    public TeaMachineResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, String shopGroupCode,
             int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
         TeaMachineResult<PageDTO<ShopDTO>> teaMachineResult;
         try {
-            String shopGroupCode = null;
-            if (StringUtils.isNotBlank(shopGroupName)) {
-                ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupName(tenantCode, shopGroupName);
-                if (shopGroupPO == null) {
-                    return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
-                } else {
-                    shopGroupCode = shopGroupPO.getShopGroupCode();
-                }
-            }
-
             PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCode,
                     pageNum, pageSize);
             List<ShopDTO> dtoList = convert(pageInfo.getList());

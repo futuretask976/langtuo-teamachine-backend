@@ -76,15 +76,15 @@ public class MachineAccessor {
         return count;
     }
 
-    public PageInfo<MachinePO> search(String tenantCode, String screenCode, String elecBoardCode,
-            String modelCode, String shopCode, int pageNum, int pageSize) {
+    public PageInfo<MachinePO> search(String tenantCode, String machineCode, String screenCode, String elecBoardCode,
+            String shopCode, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         MachineQuery machineQuery = new MachineQuery();
         machineQuery.setTenantCode(tenantCode);
+        machineQuery.setMachineCode(StringUtils.isBlank(machineCode) ? null : machineCode);
         machineQuery.setScreenCode(StringUtils.isBlank(screenCode) ? null : screenCode);
         machineQuery.setElecBoardCode(StringUtils.isBlank(elecBoardCode) ? null : elecBoardCode);
-        machineQuery.setModelCode(StringUtils.isBlank(modelCode) ? null : modelCode);
         machineQuery.setShopCode(StringUtils.isBlank(shopCode) ? null : shopCode);
         List<MachinePO> list = mapper.search(machineQuery);
 

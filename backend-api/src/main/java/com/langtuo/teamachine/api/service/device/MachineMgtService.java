@@ -20,8 +20,8 @@ public interface MachineMgtService {
      *
      * @return
      */
-    TeaMachineResult<PageDTO<MachineDTO>> search(String tenantCode, String screenCode, String elecBoardCode,
-            String modelCode, String shopName, int pageNum, int pageSize);
+    TeaMachineResult<PageDTO<MachineDTO>> search(String tenantCode, String machineCode, String screenCode,
+            String elecBoardCode, String shopCode, int pageNum, int pageSize);
 
     /**
      *

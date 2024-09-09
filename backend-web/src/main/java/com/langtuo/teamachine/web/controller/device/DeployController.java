@@ -37,9 +37,9 @@ public class DeployController {
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<DeployDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("deployCode") String deployCode, @RequestParam("machineCode") String machineCode,
-            @RequestParam("shopName") String shopName, @RequestParam(required = false, name = "state") Integer state,
+            @RequestParam("shopCode") String shopCode, @RequestParam(required = false, name = "state") Integer state,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        TeaMachineResult<PageDTO<DeployDTO>> rtn = service.search(tenantCode, deployCode, machineCode, shopName, state,
+        TeaMachineResult<PageDTO<DeployDTO>> rtn = service.search(tenantCode, deployCode, machineCode, shopCode, state,
                 pageNum, pageSize);
         return rtn;
     }

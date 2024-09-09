@@ -28,7 +28,7 @@ public interface DeployMgtService {
      * @return
      */
     TeaMachineResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
-            String shopName, Integer state, int pageNum, int pageSize);
+            String shopCode, Integer state, int pageNum, int pageSize);
 
     /**
      *

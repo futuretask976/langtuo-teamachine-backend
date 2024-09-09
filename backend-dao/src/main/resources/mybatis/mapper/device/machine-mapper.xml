@@ -55,14 +55,14 @@
         SELECT * FROM machine
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            <if test="machineCode != null">
+                AND machine_code = #{machineCode}
+            </if>
             <if test="screenCode != null">
                 AND screen_code = #{screenCode}
             </if>
             <if test="elecBoardCode != null">
                 AND elec_board_code = #{elecBoardCode}
-            </if>
-            <if test="modelCode != null">
-                AND model_code = #{modelCode}
             </if>
             <if test="shopCode != null">
                 AND shop_code = #{shopCode}

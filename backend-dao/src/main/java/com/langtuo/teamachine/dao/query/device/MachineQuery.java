@@ -10,14 +10,14 @@ public class MachineQuery {
     private String screenCode;
 
     /**
+     * 机器编码
+     */
+    private String machineCode;
+
+    /**
      * 电控板编码
      */
     private String elecBoardCode;
-
-    /**
-     * 型号编码
-     */
-    private String modelCode;
 
     /**
      * 店铺编码

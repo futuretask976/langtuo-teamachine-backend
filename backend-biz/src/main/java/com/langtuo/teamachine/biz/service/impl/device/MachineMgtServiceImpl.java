@@ -55,20 +55,14 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     }
 
     @Override
-    public TeaMachineResult<PageDTO<MachineDTO>> search(String tenantCode, String screenCode, String elecBoardCode,
-            String modelCode, String shopName, int pageNum, int pageSize) {
+    public TeaMachineResult<PageDTO<MachineDTO>> search(String tenantCode, String machineCode, String screenCode,
+            String elecBoardCode, String shopCode, int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
         TeaMachineResult<PageDTO<MachineDTO>> teaMachineResult;
         try {
-            ShopPO shopPO = shopAccessor.selectOneByShopName(tenantCode, shopName);
-            if (shopPO == null && StringUtils.isNotBlank(shopName)) {
-                return TeaMachineResult.success(new PageDTO<MachineDTO>(null, 0, pageNum, pageSize));
-            }
-            String shopCode = shopPO == null ? null : shopPO.getShopCode();
-
-            PageInfo<MachinePO> pageInfo = machineAccessor.search(tenantCode, screenCode, elecBoardCode, modelCode,
+            PageInfo<MachinePO> pageInfo = machineAccessor.search(tenantCode, machineCode, screenCode, elecBoardCode,
                     shopCode, pageNum, pageSize);
             List<MachineDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))

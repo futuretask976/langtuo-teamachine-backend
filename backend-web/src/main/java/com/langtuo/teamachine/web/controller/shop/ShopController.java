@@ -38,9 +38,9 @@ public class ShopController {
     
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<ShopDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopName") String shopName, @RequestParam("shopGroupName") String shopGroupName,
+            @RequestParam("shopName") String shopName, @RequestParam("shopGroupCode") String shopGroupCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        TeaMachineResult<PageDTO<ShopDTO>> rtn = service.search(tenantCode, shopName, shopGroupName, pageNum, pageSize);
+        TeaMachineResult<PageDTO<ShopDTO>> rtn = service.search(tenantCode, shopName, shopGroupCode, pageNum, pageSize);
         return rtn;
     }
 

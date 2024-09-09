@@ -56,14 +56,14 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
     @Override
     public TeaMachineResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
-            String shopName, Integer state, int pageNum, int pageSize) {
+            String shopCode, Integer state, int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
         TeaMachineResult<PageDTO<DeployDTO>> teaMachineResult;
         try {
             PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
-                    shopName, state, pageNum, pageSize);
+                    shopCode, state, pageNum, pageSize);
             List<DeployDTO> dtoList = convertToDeployDTO(pageInfo.getList());
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
