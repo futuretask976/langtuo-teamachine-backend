@@ -101,9 +101,11 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         try {
             if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
                 List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
-                shopGroupCodeList = shopGroupDTOList.stream()
-                        .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
-                        .collect(Collectors.toList());
+                if (!CollectionUtils.isEmpty(shopGroupDTOList)) {
+                    shopGroupCodeList = shopGroupDTOList.stream()
+                            .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
+                            .collect(Collectors.toList());
+                }
             }
 
             PageInfo<OrderActRecordPO> pageInfo = orderActRecordAccessor.search(tenantCode, shopGroupCodeList,

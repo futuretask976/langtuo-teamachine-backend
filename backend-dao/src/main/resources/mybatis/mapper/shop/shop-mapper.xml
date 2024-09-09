@@ -43,7 +43,7 @@
         SELECT * FROM shop
         WHERE 1 = 1
         AND tenant_code = #{tenantCode}
-        <if test="shopGroupCodeList != null">
+        <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
             AND shop_group_code IN
             <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
                 #{shopGroupCode}
