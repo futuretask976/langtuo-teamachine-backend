@@ -73,7 +73,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         TeaMachineResult<TeaDTO> teaMachineResult;
         try {
             TeaPO po = teaAccessor.selectOneByTeaCode(tenantCode, teaCode);
-            TeaDTO dto = convertToTeaDTO(po);
+            TeaDTO dto = convertToTeaDTO(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
@@ -88,7 +88,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         TeaMachineResult<TeaDTO> teaMachineResult;
         try {
             TeaPO po = teaAccessor.selectOneByTeaName(tenantCode, teaName);
-            TeaDTO dto = convertToTeaDTO(po);
+            TeaDTO dto = convertToTeaDTO(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByName error: " + e.getMessage(), e);
@@ -103,7 +103,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         TeaMachineResult<List<TeaDTO>> teaMachineResult;
         try {
             List<TeaPO> teaPOList = teaAccessor.selectList(tenantCode);
-            List<TeaDTO> teaDTOList = convertToTeaDTO(teaPOList);
+            List<TeaDTO> teaDTOList = convertToTeaDTO(teaPOList, false);
             teaMachineResult = TeaMachineResult.success(teaDTOList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
@@ -123,7 +123,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         try {
             PageInfo<TeaPO> pageInfo = teaAccessor.search(tenantName, teaCode, teaName,
                     pageNum, pageSize);
-            List<TeaDTO> dtoList = convertToTeaDTO(pageInfo.getList());
+            List<TeaDTO> dtoList = convertToTeaDTO(pageInfo.getList(), false);
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -291,18 +291,18 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         return resultList;
     }
 
-    private List<TeaDTO> convertToTeaDTO(List<TeaPO> poList) {
+    private List<TeaDTO> convertToTeaDTO(List<TeaPO> poList, boolean needDetail) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<TeaDTO> list = poList.stream()
-                .map(po -> convertToTeaDTO(po))
+                .map(po -> convertToTeaDTO(po, needDetail))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private TeaDTO convertToTeaDTO(TeaPO po) {
+    private TeaDTO convertToTeaDTO(TeaPO po, boolean needDetail) {
         if (po == null) {
             return null;
         }
@@ -319,7 +319,9 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         dto.setExtraInfo(po.getExtraInfo());
         dto.setImgLink(po.getImgLink());
 
-        fillTeaDTO(po.getTenantCode(), dto);
+        if (needDetail) {
+            fillTeaDTO(po.getTenantCode(), dto);
+        }
         return dto;
     }
 
