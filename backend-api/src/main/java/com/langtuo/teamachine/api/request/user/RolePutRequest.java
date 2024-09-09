@@ -49,26 +49,30 @@ public class RolePutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidCode(roleCode, true)
-                && RegexUtils.isValidName(roleName, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidCode(roleCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(roleName, true)) {
+            return false;
+        }
+        if (!isValidPermitActCodeList()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isValidPermitActCodeList() {
-        boolean isValid = true;
         if (CollectionUtils.isEmpty(permitActCodeList)) {
-            isValid = false;
-        } else {
-            for (String m : permitActCodeList) {
-                if (!RegexUtils.isValidCode(m, true)) {
-                    isValid = false;
-                    break;
-                }
+            return false;
+        }
+        for (String m : permitActCodeList) {
+            if (!RegexUtils.isValidCode(m, true)) {
+                return false;
             }
         }
-        return isValid;
+        return true;
     }
 }

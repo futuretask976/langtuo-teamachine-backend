@@ -42,13 +42,21 @@ public class ShopGroupPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidComment(comment, false)
-                && RegexUtils.isValidCode(shopGroupCode, true)
-                && RegexUtils.isValidName(shopGroupName, true)
-                && RegexUtils.isValidName(orgName, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidComment(comment, false)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(shopGroupCode, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(shopGroupName, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(orgName, true)) {
+            return false;
+        }
+        return true;
     }
 }

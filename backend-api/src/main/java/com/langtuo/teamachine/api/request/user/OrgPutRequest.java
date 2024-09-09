@@ -25,11 +25,15 @@ public class OrgPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidName(parentOrgName, false)
-                && RegexUtils.isValidName(orgName, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidName(parentOrgName, false)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(orgName, true)) {
+            return false;
+        }
+        return true;
     }
 }

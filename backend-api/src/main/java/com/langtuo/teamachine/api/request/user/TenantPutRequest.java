@@ -42,13 +42,21 @@ public class TenantPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (RegexUtils.isValidCode(tenantCode, true)
-                && RegexUtils.isValidComment(comment, false)
-                && RegexUtils.isValidName(tenantName, true)
-                && RegexUtils.isValidName(contactPerson, true)
-                && RegexUtils.isValidCode(contactPhone, true)) {
-            return true;
+        if (!RegexUtils.isValidCode(tenantCode, true)) {
+            return false;
         }
-        return false;
+        if (!RegexUtils.isValidComment(comment, false)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(tenantName, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidName(contactPerson, true)) {
+            return false;
+        }
+        if (!RegexUtils.isValidCode(contactPhone, true)) {
+            return false;
+        }
+        return true;
     }
 }
