@@ -16,6 +16,8 @@
         <result property="shopCode" column="shop_code"/>
         <result property="shopGroupCode" column="shop_group_code"/>
         <result property="orderGmtCreated" column="order_gmt_created"/>
+        <result property="teaTypeCode" column="tea_type_code"/>
+        <result property="teaCode" column="tea_code"/>
         <result property="outerOrderId" column="outer_order_id"/>
         <result property="state" column="state"/>
     </resultMap>
@@ -56,6 +58,8 @@
             , shop_code
             , shop_group_code
             , order_gmt_created
+            , tea_type_code
+            , tea_code
             , outer_order_id
             , state
         ) VALUES (
@@ -68,6 +72,8 @@
             , #{shopCode}
             , #{shopGroupCode}
             , #{orderGmtCreated}
+            , #{teaTypeCode}
+            , #{teaCode}
             , #{outerOrderId}
             , #{state}
         )

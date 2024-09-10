@@ -292,6 +292,8 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         po.setShopCode(request.getShopCode());
         po.setShopGroupCode(request.getShopGroupCode());
         po.setOrderGmtCreated(request.getOrderGmtCreated());
+        po.setTeaTypeCode(request.getTeaTypeCode());
+        po.setTeaCode(request.getTeaCode());
         po.setOuterOrderId(request.getOuterOrderId());
         po.setState(request.getState());
         return po;
