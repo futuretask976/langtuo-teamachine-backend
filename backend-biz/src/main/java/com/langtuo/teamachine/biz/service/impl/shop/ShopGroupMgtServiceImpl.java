@@ -74,9 +74,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         try {
             PageInfo<ShopGroupPO> pageInfo = shopGroupAccessor.search(tenantCode, shopGroupName,
                     pageNum, pageSize);
-            List<ShopGroupDTO> dtoList = convert(pageInfo.getList());
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
+                    convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
@@ -90,8 +89,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.selectList(tenantCode);
-            List<ShopGroupDTO> dtoList = convert(list);
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
@@ -106,8 +104,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         try {
             List<ShopGroupPO> list = shopGroupAccessor.selectListByOrgName(
                     tenantCode, BizUtils.getAdminOrgNameList(tenantCode));
-            List<ShopGroupDTO> dtoList = convert(list);
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
@@ -122,7 +119,6 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
                     messageSource));
         }
-
         ShopGroupPO shopGroupPO = convert(request);
 
         TeaMachineResult<Void> teaMachineResult;
@@ -156,8 +152,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
                 int deleted = shopGroupAccessor.deleteByShopGroupCode(tenantCode, shopGroupCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_SHOP_GROUP,
-                    messageSource));
+                teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_SHOP_GROUP, messageSource));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
