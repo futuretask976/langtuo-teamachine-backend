@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
@@ -104,7 +105,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.selectListByOrgName(
-                    tenantCode, getAdminOrgNameList(tenantCode));
+                    tenantCode, BizUtils.getAdminOrgNameList(tenantCode));
             List<ShopGroupDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -210,25 +211,5 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         po.setExtraInfo(request.getExtraInfo());
         po.setOrgName(request.getOrgName());
         return po;
-    }
-
-    private List<String> getAdminOrgNameList(String tenantCode) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new IllegalArgumentException("couldn't find login session");
-        }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String adminLoginName = userDetails.getUsername();
-        if (StringUtils.isBlank(adminLoginName)) {
-            throw new IllegalArgumentException("couldn't find login session");
-        }
-
-        AdminPO adminPO = adminAccessor.selectOneByLoginName(tenantCode, adminLoginName);
-        String orgName = adminPO.getOrgName();
-        List<OrgNode> orgPOList = orgAccessor.selectListByParent(tenantCode, orgName);
-        List<String> orgNameList = orgPOList.stream()
-                .map(orgNode -> orgNode.getOrgName())
-                .collect(Collectors.toList());
-        return orgNameList;
     }
 }

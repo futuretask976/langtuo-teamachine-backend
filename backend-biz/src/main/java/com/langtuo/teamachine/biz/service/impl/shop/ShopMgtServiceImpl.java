@@ -9,6 +9,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -99,13 +101,17 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     public TeaMachineResult<List<ShopDTO>> listByAdminOrg(String tenantCode) {
         TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {
-            List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.selectList(tenantCode);
-            List<String> shopGroupCodeList = shopGroupPOList.stream()
-                    .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
-                    .collect(Collectors.toList());
-
-            List<ShopPO> list = shopAccessor.selectListByShopGroupCode(tenantCode, shopGroupCodeList);
-            teaMachineResult = TeaMachineResult.success(convert(list));
+            List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.selectListByOrgName(
+                    tenantCode, BizUtils.getAdminOrgNameList(tenantCode));
+            if (CollectionUtils.isEmpty(shopGroupPOList)) {
+                teaMachineResult = TeaMachineResult.success(null);
+            } else {
+                List<String> shopGroupCodeList = shopGroupPOList.stream()
+                        .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
+                        .collect(Collectors.toList());
+                List<ShopPO> list = shopAccessor.selectListByShopGroupCode(tenantCode, shopGroupCodeList);
+                teaMachineResult = TeaMachineResult.success(convert(list));
+            }
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,

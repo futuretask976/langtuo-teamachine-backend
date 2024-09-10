@@ -4,10 +4,24 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.*;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
+import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
+import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import org.springframework.context.ApplicationContext;
 
 public class SpringUtils {
+    public static AdminAccessor getAdminAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        AdminAccessor adminAccessor = appContext.getBean(AdminAccessor.class);
+        return adminAccessor;
+    }
+
+    public static OrgAccessor getOrgAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        OrgAccessor orgAccessor = appContext.getBean(OrgAccessor.class);
+        return orgAccessor;
+    }
+
     public static ShopAccessor getShopAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         ShopAccessor shopAccessor = appContext.getBean(ShopAccessor.class);
