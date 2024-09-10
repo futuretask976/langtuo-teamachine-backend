@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.report.OrderAmtReportMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.record.OrderAmtReportPO" id="orderAmtReportMap">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="orderCreatedDay" column="order_created_day"/>
+        <result property="amount" column="amount"/>
+    </resultMap>
+
+    <select id="calcOne" resultMap="orderAmtReportMap">
+        SELECT
+            COUNT(1) AS amount
+        FROM order_act_record
+        WHERE 1 = 1
+            AND DATE(order_gmt_created) = #{orderCreatedDay}
+            AND TIME(order_gmt_created) >= '00:00:00'
+            AND TIME(order_gmt_created) &lt; '24:00:00'
+    </select>
+
+    <select id="selectOne" resultMap="orderAmtReportMap">
+        SELECT * FROM order_amt_report
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND order_created_day = #{orderCreatedDay}
+    </select>
+
+    <select id="selectList" resultMap="orderAmtReportMap">
+        SELECT * FROM order_amt_report
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="orderAmtReportMap">
+        SELECT * FROM order_amt_report
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="orderCreatedDayList != null and orderCreatedDayList.size() > 0">
+                AND order_created_day IN
+                <foreach item="orderCreatedDay" collection="orderCreatedDayList" open="(" separator="," close=")">
+                    #{orderCreatedDay}
+                </foreach>
+            </if>
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.report.OrderAmtReportPO">
+        INSERT INTO order_amt_report (
+            gmt_created
+            , gmt_modified
+            , tenant_code
+            , order_created_day
+            , amount
+        ) VALUES (
+            now()
+            , now()
+            , #{tenantCode}
+            , #{orderCreatedDay}
+            , #{amount}
+        )
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM order_amt_report
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND order_created_day = #{orderCreatedDay}
+    </delete>
+</mapper>

@@ -16,14 +16,14 @@
     </resultMap>
 
     <select id="selectList" resultMap="orderSpecItemActRecordPOMap">
-        SELECT * FROM order_spec_item_act_record
+        SELECT * FROM order_specitem_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND idempotent_mark = #{idempotentMark}
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO">
-        INSERT INTO order_spec_item_act_record (
+        INSERT INTO order_specitem_act_record (
             gmt_created
             , gmt_modified
             , tenant_code
@@ -41,7 +41,7 @@
     </insert>
 
     <delete id="delete">
-        DELETE FROM order_spec_item_act_record
+        DELETE FROM order_specitem_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND idempotent_mark = #{idempotentMark}

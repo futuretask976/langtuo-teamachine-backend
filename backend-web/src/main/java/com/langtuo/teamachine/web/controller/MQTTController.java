@@ -91,15 +91,15 @@ public class MQTTController {
                 List<OrderToppingActRecordPutRequest> toppingList = Lists.newArrayList();
                 OrderToppingActRecordPutRequest toppingReq1 = new OrderToppingActRecordPutRequest();
                 toppingReq1.setStepIndex(1);
-                toppingReq1.setToppingCode("topping_003");
-                toppingReq1.setToppingName("物料3");
-                toppingReq1.setActualAmount(55);
+                toppingReq1.setToppingCode("topping_002");
+                toppingReq1.setToppingName("物料2");
+                toppingReq1.setActualAmount(20);
                 toppingList.add(toppingReq1);
                 OrderToppingActRecordPutRequest toppingReq2 = new OrderToppingActRecordPutRequest();
                 toppingReq2.setStepIndex(1);
-                toppingReq2.setToppingCode("topping_004");
-                toppingReq1.setToppingName("物料4");
-                toppingReq2.setActualAmount(20);
+                toppingReq2.setToppingCode("topping_003");
+                toppingReq1.setToppingName("物料3");
+                toppingReq2.setActualAmount(30);
                 toppingList.add(toppingReq2);
                 request.setToppingList(toppingList);
 

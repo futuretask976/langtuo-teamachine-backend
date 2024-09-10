@@ -83,7 +83,12 @@
         <mapper resource="mybatis/mapper/record/clean-act-record-mapper.xml"/>
         <mapper resource="mybatis/mapper/record/drain-act-record-mapper.xml"/>
         <mapper resource="mybatis/mapper/record/order-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/record/order-spec-item-act-record-mapper.xml"/>
+        <mapper resource="mybatis/mapper/record/order-specitem-act-record-mapper.xml"/>
         <mapper resource="mybatis/mapper/record/order-topping-act-record-mapper.xml"/>
+        <!-- 报表 -->
+        <mapper resource="mybatis/mapper/report/order-amt-report-mapper.xml"/>
+        <mapper resource="mybatis/mapper/report/order-specitem-report-by-shop-mapper.xml"/>
+        <mapper resource="mybatis/mapper/report/order-tea-report-by-shop-mapper.xml"/>
+        <mapper resource="mybatis/mapper/report/order-topping-report-by-shop-mapper.xml"/>
     </mappers>
 </configuration>

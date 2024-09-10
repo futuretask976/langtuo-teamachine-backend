@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 一个namespace对应一个Mapper类（原来的dao） -->
+<mapper namespace="com.langtuo.teamachine.dao.mapper.report.OrderToppingReportByShopMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderToppingReportByShopPO" id="orderToppingReportByShopMapper">
+        <result property="id" column="id"/>
+        <result property="gmtCreated" column="gmt_created"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="orderCreatedDay" column="order_created_day"/>
+        <result property="shopGroupCode" column="shop_group_code"/>
+        <result property="shopCode" column="shop_code"/>
+        <result property="toppingCode" column="topping_code"/>
+        <result property="amount" column="amount"/>
+    </resultMap>
+
+    <select id="calcOne" resultMap="orderAmtReportMap">
+        SELECT
+            order_act.shop_group_code,
+            order_act.shop_code,
+            order_topping_act.topping_code,
+            COUNT(1) AS amount
+        FROM order_act_record AS order_act
+        LEFT JOIN
+            order_topping_act_record AS order_topping_act
+        ON DATE(order_act.order_gmt_created) = '2024-09-10'
+            AND TIME(order_act.order_gmt_created) >= '00:00:00'
+            AND TIME(order_act.order_gmt_created) &lt; '24:00:00'
+            AND order_act.idempotent_mark = order_topping_act.idempotent_mark
+        GROUP BY
+            order_act.shop_group_code, order_act.shop_code, order_topping_act.topping_code
+    </select>
+
+    <select id="selectOne" resultMap="orderToppingReportByShopMapper">
+        SELECT * FROM order_topping_report_by_shop
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND order_created_day = #{orderCreatedDay}
+    </select>
+
+    <select id="selectList" resultMap="orderToppingReportByShopMapper">
+        SELECT * FROM order_topping_report_by_shop
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+    </select>
+
+    <select id="search" resultMap="orderToppingReportByShopMapper">
+        SELECT * FROM order_topping_report_by_shop
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="orderCreatedDayList != null and orderCreatedDayList.size() > 0">
+                AND order_created_day IN
+                <foreach item="orderCreatedDay" collection="orderCreatedDayList" open="(" separator="," close=")">
+                    #{orderCreatedDay}
+                </foreach>
+            </if>
+    </select>
+
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.report.OrderToppingReportByShopPO">
+        INSERT INTO order_topping_report_by_shop (
+            gmt_created
+            , gmt_modified
+            , tenant_code
+            , order_created_day
+            , shop_group_code
+            , shop_code
+            , topping_code
+            , amount
+        ) VALUES (
+            now()
+            , now()
+            , #{tenantCode}
+            , #{orderCreatedDay}
+            , #{shopGroupCode}
+            , #{shopCode}
+            , #{toppingCode}
+            , #{amount}
+        )
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM order_topping_report_by_shop
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND order_created_day = #{orderCreatedDay}
+    </delete>
+</mapper>
