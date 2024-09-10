@@ -69,9 +69,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         try {
             PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCode,
                     pageNum, pageSize);
-            List<ShopDTO> dtoList = convert(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<ShopDTO>(
-                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                    convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
@@ -86,8 +85,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {
             List<ShopPO> list = shopAccessor.selectListByShopGroupCode(tenantCode, shopGroupCode);
-            List<ShopDTO> dtoList = convert(list);
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
@@ -125,7 +123,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
                     messageSource));
         }
-
         ShopPO shopPO = convert(request);
 
         TeaMachineResult<Void> teaMachineResult;
@@ -230,9 +227,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         po.setComment(request.getComment());
         po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
-
         return po;
     }
-
-
 }
