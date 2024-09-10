@@ -32,12 +32,14 @@ public class OrderActRecordTestor {
             put("abc", "def");
         }});
         request.setIdempotentMark(String.valueOf(System.currentTimeMillis()));
-        request.setMachineCode("abcd");
+        request.setMachineCode("machine_444");
         request.setShopCode("shop_001");
         request.setShopGroupCode("shopGroup_02");
         request.setOrderGmtCreated(new Date());
-        request.setOuterOrderId("111111");
-        request.setState(0);
+        request.setTeaTypeCode("TEA_TYPE_01");
+        request.setTeaCode("TEA_07");
+        request.setOuterOrderId(String.valueOf(System.currentTimeMillis()));
+        request.setState(2);
 
         List<OrderSpecItemActRecordPutRequest> specItemList = Lists.newArrayList();
         OrderSpecItemActRecordPutRequest specItemReq1 = new OrderSpecItemActRecordPutRequest();

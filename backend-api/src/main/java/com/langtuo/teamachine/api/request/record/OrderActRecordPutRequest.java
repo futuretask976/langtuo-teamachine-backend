@@ -56,6 +56,16 @@ public class OrderActRecordPutRequest {
     private Date orderGmtCreated;
 
     /**
+     * 茶品类型编码
+     */
+    private String teaTypeCode;
+
+    /**
+     * 茶品编码
+     */
+    private String teaCode;
+
+    /**
      * 外部订单id
      */
     private String outerOrderId;
