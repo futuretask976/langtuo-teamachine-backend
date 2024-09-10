@@ -183,18 +183,18 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         return teaMachineResult;
     }
 
-    private List<OrderActRecordDTO> convert(List<OrderActRecordPO> poList, boolean needDetail) {
+    private List<OrderActRecordDTO> convert(List<OrderActRecordPO> poList, boolean fillDetail) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<OrderActRecordDTO> list = poList.stream()
-                .map(po -> convert(po, needDetail))
+                .map(po -> convert(po, fillDetail))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private OrderActRecordDTO convert(OrderActRecordPO po, boolean needDetail) {
+    private OrderActRecordDTO convert(OrderActRecordPO po, boolean fillDetail) {
         if (po == null) {
             return null;
         }
@@ -214,7 +214,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             dto.setTeaName(teaPO.getTeaName());
         }
 
-        if (needDetail) {
+        if (fillDetail) {
             TeaTypePO teaTypePO = teaTypeAccessor.selectOneByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
             if (teaTypePO != null) {
                 dto.setTeaTypeName(teaTypePO.getTeaTypeName());

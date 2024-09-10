@@ -144,18 +144,18 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
         return teaMachineResult;
     }
 
-    private List<SupplyActRecordDTO> convert(List<SupplyActRecordPO> poList, boolean needDetail) {
+    private List<SupplyActRecordDTO> convert(List<SupplyActRecordPO> poList, boolean fillDetail) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<SupplyActRecordDTO> list = poList.stream()
-                .map(po -> convert(po, needDetail))
+                .map(po -> convert(po, fillDetail))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private SupplyActRecordDTO convert(SupplyActRecordPO po, boolean needDetail) {
+    private SupplyActRecordDTO convert(SupplyActRecordPO po, boolean fillDetail) {
         if (po == null) {
             return null;
         }
@@ -171,7 +171,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
         dto.setPipelineNum(po.getPipelineNum());
         dto.setSupplyAmount(po.getSupplyAmount());
 
-        if (needDetail) {
+        if (fillDetail) {
             ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
             if (toppingPO != null) {
                 dto.setToppingName(toppingPO.getToppingName());

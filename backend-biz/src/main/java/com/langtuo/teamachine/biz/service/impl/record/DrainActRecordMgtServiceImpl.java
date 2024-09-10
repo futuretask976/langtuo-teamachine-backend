@@ -143,18 +143,18 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
         return teaMachineResult;
     }
 
-    private List<DrainActRecordDTO> convert(List<DrainActRecordPO> poList, boolean needDetail) {
+    private List<DrainActRecordDTO> convert(List<DrainActRecordPO> poList, boolean fillDetail) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<DrainActRecordDTO> list = poList.stream()
-                .map(po -> convert(po, needDetail))
+                .map(po -> convert(po, fillDetail))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private DrainActRecordDTO convert(DrainActRecordPO po, boolean needDetail) {
+    private DrainActRecordDTO convert(DrainActRecordPO po, boolean fillDetail) {
         if (po == null) {
             return null;
         }
@@ -174,7 +174,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
         dto.setFlushSec(po.getFlushSec());
         dto.setFlushWeight(po.getFlushWeight());
 
-        if (needDetail) {
+        if (fillDetail) {
             ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
             if (toppingPO != null) {
                 dto.setToppingName(toppingPO.getToppingName());

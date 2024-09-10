@@ -143,18 +143,18 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
         return teaMachineResult;
     }
 
-    private List<CleanActRecordDTO> convert(List<CleanActRecordPO> poList, boolean needDetail) {
+    private List<CleanActRecordDTO> convert(List<CleanActRecordPO> poList, boolean fillDetail) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<CleanActRecordDTO> list = poList.stream()
-                .map(po -> convert(po, needDetail))
+                .map(po -> convert(po, fillDetail))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private CleanActRecordDTO convert(CleanActRecordPO po, boolean needDetail) {
+    private CleanActRecordDTO convert(CleanActRecordPO po, boolean fillDetail) {
         if (po == null) {
             return null;
         }
@@ -177,7 +177,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
         dto.setFlushSec(po.getFlushSec());
         dto.setFlushIntervalMin(po.getFlushIntervalMin());
 
-        if (needDetail) {
+        if (fillDetail) {
             ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
             if (toppingPO != null) {
                 dto.setToppingName(toppingPO.getToppingName());

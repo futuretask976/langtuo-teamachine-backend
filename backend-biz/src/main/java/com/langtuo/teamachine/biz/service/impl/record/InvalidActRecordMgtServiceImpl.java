@@ -143,18 +143,18 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         return teaMachineResult;
     }
 
-    private List<InvalidActRecordDTO> convert(List<InvalidActRecordPO> poList, boolean needDetail) {
+    private List<InvalidActRecordDTO> convert(List<InvalidActRecordPO> poList, boolean fillDetail) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<InvalidActRecordDTO> list = poList.stream()
-                .map(po -> convert(po, needDetail))
+                .map(po -> convert(po, fillDetail))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private InvalidActRecordDTO convert(InvalidActRecordPO po, boolean needDetail) {
+    private InvalidActRecordDTO convert(InvalidActRecordPO po, boolean fillDetail) {
         if (po == null) {
             return null;
         }
@@ -170,7 +170,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         dto.setPipelineNum(po.getPipelineNum());
         dto.setInvalidAmount(po.getInvalidAmount());
 
-        if (needDetail) {
+        if (fillDetail) {
             ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(
                     po.getTenantCode(), po.getToppingCode());
             if (toppingPO != null) {
