@@ -2,8 +2,8 @@ package com.langtuo.teamachine.dao.mapper.report;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
-import com.langtuo.teamachine.dao.po.record.SupplyActRecordPO;
-import com.langtuo.teamachine.dao.query.record.SupplyActRecordQuery;
+import com.langtuo.teamachine.dao.po.report.OrderAmtReportPO;
+import com.langtuo.teamachine.dao.query.report.OrderAmtReportQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -17,45 +17,40 @@ public interface OrderAmtReportMapper {
     /**
      *
      * @param tenantCode
-     * @param idempotentMark
+     * @param orderCreatedDay
      * @return
      */
-    SupplyActRecordPO selectOne(@Param("tenantCode") String tenantCode,
-            @Param("idempotentMark") String idempotentMark);
+    OrderAmtReportPO calcOne(@Param("tenantCode") String tenantCode,
+            @Param("orderCreatedDay") String orderCreatedDay);
 
     /**
-     * Only for test
+     *
+     * @param tenantCode
+     * @param orderCreatedDay
      * @return
      */
-    List<SupplyActRecordPO> selectList(@Param("tenantCode") String tenantCode);
+    OrderAmtReportPO selectOne(@Param("tenantCode") String tenantCode,
+            @Param("orderCreatedDay") String orderCreatedDay);
 
     /**
      *
      * @return
      */
-    List<SupplyActRecordPO> search(SupplyActRecordQuery query);
-
-    /**
-     *
-     * @param supplyActRecordPO
-     * @return
-     */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(SupplyActRecordPO supplyActRecordPO);
+    List<OrderAmtReportPO> search(OrderAmtReportQuery query);
 
     /**
      *
      * @param po
      * @return
      */
-    int update(SupplyActRecordPO po);
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
+    int insert(OrderAmtReportPO po);
 
     /**
      *
      * @param tenantCode
-     * @param idempotentMark
+     * @param orderCreatedDay
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode,
-            @Param("idempotentMark") String idempotentMark);
+    int delete(@Param("tenantCode") String tenantCode, @Param("orderCreatedDay") String orderCreatedDay);
 }

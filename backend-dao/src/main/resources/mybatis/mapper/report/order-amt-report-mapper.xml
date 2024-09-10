@@ -31,12 +31,6 @@
             AND order_created_day = #{orderCreatedDay}
     </select>
 
-    <select id="selectList" resultMap="orderAmtReportMap">
-        SELECT * FROM order_amt_report
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
-    </select>
-
     <select id="search" resultMap="orderAmtReportMap">
         SELECT * FROM order_amt_report
         WHERE 1 = 1
