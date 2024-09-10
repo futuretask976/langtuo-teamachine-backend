@@ -4,13 +4,13 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.DrainActRecordDTO;
-import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.request.record.DrainActRecordPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.DrainActRecordMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.record.DrainActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
@@ -30,13 +30,11 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
-
 @Component
 @Slf4j
 public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
     @Resource
-    private DrainActRecordAccessor accessor;
+    private DrainActRecordAccessor drainActRecordAccessor;
 
     @Resource
     private ToppingAccessor toppingAccessor;
@@ -57,7 +55,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
     public TeaMachineResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<DrainActRecordDTO> teaMachineResult;
         try {
-            DrainActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
+            DrainActRecordPO po = drainActRecordAccessor.selectOne(tenantCode, idempotentMark);
             DrainActRecordDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -76,19 +74,22 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
 
         TeaMachineResult<PageDTO<DrainActRecordDTO>> teaMachineResult;
         try {
-            if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
-                List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
-                if (!CollectionUtils.isEmpty(shopGroupDTOList)) {
-                    shopGroupCodeList = shopGroupDTOList.stream()
-                            .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
-                            .collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(shopCodeList)) {
+                if (CollectionUtils.isEmpty(shopGroupCodeList)) {
+                    shopGroupCodeList = BizUtils.getShopGroupCodeListByAdmin(tenantCode);
                 }
+                shopCodeList = BizUtils.getShopCodeListByShopGroupCode(tenantCode, shopGroupCodeList);
             }
 
-            PageInfo<DrainActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
-                    shopCodeList, pageNum, pageSize);
-            List<DrainActRecordDTO> dtoList = convert(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            if (CollectionUtils.isEmpty(shopCodeList)) {
+                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                        null, 0, pageNum, pageSize));
+            } else {
+                PageInfo<DrainActRecordPO> pageInfo = drainActRecordAccessor.search(
+                        tenantCode, shopGroupCodeList, shopCodeList, pageNum, pageSize);
+                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                        convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
+            }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
@@ -108,12 +109,12 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            DrainActRecordPO exist = accessor.selectOne(po.getTenantCode(),
+            DrainActRecordPO exist = drainActRecordAccessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
             if (exist != null) {
-                int updated = accessor.delete(po.getTenantCode(), po.getIdempotentMark());
+                int updated = drainActRecordAccessor.delete(po.getTenantCode(), po.getIdempotentMark());
             }
-            int inserted = accessor.insert(po);
+            int inserted = drainActRecordAccessor.insert(po);
 
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
@@ -133,7 +134,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = accessor.delete(tenantCode, idempotentMark);
+            int deleted = drainActRecordAccessor.delete(tenantCode, idempotentMark);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

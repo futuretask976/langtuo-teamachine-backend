@@ -25,7 +25,6 @@ public class InvalidActRecordAccessor {
 
         InvalidActRecordQuery query = new InvalidActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.addShopGroupCode(shopGroupCodeList);
         query.addShopCode(shopCodeList);
         List<InvalidActRecordPO> list = mapper.search(query);
 

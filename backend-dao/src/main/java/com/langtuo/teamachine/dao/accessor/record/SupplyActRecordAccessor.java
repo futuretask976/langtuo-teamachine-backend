@@ -25,7 +25,6 @@ public class SupplyActRecordAccessor {
 
         SupplyActRecordQuery query = new SupplyActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.addShopGroupCode(shopGroupCodeList);
         query.addShopCode(shopCodeList);
         List<SupplyActRecordPO> list = mapper.search(query);
 

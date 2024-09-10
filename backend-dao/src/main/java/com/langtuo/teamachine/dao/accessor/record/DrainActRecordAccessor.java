@@ -25,7 +25,6 @@ public class DrainActRecordAccessor {
 
         DrainActRecordQuery query = new DrainActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.addShopGroupCode(shopGroupCodeList);
         query.addShopCode(shopCodeList);
         List<DrainActRecordPO> list = mapper.search(query);
 

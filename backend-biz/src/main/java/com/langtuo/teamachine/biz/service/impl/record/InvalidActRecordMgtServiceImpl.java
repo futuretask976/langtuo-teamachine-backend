@@ -4,13 +4,13 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.InvalidActRecordDTO;
-import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.request.record.InvalidActRecordPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.InvalidActRecordMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
@@ -30,13 +30,11 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
-
 @Component
 @Slf4j
 public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtService {
     @Resource
-    private InvalidActRecordAccessor accessor;
+    private InvalidActRecordAccessor invalidActRecordAccessor;
 
     @Resource
     private ToppingAccessor toppingAccessor;
@@ -57,7 +55,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
     public TeaMachineResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<InvalidActRecordDTO> teaMachineResult;
         try {
-            InvalidActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
+            InvalidActRecordPO po = invalidActRecordAccessor.selectOne(tenantCode, idempotentMark);
             InvalidActRecordDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -76,19 +74,22 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
 
         TeaMachineResult<PageDTO<InvalidActRecordDTO>> teaMachineResult;
         try {
-            if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
-                List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
-                if (!CollectionUtils.isEmpty(shopGroupDTOList)) {
-                    shopGroupCodeList = shopGroupDTOList.stream()
-                            .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
-                            .collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(shopCodeList)) {
+                if (CollectionUtils.isEmpty(shopGroupCodeList)) {
+                    shopGroupCodeList = BizUtils.getShopGroupCodeListByAdmin(tenantCode);
                 }
+                shopCodeList = BizUtils.getShopCodeListByShopGroupCode(tenantCode, shopGroupCodeList);
             }
 
-            PageInfo<InvalidActRecordPO> pageInfo = accessor.search(tenantCode, shopGroupCodeList,
-                    shopCodeList, pageNum, pageSize);
-            List<InvalidActRecordDTO> dtoList = convert(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            if (CollectionUtils.isEmpty(shopCodeList)) {
+                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                        null, 0, pageNum, pageSize));
+            } else {
+                PageInfo<InvalidActRecordPO> pageInfo = invalidActRecordAccessor.search(
+                        tenantCode, shopGroupCodeList, shopCodeList, pageNum, pageSize);
+                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                        convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
+            }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
@@ -108,12 +109,12 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            InvalidActRecordPO exist = accessor.selectOne(po.getTenantCode(),
+            InvalidActRecordPO exist = invalidActRecordAccessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
             if (exist != null) {
-                int updated = accessor.delete(po.getTenantCode(), po.getIdempotentMark());
+                int updated = invalidActRecordAccessor.delete(po.getTenantCode(), po.getIdempotentMark());
             }
-            int inserted = accessor.insert(po);
+            int inserted = invalidActRecordAccessor.insert(po);
 
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
@@ -133,7 +134,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = accessor.delete(tenantCode, warningRuleCode);
+            int deleted = invalidActRecordAccessor.delete(tenantCode, warningRuleCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

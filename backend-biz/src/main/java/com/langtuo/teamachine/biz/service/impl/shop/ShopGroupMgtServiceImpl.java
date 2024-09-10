@@ -1,7 +1,6 @@
 package com.langtuo.teamachine.biz.service.impl.shop;
 
 import com.github.pagehelper.PageInfo;
-import com.google.protobuf.Message;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
@@ -15,16 +14,11 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
-import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
-import com.langtuo.teamachine.dao.po.user.AdminPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -103,7 +97,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.selectListByOrgName(
-                    tenantCode, BizUtils.getAdminOrgNameList(tenantCode));
+                    tenantCode, BizUtils.getOrgNameListByAdmin(tenantCode));
             teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);

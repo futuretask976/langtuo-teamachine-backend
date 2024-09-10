@@ -34,8 +34,7 @@ public class CleanActRecordController {
      */
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<CleanActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopGroupCode") String shopGroupCode,
-            @RequestParam("shopCode") String shopCode,
+            @RequestParam("shopGroupCode") String shopGroupCode, @RequestParam("shopCode") String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         List<String> shopGroupCodeList = Lists.newArrayList();
         if (!StringUtils.isBlank(shopGroupCode)) {

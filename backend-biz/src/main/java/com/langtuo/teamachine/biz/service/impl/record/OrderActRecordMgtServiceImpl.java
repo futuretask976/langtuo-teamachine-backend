@@ -6,13 +6,13 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.OrderActRecordDTO;
 import com.langtuo.teamachine.api.model.record.OrderSpecItemActRecordDTO;
 import com.langtuo.teamachine.api.model.record.OrderToppingActRecordDTO;
-import com.langtuo.teamachine.api.model.shop.ShopGroupDTO;
 import com.langtuo.teamachine.api.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.SpecItemAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
@@ -40,8 +40,6 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
 
 @Component
 @Slf4j
@@ -99,19 +97,22 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
 
         TeaMachineResult<PageDTO<OrderActRecordDTO>> teaMachineResult;
         try {
-            if (CollectionUtils.isEmpty(shopGroupCodeList) && CollectionUtils.isEmpty(shopCodeList)) {
-                List<ShopGroupDTO> shopGroupDTOList = getListModel(shopGroupMgtService.listByAdminOrg(tenantCode));
-                if (!CollectionUtils.isEmpty(shopGroupDTOList)) {
-                    shopGroupCodeList = shopGroupDTOList.stream()
-                            .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
-                            .collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(shopCodeList)) {
+                if (CollectionUtils.isEmpty(shopGroupCodeList)) {
+                    shopGroupCodeList = BizUtils.getShopGroupCodeListByAdmin(tenantCode);
                 }
+                shopCodeList = BizUtils.getShopCodeListByShopGroupCode(tenantCode, shopGroupCodeList);
             }
 
-            PageInfo<OrderActRecordPO> pageInfo = orderActRecordAccessor.search(tenantCode, shopGroupCodeList,
-                    shopCodeList, pageNum, pageSize);
-            List<OrderActRecordDTO> dtoList = convert(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            if (CollectionUtils.isEmpty(shopCodeList)) {
+                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                        null, 0, pageNum, pageSize));
+            } else {
+                PageInfo<OrderActRecordPO> pageInfo = orderActRecordAccessor.search(
+                        tenantCode, shopCodeList, pageNum, pageSize);
+                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                        convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
+            }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,

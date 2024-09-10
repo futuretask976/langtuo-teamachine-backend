@@ -99,7 +99,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {
             List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.selectListByOrgName(
-                    tenantCode, BizUtils.getAdminOrgNameList(tenantCode));
+                    tenantCode, BizUtils.getOrgNameListByAdmin(tenantCode));
             if (CollectionUtils.isEmpty(shopGroupPOList)) {
                 teaMachineResult = TeaMachineResult.success(null);
             } else {

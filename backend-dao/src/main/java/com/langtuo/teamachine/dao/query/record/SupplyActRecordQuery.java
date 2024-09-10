@@ -1,7 +1,6 @@
 package com.langtuo.teamachine.dao.query.record;
 
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.springframework.util.CollectionUtils;
 
@@ -15,28 +14,9 @@ public class SupplyActRecordQuery {
     private String tenantCode;
 
     /**
-     * 店铺组编码列表
-     */
-    private List<String> shopGroupCodeList;
-
-    /**
      * 店铺编码列表
      */
     private List<String> shopCodeList;
-
-    /**
-     * 添加店铺组编码
-     * @param shopGroupCodeList
-     */
-    public void addShopGroupCode(List<String> shopGroupCodeList) {
-        if (CollectionUtils.isEmpty(shopGroupCodeList)) {
-            return;
-        }
-        if (this.shopGroupCodeList == null) {
-            this.shopGroupCodeList = Lists.newArrayList();
-        }
-        this.shopGroupCodeList.addAll(shopGroupCodeList);
-    }
 
     /**
      * 添加店铺编码
