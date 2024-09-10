@@ -69,7 +69,7 @@ public class MQTTController {
                 request.setShopGroupCode("shopGroup_02");
                 request.setOrderGmtCreated(new Date());
                 request.setTeaTypeCode("TEA_TYPE_01");
-                request.setTeaCode("TEA_07");
+                request.setTeaCode("TEA_08");
                 request.setOuterOrderId(String.valueOf(System.currentTimeMillis()));
                 request.setState(2);
 
@@ -77,29 +77,29 @@ public class MQTTController {
                 OrderSpecItemActRecordPutRequest specItemReq1 = new OrderSpecItemActRecordPutRequest();
                 specItemReq1.setSpecCode("SPEC_SWEET");
                 specItemReq1.setSpecName("甜度");
-                specItemReq1.setSpecItemCode("SPEC_ITEM_7_SWEET");
-                specItemReq1.setSpecItemName("7分糖");
+                specItemReq1.setSpecItemCode("SPEC_ITEM_5_SWEET");
+                specItemReq1.setSpecItemName("5分糖");
                 specItemList.add(specItemReq1);
                 OrderSpecItemActRecordPutRequest specItemReq2 = new OrderSpecItemActRecordPutRequest();
                 specItemReq2.setSpecCode("SPEC_BEIXING");
                 specItemReq2.setSpecName("杯型");
-                specItemReq2.setSpecItemCode("SPEC_ITEM_BIG");
-                specItemReq2.setSpecItemName("大杯");
+                specItemReq2.setSpecItemCode("SPEC_ITEM_SMALL");
+                specItemReq2.setSpecItemName("小杯");
                 specItemList.add(specItemReq2);
                 request.setSpecItemList(specItemList);
 
                 List<OrderToppingActRecordPutRequest> toppingList = Lists.newArrayList();
                 OrderToppingActRecordPutRequest toppingReq1 = new OrderToppingActRecordPutRequest();
                 toppingReq1.setStepIndex(1);
-                toppingReq1.setToppingCode("topping_002");
-                toppingReq1.setToppingName("物料2");
-                toppingReq1.setActualAmount(20);
+                toppingReq1.setToppingCode("topping_003");
+                toppingReq1.setToppingName("物料3");
+                toppingReq1.setActualAmount(55);
                 toppingList.add(toppingReq1);
                 OrderToppingActRecordPutRequest toppingReq2 = new OrderToppingActRecordPutRequest();
                 toppingReq2.setStepIndex(1);
-                toppingReq2.setToppingCode("topping_003");
-                toppingReq1.setToppingName("物料3");
-                toppingReq2.setActualAmount(30);
+                toppingReq2.setToppingCode("topping_004");
+                toppingReq1.setToppingName("物料4");
+                toppingReq2.setActualAmount(20);
                 toppingList.add(toppingReq2);
                 request.setToppingList(toppingList);
 

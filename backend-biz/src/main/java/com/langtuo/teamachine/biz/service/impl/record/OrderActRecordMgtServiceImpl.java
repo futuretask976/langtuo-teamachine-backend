@@ -13,17 +13,13 @@ import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.util.ApiUtils;
 import com.langtuo.teamachine.biz.service.util.BizUtils;
-import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
-import com.langtuo.teamachine.dao.accessor.drink.SpecItemAccessor;
-import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
+import com.langtuo.teamachine.dao.accessor.drink.*;
 import com.langtuo.teamachine.dao.accessor.record.OrderActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.OrderSpecItemActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.OrderToppingActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
-import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
-import com.langtuo.teamachine.dao.po.drink.SpecPO;
-import com.langtuo.teamachine.dao.po.drink.ToppingPO;
+import com.langtuo.teamachine.dao.po.drink.*;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
@@ -71,6 +67,12 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     @Resource
     private ShopGroupMgtService shopGroupMgtService;
 
+    @Resource
+    private TeaTypeAccessor teaTypeAccessor;
+
+    @Resource
+    private TeaAccessor teaAccessor;
+
     @Autowired
     private MessageSource messageSource;
 
@@ -79,7 +81,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         TeaMachineResult<OrderActRecordDTO> teaMachineResult;
         try {
             OrderActRecordPO po = orderActRecordAccessor.selectOne(tenantCode, idempotentMark);
-            OrderActRecordDTO dto = convert(po);
+            OrderActRecordDTO dto = convert(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
@@ -111,7 +113,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
                 PageInfo<OrderActRecordPO> pageInfo = orderActRecordAccessor.search(
                         tenantCode, shopCodeList, pageNum, pageSize);
                 teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
+                        convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
@@ -181,18 +183,18 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         return teaMachineResult;
     }
 
-    private List<OrderActRecordDTO> convert(List<OrderActRecordPO> poList) {
+    private List<OrderActRecordDTO> convert(List<OrderActRecordPO> poList, boolean needDetail) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<OrderActRecordDTO> list = poList.stream()
-                .map(po -> convert(po))
+                .map(po -> convert(po, needDetail))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private OrderActRecordDTO convert(OrderActRecordPO po) {
+    private OrderActRecordDTO convert(OrderActRecordPO po, boolean needDetail) {
         if (po == null) {
             return null;
         }
@@ -207,24 +209,34 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         dto.setOuterOrderId(po.getOuterOrderId());
         dto.setState(po.getState());
 
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(
-                po.getTenantCode(), po.getShopGroupCode());
-        if (shopGroupPO != null) {
-            dto.setShopGroupName(shopGroupPO.getShopGroupName());
-        }
-        ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
-        if (shopPO != null) {
-            dto.setShopName(shopPO.getShopName());
+        TeaPO teaPO = teaAccessor.selectOneByTeaCode(po.getTenantCode(), po.getTeaCode());
+        if (teaPO != null) {
+            dto.setTeaName(teaPO.getTeaName());
         }
 
-        List<OrderSpecItemActRecordPO> specItemActRecordList = orderSpecItemActRecordAccessor.selectList(
-                po.getTenantCode(), po.getIdempotentMark());
-        dto.setSpecItemList(convertToOrderSpecItemActRecordDTO(specItemActRecordList));
+        if (needDetail) {
+            TeaTypePO teaTypePO = teaTypeAccessor.selectOneByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
+            if (teaTypePO != null) {
+                dto.setTeaTypeName(teaTypePO.getTeaTypeName());
+            }
+            ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(
+                    po.getTenantCode(), po.getShopGroupCode());
+            if (shopGroupPO != null) {
+                dto.setShopGroupName(shopGroupPO.getShopGroupName());
+            }
+            ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
+            if (shopPO != null) {
+                dto.setShopName(shopPO.getShopName());
+            }
 
-        List<OrderToppingActRecordPO> toppingActRecordList = orderToppingActRecordAccessor.selectList(
-                po.getTenantCode(), po.getIdempotentMark());
-        dto.setToppingList(convertToOrderToppingActRecordDTO((toppingActRecordList)));
+            List<OrderSpecItemActRecordPO> specItemActRecordList = orderSpecItemActRecordAccessor.selectList(
+                    po.getTenantCode(), po.getIdempotentMark());
+            dto.setSpecItemList(convertToOrderSpecItemActRecordDTO(specItemActRecordList));
 
+            List<OrderToppingActRecordPO> toppingActRecordList = orderToppingActRecordAccessor.selectList(
+                    po.getTenantCode(), po.getIdempotentMark());
+            dto.setToppingList(convertToOrderToppingActRecordDTO((toppingActRecordList)));
+        }
         return dto;
     }
 

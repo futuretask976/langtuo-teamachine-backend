@@ -59,6 +59,16 @@ public class OrderActRecordDTO {
     private Date orderGmtCreated;
 
     /**
+     * 茶品类型名称
+     */
+    private String teaTypeName;
+
+    /**
+     * 茶品名称
+     */
+    private String teaName;
+
+    /**
      * 外部订单id
      */
     private String outerOrderId;

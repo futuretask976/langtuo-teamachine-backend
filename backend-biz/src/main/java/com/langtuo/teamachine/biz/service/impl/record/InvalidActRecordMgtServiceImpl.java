@@ -56,8 +56,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         TeaMachineResult<InvalidActRecordDTO> teaMachineResult;
         try {
             InvalidActRecordPO po = invalidActRecordAccessor.selectOne(tenantCode, idempotentMark);
-            InvalidActRecordDTO dto = convert(po);
-            teaMachineResult = TeaMachineResult.success(dto);
+            teaMachineResult = TeaMachineResult.success(convert(po, true));
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
@@ -88,7 +87,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
                 PageInfo<InvalidActRecordPO> pageInfo = invalidActRecordAccessor.search(
                         tenantCode, shopGroupCodeList, shopCodeList, pageNum, pageSize);
                 teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
+                        convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
@@ -144,18 +143,18 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         return teaMachineResult;
     }
 
-    private List<InvalidActRecordDTO> convert(List<InvalidActRecordPO> poList) {
+    private List<InvalidActRecordDTO> convert(List<InvalidActRecordPO> poList, boolean needDetail) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
         List<InvalidActRecordDTO> list = poList.stream()
-                .map(po -> convert(po))
+                .map(po -> convert(po, needDetail))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private InvalidActRecordDTO convert(InvalidActRecordPO po) {
+    private InvalidActRecordDTO convert(InvalidActRecordPO po, boolean needDetail) {
         if (po == null) {
             return null;
         }
@@ -171,18 +170,20 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         dto.setPipelineNum(po.getPipelineNum());
         dto.setInvalidAmount(po.getInvalidAmount());
 
-        ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(
-                po.getTenantCode(), po.getToppingCode());
-        if (toppingPO != null) {
-            dto.setToppingName(toppingPO.getToppingName());
-        }
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
-        if (shopGroupPO != null) {
-            dto.setShopGroupName(shopGroupPO.getShopGroupName());
-        }
-        ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
-        if (shopPO != null) {
-            dto.setShopName(shopPO.getShopName());
+        if (needDetail) {
+            ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(
+                    po.getTenantCode(), po.getToppingCode());
+            if (toppingPO != null) {
+                dto.setToppingName(toppingPO.getToppingName());
+            }
+            ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
+            if (shopGroupPO != null) {
+                dto.setShopGroupName(shopGroupPO.getShopGroupName());
+            }
+            ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
+            if (shopPO != null) {
+                dto.setShopName(shopPO.getShopName());
+            }
         }
         return dto;
     }
