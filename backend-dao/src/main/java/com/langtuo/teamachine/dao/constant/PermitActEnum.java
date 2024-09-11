@@ -2,44 +2,47 @@ package com.langtuo.teamachine.dao.constant;
 
 public enum PermitActEnum {
     // 设备
-    MODEL_MGT("model_mgt", "型号管理", "device_set"),
-    DEPLOY_MGT("deploy_mgt", "预部署管理", "device_set"),
-    MACHINE_MGT("machine_mgt", "设备管理", "device_set"),
+    MODEL_MGT("modelMgt", "型号管理", "deviceSet"),
+    DEPLOY_MGT("deployMgt", "预部署管理", "deviceSet"),
+    MACHINE_MGT("machineMgt", "设备管理", "deviceSet"),
 
     // 用户
-    // TENANT_MGT("tenant_mgt", "商户管理", "user_set"),
-    ORG_MGT("org_mgt", "组织管理", "user_set"),
-    ROLE_MGT("role_mgt", "角色管理", "user_set"),
-    PERMIT_ACT_MGT("permit_act_mgt", "权限管理", "user_set"),
-    ADMIN_MGT("admin_mgt", "管理员管理", "user_set"),
+    // TENANT_MGT("tenantMgt", "商户管理", "userSet"),
+    ORG_MGT("orgMgt", "组织管理", "userSet"),
+    ROLE_MGT("roleMgt", "角色管理", "userSet"),
+    PERMIT_ACT_MGT("permitActMgt", "权限管理", "userSet"),
+    ADMIN_MGT("adminMgt", "管理员管理", "userSet"),
 
     // 店铺
-    SHOP_GROUP_MGT("shop_group_mgt", "店铺组管理", "shop_set"),
-    SHOP_MGT("shop_mgt", "店铺管理", "shop_set"),
+    SHOP_GROUP_MGT("shopGroupMgt", "店铺组管理", "shopSet"),
+    SHOP_MGT("shopMgt", "店铺管理", "shopSet"),
 
     // 饮品生产
-    TOPPING_TYPE_MGT("topping_type_mgt", "物料管理", "drink_set"),
-    TOPPING_MGT("topping_mgt", "物料管理", "drink_set"),
-    SPEC_MGT("spec_mgt", "规格管理", "drink_set"),
-    TEA_TYPE_MGT("tea_type_mgt", "茶品类型管理", "drink_set"),
-    TEA_MGT("tea_mgt", "茶品管理", "drink_set"),
-    ACCURACY_MGT("accuracy_mgt", "物料精度模板管理", "drink_set"),
+    TOPPING_TYPE_MGT("toppingTypeMgt", "物料管理", "drinkSet"),
+    TOPPING_MGT("toppingMgt", "物料管理", "drinkSet"),
+    SPEC_MGT("specMgt", "规格管理", "drinkSet"),
+    TEA_TYPE_MGT("teaTypeMgt", "茶品类型管理", "drinkSet"),
+    TEA_MGT("teaMgt", "茶品管理", "drinkSet"),
+    ACCURACY_MGT("accuracyMgt", "物料精度模板管理", "drinkSet"),
 
     // 菜单
-    SERIES_MGT("series_mgt", "系列管理", "menu_set"),
-    MENU_MGT("menu_mgt", "菜单管理", "menu_set"),
+    SERIES_MGT("seriesMgt", "系列管理", "menuSet"),
+    MENU_MGT("menuMgt", "菜单管理", "menuSet"),
 
     // 食安规则
-    DRAIN_RULE_RULE_MGT("drain_rule_mgt", "排空管理", "rule_set"),
-    CLEAN_RULE_MGT("clean_rule_mgt", "清洗规则管理", "rule_set"),
-    WARNING_RULE_MGT("warning_rule_mgt", "预警规则管理", "rule_set"),
+    DRAIN_RULE_RULE_MGT("drainRuleMgt", "排空管理", "ruleSet"),
+    CLEAN_RULE_MGT("cleanRuleMgt", "清洗规则管理", "ruleSet"),
+    WARNING_RULE_MGT("warningRuleMgt", "预警规则管理", "ruleSet"),
+
+    // 记录
+    INVALID_REC_MGT("invalidRecMgt", "废料记录管理", "recordSet"),
+    SUPPLY_REC_MGT("supplyRecMgt", "补料记录管理", "recordSet"),
+    DRAIN_REC_MGT("drainRecMgt", "排空记录管理", "recordSet"),
+    CLEAN_REC_MGT("cleanRecMgt", "清洗记录管理", "recordSet"),
+    ORDER_REC_MGT("orderRecMgt", "订单记录管理", "recordSet"),
 
     // 报表
-    INVALID_REC_MGT("invalid_rec_mgt", "废料记录管理", "report_set"),
-    SUPPLY_REC_MGT("supply_rec_mgt", "补料记录管理", "report_set"),
-    DRAIN_REC_MGT("drain_rec_mgt", "排空记录管理", "report_set"),
-    CLEAN_REC_MGT("clean_rec_mgt", "清洗记录管理", "report_set"),
-    ORDER_REC_MGT("order_rec_mgt", "订单记录管理", "report_set"),
+    ORDER_REPORT_MGT("orderReportMgt", "订单报表管理", "reportSet"),
     ;
 
     /**

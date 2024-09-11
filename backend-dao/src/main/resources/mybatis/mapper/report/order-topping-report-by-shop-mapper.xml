@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.report.OrderToppingReportByShopMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderToppingReportByShopPO" id="orderToppingReportByShopMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderToppingReportByShopPO" id="orderToppingReportByShopPOMapper">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -17,8 +17,10 @@
         <result property="amount" column="amount"/>
     </resultMap>
 
-    <select id="calcByDay" resultMap="orderAmtReportMap">
+    <select id="calcByDay" resultMap="orderToppingReportByShopPOMapper">
         SELECT
+            tenant_code,
+            #{orderCreatedDay} AS order_created_day,
             order_act.shop_group_code,
             order_act.shop_code,
             order_topping_act.topping_code,
@@ -26,22 +28,24 @@
         FROM order_act_record AS order_act
         LEFT JOIN
             order_topping_act_record AS order_topping_act
-        ON DATE(order_act.order_gmt_created) = '2024-09-10'
+        ON 1 = 1
+            AND order_act.tenant_code = #{tenantCode}
+            AND DATE(order_act.order_gmt_created) = #{orderCreatedDay}
             AND TIME(order_act.order_gmt_created) >= '00:00:00'
             AND TIME(order_act.order_gmt_created) &lt; '24:00:00'
             AND order_act.idempotent_mark = order_topping_act.idempotent_mark
         GROUP BY
-            order_act.shop_group_code, order_act.shop_code, order_topping_act.topping_code
+            order_act.tenant_code, #{orderCreatedDay}, order_act.shop_group_code, order_act.shop_code, order_topping_act.topping_code
     </select>
 
-    <select id="selectListByDay" resultMap="orderToppingReportByShopMapper">
+    <select id="selectListByDay" resultMap="orderToppingReportByShopPOMapper">
         SELECT * FROM order_topping_report_by_shop
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND order_created_day = #{orderCreatedDay}
     </select>
 
-    <select id="search" resultMap="orderToppingReportByShopMapper">
+    <select id="search" resultMap="orderToppingReportByShopPOMapper">
         SELECT * FROM order_topping_report_by_shop
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}

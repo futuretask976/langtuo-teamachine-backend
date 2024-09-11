@@ -1,13 +1,14 @@
 package com.langtuo.teamachine.dao.constant;
 
 public enum PermitActGroupEnum {
-    USER_SET("user_set", "用户"),
-    SHOP_SET("shop_set", "店铺"),
-    DEVICE_SET("device_set", "设备"),
-    DRINK_SET("drink_set", "饮品生产"),
-    MENU_SET("menu_set", "菜单"),
-    RULE_SET("rule_set", "食安规则"),
-    REPORT_SET("report_set", "日常报表"),
+    USER_SET("userSet", "用户"),
+    SHOP_SET("shopSet", "店铺"),
+    DEVICE_SET("deviceSet", "设备"),
+    DRINK_SET("drinkSet", "饮品生产"),
+    MENU_SET("menuSet", "菜单"),
+    RULE_SET("ruleSet", "食安规则"),
+    RECORD_SET("recordSet", "日常记录"),
+    REPORT_SET("reportSet", "日常报表"),
     ;
 
     /**

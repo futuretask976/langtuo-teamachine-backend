@@ -57,5 +57,5 @@ public class DaoConsts {
     /**
      * 租户管理的权限点，单独配置，不会在列表中出现
      */
-    public static final String PERMIT_ACT_CODE_TENANT = "tenant_mgt";
+    public static final String PERMIT_ACT_CODE_TENANT = "tenantMgt";
 }

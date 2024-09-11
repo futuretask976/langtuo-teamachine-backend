@@ -183,6 +183,9 @@ public class SecurityChainConfig {
                         PermitActEnum.SUPPLY_REC_MGT.getPermitActCode())
                 .antMatchers(WebConsts.ANT_PATTERN_ORDER_ACT_PATH).hasAnyRole(
                         PermitActEnum.ORDER_REC_MGT.getPermitActCode())
+                // 日常报表
+                .antMatchers(WebConsts.ANT_PATTERN_ORDER_REPORT_PATH).hasAnyRole(
+                        PermitActEnum.ORDER_REPORT_MGT.getPermitActCode())
                 .anyRequest().authenticated();
 
         // 异常处理

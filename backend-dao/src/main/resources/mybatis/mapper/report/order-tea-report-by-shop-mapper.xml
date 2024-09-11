@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.report.OrderTeaReportByShopMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderTeaReportByShopPO" id="orderTeaReportByShopMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderTeaReportByShopPO" id="orderTeaReportByShopPOMapper">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -17,29 +17,32 @@
         <result property="amount" column="amount"/>
     </resultMap>
 
-    <select id="calcByDay" resultMap="orderAmtReportMap">
+    <select id="calcByDay" resultMap="orderTeaReportByShopPOMapper">
         SELECT
+            tenant_code,
+            #{orderCreatedDay} AS order_created_day,
             shop_group_code,
             shop_code,
             tea_code,
             COUNT(1) AS amount
         FROM order_act_record
         WHERE 1 = 1
-            AND DATE(order_gmt_created) = '2024-09-10'
+            AND order_act.tenant_code = #{tenantCode}
+            AND DATE(order_gmt_created) = #{orderCreatedDay}
             AND TIME(order_gmt_created) >= '00:00:00'
             AND TIME(order_gmt_created) &lt; '24:00:00'
         GROUP BY
-            shop_group_code, shop_code, tea_code
+            tenant_code, #{orderCreatedDay}, shop_group_code, shop_code, tea_code
     </select>
 
-    <select id="selectListByDay" resultMap="orderTeaReportByShopMapper">
+    <select id="selectListByDay" resultMap="orderTeaReportByShopPOMapper">
         SELECT * FROM order_tea_report_by_shop
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND order_created_day = #{orderCreatedDay}
     </select>
 
-    <select id="search" resultMap="orderTeaReportByShopMapper">
+    <select id="search" resultMap="orderTeaReportByShopPOMapper">
         SELECT * FROM order_tea_report_by_shop
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}

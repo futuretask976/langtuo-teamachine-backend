@@ -101,11 +101,13 @@ public class WebConsts {
     public static final String ANT_PATTERN_INVALID_ACT_PATH = "/recordset/invalid/**";
     public static final String ANT_PATTERN_SUPPLY_ACT_PATH = "/recordset/supply/**";
     public static final String ANT_PATTERN_ORDER_ACT_PATH = "/recordset/order/**";
+    // 报表记录
+    public static final String ANT_PATTERN_ORDER_REPORT_PATH = "/reportset/order/**";
 
     /**
      * 特殊角色-权限点
      */
     public static final String ROLE_MATCH_PREFIX = "ROLE_";
     public static final String SPECIAL_PERMIT_ACT_CODE_MACHINE = "machine";
-    public static final String SPECIAL_PERMIT_ACT_CODE_TENANT_MGT = "tenant_mgt";
+    public static final String SPECIAL_PERMIT_ACT_CODE_TENANT_MGT = "tenantMgt";
 }
