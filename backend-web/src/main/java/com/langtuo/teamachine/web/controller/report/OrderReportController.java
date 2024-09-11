@@ -2,7 +2,7 @@ package com.langtuo.teamachine.web.controller.report;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.report.OrderAmtReportDTO;
-import com.langtuo.teamachine.api.model.report.OrderSpecItemReport;
+import com.langtuo.teamachine.api.model.report.OrderSpecItemReportDTO;
 import com.langtuo.teamachine.api.model.report.OrderTeaReportDTO;
 import com.langtuo.teamachine.api.model.report.OrderToppingReportDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
@@ -47,13 +47,13 @@ public class OrderReportController {
     }
 
     @GetMapping(value = "/specitemreport/search")
-    public TeaMachineResult<PageDTO<OrderSpecItemReport>> searchSpecItemReportReport(
+    public TeaMachineResult<PageDTO<OrderSpecItemReportDTO>> searchSpecItemReportReport(
             @RequestParam(name = "tenantCode") String tenantCode,
             @RequestParam(name = "orderCreatedDay") String orderCreatedDay,
             @RequestParam(name = "shopGroupCode") String shopGroupCode,
             @RequestParam(name = "shopCode") String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        TeaMachineResult<PageDTO<OrderSpecItemReport>> rtn =
+        TeaMachineResult<PageDTO<OrderSpecItemReportDTO>> rtn =
                 orderReportService.searchSpecItemReport(tenantCode, orderCreatedDay, shopGroupCode, shopCode,
                         pageNum, pageSize);
         return rtn;
