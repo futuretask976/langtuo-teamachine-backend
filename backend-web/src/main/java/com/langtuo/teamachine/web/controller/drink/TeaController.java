@@ -100,8 +100,7 @@ public class TeaController {
     public TeaMachineResult<Void> uploadExcel(@RequestParam(name = "tenantCode") String tenantCode,
             @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY,
-                    messageSource));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY));
         }
 
         // 获取文件的字节
@@ -122,7 +121,6 @@ public class TeaController {
                 }
             }
         }
-        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_PARSE_UPLOAD_FILE_ERROR,
-                messageSource));
+        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_PARSE_UPLOAD_FILE_ERROR));
     }
 }

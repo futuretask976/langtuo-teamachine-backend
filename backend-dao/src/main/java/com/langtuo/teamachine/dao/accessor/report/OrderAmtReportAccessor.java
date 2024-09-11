@@ -16,7 +16,7 @@ public class OrderAmtReportAccessor {
     private OrderAmtReportMapper mapper;
 
     public OrderAmtReportPO calcOne(String tenantCode, String orderCreatedDay) {
-        return mapper.selectOne(tenantCode, orderCreatedDay);
+        return mapper.calcOne(tenantCode, orderCreatedDay);
     }
 
     public OrderAmtReportPO selectOne(String tenantCode, String orderCreatedDay) {

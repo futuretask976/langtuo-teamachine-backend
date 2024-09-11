@@ -31,8 +31,7 @@ public class TeaMachineAuthFailureHandler implements AuthenticationFailureHandle
         response.setHeader(WebConsts.RESP_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, WebConsts.RESP_HEADER_VAL_TRUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        TeaMachineResult<Void> result = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.LOGIN_ERR_UNAUTHENTICATED,
-                messageSource));
+        TeaMachineResult<Void> result = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.LOGIN_ERR_UNAUTHENTICATED));
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();
     }

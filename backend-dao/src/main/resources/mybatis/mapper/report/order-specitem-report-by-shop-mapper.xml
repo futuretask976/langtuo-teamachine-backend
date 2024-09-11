@@ -19,23 +19,23 @@
 
     <select id="calcByDay" resultMap="orderSpecItemReportByShopPOMapper">
         SELECT
-            tenant_code,
+            order_act.tenant_code,
             #{orderCreatedDay} AS order_created_day,
             order_act.shop_group_code,
             order_act.shop_code,
-            order_spec_act.spec_item_code,
+            order_specitem_act.spec_item_code,
             COUNT(1) AS amount
         FROM order_act_record AS order_act
         LEFT JOIN
-            order_spec_item_act_record AS order_spec_act
+            order_specitem_act_record AS order_specitem_act
         ON 1 = 1
             AND order_act.tenant_code = #{tenantCode}
             AND DATE(order_act.order_gmt_created) = #{orderCreatedDay}
             AND TIME(order_act.order_gmt_created) >= '00:00:00'
             AND TIME(order_act.order_gmt_created) &lt; '24:00:00'
-            AND order_act.idempotent_mark = order_spec_act.idempotent_mark
+            AND order_act.idempotent_mark = order_specitem_act.idempotent_mark
         GROUP BY
-            order_act.tenant_code, #{orderCreatedDay}, order_act.shop_group_code, order_act.shop_code, order_spec_act.spec_item_code
+            order_act.tenant_code, #{orderCreatedDay}, order_act.shop_group_code, order_act.shop_code, order_specitem_act.spec_item_code
     </select>
 
     <select id="selectListByDay" resultMap="orderSpecItemReportByShopPOMapper">
@@ -53,6 +53,18 @@
                 AND order_created_day IN
                 <foreach item="orderCreatedDay" collection="orderCreatedDayList" open="(" separator="," close=")">
                     #{orderCreatedDay}
+                </foreach>
+            </if>
+            <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
+                AND shop_group_code IN
+                <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
+                    #{shopGroupCode}
+                </foreach>
+            </if>
+            <if test="shopCodeList != null and shopCodeList.size() > 0">
+                AND shop_code IN
+                <foreach item="shopCode" collection="shopCodeList" open="(" separator="," close=")">
+                    #{shopCode}
                 </foreach>
             </if>
     </select>

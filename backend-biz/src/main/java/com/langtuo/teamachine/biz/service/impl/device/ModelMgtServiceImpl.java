@@ -56,8 +56,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
@@ -76,8 +75,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
@@ -96,8 +94,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             teaMachineResult = TeaMachineResult.success(modelDTO);
         } catch (Exception e) {
             log.error("get error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
@@ -105,8 +102,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     @Override
     public TeaMachineResult<Void> put(ModelPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
-                    messageSource));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         String modelCode = request.getModelCode();
@@ -129,8 +125,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
-                    messageSource));
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
         // 异步发送消息准备配置信息分发
@@ -145,8 +140,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     @Override
     public TeaMachineResult<Void> delete(String modelCode) {
         if (StringUtils.isEmpty(modelCode)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
-                    messageSource));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         TeaMachineResult<Void> teaMachineResult;
@@ -158,12 +152,11 @@ public class ModelMgtServiceImpl implements ModelMgtService {
                 teaMachineResult = TeaMachineResult.success();
             } else {
                 teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
-                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_MODEL, messageSource));
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_MODEL));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
-                    messageSource));
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
     }

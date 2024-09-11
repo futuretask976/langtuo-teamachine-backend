@@ -19,7 +19,7 @@
 
     <select id="calcByDay" resultMap="orderToppingReportByShopPOMapper">
         SELECT
-            tenant_code,
+            order_act.tenant_code,
             #{orderCreatedDay} AS order_created_day,
             order_act.shop_group_code,
             order_act.shop_code,
@@ -53,6 +53,18 @@
                 AND order_created_day IN
                 <foreach item="orderCreatedDay" collection="orderCreatedDayList" open="(" separator="," close=")">
                     #{orderCreatedDay}
+                </foreach>
+            </if>
+            <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
+                AND shop_group_code IN
+                <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
+                    #{shopGroupCode}
+                </foreach>
+            </if>
+            <if test="shopCodeList != null and shopCodeList.size() > 0">
+                AND shop_code IN
+                <foreach item="shopCode" collection="shopCodeList" open="(" separator="," close=")">
+                    #{shopCode}
                 </foreach>
             </if>
     </select>

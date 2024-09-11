@@ -24,7 +24,7 @@
             AND tenant_code = #{tenantCode}
             AND DATE(order_gmt_created) = #{orderCreatedDay}
             AND TIME(order_gmt_created) >= '00:00:00'
-            AND TIME(order_gmt_created) &lt; '24:00:00'
+            AND TIME(order_gmt_created) <![CDATA[ < ]]> '24:00:00'
         GROUP BY tenant_code, order_created_day
     </select>
 

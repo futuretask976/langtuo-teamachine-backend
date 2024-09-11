@@ -9,6 +9,7 @@ import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 
 public class SpringUtils {
     public static AdminAccessor getAdminAccessor() {
@@ -81,5 +82,11 @@ public class SpringUtils {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         SpecItemAccessor specItemAccessor = appContext.getBean(SpecItemAccessor.class);
         return specItemAccessor;
+    }
+
+    public static MessageSource getMessageSource() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        MessageSource messageSource = appContext.getBean(MessageSource.class);
+        return messageSource;
     }
 }

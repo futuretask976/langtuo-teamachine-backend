@@ -27,10 +27,10 @@
             COUNT(1) AS amount
         FROM order_act_record
         WHERE 1 = 1
-            AND order_act.tenant_code = #{tenantCode}
+            AND tenant_code = #{tenantCode}
             AND DATE(order_gmt_created) = #{orderCreatedDay}
             AND TIME(order_gmt_created) >= '00:00:00'
-            AND TIME(order_gmt_created) &lt; '24:00:00'
+            AND TIME(order_gmt_created) <![CDATA[ < ]]> '24:00:00'
         GROUP BY
             tenant_code, #{orderCreatedDay}, shop_group_code, shop_code, tea_code
     </select>
@@ -50,6 +50,18 @@
                 AND order_created_day IN
                 <foreach item="orderCreatedDay" collection="orderCreatedDayList" open="(" separator="," close=")">
                     #{orderCreatedDay}
+                </foreach>
+            </if>
+            <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
+                AND shop_group_code IN
+                <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
+                    #{shopGroupCode}
+                </foreach>
+            </if>
+            <if test="shopCodeList != null and shopCodeList.size() > 0">
+                AND shop_code IN
+                <foreach item="shopCode" collection="shopCodeList" open="(" separator="," close=")">
+                    #{shopCode}
                 </foreach>
             </if>
     </select>

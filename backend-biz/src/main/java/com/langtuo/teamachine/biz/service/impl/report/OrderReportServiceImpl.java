@@ -55,22 +55,23 @@ public class OrderReportServiceImpl implements OrderReportService {
     @Override
     public TeaMachineResult<Void> calc(String tenantCode, String orderCreatedDay) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(orderCreatedDay)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
-                    messageSource));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        String curDay = DateUtils.transformYYYYMMDD(Calendar.getInstance().getTime());
-        if (curDay.equals(orderCreatedDay)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
-                    messageSource));
-        }
+//        String curDay = DateUtils.transformYYYYMMDD(Calendar.getInstance().getTime());
+//        if (curDay.equals(orderCreatedDay)) {
+//            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+//                    messageSource));
+//        }
 
         OrderAmtReportPO existAmtReport = orderAmtReportAccessor.selectOne(tenantCode, orderCreatedDay);
         if (existAmtReport != null) {
             int deleted = orderAmtReportAccessor.delete(tenantCode, orderCreatedDay);
         }
         OrderAmtReportPO amtReportPO = orderAmtReportAccessor.calcOne(tenantCode, orderCreatedDay);
-        int inserted4OrderAmtReport = orderAmtReportAccessor.insert(amtReportPO);
+        if (amtReportPO != null) {
+            int inserted4OrderAmtReport = orderAmtReportAccessor.insert(amtReportPO);
+        }
 
         List<OrderTeaReportPO> existTeaReportList = orderTeaReportByShopAccessor.selectListByDay(
                 tenantCode, orderCreatedDay);
@@ -134,8 +135,7 @@ public class OrderReportServiceImpl implements OrderReportService {
 
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
@@ -167,8 +167,7 @@ public class OrderReportServiceImpl implements OrderReportService {
             }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
@@ -201,8 +200,7 @@ public class OrderReportServiceImpl implements OrderReportService {
             }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
@@ -235,8 +233,7 @@ public class OrderReportServiceImpl implements OrderReportService {
             }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
-                    messageSource));
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
