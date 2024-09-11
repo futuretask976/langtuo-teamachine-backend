@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper.report;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
-import com.langtuo.teamachine.dao.po.report.OrderToppingReportByShopPO;
+import com.langtuo.teamachine.dao.po.report.OrderToppingReportPO;
 import com.langtuo.teamachine.dao.query.report.OrderToppingReportByShopQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,7 +20,7 @@ public interface OrderToppingReportByShopMapper {
      * @param orderCreatedDay
      * @return
      */
-    List<OrderToppingReportByShopPO> calcByDay(@Param("tenantCode") String tenantCode,
+    List<OrderToppingReportPO> calcByDay(@Param("tenantCode") String tenantCode,
             @Param("orderCreatedDay") String orderCreatedDay);
 
     /**
@@ -29,14 +29,14 @@ public interface OrderToppingReportByShopMapper {
      * @param orderCreatedDay
      * @return
      */
-    List<OrderToppingReportByShopPO> selectListByDay(@Param("tenantCode") String tenantCode,
+    List<OrderToppingReportPO> selectListByDay(@Param("tenantCode") String tenantCode,
             @Param("orderCreatedDay") String orderCreatedDay);
 
     /**
      *
      * @return
      */
-    List<OrderToppingReportByShopPO> search(OrderToppingReportByShopQuery query);
+    List<OrderToppingReportPO> search(OrderToppingReportByShopQuery query);
 
     /**
      *
@@ -44,7 +44,7 @@ public interface OrderToppingReportByShopMapper {
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(OrderToppingReportByShopPO po);
+    int insert(OrderToppingReportPO po);
 
     /**
      *

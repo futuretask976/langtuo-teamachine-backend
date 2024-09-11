@@ -1,11 +1,11 @@
-package com.langtuo.teamachine.dao.po.report;
+package com.langtuo.teamachine.api.model.report;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class OrderSpecItemReportByShopPO {
+public class OrderToppingReportDTO {
     /**
      * 数据表id
      */
@@ -20,11 +20,6 @@ public class OrderSpecItemReportByShopPO {
      * 数据表记录最近修改时间
      */
     private Date gmtModified;
-
-    /**
-     * 租户编码
-     */
-    private String tenantCode;
 
     /**
      * 订单创建时间，例如 2024-09-20
@@ -42,9 +37,9 @@ public class OrderSpecItemReportByShopPO {
     private String shopCode;
 
     /**
-     * 规格项编码
+     * 物料编码
      */
-    private String specItemCode;
+    private String toppingCode;
 
     /**
      * 数量

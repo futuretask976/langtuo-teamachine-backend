@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.report.OrderSpecItemReportByShopMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderSpecItemReportByShopPO" id="orderSpecItemReportByShopPOMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderSpecItemReportPO" id="orderSpecItemReportByShopPOMapper">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -57,7 +57,7 @@
             </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.report.OrderSpecItemReportByShopPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.report.OrderSpecItemReportPO">
         INSERT INTO order_specitem_report_by_shop (
             gmt_created
             , gmt_modified

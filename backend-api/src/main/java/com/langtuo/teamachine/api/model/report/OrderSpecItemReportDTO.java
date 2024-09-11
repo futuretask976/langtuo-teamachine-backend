@@ -5,12 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class OrderToppingReportByShopDTO {
-    /**
-     * 数据表id
-     */
-    private long id;
-
+public class OrderSpecItemReportDTO {
     /**
      * 数据表记录插入时间
      */
@@ -37,9 +32,9 @@ public class OrderToppingReportByShopDTO {
     private String shopCode;
 
     /**
-     * 物料编码
+     * 规格项编码
      */
-    private String toppingCode;
+    private String specItemCode;
 
     /**
      * 数量

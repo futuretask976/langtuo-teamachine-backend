@@ -2,9 +2,9 @@ package com.langtuo.teamachine.api.service.report;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.report.OrderAmtReportDTO;
-import com.langtuo.teamachine.api.model.report.OrderSpecItemReportByShopDTO;
-import com.langtuo.teamachine.api.model.report.OrderTeaReportByShopDTO;
-import com.langtuo.teamachine.api.model.report.OrderToppingReportByShopDTO;
+import com.langtuo.teamachine.api.model.report.OrderSpecItemReportDTO;
+import com.langtuo.teamachine.api.model.report.OrderTeaReportDTO;
+import com.langtuo.teamachine.api.model.report.OrderToppingReportDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 public interface OrderReportService {
@@ -37,7 +37,7 @@ public interface OrderReportService {
      * @param pageSize
      * @return
      */
-    TeaMachineResult<PageDTO<OrderTeaReportByShopDTO>> searchTeaReportByShop(String tenantCode,
+    TeaMachineResult<PageDTO<OrderTeaReportDTO>> searchTeaReport(String tenantCode,
             String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize);
 
     /**
@@ -50,7 +50,7 @@ public interface OrderReportService {
      * @param pageSize
      * @return
      */
-    TeaMachineResult<PageDTO<OrderSpecItemReportByShopDTO>> searchSpecItemReportByShop(String tenantCode,
+    TeaMachineResult<PageDTO<OrderSpecItemReportDTO>> searchSpecItemReport(String tenantCode,
             String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize);
 
     /**
@@ -63,6 +63,6 @@ public interface OrderReportService {
      * @param pageSize
      * @return
      */
-    TeaMachineResult<PageDTO<OrderToppingReportByShopDTO>> searchToppingReportByShop(String tenantCode,
+    TeaMachineResult<PageDTO<OrderToppingReportDTO>> searchToppingReport(String tenantCode,
             String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize);
 }

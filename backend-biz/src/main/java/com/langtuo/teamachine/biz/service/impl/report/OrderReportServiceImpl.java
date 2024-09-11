@@ -4,9 +4,9 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.report.OrderAmtReportDTO;
-import com.langtuo.teamachine.api.model.report.OrderSpecItemReportByShopDTO;
-import com.langtuo.teamachine.api.model.report.OrderTeaReportByShopDTO;
-import com.langtuo.teamachine.api.model.report.OrderToppingReportByShopDTO;
+import com.langtuo.teamachine.api.model.report.OrderSpecItemReportDTO;
+import com.langtuo.teamachine.api.model.report.OrderTeaReportDTO;
+import com.langtuo.teamachine.api.model.report.OrderToppingReportDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.report.OrderReportService;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
@@ -20,9 +20,9 @@ import com.langtuo.teamachine.dao.accessor.report.OrderSpecItemReportByShopAcces
 import com.langtuo.teamachine.dao.accessor.report.OrderTeaReportByShopAccessor;
 import com.langtuo.teamachine.dao.accessor.report.OrderToppingReportByShopAccessor;
 import com.langtuo.teamachine.dao.po.report.OrderAmtReportPO;
-import com.langtuo.teamachine.dao.po.report.OrderSpecItemReportByShopPO;
-import com.langtuo.teamachine.dao.po.report.OrderTeaReportByShopPO;
-import com.langtuo.teamachine.dao.po.report.OrderToppingReportByShopPO;
+import com.langtuo.teamachine.dao.po.report.OrderSpecItemReportPO;
+import com.langtuo.teamachine.dao.po.report.OrderTeaReportPO;
+import com.langtuo.teamachine.dao.po.report.OrderToppingReportPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,42 +72,42 @@ public class OrderReportServiceImpl implements OrderReportService {
         OrderAmtReportPO amtReportPO = orderAmtReportAccessor.calcOne(tenantCode, orderCreatedDay);
         int inserted4OrderAmtReport = orderAmtReportAccessor.insert(amtReportPO);
 
-        List<OrderTeaReportByShopPO> existTeaReportList = orderTeaReportByShopAccessor.selectListByDay(
+        List<OrderTeaReportPO> existTeaReportList = orderTeaReportByShopAccessor.selectListByDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(existTeaReportList)) {
             int deleted = orderTeaReportByShopAccessor.delete(tenantCode, orderCreatedDay);
         }
-        List<OrderTeaReportByShopPO> teaReportByShopPOList = orderTeaReportByShopAccessor.calcByDay(
+        List<OrderTeaReportPO> teaReportByShopPOList = orderTeaReportByShopAccessor.calcByDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(teaReportByShopPOList)) {
-            teaReportByShopPOList.forEach(orderTeaReportByShopPO -> {
-                int inserted = orderTeaReportByShopAccessor.insert(orderTeaReportByShopPO);
+            teaReportByShopPOList.forEach(orderTeaReportPO -> {
+                int inserted = orderTeaReportByShopAccessor.insert(orderTeaReportPO);
             });
         }
 
-        List<OrderSpecItemReportByShopPO> existSpecItemReportList = orderSpecItemReportByShopAccessor.selectListByDay(
+        List<OrderSpecItemReportPO> existSpecItemReportList = orderSpecItemReportByShopAccessor.selectListByDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(existSpecItemReportList)) {
             int deleted = orderSpecItemReportByShopAccessor.delete(tenantCode, orderCreatedDay);
         }
-        List<OrderSpecItemReportByShopPO> specItemReportByShopPOList = orderSpecItemReportByShopAccessor.calcByDay(
+        List<OrderSpecItemReportPO> specItemReportByShopPOList = orderSpecItemReportByShopAccessor.calcByDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(specItemReportByShopPOList)) {
-            specItemReportByShopPOList.forEach(orderSpecItemReportByShopPO -> {
-                int inserted = orderSpecItemReportByShopAccessor.insert(orderSpecItemReportByShopPO);
+            specItemReportByShopPOList.forEach(orderSpecItemReportPO -> {
+                int inserted = orderSpecItemReportByShopAccessor.insert(orderSpecItemReportPO);
             });
         }
 
-        List<OrderToppingReportByShopPO> existToppingReportList = orderToppingReportByShopAccessor.selectListByDay(
+        List<OrderToppingReportPO> existToppingReportList = orderToppingReportByShopAccessor.selectListByDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(existSpecItemReportList)) {
             int deleted = orderSpecItemReportByShopAccessor.delete(tenantCode, orderCreatedDay);
         }
-        List<OrderToppingReportByShopPO> toppingReportByShopPOList = orderToppingReportByShopAccessor.calcByDay(
+        List<OrderToppingReportPO> toppingReportByShopPOList = orderToppingReportByShopAccessor.calcByDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(toppingReportByShopPOList)) {
-            toppingReportByShopPOList.forEach(orderToppingReportByShopPO -> {
-                int inserted = orderToppingReportByShopAccessor.insert(orderToppingReportByShopPO);
+            toppingReportByShopPOList.forEach(orderToppingReportPO -> {
+                int inserted = orderToppingReportByShopAccessor.insert(orderToppingReportPO);
             });
         }
 
@@ -141,11 +141,11 @@ public class OrderReportServiceImpl implements OrderReportService {
     }
 
     @Override
-    public TeaMachineResult<PageDTO<OrderTeaReportByShopDTO>> searchTeaReportByShop(String tenantCode,
+    public TeaMachineResult<PageDTO<OrderTeaReportDTO>> searchTeaReport(String tenantCode,
             String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
-        TeaMachineResult<PageDTO<OrderTeaReportByShopDTO>> teaMachineResult;
+        TeaMachineResult<PageDTO<OrderTeaReportDTO>> teaMachineResult;
         try {
-            PageInfo<OrderTeaReportByShopPO> pageInfo = null;
+            PageInfo<OrderTeaReportPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
                 pageInfo = orderTeaReportByShopAccessor.searchByShopCode(tenantCode,
                         Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopCode), pageNum, pageSize);
@@ -174,11 +174,11 @@ public class OrderReportServiceImpl implements OrderReportService {
     }
 
     @Override
-    public TeaMachineResult<PageDTO<OrderSpecItemReportByShopDTO>> searchSpecItemReportByShop(String tenantCode,
+    public TeaMachineResult<PageDTO<OrderSpecItemReportDTO>> searchSpecItemReport(String tenantCode,
             String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
-        TeaMachineResult<PageDTO<OrderSpecItemReportByShopDTO>> teaMachineResult;
+        TeaMachineResult<PageDTO<OrderSpecItemReportDTO>> teaMachineResult;
         try {
-            PageInfo<OrderSpecItemReportByShopPO> pageInfo = null;
+            PageInfo<OrderSpecItemReportPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
                 pageInfo = orderSpecItemReportByShopAccessor.searchByShopCode(tenantCode,
                         Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopCode), pageNum, pageSize);
@@ -208,11 +208,11 @@ public class OrderReportServiceImpl implements OrderReportService {
     }
 
     @Override
-    public TeaMachineResult<PageDTO<OrderToppingReportByShopDTO>> searchToppingReportByShop(String tenantCode,
+    public TeaMachineResult<PageDTO<OrderToppingReportDTO>> searchToppingReport(String tenantCode,
             String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
-        TeaMachineResult<PageDTO<OrderToppingReportByShopDTO>> teaMachineResult;
+        TeaMachineResult<PageDTO<OrderToppingReportDTO>> teaMachineResult;
         try {
-            PageInfo<OrderToppingReportByShopPO> pageInfo = null;
+            PageInfo<OrderToppingReportPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
                 pageInfo = orderToppingReportByShopAccessor.searchByShopCode(tenantCode,
                         Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopCode), pageNum, pageSize);
@@ -264,7 +264,7 @@ public class OrderReportServiceImpl implements OrderReportService {
         return dto;
     }
 
-    private List<OrderTeaReportByShopDTO> convertToOrderTeaReportByShopDTO(List<OrderTeaReportByShopPO> poList) {
+    private List<OrderTeaReportPO> convertToOrderTeaReportByShopDTO(List<OrderTeaReportPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
@@ -274,12 +274,12 @@ public class OrderReportServiceImpl implements OrderReportService {
                 .collect(Collectors.toList());
     }
 
-    private OrderTeaReportByShopDTO convertToOrderTeaReportByShopDTO(OrderTeaReportByShopPO po) {
+    private OrderTeaReportPO convertToOrderTeaReportByShopDTO(OrderTeaReportPO po) {
         if (po == null) {
             return null;
         }
 
-        OrderTeaReportByShopDTO dto = new OrderTeaReportByShopDTO();
+        OrderTeaReportPO dto = new OrderTeaReportPO();
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setOrderCreatedDay(po.getOrderCreatedDay());
@@ -290,8 +290,8 @@ public class OrderReportServiceImpl implements OrderReportService {
         return dto;
     }
 
-    private List<OrderSpecItemReportByShopDTO> convertToOrderSpecItemReportByShopDTO(
-            List<OrderSpecItemReportByShopPO> poList) {
+    private List<OrderSpecItemReportPO> convertToOrderSpecItemReportByShopDTO(
+            List<OrderSpecItemReportPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
@@ -301,12 +301,12 @@ public class OrderReportServiceImpl implements OrderReportService {
                 .collect(Collectors.toList());
     }
 
-    private OrderSpecItemReportByShopDTO convertToOrderSpecItemReportByShopDTO(OrderSpecItemReportByShopPO po) {
+    private OrderSpecItemReportPO convertToOrderSpecItemReportByShopDTO(OrderSpecItemReportPO po) {
         if (po == null) {
             return null;
         }
 
-        OrderSpecItemReportByShopDTO dto = new OrderSpecItemReportByShopDTO();
+        OrderSpecItemReportPO dto = new OrderSpecItemReportPO();
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setOrderCreatedDay(po.getOrderCreatedDay());
@@ -317,8 +317,8 @@ public class OrderReportServiceImpl implements OrderReportService {
         return dto;
     }
 
-    private List<OrderToppingReportByShopDTO> convertToOrderToppingReportByShopDTO(
-            List<OrderToppingReportByShopPO> poList) {
+    private List<OrderToppingReportPO> convertToOrderToppingReportByShopDTO(
+            List<OrderToppingReportPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
@@ -328,12 +328,12 @@ public class OrderReportServiceImpl implements OrderReportService {
                 .collect(Collectors.toList());
     }
 
-    private OrderToppingReportByShopDTO convertToOrderToppingReportByShopDTO(OrderToppingReportByShopPO po) {
+    private OrderToppingReportPO convertToOrderToppingReportByShopDTO(OrderToppingReportPO po) {
         if (po == null) {
             return null;
         }
 
-        OrderToppingReportByShopDTO dto = new OrderToppingReportByShopDTO();
+        OrderToppingReportPO dto = new OrderToppingReportPO();
         dto.setGmtCreated(po.getGmtCreated());
         dto.setGmtModified(po.getGmtModified());
         dto.setOrderCreatedDay(po.getOrderCreatedDay());

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class OrderTeaReportByShopPO {
+public class OrderSpecItemReportPO {
     /**
      * 数据表id
      */
@@ -42,9 +42,9 @@ public class OrderTeaReportByShopPO {
     private String shopCode;
 
     /**
-     * 茶品编码
+     * 规格项编码
      */
-    private String teaCode;
+    private String specItemCode;
 
     /**
      * 数量

@@ -2,9 +2,9 @@ package com.langtuo.teamachine.web.controller.report;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.report.OrderAmtReportDTO;
-import com.langtuo.teamachine.api.model.report.OrderSpecItemReportByShopDTO;
-import com.langtuo.teamachine.api.model.report.OrderTeaReportByShopDTO;
-import com.langtuo.teamachine.api.model.report.OrderToppingReportByShopDTO;
+import com.langtuo.teamachine.api.model.report.OrderSpecItemReport;
+import com.langtuo.teamachine.api.model.report.OrderTeaReportDTO;
+import com.langtuo.teamachine.api.model.report.OrderToppingReportDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.report.OrderReportService;
 import org.springframework.web.bind.annotation.*;
@@ -34,40 +34,40 @@ public class OrderReportController {
         return rtn;
     }
 
-    @GetMapping(value = "/teareportbyshop/search")
-    public TeaMachineResult<PageDTO<OrderTeaReportByShopDTO>> searchTeaReportByShopReport(
+    @GetMapping(value = "/teareport/search")
+    public TeaMachineResult<PageDTO<OrderTeaReportDTO>> searchTeaReportReport(
             @RequestParam(name = "tenantCode") String tenantCode,
             @RequestParam(name = "orderCreatedDay") String orderCreatedDay,
             @RequestParam(name = "shopGroupCode") String shopGroupCode,
             @RequestParam(name = "shopCode") String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        TeaMachineResult<PageDTO<OrderTeaReportByShopDTO>> rtn = orderReportService.searchTeaReportByShop(tenantCode,
+        TeaMachineResult<PageDTO<OrderTeaReportDTO>> rtn = orderReportService.searchTeaReport(tenantCode,
                 orderCreatedDay, shopGroupCode, shopCode, pageNum, pageSize);
         return rtn;
     }
 
-    @GetMapping(value = "/specitemreportbyshop/search")
-    public TeaMachineResult<PageDTO<OrderSpecItemReportByShopDTO>> searchSpecItemReportByShopReport(
+    @GetMapping(value = "/specitemreport/search")
+    public TeaMachineResult<PageDTO<OrderSpecItemReport>> searchSpecItemReportReport(
             @RequestParam(name = "tenantCode") String tenantCode,
             @RequestParam(name = "orderCreatedDay") String orderCreatedDay,
             @RequestParam(name = "shopGroupCode") String shopGroupCode,
             @RequestParam(name = "shopCode") String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        TeaMachineResult<PageDTO<OrderSpecItemReportByShopDTO>> rtn =
-                orderReportService.searchSpecItemReportByShop(tenantCode, orderCreatedDay, shopGroupCode, shopCode,
+        TeaMachineResult<PageDTO<OrderSpecItemReport>> rtn =
+                orderReportService.searchSpecItemReport(tenantCode, orderCreatedDay, shopGroupCode, shopCode,
                         pageNum, pageSize);
         return rtn;
     }
 
-    @GetMapping(value = "/toppingreportbyshop/search")
-    public TeaMachineResult<PageDTO<OrderToppingReportByShopDTO>> searchToppingReportByShopReport(
+    @GetMapping(value = "/toppingreport/search")
+    public TeaMachineResult<PageDTO<OrderToppingReportDTO>> searchToppingReportReport(
             @RequestParam(name = "tenantCode") String tenantCode,
             @RequestParam(name = "orderCreatedDay") String orderCreatedDay,
             @RequestParam(name = "shopGroupCode") String shopGroupCode,
             @RequestParam(name = "shopCode") String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        TeaMachineResult<PageDTO<OrderToppingReportByShopDTO>> rtn =
-                orderReportService.searchToppingReportByShop(tenantCode, orderCreatedDay, shopGroupCode, shopCode,
+        TeaMachineResult<PageDTO<OrderToppingReportDTO>> rtn =
+                orderReportService.searchToppingReport(tenantCode, orderCreatedDay, shopGroupCode, shopCode,
                         pageNum, pageSize);
         return rtn;
     }
