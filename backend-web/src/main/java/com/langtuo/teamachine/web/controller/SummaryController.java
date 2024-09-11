@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import com.langtuo.teamachine.api.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.api.request.record.OrderSpecItemActRecordPutRequest;
 import com.langtuo.teamachine.api.request.record.OrderToppingActRecordPutRequest;
+import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
-import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.biz.service.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mqtt")
+@RequestMapping("/summary")
 @Slf4j
-public class MQTTController {
+public class SummaryController {
     @Resource
     private OrderActRecordMgtService orderActRecordMgtService;
 
