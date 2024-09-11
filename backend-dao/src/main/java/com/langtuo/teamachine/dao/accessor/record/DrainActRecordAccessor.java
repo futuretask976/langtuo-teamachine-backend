@@ -19,13 +19,26 @@ public class DrainActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<DrainActRecordPO> search(String tenantCode, List<String> shopGroupCodeList,
-            List<String> shopCodeList, int pageNum, int pageSize) {
+    public PageInfo<DrainActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+            int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         DrainActRecordQuery query = new DrainActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.addShopCode(shopCodeList);
+        query.addAllShopGroupCode(shopGroupCodeList);
+        List<DrainActRecordPO> list = mapper.search(query);
+
+        PageInfo<DrainActRecordPO> pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
+    public PageInfo<DrainActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
+            int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        DrainActRecordQuery query = new DrainActRecordQuery();
+        query.setTenantCode(tenantCode);
+        query.addAllShopCode(shopCodeList);
         List<DrainActRecordPO> list = mapper.search(query);
 
         PageInfo<DrainActRecordPO> pageInfo = new PageInfo(list);

@@ -4,12 +4,9 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.InvalidActRecordDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.InvalidActRecordMgtService;
-import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.util.Lists;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RestController
 @RequestMapping("/recordset/invalid")
@@ -26,18 +23,9 @@ public class InvalidActRecordController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<InvalidActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopGroupCode") String shopGroupCode,
-            @RequestParam("shopCode") String shopCode,
+            @RequestParam("shopGroupCode") String shopGroupCode, @RequestParam("shopCode") String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        List<String> shopGroupCodeList = Lists.newArrayList();
-        if (!StringUtils.isBlank(shopGroupCode)) {
-            shopGroupCodeList.add(shopGroupCode);
-        }
-        List<String> shopCodeList = Lists.newArrayList();
-        if (!StringUtils.isBlank(shopCode)) {
-            shopCodeList.add(shopCode);
-        }
-        TeaMachineResult<PageDTO<InvalidActRecordDTO>> rtn = service.search(tenantCode, shopGroupCodeList, shopCodeList,
+        TeaMachineResult<PageDTO<InvalidActRecordDTO>> rtn = service.search(tenantCode, shopGroupCode, shopCode,
                 pageNum, pageSize);
         return rtn;
     }

@@ -8,7 +8,7 @@ import com.langtuo.teamachine.api.request.user.RolePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
-import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.MessageUtils;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
@@ -79,7 +79,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
@@ -98,7 +98,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("page error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
@@ -125,7 +125,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("list error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
@@ -134,7 +134,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     @Override
     public TeaMachineResult<Void> put(RolePutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
                     messageSource));
         }
 
@@ -146,7 +146,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(rolePO.getRoleCode())) {
                 RolePO exist = roleAccessor.selectOneByRoleCode(request.getTenantCode(), request.getRoleCode());
                 if (exist != null) {
-                    teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_TENANT_SUPER_ADMIN_ROLE,
+                    teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_TENANT_SUPER_ADMIN_ROLE,
                     messageSource));
                 } else {
                     int inserted = roleAccessor.insert(rolePO);
@@ -172,7 +172,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             }
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
@@ -181,18 +181,18 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String roleCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(roleCode)) {
-            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
                     messageSource));
         }
 
         int adminCount = adminAccessor.countByRoleCode(tenantCode, roleCode);
         if (adminCount > 0) {
-            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_ROLE,
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_ROLE,
                     messageSource));
         }
 
         if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(roleCode)) {
-            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_TENANT_SUPER_ADMIN_ROLE,
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_TENANT_SUPER_ADMIN_ROLE,
                     messageSource));
         }
 
@@ -203,7 +203,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
                     messageSource));
         }
         return teaMachineResult;

@@ -15,21 +15,36 @@ public class OrderTeaReportByShopAccessor {
     @Resource
     private OrderTeaReportByShopMapper mapper;
 
-    public OrderTeaReportByShopPO calcOne(String tenantCode, String orderCreatedDay) {
-        return mapper.selectOne(tenantCode, orderCreatedDay);
+    public List<OrderTeaReportByShopPO> calcByDay(String tenantCode, String orderCreatedDay) {
+        return mapper.calcByDay(tenantCode, orderCreatedDay);
     }
 
-    public OrderTeaReportByShopPO selectOne(String tenantCode, String orderCreatedDay) {
-        return mapper.selectOne(tenantCode, orderCreatedDay);
+    public List<OrderTeaReportByShopPO> selectListByDay(String tenantCode, String orderCreatedDay) {
+        return mapper.selectListByDay(tenantCode, orderCreatedDay);
     }
 
-    public PageInfo<OrderTeaReportByShopPO> search(String tenantCode, List<String> orderCreatedDayList,
-            int pageNum, int pageSize) {
+    public PageInfo<OrderTeaReportByShopPO> searchByShopGroupCode(String tenantCode, List<String> orderCreatedDayList,
+            List<String> shopGroupCodeList, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         OrderTeaReportByShopQuery query = new OrderTeaReportByShopQuery();
         query.setTenantCode(tenantCode);
         query.addOrderCreatedDay(orderCreatedDayList);
+        query.addAllShopGroupCode(shopGroupCodeList);
+        List<OrderTeaReportByShopPO> list = mapper.search(query);
+
+        PageInfo<OrderTeaReportByShopPO> pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
+    public PageInfo<OrderTeaReportByShopPO> searchByShopCode(String tenantCode, List<String> orderCreatedDayList,
+            List<String> shopCodeList, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        OrderTeaReportByShopQuery query = new OrderTeaReportByShopQuery();
+        query.setTenantCode(tenantCode);
+        query.addOrderCreatedDay(orderCreatedDayList);
+        query.addAllShopCode(shopCodeList);
         List<OrderTeaReportByShopPO> list = mapper.search(query);
 
         PageInfo<OrderTeaReportByShopPO> pageInfo = new PageInfo(list);

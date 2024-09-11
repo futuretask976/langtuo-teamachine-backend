@@ -17,7 +17,7 @@
         <result property="amount" column="amount"/>
     </resultMap>
 
-    <select id="calcOne" resultMap="orderAmtReportMap">
+    <select id="calcByDay" resultMap="orderAmtReportMap">
         SELECT
             order_act.shop_group_code,
             order_act.shop_code,
@@ -34,17 +34,11 @@
             order_act.shop_group_code, order_act.shop_code, order_topping_act.topping_code
     </select>
 
-    <select id="selectOne" resultMap="orderToppingReportByShopMapper">
+    <select id="selectListByDay" resultMap="orderToppingReportByShopMapper">
         SELECT * FROM order_topping_report_by_shop
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND order_created_day = #{orderCreatedDay}
-    </select>
-
-    <select id="selectList" resultMap="orderToppingReportByShopMapper">
-        SELECT * FROM order_topping_report_by_shop
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
     </select>
 
     <select id="search" resultMap="orderToppingReportByShopMapper">

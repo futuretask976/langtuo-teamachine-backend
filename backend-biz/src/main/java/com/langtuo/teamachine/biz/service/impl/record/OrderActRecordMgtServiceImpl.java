@@ -11,7 +11,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
-import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.MessageUtils;
 import com.langtuo.teamachine.biz.service.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.drink.*;
 import com.langtuo.teamachine.dao.accessor.record.OrderActRecordAccessor;
@@ -20,6 +20,7 @@ import com.langtuo.teamachine.dao.accessor.record.OrderToppingActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.po.drink.*;
+import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
@@ -27,6 +28,7 @@ import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -85,39 +87,43 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
     }
 
     @Override
-    public TeaMachineResult<PageDTO<OrderActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
-            List<String> shopCodeList, int pageNum, int pageSize) {
+    public TeaMachineResult<PageDTO<OrderActRecordDTO>> search(String tenantCode, String shopGroupCode,
+            String shopCode, int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
         TeaMachineResult<PageDTO<OrderActRecordDTO>> teaMachineResult;
         try {
-            if (CollectionUtils.isEmpty(shopCodeList)) {
-                if (CollectionUtils.isEmpty(shopGroupCodeList)) {
-                    shopGroupCodeList = BizUtils.getShopGroupCodeListByAdmin(tenantCode);
-                }
-                shopCodeList = BizUtils.getShopCodeListByShopGroupCode(tenantCode, shopGroupCodeList);
+            PageInfo<OrderActRecordPO> pageInfo = null;
+            if (!StringUtils.isBlank(shopCode)) {
+                pageInfo = orderActRecordAccessor.searchByShopCode(tenantCode, Lists.newArrayList(shopCode),
+                        pageNum, pageSize);
+            } else if (!StringUtils.isBlank(shopGroupCode)) {
+                pageInfo = orderActRecordAccessor.searchByShopGroupCode(tenantCode, Lists.newArrayList(shopGroupCode),
+                        pageNum, pageSize);
+            } else {
+                List<String> shopGroupCodeList = BizUtils.getShopGroupCodeListByAdmin(tenantCode);
+                pageInfo = orderActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCodeList,
+                        pageNum, pageSize);
             }
 
-            if (CollectionUtils.isEmpty(shopCodeList)) {
+            if (pageInfo == null) {
                 teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                         null, 0, pageNum, pageSize));
             } else {
-                PageInfo<OrderActRecordPO> pageInfo = orderActRecordAccessor.search(
-                        tenantCode, shopCodeList, pageNum, pageSize);
                 teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                         convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
@@ -126,7 +132,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String warningRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
                     messageSource));
         }
 
@@ -136,7 +142,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
@@ -145,7 +151,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     @Override
     public TeaMachineResult<Void> put(OrderActRecordPutRequest request) {
         if (request == null) {
-            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
                     messageSource));
         }
 
@@ -177,7 +183,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
                     messageSource));
         }
         return teaMachineResult;

@@ -19,13 +19,26 @@ public class InvalidActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<InvalidActRecordPO> search(String tenantCode, List<String> shopGroupCodeList,
-            List<String> shopCodeList, int pageNum, int pageSize) {
+    public PageInfo<InvalidActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+            int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         InvalidActRecordQuery query = new InvalidActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.addShopCode(shopCodeList);
+        query.addAllShopGroupCode(shopGroupCodeList);
+        List<InvalidActRecordPO> list = mapper.search(query);
+
+        PageInfo<InvalidActRecordPO> pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
+    public PageInfo<InvalidActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
+            int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        InvalidActRecordQuery query = new InvalidActRecordQuery();
+        query.setTenantCode(tenantCode);
+        query.addAllShopCode(shopCodeList);
         List<InvalidActRecordPO> list = mapper.search(query);
 
         PageInfo<InvalidActRecordPO> pageInfo = new PageInfo(list);

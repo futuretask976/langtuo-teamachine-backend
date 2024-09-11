@@ -25,7 +25,7 @@ public interface OrderTeaReportByShopMapper {
      * @param orderCreatedDay
      * @return
      */
-    OrderTeaReportByShopPO calcOne(@Param("tenantCode") String tenantCode,
+    List<OrderTeaReportByShopPO> calcByDay(@Param("tenantCode") String tenantCode,
             @Param("orderCreatedDay") String orderCreatedDay);
 
     /**
@@ -34,7 +34,7 @@ public interface OrderTeaReportByShopMapper {
      * @param orderCreatedDay
      * @return
      */
-    OrderTeaReportByShopPO selectOne(@Param("tenantCode") String tenantCode,
+    List<OrderTeaReportByShopPO> selectListByDay(@Param("tenantCode") String tenantCode,
             @Param("orderCreatedDay") String orderCreatedDay);
 
     /**

@@ -20,8 +20,8 @@ public interface DrainActRecordMgtService {
      *
      * @return
      */
-    TeaMachineResult<PageDTO<DrainActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
-            List<String> shopCodeList, int pageNum, int pageSize);
+    TeaMachineResult<PageDTO<DrainActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
+            int pageNum, int pageSize);
 
     /**
      *

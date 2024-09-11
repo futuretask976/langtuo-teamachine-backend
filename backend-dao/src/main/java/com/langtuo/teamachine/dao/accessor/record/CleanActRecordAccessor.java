@@ -19,12 +19,26 @@ public class CleanActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<CleanActRecordPO> search(String tenantCode, List<String> shopCodeList, int pageNum, int pageSize) {
+    public PageInfo<CleanActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+            int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         CleanActRecordQuery query = new CleanActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.addShopCode(shopCodeList);
+        query.addAllShopGroupCode(shopGroupCodeList);
+        List<CleanActRecordPO> list = mapper.search(query);
+
+        PageInfo<CleanActRecordPO> pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
+    public PageInfo<CleanActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
+            int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        CleanActRecordQuery query = new CleanActRecordQuery();
+        query.setTenantCode(tenantCode);
+        query.addAllShopCode(shopCodeList);
         List<CleanActRecordPO> list = mapper.search(query);
 
         PageInfo<CleanActRecordPO> pageInfo = new PageInfo(list);

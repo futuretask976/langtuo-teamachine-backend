@@ -15,21 +15,36 @@ public class OrderSpecItemReportByShopAccessor {
     @Resource
     private OrderSpecItemReportByShopMapper mapper;
 
-    public OrderSpecItemReportByShopPO calcOne(String tenantCode, String orderCreatedDay) {
-        return mapper.selectOne(tenantCode, orderCreatedDay);
+    public List<OrderSpecItemReportByShopPO> calcByDay(String tenantCode, String orderCreatedDay) {
+        return mapper.calcByDay(tenantCode, orderCreatedDay);
     }
 
-    public OrderSpecItemReportByShopPO selectOne(String tenantCode, String orderCreatedDay) {
-        return mapper.selectOne(tenantCode, orderCreatedDay);
+    public List<OrderSpecItemReportByShopPO> selectListByDay(String tenantCode, String orderCreatedDay) {
+        return mapper.selectListByDay(tenantCode, orderCreatedDay);
     }
 
-    public PageInfo<OrderSpecItemReportByShopPO> search(String tenantCode, List<String> orderCreatedDayList,
-            int pageNum, int pageSize) {
+    public PageInfo<OrderSpecItemReportByShopPO> searchByShopGroupCode(String tenantCode, List<String> orderCreatedDayList,
+            List<String> shopGroupCodeList, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         OrderSpecItemReportByShopQuery query = new OrderSpecItemReportByShopQuery();
         query.setTenantCode(tenantCode);
         query.addOrderCreatedDay(orderCreatedDayList);
+        query.addAllShopGroupCode(shopGroupCodeList);
+        List<OrderSpecItemReportByShopPO> list = mapper.search(query);
+
+        PageInfo<OrderSpecItemReportByShopPO> pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
+    public PageInfo<OrderSpecItemReportByShopPO> searchByShopCode(String tenantCode, List<String> orderCreatedDayList,
+            List<String> shopCodeList, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        OrderSpecItemReportByShopQuery query = new OrderSpecItemReportByShopQuery();
+        query.setTenantCode(tenantCode);
+        query.addOrderCreatedDay(orderCreatedDayList);
+        query.addAllShopCode(shopCodeList);
         List<OrderSpecItemReportByShopPO> list = mapper.search(query);
 
         PageInfo<OrderSpecItemReportByShopPO> pageInfo = new PageInfo(list);

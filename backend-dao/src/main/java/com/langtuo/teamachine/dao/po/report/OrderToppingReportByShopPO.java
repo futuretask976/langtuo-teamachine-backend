@@ -1,7 +1,10 @@
 package com.langtuo.teamachine.dao.po.report;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class OrderToppingReportByShopPO {
     /**
      * 数据表id

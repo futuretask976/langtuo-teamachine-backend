@@ -29,7 +29,7 @@ public class OrderAmtReportAccessor {
 
         OrderAmtReportQuery query = new OrderAmtReportQuery();
         query.setTenantCode(tenantCode);
-        query.addOrderCreatedDay(orderCreatedDayList);
+        query.addAllOrderCreatedDay(orderCreatedDayList);
         List<OrderAmtReportPO> list = mapper.search(query);
 
         PageInfo<OrderAmtReportPO> pageInfo = new PageInfo(list);

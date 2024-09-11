@@ -20,8 +20,8 @@ public interface InvalidActRecordMgtService {
      *
      * @return
      */
-    TeaMachineResult<PageDTO<InvalidActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
-            List<String> shopCodeList, int pageNum, int pageSize);
+    TeaMachineResult<PageDTO<InvalidActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
+            int pageNum, int pageSize);
 
     /**
      *

@@ -20,8 +20,8 @@ public interface SupplyActRecordMgtService {
      *
      * @return
      */
-    TeaMachineResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
-            List<String> shopCodeList, int pageNum, int pageSize);
+    TeaMachineResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
+            int pageNum, int pageSize);
 
     /**
      *

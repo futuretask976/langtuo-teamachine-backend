@@ -7,7 +7,7 @@ import com.langtuo.teamachine.api.request.record.OrderToppingActRecordPutRequest
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -45,7 +45,7 @@ public class MQTTController {
             log.error("test error: " + e.getMessage(), e);
         }
         log.info("/mqtt/test exiting");
-        return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST, messageSource));
+        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST, messageSource));
     }
 
     /**
@@ -110,6 +110,6 @@ public class MQTTController {
         } catch (Exception e) {
             log.error("test error: " + e.getMessage(), e);
         }
-        return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST, messageSource));
+        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST, messageSource));
     }
 }

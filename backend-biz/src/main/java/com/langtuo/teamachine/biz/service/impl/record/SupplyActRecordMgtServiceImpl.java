@@ -9,7 +9,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.SupplyActRecordMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.biz.service.constant.BizConsts;
-import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.MessageUtils;
 import com.langtuo.teamachine.biz.service.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.record.SupplyActRecordAccessor;
@@ -21,6 +21,7 @@ import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService {
     @Resource
-    private SupplyActRecordAccessor accessor;
+    private SupplyActRecordAccessor supplyActRecordAccessor;
 
     @Resource
     private ToppingAccessor toppingAccessor;
@@ -55,44 +56,48 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
     public TeaMachineResult<SupplyActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<SupplyActRecordDTO> teaMachineResult;
         try {
-            SupplyActRecordPO po = accessor.selectOne(tenantCode, idempotentMark);
+            SupplyActRecordPO po = supplyActRecordAccessor.selectOne(tenantCode, idempotentMark);
             SupplyActRecordDTO dto = convert(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("getByCode error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
     }
 
     @Override
-    public TeaMachineResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, List<String> shopGroupCodeList,
-            List<String> shopCodeList, int pageNum, int pageSize) {
+    public TeaMachineResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, String shopGroupCode,
+            String shopCode, int pageNum, int pageSize) {
         pageNum = pageNum < BizConsts.MIN_PAGE_NUM ? BizConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < BizConsts.MIN_PAGE_SIZE ? BizConsts.MIN_PAGE_SIZE : pageSize;
 
         TeaMachineResult<PageDTO<SupplyActRecordDTO>> teaMachineResult;
         try {
-            if (CollectionUtils.isEmpty(shopCodeList)) {
-                if (CollectionUtils.isEmpty(shopGroupCodeList)) {
-                    shopGroupCodeList = BizUtils.getShopGroupCodeListByAdmin(tenantCode);
-                }
-                shopCodeList = BizUtils.getShopCodeListByShopGroupCode(tenantCode, shopGroupCodeList);
+            PageInfo<SupplyActRecordPO> pageInfo = null;
+            if (!StringUtils.isBlank(shopCode)) {
+                pageInfo = supplyActRecordAccessor.searchByShopCode(tenantCode, Lists.newArrayList(shopCode),
+                        pageNum, pageSize);
+            } else if (!StringUtils.isBlank(shopGroupCode)) {
+                pageInfo = supplyActRecordAccessor.searchByShopGroupCode(tenantCode, Lists.newArrayList(shopGroupCode),
+                        pageNum, pageSize);
+            } else {
+                List<String> shopGroupCodeList = BizUtils.getShopGroupCodeListByAdmin(tenantCode);
+                pageInfo = supplyActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCodeList,
+                        pageNum, pageSize);
             }
 
-            if (CollectionUtils.isEmpty(shopCodeList)) {
+            if (pageInfo == null) {
                 teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                         null, 0, pageNum, pageSize));
             } else {
-                PageInfo<SupplyActRecordPO> pageInfo = accessor.search(
-                        tenantCode, shopGroupCodeList, shopCodeList, pageNum, pageSize);
                 teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                         convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("search error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
@@ -101,7 +106,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
     @Override
     public TeaMachineResult<Void> put(SupplyActRecordPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
                     messageSource));
         }
 
@@ -109,17 +114,17 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            SupplyActRecordPO exist = accessor.selectOne(po.getTenantCode(),
+            SupplyActRecordPO exist = supplyActRecordAccessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
             if (exist != null) {
-                int updated = accessor.delete(po.getTenantCode(), po.getIdempotentMark());
+                int updated = supplyActRecordAccessor.delete(po.getTenantCode(), po.getIdempotentMark());
             }
-            int inserted = accessor.insert(po);
+            int inserted = supplyActRecordAccessor.insert(po);
 
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
                     messageSource));
         }
         return teaMachineResult;
@@ -128,17 +133,17 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String warningRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT,
                     messageSource));
         }
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = accessor.delete(tenantCode, warningRuleCode);
+            int deleted = supplyActRecordAccessor.delete(tenantCode, warningRuleCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL,
                     messageSource));
         }
         return teaMachineResult;

@@ -19,13 +19,26 @@ public class SupplyActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<SupplyActRecordPO> search(String tenantCode, List<String> shopGroupCodeList,
-            List<String> shopCodeList, int pageNum, int pageSize) {
+    public PageInfo<SupplyActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+            int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         SupplyActRecordQuery query = new SupplyActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.addShopCode(shopCodeList);
+        query.addAllShopGroupCode(shopGroupCodeList);
+        List<SupplyActRecordPO> list = mapper.search(query);
+
+        PageInfo<SupplyActRecordPO> pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
+    public PageInfo<SupplyActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
+            int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        SupplyActRecordQuery query = new SupplyActRecordQuery();
+        query.setTenantCode(tenantCode);
+        query.addAllShopCode(shopCodeList);
         List<SupplyActRecordPO> list = mapper.search(query);
 
         PageInfo<SupplyActRecordPO> pageInfo = new PageInfo(list);

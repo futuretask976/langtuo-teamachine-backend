@@ -22,7 +22,7 @@ public class OrderAmtReportQuery {
      * 添加店铺编码
      * @param orderCreatedDayList
      */
-    public void addOrderCreatedDay(List<String> orderCreatedDayList) {
+    public void addAllOrderCreatedDay(List<String> orderCreatedDayList) {
         if (CollectionUtils.isEmpty(orderCreatedDayList)) {
             return;
         }

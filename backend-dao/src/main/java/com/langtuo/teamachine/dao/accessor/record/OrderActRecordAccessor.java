@@ -19,12 +19,26 @@ public class OrderActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<OrderActRecordPO> search(String tenantCode, List<String> shopCodeList, int pageNum, int pageSize) {
+    public PageInfo<OrderActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+            int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         OrderActRecordQuery query = new OrderActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.addShopCode(shopCodeList);
+        query.addAllShopGroupCode(shopGroupCodeList);
+        List<OrderActRecordPO> list = mapper.search(query);
+
+        PageInfo<OrderActRecordPO> pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
+    public PageInfo<OrderActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
+            int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        OrderActRecordQuery query = new OrderActRecordQuery();
+        query.setTenantCode(tenantCode);
+        query.addAllShopCode(shopCodeList);
         List<OrderActRecordPO> list = mapper.search(query);
 
         PageInfo<OrderActRecordPO> pageInfo = new PageInfo(list);

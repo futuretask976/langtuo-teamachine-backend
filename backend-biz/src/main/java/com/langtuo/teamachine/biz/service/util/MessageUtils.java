@@ -6,7 +6,7 @@ import org.springframework.context.MessageSource;
 
 import java.util.Locale;
 
-public class ApiUtils {
+public class MessageUtils {
     public static ErrorMsgDTO getErrorMsgDTO(ErrorCodeEnum errorCodeEnum, MessageSource messageSource) {
         ErrorMsgDTO errorMsgDTO = new ErrorMsgDTO();
         errorMsgDTO.setErrorCode(errorCodeEnum.getErrorCode());

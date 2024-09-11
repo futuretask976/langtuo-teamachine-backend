@@ -6,7 +6,7 @@ import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
-import com.langtuo.teamachine.biz.service.util.ApiUtils;
+import com.langtuo.teamachine.biz.service.util.MessageUtils;
 import com.langtuo.teamachine.web.constant.WebConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -100,7 +100,7 @@ public class TeaController {
     public TeaMachineResult<Void> uploadExcel(@RequestParam(name = "tenantCode") String tenantCode,
             @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY,
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY,
                     messageSource));
         }
 
@@ -122,7 +122,7 @@ public class TeaController {
                 }
             }
         }
-        return TeaMachineResult.error(ApiUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_PARSE_UPLOAD_FILE_ERROR,
+        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_PARSE_UPLOAD_FILE_ERROR,
                 messageSource));
     }
 }

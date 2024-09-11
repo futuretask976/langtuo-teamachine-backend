@@ -20,7 +20,7 @@ public interface OrderToppingReportByShopMapper {
      * @param orderCreatedDay
      * @return
      */
-    OrderToppingReportByShopPO calcOne(@Param("tenantCode") String tenantCode,
+    List<OrderToppingReportByShopPO> calcByDay(@Param("tenantCode") String tenantCode,
             @Param("orderCreatedDay") String orderCreatedDay);
 
     /**
@@ -29,7 +29,7 @@ public interface OrderToppingReportByShopMapper {
      * @param orderCreatedDay
      * @return
      */
-    OrderToppingReportByShopPO selectOne(@Param("tenantCode") String tenantCode,
+    List<OrderToppingReportByShopPO> selectListByDay(@Param("tenantCode") String tenantCode,
             @Param("orderCreatedDay") String orderCreatedDay);
 
     /**
