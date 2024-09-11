@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.report.OrderAmtReportMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.record.OrderAmtReportPO" id="orderAmtReportMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderAmtReportPO" id="orderAmtReportMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
