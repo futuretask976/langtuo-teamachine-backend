@@ -89,11 +89,17 @@ public class RoleActRelAccessor {
             roleActRelPOList.add(roleActRelPO);
         }
 
-        RoleActRelPO roleActRelPO = new RoleActRelPO();
-        roleActRelPO.setTenantCode(tenantCode);
-        roleActRelPO.setRoleCode(roleCode);
-        roleActRelPO.setPermitActCode(DaoConsts.PERMIT_ACT_CODE_TENANT);
-        roleActRelPOList.add(roleActRelPO);
+        RoleActRelPO roleActRelPO4Tenant = new RoleActRelPO();
+        roleActRelPO4Tenant.setTenantCode(tenantCode);
+        roleActRelPO4Tenant.setRoleCode(roleCode);
+        roleActRelPO4Tenant.setPermitActCode(DaoConsts.PERMIT_ACT_CODE_TENANT);
+        roleActRelPOList.add(roleActRelPO4Tenant);
+
+        RoleActRelPO roleActRelPO4AndroidApp = new RoleActRelPO();
+        roleActRelPO4AndroidApp.setTenantCode(tenantCode);
+        roleActRelPO4AndroidApp.setRoleCode(roleCode);
+        roleActRelPO4AndroidApp.setPermitActCode(DaoConsts.PERMIT_ACT_CODE_ANDROID_APP_MGT);
+        roleActRelPOList.add(roleActRelPO4AndroidApp);
 
         return roleActRelPOList;
     }

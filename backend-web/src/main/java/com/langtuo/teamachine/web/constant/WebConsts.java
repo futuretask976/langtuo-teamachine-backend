@@ -115,6 +115,7 @@ public class WebConsts {
     public static final String ROLE_MATCH_PREFIX = "ROLE_";
     public static final String SPECIAL_PERMIT_ACT_CODE_MACHINE = "machine";
     public static final String SPECIAL_PERMIT_ACT_CODE_TENANT_MGT = "tenantMgt";
+    public static final String SPECIAL_PERMIT_ACT_CODE_ANDROID_APP_MGT = "androidAppMgt";
 
     /**
      * Cookie 常量

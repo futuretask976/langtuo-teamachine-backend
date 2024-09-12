@@ -29,18 +29,18 @@ public interface ModelPipelineMapper {
 
     /**
      *
-     * @param modelPipelinePO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(ModelPipelinePO modelPipelinePO);
+    int insert(ModelPipelinePO po);
 
     /**
      *
-     * @param modelPipelinePO
+     * @param po
      * @return
      */
-    int update(ModelPipelinePO modelPipelinePO);
+    int update(ModelPipelinePO po);
 
     /**
      *

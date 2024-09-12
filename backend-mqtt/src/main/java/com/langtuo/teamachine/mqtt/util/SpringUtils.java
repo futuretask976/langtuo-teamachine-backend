@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.mqtt.util;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.langtuo.teamachine.api.service.device.AndroidAppMgtService;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
@@ -61,6 +62,12 @@ public class SpringUtils {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         ModelMgtService modelMgtService = appContext.getBean(ModelMgtService.class);
         return modelMgtService;
+    }
+
+    public static AndroidAppMgtService getAndroidAppMgtService() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        AndroidAppMgtService androidAppMgtService = appContext.getBean(AndroidAppMgtService.class);
+        return androidAppMgtService;
     }
 
     public static AccuracyTplMgtService getToppingAccuracyTplMgtService() {

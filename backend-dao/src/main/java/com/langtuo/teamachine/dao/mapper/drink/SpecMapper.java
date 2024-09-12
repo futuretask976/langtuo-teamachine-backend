@@ -36,18 +36,18 @@ public interface SpecMapper {
 
     /**
      *
-     * @param specPO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(SpecPO specPO);
+    int insert(SpecPO po);
 
     /**
      *
-     * @param specPO
+     * @param po
      * @return
      */
-    int update(SpecPO specPO);
+    int update(SpecPO po);
 
     /**
      *

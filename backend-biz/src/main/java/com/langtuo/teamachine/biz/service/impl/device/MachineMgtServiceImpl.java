@@ -43,9 +43,6 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
-    
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<MachineDTO> getByCode(String tenantCode, String machineCode) {

@@ -37,18 +37,18 @@ public interface MachineMapper {
 
     /**
      *
-     * @param machinePO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(MachinePO machinePO);
+    int insert(MachinePO po);
 
     /**
      *
-     * @param machinePO
+     * @param po
      * @return
      */
-    int update(MachinePO machinePO);
+    int update(MachinePO po);
 
     /**
      *

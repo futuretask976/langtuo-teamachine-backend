@@ -35,18 +35,18 @@ public interface ModelMapper {
 
     /**
      *
-     * @param modelPO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(ModelPO modelPO);
+    int insert(ModelPO po);
 
     /**
      *
-     * @param modelPO
+     * @param po
      * @return
      */
-    int update(ModelPO modelPO);
+    int update(ModelPO po);
 
     /**
      *

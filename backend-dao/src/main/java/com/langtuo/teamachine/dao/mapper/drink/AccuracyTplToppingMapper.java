@@ -21,11 +21,11 @@ public interface AccuracyTplToppingMapper {
 
     /**
      *
-     * @param specPO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(AccuracyTplToppingPO specPO);
+    int insert(AccuracyTplToppingPO po);
 
     /**
      *

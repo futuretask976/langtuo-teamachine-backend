@@ -37,18 +37,18 @@ public interface TeaMapper {
 
     /**
      *
-     * @param teaPO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(TeaPO teaPO);
+    int insert(TeaPO po);
 
     /**
      *
-     * @param teaPO
+     * @param po
      * @return
      */
-    int update(TeaPO teaPO);
+    int update(TeaPO po);
 
     /**
      *

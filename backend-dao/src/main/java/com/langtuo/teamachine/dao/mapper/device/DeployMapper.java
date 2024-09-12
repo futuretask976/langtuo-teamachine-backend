@@ -36,18 +36,18 @@ public interface DeployMapper {
 
     /**
      *
-     * @param deployPO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(DeployPO deployPO);
+    int insert(DeployPO po);
 
     /**
      *
-     * @param deployPO
+     * @param po
      * @return
      */
-    int update(DeployPO deployPO);
+    int update(DeployPO po);
 
     /**
      * 

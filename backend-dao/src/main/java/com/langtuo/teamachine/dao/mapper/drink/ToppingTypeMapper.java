@@ -37,18 +37,18 @@ public interface ToppingTypeMapper {
 
     /**
      *
-     * @param toppingTypePO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(ToppingTypePO toppingTypePO);
+    int insert(ToppingTypePO po);
 
     /**
      *
-     * @param toppingTypePO
+     * @param po
      * @return
      */
-    int update(ToppingTypePO toppingTypePO);
+    int update(ToppingTypePO po);
 
     /**
      *

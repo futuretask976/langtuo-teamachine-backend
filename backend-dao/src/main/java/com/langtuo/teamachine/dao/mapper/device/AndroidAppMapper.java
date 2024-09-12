@@ -1,8 +1,9 @@
-package com.langtuo.teamachine.dao.mapper.drink;
+package com.langtuo.teamachine.dao.mapper.device;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
-import com.langtuo.teamachine.dao.po.drink.ToppingBaseRulePO;
+import com.langtuo.teamachine.dao.po.device.AndroidAppPO;
+import com.langtuo.teamachine.dao.query.device.AndroidAppQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,12 +13,19 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface ToppingBaseRuleMapper {
+public interface AndroidAppMapper {
+    /**
+     *
+     * @param version
+     * @return
+     */
+    AndroidAppPO selectOne(@Param("version") String version);
+
     /**
      *
      * @return
      */
-    List<ToppingBaseRulePO> selectList(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
+    List<AndroidAppPO> search(AndroidAppQuery query);
 
     /**
      *
@@ -25,21 +33,19 @@ public interface ToppingBaseRuleMapper {
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(ToppingBaseRulePO po);
+    int insert(AndroidAppPO po);
 
     /**
      *
-     * @param tenantCode
-     * @param teaCode
+     * @param po
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
+    int update(AndroidAppPO po);
 
     /**
      *
-     * @param tenantCode
-     * @param toppingCode
+     * @param version
      * @return
      */
-    int countByToppingCode(@Param("tenantCode") String tenantCode, @Param("toppingCode") String toppingCode);
+    int delete(@Param("version") String version);
 }

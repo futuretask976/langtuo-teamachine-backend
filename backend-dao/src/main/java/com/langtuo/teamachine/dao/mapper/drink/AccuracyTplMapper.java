@@ -37,18 +37,18 @@ public interface AccuracyTplMapper {
 
     /**
      *
-     * @param specPO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(AccuracyTplPO specPO);
+    int insert(AccuracyTplPO po);
 
     /**
      *
-     * @param specPO
+     * @param po
      * @return
      */
-    int update(AccuracyTplPO specPO);
+    int update(AccuracyTplPO po);
 
     /**
      *

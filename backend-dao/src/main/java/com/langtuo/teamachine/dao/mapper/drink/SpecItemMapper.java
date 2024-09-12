@@ -29,18 +29,18 @@ public interface SpecItemMapper {
 
     /**
      *
-     * @param specItemPO
+     * @param po
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(SpecItemPO specItemPO);
+    int insert(SpecItemPO po);
 
     /**
      *
-     * @param specItemPO
+     * @param po
      * @return
      */
-    int update(SpecItemPO specItemPO);
+    int update(SpecItemPO po);
 
     /**
      *

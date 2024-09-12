@@ -3,6 +3,7 @@ package com.langtuo.teamachine.biz.service.aync;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.langtuo.teamachine.biz.service.aync.threadpool.AsyncExeService;
+import com.langtuo.teamachine.biz.service.aync.worker.device.AndroidAppDispatchWorker;
 import com.langtuo.teamachine.biz.service.aync.worker.device.MachineDispatchWorker;
 import com.langtuo.teamachine.biz.service.aync.worker.device.ModelDispatchWorker;
 import com.langtuo.teamachine.biz.service.aync.worker.drink.AccuracyTplDispatchWorker;
@@ -61,6 +62,7 @@ public class AsyncDispatcher implements InitializingBean {
         // device 相关
         workerMap.put(BizConsts.BIZ_CODE_MODEL_UPDATED, jsonPayload -> new ModelDispatchWorker(jsonPayload));
         workerMap.put(BizConsts.BIZ_CODE_MACHINE_UPDATED, jsonPayload -> new MachineDispatchWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_ANDROID_APP_DISPATCHED, jsonPayload -> new AndroidAppDispatchWorker(jsonPayload));
         // drink 相关
         workerMap.put(BizConsts.BIZ_CODE_ACCURACY_TPL_UPDATED, jsonPayload -> new AccuracyTplDispatchWorker(jsonPayload));
         // menu 相关

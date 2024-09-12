@@ -212,6 +212,7 @@ public class BizConsts {
     public static final String JSON_KEY_BIZ_CODE = "bizCode";
     public static final String JSON_KEY_TENANT_CODE = "tenantCode";
     public static final String JSON_KEY_MODEL_CODE = "modelCode";
+    public static final String JSON_KEY_ANDROID_APP_VER = "androidAppVer";
     public static final String JSON_KEY_MACHINE_CODE = "machineCode";
     public static final String JSON_KEY_TEMPLATE_CODE = "templateCode";
     public static final String JSON_KEY_SHOP_CODE = "shopCode";
@@ -233,6 +234,7 @@ public class BizConsts {
      */
     public static final String BIZ_CODE_MODEL_UPDATED = "modelUpdated";
     public static final String BIZ_CODE_MACHINE_UPDATED = "machineUpdated";
+    public static final String BIZ_CODE_ANDROID_APP_DISPATCHED = "androidAppDispatched";
     public static final String BIZ_CODE_TENANT_UPDATED = "tenantUpdated";
     public static final String BIZ_CODE_ACCURACY_TPL_UPDATED = "accuracyTplUpdated";
     public static final String BIZ_CODE_MENU_UPDATED = "menuUpdated";
@@ -250,6 +252,7 @@ public class BizConsts {
     public static final String BIZ_CODE_DISPATCH_MENU = "dispatchMenu";
     public static final String BIZ_CODE_DISPATCH_MENU_LIST = "dispatchMenuList";
     public static final String BIZ_CODE_DISPATCH_MODEL = "dispatchModel";
+    public static final String BIZ_CODE_DISPATCH_ANDROID_APP = "dispatchAndroidApp";
     public static final String BIZ_CODE_DISPATCH_DRAIN_RULE = "dispatchDrainRule";
     public static final String BIZ_CODE_DISPATCH_WARNING_RULE = "dispatchWarningRule";
 }
