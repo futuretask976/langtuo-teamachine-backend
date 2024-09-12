@@ -42,7 +42,7 @@ public class AndroidAppController {
 
     @GetMapping(value = "/dispatch")
     public TeaMachineResult<Void> dispatch(@RequestParam(name = "version") String version) {
-        TeaMachineResult<Void> rtn = service.delete(version);
+        TeaMachineResult<Void> rtn = service.dispatch(version);
         return rtn;
     }
 }

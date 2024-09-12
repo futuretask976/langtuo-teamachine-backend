@@ -41,6 +41,7 @@
         <mapper resource="mybatis/mapper/device/machine-mapper.xml"/>
         <mapper resource="mybatis/mapper/device/deploy-mapper.xml"/>
         <mapper resource="mybatis/mapper/device/machine-code-seq-mapper.xml"/>
+        <mapper resource="mybatis/mapper/device/android-app-mapper.xml"/>
         <!-- 用户 -->
         <mapper resource="mybatis/mapper/user/tenant-mapper.xml"/>
         <mapper resource="mybatis/mapper/user/admin-mapper.xml"/>

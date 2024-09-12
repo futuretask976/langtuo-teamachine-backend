@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.mapper.device.AndroidAppMapper;
 import com.langtuo.teamachine.dao.po.device.AndroidAppPO;
 import com.langtuo.teamachine.dao.query.device.AndroidAppQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -29,7 +30,7 @@ public class AndroidAppAccessor {
         PageHelper.startPage(pageNum, pageSize);
 
         AndroidAppQuery query = new AndroidAppQuery();
-        query.setVersion(version);
+        query.setVersion(StringUtils.isBlank(version) ? null : version);
         List<AndroidAppPO> poList = mapper.search(query);
 
         PageInfo<AndroidAppPO> pageInfo = new PageInfo(poList);

@@ -43,7 +43,6 @@ public class MachineDispatchWorker implements Runnable {
         JSONObject jsonMsg = new JSONObject();
         jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MACHINE);
         jsonMsg.put(BizConsts.JSON_KEY_MACHINE, jsonDispatchCont);
-        log.info("$$$$$ MachineDispatchWorker jsonMsg: " + jsonMsg);
 
         MqttProducer mqttProducer = SpringUtils.getMqttProducer();
         mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());

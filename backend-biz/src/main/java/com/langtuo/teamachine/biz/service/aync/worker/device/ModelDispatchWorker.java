@@ -42,7 +42,6 @@ public class ModelDispatchWorker implements Runnable {
         JSONObject jsonMsg = new JSONObject();
         jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MODEL);
         jsonMsg.put(BizConsts.JSON_KEY_MODEL, jsonDispatchCont);
-        log.info("$$$$$ ModelDispatchWorker jsonMsg: " + jsonMsg);
 
         TenantMgtService tenantMgtService = SpringUtils.getTenantMgtService();
         List<String> tenantCodeList = getListModel(tenantMgtService.list()).stream()
