@@ -60,6 +60,7 @@ public class WebConsts {
     /**
      * 授权处理路径
      */
+    public static final String ANT_PATTERN_SUMMARY_CHART_PATH = "/summarychart/**";
     // 设备
     public static final String ANT_PATTERN_MODEL_PATH = "/deviceset/model/**";
     public static final String ANT_PATTERN_DEPLOY_PATH = "/deviceset/deploy/**";

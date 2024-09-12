@@ -34,6 +34,7 @@
 
     <mappers>
         <!-- 每一个Mapper.xml都要在Mybatis核心配置文件中注册！ -->
+        <mapper resource="mybatis/mapper/summary-chart-mapper.xml"/>
         <!-- 设备 -->
         <mapper resource="mybatis/mapper/device/model-mapper.xml"/>
         <mapper resource="mybatis/mapper/device/model-pipeline-mapper.xml"/>

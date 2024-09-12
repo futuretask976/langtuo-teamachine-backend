@@ -40,3 +40,4 @@ teamachine:
         - /userset/tenant/list/**
         - /deviceset/machine/activate/**
         - /mqtt/**
+        - /summarychart/**
