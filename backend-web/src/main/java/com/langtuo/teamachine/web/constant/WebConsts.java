@@ -61,6 +61,7 @@ public class WebConsts {
      * 授权处理路径
      */
     public static final String ANT_PATTERN_LOGIN_PATH = "/login";
+    public static final String ANT_PATTERN_LOGOUT_PATH = "/logout";
     public static final String ANT_PATTERN_LOGIN_PROCESSING_PATH = "/login-processing";
     public static final String ANT_PATTERN_SUMMARY_CHART_PATH = "/summarychart/**";
     // 设备

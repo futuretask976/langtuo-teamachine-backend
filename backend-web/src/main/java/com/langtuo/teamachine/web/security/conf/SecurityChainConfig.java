@@ -70,7 +70,7 @@ public class SecurityChainConfig {
         // 登出设置
         httpSecurity.logout(logout ->
                 logout
-                        .logoutUrl("/logout")
+                        .logoutUrl(WebConsts.ANT_PATTERN_LOGOUT_PATH)
                         .logoutSuccessHandler(teaMachineLogoutSuccessHandler)
                         //.logoutSuccessUrl("/bye")
                         .clearAuthentication(true)
