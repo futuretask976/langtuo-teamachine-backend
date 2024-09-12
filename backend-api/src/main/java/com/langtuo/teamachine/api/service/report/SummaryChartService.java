@@ -11,6 +11,13 @@ public interface SummaryChartService {
      * @param tenantCode
      * @return
      */
+    TeaMachineResult<List<Map<String, String>>> select4TeaAmtByDayChart(String tenantCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
     TeaMachineResult<List<Map<String, String>>> select4OrgShopChart(String tenantCode);
 
     /**

@@ -15,6 +15,12 @@ public class SummayChartServiceImpl implements SummaryChartService {
     private SummaryChartAccessor summaryChartAccessor;
 
     @Override
+    public TeaMachineResult<List<Map<String, String>>> select4TeaAmtByDayChart(String tenantCode) {
+        List<Map<String, String>> result = summaryChartAccessor.select4TeaAmtByDayChart(tenantCode);
+        return TeaMachineResult.success(result);
+    }
+
+    @Override
     public TeaMachineResult<List<Map<String, String>>> select4OrgShopChart(String tenantCode) {
         List<Map<String, String>> result = summaryChartAccessor.select4OrgShopChart(tenantCode);
         return TeaMachineResult.success(result);

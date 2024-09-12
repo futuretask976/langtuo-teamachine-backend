@@ -18,6 +18,15 @@ public class SummaryChartAccessor {
      * @param tenantCode
      * @return
      */
+    public List<Map<String, String>> select4TeaAmtByDayChart(@Param("tenantCode") String tenantCode) {
+        return summaryChartMapper.select4TeaAmtByDayChart(tenantCode);
+    }
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
     public List<Map<String, String>> select4OrgShopChart(@Param("tenantCode") String tenantCode) {
         return summaryChartMapper.select4OrgShopChart(tenantCode);
     }

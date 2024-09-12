@@ -5,6 +5,19 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.SummaryChartMapper">
+    <select id="select4TeaAmtByDayChart" resultType="java.util.HashMap">
+        SELECT
+            order_created_day AS orderCreatedDay,
+            tea_code AS teaCode,
+            SUM(amount) AS amount
+        FROM order_tea_report_by_shop
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND order_created_day >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 14 DAY), '%Y-%m-%d')
+        GROUP BY order_created_day, tea_code
+        ORDER BY order_created_day, tea_code ASC
+    </select>
+
     <select id="select4OrgShopChart" resultType="java.util.HashMap">
         SELECT
             org_name AS orgName,

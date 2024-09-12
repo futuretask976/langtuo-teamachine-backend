@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.web.controller.report;
+package com.langtuo.teamachine.web.controller;
 
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.report.SummaryChartService;
@@ -16,6 +16,17 @@ import java.util.Map;
 public class SummaryChartController {
     @Resource
     private SummaryChartService summaryChartService;
+
+    /**
+     * url: http://localhost:8080/teamachinebackend/summarychart/teaamtbyday?tenantCode=tenant_001
+     * @param tenantCode
+     * @return
+     */
+    @GetMapping(value = "/teaamtbyday")
+    public TeaMachineResult<List<Map<String, String>>> select4TeaAmtByDayChart(@RequestParam(name = "tenantCode") String tenantCode) {
+        TeaMachineResult<List<Map<String, String>>> rtn = summaryChartService.select4TeaAmtByDayChart(tenantCode);
+        return rtn;
+    }
 
     /**
      * url: http://localhost:8080/teamachinebackend/summarychart/orgshop?tenantCode=tenant_001

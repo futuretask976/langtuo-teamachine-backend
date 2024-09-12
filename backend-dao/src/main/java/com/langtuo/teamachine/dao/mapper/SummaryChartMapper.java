@@ -20,6 +20,13 @@ public interface SummaryChartMapper {
      * @param tenantCode
      * @return
      */
+    List<Map<String, String>> select4TeaAmtByDayChart(@Param("tenantCode") String tenantCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
     List<Map<String, String>> select4OrgShopChart(@Param("tenantCode") String tenantCode);
 
     /**
