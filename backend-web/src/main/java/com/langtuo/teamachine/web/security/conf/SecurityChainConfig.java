@@ -57,10 +57,10 @@ public class SecurityChainConfig {
         // 登录设置
         httpSecurity.formLogin(formLogin -> {
             formLogin
-                    .loginPage("/login") // Login page will be accessed through this endpoint. We will create a controller method for this.
-                    .loginProcessingUrl("/login-processing") // This endpoint will be mapped internally. This URL will be our Login form post action.
-                    .usernameParameter("username")
-                    .passwordParameter("password")
+                    .loginPage(WebConsts.ANT_PATTERN_LOGIN_PATH) // Login page will be accessed through this endpoint. We will create a controller method for this.
+                    .loginProcessingUrl(WebConsts.ANT_PATTERN_LOGIN_PROCESSING_PATH) // This endpoint will be mapped internally. This URL will be our Login form post action.
+                    .usernameParameter(WebConsts.PARAM_KEY_USERNAME)
+                    .passwordParameter(WebConsts.PARAM_KEY_PASSWORD)
                     .permitAll() // We re permitting all for login page
                     .successHandler(teaMachineAuthSuccessHandler) // .defaultSuccessUrl("/welcome") // If the login is successful, user will be redirected to this URL.
                     .failureHandler(teaMachineAuthFailureHandler);
@@ -75,7 +75,7 @@ public class SecurityChainConfig {
                         //.logoutSuccessUrl("/bye")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID") // 如果你使用cookie来传递session id
+                        .deleteCookies(WebConsts.COOKIE_KEY_JSESSIONID) // 如果你使用cookie来传递session id
         );
 
         // 允许跨域请求的OPTIONS请求
@@ -99,6 +99,8 @@ public class SecurityChainConfig {
                 .antMatchers(WebConsts.ANT_PATTERN_DEPLOY_PATH).hasAnyRole(
                         PermitActEnum.DEPLOY_MGT.getPermitActCode())
                 .antMatchers(WebConsts.ANT_PATTERN_MACHINE_PATH).hasAnyRole(
+                        PermitActEnum.MACHINE_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_ANDROID_PATH).hasAnyRole(
                         PermitActEnum.MACHINE_MGT.getPermitActCode())
                 // 用户
                 .antMatchers(WebConsts.ANT_PATTERN_ROLE_LIST_PATH).hasAnyRole(

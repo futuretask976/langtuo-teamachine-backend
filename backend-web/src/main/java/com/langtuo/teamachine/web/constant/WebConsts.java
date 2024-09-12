@@ -60,11 +60,14 @@ public class WebConsts {
     /**
      * 授权处理路径
      */
+    public static final String ANT_PATTERN_LOGIN_PATH = "/login";
+    public static final String ANT_PATTERN_LOGIN_PROCESSING_PATH = "/login-processing";
     public static final String ANT_PATTERN_SUMMARY_CHART_PATH = "/summarychart/**";
     // 设备
     public static final String ANT_PATTERN_MODEL_PATH = "/deviceset/model/**";
     public static final String ANT_PATTERN_DEPLOY_PATH = "/deviceset/deploy/**";
     public static final String ANT_PATTERN_MACHINE_PATH = "/deviceset/machine/**";
+    public static final String ANT_PATTERN_ANDROID_PATH = "/deviceset/android/**";
     // 用户
     public static final String ANT_PATTERN_ROLE_LIST_PATH = "/userset/role/list/**";
     public static final String ANT_PATTERN_PERMITACT_LIST_PATH = "/userset/permitact/list/**";
@@ -111,4 +114,15 @@ public class WebConsts {
     public static final String ROLE_MATCH_PREFIX = "ROLE_";
     public static final String SPECIAL_PERMIT_ACT_CODE_MACHINE = "machine";
     public static final String SPECIAL_PERMIT_ACT_CODE_TENANT_MGT = "tenantMgt";
+
+    /**
+     * Cookie 常量
+     */
+    public static final String COOKIE_KEY_JSESSIONID = "JSESSIONID";
+
+    /**
+     * 请求参数常量
+     */
+    public static final String PARAM_KEY_USERNAME = "username";
+    public static final String PARAM_KEY_PASSWORD = "password";
 }
