@@ -35,6 +35,21 @@ public class RegexUtils {
         return false;
     }
 
+    public static boolean isValidVersion(String input, boolean required) {
+        if (StringUtils.isBlank(input)) {
+            if (!required) {
+                return true;
+            }
+        } else {
+            String pattern = "^\\d+(\\.\\d+){1,2}$";
+            boolean isMatch = Pattern.matches(pattern, input);
+            if (isMatch) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isValidComment(String input, boolean required) {
         if (StringUtils.isBlank(input)) {
             if (!required) {
@@ -66,14 +81,9 @@ public class RegexUtils {
     }
 
     public static void main(String args[]) {
-//        System.out.println(isValidStr(null, true));
-//        System.out.println(isValidStr("", true));
-//        System.out.println(isValidStr(null, false));
-//        System.out.println(isValidStr("", false));
-//        System.out.println(isValidStr("aAbce01234", false));
-//        System.out.println(isValidStr("aAbce_01234", false));
-//        System.out.println(isValidStr("aAbce-01234", false));
-        System.out.println(isValidName("大杯-五分糖", true));
-        System.out.println(isValidName("SPEC_ITEM_BIG-SPEC_ITEM_5_SWEET", true));
+        String[] versions = {"1.2.3", "1.2", "1.2.3.4", "invalid", "1", "1.a.3"};
+        for (String version : versions) {
+            System.out.println(version + " is valid: " + isValidVersion(version, true));
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.langtuo.teamachine.api.request.device;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -32,6 +33,12 @@ public class AndroidAppPutRequest {
      * @return
      */
     public boolean isValid() {
+        if (!RegexUtils.isValidVersion(version, true)) {
+            return false;
+        }
+        if (StringUtils.isBlank(ossPath)) {
+            return false;
+        }
         if (!RegexUtils.isValidCode(comment, false)) {
             return false;
         }
