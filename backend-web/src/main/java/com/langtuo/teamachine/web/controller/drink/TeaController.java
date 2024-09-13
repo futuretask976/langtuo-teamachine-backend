@@ -38,8 +38,8 @@ public class TeaController {
     private MessageSource messageSource;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<TeaDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "teaCode") String teaCode) {
+    public TeaMachineResult<TeaDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("teaCode") String teaCode) {
         TeaMachineResult<TeaDTO> rtn = service.getByCode(tenantCode, teaCode);
         return rtn;
     }
@@ -52,7 +52,8 @@ public class TeaController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<TeaDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("teaCode") String teaCode, @RequestParam("teaName") String teaName,
+            @RequestParam(name = "teaCode", required = false) String teaCode,
+            @RequestParam(name = "teaName", required = false) String teaName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<TeaDTO>> rtn = service.search(tenantCode, teaCode, teaName,
                 pageNum, pageSize);
@@ -66,14 +67,14 @@ public class TeaController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "teaCode") String teaCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("teaCode") String teaCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, teaCode);
         return rtn;
     }
 
     @GetMapping("/export")
-    public ResponseEntity<byte[]> exportExcel(@RequestParam(name = "tenantCode") String tenantCode) {
+    public ResponseEntity<byte[]> exportExcel(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
         XSSFWorkbook xssfWorkbook = getModel(rtn);
 
@@ -97,7 +98,7 @@ public class TeaController {
     }
 
     @PostMapping("/upload")
-    public TeaMachineResult<Void> uploadExcel(@RequestParam(name = "tenantCode") String tenantCode,
+    public TeaMachineResult<Void> uploadExcel(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY));

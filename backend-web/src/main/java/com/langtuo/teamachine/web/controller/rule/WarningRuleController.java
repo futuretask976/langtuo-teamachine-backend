@@ -19,8 +19,8 @@ public class WarningRuleController {
     private WarningRuleMgtService service;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<WarningRuleDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "warningRuleCode") String warningRuleCode) {
+    public TeaMachineResult<WarningRuleDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("warningRuleCode") String warningRuleCode) {
         TeaMachineResult<WarningRuleDTO> rtn = service.getByCode(tenantCode, warningRuleCode);
         return rtn;
     }
@@ -34,7 +34,8 @@ public class WarningRuleController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<WarningRuleDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("warningRuleCode") String warningRuleCode, @RequestParam("warningRuleName") String warningRuleName,
+            @RequestParam(name = "warningRuleCode", required = false) String warningRuleCode,
+            @RequestParam(name = "warningRuleName", required = false) String warningRuleName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<WarningRuleDTO>> rtn = service.search(tenantCode, warningRuleCode, warningRuleName,
                 pageNum, pageSize);
@@ -48,8 +49,8 @@ public class WarningRuleController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "warningRuleCode") String warningRuleCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("warningRuleCode") String warningRuleCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, warningRuleCode);
         return rtn;
     }
@@ -61,8 +62,8 @@ public class WarningRuleController {
     }
 
     @GetMapping(value = "/dispatch/get")
-    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByMenuCode(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "warningRuleCode") String warningRuleCode) {
+    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByMenuCode(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("warningRuleCode") String warningRuleCode) {
         TeaMachineResult<WarningRuleDispatchDTO> rtn = service.getDispatchByWarningRuleCode(tenantCode, warningRuleCode);
         return rtn;
     }

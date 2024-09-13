@@ -17,8 +17,8 @@ public class RoleController {
     private RoleMgtService service;
     
     @GetMapping(value = "/get")
-    public TeaMachineResult<RoleDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "roleCode") String roleCode) {
+    public TeaMachineResult<RoleDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("roleCode") String roleCode) {
         TeaMachineResult<RoleDTO> rtn = service.getByCode(tenantCode, roleCode);
         return rtn;
     }
@@ -31,8 +31,8 @@ public class RoleController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<RoleDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("roleName") String roleName, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
+            @RequestParam(name = "roleName", required = false) String roleName,
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<RoleDTO>> rtn = service.search(tenantCode, roleName, pageNum, pageSize);
         return rtn;
     }
@@ -44,8 +44,8 @@ public class RoleController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "roleCode") String roleCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("roleCode") String roleCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, roleCode);
         return rtn;
     }

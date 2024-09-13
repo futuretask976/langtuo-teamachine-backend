@@ -58,6 +58,16 @@ public class MachineDTO {
     private String shopName;
 
     /**
+     * 店铺组编码
+     */
+    private String shopGroupCode;
+
+    /**
+     * 店铺组名称
+     */
+    private String shopGroupName;
+
+    /**
      * 型号编码
      */
     private String modelCode;

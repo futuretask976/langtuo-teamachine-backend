@@ -25,7 +25,7 @@ public class TenantController {
     private MessageSource messageSource;
     
     @GetMapping(value = "/get")
-    public TeaMachineResult<TenantDTO> get(@RequestParam(name = "tenantCode") String tenantCode) {
+    public TeaMachineResult<TenantDTO> get(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<TenantDTO> rtn = service.get(tenantCode);
         return rtn;
     }
@@ -38,8 +38,8 @@ public class TenantController {
     
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<TenantDTO>> search(@RequestParam("tenantName") String tenantName,
-            @RequestParam("contactPerson") String contactPerson, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
+            @RequestParam(name = "contactPerson", required = false) String contactPerson,
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<TenantDTO>> rtn = service.search(tenantName, contactPerson, pageNum, pageSize);
         return rtn;
     }
@@ -51,7 +51,7 @@ public class TenantController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode);
         return rtn;
     }

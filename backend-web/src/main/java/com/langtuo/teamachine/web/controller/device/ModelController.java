@@ -17,7 +17,7 @@ public class ModelController {
     private ModelMgtService service;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<ModelDTO> get(@RequestParam(name = "modelCode") String modelCode) {
+    public TeaMachineResult<ModelDTO> get(@RequestParam("modelCode") String modelCode) {
         TeaMachineResult<ModelDTO> rtn = service.get(modelCode);
         return rtn;
     }
@@ -29,7 +29,8 @@ public class ModelController {
     }
 
     @GetMapping(value = "/search")
-    public TeaMachineResult<PageDTO<ModelDTO>> search(@RequestParam("modelCode") String modelCode,
+    public TeaMachineResult<PageDTO<ModelDTO>> search(
+            @RequestParam(name = "modelCode", required = false) String modelCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<ModelDTO>> rtn = service.search(modelCode, pageNum, pageSize);
         return rtn;
@@ -42,7 +43,7 @@ public class ModelController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "modelCode") String modelCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("modelCode") String modelCode) {
         TeaMachineResult<Void> rtn = service.delete(modelCode);
         return rtn;
     }

@@ -16,13 +16,14 @@ public class AndroidAppController {
     private AndroidAppMgtService service;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<AndroidAppDTO> get(@RequestParam(name = "version") String version) {
+    public TeaMachineResult<AndroidAppDTO> get(@RequestParam("version") String version) {
         TeaMachineResult<AndroidAppDTO> rtn = service.get(version);
         return rtn;
     }
 
     @GetMapping(value = "/search")
-    public TeaMachineResult<PageDTO<AndroidAppDTO>> search(@RequestParam("version") String version,
+    public TeaMachineResult<PageDTO<AndroidAppDTO>> search(
+            @RequestParam(name = "version", required = false) String version,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<AndroidAppDTO>> rtn = service.search(version, pageNum, pageSize);
         return rtn;
@@ -35,13 +36,13 @@ public class AndroidAppController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "version") String version) {
+    public TeaMachineResult<Void> delete(@RequestParam("version") String version) {
         TeaMachineResult<Void> rtn = service.delete(version);
         return rtn;
     }
 
     @GetMapping(value = "/dispatch")
-    public TeaMachineResult<Void> dispatch(@RequestParam(name = "version") String version) {
+    public TeaMachineResult<Void> dispatch(@RequestParam("version") String version) {
         TeaMachineResult<Void> rtn = service.dispatch(version);
         return rtn;
     }

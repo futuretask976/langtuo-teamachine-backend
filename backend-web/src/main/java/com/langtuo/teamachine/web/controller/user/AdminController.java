@@ -18,15 +18,16 @@ public class AdminController {
     private AdminMgtService service;
     
     @GetMapping(value = "/get")
-    public TeaMachineResult<AdminDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "loginName") String loginName) {
+    public TeaMachineResult<AdminDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("loginName") String loginName) {
         TeaMachineResult<AdminDTO> rtn = service.get(tenantCode, loginName);
         return rtn;
     }
     
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<AdminDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("loginName") String loginName, @RequestParam("roleName") String roleName,
+            @RequestParam(name = "loginName", required = false) String loginName,
+            @RequestParam(name = "roleName", required = false) String roleName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<AdminDTO>> rtn = service.search(tenantCode, loginName, roleName, pageNum, pageSize);
         return rtn;
@@ -39,8 +40,8 @@ public class AdminController {
     }
     
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "loginName") String loginName) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("loginName") String loginName) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, loginName);
         return rtn;
     }

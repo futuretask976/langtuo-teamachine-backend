@@ -17,8 +17,8 @@ public class SpecController {
     private SpecMgtService service;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<SpecDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "specCode") String specCode) {
+    public TeaMachineResult<SpecDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("specCode") String specCode) {
         TeaMachineResult<SpecDTO> rtn = service.getByCode(tenantCode, specCode);
         return rtn;
     }
@@ -31,7 +31,8 @@ public class SpecController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<SpecDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("specCode") String specCode, @RequestParam("specName") String specName,
+            @RequestParam(name = "specCode", required = false) String specCode,
+            @RequestParam(name = "specName", required = false) String specName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<SpecDTO>> rtn = service.search(tenantCode, specCode, specName,
                 pageNum, pageSize);
@@ -45,8 +46,8 @@ public class SpecController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "specCode") String specCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("specCode") String specCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, specCode);
         return rtn;
     }

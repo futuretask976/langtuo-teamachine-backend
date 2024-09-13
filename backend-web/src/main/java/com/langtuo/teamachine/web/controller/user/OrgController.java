@@ -17,28 +17,28 @@ public class OrgController {
     private OrgMgtService service;
     
     @GetMapping(value = "/get")
-    public TeaMachineResult<OrgDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "orgName") String orgName) {
+    public TeaMachineResult<OrgDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("orgName") String orgName) {
         TeaMachineResult<OrgDTO> rtn = service.get(tenantCode, orgName);
         return rtn;
     }
     
     @GetMapping(value = "/listbydepth")
-    public TeaMachineResult<OrgDTO> listByDepth(@RequestParam(name = "tenantCode") String tenantCode) {
+    public TeaMachineResult<OrgDTO> listByDepth(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<OrgDTO> rtn = service.getTop(tenantCode);
         return rtn;
     }
     
     @GetMapping(value = "/list")
-    public TeaMachineResult<List<OrgDTO>> list(@RequestParam(name = "tenantCode") String tenantCode) {
+    public TeaMachineResult<List<OrgDTO>> list(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<List<OrgDTO>> rtn = service.list(tenantCode);
         return rtn;
     }
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<OrgDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("orgName") String orgName, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
+            @RequestParam(name = "orgName", required = false) String orgName,
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<OrgDTO>> rtn = service.search(tenantCode, orgName, pageNum, pageSize);
         return rtn;
     }
@@ -50,8 +50,8 @@ public class OrgController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "orgName") String orgName) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("orgName") String orgName) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, orgName);
         return rtn;
     }

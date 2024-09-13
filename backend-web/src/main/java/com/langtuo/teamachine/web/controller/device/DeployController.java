@@ -28,16 +28,18 @@ public class DeployController {
     private DeployMgtService service;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<DeployDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "deployCode") String deployCode) {
+    public TeaMachineResult<DeployDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("deployCode") String deployCode) {
         TeaMachineResult<DeployDTO> rtn = service.getByCode(tenantCode, deployCode);
         return rtn;
     }
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<DeployDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("deployCode") String deployCode, @RequestParam("machineCode") String machineCode,
-            @RequestParam("shopCode") String shopCode, @RequestParam(required = false, name = "state") Integer state,
+            @RequestParam(name = "deployCode", required = false) String deployCode,
+            @RequestParam(name = "machineCode", required = false) String machineCode,
+            @RequestParam(name = "shopCode", required = false) String shopCode,
+            @RequestParam(name = "state", required = false) Integer state,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<DeployDTO>> rtn = service.search(tenantCode, deployCode, machineCode, shopCode, state,
                 pageNum, pageSize);
@@ -52,25 +54,25 @@ public class DeployController {
 
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "deployCode") String deployCode) {
+            @RequestParam("deployCode") String deployCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, deployCode);
         return rtn;
     }
 
     @GetMapping(value = "/deploycode/generate")
-    public TeaMachineResult<String> generateDeployCode(@RequestParam(name = "tenantCode") String tenantCode) {
+    public TeaMachineResult<String> generateDeployCode(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<String> rtn = service.generateDeployCode();
         return rtn;
     }
 
     @GetMapping(value = "/machinecode/generate")
-    public TeaMachineResult<String> generateMachineCode(@RequestParam(name = "tenantCode") String tenantCode) {
+    public TeaMachineResult<String> generateMachineCode(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<String> rtn = service.generateMachineCode();
         return rtn;
     }
 
     @GetMapping("/export")
-    public ResponseEntity<byte[]> exportExcel(@RequestParam(name = "tenantCode") String tenantCode) {
+    public ResponseEntity<byte[]> exportExcel(@RequestParam("tenantCode") String tenantCode) {
         TeaMachineResult<XSSFWorkbook> rtn = service.exportByExcel(tenantCode);
         XSSFWorkbook xssfWorkbook = getModel(rtn);
 

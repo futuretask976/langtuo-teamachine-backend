@@ -18,16 +18,15 @@ public class OrderReportController {
     private OrderReportService orderReportService;
 
     @GetMapping(value = "/calc")
-    public TeaMachineResult<Void> calc(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "orderCreatedDay") String orderCreatedDay) {
+    public TeaMachineResult<Void> calc(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("orderCreatedDay") String orderCreatedDay) {
         TeaMachineResult<Void> rtn = orderReportService.calc(tenantCode, orderCreatedDay);
         return rtn;
     }
 
     @GetMapping(value = "/amtreport/search")
-    public TeaMachineResult<PageDTO<OrderAmtReportDTO>> searchAmtReport(
-            @RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "orderCreatedDay") String orderCreatedDay,
+    public TeaMachineResult<PageDTO<OrderAmtReportDTO>> searchAmtReport(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("orderCreatedDay") String orderCreatedDay,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<OrderAmtReportDTO>> rtn = orderReportService.searchAmtReport(tenantCode,
                 orderCreatedDay, pageNum, pageSize);
@@ -36,10 +35,10 @@ public class OrderReportController {
 
     @GetMapping(value = "/teareport/search")
     public TeaMachineResult<PageDTO<OrderTeaReportDTO>> searchTeaReportReport(
-            @RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "orderCreatedDay") String orderCreatedDay,
-            @RequestParam(name = "shopGroupCode") String shopGroupCode,
-            @RequestParam(name = "shopCode") String shopCode,
+            @RequestParam("tenantCode") String tenantCode,
+            @RequestParam("orderCreatedDay") String orderCreatedDay,
+            @RequestParam(name = "shopGroupCode", required = false) String shopGroupCode,
+            @RequestParam(name = "shopCode", required = false) String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<OrderTeaReportDTO>> rtn = orderReportService.searchTeaReport(tenantCode,
                 orderCreatedDay, shopGroupCode, shopCode, pageNum, pageSize);
@@ -48,10 +47,10 @@ public class OrderReportController {
 
     @GetMapping(value = "/specitemreport/search")
     public TeaMachineResult<PageDTO<OrderSpecItemReportDTO>> searchSpecItemReportReport(
-            @RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "orderCreatedDay") String orderCreatedDay,
-            @RequestParam(name = "shopGroupCode") String shopGroupCode,
-            @RequestParam(name = "shopCode") String shopCode,
+            @RequestParam("tenantCode") String tenantCode,
+            @RequestParam("orderCreatedDay") String orderCreatedDay,
+            @RequestParam(name = "shopGroupCode", required = false) String shopGroupCode,
+            @RequestParam(name = "shopCode", required = false) String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<OrderSpecItemReportDTO>> rtn =
                 orderReportService.searchSpecItemReport(tenantCode, orderCreatedDay, shopGroupCode, shopCode,
@@ -61,10 +60,10 @@ public class OrderReportController {
 
     @GetMapping(value = "/toppingreport/search")
     public TeaMachineResult<PageDTO<OrderToppingReportDTO>> searchToppingReportReport(
-            @RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "orderCreatedDay") String orderCreatedDay,
-            @RequestParam(name = "shopGroupCode") String shopGroupCode,
-            @RequestParam(name = "shopCode") String shopCode,
+            @RequestParam("tenantCode") String tenantCode,
+            @RequestParam("orderCreatedDay") String orderCreatedDay,
+            @RequestParam(name = "shopGroupCode", required = false) String shopGroupCode,
+            @RequestParam(name = "shopCode", required = false) String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<OrderToppingReportDTO>> rtn =
                 orderReportService.searchToppingReport(tenantCode, orderCreatedDay, shopGroupCode, shopCode,

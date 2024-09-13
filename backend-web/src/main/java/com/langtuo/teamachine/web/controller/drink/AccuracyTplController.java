@@ -17,8 +17,8 @@ public class AccuracyTplController {
     private AccuracyTplMgtService service;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<AccuracyTplDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "templateCode") String templateCode) {
+    public TeaMachineResult<AccuracyTplDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("templateCode") String templateCode) {
         TeaMachineResult<AccuracyTplDTO> rtn = service.getByCode(tenantCode, templateCode);
         return rtn;
     }
@@ -31,7 +31,8 @@ public class AccuracyTplController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<AccuracyTplDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("templateCode") String templateCode, @RequestParam("templateName") String templateName,
+            @RequestParam(name = "templateCode", required = false) String templateCode,
+            @RequestParam(name = "templateName", required = false) String templateName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<AccuracyTplDTO>> rtn = service.search(tenantCode, templateCode, templateName,
                 pageNum, pageSize);
@@ -45,8 +46,8 @@ public class AccuracyTplController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "templateCode") String templateCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("templateCode") String templateCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, templateCode);
         return rtn;
     }

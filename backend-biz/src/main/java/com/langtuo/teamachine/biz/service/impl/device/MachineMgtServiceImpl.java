@@ -15,8 +15,10 @@ import com.langtuo.teamachine.biz.service.util.MessageUtils;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
+import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
+import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +42,9 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Resource
     private ShopAccessor shopAccessor;
+
+    @Resource
+    private ShopGroupAccessor shopGroupAccessor;
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
@@ -233,6 +238,13 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             dto.setShopCode(shopPO.getShopCode());
             dto.setShopName(shopPO.getShopName());
         }
+
+        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(),
+                shopPO.getShopGroupCode());
+        if (shopGroupPO != null) {
+            dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
+            dto.setShopGroupName(shopGroupPO.getShopGroupName());
+        }
         return dto;
     }
 
@@ -249,7 +261,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         po.setModelCode(deployPO.getModelCode());
         po.setShopCode(deployPO.getShopCode());
         po.setMachineName(null);
-        po.setState(1);
+        po.setState(BizConsts.STATE_ENABLED);
         po.setMaintainUntil(null);
         po.setValidUntil(null);
         return po;

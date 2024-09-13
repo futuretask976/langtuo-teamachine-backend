@@ -18,8 +18,8 @@ public class MachineController {
     private MachineMgtService service;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<MachineDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "machineCode") String machineCode) {
+    public TeaMachineResult<MachineDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("machineCode") String machineCode) {
         TeaMachineResult<MachineDTO> rtn = service.getByCode(tenantCode, machineCode);
         return rtn;
     }
@@ -32,8 +32,10 @@ public class MachineController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<MachineDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("machineCode") String machineCode, @RequestParam("screenCode") String screenCode,
-            @RequestParam("elecBoardCode") String elecBoardCode, @RequestParam("shopCode") String shopCode,
+            @RequestParam(name = "machineCode", required = false) String machineCode,
+            @RequestParam(name = "screenCode", required = false) String screenCode,
+            @RequestParam(name = "elecBoardCode", required = false) String elecBoardCode,
+            @RequestParam(name = "shopCode", required = false) String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<MachineDTO>> rtn = service.search(tenantCode, machineCode, screenCode, elecBoardCode,
                 shopCode, pageNum, pageSize);
@@ -53,8 +55,8 @@ public class MachineController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "machineCode") String machineCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("machineCode") String machineCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, machineCode);
         return rtn;
     }

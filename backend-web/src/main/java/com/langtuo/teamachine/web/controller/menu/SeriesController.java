@@ -17,8 +17,8 @@ public class SeriesController {
     private SeriesMgtService service;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<SeriesDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "seriesCode") String seriesCode) {
+    public TeaMachineResult<SeriesDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("seriesCode") String seriesCode) {
         TeaMachineResult<SeriesDTO> rtn = service.getByCode(tenantCode, seriesCode);
         return rtn;
     }
@@ -31,7 +31,8 @@ public class SeriesController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<SeriesDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("seriesCode") String seriesCode, @RequestParam("seriesName") String seriesName,
+            @RequestParam(name = "seriesCode", required = false) String seriesCode,
+            @RequestParam(name = "seriesName", required = false) String seriesName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<SeriesDTO>> rtn = service.search(tenantCode, seriesCode, seriesName,
                 pageNum, pageSize);
@@ -45,8 +46,8 @@ public class SeriesController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "seriesCode") String seriesCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("seriesCode") String seriesCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, seriesCode);
         return rtn;
     }

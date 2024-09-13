@@ -17,8 +17,8 @@ public class ShopGroupController {
     private ShopGroupMgtService service;
     
     @GetMapping(value = "/get")
-    public TeaMachineResult<ShopGroupDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "shopGroupCode") String shopGroupCode) {
+    public TeaMachineResult<ShopGroupDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("shopGroupCode") String shopGroupCode) {
         TeaMachineResult<ShopGroupDTO> rtn = service.getByCode(tenantCode, shopGroupCode);
         return rtn;
     }
@@ -37,8 +37,8 @@ public class ShopGroupController {
     
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<ShopGroupDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopGroupName") String shopGroupName, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
+            @RequestParam(name = "shopGroupName", required = false) String shopGroupName,
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<ShopGroupDTO>> rtn = service.search(tenantCode, shopGroupName, pageNum, pageSize);
         return rtn;
     }
@@ -50,8 +50,8 @@ public class ShopGroupController {
     }
     
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "shopGroupCode") String shopGroupCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("shopGroupCode") String shopGroupCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, shopGroupCode);
         return rtn;
     }

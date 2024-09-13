@@ -23,7 +23,8 @@ public class InvalidActRecordController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<InvalidActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("shopGroupCode") String shopGroupCode, @RequestParam("shopCode") String shopCode,
+            @RequestParam(name = "shopGroupCode", required = false) String shopGroupCode,
+            @RequestParam(name = "shopCode", required = false) String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<InvalidActRecordDTO>> rtn = service.search(tenantCode, shopGroupCode, shopCode,
                 pageNum, pageSize);

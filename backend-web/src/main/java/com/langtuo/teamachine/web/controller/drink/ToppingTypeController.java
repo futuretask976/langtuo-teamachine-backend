@@ -17,8 +17,8 @@ public class ToppingTypeController {
     private ToppingTypeMgtService service;
 
     @GetMapping(value = "/get")
-    public TeaMachineResult<ToppingTypeDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "toppingTypeCode") String toppingTypeCode) {
+    public TeaMachineResult<ToppingTypeDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("toppingTypeCode") String toppingTypeCode) {
         TeaMachineResult<ToppingTypeDTO> rtn = service.getByCode(tenantCode, toppingTypeCode);
         return rtn;
     }
@@ -31,8 +31,8 @@ public class ToppingTypeController {
 
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<ToppingTypeDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("toppingTypeCode") String toppingTypeCode,
-            @RequestParam("toppingTypeName") String toppingTypeName,
+            @RequestParam(name = "toppingTypeCode", required = false) String toppingTypeCode,
+            @RequestParam(name = "toppingTypeName", required = false) String toppingTypeName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<ToppingTypeDTO>> rtn = service.search(tenantCode, toppingTypeCode, toppingTypeName,
                 pageNum, pageSize);
@@ -46,8 +46,8 @@ public class ToppingTypeController {
     }
 
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "toppingTypeCode") String toppingTypeCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("toppingTypeCode") String toppingTypeCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, toppingTypeCode);
         return rtn;
     }

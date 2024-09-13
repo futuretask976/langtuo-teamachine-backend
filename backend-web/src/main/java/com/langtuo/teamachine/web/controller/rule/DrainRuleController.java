@@ -19,8 +19,8 @@ public class DrainRuleController {
     private DrainRuleMgtService service;
     
     @GetMapping(value = "/get")
-    public TeaMachineResult<DrainRuleDTO> get(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "drainRuleCode") String drainRuleCode) {
+    public TeaMachineResult<DrainRuleDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("drainRuleCode") String drainRuleCode) {
         TeaMachineResult<DrainRuleDTO> rtn = service.getByCode(tenantCode, drainRuleCode);
         return rtn;
     }
@@ -34,7 +34,8 @@ public class DrainRuleController {
     
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<DrainRuleDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam("drainRuleCode") String drainRuleCode, @RequestParam("drainRuleName") String drainRuleName,
+            @RequestParam(name = "drainRuleCode", required = false) String drainRuleCode,
+            @RequestParam(name = "drainRuleName", required = false) String drainRuleName,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<DrainRuleDTO>> rtn = service.search(tenantCode, drainRuleCode, drainRuleName,
                 pageNum, pageSize);
@@ -48,8 +49,8 @@ public class DrainRuleController {
     }
     
     @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "drainRuleCode") String drainRuleCode) {
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("drainRuleCode") String drainRuleCode) {
         TeaMachineResult<Void> rtn = service.delete(tenantCode, drainRuleCode);
         return rtn;
     }
@@ -61,8 +62,8 @@ public class DrainRuleController {
     }
     
     @GetMapping(value = "/dispatch/get")
-    public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByMenuCode(@RequestParam(name = "tenantCode") String tenantCode,
-            @RequestParam(name = "drainRuleCode") String drainRuleCode) {
+    public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByMenuCode(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("drainRuleCode") String drainRuleCode) {
         TeaMachineResult<DrainRuleDispatchDTO> rtn = service.getDispatchByDrainRuleCode(tenantCode, drainRuleCode);
         return rtn;
     }
