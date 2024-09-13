@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.device.AndroidAppDTO;
+import com.langtuo.teamachine.api.model.device.AndroidAppDispatchDTO;
+import com.langtuo.teamachine.api.request.device.AndroidAppDispatchPutRequest;
 import com.langtuo.teamachine.api.request.device.AndroidAppPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.AndroidAppMgtService;
@@ -12,6 +14,8 @@ import com.langtuo.teamachine.biz.service.constant.BizConsts;
 import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.biz.service.util.MessageUtils;
 import com.langtuo.teamachine.dao.accessor.device.AndroidAppAccessor;
+import com.langtuo.teamachine.dao.accessor.device.AndroidAppDispatchAccessor;
+import com.langtuo.teamachine.dao.po.device.AndroidAppDispatchPO;
 import com.langtuo.teamachine.dao.po.device.AndroidAppPO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +31,9 @@ import java.util.stream.Collectors;
 public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     @Resource
     private AndroidAppAccessor androidAppAccessor;
+
+    @Resource
+    private AndroidAppDispatchAccessor androidAppDispatchAccessor;
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
@@ -104,18 +111,56 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> dispatch(String version) {
-        if (StringUtils.isBlank(version)) {
+    public TeaMachineResult<Void> putDispatch(AndroidAppDispatchPutRequest request) {
+        if (request == null) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+        List<AndroidAppDispatchPO> poList = convert(request);
+
+        TeaMachineResult<Void> teaMachineResult;
+        try {
+            int deleted = androidAppDispatchAccessor.deleteByAndroidAppVersion(request.getTenantCode(),
+                    request.getVersion());
+            poList.forEach(po -> {
+                androidAppDispatchAccessor.insert(po);
+            });
+            teaMachineResult = TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("putDispatch error: " + e.getMessage(), e);
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
         jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_ANDROID_APP_DISPATCHED);
-        jsonPayload.put(BizConsts.JSON_KEY_ANDROID_APP_VER, version);
+        jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
+        jsonPayload.put(BizConsts.JSON_KEY_VERSION, request.getVersion());
         asyncDispatcher.dispatch(jsonPayload);
 
-        return TeaMachineResult.success();
+        return teaMachineResult;
+    }
+
+    @Override
+    public TeaMachineResult<AndroidAppDispatchDTO> getDispatchByVersion(String tenantCode, String version) {
+        TeaMachineResult<AndroidAppDispatchDTO> teaMachineResult;
+        try {
+            AndroidAppDispatchDTO dto = new AndroidAppDispatchDTO();
+            dto.setVersion(version);
+
+            List<AndroidAppDispatchPO> poList = androidAppDispatchAccessor.selectListByAndroidAppVersion(tenantCode,
+                    version);
+            if (!CollectionUtils.isEmpty(poList)) {
+                dto.setShopGroupCodeList(poList.stream()
+                        .map(po -> po.getShopGroupCode())
+                        .collect(Collectors.toList()));
+            }
+
+            teaMachineResult = TeaMachineResult.success(dto);
+        } catch (Exception e) {
+            log.error("listDispatchByMenuCode error: " + e.getMessage(), e);
+            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+        }
+        return teaMachineResult;
     }
 
     private List<AndroidAppDTO> convertToAndroidAppDTO(List<AndroidAppPO> poList) {
@@ -154,5 +199,19 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         po.setOssPath(request.getOssPath());
         po.setComment(request.getComment());
         return po;
+    }
+
+    private List<AndroidAppDispatchPO> convert(AndroidAppDispatchPutRequest request) {
+        String tenantCode = request.getTenantCode();
+        String version = request.getVersion();
+
+        return request.getShopGroupCodeList().stream()
+                .map(shopGroupCode -> {
+                    AndroidAppDispatchPO po = new AndroidAppDispatchPO();
+                    po.setTenantCode(tenantCode);
+                    po.setVersion(version);
+                    po.setShopGroupCode(shopGroupCode);
+                    return po;
+                }).collect(Collectors.toList());
     }
 }

@@ -64,6 +64,7 @@ public class WebConsts {
     public static final String ANT_PATTERN_LOGOUT_PATH = "/logout";
     public static final String ANT_PATTERN_LOGIN_PROCESSING_PATH = "/login-processing";
     public static final String ANT_PATTERN_SUMMARY_CHART_PATH = "/summarychart/**";
+    public static final String ANT_PATTERN_OSS_PATH = "/securityset/oss/**";
     // 设备
     public static final String ANT_PATTERN_MODEL_PATH = "/deviceset/model/**";
     public static final String ANT_PATTERN_DEPLOY_PATH = "/deviceset/deploy/**";
@@ -91,7 +92,6 @@ public class WebConsts {
     public static final String ANT_PATTERN_TEA_TYPE_PATH = "/drinkset/tea/type/**";
     public static final String ANT_PATTERN_TEA_PATH = "/drinkset/tea/**";
     public static final String ANT_PATTERN_ACCURACY_PATH = "/drinkset/accuracy/**";
-    public static final String ANT_PATTERN_OSS_PATH = "/securityset/oss/**";
     // 菜单
     public static final String ANT_PATTERN_SERIES_LIST_PATH = "/menuset/series/list/**";
     public static final String ANT_PATTERN_SERIES_PATH = "/menuset/series/**";

@@ -214,7 +214,6 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         if (request == null) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
-
         List<MenuDispatchPO> poList = convert(request);
 
         TeaMachineResult<Void> teaMachineResult;
@@ -224,7 +223,6 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             poList.forEach(po -> {
                 menuDispatchAccessor.insert(po);
             });
-
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("putDispatch error: " + e.getMessage(), e);
@@ -233,7 +231,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_MENU_UPDATED);
+        jsonPayload.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_MENU_DISPATCHED);
         jsonPayload.put(BizConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
         jsonPayload.put(BizConsts.JSON_KEY_MENU_CODE, request.getMenuCode());
         asyncDispatcher.dispatch(jsonPayload);

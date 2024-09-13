@@ -66,7 +66,7 @@ public class AsyncDispatcher implements InitializingBean {
         // drink 相关
         workerMap.put(BizConsts.BIZ_CODE_ACCURACY_TPL_UPDATED, jsonPayload -> new AccuracyTplDispatchWorker(jsonPayload));
         // menu 相关
-        workerMap.put(BizConsts.BIZ_CODE_MENU_UPDATED, jsonPayload -> new MenuDispatchWorker(jsonPayload));
+        workerMap.put(BizConsts.BIZ_CODE_MENU_DISPATCHED, jsonPayload -> new MenuDispatchWorker(jsonPayload));
         workerMap.put(BizConsts.BIZ_CODE_MENU_LIST_REQUESTED, jsonPayload -> new MenuDispatch4InitWorker(jsonPayload));
         // rule 相关
         workerMap.put(BizConsts.BIZ_CODE_DRAIN_RULE_DISPATCHED, jsonPayload -> new DrainRuleDispatchWorker(jsonPayload));

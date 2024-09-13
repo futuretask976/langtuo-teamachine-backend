@@ -39,7 +39,7 @@ public class AndroidAppPutRequest {
         if (StringUtils.isBlank(ossPath)) {
             return false;
         }
-        if (!RegexUtils.isValidCode(comment, false)) {
+        if (!RegexUtils.isValidComment(comment, false)) {
             return false;
         }
         return true;

@@ -2,6 +2,8 @@ package com.langtuo.teamachine.web.controller.device;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.device.AndroidAppDTO;
+import com.langtuo.teamachine.api.model.device.AndroidAppDispatchDTO;
+import com.langtuo.teamachine.api.request.device.AndroidAppDispatchPutRequest;
 import com.langtuo.teamachine.api.request.device.AndroidAppPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.AndroidAppMgtService;
@@ -35,15 +37,16 @@ public class AndroidAppController {
         return rtn;
     }
 
-    @DeleteMapping(value = "/delete")
-    public TeaMachineResult<Void> delete(@RequestParam("version") String version) {
-        TeaMachineResult<Void> rtn = service.delete(version);
+    @PutMapping(value = "/dispatch/put")
+    public TeaMachineResult<Void> putDispatch(@RequestBody AndroidAppDispatchPutRequest request) {
+        TeaMachineResult<Void> rtn = service.putDispatch(request);
         return rtn;
     }
 
-    @GetMapping(value = "/dispatch")
-    public TeaMachineResult<Void> dispatch(@RequestParam("version") String version) {
-        TeaMachineResult<Void> rtn = service.dispatch(version);
+    @GetMapping(value = "/dispatch/get")
+    public TeaMachineResult<AndroidAppDispatchDTO> getDispatchByMenuCode(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("version") String version) {
+        TeaMachineResult<AndroidAppDispatchDTO> rtn = service.getDispatchByVersion(tenantCode, version);
         return rtn;
     }
 }

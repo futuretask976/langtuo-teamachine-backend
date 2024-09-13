@@ -85,7 +85,6 @@ public class MenuDispatchWorker implements Runnable {
         jsonMsg.put(BizConsts.JSON_KEY_BIZ_CODE, BizConsts.BIZ_CODE_DISPATCH_MENU);
         jsonMsg.put(BizConsts.JSON_KEY_MD5_AS_HEX, md5AsHex);
         jsonMsg.put(BizConsts.JSON_KEY_OSS_PATH, ossPath);
-        System.out.println(jsonMsg.toJSONString());
 
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();

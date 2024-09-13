@@ -92,6 +92,10 @@ public class SecurityChainConfig {
 
         // 配置授权处理，授权管理器可以配置多个
         httpSecurity.authorizeRequests()
+                // 安全
+                .antMatchers(WebConsts.ANT_PATTERN_OSS_PATH).hasAnyRole(
+                        PermitActEnum.TEA_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
                 // 设备
                 .antMatchers(WebConsts.ANT_PATTERN_MODEL_PATH).hasAnyRole(
                         PermitActEnum.MODEL_MGT.getPermitActCode(),
@@ -153,8 +157,6 @@ public class SecurityChainConfig {
                 .antMatchers(WebConsts.ANT_PATTERN_ACCURACY_PATH).hasAnyRole(
                         PermitActEnum.ACCURACY_MGT.getPermitActCode(),
                         WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
-                .antMatchers(WebConsts.ANT_PATTERN_OSS_PATH).hasAnyRole(
-                        PermitActEnum.TEA_MGT.getPermitActCode())
                 // 菜单
                 .antMatchers(WebConsts.ANT_PATTERN_SERIES_LIST_PATH).hasAnyRole(
                         PermitActEnum.SERIES_MGT.getPermitActCode(),
