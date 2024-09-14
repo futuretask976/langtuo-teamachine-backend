@@ -11,6 +11,8 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
+import com.langtuo.teamachine.dao.po.rule.DrainRulePO;
+import com.langtuo.teamachine.dao.po.rule.DrainRuleToppingPO;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -110,22 +112,49 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         if (request == null || !request.isValid()) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
-        ShopGroupPO shopGroupPO = convert(request);
 
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            ShopGroupPO exist = shopGroupAccessor.selectOneByShopGroupCode(request.getTenantCode(), request.getShopGroupCode());
-            if (exist != null) {
-                int updated = shopGroupAccessor.update(shopGroupPO);
-            } else {
-                int inserted = shopGroupAccessor.insert(shopGroupPO);
-            }
-            teaMachineResult = TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+        ShopGroupPO shopGroupPO = convert(request);
+        if (request.isNewPut()) {
+            return putNew(shopGroupPO);
+        } else {
+            return putUpdate(shopGroupPO);
         }
-        return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putNew(ShopGroupPO po) {
+        try {
+            ShopGroupPO exist = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+
+            int inserted = shopGroupAccessor.insert(po);
+            if (CommonConsts.NUM_ONE != inserted) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("shopGroupMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
+    }
+
+    private TeaMachineResult<Void> putUpdate(ShopGroupPO po) {
+        try {
+            ShopGroupPO exist = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+
+            int updated = shopGroupAccessor.insert(po);
+            if (CommonConsts.NUM_ONE != updated) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("shopGroupMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override
