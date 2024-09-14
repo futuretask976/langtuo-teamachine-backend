@@ -52,10 +52,10 @@ public class MenuSeriesRelAccessor {
         return inserted;
     }
 
-    public int deleteBySeriesCode(String tenantCode, String seriesCode) {
-        int deleted = mapper.delete(tenantCode, seriesCode);
+    public int deleteByMenuCode(String tenantCode, String menuCode) {
+        int deleted = mapper.delete(tenantCode, menuCode);
         if (deleted == DaoConsts.DELETED_ONE_ROW) {
-            deleteCacheList(tenantCode, seriesCode);
+            deleteCacheList(tenantCode, menuCode);
         }
         return deleted;
     }

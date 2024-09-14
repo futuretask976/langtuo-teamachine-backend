@@ -163,32 +163,60 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        MenuPO seriesPO = convertMenuPO(request);
-        List<MenuSeriesRelPO> menuSeriesRelPOList = convertToMenuSeriesRelPO(request);
-
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            MenuPO exist = menuAccessor.selectOneByMenuCode(seriesPO.getTenantCode(),
-                    seriesPO.getMenuCode());
-            if (exist != null) {
-                int updated = menuAccessor.update(seriesPO);
-            } else {
-                int inserted = menuAccessor.insert(seriesPO);
-            }
-
-            int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteBySeriesCode(seriesPO.getTenantCode(), seriesPO.getMenuCode());
-            if (!CollectionUtils.isEmpty(menuSeriesRelPOList)) {
-                menuSeriesRelPOList.forEach(seriesTeaRelPO -> {
-                    menuSeriesRelAccessor.insert(seriesTeaRelPO);
-                });
-            }
-
-            teaMachineResult = TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        MenuPO po = convertMenuPO(request);
+        List<MenuSeriesRelPO> seriesRelPOList = convertToMenuSeriesRelPO(request);
+        if (request.isNewPut()) {
+            return putNew(po, seriesRelPOList);
+        } else {
+            return putUpdate(po, seriesRelPOList);
         }
-        return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putNew(MenuPO po, List<MenuSeriesRelPO> seriesRelPOlist) {
+        try {
+            int inserted = menuAccessor.insert(po);
+            if (inserted != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+
+            int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteByMenuCode(po.getTenantCode(), po.getMenuCode());
+            for (MenuSeriesRelPO seriesRelPO : seriesRelPOlist) {
+                int inserted4Pipeline = menuSeriesRelAccessor.insert(seriesRelPO);
+                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                }
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("menuMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
+    }
+
+    private TeaMachineResult<Void> putUpdate(MenuPO po, List<MenuSeriesRelPO> seriesRelPOlist) {
+        try {
+            MenuPO exist = menuAccessor.selectOneByMenuCode(po.getTenantCode(), po.getMenuCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
+            int updated = menuAccessor.update(po);
+            if (updated != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+
+            int deleted4SeriesRel = menuSeriesRelAccessor.deleteByMenuCode(po.getTenantCode(), po.getMenuCode());
+            for (MenuSeriesRelPO seriesRelPO : seriesRelPOlist) {
+                int inserted4SeriesRel = menuSeriesRelAccessor.insert(seriesRelPO);
+                if (inserted4SeriesRel != CommonConsts.NUM_ONE) {
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                }
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("menuMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override
@@ -200,7 +228,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted4Series = menuAccessor.deleteByMenuCode(tenantCode, menuCode);
-            int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteBySeriesCode(tenantCode, menuCode);
+            int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteByMenuCode(tenantCode, menuCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

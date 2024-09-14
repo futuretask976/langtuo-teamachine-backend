@@ -106,7 +106,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
         SpecPO po = convert(request);
         List<SpecItemPO> specItemPOList = convertToSpecItemPO(request);
-
         if (request.isNewPut()) {
             return putNew(po, specItemPOList);
         } else {
