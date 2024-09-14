@@ -14,8 +14,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -31,9 +29,6 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
     @Resource
     private ToppingBaseRuleMapper toppingBaseRuleMapper;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<List<ToppingDTO>> list(String tenantCode) {
@@ -104,22 +99,42 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         }
 
         ToppingPO toppingTypePO = convert(request);
-
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            ToppingPO exist = toppingAccessor.selectOneByToppingCode(toppingTypePO.getTenantCode(),
-                    toppingTypePO.getToppingCode());
-            if (exist != null) {
-                int updated = toppingAccessor.update(toppingTypePO);
-            } else {
-                int inserted = toppingAccessor.insert(toppingTypePO);
-            }
-            teaMachineResult = TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        if (request.isNewPut()) {
+            return putNew(toppingTypePO);
+        } else {
+            return putUpdate(toppingTypePO);
         }
-        return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putNew(ToppingPO po) {
+        try {
+            int inserted = toppingAccessor.insert(po);
+            if (inserted != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("toppingMgtService|putNew|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+    }
+
+    private TeaMachineResult<Void> putUpdate(ToppingPO po) {
+        try {
+            ToppingPO exist = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
+            int updated = toppingAccessor.update(po);
+            if (updated != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("toppingMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override

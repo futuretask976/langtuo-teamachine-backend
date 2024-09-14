@@ -21,8 +21,6 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -61,9 +59,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
     @Resource
     private ExcelHandlerFactory excelHandlerFactory;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<TeaDTO> getByCode(String tenantCode, String teaCode) {
@@ -138,14 +133,24 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         List<TeaUnitPO> teaUnitPOList = convertToTeaUnitPO(request);
         List<ToppingAdjustRulePO> toppingAdjustRulePOList = convertToToppingAdjustRulePO(request);
 
+        if (request.isNewPut()) {
+            return putNew(teaPO, toppingBaseRulePOList, teaUnitPOList, toppingAdjustRulePOList);
+        } else {
+            return putUpdate(teaPO, toppingBaseRulePOList, teaUnitPOList, toppingAdjustRulePOList);
+        }
+    }
 
-        TeaMachineResult<Void> teaMachineResult;
+    private TeaMachineResult<Void> putNew(TeaPO teaPO, List<ToppingBaseRulePO> toppingBaseRulePOList,
+            List<TeaUnitPO> teaUnitPOList, List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
         try {
             TeaPO exist = teaAccessor.selectOneByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             if (exist != null) {
-                int updated = teaAccessor.update(teaPO);
-            } else {
-                int inserted = teaAccessor.insert(teaPO);
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
+            int inserted4Tea = teaAccessor.insert(teaPO);
+            if (CommonConsts.NUM_ONE != inserted4Tea) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted4TeaUnit = teaUnitAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
@@ -162,13 +167,45 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             toppingAdjustRulePOList.forEach(item -> {
                 int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(item);
             });
-
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            log.error("specMgtService|putNew|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putUpdate(TeaPO teaPO, List<ToppingBaseRulePO> toppingBaseRulePOList,
+            List<TeaUnitPO> teaUnitPOList, List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
+        try {
+            TeaPO exist = teaAccessor.selectOneByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
+            int inserted4Tea = teaAccessor.update(teaPO);
+            if (CommonConsts.NUM_ONE != inserted4Tea) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+
+            int deleted4TeaUnit = teaUnitAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
+            teaUnitPOList.forEach(item -> {
+                int inserted4TeaUnit = teaUnitAccessor.insert(item);
+            });
+
+            int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
+            toppingBaseRulePOList.forEach(item -> {
+                int inserted4ToppingAdjustRule = toppingBaseRuleAccessor.insert(item);
+            });
+
+            int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
+            toppingAdjustRulePOList.forEach(item -> {
+                int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(item);
+            });
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("specMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override

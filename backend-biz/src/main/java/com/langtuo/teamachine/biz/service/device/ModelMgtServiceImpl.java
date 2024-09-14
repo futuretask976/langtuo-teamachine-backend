@@ -156,6 +156,14 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             if (updated != CommonConsts.NUM_ONE) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
+
+            int deleted = modelPipelineAccessor.deleteByModelCode(po.getModelCode());
+            for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
+                int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
+                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                }
+            }
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("modelMgtService|putUpdate|fatal|" + e.getMessage(), e);

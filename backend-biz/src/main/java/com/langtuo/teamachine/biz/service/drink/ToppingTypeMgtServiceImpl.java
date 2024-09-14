@@ -14,8 +14,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -26,19 +24,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     @Resource
-    private ToppingTypeAccessor accessor;
+    private ToppingTypeAccessor toppingTypeAccessor;
 
     @Resource
     private ToppingAccessor toppingAccessor;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<List<ToppingTypeDTO>> list(String tenantCode) {
         TeaMachineResult<List<ToppingTypeDTO>> teaMachineResult;
         try {
-            List<ToppingTypePO> list = accessor.selectList(tenantCode);
+            List<ToppingTypePO> list = toppingTypeAccessor.selectList(tenantCode);
             List<ToppingTypeDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
@@ -59,7 +54,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
         TeaMachineResult<PageDTO<ToppingTypeDTO>> teaMachineResult;
         try {
-            PageInfo<ToppingTypePO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
+            PageInfo<ToppingTypePO> pageInfo = toppingTypeAccessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
             List<ToppingTypeDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convert(po))
@@ -78,7 +73,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     public TeaMachineResult<ToppingTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
         TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
-            ToppingTypePO toppingTypePO = accessor.selectOneByToppingTypeCode(tenantCode, toppingTypeCode);
+            ToppingTypePO toppingTypePO = toppingTypeAccessor.selectOneByToppingTypeCode(tenantCode, toppingTypeCode);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
 
             teaMachineResult = TeaMachineResult.success(tenantDTO);
@@ -93,7 +88,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     public TeaMachineResult<ToppingTypeDTO> getByName(String tenantCode, String toppingTypeName) {
         TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
-            ToppingTypePO toppingTypePO = accessor.selectOneByToppingTypeName(tenantCode, toppingTypeName);
+            ToppingTypePO toppingTypePO = toppingTypeAccessor.selectOneByToppingTypeName(tenantCode, toppingTypeName);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
 
             teaMachineResult = TeaMachineResult.success(tenantDTO);
@@ -111,22 +106,42 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         }
 
         ToppingTypePO toppingTypePO = convert(request);
-
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            ToppingTypePO exist = accessor.selectOneByToppingTypeCode(toppingTypePO.getTenantCode(),
-                    toppingTypePO.getToppingTypeCode());
-            if (exist != null) {
-                int updated = accessor.update(toppingTypePO);
-            } else {
-                int inserted = accessor.insert(toppingTypePO);
-            }
-            teaMachineResult = TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        if (request.isNewPut()) {
+            return putNew(toppingTypePO);
+        } else {
+            return putUpdate(toppingTypePO);
         }
-        return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putNew(ToppingTypePO po) {
+        try {
+            int inserted = toppingTypeAccessor.insert(po);
+            if (inserted != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("toppingTypeMgtService|putNew|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+    }
+
+    private TeaMachineResult<Void> putUpdate(ToppingTypePO po) {
+        try {
+            ToppingTypePO exist = toppingTypeAccessor.selectOneByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
+            int updated = toppingTypeAccessor.update(po);
+            if (updated != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("toppingTypeMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override
@@ -139,7 +154,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         try {
             int countByToppingTypeCode = toppingAccessor.countByToppingTypeCode(tenantCode, toppingTypeCode);
             if (countByToppingTypeCode == CommonConsts.DB_SELECT_RESULT_EMPTY) {
-                int deleted = accessor.delete(tenantCode, toppingTypeCode);
+                int deleted = toppingTypeAccessor.delete(tenantCode, toppingTypeCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
                 teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_TOPPING_TYPE));

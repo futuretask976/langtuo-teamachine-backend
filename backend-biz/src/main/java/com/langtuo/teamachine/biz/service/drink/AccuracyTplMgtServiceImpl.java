@@ -18,8 +18,6 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -38,9 +36,6 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<List<AccuracyTplDTO>> list(String tenantCode) {
@@ -113,28 +108,15 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         if (request == null || !request.isValid()) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
+
         AccuracyTplPO po = convertToAccuracyTplPO(request);
         List<AccuracyTplToppingPO> toppingPOList = convertToAccuracyTplToppingPO(request);
 
         TeaMachineResult<Void> teaMachineResult;
-        try {
-            AccuracyTplPO exist = accuracyTplAccessor.selectOneByTplCode(po.getTenantCode(), po.getTemplateCode());
-            if (exist != null) {
-                int updated = accuracyTplAccessor.update(po);
-            } else {
-                int inserted = accuracyTplAccessor.insert(po);
-            }
-
-            int deleted = accuracyTplToppingAccessor.deleteByTplCode(request.getTenantCode(), request.getTemplateCode());
-            if (!CollectionUtils.isEmpty(toppingPOList)) {
-                toppingPOList.forEach(toppingPO -> {
-                    int inserted = accuracyTplToppingAccessor.insert(toppingPO);
-                });
-            }
-            teaMachineResult = TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        if (request.isNewPut()) {
+            teaMachineResult = putNew(po, toppingPOList);
+        } else {
+            teaMachineResult = putUpdate(po, toppingPOList);
         }
 
         // 异步发送消息准备配置信息分发
@@ -145,6 +127,53 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putNew(AccuracyTplPO po, List<AccuracyTplToppingPO> toppingPOList) {
+        try {
+            int inserted = accuracyTplAccessor.insert(po);
+            if (inserted != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+
+            int deleted = accuracyTplToppingAccessor.deleteByTplCode(po.getTenantCode(), po.getTemplateCode());
+            for (AccuracyTplToppingPO toppingPO : toppingPOList) {
+                int inserted4Pipeline = accuracyTplToppingAccessor.insert(toppingPO);
+                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                }
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("accuracyTplMgtService|putNew|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+    }
+
+    private TeaMachineResult<Void> putUpdate(AccuracyTplPO po, List<AccuracyTplToppingPO> toppingPOList) {
+        try {
+            AccuracyTplPO exist = accuracyTplAccessor.selectOneByTplCode(po.getTenantCode(), po.getTemplateCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
+            int updated = accuracyTplAccessor.update(po);
+            if (updated != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+
+            int deleted = accuracyTplToppingAccessor.deleteByTplCode(po.getTenantCode(), po.getTemplateCode());
+            for (AccuracyTplToppingPO toppingPO : toppingPOList) {
+                int inserted4Pipeline = accuracyTplToppingAccessor.insert(toppingPO);
+                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                }
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("accuracyTplMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override

@@ -17,8 +17,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -37,9 +35,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     @Resource
     private TeaUnitAccessor teaUnitAccessor;
-    
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<List<SpecDTO>> list(String tenantCode) {
@@ -109,31 +104,61 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        SpecPO specPO = convert(request);
+        SpecPO po = convert(request);
         List<SpecItemPO> specItemPOList = convertToSpecItemPO(request);
 
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            SpecPO exist = specAccessor.selectOneBySpecCode(specPO.getTenantCode(), specPO.getSpecCode());
-            if (exist != null) {
-                int updated = specAccessor.update(specPO);
-            } else {
-                int inserted = specAccessor.insert(specPO);
-            }
-
-            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(specPO.getTenantCode(), specPO.getSpecCode());
-            if (!CollectionUtils.isEmpty(specItemPOList)) {
-                specItemPOList.stream().forEach(item -> {
-                    specItemAccessor.insert(item);
-                });
-            }
-
-            teaMachineResult = TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        if (request.isNewPut()) {
+            return putNew(po, specItemPOList);
+        } else {
+            return putUpdate(po, specItemPOList);
         }
-        return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putNew(SpecPO po, List<SpecItemPO> specItemPOList) {
+        try {
+            int inserted = specAccessor.insert(po);
+            if (inserted != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+
+            int deleted = specItemAccessor.deleteBySpecCode(po.getTenantCode(), po.getSpecCode());
+            for (SpecItemPO specItemPO : specItemPOList) {
+                int inserted4Pipeline = specItemAccessor.insert(specItemPO);
+                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                }
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("specMgtService|putNew|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+    }
+
+    private TeaMachineResult<Void> putUpdate(SpecPO po, List<SpecItemPO> specItemPOList) {
+        try {
+            SpecPO exist = specAccessor.selectOneBySpecCode(po.getTenantCode(), po.getSpecCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
+            int updated = specAccessor.update(po);
+            if (updated != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+
+            int deleted = specItemAccessor.deleteBySpecCode(po.getTenantCode(), po.getSpecCode());
+            for (SpecItemPO specItemPO : specItemPOList) {
+                int inserted4Pipeline = specItemAccessor.insert(specItemPO);
+                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                }
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("specMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override
