@@ -14,8 +14,6 @@ import com.langtuo.teamachine.dao.accessor.device.AndroidAppAccessor;
 import com.langtuo.teamachine.dao.accessor.device.AndroidAppDispatchAccessor;
 import com.langtuo.teamachine.dao.po.device.AndroidAppDispatchPO;
 import com.langtuo.teamachine.dao.po.device.AndroidAppPO;
-import com.langtuo.teamachine.dao.po.user.AdminPO;
-import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
