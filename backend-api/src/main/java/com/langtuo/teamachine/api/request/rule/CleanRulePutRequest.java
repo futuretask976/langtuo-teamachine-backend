@@ -50,6 +50,11 @@ public class CleanRulePutRequest {
     private List<CleanRuleStepPutRequest> cleanRuleStepList;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

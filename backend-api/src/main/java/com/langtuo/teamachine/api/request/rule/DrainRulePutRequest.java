@@ -40,6 +40,11 @@ public class DrainRulePutRequest {
     private List<DrainRuleToppingPutRequest> toppingRuleList;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

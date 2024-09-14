@@ -1,15 +1,15 @@
 package com.langtuo.teamachine.mqtt.consume.worker.record;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
-import com.langtuo.teamachine.api.request.record.InvalidActRecordPutRequest;
-import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.record.InvalidActRecordMgtService;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
+import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
+import com.langtuo.teamachine.dao.util.SpringUtils;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
-import com.langtuo.teamachine.mqtt.util.SpringUtils;
+import com.langtuo.teamachine.mqtt.request.record.InvalidActRecordPutRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 
@@ -26,25 +26,59 @@ public class InvalidActRecordWorker implements Runnable {
         JSONArray jsonList = jsonPayload.getJSONArray(MqttConsts.RECEIVE_KEY_LIST);
         jsonList.forEach(jsonObject -> {
             InvalidActRecordPutRequest request = TypeUtils.castToJavaBean(jsonObject, InvalidActRecordPutRequest.class);
-            if (request.isValid()) {
-                requestList.add(request);
-            } else {
-                log.error("request is invalid: " + jsonObject == null ? null : JSON.toJSONString(jsonObject));
-            }
+            requestList.add(request);
         });
-        if (CollectionUtils.isEmpty(requestList)) {
-            throw new IllegalArgumentException("request list is empty");
-        }
     }
 
     @Override
     public void run() {
-        InvalidActRecordMgtService invalidActRecordMgtService = SpringUtils.getInvalidActRecordMgtService();
-        for (InvalidActRecordPutRequest request : requestList) {
-            TeaMachineResult<Void> result = invalidActRecordMgtService.put(request);
-            if (result == null || !result.isSuccess()) {
-                log.error("insert invalid act record error: " + result == null ? null : result.getErrorMsg());
-            }
+        if (CollectionUtils.isEmpty(requestList)) {
+            log.error("invalidActRecordWorker|run|illegalArgument|requestListEmpty");
         }
+
+        for (InvalidActRecordPutRequest request : requestList) {
+            put(request);
+        }
+    }
+
+    public void put(InvalidActRecordPutRequest request) {
+        if (request == null || !request.isValid()) {
+            log.error("invalidActRecordWorker|put|illegalArgument|"
+                    + request == null ? null : JSONObject.toJSONString(request));
+            return;
+        }
+
+        InvalidActRecordPO po = convert(request);
+        try {
+            InvalidActRecordAccessor invalidActRecordAccessor = SpringUtils.getInvalidActRecordAccessor();
+            InvalidActRecordPO exist = invalidActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
+            if (exist == null) {
+                int inserted = invalidActRecordAccessor.insert(po);
+                if (CommonConsts.NUM_ONE != inserted) {
+                    log.error("invalidActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+                }
+            }
+        } catch (Exception e) {
+            log.error("invalidActRecordWorker|put|fatal|" + e.getMessage(), e);
+        }
+    }
+
+    private InvalidActRecordPO convert(InvalidActRecordPutRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        InvalidActRecordPO po = new InvalidActRecordPO();
+        po.setTenantCode(request.getTenantCode());
+        po.setExtraInfo(request.getExtraInfo());
+        po.setIdempotentMark(request.getIdempotentMark());
+        po.setMachineCode(request.getMachineCode());
+        po.setShopCode(request.getShopCode());
+        po.setShopGroupCode(request.getShopGroupCode());
+        po.setInvalidTime(request.getInvalidTime());
+        po.setToppingCode(request.getToppingCode());
+        po.setPipelineNum(request.getPipelineNum());
+        po.setInvalidAmount(request.getInvalidAmount());
+        return po;
     }
 }

@@ -21,6 +21,11 @@ public class OrgPutRequest {
     private String parentOrgName;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

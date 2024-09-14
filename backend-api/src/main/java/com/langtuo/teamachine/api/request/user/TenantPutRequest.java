@@ -38,6 +38,11 @@ public class TenantPutRequest {
     private Map<String, String> extraInfo;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

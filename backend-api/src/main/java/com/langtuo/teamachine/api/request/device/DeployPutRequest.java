@@ -43,6 +43,11 @@ public class DeployPutRequest {
     private int state;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      * 参数校验
      * @return
      */

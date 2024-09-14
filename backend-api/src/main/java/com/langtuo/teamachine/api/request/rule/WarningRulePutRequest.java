@@ -53,6 +53,11 @@ public class WarningRulePutRequest {
     private int threshold;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

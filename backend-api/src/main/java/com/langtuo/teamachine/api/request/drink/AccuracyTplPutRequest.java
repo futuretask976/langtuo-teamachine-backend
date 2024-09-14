@@ -61,6 +61,11 @@ public class AccuracyTplPutRequest {
     private String comment;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      * 参数校验
      * @return
      */

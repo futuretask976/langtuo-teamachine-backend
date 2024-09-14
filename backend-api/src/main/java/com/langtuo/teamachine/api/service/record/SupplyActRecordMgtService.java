@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.service.record;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.SupplyActRecordDTO;
-import com.langtuo.teamachine.api.request.record.SupplyActRecordPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
@@ -22,13 +21,6 @@ public interface SupplyActRecordMgtService {
      */
     TeaMachineResult<PageDTO<SupplyActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
             int pageNum, int pageSize);
-
-    /**
-     *
-     * @param request
-     * @return
-     */
-    TeaMachineResult<Void> put(SupplyActRecordPutRequest request);
 
     /**
      *

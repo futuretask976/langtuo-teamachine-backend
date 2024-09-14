@@ -28,6 +28,7 @@
     <modules>
         <module>backend-web</module>
         <module>backend-dao</module>
+        <module>backend-internal</module>
         <module>backend-api</module>
         <module>backend-biz</module>
         <module>backend-mqtt</module>

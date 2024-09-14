@@ -43,6 +43,11 @@ public class ShopPutRequest {
     private String shopGroupCode;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

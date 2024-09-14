@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.biz.service.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.biz.service.util.MessageUtils;
+import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
+import com.langtuo.teamachine.internal.util.MessageUtils;
 import com.langtuo.teamachine.web.constant.WebConsts;
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;

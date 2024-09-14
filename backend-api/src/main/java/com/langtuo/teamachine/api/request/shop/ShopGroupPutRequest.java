@@ -38,6 +38,11 @@ public class ShopGroupPutRequest {
     private String orgName;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

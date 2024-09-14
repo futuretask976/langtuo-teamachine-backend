@@ -33,6 +33,11 @@ public class ToppingTypePutRequest {
     private String toppingTypeName;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      * 参数校验
      * @return
      */

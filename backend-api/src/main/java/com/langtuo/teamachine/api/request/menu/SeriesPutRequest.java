@@ -40,6 +40,11 @@ public class SeriesPutRequest {
     private List<SeriesTeaRelPutRequest> seriesTeaRelList;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

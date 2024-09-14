@@ -1,15 +1,15 @@
 package com.langtuo.teamachine.mqtt.consume.worker.record;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
-import com.langtuo.teamachine.api.request.record.SupplyActRecordPutRequest;
-import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.record.SupplyActRecordMgtService;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.dao.accessor.record.SupplyActRecordAccessor;
+import com.langtuo.teamachine.dao.po.record.SupplyActRecordPO;
+import com.langtuo.teamachine.dao.util.SpringUtils;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
-import com.langtuo.teamachine.mqtt.util.SpringUtils;
+import com.langtuo.teamachine.mqtt.request.record.SupplyActRecordPutRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 
@@ -26,25 +26,58 @@ public class SupplyActRecordWorker implements Runnable {
         JSONArray jsonList = jsonPayload.getJSONArray(MqttConsts.RECEIVE_KEY_LIST);
         jsonList.forEach(jsonObject -> {
             SupplyActRecordPutRequest request = TypeUtils.castToJavaBean(jsonObject, SupplyActRecordPutRequest.class);
-            if (request.isValid()) {
-                requestList.add(request);
-            } else {
-                log.error("request is invalid: " + jsonObject == null ? null : JSON.toJSONString(jsonObject));
-            }
+            requestList.add(request);
         });
+    }
+
+    public void run() {
         if (CollectionUtils.isEmpty(requestList)) {
-            throw new IllegalArgumentException("request list is empty");
+            log.error("supplyActRecordWorker|run|illegalArgument|requestListEmpty");
+        }
+
+        for (SupplyActRecordPutRequest request : requestList) {
+            put(request);
         }
     }
 
-    @Override
-    public void run() {
-        SupplyActRecordMgtService supplyActRecordMgtService = SpringUtils.getSupplyActRecordMgtService();
-        for (SupplyActRecordPutRequest request : requestList) {
-            TeaMachineResult<Void> result = supplyActRecordMgtService.put(request);
-            if (result == null || !result.isSuccess()) {
-                log.error("insert supply act record error: " + result == null ? null : result.getErrorMsg());
-            }
+    public void put(SupplyActRecordPutRequest request) {
+        if (request == null || !request.isValid()) {
+            log.error("supplyActRecordWorker|put|illegalArgument|"
+                    + request == null ? null : JSONObject.toJSONString(request));
+            return;
         }
+
+        SupplyActRecordPO po = convert(request);
+        try {
+            SupplyActRecordAccessor supplyActRecordAccessor = SpringUtils.getSupplyActRecordAccessor();
+            SupplyActRecordPO exist = supplyActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
+            if (exist == null) {
+                int inserted = supplyActRecordAccessor.insert(po);
+                if (CommonConsts.NUM_ONE != inserted) {
+                    log.error("supplyActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+                }
+            }
+        } catch (Exception e) {
+            log.error("supplyActRecordWorker|put|fatal|" + e.getMessage(), e);
+        }
+    }
+
+    private SupplyActRecordPO convert(SupplyActRecordPutRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        SupplyActRecordPO po = new SupplyActRecordPO();
+        po.setTenantCode(request.getTenantCode());
+        po.setExtraInfo(request.getExtraInfo());
+        po.setIdempotentMark(request.getIdempotentMark());
+        po.setMachineCode(request.getMachineCode());
+        po.setShopCode(request.getShopCode());
+        po.setShopGroupCode(request.getShopGroupCode());
+        po.setSupplyTime(request.getSupplyTime());
+        po.setToppingCode(request.getToppingCode());
+        po.setPipelineNum(request.getPipelineNum());
+        po.setSupplyAmount(request.getSupplyAmount());
+        return po;
     }
 }

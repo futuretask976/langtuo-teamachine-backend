@@ -45,6 +45,11 @@ public class RolePutRequest {
     private List<String> permitActCodeList;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

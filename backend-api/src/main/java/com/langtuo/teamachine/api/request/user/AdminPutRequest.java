@@ -2,6 +2,7 @@ package com.langtuo.teamachine.api.request.user;
 
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -43,6 +44,11 @@ public class AdminPutRequest {
     private String orgName;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */
@@ -56,13 +62,13 @@ public class AdminPutRequest {
         if (!RegexUtils.isValidName(loginName, true)) {
             return false;
         }
-        if (!RegexUtils.isValidCode(loginPass, true)) {
-            return false;
-        }
         if (!RegexUtils.isValidCode(roleCode, true)) {
             return false;
         }
         if (!RegexUtils.isValidName(orgName, true)) {
+            return false;
+        }
+        if (newPut && StringUtils.isBlank(loginPass)) {
             return false;
         }
         return true;

@@ -20,6 +20,11 @@ public class ModelPipelinePutRequest {
     private int enableWarm;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      * 参数校验
      * @return
      */

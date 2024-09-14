@@ -1,15 +1,15 @@
 package com.langtuo.teamachine.mqtt.consume.worker.record;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
-import com.langtuo.teamachine.api.request.record.CleanActRecordPutRequest;
-import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.record.CleanActRecordMgtService;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.dao.accessor.record.CleanActRecordAccessor;
+import com.langtuo.teamachine.dao.po.record.CleanActRecordPO;
+import com.langtuo.teamachine.dao.util.SpringUtils;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
-import com.langtuo.teamachine.mqtt.util.SpringUtils;
+import com.langtuo.teamachine.mqtt.request.record.CleanActRecordPutRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 
@@ -26,25 +26,65 @@ public class CleanActRecordWorker implements Runnable {
         JSONArray jsonList = jsonPayload.getJSONArray(MqttConsts.RECEIVE_KEY_LIST);
         jsonList.forEach(jsonObject -> {
             CleanActRecordPutRequest request = TypeUtils.castToJavaBean(jsonObject, CleanActRecordPutRequest.class);
-            if (request.isValid()) {
-                requestList.add(request);
-            } else {
-                log.error("request is invalid: " + jsonObject == null ? null : JSON.toJSONString(jsonObject));
-            }
+            requestList.add(request);
         });
-        if (CollectionUtils.isEmpty(requestList)) {
-            throw new IllegalArgumentException("request list is empty");
-        }
     }
 
     @Override
     public void run() {
-        CleanActRecordMgtService cleanActRecordMgtService = SpringUtils.getCleanActRecordMgtService();
-        for (CleanActRecordPutRequest request : requestList) {
-            TeaMachineResult<Void> result = cleanActRecordMgtService.put(request);
-            if (result == null || !result.isSuccess()) {
-                log.error("insert clean act record error: " + result == null ? null : result.getErrorMsg());
-            }
+        if (CollectionUtils.isEmpty(requestList)) {
+            log.error("cleanActRecordWorker|run|illegalArgument|requestListEmpty");
         }
+
+        for (CleanActRecordPutRequest request : requestList) {
+            put(request);
+        }
+    }
+
+    private void put(CleanActRecordPutRequest request) {
+        if (request == null || !request.isValid()) {
+            log.error("cleanActRecordWorker|put|illegalArgument|"
+                    + request == null ? null : JSONObject.toJSONString(request));
+            return;
+        }
+
+        CleanActRecordPO po = convert(request);
+        try {
+            CleanActRecordAccessor cleanActRecordAccessor = SpringUtils.getCleanActRecordAccessor();
+            CleanActRecordPO exist = cleanActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
+            if (exist == null) {
+                int inserted = cleanActRecordAccessor.insert(po);
+                if (CommonConsts.NUM_ONE != inserted) {
+                    log.error("cleanActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+                }
+            }
+        } catch (Exception e) {
+            log.error("cleanActRecordWorker|put|fatal|" + e.getMessage(), e);
+        }
+    }
+
+    private CleanActRecordPO convert(CleanActRecordPutRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        CleanActRecordPO po = new CleanActRecordPO();
+        po.setExtraInfo(request.getExtraInfo());
+        po.setIdempotentMark(request.getIdempotentMark());
+        po.setMachineCode(request.getMachineCode());
+        po.setShopCode(request.getShopCode());
+        po.setShopGroupCode(request.getShopGroupCode());
+        po.setCleanStartTime(request.getCleanStartTime());
+        po.setCleanEndTime(request.getCleanEndTime());
+        po.setToppingCode(request.getToppingCode());
+        po.setPipelineNum(request.getPipelineNum());
+        po.setCleanType(request.getCleanType());
+        po.setCleanRuleCode(request.getCleanRuleCode());
+        po.setCleanContent(request.getCleanContent());
+        po.setWashSec(request.getWashSec());
+        po.setSoakMin(request.getSoakMin());
+        po.setFlushSec(request.getFlushSec());
+        po.setFlushIntervalMin(request.getFlushIntervalMin());
+        return po;
     }
 }

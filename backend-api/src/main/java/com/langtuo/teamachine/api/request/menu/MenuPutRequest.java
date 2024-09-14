@@ -46,6 +46,11 @@ public class MenuPutRequest {
     private List<MenuSeriesRelPutRequest> menuSeriesRelList;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      *
      * @return
      */

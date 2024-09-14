@@ -68,6 +68,11 @@ public class ToppingPutRequest {
     private Map<String, String> extraInfo;
 
     /**
+     * 是否新建
+     */
+    private boolean newPut;
+
+    /**
      * 参数校验
      * @return
      */

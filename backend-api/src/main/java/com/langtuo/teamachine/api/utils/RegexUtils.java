@@ -81,7 +81,7 @@ public class RegexUtils {
     }
 
     public static void main(String args[]) {
-        String[] versions = {"1.2.3", "1.2", "1.2.3.4", "invalid", "1", "1.a.3", "23"};
+        String[] versions = {"pass", "pass`", "pass-", "pass="};
         for (String version : versions) {
             System.out.println(version + " is valid: " + isValidVersion(version, true));
         }

@@ -65,6 +65,11 @@ public class TeaPutRequest {
      */
     private List<ActStepPutRequest> actStepList;
 
+    /**
+     * 是否新建
+     */
+    private boolean newPut;
+
     public void addTeaUnit(TeaUnitPutRequest request) {
         if (request == null) {
             return;

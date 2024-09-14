@@ -22,6 +22,14 @@
     </properties>
 
     <dependencies>
+        <!-- internal start -->
+        <dependency>
+            <groupId>com.langtuo</groupId>
+            <artifactId>backend-internal</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <!-- internal end -->
+
         <!-- spring start -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

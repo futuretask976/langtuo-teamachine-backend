@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.service.record;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.DrainActRecordDTO;
-import com.langtuo.teamachine.api.request.record.DrainActRecordPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 
 import java.util.List;
@@ -22,13 +21,6 @@ public interface DrainActRecordMgtService {
      */
     TeaMachineResult<PageDTO<DrainActRecordDTO>> search(String tenantCode, String shopGroupCode, String shopCode,
             int pageNum, int pageSize);
-
-    /**
-     *
-     * @param request
-     * @return
-     */
-    TeaMachineResult<Void> put(DrainActRecordPutRequest request);
 
     /**
      *
