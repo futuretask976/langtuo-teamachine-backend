@@ -152,33 +152,59 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        DrainRulePO openRulePO = convertToDrainRulePO(request);
-        List<DrainRuleToppingPO> openRuleToppingPOList = convertToDrainRuleIncludePO(request);
-
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            DrainRulePO exist = drainRuleAccessor.selectOneByDrainRuleCode(openRulePO.getTenantCode(),
-                    openRulePO.getDrainRuleCode());
-            if (exist != null) {
-                int updated = drainRuleAccessor.update(openRulePO);
-            } else {
-                int inserted = drainRuleAccessor.insert(openRulePO);
-            }
-
-            int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(request.getTenantCode(),
-                    request.getDrainRuleCode());
-            if (!CollectionUtils.isEmpty(openRuleToppingPOList)) {
-                openRuleToppingPOList.forEach(item -> {
-                    int inserted4Topping = drainRuleToppingAccessor.insert(item);
-                });
-            }
-
-            teaMachineResult = TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        DrainRulePO drainRulePO = convertToDrainRulePO(request);
+        List<DrainRuleToppingPO> drainRuleToppingPOList = convertToDrainRuleIncludePO(request);
+        if (request.isNewPut()) {
+            return putNew(drainRulePO, drainRuleToppingPOList);
+        } else {
+            return putUpdate(drainRulePO, drainRuleToppingPOList);
         }
-        return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putNew(DrainRulePO po, List<DrainRuleToppingPO> toppingPOList) {
+        try {
+            DrainRulePO exist = drainRuleAccessor.selectOneByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+
+            int inserted = drainRuleAccessor.insert(po);
+            if (CommonConsts.NUM_ONE != inserted) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+
+            int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+            for (DrainRuleToppingPO toppingPO : toppingPOList) {
+                int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("drainRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
+    }
+
+    private TeaMachineResult<Void> putUpdate(DrainRulePO po, List<DrainRuleToppingPO> toppingPOList) {
+        try {
+            DrainRulePO exist = drainRuleAccessor.selectOneByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+
+            int updated = drainRuleAccessor.update(po);
+            if (CommonConsts.NUM_ONE != updated) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+
+            int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+            for (DrainRuleToppingPO toppingPO : toppingPOList) {
+                int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("drainRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override
