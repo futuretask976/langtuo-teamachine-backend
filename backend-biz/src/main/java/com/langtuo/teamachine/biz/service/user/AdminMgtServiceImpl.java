@@ -6,7 +6,6 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.AdminPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.AdminMgtService;
-import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
@@ -17,8 +16,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -34,9 +31,6 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
     @Resource
     private RoleAccessor roleAccessor;
-    
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<AdminDTO> get(String tenantCode, String loginName) {

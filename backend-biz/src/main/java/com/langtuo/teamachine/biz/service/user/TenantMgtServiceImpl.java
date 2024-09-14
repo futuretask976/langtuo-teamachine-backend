@@ -15,8 +15,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -32,9 +30,6 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
-    
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<List<TenantDTO>> list() {
@@ -89,21 +84,12 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        String tenantCode = request.getTenantCode();
         TenantPO tenantPO = convert(request);
-
         TeaMachineResult<Void> teaMachineResult;
-        try {
-            TenantPO exist = tenantAccessor.selectOneByTenantCode(tenantCode);
-            if (exist != null) {
-                int updated = tenantAccessor.update(tenantPO);
-            } else {
-                int inserted = tenantAccessor.insert(tenantPO);
-            }
-            teaMachineResult = TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        if (request.isNewPut()) {
+            teaMachineResult = putNew(tenantPO);
+        } else {
+            teaMachineResult = putUpdate(tenantPO);
         }
 
         // 异步发送消息准备添加超级租户管理角色和超级租户管理员
@@ -113,6 +99,37 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         asyncDispatcher.dispatch(jsonPayload);
 
         return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putNew(TenantPO po) {
+        try {
+            int inserted = tenantAccessor.insert(po);
+            if (inserted != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("tenantMgtService|putNew|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+    }
+
+    private TeaMachineResult<Void> putUpdate(TenantPO po) {
+        try {
+            TenantPO exist = tenantAccessor.selectOneByTenantCode(po.getTenantCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
+            int updated = tenantAccessor.update(po);
+            if (updated != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("tenantMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override

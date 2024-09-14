@@ -14,8 +14,6 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -28,9 +26,6 @@ import java.util.stream.Collectors;
 public class OrgMgtServiceImpl implements OrgMgtService {
     @Resource
     private OrgAccessor orgAccessor;
-    
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<OrgDTO> getTop(String tenantCode) {
@@ -111,24 +106,46 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        String tenantCode = request.getTenantCode();
-        String orgName = request.getOrgName();
         OrgNode orgNode = convert(request);
+        if (request.isNewPut()) {
+            return putNew(orgNode);
+        } else {
+            return putUpdate(orgNode);
+        }
+    }
 
+    private TeaMachineResult<Void> putNew(OrgNode po) {
         TeaMachineResult<Void> teaMachineResult;
         try {
-            OrgNode exist = orgAccessor.selectOne(tenantCode, orgName);
-            if (exist != null) {
-                int updated = orgAccessor.update(orgNode);
+            int inserted = orgAccessor.insert(po);
+            if (inserted == CommonConsts.NUM_ONE) {
+                teaMachineResult = TeaMachineResult.success();
             } else {
-                int inserted = orgAccessor.insert(orgNode);
+                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
-            teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
+            log.error("orgMgtService|putNew|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putUpdate(OrgNode po) {
+        try {
+            OrgNode exist = orgAccessor.selectOne(po.getTenantCode(), po.getOrgName());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
+            int updated = orgAccessor.update(po);
+            if (updated != CommonConsts.NUM_ONE) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("orgMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override
