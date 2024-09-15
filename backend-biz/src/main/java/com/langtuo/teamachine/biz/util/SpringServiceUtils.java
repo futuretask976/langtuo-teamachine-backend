@@ -8,12 +8,9 @@ import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
-import com.langtuo.teamachine.api.service.record.*;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
 import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.api.service.user.*;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import org.springframework.context.ApplicationContext;
 
