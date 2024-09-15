@@ -115,6 +115,11 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     private TeaMachineResult<Void> putNew(SpecPO po, List<SpecItemPO> specItemPOList) {
         try {
+            SpecPO exist = specAccessor.selectOneBySpecCode(po.getTenantCode(), po.getSpecCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
             int inserted = specAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));

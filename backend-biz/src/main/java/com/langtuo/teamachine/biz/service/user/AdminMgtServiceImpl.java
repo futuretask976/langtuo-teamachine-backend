@@ -140,6 +140,11 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     private TeaMachineResult<Void> putNew(AdminPO po) {
         TeaMachineResult<Void> teaMachineResult;
         try {
+            AdminPO exist = adminAccessor.selectOneByLoginName(po.getTenantCode(), po.getLoginName());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
             int inserted = adminAccessor.insert(po);
             if (inserted == CommonConsts.NUM_ONE) {
                 teaMachineResult = TeaMachineResult.success();

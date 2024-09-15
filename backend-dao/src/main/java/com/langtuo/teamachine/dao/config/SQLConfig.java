@@ -61,8 +61,8 @@ public class SQLConfig {
                 .username(userName)
                 .password(password)
                 .build());
-        hikariDataSource.setMaximumPoolSize(10);
-        hikariDataSource.setMinimumIdle(5);
+        hikariDataSource.setMaximumPoolSize(5);
+        hikariDataSource.setMinimumIdle(2);
         return hikariDataSource;
     }
 

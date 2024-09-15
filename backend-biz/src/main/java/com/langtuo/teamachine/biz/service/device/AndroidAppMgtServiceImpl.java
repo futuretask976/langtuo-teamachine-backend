@@ -156,17 +156,21 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     private TeaMachineResult<Void> putNew(AndroidAppPO po) {
         TeaMachineResult<Void> teaMachineResult;
         try {
+            AndroidAppPO exist = androidAppAccessor.selectOne(po.getVersion());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
             int inserted = androidAppAccessor.insert(po);
             if (inserted == CommonConsts.NUM_ONE) {
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
         } catch (Exception e) {
             log.error("androidAppMgtService|putNew|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private TeaMachineResult<Void> putUpdate(AndroidAppPO po) {

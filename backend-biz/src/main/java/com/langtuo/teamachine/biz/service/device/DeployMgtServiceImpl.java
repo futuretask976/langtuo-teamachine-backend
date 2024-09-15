@@ -169,6 +169,11 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     private TeaMachineResult<Void> putNew(DeployPO po) {
         TeaMachineResult<Void> teaMachineResult;
         try {
+            DeployPO exist = deployAccessor.selectOneByDeployCode(po.getTenantCode(), po.getDeployCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
             int inserted = deployAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));

@@ -117,6 +117,11 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     private TeaMachineResult<Void> putNew(OrgNode po) {
         TeaMachineResult<Void> teaMachineResult;
         try {
+            OrgNode exist = orgAccessor.selectOne(po.getTenantCode(), po.getOrgName());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
             int inserted = orgAccessor.insert(po);
             if (inserted == CommonConsts.NUM_ONE) {
                 teaMachineResult = TeaMachineResult.success();

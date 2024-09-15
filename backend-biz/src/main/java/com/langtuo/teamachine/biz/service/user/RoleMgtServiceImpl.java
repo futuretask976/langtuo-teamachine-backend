@@ -10,6 +10,7 @@ import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
+import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -136,40 +137,60 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         RolePO rolePO = convert(request);
         List<RoleActRelPO> roleActRelPOList = convertRoleActRel(request);
-
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(rolePO.getRoleCode())) {
-                RolePO exist = roleAccessor.selectOneByRoleCode(request.getTenantCode(), request.getRoleCode());
-                if (exist != null) {
-                    teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_TENANT_SUPER_ADMIN_ROLE));
-                } else {
-                    int inserted = roleAccessor.insert(rolePO);
-                    int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(request.getTenantCode(), request.getRoleCode());
-                    roleActRelPOList.stream().forEach(item -> {
-                        int inserted4RoleActRel = roleActRelAccessor.insert(item);
-                    });
-                    teaMachineResult = TeaMachineResult.success();
-                }
-            } else {
-                RolePO exist = roleAccessor.selectOneByRoleCode(request.getTenantCode(), request.getRoleCode());
-                if (exist != null) {
-                    int updated = roleAccessor.update(rolePO);
-                } else {
-                    int inserted = roleAccessor.insert(rolePO);
-                }
-
-                int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(request.getTenantCode(), request.getRoleCode());
-                roleActRelPOList.stream().forEach(item -> {
-                    int inserted4RoleActRel = roleActRelAccessor.insert(item);
-                });
-                teaMachineResult = TeaMachineResult.success();
-            }
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+        if (request.isNewPut()) {
+            return putNew(rolePO, roleActRelPOList);
+        } else {
+            return putUpdate(rolePO, roleActRelPOList);
         }
-        return teaMachineResult;
+    }
+
+    private TeaMachineResult<Void> putNew(RolePO po, List<RoleActRelPO> actRelPOList) {
+        try {
+            RolePO exist = roleAccessor.selectOneByRoleCode(po.getTenantCode(), po.getRoleCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+
+            int inserted = roleAccessor.insert(po);
+            if (CommonConsts.NUM_ONE != inserted) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+
+            int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(po.getTenantCode(), po.getRoleCode());
+            for (RoleActRelPO actRelPO : actRelPOList) {
+                int inserted4actRel = roleActRelAccessor.insert(actRelPO);
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("roleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
+    }
+
+    private TeaMachineResult<Void> putUpdate(RolePO po, List<RoleActRelPO> actRelPOList) {
+        try {
+            RolePO exist = roleAccessor.selectOneByRoleCode(po.getTenantCode(), po.getRoleCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
+            if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(po.getRoleCode())) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_TENANT_SUPER_ADMIN_ROLE));
+            }
+
+            int inserted = roleAccessor.insert(po);
+            if (CommonConsts.NUM_ONE != inserted) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+
+            int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(po.getTenantCode(), po.getRoleCode());
+            for (RoleActRelPO actRelPO : actRelPOList) {
+                int inserted4actRel = roleActRelAccessor.insert(actRelPO);
+            }
+            return TeaMachineResult.success();
+        } catch (Exception e) {
+            log.error("roleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
     }
 
     @Override

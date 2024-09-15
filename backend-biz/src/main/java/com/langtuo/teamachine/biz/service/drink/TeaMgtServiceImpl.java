@@ -132,7 +132,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         List<ToppingBaseRulePO> toppingBaseRulePOList = convertToToppingBaseRulePO(request);
         List<TeaUnitPO> teaUnitPOList = convertToTeaUnitPO(request);
         List<ToppingAdjustRulePO> toppingAdjustRulePOList = convertToToppingAdjustRulePO(request);
-
         if (request.isNewPut()) {
             return putNew(teaPO, toppingBaseRulePOList, teaUnitPOList, toppingAdjustRulePOList);
         } else {

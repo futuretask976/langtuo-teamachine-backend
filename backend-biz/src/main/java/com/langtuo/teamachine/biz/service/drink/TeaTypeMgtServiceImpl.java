@@ -107,7 +107,11 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     }
 
     private TeaMachineResult<Void> putNew(TeaTypePO po) {
-        try {
+        try {TeaTypePO exist = accessor.selectOneByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
             int inserted = accessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));

@@ -108,6 +108,11 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
     private TeaMachineResult<Void> putNew(ToppingPO po) {
         try {
+            ToppingPO exist = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
             int inserted = toppingAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));

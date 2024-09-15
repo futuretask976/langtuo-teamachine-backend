@@ -103,6 +103,11 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
     private TeaMachineResult<Void> putNew(TenantPO po) {
         try {
+            TenantPO exist = tenantAccessor.selectOneByTenantCode(po.getTenantCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            }
+
             int inserted = tenantAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
