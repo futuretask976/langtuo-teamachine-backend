@@ -126,8 +126,14 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     private TeaMachineResult<Void> putNew(ModelPO po, List<ModelPipelinePO> modelPipelinePOList) {
         try {
+            ModelPO exist = modelAccessor.selectOneByModelCode(po.getModelCode());
+            if (exist == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+            }
+
             int inserted = modelAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
+                log.error("modelMgtService|putNewModel|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
@@ -135,6 +141,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
                 int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
                 if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                    log.error("modelMgtService|putNewPipeline|error|" + inserted);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }

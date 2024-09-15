@@ -171,11 +171,12 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         try {
             DeployPO exist = deployAccessor.selectOneByDeployCode(po.getTenantCode(), po.getDeployCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = deployAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
+                log.error("deployMgtService|putNew|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
             return TeaMachineResult.success();
@@ -189,11 +190,12 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         try {
             DeployPO exist = deployAccessor.selectOneByDeployCode(po.getTenantCode(), po.getDeployCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = deployAccessor.update(po);
             if (updated != CommonConsts.NUM_ONE) {
+                log.error("deployMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();
