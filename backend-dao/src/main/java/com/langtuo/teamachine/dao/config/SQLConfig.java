@@ -2,6 +2,7 @@ package com.langtuo.teamachine.dao.config;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.interceptor.LangTuoTableShardInterceptor;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -54,11 +55,15 @@ public class SQLConfig {
     @Bean(name = DATA_SOURCE_NAME)
     @Primary
     public DataSource getSQLDatasource() {
-        return DataSourceBuilder.create()
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setDataSource(DataSourceBuilder.create()
                 .url("jdbc:mysql://" + host + ":" + port + "/" + dbName + "?useSSL=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true")
                 .username(userName)
                 .password(password)
-                .build();
+                .build());
+        hikariDataSource.setMaximumPoolSize(10);
+        hikariDataSource.setMinimumIdle(5);
+        return hikariDataSource;
     }
 
     @Bean(name = SESSION_FACTORY_NAME)
