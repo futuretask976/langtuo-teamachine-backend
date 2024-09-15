@@ -10,7 +10,6 @@ import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
-import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -174,7 +173,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(po.getRoleCode())) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_TENANT_SUPER_ADMIN_ROLE));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN_ROLE));
             }
 
             int inserted = roleAccessor.insert(po);
@@ -205,7 +204,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         }
 
         if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(roleCode)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_TENANT_SUPER_ADMIN_ROLE));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN_ROLE));
         }
 
         TeaMachineResult<Void> teaMachineResult;
