@@ -1,26 +1,22 @@
 package com.langtuo.teamachine.biz.aync.worker.user;
 
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.model.user.OrgDTO;
-import com.langtuo.teamachine.api.model.user.PermitActDTO;
-import com.langtuo.teamachine.api.model.user.RoleDTO;
-import com.langtuo.teamachine.api.request.user.OrgPutRequest;
-import com.langtuo.teamachine.api.request.user.RolePutRequest;
-import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.user.OrgMgtService;
-import com.langtuo.teamachine.api.service.user.PermitActMgtService;
-import com.langtuo.teamachine.api.service.user.RoleMgtService;
-import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
+import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
+import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
+import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
 import com.langtuo.teamachine.dao.constant.DaoConsts;
+import com.langtuo.teamachine.dao.node.user.OrgNode;
+import com.langtuo.teamachine.dao.po.user.PermitActPO;
+import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
+import com.langtuo.teamachine.dao.po.user.RolePO;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
 public class TenantPostWorker implements Runnable {
@@ -38,37 +34,35 @@ public class TenantPostWorker implements Runnable {
 
     @Override
     public void run() {
-        RoleMgtService roleMgtService = SpringServiceUtils.getRoleMgtService();
-        RoleDTO superRole4Tenant = getModel(roleMgtService.getByCode(tenantCode, DaoConsts.ROLE_CODE_TENANT_SUPER));
-        if (superRole4Tenant == null) {
-            RolePutRequest rolePutRequest = new RolePutRequest();
-            rolePutRequest.setTenantCode(tenantCode);
-            rolePutRequest.setRoleCode(DaoConsts.ROLE_CODE_TENANT_SUPER);
-            rolePutRequest.setRoleName(DaoConsts.ROLE_NAME_TENANT_SUPER);
-            rolePutRequest.setSysReserved(DaoConsts.ROLE_SYS_RESERVED);
+        RolePO rolePO = new RolePO();
+        rolePO.setTenantCode(tenantCode);
+        rolePO.setRoleCode(DaoConsts.ROLE_CODE_TENANT_SUPER);
+        rolePO.setRoleName(DaoConsts.ROLE_NAME_TENANT_SUPER);
+        rolePO.setSysReserved(DaoConsts.ROLE_SYS_RESERVED);
 
-            PermitActMgtService permitActMgtService = SpringServiceUtils.getPermitActMgtService();
-            List<PermitActDTO> permitActDTOList = getListModel(permitActMgtService.listPermitAct());
-            rolePutRequest.setPermitActCodeList(permitActDTOList.stream()
-                    .map(PermitActDTO::getPermitActCode)
-                    .collect(Collectors.toList()));
+        RoleAccessor roleAccessor = SpringAccessorUtils.getRoleAccessor();
+        int inserted4Role = roleAccessor.insert(rolePO);
 
-            TeaMachineResult<Void> putRtn = roleMgtService.put(rolePutRequest);
-            if (putRtn == null || !putRtn.isSuccess()) {
-                log.error("insert tenant super role error: " + putRtn == null ? null : putRtn.getErrorMsg());
-            }
+        PermitActAccessor permitActAccessor = SpringAccessorUtils.getPermitActAccessor();
+        List<PermitActPO> permitActPOList = permitActAccessor.selectPermitActList();
+        if (CollectionUtils.isEmpty(permitActPOList)) {
+            return;
         }
 
-        OrgMgtService orgMgtService = SpringServiceUtils.getOrgMgtService();
-        OrgDTO orgDTO = getModel(orgMgtService.get(tenantCode, DaoConsts.ORG_NAME_TOP));
-        if (orgDTO == null) {
-            OrgPutRequest orgPutRequest = new OrgPutRequest();
-            orgPutRequest.setTenantCode(tenantCode);
-            orgPutRequest.setOrgName(DaoConsts.ORG_NAME_TOP);
-            TeaMachineResult<Void> putRtn = orgMgtService.put(orgPutRequest);
-            if (putRtn == null || !putRtn.isSuccess()) {
-                log.error("insert org top error: " + putRtn == null ? null : putRtn.getErrorMsg());
-            }
+        RoleActRelAccessor roleActRelAccessor = SpringAccessorUtils.getRoleActRelAccessor();
+        for (PermitActPO permitActPO : permitActPOList) {
+            RoleActRelPO actRelPO = new RoleActRelPO();
+            actRelPO.setTenantCode(tenantCode);
+            actRelPO.setRoleCode(DaoConsts.ROLE_CODE_TENANT_SUPER);
+            actRelPO.setPermitActCode(permitActPO.getPermitActCode());
+            int inserted4ActRel = roleActRelAccessor.insert(actRelPO);
         }
+
+        OrgNode orgNode = new OrgNode();
+        orgNode.setTenantCode(tenantCode);
+        orgNode.setOrgName(DaoConsts.ORG_NAME_TOP);
+
+        OrgAccessor orgAccessor = SpringAccessorUtils.getOrgAccessor();
+        int inserted4Org = orgAccessor.insert(orgNode);
     }
 }

@@ -14,9 +14,7 @@ import com.langtuo.teamachine.dao.accessor.rule.DrainRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
-import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
-import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
-import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
+import com.langtuo.teamachine.dao.accessor.user.*;
 import org.springframework.context.ApplicationContext;
 
 public class SpringAccessorUtils {
@@ -119,6 +117,24 @@ public class SpringAccessorUtils {
     public static TenantAccessor getTenantAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         TenantAccessor accessor = appContext.getBean(TenantAccessor.class);
+        return accessor;
+    }
+
+    public static RoleAccessor getRoleAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        RoleAccessor accessor = appContext.getBean(RoleAccessor.class);
+        return accessor;
+    }
+
+    public static RoleActRelAccessor getRoleActRelAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        RoleActRelAccessor accessor = appContext.getBean(RoleActRelAccessor.class);
+        return accessor;
+    }
+
+    public static PermitActAccessor getPermitActAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        PermitActAccessor accessor = appContext.getBean(PermitActAccessor.class);
         return accessor;
     }
 

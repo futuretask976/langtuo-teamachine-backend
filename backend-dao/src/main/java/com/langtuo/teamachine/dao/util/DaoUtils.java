@@ -1,11 +1,13 @@
 package com.langtuo.teamachine.dao.util;
 
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
+import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
+import com.langtuo.teamachine.dao.po.user.TenantPO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DaoUtils {
+    public static List<String> getTenantCodeList() {
+        TenantAccessor tenantAccessor = SpringAccessorUtils.getTenantAccessor();
+        List<TenantPO> list = tenantAccessor.selectList();
+
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.stream().map(TenantPO::getTenantCode).collect(Collectors.toList());
+    }
+
     /**
      * 获取指定店铺编码列表下的机器列表
      * @param tenantCode

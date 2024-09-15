@@ -1,12 +1,9 @@
 package com.langtuo.teamachine.biz.aync.worker.rule;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDTO;
-import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.dao.accessor.rule.DrainRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.po.rule.DrainRuleDispatchPO;
@@ -16,7 +13,6 @@ import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -65,26 +61,8 @@ public class DrainRuleDispatchWorker implements Runnable {
         });
     }
 
-    private DrainRuleMgtService getOpenRuleMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        DrainRuleMgtService drainRuleMgtService = appContext.getBean(DrainRuleMgtService.class);
-        return drainRuleMgtService;
-    }
-
-    private ShopMgtService getShopMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        ShopMgtService shopMgtService = appContext.getBean(ShopMgtService.class);
-        return shopMgtService;
-    }
-
-    private MachineMgtService getMachineMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MachineMgtService machineMgtService = appContext.getBean(MachineMgtService.class);
-        return machineMgtService;
-    }
-
     private JSONObject getDispatchCont() {
-        DrainRuleMgtService drainRuleMgtService = getOpenRuleMgtService();
+        DrainRuleMgtService drainRuleMgtService = SpringServiceUtils.getDrainRuleMgtService() ;
         DrainRuleDTO drainRuleDTO = getModel(drainRuleMgtService.getByCode(tenantCode, drainRuleCode));
         if (drainRuleDTO == null) {
             log.info("open rule error, stop worker");

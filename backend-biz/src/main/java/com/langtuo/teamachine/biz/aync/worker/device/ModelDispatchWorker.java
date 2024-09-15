@@ -6,6 +6,7 @@ import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -43,11 +44,7 @@ public class ModelDispatchWorker implements Runnable {
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MODEL);
         jsonMsg.put(CommonConsts.JSON_KEY_MODEL, jsonDispatchCont);
 
-        TenantMgtService tenantMgtService = SpringServiceUtils.getTenantMgtService();
-        List<String> tenantCodeList = getListModel(tenantMgtService.list()).stream()
-                .map(TenantDTO::getTenantCode)
-                .collect(Collectors.toList());
-
+        List<String> tenantCodeList = DaoUtils.getTenantCodeList();
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         tenantCodeList.forEach(tenantCode -> {
             mqttProducer.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());

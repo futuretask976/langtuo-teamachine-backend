@@ -1,12 +1,9 @@
 package com.langtuo.teamachine.biz.aync.worker.rule;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
-import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
@@ -16,7 +13,6 @@ import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -65,29 +61,10 @@ public class WarningRuleDispatchWorker implements Runnable {
         });
     }
 
-    private WarningRuleMgtService getWarningRuleMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        WarningRuleMgtService warningRuleMgtService = appContext.getBean(WarningRuleMgtService.class);
-        return warningRuleMgtService;
-    }
-
-    private ShopMgtService getShopMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        ShopMgtService shopMgtService = appContext.getBean(ShopMgtService.class);
-        return shopMgtService;
-    }
-
-    private MachineMgtService getMachineMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MachineMgtService machineMgtService = appContext.getBean(MachineMgtService.class);
-        return machineMgtService;
-    }
-
     private JSONObject getDispatchCont() {
-        WarningRuleMgtService warningRuleMgtService = getWarningRuleMgtService();
+        WarningRuleMgtService warningRuleMgtService = SpringServiceUtils.getWarningRuleMgtService();
         WarningRuleDTO warningRuleDTO = getModel(warningRuleMgtService.getByCode(tenantCode, warningRuleCode));
         if (warningRuleDTO == null) {
-            log.info("warning rule error, stop worker");
             return null;
         }
 
