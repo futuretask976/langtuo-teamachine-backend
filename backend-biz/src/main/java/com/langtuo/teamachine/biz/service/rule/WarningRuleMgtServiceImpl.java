@@ -157,16 +157,17 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             WarningRulePO exist = warningRuleAccessor.selectOneByWarningRuleCode(po.getTenantCode(),
                     po.getWarningRuleCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = warningRuleAccessor.insert(po);
             if (CommonConsts.NUM_ONE != inserted) {
+                log.error("warningRuleMgtService|putNewWarningRule|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("drainRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("warningRuleMgtService|putNew|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -176,16 +177,17 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             WarningRulePO exist = warningRuleAccessor.selectOneByWarningRuleCode(po.getTenantCode(),
                     po.getWarningRuleCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = warningRuleAccessor.update(po);
             if (CommonConsts.NUM_ONE != updated) {
+                log.error("warningRuleMgtService|putUpdateWarningRule|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("drainRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("warningRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }

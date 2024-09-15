@@ -165,21 +165,25 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         try {
             DrainRulePO exist = drainRuleAccessor.selectOneByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = drainRuleAccessor.insert(po);
             if (CommonConsts.NUM_ONE != inserted) {
+                log.error("drainRuleMgtService|putNewDrainRule|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
             for (DrainRuleToppingPO toppingPO : toppingPOList) {
                 int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
+                if (CommonConsts.NUM_ONE != inserted4Topping) {
+                    log.error("cleanRuleMgtService|putNewTopping|error|" + inserted4Topping);
+                }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("drainRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("drainRuleMgtService|putNew|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -188,17 +192,21 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         try {
             DrainRulePO exist = drainRuleAccessor.selectOneByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = drainRuleAccessor.update(po);
             if (CommonConsts.NUM_ONE != updated) {
+                log.error("drainRuleMgtService|putUpdateDrainRule|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
             for (DrainRuleToppingPO toppingPO : toppingPOList) {
                 int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
+                if (CommonConsts.NUM_ONE != inserted4Topping) {
+                    log.error("cleanRuleMgtService|putUpdateTopping|error|" + inserted4Topping);
+                }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {

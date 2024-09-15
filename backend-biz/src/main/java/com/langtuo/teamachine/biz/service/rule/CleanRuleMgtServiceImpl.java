@@ -172,27 +172,34 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         try {
             CleanRulePO exist = cleanRuleAccessor.selectOneByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = cleanRuleAccessor.insert(po);
             if (CommonConsts.NUM_ONE != inserted) {
+                log.error("cleanRuleMgtService|putNewCleanRule|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
             for (CleanRuleStepPO stepPO : stepPOList) {
-                int inserted4Except = cleanRuleStepAccessor.insert(stepPO);
+                int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
+                if (CommonConsts.NUM_ONE != inserted4Step) {
+                    log.error("cleanRuleMgtService|putNewStep|error|" + inserted4Step);
+                }
             }
 
             int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(po.getTenantCode(),
                     po.getCleanRuleCode());
             for (CleanRuleExceptPO exceptPO : exceptPOList) {
                 int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
+                if (CommonConsts.NUM_ONE != inserted) {
+                    log.error("cleanRuleMgtService|putNewExcept|error|" + inserted4Except);
+                }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("menuMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("cleanRuleMgtService|putNew|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -202,27 +209,34 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         try {
             CleanRulePO exist = cleanRuleAccessor.selectOneByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
-            int updated = cleanRuleAccessor.insert(po);
+            int updated = cleanRuleAccessor.update(po);
             if (CommonConsts.NUM_ONE != updated) {
+                log.error("cleanRuleMgtService|putUpdateCleanRule|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
             int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
             for (CleanRuleStepPO stepPO : stepPOList) {
-                int inserted4Except = cleanRuleStepAccessor.insert(stepPO);
+                int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
+                if (CommonConsts.NUM_ONE != inserted4Step) {
+                    log.error("cleanRuleMgtService|putUpdateStep|error|" + inserted4Step);
+                }
             }
 
             int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(po.getTenantCode(),
                     po.getCleanRuleCode());
             for (CleanRuleExceptPO exceptPO : exceptPOList) {
                 int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
+                if (CommonConsts.NUM_ONE != inserted4Except) {
+                    log.error("cleanRuleMgtService|putUpdateExcept|error|" + inserted4Except);
+                }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("menuMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("cleanRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
