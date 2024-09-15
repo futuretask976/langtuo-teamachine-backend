@@ -117,11 +117,12 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         try {
             ToppingTypePO exist = toppingTypeAccessor.selectOneByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = toppingTypeAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
+                log.error("toppingTypeMgtService|putNew|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();
@@ -135,11 +136,12 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         try {
             ToppingTypePO exist = toppingTypeAccessor.selectOneByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = toppingTypeAccessor.update(po);
             if (updated != CommonConsts.NUM_ONE) {
+                log.error("toppingTypeMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();

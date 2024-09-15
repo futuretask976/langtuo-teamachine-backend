@@ -133,18 +133,20 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         try {
             AccuracyTplPO exist = accuracyTplAccessor.selectOneByTplCode(po.getTenantCode(), po.getTemplateCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = accuracyTplAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
+                log.error("accuracyTplMgtService|putNewAccuracyTpl|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted = accuracyTplToppingAccessor.deleteByTplCode(po.getTenantCode(), po.getTemplateCode());
             for (AccuracyTplToppingPO toppingPO : toppingPOList) {
-                int inserted4Pipeline = accuracyTplToppingAccessor.insert(toppingPO);
-                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                int inserted4Topping = accuracyTplToppingAccessor.insert(toppingPO);
+                if (inserted4Topping != CommonConsts.NUM_ONE) {
+                    log.error("accuracyTplMgtService|putNewAccuracyTplTopping|error|" + inserted);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
@@ -159,18 +161,20 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         try {
             AccuracyTplPO exist = accuracyTplAccessor.selectOneByTplCode(po.getTenantCode(), po.getTemplateCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = accuracyTplAccessor.update(po);
             if (updated != CommonConsts.NUM_ONE) {
+                log.error("accuracyTplMgtService|putUpdateAccuracyTpl|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
             int deleted = accuracyTplToppingAccessor.deleteByTplCode(po.getTenantCode(), po.getTemplateCode());
             for (AccuracyTplToppingPO toppingPO : toppingPOList) {
-                int inserted4Pipeline = accuracyTplToppingAccessor.insert(toppingPO);
-                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                int inserted4Topping = accuracyTplToppingAccessor.insert(toppingPO);
+                if (inserted4Topping != CommonConsts.NUM_ONE) {
+                    log.error("accuracyTplMgtService|putUpdateAccuracyTplTopping|error|" + inserted4Topping);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
