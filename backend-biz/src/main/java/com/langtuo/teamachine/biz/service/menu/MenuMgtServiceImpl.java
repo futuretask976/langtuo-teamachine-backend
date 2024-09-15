@@ -174,15 +174,22 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     private TeaMachineResult<Void> putNew(MenuPO po, List<MenuSeriesRelPO> seriesRelPOlist) {
         try {
+            MenuPO exist = menuAccessor.selectOneByMenuCode(po.getTenantCode(), po.getMenuCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+            }
+
             int inserted = menuAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
+                log.error("menuMgtService|putNewMenu|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
-            int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteByMenuCode(po.getTenantCode(), po.getMenuCode());
+            int deleted4SeriesRel = menuSeriesRelAccessor.deleteByMenuCode(po.getTenantCode(), po.getMenuCode());
             for (MenuSeriesRelPO seriesRelPO : seriesRelPOlist) {
-                int inserted4Pipeline = menuSeriesRelAccessor.insert(seriesRelPO);
-                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                int inserted4SeriesRel = menuSeriesRelAccessor.insert(seriesRelPO);
+                if (inserted4SeriesRel != CommonConsts.NUM_ONE) {
+                    log.error("menuMgtService|putNewSeriesRel|error|" + inserted4SeriesRel);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
@@ -197,11 +204,12 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         try {
             MenuPO exist = menuAccessor.selectOneByMenuCode(po.getTenantCode(), po.getMenuCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = menuAccessor.update(po);
             if (updated != CommonConsts.NUM_ONE) {
+                log.error("menuMgtService|putUpdateMenu|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
@@ -209,6 +217,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             for (MenuSeriesRelPO seriesRelPO : seriesRelPOlist) {
                 int inserted4SeriesRel = menuSeriesRelAccessor.insert(seriesRelPO);
                 if (inserted4SeriesRel != CommonConsts.NUM_ONE) {
+                    log.error("menuMgtService|putUpdateSeriesRel|error|" + inserted4SeriesRel);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }

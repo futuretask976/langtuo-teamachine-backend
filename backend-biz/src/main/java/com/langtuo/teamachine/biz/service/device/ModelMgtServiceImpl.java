@@ -161,6 +161,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
             int updated = modelAccessor.update(po);
             if (updated != CommonConsts.NUM_ONE) {
+                log.error("modelMgtService|putUpdateModel|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
@@ -168,6 +169,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
                 int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
                 if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                    log.error("modelMgtService|putUpdatePipeline|error|" + inserted4Pipeline);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }

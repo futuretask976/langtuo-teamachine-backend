@@ -141,15 +141,22 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
     private TeaMachineResult<Void> putNew(SeriesPO po, List<SeriesTeaRelPO> teaRelPOList) {
         try {
+            SeriesPO exist = seriesAccessor.selectOneBySeriesCode(po.getTenantCode(), po.getSeriesCode());
+            if (exist != null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+            }
+
             int inserted = seriesAccessor.insert(po);
             if (inserted != CommonConsts.NUM_ONE) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                log.error("seriesMgtService|putNewSeries|error|" + inserted);
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted4TeaRel = seriesTeaRelAccessor.deleteBySeriesCode(po.getTenantCode(), po.getSeriesCode());
             for (SeriesTeaRelPO teaRelPO : teaRelPOList) {
                 int inserted4TeaRel = seriesTeaRelAccessor.insert(teaRelPO);
                 if (inserted4TeaRel != CommonConsts.NUM_ONE) {
+                    log.error("seriesMgtService|putNewTeaRel|error|" + inserted4TeaRel);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
@@ -164,11 +171,12 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         try {
             SeriesPO exist = seriesAccessor.selectOneBySeriesCode(po.getTenantCode(), po.getSeriesCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = seriesAccessor.update(po);
             if (updated != CommonConsts.NUM_ONE) {
+                log.error("seriesMgtService|putUpdateSeries|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
@@ -176,6 +184,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             for (SeriesTeaRelPO teaRelPO : teaRelPOList) {
                 int inserted4TeaRel = seriesTeaRelAccessor.insert(teaRelPO);
                 if (inserted4TeaRel != CommonConsts.NUM_ONE) {
+                    log.error("seriesMgtService|putUpdateTeaRel|error|" + inserted4TeaRel);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
