@@ -1,9 +1,17 @@
 package com.langtuo.teamachine.dao.util;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.langtuo.teamachine.dao.accessor.device.AndroidAppAccessor;
+import com.langtuo.teamachine.dao.accessor.device.AndroidAppDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
+import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.*;
+import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.record.*;
+import com.langtuo.teamachine.dao.accessor.rule.CleanRuleDispatchAccessor;
+import com.langtuo.teamachine.dao.accessor.rule.DrainRuleDispatchAccessor;
+import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
@@ -11,10 +19,40 @@ import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import org.springframework.context.ApplicationContext;
 
-public class SpringUtils {
+public class SpringAccessorUtils {
     public static OrderToppingActRecordAccessor getOrderToppingActRecordAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         OrderToppingActRecordAccessor accessor = appContext.getBean(OrderToppingActRecordAccessor.class);
+        return accessor;
+    }
+
+    public static MenuAccessor getMenuAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        MenuAccessor accessor = appContext.getBean(MenuAccessor.class);
+        return accessor;
+    }
+
+    public static MenuDispatchAccessor getMenuDispatchAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        MenuDispatchAccessor accessor = appContext.getBean(MenuDispatchAccessor.class);
+        return accessor;
+    }
+
+    public static CleanRuleDispatchAccessor getCleanRuleDispatchAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        CleanRuleDispatchAccessor accessor = appContext.getBean(CleanRuleDispatchAccessor.class);
+        return accessor;
+    }
+
+    public static DrainRuleDispatchAccessor getDrainRuleDispatchAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        DrainRuleDispatchAccessor accessor = appContext.getBean(DrainRuleDispatchAccessor.class);
+        return accessor;
+    }
+
+    public static WarningRuleDispatchAccessor getWarningRuleDispatchAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        WarningRuleDispatchAccessor accessor = appContext.getBean(WarningRuleDispatchAccessor.class);
         return accessor;
     }
 
@@ -123,6 +161,24 @@ public class SpringUtils {
     public static SpecItemAccessor getSpecItemAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         SpecItemAccessor accessor = appContext.getBean(SpecItemAccessor.class);
+        return accessor;
+    }
+
+    public static MachineAccessor getMachineItemAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        MachineAccessor accessor = appContext.getBean(MachineAccessor.class);
+        return accessor;
+    }
+
+    public static AndroidAppAccessor getAndroidAppAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        AndroidAppAccessor accessor = appContext.getBean(AndroidAppAccessor.class);
+        return accessor;
+    }
+
+    public static AndroidAppDispatchAccessor getAndroidAppDispatchAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        AndroidAppDispatchAccessor accessor = appContext.getBean(AndroidAppDispatchAccessor.class);
         return accessor;
     }
 }

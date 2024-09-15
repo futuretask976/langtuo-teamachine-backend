@@ -6,7 +6,7 @@ import com.alibaba.fastjson.util.TypeUtils;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
-import com.langtuo.teamachine.dao.util.SpringUtils;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.request.record.InvalidActRecordPutRequest;
@@ -50,7 +50,7 @@ public class InvalidActRecordWorker implements Runnable {
 
         InvalidActRecordPO po = convert(request);
         try {
-            InvalidActRecordAccessor invalidActRecordAccessor = SpringUtils.getInvalidActRecordAccessor();
+            InvalidActRecordAccessor invalidActRecordAccessor = SpringAccessorUtils.getInvalidActRecordAccessor();
             InvalidActRecordPO exist = invalidActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = invalidActRecordAccessor.insert(po);

@@ -3,7 +3,7 @@ package com.langtuo.teamachine.biz.excel.parser;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.po.user.TenantPO;
-import com.langtuo.teamachine.dao.util.SpringUtils;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -30,7 +30,7 @@ public class DefaultDeployParser implements DeployParser {
             cell.setCellValue(CommonConsts.TITLE_LIST_4_DEPLOY_EXPORT.get(i));
         }
 
-        List<DeployPO> deployPOList = SpringUtils.getDeployAccessor().selectList(tenantCode);
+        List<DeployPO> deployPOList = SpringAccessorUtils.getDeployAccessor().selectList(tenantCode);
         int lineIndex = CommonConsts.ROW_START_NUM_4_DEPLOY;
         for (DeployPO deployPO : deployPOList) {
             Row dataRow = sheet.createRow(lineIndex++);
@@ -47,7 +47,7 @@ public class DefaultDeployParser implements DeployParser {
             cell4TenantCode.setCellValue(deployPO.getTenantCode());
             // 添加商户名称
             Cell cell4TenantName = dataRow.createCell(columnIndex++);
-            TenantPO tenantPO = SpringUtils.getTenantAccessor().selectOneByTenantCode(tenantCode);
+            TenantPO tenantPO = SpringAccessorUtils.getTenantAccessor().selectOneByTenantCode(tenantCode);
             if (tenantPO != null) {
                 cell4TenantName.setCellValue(tenantPO.getTenantName());
             }
@@ -65,7 +65,7 @@ public class DefaultDeployParser implements DeployParser {
             cell4ShopCode.setCellValue(deployPO.getShopCode());
             // 添加店铺名称
             Cell cell4ShopName = dataRow.createCell(columnIndex++);
-            ShopPO shopPO = SpringUtils.getShopAccessor().selectOneByShopCode(tenantCode, deployPO.getShopCode());
+            ShopPO shopPO = SpringAccessorUtils.getShopAccessor().selectOneByShopCode(tenantCode, deployPO.getShopCode());
             if (shopPO != null) {
                 cell4ShopName.setCellValue(shopPO.getShopName());
             }

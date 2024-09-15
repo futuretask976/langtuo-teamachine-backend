@@ -263,7 +263,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             DrainRuleDispatchDTO dto = new DrainRuleDispatchDTO();
             dto.setDrainRuleCode(openRuleCode);
 
-            List<DrainRuleDispatchPO> poList = drainRuleDispatchAccessor.selectListByCleanRuleCode(tenantCode, openRuleCode);
+            List<DrainRuleDispatchPO> poList = drainRuleDispatchAccessor.selectListByDrainRuleCode(tenantCode, openRuleCode);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())

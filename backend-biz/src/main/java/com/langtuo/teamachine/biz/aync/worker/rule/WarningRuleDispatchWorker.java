@@ -3,14 +3,15 @@ package com.langtuo.teamachine.biz.aync.worker.rule;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
-import com.langtuo.teamachine.api.model.rule.WarningRuleDispatchDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.biz.util.SpringUtils;
+import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
+import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
+import com.langtuo.teamachine.dao.util.DaoUtils;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +20,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
 import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
@@ -60,7 +59,7 @@ public class WarningRuleDispatchWorker implements Runnable {
             log.info("machine code list is empty, stop worker");
         }
 
-        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
+        MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         machineCodeList.stream().forEach(machineCode -> {
             mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
@@ -97,50 +96,19 @@ public class WarningRuleDispatchWorker implements Runnable {
     }
 
     private List<String> getMachineCodeList() {
-        WarningRuleMgtService warningRuleMgtService = getWarningRuleMgtService();
-        WarningRuleDispatchDTO drainRuleDispatchDTO = getModel(warningRuleMgtService.getDispatchByWarningRuleCode(tenantCode, warningRuleCode));
-        if (drainRuleDispatchDTO == null) {
-            log.info("warning rule dispatch is null");
+        WarningRuleDispatchAccessor warningRuleDispatchAccessor = SpringAccessorUtils.getWarningRuleDispatchAccessor();
+        List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.selectListByWarningRuleCode(
+                tenantCode, warningRuleCode);
+        if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
+            log.info("warningRuleDispatchWorker|getDispatch|null|stopWorker");
             return null;
         }
 
-        ShopMgtService shopMgtService = getShopMgtService();
-        List<String> shopCodeList = drainRuleDispatchDTO.getShopGroupCodeList().stream()
-                .map(shopGroupCode -> {
-                    List<ShopDTO> shopList = getListModel(shopMgtService.listByShopGroupCode(
-                            tenantCode, shopGroupCode));
-                    if (shopList == null) {
-                        return null;
-                    }
-
-                    return shopList.stream()
-                            .map(shop -> shop.getShopCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(shopCodeList)) {
-            log.info("shop code list is empty");
-            return null;
-        }
-
-        MachineMgtService machineMgtService = getMachineMgtService();
-        List<String> machineCodeList = shopCodeList.stream()
-                .map(shopCode -> {
-                    List<MachineDTO> machineList = getListModel(machineMgtService.listByShopCode(
-                            tenantCode, shopCode));
-                    if (machineList == null) {
-                        return null;
-                    }
-
-                    return machineList.stream()
-                            .map(shop -> shop.getMachineCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
+                warningRuleDispatchPOList.stream()
+                        .map(WarningRuleDispatchPO::getShopGroupCode)
+                        .collect(Collectors.toList()));
+        List<String> machineCodeList = DaoUtils.getMachineCodeListByShopCodeList(tenantCode, shopCodeList);
         return machineCodeList;
     }
 }

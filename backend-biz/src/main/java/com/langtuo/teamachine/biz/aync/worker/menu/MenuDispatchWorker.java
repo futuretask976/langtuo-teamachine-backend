@@ -3,21 +3,20 @@ package com.langtuo.teamachine.biz.aync.worker.menu;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDTO;
-import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
-import com.langtuo.teamachine.api.model.shop.ShopDTO;
-import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopMgtService;
-import com.langtuo.teamachine.biz.util.SpringUtils;
+import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.config.OSSConfig;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
+import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
+import com.langtuo.teamachine.dao.util.DaoUtils;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
@@ -34,7 +33,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
 import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
@@ -92,21 +90,21 @@ public class MenuDispatchWorker implements Runnable {
             log.info("menuDispatchWorker|getMachineCodeList|empty|stopWorker");
         }
 
-        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
+        MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         machineCodeList.stream().forEach(machineCode -> {
             mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
         });
     }
 
     private JSONObject getDispatchCont() {
-        MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
+        MenuMgtService menuMgtService = SpringServiceUtils.getMenuMgtService();
         MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
         if (menuDTO == null) {
             log.info("menuDispatchWorker|getMenu|null|stopWorker");
             return null;
         }
 
-        SeriesMgtService seriesMgtService = SpringUtils.getSeriesMgtService();
+        SeriesMgtService seriesMgtService = SpringServiceUtils.getSeriesMgtService();
         List<SeriesDTO> seriesList = menuDTO.getMenuSeriesRelList().stream()
                 .map(menuSeriesRelDTO -> {
                     SeriesDTO seriesDTO = getModel(seriesMgtService.getByCode(
@@ -137,7 +135,7 @@ public class MenuDispatchWorker implements Runnable {
             return null;
         }
 
-        TeaMgtService teaMgtService = SpringUtils.getTeaMgtService();
+        TeaMgtService teaMgtService = SpringServiceUtils.getTeaMgtService();
         List<TeaDTO> teaList = teaCodeList.stream()
                 .map(teaCode -> {
                     TeaDTO teaDTO = getModel(teaMgtService.getByCode(tenantCode, teaCode));
@@ -164,50 +162,19 @@ public class MenuDispatchWorker implements Runnable {
     }
 
     private List<String> getMachineCodeList() {
-        MenuMgtService menuMgtService = SpringUtils.getMenuMgtService();
-        MenuDispatchDTO menuDispatchDTO = getModel(menuMgtService.getDispatchByMenuCode(tenantCode, menuCode));
-        if (menuDispatchDTO == null) {
-            log.info("menuDispatchWorker|getMenuDispatch|null|stopWorker");
+        MenuDispatchAccessor menuDispatchAccessor = SpringAccessorUtils.getMenuDispatchAccessor();
+        List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.selectListByMenuCode(
+                tenantCode, menuCode);
+        if (CollectionUtils.isEmpty(menuDispatchPOList)) {
+            log.info("menuDispatchWorker|getDispatch|null|stopWorker");
             return null;
         }
 
-        ShopMgtService shopMgtService = SpringUtils.getShopMgtService();
-        List<String> shopCodeList = menuDispatchDTO.getShopGroupCodeList().stream()
-                .map(shopGroupCode -> {
-                    List<ShopDTO> shopList = getListModel(shopMgtService.listByShopGroupCode(
-                            tenantCode, shopGroupCode));
-                    if (shopList == null) {
-                        return null;
-                    }
-
-                    return shopList.stream()
-                            .map(shop -> shop.getShopCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(shopCodeList)) {
-            log.info("menuDispatchWorker|getShopList|empty|stopWorker");
-            return null;
-        }
-
-        MachineMgtService machineMgtService = SpringUtils.getMachineMgtService();
-        List<String> machineCodeList = shopCodeList.stream()
-                .map(shopCode -> {
-                    List<MachineDTO> machineList = getListModel(machineMgtService.listByShopCode(
-                            tenantCode, shopCode));
-                    if (machineList == null) {
-                        return null;
-                    }
-
-                    return machineList.stream()
-                            .map(shop -> shop.getMachineCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
+                menuDispatchPOList.stream()
+                        .map(MenuDispatchPO::getShopGroupCode)
+                        .collect(Collectors.toList()));
+        List<String> machineCodeList = DaoUtils.getMachineCodeListByShopCodeList(tenantCode, shopCodeList);
         return machineCodeList;
     }
 

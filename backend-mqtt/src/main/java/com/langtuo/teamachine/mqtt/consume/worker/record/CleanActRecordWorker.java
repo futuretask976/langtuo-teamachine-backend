@@ -6,7 +6,7 @@ import com.alibaba.fastjson.util.TypeUtils;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.dao.accessor.record.CleanActRecordAccessor;
 import com.langtuo.teamachine.dao.po.record.CleanActRecordPO;
-import com.langtuo.teamachine.dao.util.SpringUtils;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.request.record.CleanActRecordPutRequest;
@@ -50,7 +50,7 @@ public class CleanActRecordWorker implements Runnable {
 
         CleanActRecordPO po = convert(request);
         try {
-            CleanActRecordAccessor cleanActRecordAccessor = SpringUtils.getCleanActRecordAccessor();
+            CleanActRecordAccessor cleanActRecordAccessor = SpringAccessorUtils.getCleanActRecordAccessor();
             CleanActRecordPO exist = cleanActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = cleanActRecordAccessor.insert(po);

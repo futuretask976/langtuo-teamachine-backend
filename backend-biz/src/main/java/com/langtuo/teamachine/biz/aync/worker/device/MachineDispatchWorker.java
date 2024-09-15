@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
-import com.langtuo.teamachine.biz.util.SpringUtils;
+import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -44,12 +44,12 @@ public class MachineDispatchWorker implements Runnable {
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MACHINE);
         jsonMsg.put(CommonConsts.JSON_KEY_MACHINE, jsonDispatchCont);
 
-        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
+        MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
     }
 
     private JSONObject getDispatchCont() {
-        MachineMgtService machineMgtService = SpringUtils.getMachineMgtService();
+        MachineMgtService machineMgtService = SpringServiceUtils.getMachineMgtService();
         MachineDTO dto = getModel(machineMgtService.getByCode(tenantCode, machineCode));
         if (dto == null) {
             log.info("machine is null, stop worker");

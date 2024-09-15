@@ -10,7 +10,7 @@ import com.langtuo.teamachine.dao.accessor.record.OrderToppingActRecordAccessor;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
-import com.langtuo.teamachine.dao.util.SpringUtils;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +56,7 @@ public class OrderActRecordWorker implements Runnable {
         List<OrderSpecItemActRecordPO> orderSpecItemActRecordPOList = convertToSpecItemActRecordPO(request);
         List<OrderToppingActRecordPO> orderToppingActRecordPOList = convertToOrderToppingActRecordPO(request);
         try {
-            OrderActRecordAccessor orderActRecordAccessor = SpringUtils.getOrderActRecordAccessor();
+            OrderActRecordAccessor orderActRecordAccessor = SpringAccessorUtils.getOrderActRecordAccessor();
             OrderActRecordPO exist = orderActRecordAccessor.selectOne(po.getTenantCode(),
                     po.getIdempotentMark());
             if (exist == null) {
@@ -64,7 +64,7 @@ public class OrderActRecordWorker implements Runnable {
             }
 
             OrderSpecItemActRecordAccessor orderSpecItemActRecordAccessor =
-                    SpringUtils.getOrderSpecItemActRecordAccessor();
+                    SpringAccessorUtils.getOrderSpecItemActRecordAccessor();
             int deleted4SpecItemActRec = orderSpecItemActRecordAccessor.delete(po.getTenantCode(),
                     po.getIdempotentMark());
             for (OrderSpecItemActRecordPO orderSpecItemActRecordPO : orderSpecItemActRecordPOList) {
@@ -72,7 +72,7 @@ public class OrderActRecordWorker implements Runnable {
             }
 
             OrderToppingActRecordAccessor orderToppingActRecordAccessor =
-                    SpringUtils.getOrderToppingActRecordAccessor();
+                    SpringAccessorUtils.getOrderToppingActRecordAccessor();
             int deleted4ToppingActRec = orderToppingActRecordAccessor.delete(po.getTenantCode(),
                     po.getIdempotentMark());
             for (OrderToppingActRecordPO orderToppingActRecordPO : orderToppingActRecordPOList) {

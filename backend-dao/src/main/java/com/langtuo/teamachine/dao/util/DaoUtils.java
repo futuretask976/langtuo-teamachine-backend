@@ -1,6 +1,8 @@
 package com.langtuo.teamachine.dao.util;
 
+import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
+import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
@@ -11,20 +13,49 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DaoUtils {
+    /**
+     * 获取指定店铺编码列表下的机器列表
+     * @param tenantCode
+     * @param shopCodeList
+     * @return
+     */
+    public static List<String> getMachineCodeListByShopCodeList(String tenantCode, List<String> shopCodeList) {
+        if (StringUtils.isBlank(tenantCode) || CollectionUtils.isEmpty(shopCodeList)) {
+            return null;
+        }
+
+        MachineAccessor machineAccessor = SpringAccessorUtils.getMachineItemAccessor();
+        List<String> machineCodeList = shopCodeList.stream()
+                .map(shopCode -> {
+                    List<MachinePO> machinePOList = machineAccessor.selectListByShopCode(tenantCode, shopCode);
+                    if (CollectionUtils.isEmpty(machinePOList)) {
+                        return null;
+                    }
+                    return machinePOList.stream()
+                            .map(shop -> shop.getMachineCode())
+                            .collect(Collectors.toList());
+                })
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        return machineCodeList;
+    }
+
     /**
      * 根据店铺组编码获取其关联的店铺编码列表
      * @param tenantCode
      * @return
      */
-    public static List<String> getShopCodeListByShopGroupCode(String tenantCode, List<String> shopGroupCodeList) {
+    public static List<String> getShopCodeListByShopGroupCodeList(String tenantCode, List<String> shopGroupCodeList) {
         if (CollectionUtils.isEmpty(shopGroupCodeList)) {
             return null;
         }
 
-        List<ShopPO> shopPOList = SpringUtils.getShopAccessor().selectListByShopGroupCode(tenantCode,
+        List<ShopPO> shopPOList = SpringAccessorUtils.getShopAccessor().selectListByShopGroupCode(tenantCode,
                 shopGroupCodeList);
         if (CollectionUtils.isEmpty(shopPOList)) {
             return null;
@@ -52,7 +83,7 @@ public class DaoUtils {
             return null;
         }
 
-        List<ShopPO> shopPOList = SpringUtils.getShopAccessor().selectListByShopGroupCode(tenantCode,
+        List<ShopPO> shopPOList = SpringAccessorUtils.getShopAccessor().selectListByShopGroupCode(tenantCode,
                 shopGroupCodeList);
         if (CollectionUtils.isEmpty(shopPOList)) {
             return null;
@@ -74,7 +105,7 @@ public class DaoUtils {
             return null;
         }
 
-        List<ShopGroupPO> shopGroupPOList = SpringUtils.getShopGroupAccessor()
+        List<ShopGroupPO> shopGroupPOList = SpringAccessorUtils.getShopGroupAccessor()
                 .selectListByOrgName(tenantCode, orgNameListByAdmin);
         if (CollectionUtils.isEmpty(shopGroupPOList)) {
             return null;
@@ -93,7 +124,7 @@ public class DaoUtils {
     public static List<String> getOrgNameListByAdmin(String tenantCode) {
         AdminPO adminPO = getLoginAdminPO(tenantCode);
         String orgName = adminPO.getOrgName();
-        List<OrgNode> orgPOList = SpringUtils.getOrgAccessor().selectListByParent(tenantCode, orgName);
+        List<OrgNode> orgPOList = SpringAccessorUtils.getOrgAccessor().selectListByParent(tenantCode, orgName);
         List<String> orgNameList = orgPOList.stream()
                 .map(OrgNode::getOrgName)
                 .collect(Collectors.toList());
@@ -116,7 +147,7 @@ public class DaoUtils {
             throw new IllegalArgumentException("couldn't find login session");
         }
 
-        AdminPO adminPO = SpringUtils.getAdminAccessor().selectOneByLoginName(tenantCode, adminLoginName);
+        AdminPO adminPO = SpringAccessorUtils.getAdminAccessor().selectOneByLoginName(tenantCode, adminLoginName);
         return adminPO;
     }
 }

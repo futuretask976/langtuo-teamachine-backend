@@ -15,7 +15,7 @@ import com.langtuo.teamachine.api.service.user.*;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import org.springframework.context.ApplicationContext;
 
-public class SpringUtils {
+public class SpringServiceUtils {
     public static MqttProducer getMqttProducer() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         MqttProducer mqttProducer = appContext.getBean(MqttProducer.class);

@@ -6,7 +6,7 @@ import com.alibaba.fastjson.util.TypeUtils;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.dao.accessor.record.DrainActRecordAccessor;
 import com.langtuo.teamachine.dao.po.record.DrainActRecordPO;
-import com.langtuo.teamachine.dao.util.SpringUtils;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.request.record.DrainActRecordPutRequest;
@@ -50,7 +50,7 @@ public class DrainActRecordWorker implements Runnable {
 
         DrainActRecordPO po = convert(request);
         try {
-            DrainActRecordAccessor drainActRecordAccessor = SpringUtils.getDrainActRecordAccessor();
+            DrainActRecordAccessor drainActRecordAccessor = SpringAccessorUtils.getDrainActRecordAccessor();
             DrainActRecordPO exist = drainActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = drainActRecordAccessor.insert(po);

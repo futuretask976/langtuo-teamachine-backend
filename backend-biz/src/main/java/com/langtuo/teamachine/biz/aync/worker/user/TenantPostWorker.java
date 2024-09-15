@@ -10,7 +10,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.OrgMgtService;
 import com.langtuo.teamachine.api.service.user.PermitActMgtService;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
-import com.langtuo.teamachine.biz.util.SpringUtils;
+import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class TenantPostWorker implements Runnable {
 
     @Override
     public void run() {
-        RoleMgtService roleMgtService = SpringUtils.getRoleMgtService();
+        RoleMgtService roleMgtService = SpringServiceUtils.getRoleMgtService();
         RoleDTO superRole4Tenant = getModel(roleMgtService.getByCode(tenantCode, DaoConsts.ROLE_CODE_TENANT_SUPER));
         if (superRole4Tenant == null) {
             RolePutRequest rolePutRequest = new RolePutRequest();
@@ -47,7 +47,7 @@ public class TenantPostWorker implements Runnable {
             rolePutRequest.setRoleName(DaoConsts.ROLE_NAME_TENANT_SUPER);
             rolePutRequest.setSysReserved(DaoConsts.ROLE_SYS_RESERVED);
 
-            PermitActMgtService permitActMgtService = SpringUtils.getPermitActMgtService();
+            PermitActMgtService permitActMgtService = SpringServiceUtils.getPermitActMgtService();
             List<PermitActDTO> permitActDTOList = getListModel(permitActMgtService.listPermitAct());
             rolePutRequest.setPermitActCodeList(permitActDTOList.stream()
                     .map(PermitActDTO::getPermitActCode)
@@ -59,7 +59,7 @@ public class TenantPostWorker implements Runnable {
             }
         }
 
-        OrgMgtService orgMgtService = SpringUtils.getOrgMgtService();
+        OrgMgtService orgMgtService = SpringServiceUtils.getOrgMgtService();
         OrgDTO orgDTO = getModel(orgMgtService.get(tenantCode, DaoConsts.ORG_NAME_TOP));
         if (orgDTO == null) {
             OrgPutRequest orgPutRequest = new OrgPutRequest();

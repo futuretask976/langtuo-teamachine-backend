@@ -5,7 +5,7 @@ import com.langtuo.teamachine.api.model.device.ModelDTO;
 import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
-import com.langtuo.teamachine.biz.util.SpringUtils;
+import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -43,19 +43,19 @@ public class ModelDispatchWorker implements Runnable {
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MODEL);
         jsonMsg.put(CommonConsts.JSON_KEY_MODEL, jsonDispatchCont);
 
-        TenantMgtService tenantMgtService = SpringUtils.getTenantMgtService();
+        TenantMgtService tenantMgtService = SpringServiceUtils.getTenantMgtService();
         List<String> tenantCodeList = getListModel(tenantMgtService.list()).stream()
                 .map(TenantDTO::getTenantCode)
                 .collect(Collectors.toList());
 
-        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
+        MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         tenantCodeList.forEach(tenantCode -> {
             mqttProducer.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
         });
     }
 
     private JSONObject getDispatchCont() {
-        ModelMgtService modelMgtService = SpringUtils.getModelMgtService();
+        ModelMgtService modelMgtService = SpringServiceUtils.getModelMgtService();
         ModelDTO dto = getModel(modelMgtService.get(modelCode));
         if (dto == null) {
             log.info("model is empty, stop worker");

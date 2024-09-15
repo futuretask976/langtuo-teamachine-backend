@@ -3,7 +3,7 @@ package com.langtuo.teamachine.biz.aync.worker.drink;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
-import com.langtuo.teamachine.biz.util.SpringUtils;
+import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -44,12 +44,12 @@ public class AccuracyTplDispatchWorker implements Runnable {
         jsonMsg.put(CommonConsts.JSON_KEY_ACCURACY_TPL, jsonDispatchCont);
         log.info("$$$$$ AccuracyDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
-        MqttProducer mqttProducer = SpringUtils.getMqttProducer();
+        MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         mqttProducer.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
     }
 
     private JSONObject getDispatchCont() {
-        AccuracyTplMgtService accuracyTplMgtService = SpringUtils.getToppingAccuracyTplMgtService();
+        AccuracyTplMgtService accuracyTplMgtService = SpringServiceUtils.getToppingAccuracyTplMgtService();
         AccuracyTplDTO dto = getModel(accuracyTplMgtService.getByCode(tenantCode, templateCode));
         if (dto == null) {
             log.info("open rule list is empty, stop worker");
