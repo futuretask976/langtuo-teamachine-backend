@@ -132,11 +132,12 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         try {
             ShopPO exist = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = shopAccessor.insert(po);
             if (CommonConsts.NUM_ONE != inserted) {
+                log.error("shopMgtService|putNew|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
             return TeaMachineResult.success();
@@ -150,11 +151,12 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         try {
             ShopPO exist = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = shopAccessor.insert(po);
             if (CommonConsts.NUM_ONE != updated) {
+                log.error("shopMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
             return TeaMachineResult.success();
