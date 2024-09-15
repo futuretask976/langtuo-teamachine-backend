@@ -1,12 +1,10 @@
 package com.langtuo.teamachine.dao.util;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.langtuo.teamachine.dao.accessor.device.AndroidAppAccessor;
 import com.langtuo.teamachine.dao.accessor.device.AndroidAppDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.*;
-import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.record.*;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleDispatchAccessor;
@@ -21,12 +19,6 @@ public class SpringAccessorUtils {
     public static OrderToppingActRecordAccessor getOrderToppingActRecordAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         OrderToppingActRecordAccessor accessor = appContext.getBean(OrderToppingActRecordAccessor.class);
-        return accessor;
-    }
-
-    public static MenuAccessor getMenuAccessor() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MenuAccessor accessor = appContext.getBean(MenuAccessor.class);
         return accessor;
     }
 
@@ -183,12 +175,6 @@ public class SpringAccessorUtils {
     public static MachineAccessor getMachineItemAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         MachineAccessor accessor = appContext.getBean(MachineAccessor.class);
-        return accessor;
-    }
-
-    public static AndroidAppAccessor getAndroidAppAccessor() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        AndroidAppAccessor accessor = appContext.getBean(AndroidAppAccessor.class);
         return accessor;
     }
 
