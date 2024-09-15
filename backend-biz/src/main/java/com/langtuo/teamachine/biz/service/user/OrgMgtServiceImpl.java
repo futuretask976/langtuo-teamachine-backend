@@ -119,15 +119,15 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         try {
             OrgNode exist = orgAccessor.selectOne(po.getTenantCode(), po.getOrgName());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = orgAccessor.insert(po);
-            if (inserted == CommonConsts.NUM_ONE) {
-                teaMachineResult = TeaMachineResult.success();
-            } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            if (inserted != CommonConsts.NUM_ONE) {
+                log.error("orgMgtService|putNew|error|" + inserted);
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("orgMgtService|putNew|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
@@ -139,11 +139,12 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         try {
             OrgNode exist = orgAccessor.selectOne(po.getTenantCode(), po.getOrgName());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = orgAccessor.update(po);
             if (updated != CommonConsts.NUM_ONE) {
+                log.error("orgMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();

@@ -142,38 +142,39 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         try {
             AdminPO exist = adminAccessor.selectOneByLoginName(po.getTenantCode(), po.getLoginName());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = adminAccessor.insert(po);
-            if (inserted == CommonConsts.NUM_ONE) {
-                teaMachineResult = TeaMachineResult.success();
-            } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            if (inserted != CommonConsts.NUM_ONE) {
+                log.error("adminMgtService|putNew|error|" + inserted);
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("adminMgtService|putNew|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private TeaMachineResult<Void> putUpdate(AdminPO po) {
         try {
             AdminPO exist = adminAccessor.selectOneByLoginName(po.getTenantCode(), po.getLoginName());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(exist.getRoleCode())) {
                 AdminPO loginAdminPO = DaoUtils.getLoginAdminPO(po.getTenantCode());
                 if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(loginAdminPO.getRoleCode())) {
-                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                            ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN));
                 }
             }
 
             int updated = adminAccessor.update(po);
             if (updated != CommonConsts.NUM_ONE) {
+                log.error("adminMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();

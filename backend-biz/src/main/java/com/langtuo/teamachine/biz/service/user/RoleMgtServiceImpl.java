@@ -147,17 +147,21 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         try {
             RolePO exist = roleAccessor.selectOneByRoleCode(po.getTenantCode(), po.getRoleCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = roleAccessor.insert(po);
             if (CommonConsts.NUM_ONE != inserted) {
+                log.error("roleMgtService|putNewRole|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(po.getTenantCode(), po.getRoleCode());
             for (RoleActRelPO actRelPO : actRelPOList) {
                 int inserted4actRel = roleActRelAccessor.insert(actRelPO);
+                if (CommonConsts.NUM_ONE != inserted) {
+                    log.error("roleMgtService|putNewActRel|error|" + inserted4actRel);
+                }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
@@ -178,12 +182,16 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
             int inserted = roleAccessor.insert(po);
             if (CommonConsts.NUM_ONE != inserted) {
+                log.error("roleMgtService|putUpdateRole|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(po.getTenantCode(), po.getRoleCode());
             for (RoleActRelPO actRelPO : actRelPOList) {
                 int inserted4actRel = roleActRelAccessor.insert(actRelPO);
+                if (CommonConsts.NUM_ONE != inserted) {
+                    log.error("roleMgtService|putUpdateActRel|error|" + inserted4actRel);
+                }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
