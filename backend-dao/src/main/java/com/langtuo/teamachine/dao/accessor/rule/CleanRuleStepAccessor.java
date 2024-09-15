@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.dao.accessor.rule;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.rule.CleanRuleStepMapper;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleStepPO;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -31,7 +31,7 @@ public class CleanRuleStepAccessor {
 
     public int insert(CleanRuleStepPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getCleanRuleCode());
         }
         return inserted;
@@ -39,7 +39,7 @@ public class CleanRuleStepAccessor {
 
     public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         int deleted = mapper.delete(tenantCode, cleanRuleCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, cleanRuleCode);
         }
         return deleted;

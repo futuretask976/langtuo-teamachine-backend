@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.menu;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.menu.SeriesMapper;
 import com.langtuo.teamachine.dao.po.menu.SeriesPO;
 import com.langtuo.teamachine.dao.query.menu.SeriesQuery;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -79,7 +79,7 @@ public class SeriesAccessor {
 
     public int insert(SeriesPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSeriesCode(), po.getSeriesName());
             deleteCacheList(po.getTenantCode());
         }
@@ -88,7 +88,7 @@ public class SeriesAccessor {
 
     public int update(SeriesPO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSeriesCode(), po.getSeriesName());
             deleteCacheList(po.getTenantCode());
         }
@@ -98,11 +98,11 @@ public class SeriesAccessor {
     public int deleteBySeriesCode(String tenantCode, String seriesCode) {
         SeriesPO po = selectOneBySeriesCode(tenantCode, seriesCode);
         if (po == null) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, seriesCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getSeriesCode(), po.getSeriesName());
             deleteCacheList(tenantCode);
         }

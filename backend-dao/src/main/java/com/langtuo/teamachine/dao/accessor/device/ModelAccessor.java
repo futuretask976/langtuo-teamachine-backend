@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.device;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.device.ModelMapper;
 import com.langtuo.teamachine.dao.po.device.ModelPO;
 import com.langtuo.teamachine.dao.query.device.MachineModelQuery;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -62,7 +62,7 @@ public class ModelAccessor {
 
     public int insert(ModelPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getModelCode());
             deleteCacheList();
         }
@@ -71,7 +71,7 @@ public class ModelAccessor {
 
     public int update(ModelPO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getModelCode());
             deleteCacheList();
         }
@@ -80,7 +80,7 @@ public class ModelAccessor {
 
     public int deleteByModelCode(String modelCode) {
         int deleted = mapper.delete(modelCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(modelCode);
             deleteCacheList();
         }

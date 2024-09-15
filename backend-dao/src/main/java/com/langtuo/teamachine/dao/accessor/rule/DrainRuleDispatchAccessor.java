@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.dao.accessor.rule;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.rule.DrainRuleDispatchMapper;
 import com.langtuo.teamachine.dao.po.rule.DrainRuleDispatchPO;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -44,7 +44,7 @@ public class DrainRuleDispatchAccessor {
 
     public int insert(DrainRuleDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getDrainRuleCode(), po.getShopGroupCode());
         }
         return inserted;
@@ -53,12 +53,12 @@ public class DrainRuleDispatchAccessor {
     public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         List<DrainRuleDispatchPO> existList = selectListByDrainRuleCode(tenantCode, cleanRuleCode);
         if (CollectionUtils.isEmpty(existList)) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
         String shopGroupCode = existList.get(0).getShopGroupCode();
 
         int deleted = mapper.delete(tenantCode, cleanRuleCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, cleanRuleCode, shopGroupCode);
         }
         return deleted;

@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.dao.accessor.device;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.device.AndroidAppDispatchMapper;
 import com.langtuo.teamachine.dao.po.device.AndroidAppDispatchPO;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -46,7 +46,7 @@ public class AndroidAppDispatchAccessor {
 
     public int insert(AndroidAppDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getVersion(), po.getShopGroupCode());
         }
         return inserted;
@@ -54,7 +54,7 @@ public class AndroidAppDispatchAccessor {
 
     public int update(AndroidAppDispatchPO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getVersion(), po.getShopGroupCode());
         }
         return updated;
@@ -63,12 +63,12 @@ public class AndroidAppDispatchAccessor {
     public int deleteByAndroidAppVersion(String tenantCode, String version) {
         List<AndroidAppDispatchPO> existList = selectListByAndroidAppVersion(tenantCode, version);
         if (CollectionUtils.isEmpty(existList)) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
         String shopGroupCode = existList.get(0).getShopGroupCode();
 
         int deleted = mapper.delete(tenantCode, version);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, version, shopGroupCode);
         }
         return deleted;

@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.menu;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.menu.MenuMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.query.menu.MenuQuery;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -85,7 +85,7 @@ public class MenuAccessor {
 
     public int insert(MenuPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMenuCode(), po.getMenuName());
             deleteCacheList(po.getTenantCode());
         }
@@ -94,7 +94,7 @@ public class MenuAccessor {
 
     public int update(MenuPO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMenuCode(), po.getMenuName());
             deleteCacheList(po.getTenantCode());
         }
@@ -104,11 +104,11 @@ public class MenuAccessor {
     public int deleteByMenuCode(String tenantCode, String menuCode) {
         MenuPO po = selectOneByMenuCode(tenantCode, menuCode);
         if (po == null) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, menuCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getMenuCode(), po.getMenuName());
             deleteCacheList(tenantCode);
         }

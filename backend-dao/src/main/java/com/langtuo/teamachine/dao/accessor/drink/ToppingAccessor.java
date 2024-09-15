@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.drink;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.drink.ToppingMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingPO;
 import com.langtuo.teamachine.dao.query.drink.ToppingQuery;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -79,7 +79,7 @@ public class ToppingAccessor {
 
     public int insert(ToppingPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(po.getTenantCode(), po.getToppingTypeCode());
         }
@@ -88,7 +88,7 @@ public class ToppingAccessor {
 
     public int update(ToppingPO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(po.getTenantCode(), po.getToppingTypeCode());
@@ -99,11 +99,11 @@ public class ToppingAccessor {
     public int deleteByToppingCode(String tenantCode, String toppingCode) {
         ToppingPO po = selectOneByToppingCode(tenantCode, toppingCode);
         if (po == null) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, toppingCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(po.getTenantCode(), po.getToppingTypeCode());

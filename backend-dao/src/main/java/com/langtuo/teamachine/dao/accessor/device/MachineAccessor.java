@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.device;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.device.MachineMapper;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.query.device.MachineQuery;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -94,7 +94,7 @@ public class MachineAccessor {
 
     public int insert(MachinePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getShopCode());
             deleteCacheCount(po.getModelCode());
         }
@@ -103,7 +103,7 @@ public class MachineAccessor {
 
     public int update(MachinePO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode(), po.getShopCode());
             deleteCacheCount(po.getModelCode());
@@ -114,11 +114,11 @@ public class MachineAccessor {
     public int deleteByMachineCode(String tenantCode, String machineCode) {
         MachinePO po = selectOneByMachineCode(tenantCode, machineCode);
         if (po == null) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, machineCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, machineCode);
             deleteCacheList(tenantCode, po.getShopCode());
             deleteCacheCount(po.getModelCode());

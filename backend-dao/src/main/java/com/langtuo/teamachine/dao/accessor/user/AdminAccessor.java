@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.user;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.user.AdminMapper;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
 import com.langtuo.teamachine.dao.query.user.AdminQuery;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -70,7 +70,7 @@ public class AdminAccessor {
 
     public int insert(AdminPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(po.getTenantCode(), po.getRoleCode());
         }
@@ -79,7 +79,7 @@ public class AdminAccessor {
 
     public int update(AdminPO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getLoginName());
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(po.getTenantCode(), po.getRoleCode());
@@ -89,7 +89,7 @@ public class AdminAccessor {
 
     public int updatePassword(String tenantCode, String loginName, String loginPass) {
         int updated = mapper.updatePassword(tenantCode, loginName, loginPass);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(tenantCode, loginName);
             deleteCacheList(tenantCode);
         }
@@ -99,11 +99,11 @@ public class AdminAccessor {
     public int deleteByLoginName(String tenantCode, String loginName) {
         AdminPO po = selectOneByLoginName(tenantCode, loginName);
         if (po == null) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, loginName);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, loginName);
             deleteCacheList(tenantCode);
             deleteCacheCount(tenantCode, po.getRoleCode());
@@ -185,16 +185,16 @@ public class AdminAccessor {
     }
 
     private AdminPO getSysSuperAdmin(String tenantCode, String loginName) {
-        if (!DaoConsts.ADMIN_SYS_SUPER_LOGIN_NAME.equals(loginName)) {
+        if (!CommonConsts.ADMIN_SYS_SUPER_LOGIN_NAME.equals(loginName)) {
             return null;
         }
 
         AdminPO po = new AdminPO();
         po.setTenantCode(tenantCode);
-        po.setLoginName(DaoConsts.ADMIN_SYS_SUPER_LOGIN_NAME);
-        po.setLoginPass(DaoConsts.ADMIN_SYS_SUPER_PASSWORD);
-        po.setOrgName(DaoConsts.ORG_NAME_TOP);
-        po.setRoleCode(DaoConsts.ROLE_CODE_SYS_SUPER);
+        po.setLoginName(CommonConsts.ADMIN_SYS_SUPER_LOGIN_NAME);
+        po.setLoginPass(CommonConsts.ADMIN_SYS_SUPER_PASSWORD);
+        po.setOrgName(CommonConsts.ORG_NAME_TOP);
+        po.setRoleCode(CommonConsts.ROLE_CODE_SYS_SUPER);
         return po;
     }
 }

@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.dao.accessor.menu;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.menu.MenuSeriesRelMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -46,7 +46,7 @@ public class MenuSeriesRelAccessor {
 
     public int insert(MenuSeriesRelPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getMenuCode());
         }
         return inserted;
@@ -54,7 +54,7 @@ public class MenuSeriesRelAccessor {
 
     public int deleteByMenuCode(String tenantCode, String menuCode) {
         int deleted = mapper.delete(tenantCode, menuCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, menuCode);
         }
         return deleted;

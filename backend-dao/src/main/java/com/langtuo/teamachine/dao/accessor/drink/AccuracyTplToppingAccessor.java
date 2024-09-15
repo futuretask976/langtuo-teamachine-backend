@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.drink.AccuracyTplToppingMapper;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplToppingPO;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -33,7 +33,7 @@ public class AccuracyTplToppingAccessor {
 
     public int insert(AccuracyTplToppingPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getTemplateCode());
         }
         return inserted;
@@ -41,7 +41,7 @@ public class AccuracyTplToppingAccessor {
 
     public int deleteByTplCode(String tenantCode, String templateCode) {
         int deleted = mapper.delete(tenantCode, templateCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, templateCode);
         }
         return deleted;

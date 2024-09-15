@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.user;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.user.RoleMapper;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import com.langtuo.teamachine.dao.query.user.AdminRoleQuery;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -92,7 +92,7 @@ public class RoleAccessor {
 
     public int insert(RolePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getRoleCode(), po.getRoleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -101,7 +101,7 @@ public class RoleAccessor {
 
     public int update(RolePO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getRoleCode(), po.getRoleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -111,11 +111,11 @@ public class RoleAccessor {
     public int deleteByRoleCode(String tenantCode, String roleCode) {
         RolePO po = selectOneByRoleCode(tenantCode, roleCode);
         if (po == null) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, roleCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getRoleCode(), po.getRoleName());
             deleteCacheList(tenantCode);
         }
@@ -164,14 +164,14 @@ public class RoleAccessor {
     }
 
     private RolePO getSysSuperRole(String tenantCode, String roleCode) {
-        if (!DaoConsts.ROLE_CODE_SYS_SUPER.equals(roleCode)) {
+        if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(roleCode)) {
             return null;
         }
 
         RolePO po = new RolePO();
-        po.setRoleCode(DaoConsts.ROLE_CODE_SYS_SUPER);
-        po.setRoleName(DaoConsts.ROLE_NAME_SYS_SUPER);
-        po.setSysReserved(DaoConsts.ROLE_SYS_RESERVED);
+        po.setRoleCode(CommonConsts.ROLE_CODE_SYS_SUPER);
+        po.setRoleName(CommonConsts.ROLE_NAME_SYS_SUPER);
+        po.setSysReserved(CommonConsts.ROLE_SYS_RESERVED);
         return po;
     }
 }

@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.dao.accessor.user;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.constant.PermitActEnum;
 import com.langtuo.teamachine.dao.mapper.user.RoleActRelMapper;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +41,7 @@ public class RoleActRelAccessor {
 
     public int insert(RoleActRelPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getRoleCode());
         }
         return inserted;
@@ -49,7 +49,7 @@ public class RoleActRelAccessor {
 
     public int deleteByRoleCode(String tenantCode, String roleCode) {
         int deleted = mapper.delete(tenantCode, roleCode);
-        if (deleted > DaoConsts.DELETED_ZERO_ROW) {
+        if (deleted > CommonConsts.DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, roleCode);
         }
         return deleted;
@@ -76,7 +76,7 @@ public class RoleActRelAccessor {
     }
 
     public List<RoleActRelPO> getSysSuperRoleActRel(String tenantCode, String roleCode) {
-        if (!DaoConsts.ROLE_CODE_SYS_SUPER.equals(roleCode)) {
+        if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(roleCode)) {
             return null;
         }
 
@@ -92,13 +92,13 @@ public class RoleActRelAccessor {
         RoleActRelPO roleActRelPO4Tenant = new RoleActRelPO();
         roleActRelPO4Tenant.setTenantCode(tenantCode);
         roleActRelPO4Tenant.setRoleCode(roleCode);
-        roleActRelPO4Tenant.setPermitActCode(DaoConsts.PERMIT_ACT_CODE_TENANT);
+        roleActRelPO4Tenant.setPermitActCode(CommonConsts.PERMIT_ACT_CODE_TENANT);
         roleActRelPOList.add(roleActRelPO4Tenant);
 
         RoleActRelPO roleActRelPO4AndroidApp = new RoleActRelPO();
         roleActRelPO4AndroidApp.setTenantCode(tenantCode);
         roleActRelPO4AndroidApp.setRoleCode(roleCode);
-        roleActRelPO4AndroidApp.setPermitActCode(DaoConsts.PERMIT_ACT_CODE_ANDROID_APP_MGT);
+        roleActRelPO4AndroidApp.setPermitActCode(CommonConsts.PERMIT_ACT_CODE_ANDROID_APP_MGT);
         roleActRelPOList.add(roleActRelPO4AndroidApp);
 
         return roleActRelPOList;

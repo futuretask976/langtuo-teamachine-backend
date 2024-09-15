@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.drink;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.drink.ToppingTypeMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingTypePO;
 import com.langtuo.teamachine.dao.query.drink.ToppingTypeQuery;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -79,7 +79,7 @@ public class ToppingTypeAccessor {
 
     public int insert(ToppingTypePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getToppingTypeCode(), po.getToppingTypeName());
             deleteCacheList(po.getTenantCode());
         }
@@ -88,7 +88,7 @@ public class ToppingTypeAccessor {
 
     public int update(ToppingTypePO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getToppingTypeCode(), po.getToppingTypeName());
             deleteCacheList(po.getTenantCode());
         }
@@ -98,11 +98,11 @@ public class ToppingTypeAccessor {
     public int delete(String tenantCode, String toppingTypeCode) {
         ToppingTypePO po = selectOneByToppingTypeCode(tenantCode, toppingTypeCode);
         if (po == null) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, toppingTypeCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getToppingTypeCode(), po.getToppingTypeName());
             deleteCacheList(tenantCode);
         }

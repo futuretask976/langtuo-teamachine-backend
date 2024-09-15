@@ -3,10 +3,10 @@ package com.langtuo.teamachine.dao.accessor.shop;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.shop.ShopMapper;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.query.shop.ShopQuery;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -92,7 +92,7 @@ public class ShopAccessor {
 
     public int insert(ShopPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
             deleteCacheCount(po.getTenantCode(), po.getShopGroupCode());
         }
@@ -101,7 +101,7 @@ public class ShopAccessor {
 
     public int update(ShopPO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
             deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
             deleteCacheCount(po.getTenantCode(), po.getShopGroupCode());
@@ -112,11 +112,11 @@ public class ShopAccessor {
     public int delete(String tenantCode, String shopCode) {
         ShopPO po = selectOneByShopCode(tenantCode, shopCode);
         if (po == null) {
-            return DaoConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, shopCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getShopCode(), po.getShopName());
             deleteCacheList(tenantCode, po.getShopGroupCode());
             deleteCacheCount(po.getTenantCode(), po.getShopGroupCode());

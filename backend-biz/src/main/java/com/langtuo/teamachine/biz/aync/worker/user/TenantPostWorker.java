@@ -6,7 +6,6 @@ import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.user.PermitActPO;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
@@ -36,9 +35,9 @@ public class TenantPostWorker implements Runnable {
     public void run() {
         RolePO rolePO = new RolePO();
         rolePO.setTenantCode(tenantCode);
-        rolePO.setRoleCode(DaoConsts.ROLE_CODE_TENANT_SUPER);
-        rolePO.setRoleName(DaoConsts.ROLE_NAME_TENANT_SUPER);
-        rolePO.setSysReserved(DaoConsts.ROLE_SYS_RESERVED);
+        rolePO.setRoleCode(CommonConsts.ROLE_CODE_TENANT_SUPER);
+        rolePO.setRoleName(CommonConsts.ROLE_NAME_TENANT_SUPER);
+        rolePO.setSysReserved(CommonConsts.ROLE_SYS_RESERVED);
 
         RoleAccessor roleAccessor = SpringAccessorUtils.getRoleAccessor();
         int inserted4Role = roleAccessor.insert(rolePO);
@@ -53,14 +52,14 @@ public class TenantPostWorker implements Runnable {
         for (PermitActPO permitActPO : permitActPOList) {
             RoleActRelPO actRelPO = new RoleActRelPO();
             actRelPO.setTenantCode(tenantCode);
-            actRelPO.setRoleCode(DaoConsts.ROLE_CODE_TENANT_SUPER);
+            actRelPO.setRoleCode(CommonConsts.ROLE_CODE_TENANT_SUPER);
             actRelPO.setPermitActCode(permitActPO.getPermitActCode());
             int inserted4ActRel = roleActRelAccessor.insert(actRelPO);
         }
 
         OrgNode orgNode = new OrgNode();
         orgNode.setTenantCode(tenantCode);
-        orgNode.setOrgName(DaoConsts.ORG_NAME_TOP);
+        orgNode.setOrgName(CommonConsts.ORG_NAME_TOP);
 
         OrgAccessor orgAccessor = SpringAccessorUtils.getOrgAccessor();
         int inserted4Org = orgAccessor.insert(orgNode);

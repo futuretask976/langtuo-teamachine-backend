@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.drink.SpecItemMapper;
 import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -61,7 +61,7 @@ public class SpecItemAccessor {
 
     public int insert(SpecItemPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecItemCode(), po.getSpecItemName());
             deleteCacheList(po.getTenantCode(), po.getSpecCode());
         }
@@ -70,7 +70,7 @@ public class SpecItemAccessor {
 
     public int update(SpecItemPO po) {
         int updated = mapper.update(po);
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecItemCode(), po.getSpecItemName());
             deleteCacheList(po.getTenantCode(), po.getSpecCode());
         }
@@ -81,7 +81,7 @@ public class SpecItemAccessor {
         List<SpecItemPO> specItemPOList = mapper.selectList(tenantCode, specCode);
 
         int deleted = mapper.delete(tenantCode, specCode);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             specItemPOList.forEach(specItemPO -> {
                 deleteCacheOne(tenantCode, specItemPO.getSpecItemCode(), specItemPO.getSpecItemName());
             });

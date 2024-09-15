@@ -2,10 +2,10 @@ package com.langtuo.teamachine.dao.accessor.user;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
-import com.langtuo.teamachine.dao.constant.DaoConsts;
 import com.langtuo.teamachine.dao.mapper.user.OrgMapper;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.user.OrgPO;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
@@ -102,7 +102,7 @@ public class OrgAccessor {
 
     public int insert(OrgNode node) {
         int inserted = mapper.insert(convert(node));
-        if (inserted == DaoConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             orgNodeMapByTenant.remove(node.getTenantCode());
         }
         return inserted;
@@ -110,7 +110,7 @@ public class OrgAccessor {
 
     public int update(OrgNode node) {
         int updated = mapper.update(convert(node));
-        if (updated == DaoConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.UPDATED_ONE_ROW) {
             orgNodeMapByTenant.remove(node.getTenantCode());
         }
         return updated;
@@ -118,7 +118,7 @@ public class OrgAccessor {
 
     public int delete(String tenantCode, String orgName) {
         int deleted = mapper.delete(tenantCode, orgName);
-        if (deleted == DaoConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DELETED_ONE_ROW) {
             orgNodeMapByTenant.remove(tenantCode);
         }
         return deleted;
