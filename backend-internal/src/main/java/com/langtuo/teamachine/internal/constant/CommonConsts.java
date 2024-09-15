@@ -249,11 +249,11 @@ public class CommonConsts {
     public static final String BIZ_CODE_ANDROID_APP_DISPATCHED = "androidAppDispatched";
     public static final String BIZ_CODE_TENANT_UPDATED = "tenantUpdated";
     public static final String BIZ_CODE_ACCURACY_TPL_UPDATED = "accuracyTplUpdated";
-    public static final String BIZ_CODE_MENU_DISPATCHED = "menuDispatched";
+    public static final String BIZ_CODE_MENU_DISPATCH_REQUESTED = "menuDispatchRequested";
     public static final String BIZ_CODE_MENU_LIST_REQUESTED = "menuListRequested";
-    public static final String BIZ_CODE_DRAIN_RULE_DISPATCHED = "drainRuleDispatched";
-    public static final String BIZ_CODE_CLEAN_RULE_DISPATCHED = "cleanRuleDispatched";
-    public static final String BIZ_CODE_WARNING_RULE_DISPATCHED = "warningRuleDispatched";
+    public static final String BIZ_CODE_DRAIN_RULE_DISPATCH_REQUESTED = "drainRuleDispatchRequested";
+    public static final String BIZ_CODE_CLEAN_RULE_DISPATCH_REQUESTED = "cleanRuleDispatchRequested";
+    public static final String BIZ_CODE_WARNING_RULE_DISPATCH_REQUESTED = "warningRuleDispatchRequested";
 
     /**
      * dispatch 用的消息 bizCode

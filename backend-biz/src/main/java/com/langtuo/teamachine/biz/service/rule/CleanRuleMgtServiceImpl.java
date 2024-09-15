@@ -16,8 +16,6 @@ import com.langtuo.teamachine.dao.accessor.rule.CleanRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleExceptAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleStepAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
-import com.langtuo.teamachine.dao.po.menu.MenuPO;
-import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleExceptPO;
 import com.langtuo.teamachine.dao.po.rule.CleanRulePO;
@@ -271,7 +269,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
         // 异步发送消息准备配置信息分发
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_CLEAN_RULE_DISPATCHED);
+        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_CLEAN_RULE_DISPATCH_REQUESTED);
         jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
         jsonPayload.put(CommonConsts.JSON_KEY_CLEAN_RULE_CODE, request.getCleanRuleCode());
         asyncDispatcher.dispatch(jsonPayload);

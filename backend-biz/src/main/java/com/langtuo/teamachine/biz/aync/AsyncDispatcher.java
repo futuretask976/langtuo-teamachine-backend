@@ -66,12 +66,12 @@ public class AsyncDispatcher implements InitializingBean {
         // drink 相关
         workerMap.put(CommonConsts.BIZ_CODE_ACCURACY_TPL_UPDATED, jsonPayload -> new AccuracyTplDispatchWorker(jsonPayload));
         // menu 相关
-        workerMap.put(CommonConsts.BIZ_CODE_MENU_DISPATCHED, jsonPayload -> new MenuDispatchWorker(jsonPayload));
+        workerMap.put(CommonConsts.BIZ_CODE_MENU_DISPATCH_REQUESTED, jsonPayload -> new MenuDispatchWorker(jsonPayload));
         workerMap.put(CommonConsts.BIZ_CODE_MENU_LIST_REQUESTED, jsonPayload -> new MenuDispatch4InitWorker(jsonPayload));
         // rule 相关
-        workerMap.put(CommonConsts.BIZ_CODE_DRAIN_RULE_DISPATCHED, jsonPayload -> new DrainRuleDispatchWorker(jsonPayload));
-        workerMap.put(CommonConsts.BIZ_CODE_CLEAN_RULE_DISPATCHED, jsonPayload -> new CleanRuleDispatchWorker(jsonPayload));
-        workerMap.put(CommonConsts.BIZ_CODE_WARNING_RULE_DISPATCHED, jsonPayload -> new WarningRuleDispatchWorker(jsonPayload));
+        workerMap.put(CommonConsts.BIZ_CODE_DRAIN_RULE_DISPATCH_REQUESTED, jsonPayload -> new DrainRuleDispatchWorker(jsonPayload));
+        workerMap.put(CommonConsts.BIZ_CODE_CLEAN_RULE_DISPATCH_REQUESTED, jsonPayload -> new CleanRuleDispatchWorker(jsonPayload));
+        workerMap.put(CommonConsts.BIZ_CODE_WARNING_RULE_DISPATCH_REQUESTED, jsonPayload -> new WarningRuleDispatchWorker(jsonPayload));
         // user 相关
         workerMap.put(CommonConsts.BIZ_CODE_TENANT_UPDATED, jsonPayload -> new TenantPostWorker(jsonPayload));
     }
