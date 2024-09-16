@@ -45,7 +45,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
             AndroidAppPO po = androidAppAccessor.selectOne(version);
             teaMachineResult = TeaMachineResult.success(convertToAndroidAppDTO(po));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("androidAppMgtService|get|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -63,7 +63,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("androidAppMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -94,7 +94,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
             int deleted = androidAppAccessor.deleteByVersion(version);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("androidAppMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
@@ -116,7 +116,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
             });
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("putDispatch error: " + e.getMessage(), e);
+            log.error("androidAppMgtService|putDispatch|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -147,7 +147,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("listDispatchByMenuCode error: " + e.getMessage(), e);
+            log.error("androidAppMgtService|getDispatchByVersion|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;

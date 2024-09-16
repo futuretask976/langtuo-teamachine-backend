@@ -62,7 +62,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("deployMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -75,7 +75,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             DeployDTO dto = convertToDeployPO(deployAccessor.selectOneByDeployCode(tenantCode, deployCode));
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("get error: " + e.getMessage(), e);
+            log.error("deployMgtService|getByCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -88,7 +88,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             DeployDTO dto = convertToDeployPO(deployAccessor.selectOneByMachineCode(tenantCode, machineCode));
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("get error: " + e.getMessage(), e);
+            log.error("deployMgtService|getByMachineCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -119,7 +119,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             int deleted = deployAccessor.deleteByDeployCode(tenantCode, deployCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("deployMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
@@ -132,7 +132,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             String deployCode = BizUtils.genRandomStr(6);
             teaMachineResult = TeaMachineResult.success(deployCode);
         } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
+            log.error("deployMgtService|generateDeployCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
@@ -160,7 +160,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
             teaMachineResult = TeaMachineResult.success(machineCode);
         } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
+            log.error("deployMgtService|generateMachineCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;

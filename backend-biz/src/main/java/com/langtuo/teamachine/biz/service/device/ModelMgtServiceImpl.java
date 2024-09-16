@@ -55,7 +55,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             List<ModelDTO> dtoList = convertToModelDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("modelMgtService|list|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -74,7 +74,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("modelMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -93,7 +93,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             }
             teaMachineResult = TeaMachineResult.success(modelDTO);
         } catch (Exception e) {
-            log.error("get error: " + e.getMessage(), e);
+            log.error("modelMgtService|get|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -198,7 +198,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("modelMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;

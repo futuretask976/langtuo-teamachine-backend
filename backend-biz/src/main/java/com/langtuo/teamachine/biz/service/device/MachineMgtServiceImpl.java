@@ -71,7 +71,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<MachineDTO>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("machineMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -88,7 +88,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("machineMgtService|list|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -105,7 +105,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("machineMgtService|listByShopCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -147,7 +147,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
                 teaMachineResult = TeaMachineResult.success(convert(existMachinePO));
             }
         } catch (Exception e) {
-            log.error("activate error: " + e.getMessage(), e);
+            log.error("machineMgtService|activate|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -180,7 +180,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("machineMgtService|update|fatal|" + e.getMessage(), e);
+            log.error("machineMgtService|put|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -196,7 +196,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             int deleted = machineAccessor.deleteByMachineCode(tenantCode, machineCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("machineMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
