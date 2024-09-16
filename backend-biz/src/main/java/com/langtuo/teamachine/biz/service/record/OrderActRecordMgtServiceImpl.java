@@ -84,7 +84,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             OrderActRecordDTO dto = convert(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("getByCode error: " + e.getMessage(), e);
+            log.error("orderActRecordMgtService|get|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -119,7 +119,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
                         convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("orderActRecordMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -136,7 +136,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             int deleted = orderActRecordAccessor.delete(tenantCode, warningRuleCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("orderActRecordMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;

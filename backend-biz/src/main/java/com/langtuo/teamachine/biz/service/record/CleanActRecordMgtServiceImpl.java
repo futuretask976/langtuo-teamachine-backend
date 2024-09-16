@@ -58,7 +58,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
             CleanActRecordPO po = cleanActRecordAccessor.selectOne(tenantCode, idempotentMark);
             teaMachineResult = TeaMachineResult.success(convert(po, true));
         } catch (Exception e) {
-            log.error("getByCode error: " + e.getMessage(), e);
+            log.error("cleanActRecordMgtService|get|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -93,13 +93,11 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
                         convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("cleanActRecordMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
-
-
 
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String idempotentMark) {
@@ -112,7 +110,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
             int deleted = cleanActRecordAccessor.delete(tenantCode, idempotentMark);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("cleanActRecordMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;

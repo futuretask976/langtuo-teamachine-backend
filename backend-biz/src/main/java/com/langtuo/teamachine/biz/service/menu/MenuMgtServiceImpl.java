@@ -62,7 +62,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             List<MenuDTO> dtoList = convertToMenuDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("menuMgtService|list|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -91,7 +91,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             List<MenuDTO> menuDTOList = convertToMenuDTO(cleanRulePOList);
             teaMachineResult = TeaMachineResult.success(menuDTOList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("menuMgtService|listByShopCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -123,7 +123,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("menuMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -137,7 +137,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             MenuDTO seriesDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
-            log.error("getByCode error: " + e.getMessage(), e);
+            log.error("menuMgtService|getByCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -151,7 +151,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             MenuDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
-            log.error("getByName error: " + e.getMessage(), e);
+            log.error("menuMgtService|getByName|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -240,7 +240,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteByMenuCode(tenantCode, menuCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("menuMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
@@ -262,7 +262,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             });
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("putDispatch error: " + e.getMessage(), e);
+            log.error("menuMgtService|putDispatch|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -292,7 +292,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("listDispatchByMenuCode error: " + e.getMessage(), e);
+            log.error("menuMgtService|getDispatchByMenuCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;

@@ -58,7 +58,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
             InvalidActRecordPO po = invalidActRecordAccessor.selectOne(tenantCode, idempotentMark);
             teaMachineResult = TeaMachineResult.success(convert(po, true));
         } catch (Exception e) {
-            log.error("getByCode error: " + e.getMessage(), e);
+            log.error("invalidActRecordMgtService|get|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -93,7 +93,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
                         convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("invalidActRecordMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -110,7 +110,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
             int deleted = invalidActRecordAccessor.delete(tenantCode, warningRuleCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("invalidActRecordMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
