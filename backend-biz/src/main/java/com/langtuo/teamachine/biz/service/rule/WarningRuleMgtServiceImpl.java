@@ -56,7 +56,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("getByCode error: " + e.getMessage(), e);
+            log.error("warningRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -70,7 +70,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("getByName error: " + e.getMessage(), e);
+            log.error("warningRuleMgtService|getByName|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -84,7 +84,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(poList);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("warningRuleMgtService|list|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -113,7 +113,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRuleDTO> drainRuleDTOList = convertToWarningRuleDTO(warningRulePOList);
             teaMachineResult = TeaMachineResult.success(drainRuleDTOList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("warningRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -132,7 +132,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(pageInfo.getList());
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("warningRuleMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -203,7 +203,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             int deleted = warningRuleAccessor.deleteByWarningRuleCode(tenantCode, warningRuleCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("warningRuleMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
@@ -226,7 +226,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("putDispatch error: " + e.getMessage(), e);
+            log.error("warningRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -256,7 +256,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("getDispatchByWarningRuleCode error: " + e.getMessage(), e);
+            log.error("warningRuleMgtService|getDispatchByWarningRuleCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;

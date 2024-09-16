@@ -68,7 +68,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             CleanRuleDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("getByCode error: " + e.getMessage(), e);
+            log.error("cleanRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -82,7 +82,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             CleanRuleDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("getByName error: " + e.getMessage(), e);
+            log.error("cleanRuleMgtService|getByName|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -96,7 +96,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
             teaMachineResult = TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("cleanRuleMgtService|list|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -125,7 +125,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
             teaMachineResult = TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("cleanRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -145,7 +145,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("cleanRuleMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -254,7 +254,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("cleanRuleMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
@@ -277,7 +277,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("putDispatch error: " + e.getMessage(), e);
+            log.error("cleanRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -307,7 +307,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("getDispatchByCleanRuleCode error: " + e.getMessage(), e);
+            log.error("cleanRuleMgtService|getDispatchByCleanRuleCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
