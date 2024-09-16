@@ -68,7 +68,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             TeaDTO dto = convertToTeaDTO(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("getByCode error: " + e.getMessage(), e);
+            log.error("teaMgtService|getByCode|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -82,7 +82,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             TeaDTO dto = convertToTeaDTO(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("getByName error: " + e.getMessage(), e);
+            log.error("teaMgtService|getByName|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -96,7 +96,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             List<TeaDTO> teaDTOList = convertToTeaDTO(teaPOList, false);
             teaMachineResult = TeaMachineResult.success(teaDTOList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("teaMgtService|list|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -116,7 +116,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("teaMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -247,7 +247,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("teaMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
