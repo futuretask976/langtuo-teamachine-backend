@@ -36,6 +36,7 @@ public class CleanRuleDispatchWorker implements Runnable {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.cleanRuleCode = jsonPayload.getString(CommonConsts.JSON_KEY_CLEAN_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(cleanRuleCode)) {
+            log.error("cleanRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + cleanRuleCode);
             throw new IllegalArgumentException("tenantCode or cleanRuleCode is blank");
         }
     }
@@ -43,16 +44,20 @@ public class CleanRuleDispatchWorker implements Runnable {
     @Override
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
+        if (jsonDispatchCont == null) {
+            log.error("cleanRuleDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
+            return;
+        }
 
         JSONObject jsonMsg = new JSONObject();
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_CLEAN_RULE);
         jsonMsg.put(CommonConsts.JSON_KEY_CLEAN_RULE, jsonDispatchCont);
-        log.info("$$$$$ CleanRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
         if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.info("machine code list is empty, stop worker");
+            log.error("cleanRuleDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList);
+            return;
         }
 
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
@@ -63,13 +68,13 @@ public class CleanRuleDispatchWorker implements Runnable {
 
     private JSONObject getDispatchCont() {
         CleanRuleMgtService cleanRuleMgtService = SpringServiceUtils.getCleanRuleMgtService();
-        CleanRuleDTO cleanRuleDTO = getModel(cleanRuleMgtService.getByCode(tenantCode, cleanRuleCode));
-        if (cleanRuleDTO == null) {
-            log.info("clean rule error, stop worker");
+        CleanRuleDTO dto = getModel(cleanRuleMgtService.getByCode(tenantCode, cleanRuleCode));
+        if (dto == null) {
+            log.error("cleanRuleDispatchWorker|getRule|error|stopWorker|" + dto);
             return null;
         }
 
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(cleanRuleDTO);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(dto);
         return jsonObject;
     }
 
@@ -78,7 +83,7 @@ public class CleanRuleDispatchWorker implements Runnable {
         List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.selectListByCleanRuleCode(
                 tenantCode, cleanRuleCode);
         if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
-            log.info("cleanRuleDispatchWorker|getDispatch|null|stopWorker");
+            log.info("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + cleanRuleDispatchPOList);
             return null;
         }
 

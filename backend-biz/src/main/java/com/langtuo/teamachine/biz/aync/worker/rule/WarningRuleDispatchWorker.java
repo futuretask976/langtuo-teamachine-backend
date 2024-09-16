@@ -36,6 +36,7 @@ public class WarningRuleDispatchWorker implements Runnable {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.warningRuleCode = jsonPayload.getString(CommonConsts.JSON_KEY_WARNING_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(warningRuleCode)) {
+            log.error("drainRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + warningRuleCode);
             throw new IllegalArgumentException("tenantCode or warningRuleCode is blank");
         }
     }
@@ -47,12 +48,12 @@ public class WarningRuleDispatchWorker implements Runnable {
         JSONObject jsonMsg = new JSONObject();
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_WARNING_RULE);
         jsonMsg.put(CommonConsts.JSON_KEY_WARNING_RULE, jsonDispatchCont);
-        log.info("$$$$$ WarningRuleDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
         if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.info("machine code list is empty, stop worker");
+            log.error("warningRuleDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList);
+            return;
         }
 
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
@@ -63,12 +64,13 @@ public class WarningRuleDispatchWorker implements Runnable {
 
     private JSONObject getDispatchCont() {
         WarningRuleMgtService warningRuleMgtService = SpringServiceUtils.getWarningRuleMgtService();
-        WarningRuleDTO warningRuleDTO = getModel(warningRuleMgtService.getByCode(tenantCode, warningRuleCode));
-        if (warningRuleDTO == null) {
+        WarningRuleDTO dto = getModel(warningRuleMgtService.getByCode(tenantCode, warningRuleCode));
+        if (dto == null) {
+            log.error("warningRuleDispatchWorker|getRule|error|stopWorker|" + dto);
             return null;
         }
 
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(warningRuleDTO);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(dto);
         return jsonObject;
     }
 
@@ -77,7 +79,7 @@ public class WarningRuleDispatchWorker implements Runnable {
         List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.selectListByWarningRuleCode(
                 tenantCode, warningRuleCode);
         if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
-            log.info("warningRuleDispatchWorker|getDispatch|null|stopWorker");
+            log.info("warningRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + warningRuleDispatchPOList);
             return null;
         }
 
