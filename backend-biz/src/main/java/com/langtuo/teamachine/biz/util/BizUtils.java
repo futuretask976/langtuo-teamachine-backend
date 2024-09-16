@@ -1,20 +1,26 @@
 package com.langtuo.teamachine.biz.util;
 
+import com.langtuo.teamachine.dao.config.OSSConfig;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
+import com.langtuo.teamachine.dao.oss.OSSUtils;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.DigestUtils;
 
+import java.io.*;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class BizUtils {
     /**
      *
@@ -34,9 +40,106 @@ public class BizUtils {
         return sb.toString();
     }
 
+    public static boolean removeFile(File root) {
+        if (root == null || !root.exists()) {
+            return true;
+        }
 
+        boolean result = false;
+        if (root.isFile()) {
+            result = root.delete();
+        } else {
+            File[] files = root.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
+                result = removeFile(file);
+            }
+            if (result) {
+                result = root.delete();
+            }
+        }
+        return result;
+    }
 
+    public static boolean writeStrToFile(String outputCont, File outputFile) {
+        if (StringUtils.isBlank(outputCont) || outputCont == null) {
+            return false;
+        }
 
+        if (outputFile.exists()) {
+            boolean deleted = outputFile.delete();
+            if (!deleted) {
+                return false;
+            }
+        }
 
+        boolean removed = removeFile(outputFile.getParentFile());
+        if (!removed) {
+            return false;
+        }
 
+        boolean maked = outputFile.getParentFile().mkdirs();
+        if (!maked) {
+            return false;
+        }
+
+        try {
+            boolean created = outputFile.createNewFile();
+            if (!created) {
+                return false;
+            }
+        } catch (IOException e) {
+            log.error("bizUtils|createNewFile|fatal|" + e.getMessage(), e);
+            return false;
+        }
+
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(outputFile);
+            writer.write(outputCont);
+            writer.flush();
+            return true;
+        } catch (IOException e) {
+            log.error("bizUtils|writeFile|fatal|" + e.getMessage(), e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    log.error("bizUtils|closeWriter|fatal|" + e.getMessage(), e);
+                }
+            }
+        }
+        return false;
+    }
+
+    public static String uploadOSS(File file) {
+        String ossPath = null;
+        try {
+            ossPath = OSSUtils.uploadFile(file, OSSConfig.OSS_MENU_PATH);
+        } catch (FileNotFoundException e) {
+            log.info("bizUtils|uploadFileToOSS|fatal|" + e.getMessage());
+        }
+        return ossPath;
+    }
+
+    public static String calcMD5Hex(File file) {
+        String md5AsHex = null;
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+            md5AsHex = DigestUtils.md5DigestAsHex(fileInputStream);
+        } catch (IOException e) {
+            log.info("bizUtils|calcMD5Hex|fatal|" + e.getMessage());
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    log.info("bizUtils|closeFileInputStream|fatal|" + e.getMessage());
+                }
+            }
+        }
+        return md5AsHex;
+    }
 }

@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
+import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.config.OSSConfig;
@@ -51,6 +52,7 @@ public class MenuDispatchWorker implements Runnable {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.menuCode = jsonPayload.getString(CommonConsts.JSON_KEY_MENU_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)) {
+            log.error("menuDispatch4InitWorker|init|illegalArgument|" + tenantCode + "|" + menuCode);
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
     }
@@ -59,11 +61,11 @@ public class MenuDispatchWorker implements Runnable {
     public void run() {
         JSONObject dispatchCont = getDispatchCont();
         if (dispatchCont == null) {
-            log.info("menuDispatchWorker|getDispatchCont|dispatchContEmpty|stopWorker");
+            log.info("menuDispatchWorker|getDispatchCont|error|stopWorker|" + dispatchCont);
             return;
         }
         File outputFile = new File("dispatch/menu_output.json");
-        boolean wrote = MqttUtils.writeStrToFile(dispatchCont.toJSONString(), outputFile);
+        boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), outputFile);
         if (!wrote) {
             log.info("menuDispatchWorker|writeStrToFile|failed|stopWorker");
             return;
