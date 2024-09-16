@@ -27,6 +27,7 @@ public class TenantPostWorker implements Runnable {
     public TenantPostWorker(JSONObject jsonPayload) {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         if (StringUtils.isBlank(tenantCode)) {
+            log.error("tenantPostWorker|init|illegalArgument|" + tenantCode);
             throw new IllegalArgumentException("tenantCode is blank");
         }
     }
@@ -41,10 +42,14 @@ public class TenantPostWorker implements Runnable {
 
         RoleAccessor roleAccessor = SpringAccessorUtils.getRoleAccessor();
         int inserted4Role = roleAccessor.insert(rolePO);
+        if (CommonConsts.NUM_ONE != inserted4Role) {
+            log.error("tenantPostWorker|insertRole|error|" + inserted4Role);
+        }
 
         PermitActAccessor permitActAccessor = SpringAccessorUtils.getPermitActAccessor();
         List<PermitActPO> permitActPOList = permitActAccessor.selectPermitActList();
         if (CollectionUtils.isEmpty(permitActPOList)) {
+            log.error("tenantPostWorker|getPermitActPOList|error|" + permitActPOList);
             return;
         }
 
@@ -55,6 +60,9 @@ public class TenantPostWorker implements Runnable {
             actRelPO.setRoleCode(CommonConsts.ROLE_CODE_TENANT_SUPER);
             actRelPO.setPermitActCode(permitActPO.getPermitActCode());
             int inserted4ActRel = roleActRelAccessor.insert(actRelPO);
+            if (CommonConsts.NUM_ONE != inserted4Role) {
+                log.error("tenantPostWorker|insert4ActRel|error|" + inserted4ActRel);
+            }
         }
 
         OrgNode orgNode = new OrgNode();
@@ -63,5 +71,8 @@ public class TenantPostWorker implements Runnable {
 
         OrgAccessor orgAccessor = SpringAccessorUtils.getOrgAccessor();
         int inserted4Org = orgAccessor.insert(orgNode);
+        if (CommonConsts.NUM_ONE != inserted4Org) {
+            log.error("tenantPostWorker|insert4Org|error|" + inserted4Org);
+        }
     }
 }
