@@ -35,6 +35,7 @@ public class AndroidAppDispatchWorker implements Runnable {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.version = jsonPayload.getString(CommonConsts.JSON_KEY_VERSION);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(version)) {
+            log.error("androidAppDispatchWorker|init|illegalArgument|" + tenantCode + "|" + version);
             throw new IllegalArgumentException("tenantCode or version is blank");
         }
     }
@@ -43,7 +44,7 @@ public class AndroidAppDispatchWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.info("dispatch content error, stop worker");
+            log.error("androidAppDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
             return;
         }
 
@@ -54,7 +55,7 @@ public class AndroidAppDispatchWorker implements Runnable {
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
         if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.info("menuDispatchWorker|getMachineCodeList|empty|stopWorker");
+            log.error("androidAppDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList);
         }
 
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
@@ -68,7 +69,7 @@ public class AndroidAppDispatchWorker implements Runnable {
         List<AndroidAppDispatchPO> androidAppDispatchPOList = androidAppDispatchAccessor.selectListByAndroidAppVersion(
                 tenantCode, version);
         if (CollectionUtils.isEmpty(androidAppDispatchPOList)) {
-            log.info("androidAppDispatchWorker|getDispatch|null|stopWorker");
+            log.error("androidAppDispatchWorker|getDispatch|error|stopWorker|" + androidAppDispatchPOList);
             return null;
         }
 
@@ -84,7 +85,7 @@ public class AndroidAppDispatchWorker implements Runnable {
         AndroidAppMgtService androidAppMgtService = SpringServiceUtils.getAndroidAppMgtService();
         AndroidAppDTO dto = getModel(androidAppMgtService.get(version));
         if (dto == null) {
-            log.info("android app is empty, stop worker");
+            log.error("androidAppDispatchWorker|getAndroidApp|error|stopWorker|" + dto);
             return null;
         }
 

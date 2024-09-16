@@ -28,6 +28,7 @@ public class ModelDispatchWorker implements Runnable {
     public ModelDispatchWorker(JSONObject jsonPayload) {
         this.modelCode = jsonPayload.getString(CommonConsts.JSON_KEY_MODEL_CODE);
         if (StringUtils.isBlank(modelCode)) {
+            log.error("modelDispatchWorker|init|illegalArgument|" + modelCode);
             throw new IllegalArgumentException("modelCode is blank");
         }
     }
@@ -36,7 +37,7 @@ public class ModelDispatchWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.info("dispatch content error, stop worker");
+            log.error("modelDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
             return;
         }
 
@@ -55,7 +56,7 @@ public class ModelDispatchWorker implements Runnable {
         ModelMgtService modelMgtService = SpringServiceUtils.getModelMgtService();
         ModelDTO dto = getModel(modelMgtService.get(modelCode));
         if (dto == null) {
-            log.info("model is empty, stop worker");
+            log.error("machineDispatchWorker|getModel|error|stopWorker|" + dto);
             return null;
         }
 
