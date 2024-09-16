@@ -27,7 +27,8 @@ public class AccuracyTplDispatchWorker implements Runnable {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.templateCode = jsonPayload.getString(CommonConsts.JSON_KEY_TEMPLATE_CODE);
         if (StringUtils.isBlank(tenantCode)) {
-            throw new IllegalArgumentException("tenantCode or menuCode is blank");
+            log.error("accuracyTplDispatchWorker|init|illegalArgument|" + tenantCode + "|" + templateCode);
+            throw new IllegalArgumentException("tenantCode or templateCode is blank");
         }
     }
 
@@ -35,14 +36,13 @@ public class AccuracyTplDispatchWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.info("dispatch content error, stop worker");
+            log.error("accuracyTplDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
             return;
         }
 
         JSONObject jsonMsg = new JSONObject();
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_ACCURACY);
         jsonMsg.put(CommonConsts.JSON_KEY_ACCURACY_TPL, jsonDispatchCont);
-        log.info("$$$$$ AccuracyDispatchWorker sendMsg: " + jsonMsg.toJSONString());
 
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         mqttProducer.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
@@ -52,7 +52,7 @@ public class AccuracyTplDispatchWorker implements Runnable {
         AccuracyTplMgtService accuracyTplMgtService = SpringServiceUtils.getToppingAccuracyTplMgtService();
         AccuracyTplDTO dto = getModel(accuracyTplMgtService.getByCode(tenantCode, templateCode));
         if (dto == null) {
-            log.info("open rule list is empty, stop worker");
+            log.error("accuracyTplDispatchWorker|getTpl|error|stopWorker|" + dto);
             return null;
         }
 
