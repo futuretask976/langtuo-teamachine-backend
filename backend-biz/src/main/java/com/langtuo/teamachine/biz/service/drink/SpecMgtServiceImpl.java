@@ -183,7 +183,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                 int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_SPEC));
+                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

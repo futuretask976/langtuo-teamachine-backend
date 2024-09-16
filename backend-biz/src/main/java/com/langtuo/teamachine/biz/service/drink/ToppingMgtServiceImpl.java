@@ -157,7 +157,8 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
                 int deleted = toppingAccessor.deleteByToppingCode(tenantCode, toppingCode);
                 teaMachineResult = TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_TOPPING));
+                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
             log.error("delete error: " + e.getMessage(), e);

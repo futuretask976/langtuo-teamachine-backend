@@ -208,7 +208,8 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         int adminCount = adminAccessor.countByRoleCode(tenantCode, roleCode);
         if (adminCount > 0) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_ROLE));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                    ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
         }
 
         if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(roleCode)) {
