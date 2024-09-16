@@ -127,7 +127,7 @@ public class OrderReportServiceImpl implements OrderReportService {
             }
 
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("orderReportService|searchAmtReport|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -159,7 +159,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                         convertToOrderTeaReportByShopDTO(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("orderReportService|searchTeaReport|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -192,7 +192,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                         pageNum, pageSize));
             }
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("orderReportService|searchSpecItemReport|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -225,7 +225,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                         pageNum, pageSize));
             }
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("orderReportService|searchToppingReport|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
