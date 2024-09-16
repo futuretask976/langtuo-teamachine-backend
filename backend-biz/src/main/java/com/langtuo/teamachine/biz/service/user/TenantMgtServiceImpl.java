@@ -39,7 +39,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             List<TenantDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("tenantMgtService|list|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -58,7 +58,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("tenantMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -72,7 +72,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             TenantDTO tenantDTO = convert(tenantPO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
-            log.error("get error: " + e.getMessage(), e);
+            log.error("tenantMgtService|get|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -150,6 +150,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             int deleted = tenantAccessor.deleteByTenantCode(tenantCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
+            log.error("tenantMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;

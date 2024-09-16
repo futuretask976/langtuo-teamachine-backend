@@ -78,7 +78,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("roleMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -96,7 +96,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("page error: " + e.getMessage(), e);
+            log.error("roleMgtService|page|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -222,7 +222,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             int deleted4Rel = roleActRelAccessor.deleteByRoleCode(tenantCode, roleCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("roleMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;

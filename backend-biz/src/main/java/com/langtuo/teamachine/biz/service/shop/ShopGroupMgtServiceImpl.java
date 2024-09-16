@@ -74,7 +74,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("search error: " + e.getMessage(), e);
+            log.error("shopGroupMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -87,7 +87,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             List<ShopGroupPO> list = shopGroupAccessor.selectList(tenantCode);
             teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("shopGroupMgtService|list|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -101,7 +101,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
                     tenantCode, DaoUtils.getOrgNameListByAdmin(tenantCode));
             teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("shopGroupMgtService|listByAdminOrg|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -176,7 +176,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
-            log.error("delete error: " + e.getMessage(), e);
+            log.error("shopGroupMgtService|delete|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
