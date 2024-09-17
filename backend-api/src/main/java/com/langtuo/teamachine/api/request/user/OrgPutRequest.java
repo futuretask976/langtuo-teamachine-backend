@@ -39,6 +39,9 @@ public class OrgPutRequest {
         if (!RegexUtils.isValidName(orgName, true)) {
             return false;
         }
+        if (orgName.equals(parentOrgName)) {
+            return false;
+        }
         return true;
     }
 }
