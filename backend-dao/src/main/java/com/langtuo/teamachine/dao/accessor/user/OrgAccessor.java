@@ -41,7 +41,7 @@ public class OrgAccessor {
         return null;
     }
 
-    public OrgNode selectOne(String tenantCode, String orgName) {
+    public OrgNode getByOrgName(String tenantCode, String orgName) {
         if (orgNodeMapByTenant.get(tenantCode) == null) {
             initOrgNodeMapByTenant(tenantCode);
         }
@@ -55,7 +55,7 @@ public class OrgAccessor {
         }
     }
 
-    public List<OrgNode> selectList(String tenantCode) {
+    public List<OrgNode> list(String tenantCode) {
         if (orgNodeMapByTenant.get(tenantCode) == null) {
             initOrgNodeMapByTenant(tenantCode);
         }
@@ -63,7 +63,7 @@ public class OrgAccessor {
         return listOrgNode(tenantCode);
     }
 
-    public List<OrgNode> selectListByParent(String tenantCode, String orgName) {
+    public List<OrgNode> listByParentOrgName(String tenantCode, String orgName) {
         if (orgNodeMapByTenant.get(tenantCode) == null) {
             initOrgNodeMapByTenant(tenantCode);
         }

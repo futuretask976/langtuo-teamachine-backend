@@ -47,14 +47,14 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     @Override
     public TeaMachineResult<ShopDTO> getByCode(String tenantCode, String shopCode) {
-        ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, shopCode);
+        ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
         ShopDTO shopDTO = convert(shopPO);
         return TeaMachineResult.success(shopDTO);
     }
 
     @Override
     public TeaMachineResult<ShopDTO> getByName(String tenantCode, String shopName) {
-        ShopPO shopPO = shopAccessor.selectOneByShopName(tenantCode, shopName);
+        ShopPO shopPO = shopAccessor.getByShopName(tenantCode, shopName);
         ShopDTO shopDTO = convert(shopPO);
         return TeaMachineResult.success(shopDTO);
     }
@@ -83,7 +83,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     public TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {
-            List<ShopPO> list = shopAccessor.selectListByShopGroupCode(tenantCode, shopGroupCode);
+            List<ShopPO> list = shopAccessor.listByShopGroupCode(tenantCode, shopGroupCode);
             teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("shopMgtService|listByShopGroupCode|fatal|" + e.getMessage(), e);
@@ -96,7 +96,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     public TeaMachineResult<List<ShopDTO>> listByAdminOrg(String tenantCode) {
         TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {
-            List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.selectListByOrgName(
+            List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.listByOrgName(
                     tenantCode, DaoUtils.getOrgNameListByAdmin(tenantCode));
             if (CollectionUtils.isEmpty(shopGroupPOList)) {
                 teaMachineResult = TeaMachineResult.success(null);
@@ -104,7 +104,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
                 List<String> shopGroupCodeList = shopGroupPOList.stream()
                         .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
                         .collect(Collectors.toList());
-                List<ShopPO> list = shopAccessor.selectListByShopGroupCode(tenantCode, shopGroupCodeList);
+                List<ShopPO> list = shopAccessor.listByShopGroupCode(tenantCode, shopGroupCodeList);
                 teaMachineResult = TeaMachineResult.success(convert(list));
             }
         } catch (Exception e) {
@@ -130,7 +130,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     private TeaMachineResult<Void> putNew(ShopPO po) {
         try {
-            ShopPO exist = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
+            ShopPO exist = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -149,7 +149,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     private TeaMachineResult<Void> putUpdate(ShopPO po) {
         try {
-            ShopPO exist = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
+            ShopPO exist = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
@@ -225,7 +225,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
+        ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
         if (shopGroupPO != null) {
             dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
             dto.setShopGroupName(shopGroupPO.getShopGroupName());

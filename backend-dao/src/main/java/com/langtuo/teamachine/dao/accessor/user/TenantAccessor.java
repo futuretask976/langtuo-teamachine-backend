@@ -20,19 +20,10 @@ public class TenantAccessor {
         return mapper.selectOne(tenantCode);
     }
 
-    public List<TenantPO> selectList() {
+    public List<TenantPO> list() {
         List<TenantPO> list = mapper.selectList();
 
         return list;
-    }
-
-    public PageInfo<TenantPO> selectList(int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-
-        List<TenantPO> list = mapper.selectList();
-
-        PageInfo<TenantPO> pageInfo = new PageInfo(list);
-        return pageInfo;
     }
 
     public PageInfo<TenantPO> search(String tenantName, String contactPerson, int pageNum, int pageSize) {

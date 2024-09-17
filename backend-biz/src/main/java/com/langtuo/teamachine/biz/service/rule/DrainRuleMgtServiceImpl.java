@@ -102,7 +102,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     public TeaMachineResult<List<DrainRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<DrainRuleDTO>> teaMachineResult;
         try {
-            ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, shopCode);
+            ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
             if (shopPO == null) {
                 teaMachineResult = TeaMachineResult.success();
             }

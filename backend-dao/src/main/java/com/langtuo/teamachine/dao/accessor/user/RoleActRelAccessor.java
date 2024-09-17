@@ -19,7 +19,7 @@ public class RoleActRelAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<RoleActRelPO> selectListByRoleCode(String tenantCode, String roleCode) {
+    public List<RoleActRelPO> listByRoleCode(String tenantCode, String roleCode) {
         // 超级管理员特殊逻辑
         List<RoleActRelPO> superRoleActRelPOList = getSysSuperRoleActRel(tenantCode, roleCode);
         if (superRoleActRelPOList != null) {

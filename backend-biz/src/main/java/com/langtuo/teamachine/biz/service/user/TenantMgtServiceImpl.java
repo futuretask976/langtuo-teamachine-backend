@@ -35,7 +35,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
     public TeaMachineResult<List<TenantDTO>> list() {
         TeaMachineResult<List<TenantDTO>> teaMachineResult;
         try {
-            List<TenantPO> list = tenantAccessor.selectList();
+            List<TenantPO> list = tenantAccessor.list();
             List<TenantDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {

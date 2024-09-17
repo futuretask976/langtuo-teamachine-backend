@@ -34,7 +34,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
     @Override
     public TeaMachineResult<AdminDTO> get(String tenantCode, String loginName) {
-        AdminPO adminPO = adminAccessor.selectOneByLoginName(tenantCode, loginName);
+        AdminPO adminPO = adminAccessor.getByLoginName(tenantCode, loginName);
         AdminDTO adminRoleDTO = convert(adminPO);
         return TeaMachineResult.success(adminRoleDTO);
     }
@@ -49,7 +49,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         try {
             String roleCode = null;
             if (StringUtils.isNotBlank(roleName)) {
-                RolePO rolePO = roleAccessor.selectOneByRoleName(tenantCode, roleName);
+                RolePO rolePO = roleAccessor.getByRoleName(tenantCode, roleName);
                 if (rolePO == null) {
                     return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
                 } else {
@@ -76,7 +76,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     public TeaMachineResult<List<AdminDTO>> list(String tenantCode) {
         TeaMachineResult<List<AdminDTO>> teaMachineResult;
         try {
-            List<AdminPO> list = adminAccessor.selectList(tenantCode);
+            List<AdminPO> list = adminAccessor.list(tenantCode);
             List<AdminDTO> dtoList = list.stream()
                     .map(adminPO -> convert(adminPO))
                     .collect(Collectors.toList());
@@ -140,7 +140,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     private TeaMachineResult<Void> putNew(AdminPO po) {
         TeaMachineResult<Void> teaMachineResult;
         try {
-            AdminPO exist = adminAccessor.selectOneByLoginName(po.getTenantCode(), po.getLoginName());
+            AdminPO exist = adminAccessor.getByLoginName(po.getTenantCode(), po.getLoginName());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -159,7 +159,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
     private TeaMachineResult<Void> putUpdate(AdminPO po) {
         try {
-            AdminPO exist = adminAccessor.selectOneByLoginName(po.getTenantCode(), po.getLoginName());
+            AdminPO exist = adminAccessor.getByLoginName(po.getTenantCode(), po.getLoginName());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
@@ -199,7 +199,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         dto.setLoginPass(adminPO.getLoginPass());
         dto.setOrgName(adminPO.getOrgName());
 
-        RolePO rolePO = roleAccessor.selectOneByRoleCode(adminPO.getTenantCode(), adminPO.getRoleCode());
+        RolePO rolePO = roleAccessor.getByRoleCode(adminPO.getTenantCode(), adminPO.getRoleCode());
         if (rolePO != null) {
             dto.setRoleCode(rolePO.getRoleCode());
             dto.setRoleName(rolePO.getRoleName());

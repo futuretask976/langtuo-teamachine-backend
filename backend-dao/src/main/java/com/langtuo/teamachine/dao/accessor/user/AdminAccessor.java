@@ -21,7 +21,7 @@ public class AdminAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public AdminPO selectOneByLoginName(String tenantCode, String loginName) {
+    public AdminPO getByLoginName(String tenantCode, String loginName) {
         // 超级管理员特殊逻辑
         AdminPO superAdminPO = getSysSuperAdmin(tenantCode, loginName);
         if (superAdminPO != null) {
@@ -41,7 +41,7 @@ public class AdminAccessor {
         return po;
     }
 
-    public List<AdminPO> selectList(String tenantCode) {
+    public List<AdminPO> list(String tenantCode) {
         // 首先访问缓存
         List<AdminPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -97,7 +97,7 @@ public class AdminAccessor {
     }
 
     public int deleteByLoginName(String tenantCode, String loginName) {
-        AdminPO po = selectOneByLoginName(tenantCode, loginName);
+        AdminPO po = getByLoginName(tenantCode, loginName);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

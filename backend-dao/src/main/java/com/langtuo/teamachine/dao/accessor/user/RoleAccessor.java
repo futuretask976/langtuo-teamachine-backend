@@ -21,7 +21,7 @@ public class RoleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public RolePO selectOneByRoleCode(String tenantCode, String roleCode) {
+    public RolePO getByRoleCode(String tenantCode, String roleCode) {
         // 超级管理员特殊逻辑
         RolePO superRolePO = getSysSuperRole(tenantCode, roleCode);
         if (superRolePO != null) {
@@ -41,7 +41,7 @@ public class RoleAccessor {
         return po;
     }
 
-    public RolePO selectOneByRoleName(String tenantCode, String roleName) {
+    public RolePO getByRoleName(String tenantCode, String roleName) {
         // 首先访问缓存
         RolePO cached = getCache(tenantCode, null, roleName);
         if (cached != null) {
@@ -55,7 +55,7 @@ public class RoleAccessor {
         return po;
     }
 
-    public List<RolePO> selectList(String tenantCode) {
+    public List<RolePO> search(String tenantCode) {
         // 首先访问缓存
         List<RolePO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -67,15 +67,6 @@ public class RoleAccessor {
         // 设置缓存
         setCacheList(tenantCode, list);
         return list;
-    }
-
-    public PageInfo<RolePO> selectList(String tenantCode, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-
-        List<RolePO> list = mapper.selectList(tenantCode);
-
-        PageInfo<RolePO> pageInfo = new PageInfo(list);
-        return pageInfo;
     }
 
     public PageInfo<RolePO> search(String tenantCode, String roleName, int pageNum, int pageSize) {
@@ -109,7 +100,7 @@ public class RoleAccessor {
     }
 
     public int deleteByRoleCode(String tenantCode, String roleCode) {
-        RolePO po = selectOneByRoleCode(tenantCode, roleCode);
+        RolePO po = getByRoleCode(tenantCode, roleCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

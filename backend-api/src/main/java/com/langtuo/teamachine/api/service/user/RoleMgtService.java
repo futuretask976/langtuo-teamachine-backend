@@ -37,15 +37,6 @@ public interface RoleMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
-    TeaMachineResult<PageDTO<RoleDTO>> page(String tenantCode, int pageNum, int pageSize);
-
-    /**
-     *
      * @param request
      * @return
      */

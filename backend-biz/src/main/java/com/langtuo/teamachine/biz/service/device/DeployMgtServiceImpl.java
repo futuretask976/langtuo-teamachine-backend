@@ -254,7 +254,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         dto.setState(po.getState());
         dto.setExtraInfo(po.getExtraInfo());
 
-        ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
+        ShopPO shopPO = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
         if (shopPO != null) {
             dto.setShopCode(shopPO.getShopCode());
             dto.setShopName(shopPO.getShopName());

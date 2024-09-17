@@ -68,7 +68,7 @@ public class SummayChartServiceImpl implements SummaryChartService {
         if (!CollectionUtils.isEmpty(result)) {
             result.forEach(map -> {
                 String shopCode = map.get("shopCode");
-                ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, shopCode);
+                ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
                 map.put("shopName", shopPO.getShopName());
             });
         }

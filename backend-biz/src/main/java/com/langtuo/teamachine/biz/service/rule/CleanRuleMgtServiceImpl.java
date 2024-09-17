@@ -106,7 +106,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     public TeaMachineResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<CleanRuleDTO>> teaMachineResult;
         try {
-            ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, shopCode);
+            ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
             if (shopPO == null) {
                 teaMachineResult = TeaMachineResult.success();
             }

@@ -72,7 +72,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     public TeaMachineResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<MenuDTO>> teaMachineResult;
         try {
-            ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, shopCode);
+            ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
             if (shopPO == null) {
                 teaMachineResult = TeaMachineResult.success();
             }

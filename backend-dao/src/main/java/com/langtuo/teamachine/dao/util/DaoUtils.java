@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class DaoUtils {
     public static List<String> getTenantCodeList() {
         TenantAccessor tenantAccessor = SpringAccessorUtils.getTenantAccessor();
-        List<TenantPO> list = tenantAccessor.selectList();
+        List<TenantPO> list = tenantAccessor.list();
 
         if (CollectionUtils.isEmpty(list)) {
             return null;
@@ -67,7 +67,7 @@ public class DaoUtils {
             return null;
         }
 
-        List<ShopPO> shopPOList = SpringAccessorUtils.getShopAccessor().selectListByShopGroupCode(tenantCode,
+        List<ShopPO> shopPOList = SpringAccessorUtils.getShopAccessor().listByShopGroupCode(tenantCode,
                 shopGroupCodeList);
         if (CollectionUtils.isEmpty(shopPOList)) {
             return null;
@@ -95,7 +95,7 @@ public class DaoUtils {
             return null;
         }
 
-        List<ShopPO> shopPOList = SpringAccessorUtils.getShopAccessor().selectListByShopGroupCode(tenantCode,
+        List<ShopPO> shopPOList = SpringAccessorUtils.getShopAccessor().listByShopGroupCode(tenantCode,
                 shopGroupCodeList);
         if (CollectionUtils.isEmpty(shopPOList)) {
             return null;
@@ -118,7 +118,7 @@ public class DaoUtils {
         }
 
         List<ShopGroupPO> shopGroupPOList = SpringAccessorUtils.getShopGroupAccessor()
-                .selectListByOrgName(tenantCode, orgNameListByAdmin);
+                .listByOrgName(tenantCode, orgNameListByAdmin);
         if (CollectionUtils.isEmpty(shopGroupPOList)) {
             return null;
         }
@@ -136,7 +136,7 @@ public class DaoUtils {
     public static List<String> getOrgNameListByAdmin(String tenantCode) {
         AdminPO adminPO = getLoginAdminPO(tenantCode);
         String orgName = adminPO.getOrgName();
-        List<OrgNode> orgPOList = SpringAccessorUtils.getOrgAccessor().selectListByParent(tenantCode, orgName);
+        List<OrgNode> orgPOList = SpringAccessorUtils.getOrgAccessor().listByParentOrgName(tenantCode, orgName);
         List<String> orgNameList = orgPOList.stream()
                 .map(OrgNode::getOrgName)
                 .collect(Collectors.toList());
@@ -159,7 +159,7 @@ public class DaoUtils {
             throw new IllegalArgumentException("couldn't find login session");
         }
 
-        AdminPO adminPO = SpringAccessorUtils.getAdminAccessor().selectOneByLoginName(tenantCode, adminLoginName);
+        AdminPO adminPO = SpringAccessorUtils.getAdminAccessor().getByLoginName(tenantCode, adminLoginName);
         return adminPO;
     }
 }

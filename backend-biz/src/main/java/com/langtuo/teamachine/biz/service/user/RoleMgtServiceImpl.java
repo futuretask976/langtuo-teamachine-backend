@@ -54,14 +54,14 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
     @Override
     public TeaMachineResult<RoleDTO> getByCode(String tenantCode, String roleCode) {
-        RolePO rolePO = roleAccessor.selectOneByRoleCode(tenantCode, roleCode);
+        RolePO rolePO = roleAccessor.getByRoleCode(tenantCode, roleCode);
         RoleDTO roleDTO = convert(rolePO);
         return TeaMachineResult.success(roleDTO);
     }
 
     @Override
     public TeaMachineResult<RoleDTO> getByName(String tenantCode, String roleName) {
-        RolePO rolePO = roleAccessor.selectOneByRoleName(tenantCode, roleName);
+        RolePO rolePO = roleAccessor.getByRoleName(tenantCode, roleName);
         RoleDTO roleDTO = convert(rolePO);
         return TeaMachineResult.success(roleDTO);
     }
@@ -85,28 +85,10 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     }
 
     @Override
-    public TeaMachineResult<PageDTO<RoleDTO>> page(String tenantCode, int pageNum, int pageSize) {
-        pageNum = pageNum <= 0 ? 1 : pageNum;
-        pageSize = pageSize <=0 ? 20 : pageSize;
-
-        TeaMachineResult<PageDTO<RoleDTO>> teaMachineResult;
-        try {
-            PageInfo<RolePO> pageInfo = roleAccessor.selectList(tenantCode, pageNum, pageSize);
-            List<RoleDTO> dtoList = convert(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
-        } catch (Exception e) {
-            log.error("roleMgtService|page|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-        return teaMachineResult;
-    }
-
-    @Override
     public TeaMachineResult<List<RoleDTO>> list(String tenantCode) {
         TeaMachineResult<List<RoleDTO>> teaMachineResult;
         try {
-            List<RolePO> list = roleAccessor.selectList(tenantCode);
+            List<RolePO> list = roleAccessor.search(tenantCode);
 
             String adminLoginName = getAdminName();
             if (!"SYS_SUPER_ADMIN".equals(adminLoginName)) {
@@ -145,7 +127,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
     private TeaMachineResult<Void> putNew(RolePO po, List<RoleActRelPO> actRelPOList) {
         try {
-            RolePO exist = roleAccessor.selectOneByRoleCode(po.getTenantCode(), po.getRoleCode());
+            RolePO exist = roleAccessor.getByRoleCode(po.getTenantCode(), po.getRoleCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -172,7 +154,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
     private TeaMachineResult<Void> putUpdate(RolePO po, List<RoleActRelPO> actRelPOList) {
         try {
-            RolePO exist = roleAccessor.selectOneByRoleCode(po.getTenantCode(), po.getRoleCode());
+            RolePO exist = roleAccessor.getByRoleCode(po.getTenantCode(), po.getRoleCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -253,7 +235,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        List<RoleActRelPO> roleActRelPOList = roleActRelAccessor.selectListByRoleCode(
+        List<RoleActRelPO> roleActRelPOList = roleActRelAccessor.listByRoleCode(
                 po.getTenantCode(), po.getRoleCode());
         if (!CollectionUtils.isEmpty(roleActRelPOList)) {
             dto.setPermitActCodeList(roleActRelPOList.stream()

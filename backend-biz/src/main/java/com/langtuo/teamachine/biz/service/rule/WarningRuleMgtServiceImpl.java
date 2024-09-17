@@ -94,7 +94,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     public TeaMachineResult<List<WarningRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<WarningRuleDTO>> teaMachineResult;
         try {
-            ShopPO shopPO = shopAccessor.selectOneByShopCode(tenantCode, shopCode);
+            ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
             if (shopPO == null) {
                 teaMachineResult = TeaMachineResult.success();
             }

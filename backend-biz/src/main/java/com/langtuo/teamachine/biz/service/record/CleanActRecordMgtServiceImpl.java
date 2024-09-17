@@ -155,11 +155,11 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
             if (toppingPO != null) {
                 dto.setToppingName(toppingPO.getToppingName());
             }
-            ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
+            ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
             if (shopGroupPO != null) {
                 dto.setShopGroupName(shopGroupPO.getShopGroupName());
             }
-            ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
+            ShopPO shopPO = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
             if (shopPO != null) {
                 dto.setShopName(shopPO.getShopName());
             }

@@ -21,7 +21,7 @@ public class ShopGroupAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public ShopGroupPO selectOneByShopGroupCode(String tenantCode, String shopGroupCode) {
+    public ShopGroupPO getByShopGroupCode(String tenantCode, String shopGroupCode) {
         // 首先访问缓存
         ShopGroupPO cached = getCache(tenantCode, shopGroupCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class ShopGroupAccessor {
         return po;
     }
 
-    public ShopGroupPO selectOneByShopGroupName(String tenantCode, String shopGroupName) {
+    public ShopGroupPO getByShopGroupName(String tenantCode, String shopGroupName) {
         // 首先访问缓存
         ShopGroupPO cached = getCache(tenantCode, null, shopGroupName);
         if (cached != null) {
@@ -49,7 +49,7 @@ public class ShopGroupAccessor {
         return po;
     }
 
-    public List<ShopGroupPO> selectList(String tenantCode) {
+    public List<ShopGroupPO> list(String tenantCode) {
         // 首先访问缓存
         List<ShopGroupPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -63,7 +63,7 @@ public class ShopGroupAccessor {
         return list;
     }
 
-    public List<ShopGroupPO> selectListByOrgName(String tenantCode, List<String> orgNameList) {
+    public List<ShopGroupPO> listByOrgName(String tenantCode, List<String> orgNameList) {
         // 首先访问缓存
         List<ShopGroupPO> cachedList = getCacheListByOrgNameList(tenantCode, orgNameList);
         if (cachedList != null) {
@@ -108,7 +108,7 @@ public class ShopGroupAccessor {
     }
 
     public int deleteByShopGroupCode(String tenantCode, String shopGroupCode) {
-        ShopGroupPO po = selectOneByShopGroupCode(tenantCode, shopGroupCode);
+        ShopGroupPO po = getByShopGroupCode(tenantCode, shopGroupCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

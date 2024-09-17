@@ -6,13 +6,10 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.shop.ShopGroupPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
-import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
-import com.langtuo.teamachine.dao.po.rule.DrainRulePO;
-import com.langtuo.teamachine.dao.po.rule.DrainRuleToppingPO;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -49,14 +46,14 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
     @Override
     public TeaMachineResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode) {
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(tenantCode, shopGroupCode);
+        ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupCode(tenantCode, shopGroupCode);
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
         return TeaMachineResult.success(shopGroupDTO);
     }
 
     @Override
     public TeaMachineResult<ShopGroupDTO> getByName(String tenantCode, String shopGroupName) {
-        ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupName(tenantCode, shopGroupName);
+        ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupName(tenantCode, shopGroupName);
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
         return TeaMachineResult.success(shopGroupDTO);
     }
@@ -84,7 +81,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     public TeaMachineResult<List<ShopGroupDTO>> list(String tenantCode) {
         TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
-            List<ShopGroupPO> list = shopGroupAccessor.selectList(tenantCode);
+            List<ShopGroupPO> list = shopGroupAccessor.list(tenantCode);
             teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("shopGroupMgtService|list|fatal|" + e.getMessage(), e);
@@ -97,7 +94,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     public TeaMachineResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode) {
         TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
-            List<ShopGroupPO> list = shopGroupAccessor.selectListByOrgName(
+            List<ShopGroupPO> list = shopGroupAccessor.listByOrgName(
                     tenantCode, DaoUtils.getOrgNameListByAdmin(tenantCode));
             teaMachineResult = TeaMachineResult.success(convert(list));
         } catch (Exception e) {
@@ -123,7 +120,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
     private TeaMachineResult<Void> putNew(ShopGroupPO po) {
         try {
-            ShopGroupPO exist = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
+            ShopGroupPO exist = shopGroupAccessor.getByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -142,7 +139,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
     private TeaMachineResult<Void> putUpdate(ShopGroupPO po) {
         try {
-            ShopGroupPO exist = shopGroupAccessor.selectOneByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
+            ShopGroupPO exist = shopGroupAccessor.getByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }

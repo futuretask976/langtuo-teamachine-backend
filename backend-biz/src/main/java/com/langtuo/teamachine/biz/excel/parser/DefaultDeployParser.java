@@ -65,7 +65,7 @@ public class DefaultDeployParser implements DeployParser {
             cell4ShopCode.setCellValue(deployPO.getShopCode());
             // 添加店铺名称
             Cell cell4ShopName = dataRow.createCell(columnIndex++);
-            ShopPO shopPO = SpringAccessorUtils.getShopAccessor().selectOneByShopCode(tenantCode, deployPO.getShopCode());
+            ShopPO shopPO = SpringAccessorUtils.getShopAccessor().getByShopCode(tenantCode, deployPO.getShopCode());
             if (shopPO != null) {
                 cell4ShopName.setCellValue(shopPO.getShopName());
             }

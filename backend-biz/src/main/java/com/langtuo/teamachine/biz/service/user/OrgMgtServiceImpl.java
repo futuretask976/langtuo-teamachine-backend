@@ -44,7 +44,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public TeaMachineResult<List<OrgDTO>> listByParent(String tenantCode, String orgName) {
         TeaMachineResult<List<OrgDTO>> teaMachineResult;
         try {
-            List<OrgNode> orgNodeList = orgAccessor.selectListByParent(tenantCode, orgName);
+            List<OrgNode> orgNodeList = orgAccessor.listByParentOrgName(tenantCode, orgName);
             teaMachineResult = TeaMachineResult.success(convert(orgNodeList));
         } catch (Exception e) {
             log.error("orgMgtService|listByParent|fatal|" + e.getMessage(), e);
@@ -57,7 +57,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public TeaMachineResult<List<OrgDTO>> list(String tenantCode) {
         TeaMachineResult<List<OrgDTO>> teaMachineResult;
         try {
-            List<OrgNode> nodeList = orgAccessor.selectList(tenantCode);
+            List<OrgNode> nodeList = orgAccessor.list(tenantCode);
             List<OrgDTO> dtoList = convert(nodeList);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public TeaMachineResult<OrgDTO> get(String tenantCode, String orgName) {
         TeaMachineResult<OrgDTO> teaMachineResult;
         try {
-            OrgNode orgNode = orgAccessor.selectOne(tenantCode, orgName);
+            OrgNode orgNode = orgAccessor.getByOrgName(tenantCode, orgName);
             OrgDTO orgDTO = convert(orgNode);
             teaMachineResult = TeaMachineResult.success(orgDTO);
         } catch (Exception e) {
@@ -117,7 +117,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     private TeaMachineResult<Void> putNew(OrgNode po) {
         TeaMachineResult<Void> teaMachineResult;
         try {
-            OrgNode exist = orgAccessor.selectOne(po.getTenantCode(), po.getOrgName());
+            OrgNode exist = orgAccessor.getByOrgName(po.getTenantCode(), po.getOrgName());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -137,7 +137,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
     private TeaMachineResult<Void> putUpdate(OrgNode po) {
         try {
-            OrgNode exist = orgAccessor.selectOne(po.getTenantCode(), po.getOrgName());
+            OrgNode exist = orgAccessor.getByOrgName(po.getTenantCode(), po.getOrgName());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }

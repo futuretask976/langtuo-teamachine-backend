@@ -178,12 +178,12 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             if (teaTypePO != null) {
                 dto.setTeaTypeName(teaTypePO.getTeaTypeName());
             }
-            ShopGroupPO shopGroupPO = shopGroupAccessor.selectOneByShopGroupCode(
+            ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupCode(
                     po.getTenantCode(), po.getShopGroupCode());
             if (shopGroupPO != null) {
                 dto.setShopGroupName(shopGroupPO.getShopGroupName());
             }
-            ShopPO shopPO = shopAccessor.selectOneByShopCode(po.getTenantCode(), po.getShopCode());
+            ShopPO shopPO = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
             if (shopPO != null) {
                 dto.setShopName(shopPO.getShopName());
             }
