@@ -23,29 +23,15 @@ public class ShopAccessor {
 
     public ShopPO getByShopCode(String tenantCode, String shopCode) {
         // 首先访问缓存
-        ShopPO cached = getCache(tenantCode, shopCode, null);
+        ShopPO cached = getCache(tenantCode, shopCode);
         if (cached != null) {
             return cached;
         }
 
-        ShopPO po = mapper.selectOne(tenantCode, shopCode, null);
+        ShopPO po = mapper.selectOne(tenantCode, shopCode);
 
         // 设置缓存
-        getCache(tenantCode, shopCode, null, po);
-        return po;
-    }
-
-    public ShopPO getByShopName(String tenantCode, String shopName) {
-        // 首先访问缓存
-        ShopPO cached = getCache(tenantCode, null, shopName);
-        if (cached != null) {
-            return cached;
-        }
-
-        ShopPO po = mapper.selectOne(tenantCode, null, shopName);
-
-        // 设置缓存
-        getCache(tenantCode, null, shopName, po);
+        getCache(tenantCode, shopCode, po);
         return po;
     }
 
@@ -100,16 +86,17 @@ public class ShopAccessor {
     }
 
     public int update(ShopPO po) {
-        ShopPO exist = mapper.selectOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
+        ShopPO exist = mapper.selectOne(po.getTenantCode(), po.getShopCode());
         if (exist == null) {
             return CommonConsts.NUM_ZERO;
         }
 
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
-            deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
+            deleteCacheOne(po.getTenantCode(), po.getShopCode());
+            deleteCacheList(exist.getTenantCode(), exist.getShopGroupCode());
             deleteCacheCount(exist.getTenantCode(), exist.getShopGroupCode());
+            deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
             deleteCacheCount(po.getTenantCode(), po.getShopGroupCode());
         }
         return updated;
@@ -123,7 +110,7 @@ public class ShopAccessor {
 
         int deleted = mapper.delete(tenantCode, shopCode);
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
-            deleteCacheOne(tenantCode, po.getShopCode(), po.getShopName());
+            deleteCacheOne(tenantCode, po.getShopCode());
             deleteCacheList(tenantCode, po.getShopGroupCode());
             deleteCacheCount(po.getTenantCode(), po.getShopGroupCode());
         }
@@ -143,8 +130,8 @@ public class ShopAccessor {
         return count;
     }
 
-    private String getCacheKey(String tenantCode, String shopCode, String shopName) {
-        return "shopAcc-" + tenantCode + "-" + shopCode + "-" + shopName;
+    private String getCacheKey(String tenantCode, String shopCode) {
+        return "shopAcc-" + tenantCode + "-" + shopCode;
     }
 
     private String getCacheListKey(String tenantCode, String shopGroupCode) {
@@ -187,8 +174,8 @@ public class ShopAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private ShopPO getCache(String tenantCode, String shopCode, String shopName) {
-        String key = getCacheKey(tenantCode, shopCode, shopName);
+    private ShopPO getCache(String tenantCode, String shopCode) {
+        String key = getCacheKey(tenantCode, shopCode);
         Object cached = redisManager.getValue(key);
         ShopPO po = (ShopPO) cached;
         return po;
@@ -206,14 +193,13 @@ public class ShopAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void getCache(String tenantCode, String shopCode, String shopName, ShopPO po) {
-        String key = getCacheKey(tenantCode, shopCode, shopName);
+    private void getCache(String tenantCode, String shopCode, ShopPO po) {
+        String key = getCacheKey(tenantCode, shopCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheOne(String tenantCode, String shopCode, String shopName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, shopCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, shopName));
+    private void deleteCacheOne(String tenantCode, String shopCode) {
+        redisManager.deleteKey(getCacheKey(tenantCode, shopCode));
     }
 
     private void deleteCacheList(String tenantCode, String shopGroupCode) {

@@ -25,9 +25,6 @@
             <if test="shopCode != null">
                 AND shop_code = #{shopCode}
             </if>
-            <if test="shopName != null">
-                AND shop_name = #{shopName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="shopPOMap">

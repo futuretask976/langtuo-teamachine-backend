@@ -17,13 +17,6 @@ public interface ShopMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<ShopDTO> getByName(String tenantCode, String shopName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, String shopGroupCode, int pageNum, int pageSize);

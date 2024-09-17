@@ -6,12 +6,15 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.RolePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
+import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleActRelAccessor;
+import com.langtuo.teamachine.dao.po.user.AdminPO;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
 import com.langtuo.teamachine.dao.po.user.RolePO;
+import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
@@ -30,11 +33,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class RoleMgtServiceImpl implements RoleMgtService {
-    /**
-     * 租户超级管理员角色的roleCode硬编码
-     */
-    private static final String TENANT_SUPER_ADMIN_ROLE_CODE = "role_tenant_super_admin";
-
     @Resource
     private RoleAccessor roleAccessor;
 
@@ -141,20 +139,24 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
-            if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(po.getRoleCode())) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN_ROLE));
+            if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(po.getRoleCode())) {
+                AdminPO adminPO = DaoUtils.getLoginAdminPO(po.getTenantCode());
+                if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(adminPO.getRoleCode())) {
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                            ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN_ROLE));
+                }
             }
 
-            int inserted = roleAccessor.insert(po);
-            if (CommonConsts.NUM_ONE != inserted) {
-                log.error("roleMgtService|putUpdateRole|error|" + inserted);
+            int updated = roleAccessor.update(po);
+            if (CommonConsts.NUM_ONE != updated) {
+                log.error("roleMgtService|putUpdateRole|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(po.getTenantCode(), po.getRoleCode());
             for (RoleActRelPO actRelPO : actRelPOList) {
                 int inserted4actRel = roleActRelAccessor.insert(actRelPO);
-                if (CommonConsts.NUM_ONE != inserted) {
+                if (CommonConsts.NUM_ONE != updated) {
                     log.error("roleMgtService|putUpdateActRel|error|" + inserted4actRel);
                 }
             }
@@ -177,8 +179,14 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                     ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
         }
 
-        if (TENANT_SUPER_ADMIN_ROLE_CODE.equals(roleCode)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN_ROLE));
+        if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(roleCode)) {
+            if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(roleCode)) {
+                AdminPO adminPO = DaoUtils.getLoginAdminPO(tenantCode);
+                if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(adminPO.getRoleCode())) {
+                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                            ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN_ROLE));
+                }
+            }
         }
 
         TeaMachineResult<Void> teaMachineResult;

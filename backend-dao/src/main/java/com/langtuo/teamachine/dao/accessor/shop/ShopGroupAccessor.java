@@ -78,7 +78,7 @@ public class ShopGroupAccessor {
     public int insert(ShopGroupPO po) {
         int inserted = mapper.insert(po);
         if (inserted == CommonConsts.INSERTED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode(), po.getShopGroupName());
+            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCountByOrgName(po.getTenantCode(), po.getOrgName());
         }
@@ -93,7 +93,7 @@ public class ShopGroupAccessor {
 
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode(), po.getShopGroupName());
+            deleteCacheOne(po.getTenantCode(), po.getShopGroupCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCountByOrgName(exist.getTenantCode(), exist.getOrgName());
             deleteCacheCountByOrgName(po.getTenantCode(), po.getOrgName());
@@ -109,7 +109,7 @@ public class ShopGroupAccessor {
 
         int deleted = mapper.delete(tenantCode, shopGroupCode);
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
-            deleteCacheOne(tenantCode, po.getShopGroupCode(), po.getShopGroupName());
+            deleteCacheOne(tenantCode, po.getShopGroupCode());
             deleteCacheList(tenantCode);
             deleteCacheCountByOrgName(tenantCode, po.getOrgName());
         }
@@ -197,7 +197,7 @@ public class ShopGroupAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void deleteCacheOne(String tenantCode, String shopGroupCode, String shopGroupName) {
+    private void deleteCacheOne(String tenantCode, String shopGroupCode) {
         redisManager.deleteKey(getCacheKey(tenantCode, shopGroupCode));
     }
 

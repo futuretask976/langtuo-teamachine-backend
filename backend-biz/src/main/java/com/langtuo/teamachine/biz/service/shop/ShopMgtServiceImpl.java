@@ -53,13 +53,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
-    public TeaMachineResult<ShopDTO> getByName(String tenantCode, String shopName) {
-        ShopPO shopPO = shopAccessor.getByShopName(tenantCode, shopName);
-        ShopDTO shopDTO = convert(shopPO);
-        return TeaMachineResult.success(shopDTO);
-    }
-
-    @Override
     public TeaMachineResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, String shopGroupCode,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
