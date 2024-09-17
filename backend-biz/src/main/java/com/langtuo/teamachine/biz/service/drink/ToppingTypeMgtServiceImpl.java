@@ -73,7 +73,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     public TeaMachineResult<ToppingTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
         TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
-            ToppingTypePO toppingTypePO = toppingTypeAccessor.selectOneByToppingTypeCode(tenantCode, toppingTypeCode);
+            ToppingTypePO toppingTypePO = toppingTypeAccessor.getByToppingTypeCode(tenantCode, toppingTypeCode);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
 
             teaMachineResult = TeaMachineResult.success(tenantDTO);
@@ -88,7 +88,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     public TeaMachineResult<ToppingTypeDTO> getByName(String tenantCode, String toppingTypeName) {
         TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
-            ToppingTypePO toppingTypePO = toppingTypeAccessor.selectOneByToppingTypeName(tenantCode, toppingTypeName);
+            ToppingTypePO toppingTypePO = toppingTypeAccessor.getByToppingTypeName(tenantCode, toppingTypeName);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
 
             teaMachineResult = TeaMachineResult.success(tenantDTO);
@@ -115,7 +115,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
     private TeaMachineResult<Void> putNew(ToppingTypePO po) {
         try {
-            ToppingTypePO exist = toppingTypeAccessor.selectOneByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode());
+            ToppingTypePO exist = toppingTypeAccessor.getByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -134,7 +134,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
     private TeaMachineResult<Void> putUpdate(ToppingTypePO po) {
         try {
-            ToppingTypePO exist = toppingTypeAccessor.selectOneByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode());
+            ToppingTypePO exist = toppingTypeAccessor.getByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }

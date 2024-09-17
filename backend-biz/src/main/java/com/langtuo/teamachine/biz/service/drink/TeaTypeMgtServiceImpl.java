@@ -34,7 +34,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     public TeaMachineResult<List<TeaTypeDTO>> list(String tenantCode) {
         TeaMachineResult<List<TeaTypeDTO>> teaMachineResult;
         try {
-            List<TeaTypePO> list = accessor.selectList(tenantCode);
+            List<TeaTypePO> list = accessor.list(tenantCode);
             List<TeaTypeDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     public TeaMachineResult<TeaTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
         TeaMachineResult<TeaTypeDTO> teaMachineResult;
         try {
-            TeaTypePO toppingTypePO = accessor.selectOneByTeaTypeCode(tenantCode, toppingTypeCode);
+            TeaTypePO toppingTypePO = accessor.getByTeaTypeCode(tenantCode, toppingTypeCode);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     public TeaMachineResult<TeaTypeDTO> getByName(String tenantCode, String toppingTypeName) {
         TeaMachineResult<TeaTypeDTO> teaMachineResult;
         try {
-            TeaTypePO toppingTypePO = accessor.selectOneByTeaName(tenantCode, toppingTypeName);
+            TeaTypePO toppingTypePO = accessor.getByTeaName(tenantCode, toppingTypeName);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -107,7 +107,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     }
 
     private TeaMachineResult<Void> putNew(TeaTypePO po) {
-        try {TeaTypePO exist = accessor.selectOneByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
+        try {TeaTypePO exist = accessor.getByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -126,7 +126,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
     private TeaMachineResult<Void> putUpdate(TeaTypePO po) {
         try {
-            TeaTypePO exist = accessor.selectOneByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
+            TeaTypePO exist = accessor.getByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }

@@ -64,7 +64,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     public TeaMachineResult<TeaDTO> getByCode(String tenantCode, String teaCode) {
         TeaMachineResult<TeaDTO> teaMachineResult;
         try {
-            TeaPO po = teaAccessor.selectOneByTeaCode(tenantCode, teaCode);
+            TeaPO po = teaAccessor.getByTeaCode(tenantCode, teaCode);
             TeaDTO dto = convertToTeaDTO(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     public TeaMachineResult<TeaDTO> getByName(String tenantCode, String teaName) {
         TeaMachineResult<TeaDTO> teaMachineResult;
         try {
-            TeaPO po = teaAccessor.selectOneByTeaName(tenantCode, teaName);
+            TeaPO po = teaAccessor.getByTeaName(tenantCode, teaName);
             TeaDTO dto = convertToTeaDTO(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     public TeaMachineResult<List<TeaDTO>> list(String tenantCode) {
         TeaMachineResult<List<TeaDTO>> teaMachineResult;
         try {
-            List<TeaPO> teaPOList = teaAccessor.selectList(tenantCode);
+            List<TeaPO> teaPOList = teaAccessor.list(tenantCode);
             List<TeaDTO> teaDTOList = convertToTeaDTO(teaPOList, false);
             teaMachineResult = TeaMachineResult.success(teaDTOList);
         } catch (Exception e) {
@@ -142,7 +142,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     private TeaMachineResult<Void> putNew(TeaPO teaPO, List<ToppingBaseRulePO> toppingBaseRulePOList,
             List<TeaUnitPO> teaUnitPOList, List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
         try {
-            TeaPO exist = teaAccessor.selectOneByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
+            TeaPO exist = teaAccessor.getByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -186,7 +186,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     private TeaMachineResult<Void> putUpdate(TeaPO teaPO, List<ToppingBaseRulePO> toppingBaseRulePOList,
             List<TeaUnitPO> teaUnitPOList, List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
         try {
-            TeaPO exist = teaAccessor.selectOneByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
+            TeaPO exist = teaAccessor.getByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
@@ -299,7 +299,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             ToppingAdjustRulePart adjustRulePart = new ToppingAdjustRulePart();
             adjustRulePart.setStepIndex(adjustRulePO.getStepIndex());
 
-            ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(adjustRulePO.getTenantCode(),
+            ToppingPO toppingPO = toppingAccessor.getByToppingCode(adjustRulePO.getTenantCode(),
                     adjustRulePO.getToppingCode());
             if (toppingPO != null) {
                 adjustRulePart.setToppingCode(toppingPO.getToppingCode());
@@ -369,12 +369,12 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     }
 
     private void fillTeaDTO(String tenantCode, TeaDTO teaDTO) {
-        List<TeaUnitPO> teaUnitPOList = teaUnitAccessor.selectListByTeaCode(tenantCode, teaDTO.getTeaCode());
+        List<TeaUnitPO> teaUnitPOList = teaUnitAccessor.listByTeaCode(tenantCode, teaDTO.getTeaCode());
         if (CollectionUtils.isEmpty(teaUnitPOList)) {
             // teaUnitPOList 不应该为空
             return;
         }
-        List<ToppingBaseRulePO> toppingBaseRulePOList = toppingBaseRuleAccessor.selectListByTeaCode(tenantCode,
+        List<ToppingBaseRulePO> toppingBaseRulePOList = toppingBaseRuleAccessor.listByTeaCode(tenantCode,
                 teaDTO.getTeaCode());
         if (CollectionUtils.isEmpty(toppingBaseRulePOList)) {
             // toppingBaseRulePOList 不应该为空
@@ -483,12 +483,12 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     }
 
     private SpecRuleDTO getSpecRuleDTO(TeaUnitPO teaUnitPO) {
-        SpecPO specPO = specAccessor.selectOneBySpecCode(teaUnitPO.getTenantCode(), teaUnitPO.getSpecCode());
+        SpecPO specPO = specAccessor.getBySpecCode(teaUnitPO.getTenantCode(), teaUnitPO.getSpecCode());
         SpecRuleDTO specRuleDTO = new SpecRuleDTO();
         specRuleDTO.setSpecCode(specPO.getSpecCode());
         specRuleDTO.setSpecName(specPO.getSpecName());
 
-        List<SpecItemPO> specItemPOList = specItemAccessor.selectListBySpecCode(
+        List<SpecItemPO> specItemPOList = specItemAccessor.listBySpecCode(
                 teaUnitPO.getTenantCode(), teaUnitPO.getSpecCode());
         for (SpecItemPO specItemPO : specItemPOList) {
             SpecItemRuleDTO dto = new SpecItemRuleDTO();
@@ -509,7 +509,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         specItemRuleDTO.setSpecCode(teaUnitPO.getSpecCode());
         specItemRuleDTO.setSpecItemCode(teaUnitPO.getSpecItemCode());
 
-        SpecItemPO specItemPO = specItemAccessor.selectOneBySpecItemCode(teaUnitPO.getTenantCode(),
+        SpecItemPO specItemPO = specItemAccessor.getBySpecItemCode(teaUnitPO.getTenantCode(),
                 teaUnitPO.getSpecItemCode());
         if (specItemPO != null) {
             specItemRuleDTO.setSpecItemName(specItemPO.getSpecItemName());
@@ -536,7 +536,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             String teaUnitCode, Map<Integer, Map<String, ToppingBaseRulePO>> toppingBaseRulePOMapByStepIndex) {
         List<ToppingAdjustRuleDTO> toppingAdjustRuleDTOList = Lists.newArrayList();
 
-        List<ToppingAdjustRulePO> toppingAdjustRulePOList = toppingAdjustRuleAccessor.selectListByTeaUnitCode(
+        List<ToppingAdjustRulePO> toppingAdjustRulePOList = toppingAdjustRuleAccessor.listByTeaUnitCode(
                 tenantCode, teaCode, teaUnitCode);
         if (CollectionUtils.isEmpty(toppingAdjustRulePOList)) {
             return toppingAdjustRuleDTOList;
@@ -549,7 +549,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             toppingAdjustRuleDTO.setAdjustMode(toppingAdjustRulePO.getAdjustMode());
             toppingAdjustRuleDTO.setAdjustAmount(toppingAdjustRulePO.getAdjustAmount());
 
-            ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(tenantCode, toppingAdjustRulePO.getToppingCode());
+            ToppingPO toppingPO = toppingAccessor.getByToppingCode(tenantCode, toppingAdjustRulePO.getToppingCode());
             if (toppingPO != null) {
                 toppingAdjustRuleDTO.setToppingName(toppingPO.getToppingName());
                 toppingAdjustRuleDTO.setMeasureUnit(toppingPO.getMeasureUnit());
@@ -665,7 +665,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         dto.setToppingCode(po.getToppingCode());
         dto.setBaseAmount(po.getBaseAmount());
 
-        ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
+        ToppingPO toppingPO = toppingAccessor.getByToppingCode(po.getTenantCode(), po.getToppingCode());
         if (toppingPO != null) {
             dto.setToppingName(toppingPO.getToppingName());
             dto.setMeasureUnit(toppingPO.getMeasureUnit());

@@ -19,7 +19,7 @@ public class ToppingAdjustRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<ToppingAdjustRulePO> selectListByTeaUnitCode(String tenantCode, String teaCode, String teaUnitCode) {
+    public List<ToppingAdjustRulePO> listByTeaUnitCode(String tenantCode, String teaCode, String teaUnitCode) {
         List<ToppingAdjustRulePO> cached = getCacheList(tenantCode, teaCode, teaUnitCode);
         if (!CollectionUtils.isEmpty(cached)) {
             return cached;

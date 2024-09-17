@@ -49,7 +49,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Override
     public TeaMachineResult<MachineDTO> getByCode(String tenantCode, String machineCode) {
-        MachinePO machinePO = machineAccessor.selectOneByMachineCode(tenantCode, machineCode);
+        MachinePO machinePO = machineAccessor.getByMachineCode(tenantCode, machineCode);
         MachineDTO adminRoleDTO = convert(machinePO);
         return TeaMachineResult.success(adminRoleDTO);
     }
@@ -81,7 +81,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     public TeaMachineResult<List<MachineDTO>> list(String tenantCode) {
         TeaMachineResult<List<MachineDTO>> teaMachineResult;
         try {
-            List<MachinePO> list = machineAccessor.selectList(tenantCode);
+            List<MachinePO> list = machineAccessor.list(tenantCode);
             List<MachineDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
@@ -98,7 +98,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     public TeaMachineResult<List<MachineDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<MachineDTO>> teaMachineResult;
         try {
-            List<MachinePO> list = machineAccessor.selectListByShopCode(tenantCode, shopCode);
+            List<MachinePO> list = machineAccessor.listByShopCode(tenantCode, shopCode);
             List<MachineDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
@@ -120,7 +120,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         TeaMachineResult<MachineDTO> teaMachineResult;
         try {
             // 激活时，设备端是不知道 tenantCode 的，只能通过 deployCode 查找和更新
-            DeployPO existDeployPO = deployAccessor.selectOneByDeployCode(request.getDeployCode());
+            DeployPO existDeployPO = deployAccessor.getByDeployCode(request.getDeployCode());
             if (existDeployPO == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
             }
@@ -134,7 +134,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
-            MachinePO existMachinePO = machineAccessor.selectOneByMachineCode(existDeployPO.getTenantCode(),
+            MachinePO existMachinePO = machineAccessor.getByMachineCode(existDeployPO.getTenantCode(),
                     existDeployPO.getMachineCode());
             if (existMachinePO == null) {
                 MachinePO machinePO = convertToMachinePO(request, existDeployPO);
@@ -161,7 +161,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
         try {
             MachinePO po = convert(request);
-            MachinePO exist = machineAccessor.selectOneByMachineCode(request.getTenantCode(), request.getMachineCode());
+            MachinePO exist = machineAccessor.getByMachineCode(request.getTenantCode(), request.getMachineCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
             }

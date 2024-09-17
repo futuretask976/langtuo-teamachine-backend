@@ -21,7 +21,7 @@ public class TeaAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public TeaPO selectOneByTeaCode(String tenantCode, String teaCode) {
+    public TeaPO getByTeaCode(String tenantCode, String teaCode) {
         // 首先访问缓存
         TeaPO cached = getCache(tenantCode, teaCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class TeaAccessor {
         return po;
     }
 
-    public TeaPO selectOneByTeaName(String tenantCode, String teaName) {
+    public TeaPO getByTeaName(String tenantCode, String teaName) {
         // 首先访问缓存
         TeaPO cached = getCache(tenantCode, null, teaName);
         if (cached != null) {
@@ -49,7 +49,7 @@ public class TeaAccessor {
         return po;
     }
 
-    public List<TeaPO> selectList(String tenantCode) {
+    public List<TeaPO> list(String tenantCode) {
         // 首先访问缓存
         List<TeaPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -97,7 +97,7 @@ public class TeaAccessor {
     }
 
     public int deleteByTeaCode(String tenantCode, String teaCode) {
-        TeaPO po = selectOneByTeaCode(tenantCode, teaCode);
+        TeaPO po = getByTeaCode(tenantCode, teaCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

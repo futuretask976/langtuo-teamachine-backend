@@ -17,7 +17,7 @@ public class ModelPipelineAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<ModelPipelinePO> selectListByModelCode(String modelCode) {
+    public List<ModelPipelinePO> listByModelCode(String modelCode) {
         // 首先访问缓存
         List<ModelPipelinePO> cachedList = getCacheList(modelCode);
         if (cachedList != null) {

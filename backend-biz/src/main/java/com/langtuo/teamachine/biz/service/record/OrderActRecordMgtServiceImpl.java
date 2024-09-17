@@ -168,13 +168,13 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         dto.setOuterOrderId(po.getOuterOrderId());
         dto.setState(po.getState());
 
-        TeaPO teaPO = teaAccessor.selectOneByTeaCode(po.getTenantCode(), po.getTeaCode());
+        TeaPO teaPO = teaAccessor.getByTeaCode(po.getTenantCode(), po.getTeaCode());
         if (teaPO != null) {
             dto.setTeaName(teaPO.getTeaName());
         }
 
         if (fillDetail) {
-            TeaTypePO teaTypePO = teaTypeAccessor.selectOneByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
+            TeaTypePO teaTypePO = teaTypeAccessor.getByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
             if (teaTypePO != null) {
                 dto.setTeaTypeName(teaTypePO.getTeaTypeName());
             }
@@ -218,9 +218,9 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         dto.setSpecCode(po.getSpecCode());
         dto.setSpecItemCode(po.getSpecItemCode());
 
-        SpecPO specPO = specAccessor.selectOneBySpecCode(po.getTenantCode(), po.getSpecCode());
+        SpecPO specPO = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
         dto.setSpecName(specPO.getSpecName());
-        SpecItemPO specItemPO = specItemAccessor.selectOneBySpecItemCode(po.getTenantCode(), po.getSpecItemCode());
+        SpecItemPO specItemPO = specItemAccessor.getBySpecItemCode(po.getTenantCode(), po.getSpecItemCode());
         dto.setSpecItemName(specItemPO.getSpecItemName());
         return dto;
     }
@@ -245,7 +245,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         dto.setToppingCode(po.getToppingCode());
         dto.setActualAmount(po.getActualAmount());
 
-        ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
+        ToppingPO toppingPO = toppingAccessor.getByToppingCode(po.getTenantCode(), po.getToppingCode());
         dto.setToppingName(toppingPO.getToppingName());
         return dto;
     }

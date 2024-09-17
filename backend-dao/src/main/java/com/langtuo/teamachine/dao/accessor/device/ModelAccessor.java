@@ -21,7 +21,7 @@ public class ModelAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public ModelPO selectOneByModelCode(String modelCode) {
+    public ModelPO getByModelCode(String modelCode) {
         // 首先访问缓存
         ModelPO cached = getCache(modelCode);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class ModelAccessor {
         return po;
     }
 
-    public List<ModelPO> selectList() {
+    public List<ModelPO> list() {
         // 首先访问缓存
         List<ModelPO> cachedList = getCacheList();
         if (cachedList != null) {

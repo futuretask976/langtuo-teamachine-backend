@@ -333,7 +333,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
                     dto.setFlushSec(po.getFlushSec());
                     dto.setFlushWeight(po.getFlushWeight());
 
-                    ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(
+                    ToppingPO toppingPO = toppingAccessor.getByToppingCode(
                             po.getTenantCode(), po.getToppingCode());
                     if (toppingPO != null) {
                         dto.setToppingName(toppingPO.getToppingName());

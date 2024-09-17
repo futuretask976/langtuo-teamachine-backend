@@ -18,7 +18,7 @@ public class ToppingBaseRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<ToppingBaseRulePO> selectListByTeaCode(String tenantCode, String teaCode) {
+    public List<ToppingBaseRulePO> listByTeaCode(String tenantCode, String teaCode) {
         List<ToppingBaseRulePO> cached = getCacheList(tenantCode, teaCode);
         if (!CollectionUtils.isEmpty(cached)) {
             return cached;

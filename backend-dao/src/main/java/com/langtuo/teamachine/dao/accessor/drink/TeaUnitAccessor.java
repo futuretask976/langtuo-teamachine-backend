@@ -17,7 +17,7 @@ public class TeaUnitAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<TeaUnitPO> selectListByTeaCode(String tenantCode, String teaCode) {
+    public List<TeaUnitPO> listByTeaCode(String tenantCode, String teaCode) {
         // 首先访问缓存
         List<TeaUnitPO> cachedList = getCacheList(tenantCode, teaCode);
         if (cachedList != null) {

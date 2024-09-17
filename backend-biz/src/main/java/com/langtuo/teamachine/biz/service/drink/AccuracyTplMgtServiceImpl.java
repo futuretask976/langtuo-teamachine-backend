@@ -41,7 +41,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     public TeaMachineResult<List<AccuracyTplDTO>> list(String tenantCode) {
         TeaMachineResult<List<AccuracyTplDTO>> teaMachineResult;
         try {
-            List<AccuracyTplPO> list = accuracyTplAccessor.selectList(tenantCode);
+            List<AccuracyTplPO> list = accuracyTplAccessor.list(tenantCode);
             List<AccuracyTplDTO> dtoList = list.stream()
                     .map(po -> convertToAccuracyTplPO(po))
                     .collect(Collectors.toList());
@@ -79,7 +79,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     public TeaMachineResult<AccuracyTplDTO> getByCode(String tenantCode, String specCode) {
         TeaMachineResult<AccuracyTplDTO> teaMachineResult;
         try {
-            AccuracyTplPO po = accuracyTplAccessor.selectOneByTplCode(tenantCode, specCode);
+            AccuracyTplPO po = accuracyTplAccessor.getByTplCode(tenantCode, specCode);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -93,7 +93,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     public TeaMachineResult<AccuracyTplDTO> getByName(String tenantCode, String specName) {
         TeaMachineResult<AccuracyTplDTO> teaMachineResult;
         try {
-            AccuracyTplPO po = accuracyTplAccessor.selectOneByTplName(tenantCode, specName);
+            AccuracyTplPO po = accuracyTplAccessor.getByTplName(tenantCode, specName);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -131,7 +131,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
     private TeaMachineResult<Void> putNew(AccuracyTplPO po, List<AccuracyTplToppingPO> toppingPOList) {
         try {
-            AccuracyTplPO exist = accuracyTplAccessor.selectOneByTplCode(po.getTenantCode(), po.getTemplateCode());
+            AccuracyTplPO exist = accuracyTplAccessor.getByTplCode(po.getTenantCode(), po.getTemplateCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -159,7 +159,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
     private TeaMachineResult<Void> putUpdate(AccuracyTplPO po, List<AccuracyTplToppingPO> toppingPOList) {
         try {
-            AccuracyTplPO exist = accuracyTplAccessor.selectOneByTplCode(po.getTenantCode(), po.getTemplateCode());
+            AccuracyTplPO exist = accuracyTplAccessor.getByTplCode(po.getTenantCode(), po.getTemplateCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
@@ -219,7 +219,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         dto.setUnderMode(po.getUnderMode());
         dto.setUnderAmount(po.getUnderAmount());
 
-        List<AccuracyTplToppingPO> toppingPOList = accuracyTplToppingAccessor.selectList(
+        List<AccuracyTplToppingPO> toppingPOList = accuracyTplToppingAccessor.listByTplCode(
                 po.getTenantCode(), po.getTemplateCode());
         if (!CollectionUtils.isEmpty(toppingPOList)) {
             List<String> toppingCodeList = Lists.newArrayList();

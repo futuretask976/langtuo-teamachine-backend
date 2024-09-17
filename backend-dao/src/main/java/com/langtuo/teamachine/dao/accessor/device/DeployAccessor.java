@@ -45,12 +45,12 @@ public class DeployAccessor {
      * @param deployCode
      * @return
      */
-    public DeployPO selectOneByDeployCode(String deployCode) {
+    public DeployPO getByDeployCode(String deployCode) {
         DeployPO po = mapper.selectOne(null, deployCode, null);
         return po;
     }
 
-    public DeployPO selectOneByDeployCode(String tenantCode, String deployCode) {
+    public DeployPO getByDeployCode(String tenantCode, String deployCode) {
         // 首先访问缓存
         DeployPO cached = getCache(tenantCode, deployCode, null);
         if (cached != null) {
@@ -64,7 +64,7 @@ public class DeployAccessor {
         return po;
     }
 
-    public DeployPO selectOneByMachineCode(String tenantCode, String machineCode) {
+    public DeployPO getByMachineCode(String tenantCode, String machineCode) {
         // 首先访问缓存
         DeployPO cached = getCache(tenantCode, null, machineCode);
         if (cached != null) {
@@ -78,7 +78,7 @@ public class DeployAccessor {
         return po;
     }
 
-    public List<DeployPO> selectList(String tenantCode) {
+    public List<DeployPO> list(String tenantCode) {
         // 首先访问缓存
         List<DeployPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -126,7 +126,7 @@ public class DeployAccessor {
     }
 
     public int deleteByDeployCode(String tenantCode, String deployCode) {
-        DeployPO po = selectOneByDeployCode(tenantCode, deployCode);
+        DeployPO po = getByDeployCode(tenantCode, deployCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }
@@ -139,7 +139,7 @@ public class DeployAccessor {
         return deleted;
     }
 
-    public long selectNextSeqVal4MachineCode() {
+    public long getNextSeqVal4MachineCode() {
         if (machineCodeSeqCurVal < machineCodeSeqStartVal + SEQ_SCOPE) {
             return machineCodeSeqCurVal++;
         }

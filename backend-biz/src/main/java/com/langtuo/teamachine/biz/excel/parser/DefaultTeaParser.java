@@ -201,7 +201,7 @@ public class DefaultTeaParser implements TeaParser {
 
                 List<SpecItemPO> specItemPOList = Lists.newArrayList();
                 for (String specItemName : teaUnitNameParts) {
-                    SpecItemPO specItemPO = SpringAccessorUtils.getSpecItemAccessor().selectOneBySpecItemName(tenantCode,
+                    SpecItemPO specItemPO = SpringAccessorUtils.getSpecItemAccessor().getBySpecItemName(tenantCode,
                             specItemName);
                     specItemPOList.add(specItemPO);
                 }
@@ -250,24 +250,24 @@ public class DefaultTeaParser implements TeaParser {
 
     private List<TeaExcel> fetchData4Export(String tenantCode) {
         List<TeaExcel> teaExcelList = Lists.newArrayList();
-        List<TeaPO> teaPOList = SpringAccessorUtils.getTeaAccessor().selectList(tenantCode);
+        List<TeaPO> teaPOList = SpringAccessorUtils.getTeaAccessor().list(tenantCode);
         for (TeaPO teaPO : teaPOList) {
             TeaExcel teaExcel = new TeaExcel();
             teaExcel.setTeaInfoPart(convertToTeaInfoExcel(teaPO));
             teaExcelList.add(teaExcel);
 
             List<ToppingBaseRulePO> toppingBaseRulePOList = SpringAccessorUtils.getToppingBaseRuleAccessor()
-                    .selectListByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
+                    .listByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             Map<Integer, Map<String, ToppingBaseRulePO>> baseRuleMapByStepIndex = convertToBaseRuleMap(
                     toppingBaseRulePOList);
 
             List<TeaUnitPart> teaUnitPartList = convertToTeaUnitPart(SpringAccessorUtils.getTeaUnitAccessor()
-                    .selectListByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode()));
+                    .listByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode()));
             teaExcel.addTeaUnit(teaUnitPartList);
 
             for (TeaUnitPart teaUnitPart : teaUnitPartList) {
                 List<ToppingAdjustRulePO> toppingAdjustRulePOList = SpringAccessorUtils.getToppingAdjustRuleAccessor()
-                        .selectListByTeaUnitCode(teaPO.getTenantCode(), teaPO.getTeaCode(),
+                        .listByTeaUnitCode(teaPO.getTenantCode(), teaPO.getTeaCode(),
                                 teaUnitPart.getTeaUnitCode());
                 teaExcel.addAdjustRulePart(convertToAdjustRulePart(baseRuleMapByStepIndex, toppingAdjustRulePOList));
             }
@@ -283,7 +283,7 @@ public class DefaultTeaParser implements TeaParser {
             ToppingAdjustRulePart adjustRulePart = new ToppingAdjustRulePart();
             adjustRulePart.setStepIndex(adjustRulePO.getStepIndex());
 
-            ToppingPO toppingPO = SpringAccessorUtils.getToppingAccessor().selectOneByToppingCode(
+            ToppingPO toppingPO = SpringAccessorUtils.getToppingAccessor().getByToppingCode(
                     adjustRulePO.getTenantCode(), adjustRulePO.getToppingCode());
             if (toppingPO != null) {
                 adjustRulePart.setToppingCode(toppingPO.getToppingCode());

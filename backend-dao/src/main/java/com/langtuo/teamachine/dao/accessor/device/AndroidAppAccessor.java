@@ -21,7 +21,7 @@ public class AndroidAppAccessor {
      * @param version
      * @return
      */
-    public AndroidAppPO selectOne(String version) {
+    public AndroidAppPO getByVersion(String version) {
         AndroidAppPO po = mapper.selectOne(version);
         return po;
     }

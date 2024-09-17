@@ -66,7 +66,7 @@ public class AndroidAppDispatchWorker implements Runnable {
 
     private List<String> getMachineCodeList() {
         AndroidAppDispatchAccessor androidAppDispatchAccessor = SpringAccessorUtils.getAndroidAppDispatchAccessor();
-        List<AndroidAppDispatchPO> androidAppDispatchPOList = androidAppDispatchAccessor.selectListByAndroidAppVersion(
+        List<AndroidAppDispatchPO> androidAppDispatchPOList = androidAppDispatchAccessor.listByVersion(
                 tenantCode, version);
         if (CollectionUtils.isEmpty(androidAppDispatchPOList)) {
             log.error("androidAppDispatchWorker|getDispatch|error|stopWorker|" + androidAppDispatchPOList);

@@ -42,7 +42,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     public TeaMachineResult<AndroidAppDTO> get(String version) {
         TeaMachineResult<AndroidAppDTO> teaMachineResult;
         try {
-            AndroidAppPO po = androidAppAccessor.selectOne(version);
+            AndroidAppPO po = androidAppAccessor.getByVersion(version);
             teaMachineResult = TeaMachineResult.success(convertToAndroidAppDTO(po));
         } catch (Exception e) {
             log.error("androidAppMgtService|get|fatal|" + e.getMessage(), e);
@@ -109,7 +109,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = androidAppDispatchAccessor.deleteByAndroidAppVersion(request.getTenantCode(),
+            int deleted = androidAppDispatchAccessor.deleteByVersion(request.getTenantCode(),
                     request.getVersion());
             poList.forEach(po -> {
                 androidAppDispatchAccessor.insert(po);
@@ -137,7 +137,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
             AndroidAppDispatchDTO dto = new AndroidAppDispatchDTO();
             dto.setVersion(version);
 
-            List<AndroidAppDispatchPO> poList = androidAppDispatchAccessor.selectListByAndroidAppVersion(tenantCode,
+            List<AndroidAppDispatchPO> poList = androidAppDispatchAccessor.listByVersion(tenantCode,
                     version);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
@@ -156,7 +156,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     private TeaMachineResult<Void> putNew(AndroidAppPO po) {
         TeaMachineResult<Void> teaMachineResult;
         try {
-            AndroidAppPO exist = androidAppAccessor.selectOne(po.getVersion());
+            AndroidAppPO exist = androidAppAccessor.getByVersion(po.getVersion());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -175,7 +175,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
     private TeaMachineResult<Void> putUpdate(AndroidAppPO po) {
         try {
-            AndroidAppPO exist = androidAppAccessor.selectOne(po.getVersion());
+            AndroidAppPO exist = androidAppAccessor.getByVersion(po.getVersion());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }

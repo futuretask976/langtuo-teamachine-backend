@@ -72,7 +72,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     public TeaMachineResult<DeployDTO> getByCode(String tenantCode, String deployCode) {
         TeaMachineResult<DeployDTO> teaMachineResult;
         try {
-            DeployDTO dto = convertToDeployPO(deployAccessor.selectOneByDeployCode(tenantCode, deployCode));
+            DeployDTO dto = convertToDeployPO(deployAccessor.getByDeployCode(tenantCode, deployCode));
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("deployMgtService|getByCode|fatal|" + e.getMessage(), e);
@@ -85,7 +85,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     public TeaMachineResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode) {
         TeaMachineResult<DeployDTO> teaMachineResult;
         try {
-            DeployDTO dto = convertToDeployPO(deployAccessor.selectOneByMachineCode(tenantCode, machineCode));
+            DeployDTO dto = convertToDeployPO(deployAccessor.getByMachineCode(tenantCode, machineCode));
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("deployMgtService|getByMachineCode|fatal|" + e.getMessage(), e);
@@ -142,7 +142,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     public TeaMachineResult<String> generateMachineCode() {
         TeaMachineResult<String> teaMachineResult;
         try {
-            long machineCodeSeqVal = deployAccessor.selectNextSeqVal4MachineCode();
+            long machineCodeSeqVal = deployAccessor.getNextSeqVal4MachineCode();
             String machineCode = String.valueOf(machineCodeSeqVal);
             long needSupplyCnt = CommonConsts.DEPLOY_CODE_LENGTH - machineCode.length();
             if (machineCode.length() < CommonConsts.DEPLOY_CODE_LENGTH) {
@@ -169,7 +169,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     private TeaMachineResult<Void> putNew(DeployPO po) {
         TeaMachineResult<Void> teaMachineResult;
         try {
-            DeployPO exist = deployAccessor.selectOneByDeployCode(po.getTenantCode(), po.getDeployCode());
+            DeployPO exist = deployAccessor.getByDeployCode(po.getTenantCode(), po.getDeployCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -188,7 +188,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
     private TeaMachineResult<Void> putUpdate(DeployPO po) {
         try {
-            DeployPO exist = deployAccessor.selectOneByDeployCode(po.getTenantCode(), po.getDeployCode());
+            DeployPO exist = deployAccessor.getByDeployCode(po.getTenantCode(), po.getDeployCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }

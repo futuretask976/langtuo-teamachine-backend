@@ -21,7 +21,7 @@ public class MachineAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public MachinePO selectOneByMachineCode(String tenantCode, String machineCode) {
+    public MachinePO getByMachineCode(String tenantCode, String machineCode) {
         // 首先访问缓存
         MachinePO cached = getCache(tenantCode, machineCode);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class MachineAccessor {
         return po;
     }
 
-    public List<MachinePO> selectList(String tenantCode) {
+    public List<MachinePO> list(String tenantCode) {
         // 首先访问缓存
         List<MachinePO> cachedList = getCacheList(tenantCode, null);
         if (cachedList != null) {
@@ -49,7 +49,7 @@ public class MachineAccessor {
         return list;
     }
 
-    public List<MachinePO> selectListByShopCode(String tenantCode, String shopCode) {
+    public List<MachinePO> listByShopCode(String tenantCode, String shopCode) {
         // 首先访问缓存
         List<MachinePO> cachedList = getCacheList(tenantCode, shopCode);
         if (cachedList != null) {
@@ -112,7 +112,7 @@ public class MachineAccessor {
     }
 
     public int deleteByMachineCode(String tenantCode, String machineCode) {
-        MachinePO po = selectOneByMachineCode(tenantCode, machineCode);
+        MachinePO po = getByMachineCode(tenantCode, machineCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

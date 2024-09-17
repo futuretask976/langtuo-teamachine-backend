@@ -51,7 +51,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     public TeaMachineResult<List<ModelDTO>> list() {
         TeaMachineResult<List<ModelDTO>> teaMachineResult;
         try {
-            List<ModelPO> list = modelAccessor.selectList();
+            List<ModelPO> list = modelAccessor.list();
             List<ModelDTO> dtoList = convertToModelDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -84,10 +84,10 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     public TeaMachineResult<ModelDTO> get(String modelCode) {
         TeaMachineResult<ModelDTO> teaMachineResult;
         try {
-            ModelPO modelPO = modelAccessor.selectOneByModelCode(modelCode);
+            ModelPO modelPO = modelAccessor.getByModelCode(modelCode);
             ModelDTO modelDTO = convert(modelPO);
 
-            List<ModelPipelinePO> pipelinePOList = modelPipelineAccessor.selectListByModelCode(modelCode);
+            List<ModelPipelinePO> pipelinePOList = modelPipelineAccessor.listByModelCode(modelCode);
             if (!CollectionUtils.isEmpty(pipelinePOList)) {
                 modelDTO.setPipelineList(convert(pipelinePOList));
             }
@@ -126,7 +126,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     private TeaMachineResult<Void> putNew(ModelPO po, List<ModelPipelinePO> modelPipelinePOList) {
         try {
-            ModelPO exist = modelAccessor.selectOneByModelCode(po.getModelCode());
+            ModelPO exist = modelAccessor.getByModelCode(po.getModelCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -154,7 +154,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     private TeaMachineResult<Void> putUpdate(ModelPO po, List<ModelPipelinePO> modelPipelinePOList) {
         try {
-            ModelPO exist = modelAccessor.selectOneByModelCode(po.getModelCode());
+            ModelPO exist = modelAccessor.getByModelCode(po.getModelCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
             }

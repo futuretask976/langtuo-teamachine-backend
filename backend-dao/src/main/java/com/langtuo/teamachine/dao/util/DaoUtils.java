@@ -43,7 +43,7 @@ public class DaoUtils {
         MachineAccessor machineAccessor = SpringAccessorUtils.getMachineItemAccessor();
         List<String> machineCodeList = shopCodeList.stream()
                 .map(shopCode -> {
-                    List<MachinePO> machinePOList = machineAccessor.selectListByShopCode(tenantCode, shopCode);
+                    List<MachinePO> machinePOList = machineAccessor.listByShopCode(tenantCode, shopCode);
                     if (CollectionUtils.isEmpty(machinePOList)) {
                         return null;
                     }

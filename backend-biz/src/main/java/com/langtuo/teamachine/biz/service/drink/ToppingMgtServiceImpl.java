@@ -34,7 +34,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     public TeaMachineResult<List<ToppingDTO>> list(String tenantCode) {
         TeaMachineResult<List<ToppingDTO>> teaMachineResult;
         try {
-            List<ToppingPO> list = toppingAccessor.selectList(tenantCode);
+            List<ToppingPO> list = toppingAccessor.list(tenantCode);
             List<ToppingDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     public TeaMachineResult<ToppingDTO> getByCode(String tenantCode, String toppingTypeCode) {
         TeaMachineResult<ToppingDTO> teaMachineResult;
         try {
-            ToppingPO toppingTypePO = toppingAccessor.selectOneByToppingCode(tenantCode, toppingTypeCode);
+            ToppingPO toppingTypePO = toppingAccessor.getByToppingCode(tenantCode, toppingTypeCode);
             ToppingDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     public TeaMachineResult<ToppingDTO> getByName(String tenantCode, String toppingTypeName) {
         TeaMachineResult<ToppingDTO> teaMachineResult;
         try {
-            ToppingPO toppingTypePO = toppingAccessor.selectOneByToppingName(tenantCode, toppingTypeName);
+            ToppingPO toppingTypePO = toppingAccessor.getByToppingName(tenantCode, toppingTypeName);
             ToppingDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
     private TeaMachineResult<Void> putNew(ToppingPO po) {
         try {
-            ToppingPO exist = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
+            ToppingPO exist = toppingAccessor.getByToppingCode(po.getTenantCode(), po.getToppingCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -127,7 +127,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
     private TeaMachineResult<Void> putUpdate(ToppingPO po) {
         try {
-            ToppingPO exist = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
+            ToppingPO exist = toppingAccessor.getByToppingCode(po.getTenantCode(), po.getToppingCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }

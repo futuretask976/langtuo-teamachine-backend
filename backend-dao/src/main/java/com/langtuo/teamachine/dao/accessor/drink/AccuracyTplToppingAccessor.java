@@ -17,7 +17,7 @@ public class AccuracyTplToppingAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<AccuracyTplToppingPO> selectList(String tenantCode, String templateCode) {
+    public List<AccuracyTplToppingPO> listByTplCode(String tenantCode, String templateCode) {
         // 首先访问缓存
         List<AccuracyTplToppingPO> cachedList = getCacheList(tenantCode, templateCode);
         if (cachedList != null) {

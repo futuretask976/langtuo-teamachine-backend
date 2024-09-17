@@ -17,7 +17,7 @@ public class SpecItemAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public SpecItemPO selectOneBySpecItemCode(String tenantCode, String specItemCode) {
+    public SpecItemPO getBySpecItemCode(String tenantCode, String specItemCode) {
         // 首先访问缓存
         SpecItemPO cached = getCache(tenantCode, specItemCode, null);
         if (cached != null) {
@@ -31,7 +31,7 @@ public class SpecItemAccessor {
         return po;
     }
 
-    public SpecItemPO selectOneBySpecItemName(String tenantCode, String specItemName) {
+    public SpecItemPO getBySpecItemName(String tenantCode, String specItemName) {
         // 首先访问缓存
         SpecItemPO cached = getCache(tenantCode, null, specItemName);
         if (cached != null) {
@@ -45,7 +45,7 @@ public class SpecItemAccessor {
         return po;
     }
 
-    public List<SpecItemPO> selectListBySpecCode(String tenantCode, String specCode) {
+    public List<SpecItemPO> listBySpecCode(String tenantCode, String specCode) {
         // 首先访问缓存
         List<SpecItemPO> cachedList = getCacheList(tenantCode, specCode);
         if (cachedList != null) {

@@ -151,7 +151,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
         dto.setFlushIntervalMin(po.getFlushIntervalMin());
 
         if (fillDetail) {
-            ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
+            ToppingPO toppingPO = toppingAccessor.getByToppingCode(po.getTenantCode(), po.getToppingCode());
             if (toppingPO != null) {
                 dto.setToppingName(toppingPO.getToppingName());
             }

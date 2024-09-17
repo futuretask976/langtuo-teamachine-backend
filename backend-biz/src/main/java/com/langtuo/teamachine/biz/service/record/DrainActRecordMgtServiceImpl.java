@@ -148,7 +148,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
         dto.setFlushWeight(po.getFlushWeight());
 
         if (fillDetail) {
-            ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(po.getTenantCode(), po.getToppingCode());
+            ToppingPO toppingPO = toppingAccessor.getByToppingCode(po.getTenantCode(), po.getToppingCode());
             if (toppingPO != null) {
                 dto.setToppingName(toppingPO.getToppingName());
             }

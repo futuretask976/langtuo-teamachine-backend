@@ -21,7 +21,7 @@ public class SpecAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public SpecPO selectOneBySpecCode(String tenantCode, String specCode) {
+    public SpecPO getBySpecCode(String tenantCode, String specCode) {
         // 首先访问缓存
         SpecPO cached = getCache(tenantCode, specCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class SpecAccessor {
         return po;
     }
 
-    public SpecPO selectOneBySpecName(String tenantCode, String specName) {
+    public SpecPO getBySpecName(String tenantCode, String specName) {
         // 首先访问缓存
         SpecPO cached = getCache(tenantCode, null, specName);
         if (cached != null) {
@@ -49,7 +49,7 @@ public class SpecAccessor {
         return po;
     }
 
-    public List<SpecPO> selectList(String tenantCode) {
+    public List<SpecPO> list(String tenantCode) {
         // 首先访问缓存
         List<SpecPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -96,7 +96,7 @@ public class SpecAccessor {
     }
 
     public int deleteBySpecCode(String tenantCode, String specCode) {
-        SpecPO po = selectOneBySpecCode(tenantCode, specCode);
+        SpecPO po = getBySpecCode(tenantCode, specCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

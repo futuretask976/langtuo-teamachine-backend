@@ -144,7 +144,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         dto.setInvalidAmount(po.getInvalidAmount());
 
         if (fillDetail) {
-            ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(
+            ToppingPO toppingPO = toppingAccessor.getByToppingCode(
                     po.getTenantCode(), po.getToppingCode());
             if (toppingPO != null) {
                 dto.setToppingName(toppingPO.getToppingName());

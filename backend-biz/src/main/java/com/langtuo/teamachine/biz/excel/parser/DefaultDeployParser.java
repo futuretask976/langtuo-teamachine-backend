@@ -30,7 +30,7 @@ public class DefaultDeployParser implements DeployParser {
             cell.setCellValue(CommonConsts.TITLE_LIST_4_DEPLOY_EXPORT.get(i));
         }
 
-        List<DeployPO> deployPOList = SpringAccessorUtils.getDeployAccessor().selectList(tenantCode);
+        List<DeployPO> deployPOList = SpringAccessorUtils.getDeployAccessor().list(tenantCode);
         int lineIndex = CommonConsts.ROW_START_NUM_4_DEPLOY;
         for (DeployPO deployPO : deployPOList) {
             Row dataRow = sheet.createRow(lineIndex++);

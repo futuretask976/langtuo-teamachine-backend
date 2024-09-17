@@ -18,7 +18,7 @@ public class AndroidAppDispatchAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<AndroidAppDispatchPO> selectListByAndroidAppVersion(String tenantCode, String version) {
+    public List<AndroidAppDispatchPO> listByVersion(String tenantCode, String version) {
         // 首先访问缓存
         List<AndroidAppDispatchPO> cachedList = getCacheList(tenantCode, version);
         if (cachedList != null) {
@@ -32,7 +32,7 @@ public class AndroidAppDispatchAccessor {
         return list;
     }
 
-    public List<AndroidAppDispatchPO> selectListByShopGroupCode(String tenantCode, String shopGroupCode) {
+    public List<AndroidAppDispatchPO> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         List<AndroidAppDispatchPO> cached = getCacheListByShopGroupCode(tenantCode, shopGroupCode);
         if (cached != null) {
             return cached;
@@ -60,8 +60,8 @@ public class AndroidAppDispatchAccessor {
         return updated;
     }
 
-    public int deleteByAndroidAppVersion(String tenantCode, String version) {
-        List<AndroidAppDispatchPO> existList = selectListByAndroidAppVersion(tenantCode, version);
+    public int deleteByVersion(String tenantCode, String version) {
+        List<AndroidAppDispatchPO> existList = listByVersion(tenantCode, version);
         if (CollectionUtils.isEmpty(existList)) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

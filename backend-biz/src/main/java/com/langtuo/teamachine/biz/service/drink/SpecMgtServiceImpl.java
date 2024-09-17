@@ -40,7 +40,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     public TeaMachineResult<List<SpecDTO>> list(String tenantCode) {
         TeaMachineResult<List<SpecDTO>> teaMachineResult;
         try {
-            List<SpecPO> list = specAccessor.selectList(tenantCode);
+            List<SpecPO> list = specAccessor.list(tenantCode);
             List<SpecDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -74,7 +74,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     public TeaMachineResult<SpecDTO> getByCode(String tenantCode, String specCode) {
         TeaMachineResult<SpecDTO> teaMachineResult;
         try {
-            SpecPO po = specAccessor.selectOneBySpecCode(tenantCode, specCode);
+            SpecPO po = specAccessor.getBySpecCode(tenantCode, specCode);
             SpecDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -88,7 +88,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     public TeaMachineResult<SpecDTO> getByName(String tenantCode, String specName) {
         TeaMachineResult<SpecDTO> teaMachineResult;
         try {
-            SpecPO po = specAccessor.selectOneBySpecName(tenantCode, specName);
+            SpecPO po = specAccessor.getBySpecName(tenantCode, specName);
             SpecDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -115,7 +115,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     private TeaMachineResult<Void> putNew(SpecPO po, List<SpecItemPO> specItemPOList) {
         try {
-            SpecPO exist = specAccessor.selectOneBySpecCode(po.getTenantCode(), po.getSpecCode());
+            SpecPO exist = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -143,7 +143,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     private TeaMachineResult<Void> putUpdate(SpecPO po, List<SpecItemPO> specItemPOList) {
         try {
-            SpecPO exist = specAccessor.selectOneBySpecCode(po.getTenantCode(), po.getSpecCode());
+            SpecPO exist = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
@@ -217,7 +217,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
 
-        List<SpecItemPO> poList = specItemAccessor.selectListBySpecCode(po.getTenantCode(), po.getSpecCode());
+        List<SpecItemPO> poList = specItemAccessor.listBySpecCode(po.getTenantCode(), po.getSpecCode());
         if (!CollectionUtils.isEmpty(poList)) {
             dto.setSpecItemList(poList.stream().map(item -> convert(item)).collect(Collectors.toList()));
         }

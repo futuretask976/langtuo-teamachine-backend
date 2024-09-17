@@ -42,7 +42,7 @@ public class SummayChartServiceImpl implements SummaryChartService {
         if (!CollectionUtils.isEmpty(result)) {
             result.forEach(map -> {
                 String teaCode = map.get("teaCode");
-                TeaPO teaPO = teaAccessor.selectOneByTeaCode(tenantCode, teaCode);
+                TeaPO teaPO = teaAccessor.getByTeaCode(tenantCode, teaCode);
                 map.put("teaName", teaPO.getTeaName());
             });
         }
@@ -87,7 +87,7 @@ public class SummayChartServiceImpl implements SummaryChartService {
         if (!CollectionUtils.isEmpty(result)) {
             result.forEach(map -> {
                 String teaCode = map.get("teaCode");
-                TeaPO teaPO = teaAccessor.selectOneByTeaCode(tenantCode, teaCode);
+                TeaPO teaPO = teaAccessor.getByTeaCode(tenantCode, teaCode);
                 map.put("teaName", teaPO.getTeaName());
             });
         }
@@ -103,7 +103,7 @@ public class SummayChartServiceImpl implements SummaryChartService {
                 if (StringUtils.isBlank(toppingCode)) {
                     map.put("toppingName", "未知");
                 } else {
-                    ToppingPO toppingPO = toppingAccessor.selectOneByToppingCode(tenantCode, toppingCode);
+                    ToppingPO toppingPO = toppingAccessor.getByToppingCode(tenantCode, toppingCode);
                     map.put("toppingName", toppingPO.getToppingName());
                 }
             });
@@ -120,7 +120,7 @@ public class SummayChartServiceImpl implements SummaryChartService {
                 if (StringUtils.isBlank(specItemCode)) {
                     map.put("specItemName", "未知");
                 } else {
-                    SpecItemPO specItemPO = specItemAccessor.selectOneBySpecItemCode(tenantCode, specItemCode);
+                    SpecItemPO specItemPO = specItemAccessor.getBySpecItemCode(tenantCode, specItemCode);
                     map.put("specItemName", specItemPO.getSpecItemName());
                 }
             });

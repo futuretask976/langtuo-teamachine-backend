@@ -21,7 +21,7 @@ public class AccuracyTplAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public AccuracyTplPO selectOneByTplCode(String tenantCode, String templateCode) {
+    public AccuracyTplPO getByTplCode(String tenantCode, String templateCode) {
         // 首先访问缓存
         AccuracyTplPO cached = getCache(tenantCode, templateCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class AccuracyTplAccessor {
         return po;
     }
 
-    public AccuracyTplPO selectOneByTplName(String tenantCode, String templateName) {
+    public AccuracyTplPO getByTplName(String tenantCode, String templateName) {
         // 首先访问缓存
         AccuracyTplPO cached = getCache(tenantCode, null, templateName);
         if (cached != null) {
@@ -49,7 +49,7 @@ public class AccuracyTplAccessor {
         return po;
     }
 
-    public List<AccuracyTplPO> selectList(String tenantCode) {
+    public List<AccuracyTplPO> list(String tenantCode) {
         // 首先访问缓存
         List<AccuracyTplPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -96,7 +96,7 @@ public class AccuracyTplAccessor {
     }
 
     public int deleteByTplCode(String tenantCode, String templateCode) {
-        AccuracyTplPO po = selectOneByTplCode(tenantCode, templateCode);
+        AccuracyTplPO po = getByTplCode(tenantCode, templateCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }
