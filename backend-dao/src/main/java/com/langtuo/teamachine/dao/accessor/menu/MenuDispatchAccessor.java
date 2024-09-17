@@ -18,7 +18,7 @@ public class MenuDispatchAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<MenuDispatchPO> selectListByMenuCode(String tenantCode, String menuCode) {
+    public List<MenuDispatchPO> listByMenuCode(String tenantCode, String menuCode) {
         // 首先访问缓存
         List<MenuDispatchPO> cachedList = getCacheList(tenantCode, menuCode);
         if (cachedList != null) {
@@ -32,7 +32,7 @@ public class MenuDispatchAccessor {
         return list;
     }
 
-    public List<MenuDispatchPO> selectListByShopGroupCode(String tenantCode, String shopGroupCode) {
+    public List<MenuDispatchPO> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         List<MenuDispatchPO> cached = getCacheListByShopGroupCode(tenantCode, shopGroupCode);
         if (cached != null) {
             return cached;
@@ -61,7 +61,7 @@ public class MenuDispatchAccessor {
     }
 
     public int deleteByMenuCode(String tenantCode, String menuCode) {
-        List<MenuDispatchPO> existList = selectListByMenuCode(tenantCode, menuCode);
+        List<MenuDispatchPO> existList = listByMenuCode(tenantCode, menuCode);
         if (CollectionUtils.isEmpty(existList)) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

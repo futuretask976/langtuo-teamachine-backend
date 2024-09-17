@@ -17,7 +17,7 @@ public class SeriesTeaRelAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<SeriesTeaRelPO> selectListBySeriesCode(String tenantCode, String seriesCode) {
+    public List<SeriesTeaRelPO> listBySeriesCode(String tenantCode, String seriesCode) {
         // 首先访问缓存
         List<SeriesTeaRelPO> cachedList = getCacheList(tenantCode, seriesCode);
         if (cachedList != null) {

@@ -58,7 +58,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     public TeaMachineResult<List<MenuDTO>> list(String tenantCode) {
         TeaMachineResult<List<MenuDTO>> teaMachineResult;
         try {
-            List<MenuPO> list = menuAccessor.selectList(tenantCode);
+            List<MenuPO> list = menuAccessor.list(tenantCode);
             List<MenuDTO> dtoList = convertToMenuDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -77,7 +77,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 teaMachineResult = TeaMachineResult.success();
             }
 
-            List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.selectListByShopGroupCode(
+            List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByShopGroupCode(
                     tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(menuDispatchPOList)) {
                 teaMachineResult = TeaMachineResult.success();
@@ -86,7 +86,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             List<String> menuCodeList = menuDispatchPOList.stream()
                     .map(MenuDispatchPO::getMenuCode)
                     .collect(Collectors.toList());
-            List<MenuPO> cleanRulePOList = menuAccessor.selectListByMenuCode(tenantCode,
+            List<MenuPO> cleanRulePOList = menuAccessor.listByMenuCode(tenantCode,
                     menuCodeList);
             List<MenuDTO> menuDTOList = convertToMenuDTO(cleanRulePOList);
             teaMachineResult = TeaMachineResult.success(menuDTOList);
@@ -133,7 +133,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     public TeaMachineResult<MenuDTO> getByCode(String tenantCode, String seriesCode) {
         TeaMachineResult<MenuDTO> teaMachineResult;
         try {
-            MenuPO toppingTypePO = menuAccessor.selectOneByMenuCode(tenantCode, seriesCode);
+            MenuPO toppingTypePO = menuAccessor.getByMenuCode(tenantCode, seriesCode);
             MenuDTO seriesDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
@@ -147,7 +147,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     public TeaMachineResult<MenuDTO> getByName(String tenantCode, String seriesName) {
         TeaMachineResult<MenuDTO> teaMachineResult;
         try {
-            MenuPO toppingTypePO = menuAccessor.selectOneByMenuName(tenantCode, seriesName);
+            MenuPO toppingTypePO = menuAccessor.getByMenuName(tenantCode, seriesName);
             MenuDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -174,7 +174,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     private TeaMachineResult<Void> putNew(MenuPO po, List<MenuSeriesRelPO> seriesRelPOlist) {
         try {
-            MenuPO exist = menuAccessor.selectOneByMenuCode(po.getTenantCode(), po.getMenuCode());
+            MenuPO exist = menuAccessor.getByMenuCode(po.getTenantCode(), po.getMenuCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -202,7 +202,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     private TeaMachineResult<Void> putUpdate(MenuPO po, List<MenuSeriesRelPO> seriesRelPOlist) {
         try {
-            MenuPO exist = menuAccessor.selectOneByMenuCode(po.getTenantCode(), po.getMenuCode());
+            MenuPO exist = menuAccessor.getByMenuCode(po.getTenantCode(), po.getMenuCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
@@ -283,7 +283,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             MenuDispatchDTO dto = new MenuDispatchDTO();
             dto.setMenuCode(menuCode);
 
-            List<MenuDispatchPO> poList = menuDispatchAccessor.selectListByMenuCode(tenantCode, menuCode);
+            List<MenuDispatchPO> poList = menuDispatchAccessor.listByMenuCode(tenantCode, menuCode);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())
@@ -323,7 +323,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         dto.setMenuName(po.getMenuName());
         dto.setValidFrom(po.getValidFrom());
 
-        List<MenuSeriesRelPO> seriesTeaRelPOList = menuSeriesRelAccessor.selectListBySeriesCode(
+        List<MenuSeriesRelPO> seriesTeaRelPOList = menuSeriesRelAccessor.listBySeriesCode(
                 po.getTenantCode(), po.getMenuCode());
         dto.setMenuSeriesRelList(convert(seriesTeaRelPOList));
         return dto;

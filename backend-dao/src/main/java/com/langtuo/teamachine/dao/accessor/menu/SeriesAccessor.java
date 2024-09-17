@@ -21,7 +21,7 @@ public class SeriesAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public SeriesPO selectOneBySeriesCode(String tenantCode, String seriesCode) {
+    public SeriesPO getBySeriesCode(String tenantCode, String seriesCode) {
         // 首先访问缓存
         SeriesPO cached = getCache(tenantCode, seriesCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class SeriesAccessor {
         return po;
     }
 
-    public SeriesPO selectOneBySeriesName(String tenantCode, String seriesName) {
+    public SeriesPO getBySeriesName(String tenantCode, String seriesName) {
         // 首先访问缓存
         SeriesPO cached = getCache(tenantCode, null, seriesName);
         if (cached != null) {
@@ -49,7 +49,7 @@ public class SeriesAccessor {
         return po;
     }
 
-    public List<SeriesPO> selectList(String tenantCode) {
+    public List<SeriesPO> list(String tenantCode) {
         // 首先访问缓存
         List<SeriesPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -96,7 +96,7 @@ public class SeriesAccessor {
     }
 
     public int deleteBySeriesCode(String tenantCode, String seriesCode) {
-        SeriesPO po = selectOneBySeriesCode(tenantCode, seriesCode);
+        SeriesPO po = getBySeriesCode(tenantCode, seriesCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

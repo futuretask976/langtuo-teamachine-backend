@@ -21,7 +21,7 @@ public class MenuAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public MenuPO selectOneByMenuCode(String tenantCode, String menuCode) {
+    public MenuPO getByMenuCode(String tenantCode, String menuCode) {
         // 首先访问缓存
         MenuPO cached = getCache(tenantCode, menuCode, null);
         if (cached != null) {
@@ -35,7 +35,7 @@ public class MenuAccessor {
         return po;
     }
 
-    public MenuPO selectOneByMenuName(String tenantCode, String menuName) {
+    public MenuPO getByMenuName(String tenantCode, String menuName) {
         // 首先访问缓存
         MenuPO cached = getCache(tenantCode, null, menuName);
         if (cached != null) {
@@ -49,7 +49,7 @@ public class MenuAccessor {
         return po;
     }
 
-    public List<MenuPO> selectList(String tenantCode) {
+    public List<MenuPO> list(String tenantCode) {
         // 首先访问缓存
         List<MenuPO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -63,7 +63,7 @@ public class MenuAccessor {
         return list;
     }
 
-    public List<MenuPO> selectListByMenuCode(String tenantCode, List<String> menuCodeList) {
+    public List<MenuPO> listByMenuCode(String tenantCode, List<String> menuCodeList) {
         // 这里只是在每台机器初始化的时候会调用，所以先不加缓存
         List<MenuPO> list = mapper.selectList(tenantCode, menuCodeList);
         return list;
@@ -102,7 +102,7 @@ public class MenuAccessor {
     }
 
     public int deleteByMenuCode(String tenantCode, String menuCode) {
-        MenuPO po = selectOneByMenuCode(tenantCode, menuCode);
+        MenuPO po = getByMenuCode(tenantCode, menuCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

@@ -10,8 +10,6 @@ import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.dao.accessor.menu.MenuSeriesRelAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesTeaRelAccessor;
-import com.langtuo.teamachine.dao.po.menu.MenuPO;
-import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
 import com.langtuo.teamachine.dao.po.menu.SeriesPO;
 import com.langtuo.teamachine.dao.po.menu.SeriesTeaRelPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -47,7 +45,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     public TeaMachineResult<List<SeriesDTO>> list(String tenantCode) {
         TeaMachineResult<List<SeriesDTO>> teaMachineResult;
         try {
-            List<SeriesPO> list = seriesAccessor.selectList(tenantCode);
+            List<SeriesPO> list = seriesAccessor.list(tenantCode);
             List<SeriesDTO> dtoList = convertToSeriesDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -81,7 +79,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     public TeaMachineResult<SeriesDTO> getByCode(String tenantCode, String seriesCode) {
         TeaMachineResult<SeriesDTO> teaMachineResult;
         try {
-            SeriesPO toppingTypePO = seriesAccessor.selectOneBySeriesCode(tenantCode, seriesCode);
+            SeriesPO toppingTypePO = seriesAccessor.getBySeriesCode(tenantCode, seriesCode);
             SeriesDTO seriesDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
@@ -95,7 +93,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     public TeaMachineResult<SeriesDTO> getByName(String tenantCode, String seriesName) {
         TeaMachineResult<SeriesDTO> teaMachineResult;
         try {
-            SeriesPO toppingTypePO = seriesAccessor.selectOneBySeriesName(tenantCode, seriesName);
+            SeriesPO toppingTypePO = seriesAccessor.getBySeriesName(tenantCode, seriesName);
             SeriesDTO tenantDTO = convert(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
@@ -116,7 +114,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            SeriesPO exist = seriesAccessor.selectOneBySeriesCode(seriesPO.getTenantCode(),
+            SeriesPO exist = seriesAccessor.getBySeriesCode(seriesPO.getTenantCode(),
                     seriesPO.getSeriesCode());
             if (exist != null) {
                 int updated = seriesAccessor.update(seriesPO);
@@ -141,7 +139,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
     private TeaMachineResult<Void> putNew(SeriesPO po, List<SeriesTeaRelPO> teaRelPOList) {
         try {
-            SeriesPO exist = seriesAccessor.selectOneBySeriesCode(po.getTenantCode(), po.getSeriesCode());
+            SeriesPO exist = seriesAccessor.getBySeriesCode(po.getTenantCode(), po.getSeriesCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -169,7 +167,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
     private TeaMachineResult<Void> putUpdate(SeriesPO po, List<SeriesTeaRelPO> teaRelPOList) {
         try {
-            SeriesPO exist = seriesAccessor.selectOneBySeriesCode(po.getTenantCode(), po.getSeriesCode());
+            SeriesPO exist = seriesAccessor.getBySeriesCode(po.getTenantCode(), po.getSeriesCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
@@ -243,7 +241,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         dto.setSeriesCode(po.getSeriesCode());
         dto.setSeriesName(po.getSeriesName());
 
-        List<SeriesTeaRelPO> seriesTeaRelPOList = seriesTeaRelAccessor.selectListBySeriesCode(
+        List<SeriesTeaRelPO> seriesTeaRelPOList = seriesTeaRelAccessor.listBySeriesCode(
                 po.getTenantCode(), po.getSeriesCode());
         dto.setSeriesTeaRelList(convert(seriesTeaRelPOList));
         return dto;

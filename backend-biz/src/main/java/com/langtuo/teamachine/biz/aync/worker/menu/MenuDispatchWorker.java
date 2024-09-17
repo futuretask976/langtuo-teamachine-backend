@@ -20,7 +20,6 @@ import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
-import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -165,7 +164,7 @@ public class MenuDispatchWorker implements Runnable {
 
     private List<String> getMachineCodeList() {
         MenuDispatchAccessor menuDispatchAccessor = SpringAccessorUtils.getMenuDispatchAccessor();
-        List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.selectListByMenuCode(
+        List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByMenuCode(
                 tenantCode, menuCode);
         if (CollectionUtils.isEmpty(menuDispatchPOList)) {
             log.info("menuDispatchWorker|getDispatch|null|stopWorker");

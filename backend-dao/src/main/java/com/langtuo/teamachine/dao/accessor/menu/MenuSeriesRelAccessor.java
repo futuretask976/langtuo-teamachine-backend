@@ -17,7 +17,7 @@ public class MenuSeriesRelAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<MenuSeriesRelPO> selectListBySeriesCode(String tenantCode, String seriesCode) {
+    public List<MenuSeriesRelPO> listBySeriesCode(String tenantCode, String seriesCode) {
         // 首先访问缓存
         List<MenuSeriesRelPO> cachedList = getCacheList(tenantCode, seriesCode);
         if (cachedList != null) {
