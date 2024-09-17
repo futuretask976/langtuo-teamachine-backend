@@ -102,10 +102,10 @@ public class MenuDispatch4InitWorker implements Runnable {
         }
 
         JSONArray arr = new JSONArray();
-        menuDTOList.forEach(menuDTO -> {
+        for (MenuDTO menuDTO : menuDTOList) {
             JSONObject menuDispatchCont = getDispatchCont4Menu(menuDTO.getMenuCode());
             arr.add(menuDispatchCont);
-        });
+        }
         return arr;
     }
 
@@ -161,16 +161,15 @@ public class MenuDispatch4InitWorker implements Runnable {
         JSONObject jsonMenu = (JSONObject) JSON.toJSON(menuDTO);
         jsonMenu.remove("menuSeriesRelList");
         jsonMenu.put("seriesList", new JSONArray());
-        seriesList.stream().forEach(seriesDTO -> {
+        for (SeriesDTO seriesDTO : seriesList) {
             JSONObject seriesJSON = (JSONObject) JSON.toJSON(seriesDTO);
             seriesJSON.remove("seriesTeaRelList");
             seriesJSON.put("teaList", new JSONArray());
-            teaList.stream().forEach(teaDTO -> {
+            for (TeaDTO teaDTO : teaList) {
                 seriesJSON.getJSONArray("teaList").add(JSON.toJSON(teaDTO));
-            });
+            }
             jsonMenu.getJSONArray("seriesList").add(seriesJSON);
-        });
-
+        }
         return jsonMenu;
     }
 }

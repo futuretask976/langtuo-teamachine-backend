@@ -61,9 +61,9 @@ public class CleanRuleDispatchWorker implements Runnable {
         }
 
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
-        machineCodeList.stream().forEach(machineCode -> {
+        for (String machineCode : machineCodeList) {
             mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
-        });
+        }
     }
 
     private JSONObject getDispatchCont() {

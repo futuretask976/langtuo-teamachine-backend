@@ -223,9 +223,9 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
                 po.getTenantCode(), po.getTemplateCode());
         if (!CollectionUtils.isEmpty(toppingPOList)) {
             List<String> toppingCodeList = Lists.newArrayList();
-            toppingPOList.forEach(toppingPO -> {
+            for (AccuracyTplToppingPO toppingPO : toppingPOList) {
                 toppingCodeList.add(toppingPO.getToppingCode());
-            });
+            }
             dto.setToppingCodeList(toppingCodeList);
         }
         return dto;

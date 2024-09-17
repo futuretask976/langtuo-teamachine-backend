@@ -73,9 +73,9 @@ public class OrderReportServiceImpl implements OrderReportService {
         List<OrderTeaReportPO> teaReportByShopPOList = orderTeaReportByShopAccessor.calcByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(teaReportByShopPOList)) {
-            teaReportByShopPOList.forEach(orderTeaReportPO -> {
+            for (OrderTeaReportPO orderTeaReportPO : teaReportByShopPOList) {
                 int inserted = orderTeaReportByShopAccessor.insert(orderTeaReportPO);
-            });
+            }
         }
 
         List<OrderSpecItemReportPO> existSpecItemReportList = orderSpecItemReportByShopAccessor.listByOrderCreatedDay(
@@ -86,9 +86,9 @@ public class OrderReportServiceImpl implements OrderReportService {
         List<OrderSpecItemReportPO> specItemReportByShopPOList = orderSpecItemReportByShopAccessor.calcByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(specItemReportByShopPOList)) {
-            specItemReportByShopPOList.forEach(orderSpecItemReportPO -> {
-                int inserted = orderSpecItemReportByShopAccessor.insert(orderSpecItemReportPO);
-            });
+            for (OrderSpecItemReportPO specItemReportPO : specItemReportByShopPOList) {
+                int inserted = orderSpecItemReportByShopAccessor.insert(specItemReportPO);
+            }
         }
 
         List<OrderToppingReportPO> existToppingReportList = orderToppingReportByShopAccessor.listByOrderCreatedDay(

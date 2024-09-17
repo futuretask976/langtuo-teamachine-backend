@@ -47,9 +47,9 @@ public class ToppingAdjustRuleAccessor {
 
         int deleted = mapper.delete(tenantCode, teaCode);
         if (deleted > CommonConsts.DELETED_ZERO_ROW) {
-            teaUnitCodeList.forEach(teaUnitCode -> {
+            for (String teaUnitCode : teaUnitCodeList) {
                 deleteCacheList(tenantCode, teaCode, teaUnitCode);
-            });
+            }
         }
         return deleted;
     }

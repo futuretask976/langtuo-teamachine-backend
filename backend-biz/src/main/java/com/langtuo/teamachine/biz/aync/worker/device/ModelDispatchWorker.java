@@ -45,11 +45,12 @@ public class ModelDispatchWorker implements Runnable {
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MODEL);
         jsonMsg.put(CommonConsts.JSON_KEY_MODEL, jsonDispatchCont);
 
-        List<String> tenantCodeList = DaoUtils.getTenantCodeList();
+
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
-        tenantCodeList.forEach(tenantCode -> {
+        List<String> tenantCodeList = DaoUtils.getTenantCodeList();
+        for (String tenantCode : tenantCodeList) {
             mqttProducer.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
-        });
+        }
     }
 
     private JSONObject getDispatchCont() {

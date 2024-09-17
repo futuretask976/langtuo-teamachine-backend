@@ -111,9 +111,9 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         try {
             int deleted = androidAppDispatchAccessor.deleteByVersion(request.getTenantCode(),
                     request.getVersion());
-            poList.forEach(po -> {
+            for (AndroidAppDispatchPO po : poList) {
                 androidAppDispatchAccessor.insert(po);
-            });
+            }
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("androidAppMgtService|putDispatch|fatal|" + e.getMessage(), e);

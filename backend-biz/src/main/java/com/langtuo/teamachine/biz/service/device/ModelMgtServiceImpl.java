@@ -20,8 +20,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -43,9 +41,6 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<List<ModelDTO>> list() {
@@ -127,7 +122,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     private TeaMachineResult<Void> putNew(ModelPO po, List<ModelPipelinePO> modelPipelinePOList) {
         try {
             ModelPO exist = modelAccessor.getByModelCode(po.getModelCode());
-            if (exist == null) {
+            if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 

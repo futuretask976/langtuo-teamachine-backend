@@ -257,9 +257,9 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         try {
             int deleted = menuDispatchAccessor.deleteByMenuCode(request.getTenantCode(),
                     request.getMenuCode());
-            poList.forEach(po -> {
+            for (MenuDispatchPO po : poList) {
                 menuDispatchAccessor.insert(po);
-            });
+            }
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|putDispatch|fatal|" + e.getMessage(), e);

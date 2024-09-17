@@ -124,9 +124,9 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
             int deleted4SeriesTeaRel = seriesTeaRelAccessor.deleteBySeriesCode(seriesPO.getTenantCode(), seriesPO.getSeriesCode());
             if (!CollectionUtils.isEmpty(seriesTeaRelPOList)) {
-                seriesTeaRelPOList.forEach(seriesTeaRelPO -> {
+                for (SeriesTeaRelPO seriesTeaRelPO : seriesTeaRelPOList) {
                     seriesTeaRelAccessor.insert(seriesTeaRelPO);
-                });
+                }
             }
 
             teaMachineResult = TeaMachineResult.success();

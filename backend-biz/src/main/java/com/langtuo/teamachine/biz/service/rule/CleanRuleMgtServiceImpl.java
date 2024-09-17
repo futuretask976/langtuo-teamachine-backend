@@ -271,10 +271,9 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         try {
             int deleted = cleanRuleDispatchAccessor.deleteByCleanRuleCode(request.getTenantCode(),
                     request.getCleanRuleCode());
-            poList.forEach(po -> {
+            for (CleanRuleDispatchPO po : poList) {
                 cleanRuleDispatchAccessor.insert(po);
-            });
-
+            }
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("cleanRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);

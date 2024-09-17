@@ -154,28 +154,28 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             }
 
             int deleted4TeaUnit = teaUnitAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
-            teaUnitPOList.forEach(item -> {
-                int inserted4TeaUnit = teaUnitAccessor.insert(item);
+            for (TeaUnitPO teaUnitPO : teaUnitPOList) {
+                int inserted4TeaUnit = teaUnitAccessor.insert(teaUnitPO);
                 if (CommonConsts.NUM_ONE != inserted4TeaUnit) {
                     log.error("teaMgtService|putNewTeaUnit|error|" + inserted4TeaUnit);
                 }
-            });
+            }
 
             int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
-            toppingBaseRulePOList.forEach(item -> {
+            for (ToppingBaseRulePO toppingBaseRulePO : toppingBaseRulePOList) {
                 int inserted4ToppingBaseRule = toppingBaseRuleAccessor.insert(item);
                 if (CommonConsts.NUM_ONE != inserted4ToppingBaseRule) {
                     log.error("teaMgtService|putNewToppingBaseRule|error|" + inserted4ToppingBaseRule);
                 }
-            });
+            }
 
             int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
-            toppingAdjustRulePOList.forEach(item -> {
+            for (ToppingAdjustRulePO toppingAdjustRulePO : toppingAdjustRulePOList) {
                 int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(item);
                 if (CommonConsts.NUM_ONE != inserted4ToppingAdjustRule) {
                     log.error("teaMgtService|putNewToppingAdjustRule|error|" + inserted4ToppingAdjustRule);
                 }
-            });
+            }
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("teaMgtService|putNew|fatal|" + e.getMessage(), e);
@@ -198,28 +198,28 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             }
 
             int deleted4TeaUnit = teaUnitAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
-            teaUnitPOList.forEach(item -> {
-                int inserted4TeaUnit = teaUnitAccessor.insert(item);
+            for (TeaUnitPO teaUnitPO : teaUnitPOList) {
+                int inserted4TeaUnit = teaUnitAccessor.insert(teaUnitPO);
                 if (CommonConsts.NUM_ONE != inserted4TeaUnit) {
                     log.error("teaMgtService|putUpdateTeaUnit|error|" + inserted4TeaUnit);
                 }
-            });
+            }
 
             int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
-            toppingBaseRulePOList.forEach(item -> {
+            for (ToppingBaseRulePO toppingBaseRulePO : toppingBaseRulePOList) {
                 int inserted4ToppingBaseRule = toppingBaseRuleAccessor.insert(item);
                 if (CommonConsts.NUM_ONE != inserted4ToppingBaseRule) {
                     log.error("teaMgtService|putUpdateToppingBaseRule|error|" + inserted4ToppingBaseRule);
                 }
-            });
+            }
 
             int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
-            toppingAdjustRulePOList.forEach(item -> {
-                int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(item);
+            for (ToppingAdjustRulePO toppingAdjustRulePO : toppingAdjustRulePOList) {
+                int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(toppingAdjustRulePO);
                 if (CommonConsts.NUM_ONE != inserted4ToppingAdjustRule) {
                     log.error("teaMgtService|putUpdateToppingAdjustRule|error|" + inserted4ToppingAdjustRule);
                 }
-            });
+            }
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("teaMgtService|putUpdate|fatal|" + e.getMessage(), e);

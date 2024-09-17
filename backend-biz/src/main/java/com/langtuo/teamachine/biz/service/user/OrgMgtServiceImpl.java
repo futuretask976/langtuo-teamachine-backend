@@ -215,12 +215,11 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
         if (!CollectionUtils.isEmpty(node.getChildren())) {
             List<OrgDTO> children = Lists.newArrayList();
-            node.getChildren().forEach(child -> {
-                children.add(convert(child));
-            });
+            for (OrgNode orgNode : node.getChildren()) {
+                children.add(convert(orgNode));
+            }
             dto.setChildren(children);
         }
-
         return dto;
     }
 

@@ -244,10 +244,9 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         try {
             int deleted = drainRuleDispatchAccessor.deleteByCleanRuleCode(request.getTenantCode(),
                     request.getDrainRuleCode());
-            poList.forEach(po -> {
+            for (DrainRuleDispatchPO po : poList) {
                 drainRuleDispatchAccessor.insert(po);
-            });
-
+            }
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("drainRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);

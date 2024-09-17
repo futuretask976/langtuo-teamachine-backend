@@ -220,10 +220,9 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         try {
             int deleted = warningRuleDispatchAccessor.deleteByWarningRuleCode(request.getTenantCode(),
                     request.getWarningRuleCode());
-            poList.forEach(po -> {
+            for (WarningRuleDispatchPO po : poList) {
                 warningRuleDispatchAccessor.insert(po);
-            });
-
+            }
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
             log.error("warningRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);

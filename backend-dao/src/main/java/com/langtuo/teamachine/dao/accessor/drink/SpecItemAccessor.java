@@ -82,9 +82,9 @@ public class SpecItemAccessor {
 
         int deleted = mapper.delete(tenantCode, specCode);
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
-            specItemPOList.forEach(specItemPO -> {
+            for (SpecItemPO specItemPO : specItemPOList) {
                 deleteCacheOne(tenantCode, specItemPO.getSpecItemCode(), specItemPO.getSpecItemName());
-            });
+            }
             deleteCacheList(tenantCode, specCode);
         }
         return deleted;

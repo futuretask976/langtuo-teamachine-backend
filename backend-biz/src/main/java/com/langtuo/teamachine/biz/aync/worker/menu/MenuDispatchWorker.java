@@ -92,9 +92,9 @@ public class MenuDispatchWorker implements Runnable {
         }
 
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
-        machineCodeList.stream().forEach(machineCode -> {
+        for (String machineCode : machineCodeList) {
             mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
-        });
+        }
     }
 
     private JSONObject getDispatchCont() {
@@ -106,7 +106,7 @@ public class MenuDispatchWorker implements Runnable {
         }
 
         SeriesMgtService seriesMgtService = SpringServiceUtils.getSeriesMgtService();
-        List<SeriesDTO> seriesList = menuDTO.getMenuSeriesRelList().stream()
+        List<SeriesDTO> seriesDTOList = menuDTO.getMenuSeriesRelList().stream()
                 .map(menuSeriesRelDTO -> {
                     SeriesDTO seriesDTO = getModel(seriesMgtService.getByCode(
                             tenantCode, menuSeriesRelDTO.getSeriesCode()));
@@ -114,11 +114,11 @@ public class MenuDispatchWorker implements Runnable {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(seriesList)) {
+        if (CollectionUtils.isEmpty(seriesDTOList)) {
             log.info("menuDispatchWorker|getSeriesList|empty|stopWorker");
             return null;
         }
-        List<String> teaCodeList = seriesList.stream()
+        List<String> teaCodeList = seriesDTOList.stream()
                 .map(seriesDTO -> {
                     List<SeriesTeaRelDTO> seriesTeaRelList = seriesDTO.getSeriesTeaRelList();
                     if (CollectionUtils.isEmpty(seriesTeaRelList)) {
@@ -149,16 +149,15 @@ public class MenuDispatchWorker implements Runnable {
         JSONObject jsonMenu = (JSONObject) JSON.toJSON(menuDTO);
         jsonMenu.remove("menuSeriesRelList");
         jsonMenu.put("seriesList", new JSONArray());
-        seriesList.stream().forEach(seriesDTO -> {
+        for (SeriesDTO seriesDTO : seriesDTOList) {
             JSONObject seriesJSON = (JSONObject) JSON.toJSON(seriesDTO);
             seriesJSON.remove("seriesTeaRelList");
             seriesJSON.put("teaList", new JSONArray());
-            teaList.stream().forEach(teaDTO -> {
+            for (TeaDTO teaDTO : teaList) {
                 seriesJSON.getJSONArray("teaList").add(JSON.toJSON(teaDTO));
-            });
+            }
             jsonMenu.getJSONArray("seriesList").add(seriesJSON);
-        });
-
+        }
         return jsonMenu;
     }
 
