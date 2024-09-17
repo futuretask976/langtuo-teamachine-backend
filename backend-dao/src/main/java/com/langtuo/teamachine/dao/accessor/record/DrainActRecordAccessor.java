@@ -15,7 +15,7 @@ public class DrainActRecordAccessor {
     @Resource
     private DrainActRecordMapper mapper;
 
-    public DrainActRecordPO selectOne(String tenantCode, String idempotentMark) {
+    public DrainActRecordPO getByIdempotentMark(String tenantCode, String idempotentMark) {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 

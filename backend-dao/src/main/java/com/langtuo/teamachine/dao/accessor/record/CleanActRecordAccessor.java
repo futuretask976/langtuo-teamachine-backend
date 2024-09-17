@@ -15,7 +15,7 @@ public class CleanActRecordAccessor {
     @Resource
     private CleanActRecordMapper mapper;
 
-    public CleanActRecordPO selectOne(String tenantCode, String idempotentMark) {
+    public CleanActRecordPO getByIdempotentMark(String tenantCode, String idempotentMark) {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 

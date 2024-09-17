@@ -50,7 +50,7 @@ public class SupplyActRecordWorker implements Runnable {
         SupplyActRecordPO po = convert(request);
         try {
             SupplyActRecordAccessor supplyActRecordAccessor = SpringAccessorUtils.getSupplyActRecordAccessor();
-            SupplyActRecordPO exist = supplyActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
+            SupplyActRecordPO exist = supplyActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = supplyActRecordAccessor.insert(po);
                 if (CommonConsts.NUM_ONE != inserted) {

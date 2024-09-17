@@ -12,7 +12,7 @@ public class OrderSpecItemActRecordAccessor {
     @Resource
     private OrderSpecItemActRecordMapper mapper;
 
-    public List<OrderSpecItemActRecordPO> selectList(String tenantCode, String idempotentMark) {
+    public List<OrderSpecItemActRecordPO> listByIdempotentMark(String tenantCode, String idempotentMark) {
         List<OrderSpecItemActRecordPO> list = mapper.selectList(tenantCode, idempotentMark);
         return list;
     }

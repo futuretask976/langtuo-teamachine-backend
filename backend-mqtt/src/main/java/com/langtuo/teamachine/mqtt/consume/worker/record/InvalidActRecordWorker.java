@@ -51,7 +51,7 @@ public class InvalidActRecordWorker implements Runnable {
         InvalidActRecordPO po = convert(request);
         try {
             InvalidActRecordAccessor invalidActRecordAccessor = SpringAccessorUtils.getInvalidActRecordAccessor();
-            InvalidActRecordPO exist = invalidActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
+            InvalidActRecordPO exist = invalidActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = invalidActRecordAccessor.insert(po);
                 if (CommonConsts.NUM_ONE != inserted) {

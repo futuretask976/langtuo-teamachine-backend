@@ -51,7 +51,7 @@ public class DrainActRecordWorker implements Runnable {
         DrainActRecordPO po = convert(request);
         try {
             DrainActRecordAccessor drainActRecordAccessor = SpringAccessorUtils.getDrainActRecordAccessor();
-            DrainActRecordPO exist = drainActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
+            DrainActRecordPO exist = drainActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = drainActRecordAccessor.insert(po);
                 if (CommonConsts.NUM_ONE != inserted) {

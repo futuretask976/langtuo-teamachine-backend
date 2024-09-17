@@ -15,7 +15,7 @@ public class OrderActRecordAccessor {
     @Resource
     private OrderActRecordMapper mapper;
 
-    public OrderActRecordPO selectOne(String tenantCode, String idempotentMark) {
+    public OrderActRecordPO getByIdempotentMark(String tenantCode, String idempotentMark) {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 

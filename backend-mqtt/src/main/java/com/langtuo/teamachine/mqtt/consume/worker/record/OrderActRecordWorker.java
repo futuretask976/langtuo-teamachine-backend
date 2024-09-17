@@ -57,7 +57,7 @@ public class OrderActRecordWorker implements Runnable {
         List<OrderToppingActRecordPO> orderToppingActRecordPOList = convertToOrderToppingActRecordPO(request);
         try {
             OrderActRecordAccessor orderActRecordAccessor = SpringAccessorUtils.getOrderActRecordAccessor();
-            OrderActRecordPO exist = orderActRecordAccessor.selectOne(po.getTenantCode(),
+            OrderActRecordPO exist = orderActRecordAccessor.getByIdempotentMark(po.getTenantCode(),
                     po.getIdempotentMark());
             if (exist == null) {
                 int inserted = orderActRecordAccessor.insert(po);

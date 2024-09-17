@@ -15,7 +15,7 @@ public class InvalidActRecordAccessor {
     @Resource
     private InvalidActRecordMapper mapper;
 
-    public InvalidActRecordPO selectOne(String tenantCode, String idempotentMark) {
+    public InvalidActRecordPO getByIdempotentMark(String tenantCode, String idempotentMark) {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 

@@ -55,7 +55,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
     public TeaMachineResult<SupplyActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<SupplyActRecordDTO> teaMachineResult;
         try {
-            SupplyActRecordPO po = supplyActRecordAccessor.selectOne(tenantCode, idempotentMark);
+            SupplyActRecordPO po = supplyActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
             SupplyActRecordDTO dto = convert(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {

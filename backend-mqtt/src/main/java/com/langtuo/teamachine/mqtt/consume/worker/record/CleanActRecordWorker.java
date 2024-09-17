@@ -51,7 +51,7 @@ public class CleanActRecordWorker implements Runnable {
         CleanActRecordPO po = convert(request);
         try {
             CleanActRecordAccessor cleanActRecordAccessor = SpringAccessorUtils.getCleanActRecordAccessor();
-            CleanActRecordPO exist = cleanActRecordAccessor.selectOne(po.getTenantCode(), po.getIdempotentMark());
+            CleanActRecordPO exist = cleanActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = cleanActRecordAccessor.insert(po);
                 if (CommonConsts.NUM_ONE != inserted) {

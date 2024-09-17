@@ -55,7 +55,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
     public TeaMachineResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<DrainActRecordDTO> teaMachineResult;
         try {
-            DrainActRecordPO po = drainActRecordAccessor.selectOne(tenantCode, idempotentMark);
+            DrainActRecordPO po = drainActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
             teaMachineResult = TeaMachineResult.success(convert(po, true));
         } catch (Exception e) {
             log.error("drainActRecordMgtService|get|fatal|" + e.getMessage(), e);

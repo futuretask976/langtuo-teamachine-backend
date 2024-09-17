@@ -55,7 +55,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
     public TeaMachineResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<InvalidActRecordDTO> teaMachineResult;
         try {
-            InvalidActRecordPO po = invalidActRecordAccessor.selectOne(tenantCode, idempotentMark);
+            InvalidActRecordPO po = invalidActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
             teaMachineResult = TeaMachineResult.success(convert(po, true));
         } catch (Exception e) {
             log.error("invalidActRecordMgtService|get|fatal|" + e.getMessage(), e);

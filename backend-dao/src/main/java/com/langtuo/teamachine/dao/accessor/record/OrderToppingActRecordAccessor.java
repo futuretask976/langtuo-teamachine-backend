@@ -12,7 +12,7 @@ public class OrderToppingActRecordAccessor {
     @Resource
     private OrderToppingActRecordMapper mapper;
 
-    public List<OrderToppingActRecordPO> selectList(String tenantCode, String idempotentMark) {
+    public List<OrderToppingActRecordPO> listByIdempotentMark(String tenantCode, String idempotentMark) {
         List<OrderToppingActRecordPO> list = mapper.selectList(tenantCode, idempotentMark);
         return list;
     }

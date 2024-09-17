@@ -15,7 +15,7 @@ public class SupplyActRecordAccessor {
     @Resource
     private SupplyActRecordMapper mapper;
 
-    public SupplyActRecordPO selectOne(String tenantCode, String idempotentMark) {
+    public SupplyActRecordPO getByIdempotentMark(String tenantCode, String idempotentMark) {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 

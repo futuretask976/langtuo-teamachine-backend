@@ -80,7 +80,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     public TeaMachineResult<OrderActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<OrderActRecordDTO> teaMachineResult;
         try {
-            OrderActRecordPO po = orderActRecordAccessor.selectOne(tenantCode, idempotentMark);
+            OrderActRecordPO po = orderActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
             OrderActRecordDTO dto = convert(po, true);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -188,11 +188,11 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
                 dto.setShopName(shopPO.getShopName());
             }
 
-            List<OrderSpecItemActRecordPO> specItemActRecordList = orderSpecItemActRecordAccessor.selectList(
+            List<OrderSpecItemActRecordPO> specItemActRecordList = orderSpecItemActRecordAccessor.listByIdempotentMark(
                     po.getTenantCode(), po.getIdempotentMark());
             dto.setSpecItemList(convertToOrderSpecItemActRecordDTO(specItemActRecordList));
 
-            List<OrderToppingActRecordPO> toppingActRecordList = orderToppingActRecordAccessor.selectList(
+            List<OrderToppingActRecordPO> toppingActRecordList = orderToppingActRecordAccessor.listByIdempotentMark(
                     po.getTenantCode(), po.getIdempotentMark());
             dto.setToppingList(convertToOrderToppingActRecordDTO((toppingActRecordList)));
         }

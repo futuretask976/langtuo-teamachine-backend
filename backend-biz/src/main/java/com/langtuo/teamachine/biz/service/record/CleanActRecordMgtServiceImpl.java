@@ -55,7 +55,7 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
     public TeaMachineResult<CleanActRecordDTO> get(String tenantCode, String idempotentMark) {
         TeaMachineResult<CleanActRecordDTO> teaMachineResult;
         try {
-            CleanActRecordPO po = cleanActRecordAccessor.selectOne(tenantCode, idempotentMark);
+            CleanActRecordPO po = cleanActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
             teaMachineResult = TeaMachineResult.success(convert(po, true));
         } catch (Exception e) {
             log.error("cleanActRecordMgtService|get|fatal|" + e.getMessage(), e);
