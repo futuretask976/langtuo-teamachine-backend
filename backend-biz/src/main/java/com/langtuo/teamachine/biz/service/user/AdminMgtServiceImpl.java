@@ -17,6 +17,7 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -35,8 +36,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     @Override
     public TeaMachineResult<AdminDTO> get(String tenantCode, String loginName) {
         AdminPO adminPO = adminAccessor.getByLoginName(tenantCode, loginName);
-        AdminDTO adminRoleDTO = convert(adminPO);
-        return TeaMachineResult.success(adminRoleDTO);
+        return TeaMachineResult.success(convertToAdminDTO(adminPO));
     }
 
     @Override
@@ -49,12 +49,8 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         try {
             PageInfo<AdminPO> pageInfo = adminAccessor.search(tenantCode, loginName, roleCode,
                     pageNum, pageSize);
-            List<AdminDTO> dtoList = pageInfo.getList().stream()
-                    .map(adminPO -> convert(adminPO))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            teaMachineResult = TeaMachineResult.success(new PageDTO<>(convertToAdminDTO(pageInfo.getList()),
+                    pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("adminMgtService|search|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -64,19 +60,13 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
     @Override
     public TeaMachineResult<List<AdminDTO>> list(String tenantCode) {
-        TeaMachineResult<List<AdminDTO>> teaMachineResult;
         try {
             List<AdminPO> list = adminAccessor.list(tenantCode);
-            List<AdminDTO> dtoList = list.stream()
-                    .map(adminPO -> convert(adminPO))
-                    .collect(Collectors.toList());
-
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(convertToAdminDTO(list));
         } catch (Exception e) {
             log.error("adminMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -174,7 +164,17 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         }
     }
 
-    private AdminDTO convert(AdminPO adminPO) {
+    private List<AdminDTO> convertToAdminDTO(List<AdminPO> poList) {
+        if (CollectionUtils.isEmpty(poList) ) {
+            return null;
+        }
+
+        return poList.stream()
+                .map(po -> convertToAdminDTO(po))
+                .collect(Collectors.toList());
+    }
+
+    private AdminDTO convertToAdminDTO(AdminPO adminPO) {
         if (adminPO == null) {
             return null;
         }

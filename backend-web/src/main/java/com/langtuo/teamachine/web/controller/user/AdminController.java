@@ -27,9 +27,9 @@ public class AdminController {
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<AdminDTO>> search(@RequestParam("tenantCode") String tenantCode,
             @RequestParam(name = "loginName", required = false) String loginName,
-            @RequestParam(name = "roleName", required = false) String roleName,
+            @RequestParam(name = "roleCode", required = false) String roleCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        TeaMachineResult<PageDTO<AdminDTO>> rtn = service.search(tenantCode, loginName, roleName, pageNum, pageSize);
+        TeaMachineResult<PageDTO<AdminDTO>> rtn = service.search(tenantCode, loginName, roleCode, pageNum, pageSize);
         return rtn;
     }
     

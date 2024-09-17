@@ -52,13 +52,6 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     }
 
     @Override
-    public TeaMachineResult<ShopGroupDTO> getByName(String tenantCode, String shopGroupName) {
-        ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupName(tenantCode, shopGroupName);
-        ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
-        return TeaMachineResult.success(shopGroupDTO);
-    }
-
-    @Override
     public TeaMachineResult<PageDTO<ShopGroupDTO>> search(String tenantCode, String shopGroupName,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -144,7 +137,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
-            int updated = shopGroupAccessor.insert(po);
+            int updated = shopGroupAccessor.update(po);
             if (CommonConsts.NUM_ONE != updated) {
                 log.error("shopGroupMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
