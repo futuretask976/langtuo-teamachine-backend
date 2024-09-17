@@ -72,26 +72,26 @@ public class AdminAccessor {
         int inserted = mapper.insert(po);
         if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode());
-            deleteCacheCount(po.getTenantCode(), po.getRoleCode());
+            deleteCacheCountByRoleCode(po.getTenantCode(), po.getRoleCode());
+            deleteCacheCountByOrgName(po.getTenantCode(), po.getOrgName());
         }
         return inserted;
     }
 
     public int update(AdminPO po) {
+        AdminPO exist = mapper.selectOne(po.getTenantCode(), po.getLoginName());
+        if (exist == null) {
+            return CommonConsts.NUM_ZERO;
+        }
+
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getLoginName());
             deleteCacheList(po.getTenantCode());
-            deleteCacheCount(po.getTenantCode(), po.getRoleCode());
-        }
-        return updated;
-    }
-
-    public int updatePassword(String tenantCode, String loginName, String loginPass) {
-        int updated = mapper.updatePassword(tenantCode, loginName, loginPass);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
-            deleteCacheOne(tenantCode, loginName);
-            deleteCacheList(tenantCode);
+            deleteCacheCountByRoleCode(exist.getTenantCode(), exist.getRoleCode());
+            deleteCacheCountByOrgName(exist.getTenantCode(), exist.getOrgName());
+            deleteCacheCountByRoleCode(po.getTenantCode(), po.getRoleCode());
+            deleteCacheCountByOrgName(po.getTenantCode(), po.getOrgName());
         }
         return updated;
     }
@@ -106,26 +106,44 @@ public class AdminAccessor {
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, loginName);
             deleteCacheList(tenantCode);
-            deleteCacheCount(tenantCode, po.getRoleCode());
+            deleteCacheCountByRoleCode(tenantCode, po.getRoleCode());
+            deleteCacheCountByOrgName(tenantCode, po.getOrgName());
         }
         return deleted;
     }
 
     public int countByRoleCode(String tenantCode, String roleCode) {
         // 首先访问缓存
-        Integer cached = getCacheCount(tenantCode, roleCode);
+        Integer cached = getCacheCountByRoleCode(tenantCode, roleCode);
         if (cached != null) {
             return cached;
         }
 
         int count = mapper.countByRoleCode(tenantCode, roleCode);
 
-        setCacheCount(tenantCode, roleCode, count);
+        setCacheCountByRoleCode(tenantCode, roleCode, count);
         return count;
     }
 
-    private String getCacheCountKey(String tenantCode, String roleCode) {
-        return "adminAcc-cnt-" + tenantCode + "-" + roleCode;
+    public int countByOrgName(String tenantCode, String orgName) {
+        // 首先访问缓存
+        Integer cached = getCacheCountByOrgName(tenantCode, orgName);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByOrgName(tenantCode, orgName);
+
+        setCacheCountByOrgName(tenantCode, orgName, count);
+        return count;
+    }
+
+    private String getCacheCountKeyByRoleCode(String tenantCode, String roleCode) {
+        return "adminAcc-cnt-roleCode-" + tenantCode + "-" + roleCode;
+    }
+
+    private String getCacheCountKeyByOrgName(String tenantCode, String orgName) {
+        return "adminAcc-cnt-orgName-" + tenantCode + "-" + orgName;
     }
 
     private String getCacheKey(String tenantCode, String loginName) {
@@ -136,15 +154,27 @@ public class AdminAccessor {
         return "adminAcc-" + tenantCode;
     }
 
-    private Integer getCacheCount(String tenantCode, String roleCode) {
-        String key = getCacheCountKey(tenantCode, roleCode);
+    private Integer getCacheCountByRoleCode(String tenantCode, String roleCode) {
+        String key = getCacheCountKeyByRoleCode(tenantCode, roleCode);
         Object cached = redisManager.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
-    private void setCacheCount(String tenantCode, String roleCode, Integer count) {
-        String key = getCacheCountKey(tenantCode, roleCode);
+    private Integer getCacheCountByOrgName(String tenantCode, String orgName) {
+        String key = getCacheCountKeyByOrgName(tenantCode, orgName);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCountByRoleCode(String tenantCode, String roleCode, Integer count) {
+        String key = getCacheCountKeyByRoleCode(tenantCode, roleCode);
+        redisManager.setValue(key, count);
+    }
+
+    private void setCacheCountByOrgName(String tenantCode, String orgName, Integer count) {
+        String key = getCacheCountKeyByOrgName(tenantCode, orgName);
         redisManager.setValue(key, count);
     }
 
@@ -180,8 +210,12 @@ public class AdminAccessor {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 
-    private void deleteCacheCount(String tenantCode, String roleCode) {
-        redisManager.deleteKey(getCacheCountKey(tenantCode, roleCode));
+    private void deleteCacheCountByRoleCode(String tenantCode, String roleCode) {
+        redisManager.deleteKey(getCacheCountKeyByRoleCode(tenantCode, roleCode));
+    }
+
+    private void deleteCacheCountByOrgName(String tenantCode, String orgName) {
+        redisManager.deleteKey(getCacheCountKeyByOrgName(tenantCode, orgName));
     }
 
     private AdminPO getSysSuperAdmin(String tenantCode, String loginName) {

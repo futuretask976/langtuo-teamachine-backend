@@ -17,8 +17,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,9 +46,6 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
     @Resource
     private AdminAccessor adminAccessor;
-    
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<RoleDTO> getByCode(String tenantCode, String roleCode) {
@@ -60,28 +55,18 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     }
 
     @Override
-    public TeaMachineResult<RoleDTO> getByName(String tenantCode, String roleName) {
-        RolePO rolePO = roleAccessor.getByRoleName(tenantCode, roleName);
-        RoleDTO roleDTO = convert(rolePO);
-        return TeaMachineResult.success(roleDTO);
-    }
-
-    @Override
     public TeaMachineResult<PageDTO<RoleDTO>> search(String tenantCode, String roleName, int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<RoleDTO>> teaMachineResult;
         try {
             PageInfo<RolePO> pageInfo = roleAccessor.search(tenantCode, roleName, pageNum, pageSize);
-            List<RoleDTO> dtoList = convert(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            return TeaMachineResult.success(new PageDTO<>(convert(pageInfo.getList()), pageInfo.getTotal(),
+                    pageNum, pageSize));
         } catch (Exception e) {
             log.error("roleMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -89,11 +74,9 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         TeaMachineResult<List<RoleDTO>> teaMachineResult;
         try {
             List<RolePO> list = roleAccessor.search(tenantCode);
-
-            String adminLoginName = getAdminName();
-            if (!"SYS_SUPER_ADMIN".equals(adminLoginName)) {
+            if (!CollectionUtils.isEmpty(list)) {
                 list = list.stream().filter(rolePO -> {
-                    if ("SYS_SUPER_ROLE".equals(rolePO.getRoleCode())) {
+                    if (CommonConsts.ROLE_CODE_SYS_SUPER.equals(rolePO.getRoleCode())) {
                         return false;
                     } else {
                         return true;
@@ -104,7 +87,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             List<RoleDTO> dtoList = convert(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("list error: " + e.getMessage(), e);
+            log.error("roleMgtService|list|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;

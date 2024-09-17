@@ -63,4 +63,12 @@ public interface ShopGroupMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("shopGroupCode") String shopGroupCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param orgName
+     * @return
+     */
+    int countByOrgName(@Param("tenantCode") String tenantCode, @Param("orgName") String orgName);
 }

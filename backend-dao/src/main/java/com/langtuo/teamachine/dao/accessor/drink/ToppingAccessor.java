@@ -87,10 +87,16 @@ public class ToppingAccessor {
     }
 
     public int update(ToppingPO po) {
+        ToppingPO exist = mapper.selectOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
+        if (exist == null) {
+            return CommonConsts.NUM_ZERO;
+        }
+
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCount(exist.getTenantCode(), exist.getToppingTypeCode());
             deleteCacheCount(po.getTenantCode(), po.getToppingTypeCode());
         }
         return updated;

@@ -54,6 +54,15 @@
             </if>
     </select>
 
+    <select id="countByOrgName" resultType="int">
+        SELECT COUNT(1) FROM admin
+        WHERE 1 = 1
+        AND tenant_code = #{tenantCode}
+        <if test="orgName != null">
+            AND org_name = #{orgName}
+        </if>
+    </select>
+
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.user.AdminPO">
         INSERT INTO admin (
             gmt_created
@@ -82,6 +91,9 @@
         UPDATE admin
         SET
             gmt_modified = now()
+            <if test="loginPass != null">
+                , login_pass = #{loginPass}
+            </if>
             <if test="roleCode != null">
                 , role_code = #{roleCode}
             </if>

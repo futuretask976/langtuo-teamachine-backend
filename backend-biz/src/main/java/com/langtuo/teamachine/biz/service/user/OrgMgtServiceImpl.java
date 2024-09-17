@@ -6,6 +6,8 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.OrgPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.OrgMgtService;
+import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
+import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -26,6 +28,12 @@ import java.util.stream.Collectors;
 public class OrgMgtServiceImpl implements OrgMgtService {
     @Resource
     private OrgAccessor orgAccessor;
+
+    @Resource
+    private AdminAccessor adminAccessor;
+
+    @Resource
+    private ShopGroupAccessor shopGroupAccessor;
 
     @Override
     public TeaMachineResult<OrgDTO> getTop(String tenantCode) {
@@ -160,15 +168,27 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
+            int count4Admin = adminAccessor.countByOrgName(tenantCode, orgName);
+            if (count4Admin > CommonConsts.NUM_ZERO) {
+                log.error("orgMgtService|delete|errorByAdmin|" + count4Admin);
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
+            }
+
+            int count4ShopGroup = shopGroupAccessor.countByOrgName(tenantCode, orgName);
+            if (count4ShopGroup > CommonConsts.NUM_ZERO) {
+                log.error("orgMgtService|delete|errorByShopGroup|" + count4ShopGroup);
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
+            }
+
             int deleted = orgAccessor.delete(tenantCode, orgName);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("orgMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<OrgDTO> convert(List<OrgNode> poList) {

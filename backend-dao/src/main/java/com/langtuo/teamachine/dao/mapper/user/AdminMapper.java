@@ -75,4 +75,12 @@ public interface AdminMapper {
      * @return
      */
     int countByRoleCode(@Param("tenantCode") String tenantCode, @Param("roleCode") String roleCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param orgName
+     * @return
+     */
+    int countByOrgName(@Param("tenantCode") String tenantCode, @Param("orgName") String orgName);
 }

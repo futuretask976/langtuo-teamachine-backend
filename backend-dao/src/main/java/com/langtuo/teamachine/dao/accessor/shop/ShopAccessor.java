@@ -100,10 +100,16 @@ public class ShopAccessor {
     }
 
     public int update(ShopPO po) {
+        ShopPO exist = mapper.selectOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
+        if (exist == null) {
+            return CommonConsts.NUM_ZERO;
+        }
+
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getShopCode(), po.getShopName());
             deleteCacheList(po.getTenantCode(), po.getShopGroupCode());
+            deleteCacheCount(exist.getTenantCode(), exist.getShopGroupCode());
             deleteCacheCount(po.getTenantCode(), po.getShopGroupCode());
         }
         return updated;

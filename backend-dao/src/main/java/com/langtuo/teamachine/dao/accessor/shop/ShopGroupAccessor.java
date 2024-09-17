@@ -94,15 +94,23 @@ public class ShopGroupAccessor {
         if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getShopGroupCode(), po.getShopGroupName());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCountByOrgName(po.getTenantCode(), po.getOrgName());
         }
         return inserted;
     }
 
     public int update(ShopGroupPO po) {
+        ShopGroupPO exist = mapper.selectOne(po.getTenantCode(), po.getShopGroupCode(), po.getShopGroupName());
+        if (exist == null) {
+            return CommonConsts.NUM_ZERO;
+        }
+
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getShopGroupCode(), po.getShopGroupName());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCountByOrgName(exist.getTenantCode(), exist.getOrgName());
+            deleteCacheCountByOrgName(po.getTenantCode(), po.getOrgName());
         }
         return updated;
     }
@@ -117,8 +125,38 @@ public class ShopGroupAccessor {
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getShopGroupCode(), po.getShopGroupName());
             deleteCacheList(tenantCode);
+            deleteCacheCountByOrgName(tenantCode, po.getOrgName());
         }
         return deleted;
+    }
+
+    public int countByOrgName(String tenantCode, String orgName) {
+        // 首先访问缓存
+        Integer cached = getCacheCountByOrgName(tenantCode, orgName);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByOrgName(tenantCode, orgName);
+
+        setCacheCountByOrgName(tenantCode, orgName, count);
+        return count;
+    }
+
+    private Integer getCacheCountByOrgName(String tenantCode, String orgName) {
+        String key = getCacheCountKeyByOrgName(tenantCode, orgName);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCountByOrgName(String tenantCode, String orgName, Integer count) {
+        String key = getCacheCountKeyByOrgName(tenantCode, orgName);
+        redisManager.setValue(key, count);
+    }
+
+    private String getCacheCountKeyByOrgName(String tenantCode, String orgName) {
+        return "shopGroupAcc-cnt-orgName-" + tenantCode + "-" + orgName;
     }
 
     private String getCacheKey(String tenantCode, String shopGroupCode, String shopGroupName) {
@@ -182,7 +220,7 @@ public class ShopGroupAccessor {
         redisManager.deleteKey(getCacheListKey(tenantCode));
     }
 
-    private void deleteCacheListByOrgNameList(String tenantCode, List<String> orgNameList) {
-        // TODO 需要考虑如何删除缓存，实在不行用redis的hashmap形式
+    private void deleteCacheCountByOrgName(String tenantCode, String orgName) {
+        redisManager.deleteKey(getCacheCountKeyByOrgName(tenantCode, orgName));
     }
 }

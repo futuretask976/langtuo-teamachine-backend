@@ -65,7 +65,7 @@ public class MachineAccessor {
 
     public int countByModelCode(String modelCode) {
         // 首先访问缓存
-        Integer cached = getCacheCount(modelCode);
+        Integer cached = getCacheCountByModelCode(modelCode);
         if (cached != null) {
             return cached;
         }
@@ -96,17 +96,23 @@ public class MachineAccessor {
         int inserted = mapper.insert(po);
         if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getShopCode());
-            deleteCacheCount(po.getModelCode());
+            deleteCacheCountByModelCode(po.getModelCode());
         }
         return inserted;
     }
 
     public int update(MachinePO po) {
+        MachinePO exist = mapper.selectOne(po.getTenantCode(), po.getMachineCode(), po.getMachineName());
+        if (exist == null) {
+            return CommonConsts.NUM_ZERO;
+        }
+
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode(), po.getShopCode());
-            deleteCacheCount(po.getModelCode());
+            deleteCacheCountByModelCode(exist.getModelCode());
+            deleteCacheCountByModelCode(po.getModelCode());
         }
         return updated;
     }
@@ -121,7 +127,7 @@ public class MachineAccessor {
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, machineCode);
             deleteCacheList(tenantCode, po.getShopCode());
-            deleteCacheCount(po.getModelCode());
+            deleteCacheCountByModelCode(po.getModelCode());
         }
         return deleted;
     }
@@ -134,7 +140,7 @@ public class MachineAccessor {
         return "machineAcc-" + tenantCode + "-" + shopCode;
     }
 
-    private String getCacheCountKey(String modelCode) {
+    private String getCacheCountKeyByModelCode(String modelCode) {
         return "machineAcc-cnt-" + modelCode;
     }
 
@@ -162,15 +168,15 @@ public class MachineAccessor {
         redisManager.setValue(key, po);
     }
 
-    private Integer getCacheCount(String shopGroupCode) {
-        String key = getCacheCountKey(shopGroupCode);
+    private Integer getCacheCountByModelCode(String modelCode) {
+        String key = getCacheCountKeyByModelCode(modelCode);
         Object cached = redisManager.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private void setCacheCount(String modelCode, Integer count) {
-        String key = getCacheCountKey(modelCode);
+        String key = getCacheCountKeyByModelCode(modelCode);
         redisManager.setValue(key, count);
     }
 
@@ -183,7 +189,7 @@ public class MachineAccessor {
         redisManager.deleteKey(getCacheListKey(tenantCode, null));
     }
 
-    private void deleteCacheCount(String modelCode) {
-        redisManager.deleteKey(getCacheCountKey(modelCode));
+    private void deleteCacheCountByModelCode(String modelCode) {
+        redisManager.deleteKey(getCacheCountKeyByModelCode(modelCode));
     }
 }

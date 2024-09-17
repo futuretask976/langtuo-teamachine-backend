@@ -87,10 +87,16 @@ public class TeaAccessor {
     }
 
     public int update(TeaPO po) {
+        TeaPO exist = mapper.selectOne(po.getTenantCode(), po.getTeaCode(), po.getTeaName());
+        if (exist == null) {
+            return CommonConsts.NUM_ZERO;
+        }
+
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getTeaCode(), po.getTeaName());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCount(exist.getTenantCode(), exist.getTeaTypeCode());
             deleteCacheCount(po.getTenantCode(), po.getTeaTypeCode());
         }
         return updated;

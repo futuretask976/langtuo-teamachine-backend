@@ -17,13 +17,6 @@ public interface RoleMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<RoleDTO> getByName(String tenantCode, String roleName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<RoleDTO>> search(String tenantCode, String roleName, int pageNum, int pageSize);

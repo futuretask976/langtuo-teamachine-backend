@@ -40,23 +40,13 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     }
 
     @Override
-    public TeaMachineResult<PageDTO<AdminDTO>> search(String tenantCode, String loginName, String roleName,
+    public TeaMachineResult<PageDTO<AdminDTO>> search(String tenantCode, String loginName, String roleCode,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         TeaMachineResult<PageDTO<AdminDTO>> teaMachineResult;
         try {
-            String roleCode = null;
-            if (StringUtils.isNotBlank(roleName)) {
-                RolePO rolePO = roleAccessor.getByRoleName(tenantCode, roleName);
-                if (rolePO == null) {
-                    return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
-                } else {
-                    roleCode = rolePO.getRoleCode();
-                }
-            }
-
             PageInfo<AdminPO> pageInfo = adminAccessor.search(tenantCode, loginName, roleCode,
                     pageNum, pageSize);
             List<AdminDTO> dtoList = pageInfo.getList().stream()
