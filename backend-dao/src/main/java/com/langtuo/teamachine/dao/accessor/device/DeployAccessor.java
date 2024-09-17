@@ -139,6 +139,9 @@ public class DeployAccessor {
         if (exist == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }
+        if (CommonConsts.DEPLOY_STATE_ENABLED == exist.getState()) {
+            return CommonConsts.DELETED_ZERO_ROW;
+        }
 
         int deleted = mapper.delete(tenantCode, deployCode);
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
