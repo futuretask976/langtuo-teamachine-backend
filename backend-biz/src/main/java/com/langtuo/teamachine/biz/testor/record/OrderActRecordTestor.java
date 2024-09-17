@@ -2,19 +2,27 @@ package com.langtuo.teamachine.biz.testor.record;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.record.InvalidActRecordMapper;
 import com.langtuo.teamachine.dao.mapper.record.OrderActRecordMapper;
+import com.langtuo.teamachine.dao.mapper.record.OrderSpecItemActRecordMapper;
+import com.langtuo.teamachine.dao.mapper.record.OrderToppingActRecordMapper;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
+import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
+import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
+import com.langtuo.teamachine.mqtt.consume.worker.record.OrderActRecordWorker;
 import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderSpecItemActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderToppingActRecordPutRequest;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderActRecordTestor {
     public static void main(String args[]) {
@@ -24,55 +32,64 @@ public class OrderActRecordTestor {
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrderActRecordMapper mapper = sqlSession.getMapper(OrderActRecordMapper.class);
+        OrderActRecordMapper orderActRecordMapper = sqlSession.getMapper(OrderActRecordMapper.class);
+        OrderSpecItemActRecordMapper orderSpecItemActRecordMapper = sqlSession.getMapper(OrderSpecItemActRecordMapper.class);
+        OrderToppingActRecordMapper orderToppingActRecordMapper = sqlSession.getMapper(OrderToppingActRecordMapper.class);
 
-        OrderActRecordPutRequest request = new OrderActRecordPutRequest();
-        request.setTenantCode("tenant_001");
-        request.setExtraInfo(new HashMap(){{
-            put("abc", "def");
-        }});
-        request.setIdempotentMark(String.valueOf(System.currentTimeMillis()));
-        request.setMachineCode("machine_444");
-        request.setShopCode("shop_001");
-        request.setShopGroupCode("shopGroup_02");
-        request.setOrderGmtCreated(new Date());
-        request.setTeaTypeCode("TEA_TYPE_01");
-        request.setTeaCode("TEA_07");
-        request.setOuterOrderId(String.valueOf(System.currentTimeMillis()));
-        request.setState(2);
 
-        List<OrderSpecItemActRecordPutRequest> specItemList = Lists.newArrayList();
-        OrderSpecItemActRecordPutRequest specItemReq1 = new OrderSpecItemActRecordPutRequest();
-        specItemReq1.setSpecCode("SPEC_SWEET");
-        specItemReq1.setSpecName("甜度");
-        specItemReq1.setSpecItemCode("SPEC_ITEM_7_SWEET");
-        specItemReq1.setSpecItemName("7分糖");
-        specItemList.add(specItemReq1);
-        OrderSpecItemActRecordPutRequest specItemReq2 = new OrderSpecItemActRecordPutRequest();
-        specItemReq2.setSpecCode("SPEC_BEIXING");
-        specItemReq2.setSpecName("杯型");
-        specItemReq2.setSpecItemCode("SPEC_ITEM_BIG");
-        specItemReq2.setSpecItemName("大杯");
-        specItemList.add(specItemReq2);
-        request.setSpecItemList(specItemList);
+        for (int i = 0; i < 4; i++) {
+            OrderActRecordPutRequest request = new OrderActRecordPutRequest();
+            request.setTenantCode("tenant_001");
+            request.setIdempotentMark(String.valueOf(System.currentTimeMillis()));
+            request.setMachineCode("machine_444");
+            request.setShopCode("shop_002");
+            request.setShopGroupCode("shopGroup_03");
 
-        List<OrderToppingActRecordPutRequest> toppingList = Lists.newArrayList();
-        OrderToppingActRecordPutRequest toppingReq1 = new OrderToppingActRecordPutRequest();
-        toppingReq1.setStepIndex(1);
-        toppingReq1.setToppingCode("topping_002");
-        toppingReq1.setToppingName("物料2");
-        toppingReq1.setActualAmount(20);
-        toppingList.add(toppingReq1);
-        OrderToppingActRecordPutRequest toppingReq2 = new OrderToppingActRecordPutRequest();
-        toppingReq2.setStepIndex(1);
-        toppingReq2.setToppingCode("topping_003");
-        toppingReq1.setToppingName("物料3");
-        toppingReq2.setActualAmount(30);
-        toppingList.add(toppingReq2);
-        request.setToppingList(toppingList);
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DATE, -4);
+            request.setOrderGmtCreated(calendar.getTime());
 
-        // mapper.insert(convertToOrderActRecordPO(request));
-        System.out.println(JSONObject.toJSONString(convertToOrderActRecordPO(request)));
+            request.setTeaTypeCode("TEA_TYPE_01");
+            request.setTeaCode("TEA_07");
+            request.setOuterOrderId(String.valueOf(System.currentTimeMillis()));
+            request.setState(2);
+
+            List<OrderSpecItemActRecordPutRequest> specItemList = Lists.newArrayList();
+            specItemList.add(getSpecItemRequest1());
+            specItemList.add(getSpecItemRequest2());
+            specItemList.add(getSpecItemRequest3());
+            request.setSpecItemList(specItemList);
+
+            List<OrderToppingActRecordPutRequest> toppingList = Lists.newArrayList();
+            OrderToppingActRecordPutRequest toppingReq1 = new OrderToppingActRecordPutRequest();
+            toppingReq1.setStepIndex(1);
+            toppingReq1.setToppingCode("topping_002");
+            toppingReq1.setToppingName("物料2");
+            toppingReq1.setActualAmount(20);
+            toppingList.add(toppingReq1);
+            OrderToppingActRecordPutRequest toppingReq2 = new OrderToppingActRecordPutRequest();
+            toppingReq2.setStepIndex(1);
+            toppingReq2.setToppingCode("topping_003");
+            toppingReq1.setToppingName("物料3");
+            toppingReq2.setActualAmount(30);
+            toppingList.add(toppingReq2);
+            request.setToppingList(toppingList);
+
+            OrderActRecordPO orderActRecordPO = OrderActRecordWorker.convertToOrderActRecordPO(request);
+            orderActRecordMapper.insert(orderActRecordPO);
+
+            List<OrderSpecItemActRecordPO> orderSpecItemActRecordPOList =
+                    OrderActRecordWorker.convertToSpecItemActRecordPO(request);
+            for (OrderSpecItemActRecordPO orderSpecItemActRecordPO : orderSpecItemActRecordPOList) {
+                orderSpecItemActRecordMapper.insert(orderSpecItemActRecordPO);
+            }
+
+            List<OrderToppingActRecordPO> orderToppingActRecordPOList =
+                    OrderActRecordWorker.convertToOrderToppingActRecordPO(request);
+            for (OrderToppingActRecordPO orderToppingActRecordPO : orderToppingActRecordPOList) {
+                orderToppingActRecordMapper.insert(orderToppingActRecordPO);
+            }
+        }
 
         sqlSession.commit();
         sqlSession.close();
@@ -94,21 +111,83 @@ public class OrderActRecordTestor {
         sqlSession.close();
     }
 
-    private static OrderActRecordPO convertToOrderActRecordPO(OrderActRecordPutRequest request) {
-        if (request == null) {
-            return null;
-        }
+    private static OrderSpecItemActRecordPutRequest getSpecItemRequest1() {
+        List<OrderSpecItemActRecordPutRequest> list = Lists.newArrayList();
+        OrderSpecItemActRecordPutRequest specItemReq;
 
-        OrderActRecordPO po = new OrderActRecordPO();
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
-        po.setIdempotentMark(request.getIdempotentMark());
-        po.setMachineCode(request.getMachineCode());
-        po.setShopCode(request.getShopCode());
-        po.setShopGroupCode(request.getShopGroupCode());
-        po.setOrderGmtCreated(request.getOrderGmtCreated());
-        po.setOuterOrderId(request.getOuterOrderId());
-        po.setState(request.getState());
-        return po;
+        specItemReq = new OrderSpecItemActRecordPutRequest();
+        specItemReq.setSpecCode("SPEC_SWEET");
+        specItemReq.setSpecName("甜度");
+        specItemReq.setSpecItemCode("SPEC_ITEM_7_SWEET");
+        specItemReq.setSpecItemName("7分糖");
+        list.add(specItemReq);
+
+        specItemReq = new OrderSpecItemActRecordPutRequest();
+        specItemReq.setSpecCode("SPEC_SWEET");
+        specItemReq.setSpecName("甜度");
+        specItemReq.setSpecItemCode("SPEC_ITEM_5_SWEET");
+        specItemReq.setSpecItemName("5分糖");
+        list.add(specItemReq);
+
+        specItemReq = new OrderSpecItemActRecordPutRequest();
+        specItemReq.setSpecCode("SPEC_SWEET");
+        specItemReq.setSpecName("甜度");
+        specItemReq.setSpecItemCode("SPEC_ITEM_5_SWEET");
+        specItemReq.setSpecItemName("5分糖");
+        list.add(specItemReq);
+
+        int idx = BizUtils.calcRandom(1, list.size());
+        return list.get(idx - 1);
+    }
+
+    private static OrderSpecItemActRecordPutRequest getSpecItemRequest2() {
+        List<OrderSpecItemActRecordPutRequest> list = Lists.newArrayList();
+        OrderSpecItemActRecordPutRequest specItemReq;
+
+        specItemReq = new OrderSpecItemActRecordPutRequest();
+        specItemReq.setSpecCode("SPEC_BEIXING");
+        specItemReq.setSpecName("杯型");
+        specItemReq.setSpecItemCode("SPEC_ITEM_BIG");
+        specItemReq.setSpecItemName("大杯");
+        list.add(specItemReq);
+
+        specItemReq = new OrderSpecItemActRecordPutRequest();
+        specItemReq.setSpecCode("SPEC_BEIXING");
+        specItemReq.setSpecName("杯型");
+        specItemReq.setSpecItemCode("SPEC_ITEM_MIDDLE");
+        specItemReq.setSpecItemName("中杯");
+        list.add(specItemReq);
+
+        specItemReq = new OrderSpecItemActRecordPutRequest();
+        specItemReq.setSpecCode("SPEC_BEIXING");
+        specItemReq.setSpecName("杯型");
+        specItemReq.setSpecItemCode("SPEC_ITEM_SMALL");
+        specItemReq.setSpecItemName("小杯");
+        list.add(specItemReq);
+
+        int idx = BizUtils.calcRandom(1, list.size());
+        return list.get(idx - 1);
+    }
+
+    private static OrderSpecItemActRecordPutRequest getSpecItemRequest3() {
+        List<OrderSpecItemActRecordPutRequest> list = Lists.newArrayList();
+        OrderSpecItemActRecordPutRequest specItemReq;
+
+        specItemReq = new OrderSpecItemActRecordPutRequest();
+        specItemReq.setSpecCode("SPEC_TEMP");
+        specItemReq.setSpecName("温度");
+        specItemReq.setSpecItemCode("SPEC_ITEM_WARM");
+        specItemReq.setSpecItemName("热饮");
+        list.add(specItemReq);
+
+        specItemReq = new OrderSpecItemActRecordPutRequest();
+        specItemReq.setSpecCode("SPEC_TEMP");
+        specItemReq.setSpecName("温度");
+        specItemReq.setSpecItemCode("SPEC_ITEM_FREEZE");
+        specItemReq.setSpecItemName("冰饮");
+        list.add(specItemReq);
+
+        int idx = BizUtils.calcRandom(1, list.size());
+        return list.get(idx - 1);
     }
 }

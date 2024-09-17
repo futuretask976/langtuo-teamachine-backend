@@ -46,7 +46,7 @@ public class AdminPutRequest {
     /**
      * 是否新建
      */
-    private boolean newPut;
+    private boolean putNew;
 
     /**
      *
@@ -68,7 +68,7 @@ public class AdminPutRequest {
         if (!RegexUtils.isValidName(orgName, true)) {
             return false;
         }
-        if (newPut && StringUtils.isBlank(loginPass)) {
+        if (putNew && StringUtils.isBlank(loginPass)) {
             return false;
         }
         return true;

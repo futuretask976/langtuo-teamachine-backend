@@ -165,7 +165,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         MenuPO po = convertMenuPO(request);
         List<MenuSeriesRelPO> seriesRelPOList = convertToMenuSeriesRelPO(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(po, seriesRelPOList);
         } else {
             return putUpdate(po, seriesRelPOList);

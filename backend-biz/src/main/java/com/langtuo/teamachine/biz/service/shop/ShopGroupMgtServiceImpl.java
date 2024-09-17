@@ -111,7 +111,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         }
 
         ShopGroupPO shopGroupPO = convert(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(shopGroupPO);
         } else {
             return putUpdate(shopGroupPO);

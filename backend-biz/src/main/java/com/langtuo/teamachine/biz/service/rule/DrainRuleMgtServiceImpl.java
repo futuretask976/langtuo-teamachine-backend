@@ -154,7 +154,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
         DrainRulePO drainRulePO = convertToDrainRulePO(request);
         List<DrainRuleToppingPO> drainRuleToppingPOList = convertToDrainRuleIncludePO(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(drainRulePO, drainRuleToppingPOList);
         } else {
             return putUpdate(drainRulePO, drainRuleToppingPOList);

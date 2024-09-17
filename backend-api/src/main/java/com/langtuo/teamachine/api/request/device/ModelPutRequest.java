@@ -32,7 +32,7 @@ public class ModelPutRequest {
     /**
      * 是否新建
      */
-    private boolean newPut;
+    private boolean putNew;
 
     /**
      * 参数校验

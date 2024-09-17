@@ -83,7 +83,7 @@ public class OrderActRecordWorker implements Runnable {
         }
     }
 
-    private OrderActRecordPO convertToOrderActRecordPO(OrderActRecordPutRequest request) {
+    public static OrderActRecordPO convertToOrderActRecordPO(OrderActRecordPutRequest request) {
         if (request == null) {
             return null;
         }
@@ -103,7 +103,7 @@ public class OrderActRecordWorker implements Runnable {
         return po;
     }
 
-    private List<OrderSpecItemActRecordPO> convertToSpecItemActRecordPO(OrderActRecordPutRequest request) {
+    public static List<OrderSpecItemActRecordPO> convertToSpecItemActRecordPO(OrderActRecordPutRequest request) {
         if (request == null || org.springframework.util.CollectionUtils.isEmpty(request.getSpecItemList())) {
             return null;
         }
@@ -120,7 +120,7 @@ public class OrderActRecordWorker implements Runnable {
         return specItemList;
     }
 
-    private static List<OrderToppingActRecordPO> convertToOrderToppingActRecordPO(OrderActRecordPutRequest request) {
+    public static List<OrderToppingActRecordPO> convertToOrderToppingActRecordPO(OrderActRecordPutRequest request) {
         if (request == null || org.springframework.util.CollectionUtils.isEmpty(request.getSpecItemList())) {
             return null;
         }

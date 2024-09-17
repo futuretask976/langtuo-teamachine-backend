@@ -40,7 +40,7 @@ public class TenantPutRequest {
     /**
      * 是否新建
      */
-    private boolean newPut;
+    private boolean putNew;
 
     /**
      *

@@ -107,7 +107,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         }
 
         OrgNode orgNode = convert(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(orgNode);
         } else {
             return putUpdate(orgNode);

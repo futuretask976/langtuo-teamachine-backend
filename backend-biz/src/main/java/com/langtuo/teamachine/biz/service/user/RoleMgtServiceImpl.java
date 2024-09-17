@@ -118,7 +118,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         RolePO rolePO = convert(request);
         List<RoleActRelPO> roleActRelPOList = convertRoleActRel(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(rolePO, roleActRelPOList);
         } else {
             return putUpdate(rolePO, roleActRelPOList);

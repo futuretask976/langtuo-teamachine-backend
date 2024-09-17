@@ -37,7 +37,8 @@ public class TenantController {
     }
     
     @GetMapping(value = "/search")
-    public TeaMachineResult<PageDTO<TenantDTO>> search(@RequestParam("tenantName") String tenantName,
+    public TeaMachineResult<PageDTO<TenantDTO>> search(
+            @RequestParam(name = "tenantName", required = false) String tenantName,
             @RequestParam(name = "contactPerson", required = false) String contactPerson,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<TenantDTO>> rtn = service.search(tenantName, contactPerson, pageNum, pageSize);

@@ -20,7 +20,7 @@ public class RedisConfig {
     /**
      * redis 命令超时时间
      */
-    private static final int REDIS_COMMAND_TIMEOUT = 2;
+    private static final int REDIS_COMMAND_TIMEOUT = 10;
 
     @Value("${spring.redis.host}")
     private String redisHost;

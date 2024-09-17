@@ -109,7 +109,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         List<ModelPipelinePO> modelPipelinePOList = convert(modelPO.getModelCode(), request.getPipelineList());
 
         TeaMachineResult<Void> teaMachineResult;
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             teaMachineResult = putNew(modelPO, modelPipelinePOList);
         } else {
             teaMachineResult = putUpdate(modelPO, modelPipelinePOList);

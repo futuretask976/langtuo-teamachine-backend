@@ -99,7 +99,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         }
 
         TeaTypePO teaTypePO = convert(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(teaTypePO);
         } else {
             return putUpdate(teaTypePO);

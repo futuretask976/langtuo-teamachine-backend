@@ -86,7 +86,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
         TenantPO tenantPO = convert(request);
         TeaMachineResult<Void> teaMachineResult;
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             teaMachineResult = putNew(tenantPO);
         } else {
             teaMachineResult = putUpdate(tenantPO);

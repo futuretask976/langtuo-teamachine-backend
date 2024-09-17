@@ -106,7 +106,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         }
 
         ToppingTypePO toppingTypePO = convert(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(toppingTypePO);
         } else {
             return putUpdate(toppingTypePO);

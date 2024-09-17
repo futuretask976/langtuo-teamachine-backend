@@ -68,7 +68,7 @@ public class TeaPutRequest {
     /**
      * 是否新建
      */
-    private boolean newPut;
+    private boolean putNew;
 
     public void addTeaUnit(TeaUnitPutRequest request) {
         if (request == null) {

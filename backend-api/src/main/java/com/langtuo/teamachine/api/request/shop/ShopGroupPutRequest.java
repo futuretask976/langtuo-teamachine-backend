@@ -40,7 +40,7 @@ public class ShopGroupPutRequest {
     /**
      * 是否新建
      */
-    private boolean newPut;
+    private boolean putNew;
 
     /**
      *

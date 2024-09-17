@@ -96,7 +96,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         }
 
         AdminPO po = convert(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(po);
         } else {
             return putUpdate(po);

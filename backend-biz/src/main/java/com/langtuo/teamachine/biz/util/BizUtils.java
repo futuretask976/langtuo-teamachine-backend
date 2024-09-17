@@ -18,6 +18,7 @@ import org.springframework.util.DigestUtils;
 import java.io.*;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -141,5 +142,11 @@ public class BizUtils {
             }
         }
         return md5AsHex;
+    }
+
+    public static int calcRandom(int min, int max) {
+        Random random = new Random();
+        int randomNumber = random.nextInt(max - min + 1) + min;
+        return randomNumber;
     }
 }

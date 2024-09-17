@@ -113,7 +113,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         List<AccuracyTplToppingPO> toppingPOList = convertToAccuracyTplToppingPO(request);
 
         TeaMachineResult<Void> teaMachineResult;
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             teaMachineResult = putNew(po, toppingPOList);
         } else {
             teaMachineResult = putUpdate(po, toppingPOList);

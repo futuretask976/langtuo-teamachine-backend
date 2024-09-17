@@ -160,7 +160,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         CleanRulePO cleanRulePO = convertToCleanRulePO(request);
         List<CleanRuleStepPO> cleanRuleStepPOList = convertToCleanRuleStepPO(request);
         List<CleanRuleExceptPO> cleanRuleExceptPOList = convertToCleanRuleExceptPO(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(cleanRulePO, cleanRuleStepPOList, cleanRuleExceptPOList);
         } else {
             return putUpdate(cleanRulePO, cleanRuleStepPOList, cleanRuleExceptPOList);

@@ -101,7 +101,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         }
 
         DeployPO po = convertToDeployPO(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(po);
         } else {
             return putUpdate(po);

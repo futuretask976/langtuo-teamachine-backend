@@ -121,7 +121,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         }
 
         ShopPO shopPO = convert(request);
-        if (request.isNewPut()) {
+        if (request.isPutNew()) {
             return putNew(shopPO);
         } else {
             return putUpdate(shopPO);
@@ -154,7 +154,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
-            int updated = shopAccessor.insert(po);
+            int updated = shopAccessor.update(po);
             if (CommonConsts.NUM_ONE != updated) {
                 log.error("shopMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
