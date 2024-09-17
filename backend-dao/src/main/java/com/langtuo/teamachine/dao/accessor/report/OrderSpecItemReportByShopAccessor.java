@@ -15,11 +15,11 @@ public class OrderSpecItemReportByShopAccessor {
     @Resource
     private OrderSpecItemReportByShopMapper mapper;
 
-    public List<OrderSpecItemReportPO> calcByDay(String tenantCode, String orderCreatedDay) {
+    public List<OrderSpecItemReportPO> calcByOrderCreatedDay(String tenantCode, String orderCreatedDay) {
         return mapper.calcByDay(tenantCode, orderCreatedDay);
     }
 
-    public List<OrderSpecItemReportPO> selectListByDay(String tenantCode, String orderCreatedDay) {
+    public List<OrderSpecItemReportPO> listByOrderCreatedDay(String tenantCode, String orderCreatedDay) {
         return mapper.selectListByDay(tenantCode, orderCreatedDay);
     }
 

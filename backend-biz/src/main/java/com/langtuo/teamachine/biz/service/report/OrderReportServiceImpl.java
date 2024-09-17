@@ -10,7 +10,6 @@ import com.langtuo.teamachine.api.model.report.OrderToppingReportDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.report.OrderReportService;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
-import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.report.OrderAmtReportAccessor;
 import com.langtuo.teamachine.dao.accessor.report.OrderSpecItemReportByShopAccessor;
 import com.langtuo.teamachine.dao.accessor.report.OrderTeaReportByShopAccessor;
@@ -57,21 +56,21 @@ public class OrderReportServiceImpl implements OrderReportService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        OrderAmtReportPO existAmtReport = orderAmtReportAccessor.selectOne(tenantCode, orderCreatedDay);
+        OrderAmtReportPO existAmtReport = orderAmtReportAccessor.getByOrderCreatedDay(tenantCode, orderCreatedDay);
         if (existAmtReport != null) {
             int deleted = orderAmtReportAccessor.delete(tenantCode, orderCreatedDay);
         }
-        OrderAmtReportPO amtReportPO = orderAmtReportAccessor.calcOne(tenantCode, orderCreatedDay);
+        OrderAmtReportPO amtReportPO = orderAmtReportAccessor.calcByOrderCreatedDay(tenantCode, orderCreatedDay);
         if (amtReportPO != null) {
             int inserted4OrderAmtReport = orderAmtReportAccessor.insert(amtReportPO);
         }
 
-        List<OrderTeaReportPO> existTeaReportList = orderTeaReportByShopAccessor.selectListByDay(
+        List<OrderTeaReportPO> existTeaReportList = orderTeaReportByShopAccessor.listByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(existTeaReportList)) {
             int deleted = orderTeaReportByShopAccessor.delete(tenantCode, orderCreatedDay);
         }
-        List<OrderTeaReportPO> teaReportByShopPOList = orderTeaReportByShopAccessor.calcByDay(
+        List<OrderTeaReportPO> teaReportByShopPOList = orderTeaReportByShopAccessor.calcByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(teaReportByShopPOList)) {
             teaReportByShopPOList.forEach(orderTeaReportPO -> {
@@ -79,12 +78,12 @@ public class OrderReportServiceImpl implements OrderReportService {
             });
         }
 
-        List<OrderSpecItemReportPO> existSpecItemReportList = orderSpecItemReportByShopAccessor.selectListByDay(
+        List<OrderSpecItemReportPO> existSpecItemReportList = orderSpecItemReportByShopAccessor.listByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(existSpecItemReportList)) {
             int deleted = orderSpecItemReportByShopAccessor.delete(tenantCode, orderCreatedDay);
         }
-        List<OrderSpecItemReportPO> specItemReportByShopPOList = orderSpecItemReportByShopAccessor.calcByDay(
+        List<OrderSpecItemReportPO> specItemReportByShopPOList = orderSpecItemReportByShopAccessor.calcByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(specItemReportByShopPOList)) {
             specItemReportByShopPOList.forEach(orderSpecItemReportPO -> {
@@ -92,12 +91,12 @@ public class OrderReportServiceImpl implements OrderReportService {
             });
         }
 
-        List<OrderToppingReportPO> existToppingReportList = orderToppingReportByShopAccessor.selectListByDay(
+        List<OrderToppingReportPO> existToppingReportList = orderToppingReportByShopAccessor.listByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(existSpecItemReportList)) {
             int deleted = orderSpecItemReportByShopAccessor.delete(tenantCode, orderCreatedDay);
         }
-        List<OrderToppingReportPO> toppingReportByShopPOList = orderToppingReportByShopAccessor.calcByDay(
+        List<OrderToppingReportPO> toppingReportByShopPOList = orderToppingReportByShopAccessor.calcByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(toppingReportByShopPOList)) {
             toppingReportByShopPOList.forEach(orderToppingReportPO -> {
