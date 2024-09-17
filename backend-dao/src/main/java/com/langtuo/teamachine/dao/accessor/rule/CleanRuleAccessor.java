@@ -21,7 +21,7 @@ public class CleanRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public CleanRulePO selectOneByCleanRuleCode(String tenantCode, String cleanRuleCode) {
+    public CleanRulePO getByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         CleanRulePO cached = setCache(tenantCode, cleanRuleCode, null);
         if (cached != null) {
             return cached;
@@ -96,7 +96,7 @@ public class CleanRuleAccessor {
     }
 
     public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
-        CleanRulePO po = selectOneByCleanRuleCode(tenantCode, cleanRuleCode);
+        CleanRulePO po = getByCleanRuleCode(tenantCode, cleanRuleCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

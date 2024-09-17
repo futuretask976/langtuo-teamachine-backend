@@ -64,7 +64,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     public TeaMachineResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
         TeaMachineResult<CleanRuleDTO> teaMachineResult;
         try {
-            CleanRulePO po = cleanRuleAccessor.selectOneByCleanRuleCode(tenantCode, cleanRuleCode);
+            CleanRulePO po = cleanRuleAccessor.getByCleanRuleCode(tenantCode, cleanRuleCode);
             CleanRuleDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                 teaMachineResult = TeaMachineResult.success();
             }
 
-            List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.selectListByShopGroupCode(
+            List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.listByShopGroupCode(
                     tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
                 teaMachineResult = TeaMachineResult.success();
@@ -170,7 +170,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     private TeaMachineResult<Void> putNew(CleanRulePO po, List<CleanRuleStepPO> stepPOList,
             List<CleanRuleExceptPO> exceptPOList) {
         try {
-            CleanRulePO exist = cleanRuleAccessor.selectOneByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
+            CleanRulePO exist = cleanRuleAccessor.getByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -207,7 +207,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     private TeaMachineResult<Void> putUpdate(CleanRulePO po, List<CleanRuleStepPO> stepPOList,
             List<CleanRuleExceptPO> exceptPOList) {
         try {
-            CleanRulePO exist = cleanRuleAccessor.selectOneByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
+            CleanRulePO exist = cleanRuleAccessor.getByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
@@ -298,7 +298,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             CleanRuleDispatchDTO dto = new CleanRuleDispatchDTO();
             dto.setCleanRuleCode(cleanRuleCode);
 
-            List<CleanRuleDispatchPO> poList = cleanRuleDispatchAccessor.selectListByCleanRuleCode(tenantCode, cleanRuleCode);
+            List<CleanRuleDispatchPO> poList = cleanRuleDispatchAccessor.listByCleanRuleCode(tenantCode, cleanRuleCode);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())
@@ -338,12 +338,12 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         dto.setPermitBatch(po.getPermitBatch());
         dto.setPermitRemind(po.getPermitRemind());
 
-        List<CleanRuleStepPO> cleanRuleStepPOList = cleanRuleStepAccessor.selectListByCleanRuleCode(
+        List<CleanRuleStepPO> cleanRuleStepPOList = cleanRuleStepAccessor.listByCleanRuleCode(
                 po.getTenantCode(), dto.getCleanRuleCode());
         if (!CollectionUtils.isEmpty(cleanRuleStepPOList)) {
             dto.setCleanRuleStepList(convert(cleanRuleStepPOList));
         }
-        List<CleanRuleExceptPO> cleanRuleExceptPOList = cleanRuleExceptAccessor.selectListByCleanRuleCode(
+        List<CleanRuleExceptPO> cleanRuleExceptPOList = cleanRuleExceptAccessor.listByCleanRuleCode(
                 po.getTenantCode(), dto.getCleanRuleCode());
         if (!CollectionUtils.isEmpty(cleanRuleExceptPOList)) {
             dto.setExceptToppingCodeList(cleanRuleExceptPOList.stream()

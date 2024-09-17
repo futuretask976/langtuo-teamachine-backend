@@ -18,7 +18,7 @@ public class DrainRuleDispatchAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<DrainRuleDispatchPO> selectListByDrainRuleCode(String tenantCode, String cleanRuleCode) {
+    public List<DrainRuleDispatchPO> listByDrainRuleCode(String tenantCode, String cleanRuleCode) {
         List<DrainRuleDispatchPO> cached = getCacheList(tenantCode, cleanRuleCode);
         if (cached != null) {
             return cached;
@@ -30,7 +30,7 @@ public class DrainRuleDispatchAccessor {
         return list;
     }
 
-    public List<DrainRuleDispatchPO> selectListByShopGroupCode(String tenantCode, String shopGroupCode) {
+    public List<DrainRuleDispatchPO> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         List<DrainRuleDispatchPO> cached = getCacheListByShopGroupCode(tenantCode, shopGroupCode);
         if (cached != null) {
             return cached;
@@ -51,7 +51,7 @@ public class DrainRuleDispatchAccessor {
     }
 
     public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
-        List<DrainRuleDispatchPO> existList = selectListByDrainRuleCode(tenantCode, cleanRuleCode);
+        List<DrainRuleDispatchPO> existList = listByDrainRuleCode(tenantCode, cleanRuleCode);
         if (CollectionUtils.isEmpty(existList)) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

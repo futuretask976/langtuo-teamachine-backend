@@ -18,7 +18,7 @@ public class CleanRuleDispatchAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<CleanRuleDispatchPO> selectListByCleanRuleCode(String tenantCode, String cleanRuleCode) {
+    public List<CleanRuleDispatchPO> listByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         List<CleanRuleDispatchPO> cached = getCacheList(tenantCode, cleanRuleCode);
         if (cached != null) {
             return cached;
@@ -30,7 +30,7 @@ public class CleanRuleDispatchAccessor {
         return list;
     }
 
-    public List<CleanRuleDispatchPO> selectListByShopGroupCode(String tenantCode, String shopGroupCode) {
+    public List<CleanRuleDispatchPO> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         List<CleanRuleDispatchPO> cached = getCacheListByShopGroupCode(tenantCode, shopGroupCode);
         if (cached != null) {
             return cached;
@@ -51,7 +51,7 @@ public class CleanRuleDispatchAccessor {
     }
 
     public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
-        List<CleanRuleDispatchPO> existList = selectListByCleanRuleCode(tenantCode, cleanRuleCode);
+        List<CleanRuleDispatchPO> existList = listByCleanRuleCode(tenantCode, cleanRuleCode);
         if (CollectionUtils.isEmpty(existList)) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

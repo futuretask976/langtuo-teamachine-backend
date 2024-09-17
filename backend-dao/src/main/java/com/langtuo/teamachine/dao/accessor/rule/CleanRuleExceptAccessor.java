@@ -17,7 +17,7 @@ public class CleanRuleExceptAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<CleanRuleExceptPO> selectListByCleanRuleCode(String tenantCode, String cleanRuleCode) {
+    public List<CleanRuleExceptPO> listByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         List<CleanRuleExceptPO> cached = getCacheList(tenantCode, cleanRuleCode);
         if (cached != null) {
             return cached;

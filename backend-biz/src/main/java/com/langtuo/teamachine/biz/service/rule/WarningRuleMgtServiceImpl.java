@@ -52,7 +52,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     public TeaMachineResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
         TeaMachineResult<WarningRuleDTO> teaMachineResult;
         try {
-            WarningRulePO po = warningRuleAccessor.selectOneByWarningRuleCode(tenantCode, warningRuleCode);
+            WarningRulePO po = warningRuleAccessor.getByWarningRuleCode(tenantCode, warningRuleCode);
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     public TeaMachineResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName) {
         TeaMachineResult<WarningRuleDTO> teaMachineResult;
         try {
-            WarningRulePO po = warningRuleAccessor.selectOneByWarningRuleName(tenantCode, warningRuleName);
+            WarningRulePO po = warningRuleAccessor.getByWarningRuleName(tenantCode, warningRuleName);
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -80,7 +80,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     public TeaMachineResult<List<WarningRuleDTO>> list(String tenantCode) {
         TeaMachineResult<List<WarningRuleDTO>> teaMachineResult;
         try {
-            List<WarningRulePO> poList = warningRuleAccessor.selectList(tenantCode);
+            List<WarningRulePO> poList = warningRuleAccessor.list(tenantCode);
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(poList);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
                 teaMachineResult = TeaMachineResult.success();
             }
 
-            List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.selectListByShopGroupCode(
+            List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.listByShopGroupCode(
                     tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
                 teaMachineResult = TeaMachineResult.success();
@@ -108,7 +108,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<String> warningRuleCodeList = warningRuleDispatchPOList.stream()
                     .map(WarningRuleDispatchPO::getWarningRuleCode)
                     .collect(Collectors.toList());
-            List<WarningRulePO> warningRulePOList = warningRuleAccessor.selectListByWarningRuleCode(tenantCode,
+            List<WarningRulePO> warningRulePOList = warningRuleAccessor.listByWarningRuleCode(tenantCode,
                     warningRuleCodeList);
             List<WarningRuleDTO> drainRuleDTOList = convertToWarningRuleDTO(warningRulePOList);
             teaMachineResult = TeaMachineResult.success(drainRuleDTOList);
@@ -154,7 +154,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
     private TeaMachineResult<Void> putNew(WarningRulePO po) {
         try {
-            WarningRulePO exist = warningRuleAccessor.selectOneByWarningRuleCode(po.getTenantCode(),
+            WarningRulePO exist = warningRuleAccessor.getByWarningRuleCode(po.getTenantCode(),
                     po.getWarningRuleCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
@@ -174,7 +174,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
     private TeaMachineResult<Void> putUpdate(WarningRulePO po) {
         try {
-            WarningRulePO exist = warningRuleAccessor.selectOneByWarningRuleCode(po.getTenantCode(),
+            WarningRulePO exist = warningRuleAccessor.getByWarningRuleCode(po.getTenantCode(),
                     po.getWarningRuleCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
@@ -247,7 +247,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             WarningRuleDispatchDTO dto = new WarningRuleDispatchDTO();
             dto.setWarningRuleCode(warningRuleCode);
 
-            List<WarningRuleDispatchPO> poList = warningRuleDispatchAccessor.selectListByWarningRuleCode(tenantCode, warningRuleCode);
+            List<WarningRuleDispatchPO> poList = warningRuleDispatchAccessor.listByWarningRuleCode(tenantCode, warningRuleCode);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())

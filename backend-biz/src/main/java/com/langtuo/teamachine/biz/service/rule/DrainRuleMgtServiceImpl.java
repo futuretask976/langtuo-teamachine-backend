@@ -60,7 +60,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     public TeaMachineResult<DrainRuleDTO> getByCode(String tenantCode, String drainRuleCode) {
         TeaMachineResult<DrainRuleDTO> teaMachineResult;
         try {
-            DrainRulePO po = drainRuleAccessor.selectOneByDrainRuleCode(tenantCode, drainRuleCode);
+            DrainRulePO po = drainRuleAccessor.getByDrainRuleCode(tenantCode, drainRuleCode);
             DrainRuleDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -74,7 +74,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     public TeaMachineResult<DrainRuleDTO> getByName(String tenantCode, String openRuleName) {
         TeaMachineResult<DrainRuleDTO> teaMachineResult;
         try {
-            DrainRulePO po = drainRuleAccessor.selectOneByDrainRuleName(tenantCode, openRuleName);
+            DrainRulePO po = drainRuleAccessor.getByDrainRuleName(tenantCode, openRuleName);
             DrainRuleDTO dto = convert(po);
             teaMachineResult = TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -88,7 +88,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     public TeaMachineResult<List<DrainRuleDTO>> list(String tenantCode) {
         TeaMachineResult<List<DrainRuleDTO>> teaMachineResult;
         try {
-            List<DrainRulePO> poList = drainRuleAccessor.selectList(tenantCode);
+            List<DrainRulePO> poList = drainRuleAccessor.list(tenantCode);
             List<DrainRuleDTO> dtoList = convertToDrainRuleDTO(poList);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
@@ -107,7 +107,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
                 teaMachineResult = TeaMachineResult.success();
             }
 
-            List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.selectListByShopGroupCode(
+            List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.listByShopGroupCode(
                     tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(drainRuleDispatchPOList)) {
                 teaMachineResult = TeaMachineResult.success();
@@ -116,7 +116,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             List<String> drainRuleCodeList = drainRuleDispatchPOList.stream()
                     .map(DrainRuleDispatchPO::getDrainRuleCode)
                     .collect(Collectors.toList());
-            List<DrainRulePO> cleanRulePOList = drainRuleAccessor.selectListByDrainRuleCode(tenantCode,
+            List<DrainRulePO> cleanRulePOList = drainRuleAccessor.listByDrainRuleCode(tenantCode,
                     drainRuleCodeList);
             List<DrainRuleDTO> drainRuleDTOList = convertToDrainRuleDTO(cleanRulePOList);
             teaMachineResult = TeaMachineResult.success(drainRuleDTOList);
@@ -163,7 +163,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
     private TeaMachineResult<Void> putNew(DrainRulePO po, List<DrainRuleToppingPO> toppingPOList) {
         try {
-            DrainRulePO exist = drainRuleAccessor.selectOneByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+            DrainRulePO exist = drainRuleAccessor.getByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
             if (exist != null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
@@ -190,7 +190,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
     private TeaMachineResult<Void> putUpdate(DrainRulePO po, List<DrainRuleToppingPO> toppingPOList) {
         try {
-            DrainRulePO exist = drainRuleAccessor.selectOneByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+            DrainRulePO exist = drainRuleAccessor.getByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
             if (exist == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
@@ -271,7 +271,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             DrainRuleDispatchDTO dto = new DrainRuleDispatchDTO();
             dto.setDrainRuleCode(openRuleCode);
 
-            List<DrainRuleDispatchPO> poList = drainRuleDispatchAccessor.selectListByDrainRuleCode(tenantCode, openRuleCode);
+            List<DrainRuleDispatchPO> poList = drainRuleDispatchAccessor.listByDrainRuleCode(tenantCode, openRuleCode);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())
@@ -311,7 +311,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         dto.setDrainRuleName(po.getDrainRuleName());
         dto.setDefaultRule(po.getDefaultRule());
 
-        List<DrainRuleToppingPO> poList = drainRuleToppingAccessor.selectListByDrainRuleCode(
+        List<DrainRuleToppingPO> poList = drainRuleToppingAccessor.listByDrainRuleCode(
                 po.getTenantCode(), po.getDrainRuleCode());
         if (!CollectionUtils.isEmpty(poList)) {
             dto.setToppingRuleList(convertToDrainRuleToppingDTO(poList));

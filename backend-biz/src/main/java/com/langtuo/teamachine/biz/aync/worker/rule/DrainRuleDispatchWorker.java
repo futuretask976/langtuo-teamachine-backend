@@ -80,7 +80,7 @@ public class DrainRuleDispatchWorker implements Runnable {
 
     private List<String> getMachineCodeList() {
         DrainRuleDispatchAccessor drainRuleDispatchAccessor = SpringAccessorUtils.getDrainRuleDispatchAccessor();
-        List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.selectListByDrainRuleCode(
+        List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.listByDrainRuleCode(
                 tenantCode, drainRuleCode);
         if (CollectionUtils.isEmpty(drainRuleDispatchPOList)) {
             log.info("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + drainRuleDispatchPOList);

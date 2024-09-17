@@ -17,7 +17,7 @@ public class CleanRuleStepAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<CleanRuleStepPO> selectListByCleanRuleCode(String tenantCode, String cleanRuleCode) {
+    public List<CleanRuleStepPO> listByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         List<CleanRuleStepPO> cached = getCacheList(tenantCode, cleanRuleCode);
         if (cached != null) {
             return cached;

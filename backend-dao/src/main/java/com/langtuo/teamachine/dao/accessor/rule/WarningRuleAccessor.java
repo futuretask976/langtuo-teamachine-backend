@@ -21,7 +21,7 @@ public class WarningRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public WarningRulePO selectOneByWarningRuleCode(String tenantCode, String warningRuleCode) {
+    public WarningRulePO getByWarningRuleCode(String tenantCode, String warningRuleCode) {
         WarningRulePO cached = setCache(tenantCode, warningRuleCode, null);
         if (cached != null) {
             return cached;
@@ -32,7 +32,7 @@ public class WarningRuleAccessor {
         return po;
     }
 
-    public WarningRulePO selectOneByWarningRuleName(String tenantCode, String warningRuleName) {
+    public WarningRulePO getByWarningRuleName(String tenantCode, String warningRuleName) {
         WarningRulePO cached = setCache(tenantCode, null, warningRuleName);
         if (cached != null) {
             return cached;
@@ -43,7 +43,7 @@ public class WarningRuleAccessor {
         return po;
     }
 
-    public List<WarningRulePO> selectList(String tenantCode) {
+    public List<WarningRulePO> list(String tenantCode) {
         // 首先访问缓存
         List<WarningRulePO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -57,7 +57,7 @@ public class WarningRuleAccessor {
         return list;
     }
 
-    public List<WarningRulePO> selectListByWarningRuleCode(String tenantCode, List<String> warningruleCodeList) {
+    public List<WarningRulePO> listByWarningRuleCode(String tenantCode, List<String> warningruleCodeList) {
         // 这里只是在每台机器初始化的时候会调用，所以先不加缓存
         List<WarningRulePO> list = mapper.selectList(tenantCode, warningruleCodeList);
         return list;
@@ -96,7 +96,7 @@ public class WarningRuleAccessor {
     }
 
     public int deleteByWarningRuleCode(String tenantCode, String warningRuleCode) {
-        WarningRulePO po = selectOneByWarningRuleCode(tenantCode, warningRuleCode);
+        WarningRulePO po = getByWarningRuleCode(tenantCode, warningRuleCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

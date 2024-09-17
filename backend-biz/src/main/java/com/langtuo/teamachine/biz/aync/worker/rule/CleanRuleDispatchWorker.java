@@ -80,7 +80,7 @@ public class CleanRuleDispatchWorker implements Runnable {
 
     private List<String> getMachineCodeList() {
         CleanRuleDispatchAccessor cleanRuleDispatchAccessor = SpringAccessorUtils.getCleanRuleDispatchAccessor();
-        List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.selectListByCleanRuleCode(
+        List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.listByCleanRuleCode(
                 tenantCode, cleanRuleCode);
         if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
             log.info("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + cleanRuleDispatchPOList);

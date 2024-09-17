@@ -21,7 +21,7 @@ public class DrainRuleAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public DrainRulePO selectOneByDrainRuleCode(String tenantCode, String drainRuleCode) {
+    public DrainRulePO getByDrainRuleCode(String tenantCode, String drainRuleCode) {
         DrainRulePO cached = setCache(tenantCode, drainRuleCode, null);
         if (cached != null) {
             return cached;
@@ -32,7 +32,7 @@ public class DrainRuleAccessor {
         return po;
     }
 
-    public DrainRulePO selectOneByDrainRuleName(String tenantCode, String drainRuleName) {
+    public DrainRulePO getByDrainRuleName(String tenantCode, String drainRuleName) {
         DrainRulePO cached = setCache(tenantCode, null, drainRuleName);
         if (cached != null) {
             return cached;
@@ -43,7 +43,7 @@ public class DrainRuleAccessor {
         return po;
     }
 
-    public List<DrainRulePO> selectList(String tenantCode) {
+    public List<DrainRulePO> list(String tenantCode) {
         // 首先访问缓存
         List<DrainRulePO> cachedList = getCacheList(tenantCode);
         if (cachedList != null) {
@@ -57,7 +57,7 @@ public class DrainRuleAccessor {
         return list;
     }
 
-    public List<DrainRulePO> selectListByDrainRuleCode(String tenantCode, List<String> drainRuleCodeList) {
+    public List<DrainRulePO> listByDrainRuleCode(String tenantCode, List<String> drainRuleCodeList) {
         // 这里只是在每台机器初始化的时候会调用，所以先不加缓存
         List<DrainRulePO> list = mapper.selectList(tenantCode, drainRuleCodeList);
         return list;
@@ -96,7 +96,7 @@ public class DrainRuleAccessor {
     }
 
     public int deleteByDrainRuleCode(String tenantCode, String drainRuleCode) {
-        DrainRulePO po = selectOneByDrainRuleCode(tenantCode, drainRuleCode);
+        DrainRulePO po = getByDrainRuleCode(tenantCode, drainRuleCode);
         if (po == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }

@@ -17,7 +17,7 @@ public class DrainRuleToppingAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<DrainRuleToppingPO> selectListByDrainRuleCode(String tenantCode, String drainRuleCode) {
+    public List<DrainRuleToppingPO> listByDrainRuleCode(String tenantCode, String drainRuleCode) {
         List<DrainRuleToppingPO> cached = getCacheList(tenantCode, drainRuleCode);
         if (cached != null) {
             return cached;

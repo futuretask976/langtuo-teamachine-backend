@@ -76,7 +76,7 @@ public class WarningRuleDispatchWorker implements Runnable {
 
     private List<String> getMachineCodeList() {
         WarningRuleDispatchAccessor warningRuleDispatchAccessor = SpringAccessorUtils.getWarningRuleDispatchAccessor();
-        List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.selectListByWarningRuleCode(
+        List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.listByWarningRuleCode(
                 tenantCode, warningRuleCode);
         if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
             log.info("warningRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + warningRuleDispatchPOList);

@@ -18,7 +18,7 @@ public class WarningRuleDispatchAccessor {
     @Resource
     private RedisManager redisManager;
 
-    public List<WarningRuleDispatchPO> selectListByWarningRuleCode(String tenantCode, String warningRuleCode) {
+    public List<WarningRuleDispatchPO> listByWarningRuleCode(String tenantCode, String warningRuleCode) {
         List<WarningRuleDispatchPO> cached = getCacheList(tenantCode, warningRuleCode);
         if (cached != null) {
             return cached;
@@ -30,7 +30,7 @@ public class WarningRuleDispatchAccessor {
         return list;
     }
 
-    public List<WarningRuleDispatchPO> selectListByShopGroupCode(String tenantCode, String shopGroupCode) {
+    public List<WarningRuleDispatchPO> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         List<WarningRuleDispatchPO> cached = getCacheListByShopGroupCode(tenantCode, shopGroupCode);
         if (cached != null) {
             return cached;
@@ -51,7 +51,7 @@ public class WarningRuleDispatchAccessor {
     }
 
     public int deleteByWarningRuleCode(String tenantCode, String warningRuleCode) {
-        List<WarningRuleDispatchPO> existList = selectListByWarningRuleCode(tenantCode, warningRuleCode);
+        List<WarningRuleDispatchPO> existList = listByWarningRuleCode(tenantCode, warningRuleCode);
         if (CollectionUtils.isEmpty(existList)) {
             return CommonConsts.DELETED_ZERO_ROW;
         }
