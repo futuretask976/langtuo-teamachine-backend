@@ -163,7 +163,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
             int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             for (ToppingBaseRulePO toppingBaseRulePO : toppingBaseRulePOList) {
-                int inserted4ToppingBaseRule = toppingBaseRuleAccessor.insert(item);
+                int inserted4ToppingBaseRule = toppingBaseRuleAccessor.insert(toppingBaseRulePO);
                 if (CommonConsts.NUM_ONE != inserted4ToppingBaseRule) {
                     log.error("teaMgtService|putNewToppingBaseRule|error|" + inserted4ToppingBaseRule);
                 }
@@ -171,7 +171,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
             int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             for (ToppingAdjustRulePO toppingAdjustRulePO : toppingAdjustRulePOList) {
-                int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(item);
+                int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(toppingAdjustRulePO);
                 if (CommonConsts.NUM_ONE != inserted4ToppingAdjustRule) {
                     log.error("teaMgtService|putNewToppingAdjustRule|error|" + inserted4ToppingAdjustRule);
                 }
@@ -207,7 +207,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
             int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             for (ToppingBaseRulePO toppingBaseRulePO : toppingBaseRulePOList) {
-                int inserted4ToppingBaseRule = toppingBaseRuleAccessor.insert(item);
+                int inserted4ToppingBaseRule = toppingBaseRuleAccessor.insert(toppingBaseRulePO);
                 if (CommonConsts.NUM_ONE != inserted4ToppingBaseRule) {
                     log.error("teaMgtService|putUpdateToppingBaseRule|error|" + inserted4ToppingBaseRule);
                 }

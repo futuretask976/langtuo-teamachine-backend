@@ -39,6 +39,11 @@ public class MachineUpdatePutRequest {
     private String elecBoardCode;
 
     /**
+     * 型号编码
+     */
+    private String modelCode;
+
+    /**
      * 机器状态，0：禁用，1：启用
      */
     private int state;

@@ -11,6 +11,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
+import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
@@ -43,6 +44,9 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Resource
     private ShopGroupAccessor shopGroupAccessor;
+
+    @Resource
+    private ModelAccessor modelAccessor;
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
@@ -275,6 +279,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         po.setMachineCode(request.getMachineCode());
         po.setScreenCode(request.getScreenCode());
         po.setElecBoardCode(request.getElecBoardCode());
+        po.setModelCode(request.getModelCode());
         po.setMachineName(request.getMachineName());
         po.setMaintainUntil(request.getMaintainUntil());
         po.setValidUntil(request.getValidUntil());

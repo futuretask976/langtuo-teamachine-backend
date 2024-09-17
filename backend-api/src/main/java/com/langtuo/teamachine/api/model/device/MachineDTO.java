@@ -73,6 +73,11 @@ public class MachineDTO {
     private String modelCode;
 
     /**
+     * 型号名称
+     */
+    private String modelName;
+
+    /**
      * 机器状态，0：禁用，1：启用
      */
     private int state;

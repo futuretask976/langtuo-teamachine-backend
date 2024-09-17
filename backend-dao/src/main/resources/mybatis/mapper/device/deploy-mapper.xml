@@ -114,4 +114,12 @@
             AND tenant_code = #{tenantCode}
             AND deploy_code = #{deployCode}
     </delete>
+
+    <select id="countByModelCode" resultType="int">
+        SELECT COUNT(1) FROM deploy
+        WHERE 1 = 1
+        <if test="modelCode != null">
+            AND model_code = #{modelCode}
+        </if>
+    </select>
 </mapper>

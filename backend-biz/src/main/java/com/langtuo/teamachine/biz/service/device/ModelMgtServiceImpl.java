@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.request.device.ModelPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import com.langtuo.teamachine.biz.aync.AsyncDispatcher;
+import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelPipelineAccessor;
@@ -38,6 +39,9 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     @Resource
     private MachineAccessor machineAccessor;
+
+    @Resource
+    private DeployAccessor deployAccessor;
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
@@ -181,22 +185,26 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
-            int countByModelCode = machineAccessor.countByModelCode(modelCode);
-            if (countByModelCode == CommonConsts.DB_SELECT_RESULT_EMPTY) {
-                int deleted4ModelCode = modelAccessor.deleteByModelCode(modelCode);
-                int deleted4Pipeline = modelPipelineAccessor.deleteByModelCode(modelCode);
-                teaMachineResult = TeaMachineResult.success();
-            } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+            int countDeployByModelCode = deployAccessor.countByModelCode(modelCode);
+            if (CommonConsts.NUM_ZERO != countDeployByModelCode) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
+
+            int countMachineByModelCode = machineAccessor.countByModelCode(modelCode);
+            if (CommonConsts.NUM_ZERO != countMachineByModelCode) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
+            }
+
+            int deleted4ModelCode = modelAccessor.deleteByModelCode(modelCode);
+            int deleted4Pipeline = modelPipelineAccessor.deleteByModelCode(modelCode);
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("modelMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<ModelDTO> convertToModelDTO(List<ModelPO> poList) {

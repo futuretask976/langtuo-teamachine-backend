@@ -56,4 +56,11 @@ public interface DeployMapper {
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("deployCode") String deployCode);
+
+    /**
+     *
+     * @param modelCode
+     * @return
+     */
+    int countByModelCode(@Param("modelCode") String modelCode);
 }

@@ -6,6 +6,7 @@ import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.device.DeployMapper;
 import com.langtuo.teamachine.dao.mapper.record.MachineCodeSeqMapper;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
+import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.query.device.MachineDeployQuery;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
@@ -112,31 +113,53 @@ public class DeployAccessor {
         if (inserted == CommonConsts.INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCountByModelCode(po.getModelCode());
         }
         return inserted;
     }
 
     public int update(DeployPO po) {
+        DeployPO exist = mapper.selectOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
+        if (exist == null) {
+            return CommonConsts.NUM_ZERO;
+        }
+
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode());
+            deleteCacheCountByModelCode(exist.getModelCode());
+            deleteCacheCountByModelCode(po.getModelCode());
         }
         return updated;
     }
 
     public int deleteByDeployCode(String tenantCode, String deployCode) {
-        DeployPO po = getByDeployCode(tenantCode, deployCode);
-        if (po == null) {
+        DeployPO exist = getByDeployCode(tenantCode, deployCode);
+        if (exist == null) {
             return CommonConsts.DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, deployCode);
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
+            deleteCacheOne(exist.getTenantCode(), exist.getDeployCode(), exist.getMachineCode());
             deleteCacheList(tenantCode);
+            deleteCacheCountByModelCode(exist.getModelCode());
         }
         return deleted;
+    }
+
+    public int countByModelCode(String modelCode) {
+        // 首先访问缓存
+        Integer cached = getCacheCountByModelCode(modelCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countByModelCode(modelCode);
+
+        setCacheCount(modelCode, count);
+        return count;
     }
 
     public long getNextSeqVal4MachineCode() {
@@ -150,6 +173,22 @@ public class DeployAccessor {
         return machineCodeSeqCurVal++;
     }
 
+    private Integer getCacheCountByModelCode(String modelCode) {
+        String key = getCacheCountKeyByModelCode(modelCode);
+        Object cached = redisManager.getValue(key);
+        Integer count = (Integer) cached;
+        return count;
+    }
+
+    private void setCacheCount(String modelCode, Integer count) {
+        String key = getCacheCountKeyByModelCode(modelCode);
+        redisManager.setValue(key, count);
+    }
+
+    private String getCacheCountKeyByModelCode(String modelCode) {
+        return "deployAcc-cnt-" + modelCode;
+    }
+
     private String getCacheKey(String tenantCode, String deployCode, String machineCode) {
         return "deployAcc-" + tenantCode + "-" + deployCode + "-" + machineCode;
     }
@@ -159,7 +198,7 @@ public class DeployAccessor {
     }
 
     private DeployPO getCache(String tenantCode, String deployCode, String machineCode) {
-        String key = getCacheKey(deployCode, deployCode, machineCode);
+        String key = getCacheKey(tenantCode, deployCode, machineCode);
         Object cached = redisManager.getValue(key);
         DeployPO po = (DeployPO) cached;
         return po;
@@ -178,7 +217,7 @@ public class DeployAccessor {
     }
 
     private void setCache(String tenantCode, String deployCode, String machineCode, DeployPO po) {
-        String key = getCacheKey(deployCode, deployCode, machineCode);
+        String key = getCacheKey(tenantCode, deployCode, machineCode);
         redisManager.setValue(key, po);
     }
 
@@ -189,5 +228,9 @@ public class DeployAccessor {
 
     private void deleteCacheList(String tenantCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode));
+    }
+
+    private void deleteCacheCountByModelCode(String modelCode) {
+        redisManager.deleteKey(getCacheCountKeyByModelCode(modelCode));
     }
 }
