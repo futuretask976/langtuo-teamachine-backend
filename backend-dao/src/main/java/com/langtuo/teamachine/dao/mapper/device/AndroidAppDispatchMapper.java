@@ -27,7 +27,7 @@ public interface AndroidAppDispatchMapper {
      *
      * @return
      */
-    List<AndroidAppDispatchPO> selectList(@Param("tenantCode") String tenantCode, @Param("version") String version);
+    List<AndroidAppDispatchPO> selectListByVersion(@Param("tenantCode") String tenantCode, @Param("version") String version);
 
     /**
      *

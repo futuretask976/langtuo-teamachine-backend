@@ -25,7 +25,7 @@ public class AndroidAppDispatchAccessor {
             return cachedList;
         }
 
-        List<AndroidAppDispatchPO> list = mapper.selectList(tenantCode, version);
+        List<AndroidAppDispatchPO> list = mapper.selectListByVersion(tenantCode, version);
 
         // 设置缓存
         setCacheList(tenantCode, version, list);
