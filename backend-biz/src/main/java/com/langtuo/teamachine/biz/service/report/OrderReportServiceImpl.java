@@ -24,8 +24,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -46,9 +44,6 @@ public class OrderReportServiceImpl implements OrderReportService {
 
     @Resource
     private OrderToppingReportByShopAccessor orderToppingReportByShopAccessor;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<Void> calc(String tenantCode, String orderCreatedDay) {

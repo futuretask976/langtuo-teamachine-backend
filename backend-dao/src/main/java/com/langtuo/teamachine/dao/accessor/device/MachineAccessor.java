@@ -94,7 +94,7 @@ public class MachineAccessor {
 
     public int insert(MachinePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getShopCode());
             deleteCacheCountByModelCode(po.getModelCode());
         }
@@ -104,11 +104,11 @@ public class MachineAccessor {
     public int update(MachinePO po) {
         MachinePO exist = mapper.selectOne(po.getTenantCode(), po.getMachineCode(), po.getMachineName());
         if (exist == null) {
-            return CommonConsts.NUM_ZERO;
+            return CommonConsts.DB_UPDATED_ZERO_ROW;
         }
 
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode(), po.getShopCode());
             deleteCacheCountByModelCode(exist.getModelCode());
@@ -120,11 +120,11 @@ public class MachineAccessor {
     public int deleteByMachineCode(String tenantCode, String machineCode) {
         MachinePO po = getByMachineCode(tenantCode, machineCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, machineCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, machineCode);
             deleteCacheList(tenantCode, po.getShopCode());
             deleteCacheCountByModelCode(po.getModelCode());

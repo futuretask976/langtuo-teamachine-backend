@@ -85,7 +85,7 @@ public class MenuAccessor {
 
     public int insert(MenuPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMenuCode(), po.getMenuName());
             deleteCacheList(po.getTenantCode());
         }
@@ -94,7 +94,7 @@ public class MenuAccessor {
 
     public int update(MenuPO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getMenuCode(), po.getMenuName());
             deleteCacheList(po.getTenantCode());
         }
@@ -104,11 +104,11 @@ public class MenuAccessor {
     public int deleteByMenuCode(String tenantCode, String menuCode) {
         MenuPO po = getByMenuCode(tenantCode, menuCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, menuCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getMenuCode(), po.getMenuName());
             deleteCacheList(tenantCode);
         }

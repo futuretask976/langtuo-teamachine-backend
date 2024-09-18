@@ -31,7 +31,7 @@ public class CleanRuleExceptAccessor {
 
     public int insert(CleanRuleExceptPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getCleanRuleCode());
         }
         return inserted;
@@ -39,7 +39,7 @@ public class CleanRuleExceptAccessor {
 
     public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         int deleted = mapper.delete(tenantCode, cleanRuleCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, cleanRuleCode);
         }
         return deleted;

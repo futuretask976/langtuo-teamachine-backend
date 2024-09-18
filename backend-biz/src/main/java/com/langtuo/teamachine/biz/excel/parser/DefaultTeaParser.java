@@ -210,11 +210,11 @@ public class DefaultTeaParser implements TeaParser {
                 StringBuffer newTeaUnitName = new StringBuffer();
                 List<SpecItemRulePutRequest> specItemRulePutRequestList = Lists.newArrayList();
                 for (SpecItemPO specItemPO : specItemPOList) {
-                    if (newTeaUnitCode.length() > CommonConsts.NUM_ZERO) {
+                    if (newTeaUnitCode.length() > CommonConsts.STR_LENGTH_ZERO) {
                         newTeaUnitCode.append(CommonConsts.STR_HORIZONTAL_BAR);
                     }
                     newTeaUnitCode.append(specItemPO.getSpecItemCode());
-                    if (newTeaUnitName.length() > CommonConsts.NUM_ZERO) {
+                    if (newTeaUnitName.length() > CommonConsts.STR_LENGTH_ZERO) {
                         newTeaUnitName.append(CommonConsts.STR_HORIZONTAL_BAR);
                     }
                     newTeaUnitName.append(specItemPO.getSpecItemName());
@@ -233,7 +233,7 @@ public class DefaultTeaParser implements TeaParser {
                     for (ToppingAdjustRulePutRequest adjustRule : adjustRuleList) {
                         ToppingBaseRulePutRequest baseRulePutRequest = new ToppingBaseRulePutRequest();
                         baseRulePutRequest.setToppingCode(adjustRule.getToppingCode());
-                        baseRulePutRequest.setBaseAmount(CommonConsts.NUM_ZERO);
+                        baseRulePutRequest.setBaseAmount(CommonConsts.AMOUNT_ZERO);
                         // 通过添加 toppingBaseRule，会自动构造 actStepList
                         teaPutRequest.addToppingBaseRule(adjustRule.getStepIndex(), baseRulePutRequest);
                     }
@@ -311,7 +311,7 @@ public class DefaultTeaParser implements TeaParser {
                     actualAmount = baseAmount + (CommonConsts.NUM_ONE - adjustAmount);
                 }
             }
-            adjustRulePart.setActualAmount(actualAmount < CommonConsts.NUM_ZERO ? CommonConsts.NUM_ZERO : actualAmount);
+            adjustRulePart.setActualAmount(actualAmount < CommonConsts.AMOUNT_ZERO ? CommonConsts.AMOUNT_ZERO : actualAmount);
 
             resultList.add(adjustRulePart);
         }

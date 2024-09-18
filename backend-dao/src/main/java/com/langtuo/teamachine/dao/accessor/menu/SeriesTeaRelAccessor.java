@@ -2,7 +2,6 @@ package com.langtuo.teamachine.dao.accessor.menu;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.menu.SeriesTeaRelMapper;
-import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.po.menu.SeriesTeaRelPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
@@ -39,7 +38,7 @@ public class SeriesTeaRelAccessor {
 
     public int insert(SeriesTeaRelPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getSeriesCode());
         }
         return inserted;
@@ -47,7 +46,7 @@ public class SeriesTeaRelAccessor {
 
     public int deleteBySeriesCode(String tenantCode, String seriesCode) {
         int deleted = mapper.delete(tenantCode, seriesCode);
-        if (deleted > CommonConsts.DELETED_ZERO_ROW) {
+        if (deleted > CommonConsts.DB_DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, seriesCode);
         }
         return deleted;

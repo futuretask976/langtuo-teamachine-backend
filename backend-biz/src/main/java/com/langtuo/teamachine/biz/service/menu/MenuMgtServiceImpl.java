@@ -180,7 +180,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             }
 
             int inserted = menuAccessor.insert(po);
-            if (inserted != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("menuMgtService|putNewMenu|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -188,7 +188,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             int deleted4SeriesRel = menuSeriesRelAccessor.deleteByMenuCode(po.getTenantCode(), po.getMenuCode());
             for (MenuSeriesRelPO seriesRelPO : seriesRelPOlist) {
                 int inserted4SeriesRel = menuSeriesRelAccessor.insert(seriesRelPO);
-                if (inserted4SeriesRel != CommonConsts.NUM_ONE) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4SeriesRel) {
                     log.error("menuMgtService|putNewSeriesRel|error|" + inserted4SeriesRel);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
@@ -208,7 +208,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             }
 
             int updated = menuAccessor.update(po);
-            if (updated != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("menuMgtService|putUpdateMenu|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -216,7 +216,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             int deleted4SeriesRel = menuSeriesRelAccessor.deleteByMenuCode(po.getTenantCode(), po.getMenuCode());
             for (MenuSeriesRelPO seriesRelPO : seriesRelPOlist) {
                 int inserted4SeriesRel = menuSeriesRelAccessor.insert(seriesRelPO);
-                if (inserted4SeriesRel != CommonConsts.NUM_ONE) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4SeriesRel) {
                     log.error("menuMgtService|putUpdateSeriesRel|error|" + inserted4SeriesRel);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }

@@ -114,7 +114,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             }
 
             int inserted = specAccessor.insert(po);
-            if (inserted != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("specMgtService|putNewSpec|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -122,7 +122,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             int deleted = specItemAccessor.deleteBySpecCode(po.getTenantCode(), po.getSpecCode());
             for (SpecItemPO specItemPO : specItemPOList) {
                 int inserted4Item = specItemAccessor.insert(specItemPO);
-                if (inserted4Item != CommonConsts.NUM_ONE) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Item) {
                     log.error("specMgtService|putNewSpecItem|error|" + inserted4Item);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
@@ -147,14 +147,14 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                     int count = teaUnitAccessor.countBySpecItemCode(po.getTenantCode(), deletedSpecItemPOList.stream()
                             .map(SpecItemPO::getSpecItemCode)
                             .collect(Collectors.toList()));
-                    if (count > CommonConsts.NUM_ZERO) {
+                    if (count > CommonConsts.DB_COUNT_RESULT_ZERO) {
                         return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
                     }
                 }
             }
 
             int updated = specAccessor.update(po);
-            if (updated != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("specMgtService|putUpdateSpec|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -162,7 +162,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             int deleted = specItemAccessor.deleteBySpecCode(po.getTenantCode(), po.getSpecCode());
             for (SpecItemPO specItemPO : specItemPOList) {
                 int inserted4Item = specItemAccessor.insert(specItemPO);
-                if (inserted4Item != CommonConsts.NUM_ONE) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Item) {
                     log.error("specMgtService|putUpdateSpecItem|error|" + inserted4Item);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
@@ -200,7 +200,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
         try {
             int countBySpecCode = teaUnitAccessor.countBySpecCode(tenantCode, specCode);
-            if (countBySpecCode != CommonConsts.DB_SELECT_RESULT_EMPTY) {
+            if (countBySpecCode != CommonConsts.DB_SELECT_ZERO_ROW) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }

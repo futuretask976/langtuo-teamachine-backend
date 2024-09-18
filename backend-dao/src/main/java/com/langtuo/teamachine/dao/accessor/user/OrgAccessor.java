@@ -102,7 +102,7 @@ public class OrgAccessor {
 
     public int insert(OrgNode node) {
         int inserted = mapper.insert(convert(node));
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             orgNodeMapByTenant.remove(node.getTenantCode());
         }
         return inserted;
@@ -110,7 +110,7 @@ public class OrgAccessor {
 
     public int update(OrgNode node) {
         int updated = mapper.update(convert(node));
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             orgNodeMapByTenant.remove(node.getTenantCode());
         }
         return updated;
@@ -118,7 +118,7 @@ public class OrgAccessor {
 
     public int delete(String tenantCode, String orgName) {
         int deleted = mapper.delete(tenantCode, orgName);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             orgNodeMapByTenant.remove(tenantCode);
         }
         return deleted;

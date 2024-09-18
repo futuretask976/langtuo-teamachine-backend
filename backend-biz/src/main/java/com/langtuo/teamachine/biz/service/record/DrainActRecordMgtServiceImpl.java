@@ -21,8 +21,6 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -47,9 +45,6 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
 
     @Resource
     private ShopGroupMgtService shopGroupMgtService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark) {

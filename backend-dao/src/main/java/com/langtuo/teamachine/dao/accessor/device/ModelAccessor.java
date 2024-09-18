@@ -62,7 +62,7 @@ public class ModelAccessor {
 
     public int insert(ModelPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getModelCode());
             deleteCacheList();
         }
@@ -71,7 +71,7 @@ public class ModelAccessor {
 
     public int update(ModelPO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getModelCode());
             deleteCacheList();
         }
@@ -80,7 +80,7 @@ public class ModelAccessor {
 
     public int deleteByModelCode(String modelCode) {
         int deleted = mapper.delete(modelCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(modelCode);
             deleteCacheList();
         }

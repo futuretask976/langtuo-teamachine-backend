@@ -70,7 +70,7 @@ public class AdminAccessor {
 
     public int insert(AdminPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode());
             deleteCacheCountByRoleCode(po.getTenantCode(), po.getRoleCode());
             deleteCacheCountByOrgName(po.getTenantCode(), po.getOrgName());
@@ -81,11 +81,11 @@ public class AdminAccessor {
     public int update(AdminPO po) {
         AdminPO exist = mapper.selectOne(po.getTenantCode(), po.getLoginName());
         if (exist == null) {
-            return CommonConsts.NUM_ZERO;
+            return CommonConsts.DB_UPDATED_ZERO_ROW;
         }
 
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getLoginName());
             deleteCacheList(po.getTenantCode());
             deleteCacheCountByRoleCode(exist.getTenantCode(), exist.getRoleCode());
@@ -99,11 +99,11 @@ public class AdminAccessor {
     public int deleteByLoginName(String tenantCode, String loginName) {
         AdminPO po = getByLoginName(tenantCode, loginName);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, loginName);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, loginName);
             deleteCacheList(tenantCode);
             deleteCacheCountByRoleCode(tenantCode, po.getRoleCode());

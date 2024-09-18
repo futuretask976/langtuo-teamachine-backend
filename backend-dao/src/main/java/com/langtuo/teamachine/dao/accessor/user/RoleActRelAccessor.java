@@ -41,7 +41,7 @@ public class RoleActRelAccessor {
 
     public int insert(RoleActRelPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getRoleCode());
         }
         return inserted;
@@ -49,7 +49,7 @@ public class RoleActRelAccessor {
 
     public int deleteByRoleCode(String tenantCode, String roleCode) {
         int deleted = mapper.delete(tenantCode, roleCode);
-        if (deleted > CommonConsts.DELETED_ZERO_ROW) {
+        if (deleted > CommonConsts.DB_DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, roleCode);
         }
         return deleted;

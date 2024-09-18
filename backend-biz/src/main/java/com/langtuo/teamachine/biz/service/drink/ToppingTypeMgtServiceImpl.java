@@ -112,7 +112,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             }
 
             int inserted = toppingTypeAccessor.insert(po);
-            if (inserted != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("toppingTypeMgtService|putNew|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -131,7 +131,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             }
 
             int updated = toppingTypeAccessor.update(po);
-            if (updated != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("toppingTypeMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -150,7 +150,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
         try {
             int countByToppingTypeCode = toppingAccessor.countByToppingTypeCode(tenantCode, toppingTypeCode);
-            if (countByToppingTypeCode == CommonConsts.DB_SELECT_RESULT_EMPTY) {
+            if (countByToppingTypeCode == CommonConsts.DB_SELECT_ZERO_ROW) {
                 int deleted = toppingTypeAccessor.delete(tenantCode, toppingTypeCode);
                 return TeaMachineResult.success();
             } else {

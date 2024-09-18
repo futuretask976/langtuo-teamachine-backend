@@ -78,7 +78,7 @@ public class TeaTypeAccessor {
 
     public int insert(TeaTypePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getTeaTypeCode(), po.getTeaTypeName());
             deleteCacheList(po.getTenantCode());
         }
@@ -87,7 +87,7 @@ public class TeaTypeAccessor {
 
     public int update(TeaTypePO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getTeaTypeCode(), po.getTeaTypeName());
             deleteCacheList(po.getTenantCode());
         }
@@ -97,11 +97,11 @@ public class TeaTypeAccessor {
     public int deleteByTeaTypeCode(String tenantCode, String teaTypeCode) {
         TeaTypePO po = getByTeaTypeCode(tenantCode, teaTypeCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, teaTypeCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getTeaTypeCode(), po.getTeaTypeName());
             deleteCacheList(tenantCode);
         }

@@ -79,7 +79,7 @@ public class SpecAccessor {
 
     public int insert(SpecPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecName());
             deleteCacheList(po.getTenantCode());
         }
@@ -88,7 +88,7 @@ public class SpecAccessor {
 
     public int update(SpecPO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecName());
             deleteCacheList(po.getTenantCode());
         }
@@ -98,11 +98,11 @@ public class SpecAccessor {
     public int deleteBySpecCode(String tenantCode, String specCode) {
         SpecPO po = getBySpecCode(tenantCode, specCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, specCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getSpecCode(), po.getSpecName());
             deleteCacheList(tenantCode);
         }

@@ -79,7 +79,7 @@ public class SeriesAccessor {
 
     public int insert(SeriesPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSeriesCode(), po.getSeriesName());
             deleteCacheList(po.getTenantCode());
         }
@@ -88,7 +88,7 @@ public class SeriesAccessor {
 
     public int update(SeriesPO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSeriesCode(), po.getSeriesName());
             deleteCacheList(po.getTenantCode());
         }
@@ -98,11 +98,11 @@ public class SeriesAccessor {
     public int deleteBySeriesCode(String tenantCode, String seriesCode) {
         SeriesPO po = getBySeriesCode(tenantCode, seriesCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, seriesCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getSeriesCode(), po.getSeriesName());
             deleteCacheList(tenantCode);
         }

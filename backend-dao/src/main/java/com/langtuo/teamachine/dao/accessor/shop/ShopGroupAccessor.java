@@ -77,7 +77,7 @@ public class ShopGroupAccessor {
 
     public int insert(ShopGroupPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getShopGroupCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCountByOrgName(po.getTenantCode(), po.getOrgName());
@@ -88,11 +88,11 @@ public class ShopGroupAccessor {
     public int update(ShopGroupPO po) {
         ShopGroupPO exist = mapper.selectOne(po.getTenantCode(), po.getShopGroupCode());
         if (exist == null) {
-            return CommonConsts.NUM_ZERO;
+            return CommonConsts.DB_UPDATED_ZERO_ROW;
         }
 
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getShopGroupCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCountByOrgName(exist.getTenantCode(), exist.getOrgName());
@@ -104,11 +104,11 @@ public class ShopGroupAccessor {
     public int deleteByShopGroupCode(String tenantCode, String shopGroupCode) {
         ShopGroupPO po = getByShopGroupCode(tenantCode, shopGroupCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, shopGroupCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getShopGroupCode());
             deleteCacheList(tenantCode);
             deleteCacheCountByOrgName(tenantCode, po.getOrgName());

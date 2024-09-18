@@ -5,7 +5,6 @@ import com.langtuo.teamachine.dao.mapper.menu.MenuDispatchMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -39,7 +38,7 @@ public class MenuDispatchAccessor {
 
     public int insert(MenuDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getMenuCode());
         }
         return inserted;
@@ -47,7 +46,7 @@ public class MenuDispatchAccessor {
 
     public int update(MenuDispatchPO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getMenuCode());
         }
         return updated;
@@ -55,7 +54,7 @@ public class MenuDispatchAccessor {
 
     public int deleteByMenuCode(String tenantCode, String menuCode) {
         int deleted = mapper.delete(tenantCode, menuCode);
-        if (deleted >= CommonConsts.DELETED_ONE_ROW) {
+        if (deleted >= CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, menuCode);
         }
         return deleted;

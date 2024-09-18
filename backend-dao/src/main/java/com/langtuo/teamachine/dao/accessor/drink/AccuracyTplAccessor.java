@@ -79,7 +79,7 @@ public class AccuracyTplAccessor {
 
     public int insert(AccuracyTplPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getTemplateCode(), po.getTemplateName());
             deleteCacheList(po.getTenantCode());
         }
@@ -88,7 +88,7 @@ public class AccuracyTplAccessor {
 
     public int update(AccuracyTplPO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getTemplateCode(), po.getTemplateName());
             deleteCacheList(po.getTenantCode());
         }
@@ -98,11 +98,11 @@ public class AccuracyTplAccessor {
     public int deleteByTplCode(String tenantCode, String templateCode) {
         AccuracyTplPO po = getByTplCode(tenantCode, templateCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, templateCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getTemplateCode(), po.getTemplateName());
             deleteCacheList(tenantCode);
         }

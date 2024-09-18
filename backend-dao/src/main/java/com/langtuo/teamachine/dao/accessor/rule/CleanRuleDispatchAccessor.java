@@ -36,7 +36,7 @@ public class CleanRuleDispatchAccessor {
 
     public int insert(CleanRuleDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getCleanRuleCode());
         }
         return inserted;

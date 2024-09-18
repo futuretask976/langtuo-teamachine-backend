@@ -33,7 +33,7 @@ public class AccuracyTplToppingAccessor {
 
     public int insert(AccuracyTplToppingPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getTemplateCode());
         }
         return inserted;
@@ -41,7 +41,7 @@ public class AccuracyTplToppingAccessor {
 
     public int deleteByTplCode(String tenantCode, String templateCode) {
         int deleted = mapper.delete(tenantCode, templateCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, templateCode);
         }
         return deleted;

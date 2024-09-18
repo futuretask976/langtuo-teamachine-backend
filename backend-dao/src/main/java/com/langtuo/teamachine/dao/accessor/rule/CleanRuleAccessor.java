@@ -68,7 +68,7 @@ public class CleanRuleAccessor {
 
     public int update(CleanRulePO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getCleanRuleCode(), po.getCleanRuleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -77,7 +77,7 @@ public class CleanRuleAccessor {
 
     public int insert(CleanRulePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getCleanRuleCode(), po.getCleanRuleName());
             deleteCacheList(po.getTenantCode());
         }
@@ -87,11 +87,11 @@ public class CleanRuleAccessor {
     public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         CleanRulePO po = getByCleanRuleCode(tenantCode, cleanRuleCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, cleanRuleCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getCleanRuleCode(), po.getCleanRuleName());
             deleteCacheList(tenantCode);
         }

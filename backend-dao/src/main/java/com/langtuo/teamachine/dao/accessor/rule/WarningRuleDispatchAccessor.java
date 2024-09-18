@@ -36,7 +36,7 @@ public class WarningRuleDispatchAccessor {
 
     public int insert(WarningRuleDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getWarningRuleCode());
         }
         return inserted;

@@ -105,7 +105,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             }
 
             int inserted = accessor.insert(po);
-            if (inserted != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("teaTypeMgtService|putNew|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -124,7 +124,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             }
 
             int updated = accessor.update(po);
-            if (updated != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("teaTypeMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -143,7 +143,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
         try {
             int countByTeaTypeCode = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
-            if (countByTeaTypeCode == CommonConsts.DB_SELECT_RESULT_EMPTY) {
+            if (countByTeaTypeCode == CommonConsts.DB_SELECT_ZERO_ROW) {
                 int deleted = accessor.deleteByTeaTypeCode(tenantCode, teaTypeCode);
                 return TeaMachineResult.success();
             } else {

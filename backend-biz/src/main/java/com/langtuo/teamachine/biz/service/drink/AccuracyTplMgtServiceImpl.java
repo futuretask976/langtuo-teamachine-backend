@@ -129,7 +129,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             }
 
             int inserted = accuracyTplAccessor.insert(po);
-            if (inserted != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("accuracyTplMgtService|putNewAccuracyTpl|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -137,7 +137,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             int deleted = accuracyTplToppingAccessor.deleteByTplCode(po.getTenantCode(), po.getTemplateCode());
             for (AccuracyTplToppingPO toppingPO : toppingPOList) {
                 int inserted4Topping = accuracyTplToppingAccessor.insert(toppingPO);
-                if (inserted4Topping != CommonConsts.NUM_ONE) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
                     log.error("accuracyTplMgtService|putNewAccuracyTplTopping|error|" + inserted);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
@@ -157,7 +157,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             }
 
             int updated = accuracyTplAccessor.update(po);
-            if (updated != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("accuracyTplMgtService|putUpdateAccuracyTpl|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -165,7 +165,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             int deleted = accuracyTplToppingAccessor.deleteByTplCode(po.getTenantCode(), po.getTemplateCode());
             for (AccuracyTplToppingPO toppingPO : toppingPOList) {
                 int inserted4Topping = accuracyTplToppingAccessor.insert(toppingPO);
-                if (inserted4Topping != CommonConsts.NUM_ONE) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
                     log.error("accuracyTplMgtService|putUpdateAccuracyTplTopping|error|" + inserted4Topping);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }

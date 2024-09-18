@@ -16,9 +16,16 @@ public class CommonConsts {
     public static final int MIN_PAGE_SIZE = 1;
 
     /**
-     * 数字 0
+     * 字符串长度为 0
      */
-    public static final int NUM_ZERO = 0;
+    public static final int STR_LENGTH_ZERO = 0;
+
+    /**
+     * 数量 0
+     */
+    public static final int AMOUNT_ZERO = 0;
+
+
 
     /**
      * 数字 1
@@ -29,13 +36,6 @@ public class CommonConsts {
      * 横杠
      */
     public static final String STR_HORIZONTAL_BAR = "-";
-
-    /**
-     *
-     */
-    public static final int DB_SELECT_RESULT_EMPTY = 0;
-
-
 
     /**
      * 茶品导出 - sheet名称
@@ -197,13 +197,9 @@ public class CommonConsts {
     public static final String DEPLOY_CODE_COVERING_NUM = "0";
 
     /**
-     * 日期格式完整格式
+     * 日期格式相关常量
      */
     public static final String DATE_FORMAT_FULL = "yyyy-MM-dd hh:mm:ss";
-
-    /**
-     * 日期格式简略格式
-     */
     public static final String DATE_FORMAT_SIMPLE = "yyyyMMdd";
 
     /**
@@ -270,25 +266,19 @@ public class CommonConsts {
     public static final String BIZ_CODE_DISPATCH_DRAIN_RULE = "dispatchDrainRule";
     public static final String BIZ_CODE_DISPATCH_WARNING_RULE = "dispatchWarningRule";
 
-    /**
-     * DB操作插入一条记录成功
-     */
-    public static int INSERTED_ONE_ROW = 1;
 
     /**
-     * DB操作删除一条记录成功
+     * 数据库访问相关常量
      */
-    public static int UPDATED_ONE_ROW = 1;
+    public static final int DB_COUNT_RESULT_ZERO = 0;
+    public static final int DB_INSERTED_ZERO_ROW = 0;
+    public static final int DB_INSERTED_ONE_ROW = 1;
+    public static final int DB_UPDATED_ZERO_ROW = 0;
+    public static final int DB_UPDATED_ONE_ROW = 1;
+    public static final int DB_DELETED_ZERO_ROW = 0;
+    public static final int DB_DELETED_ONE_ROW = 1;
+    public static final int DB_SELECT_ZERO_ROW = 0;
 
-    /**
-     * DB操作删除一条记录成功
-     */
-    public static int DELETED_ONE_ROW = 1;
-
-    /**
-     * DB操作删除记录失败
-     */
-    public static int DELETED_ZERO_ROW = 0;
 
     /**
      * 系统超级管理员登录名

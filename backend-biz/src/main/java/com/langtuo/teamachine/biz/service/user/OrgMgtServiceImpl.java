@@ -170,14 +170,14 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
         try {
             int count4Admin = adminAccessor.countByOrgName(tenantCode, orgName);
-            if (count4Admin > CommonConsts.NUM_ZERO) {
+            if (count4Admin > CommonConsts.DB_COUNT_RESULT_ZERO) {
                 log.error("orgMgtService|delete|errorByAdmin|" + count4Admin);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
 
             int count4ShopGroup = shopGroupAccessor.countByOrgName(tenantCode, orgName);
-            if (count4ShopGroup > CommonConsts.NUM_ZERO) {
+            if (count4ShopGroup > CommonConsts.DB_COUNT_RESULT_ZERO) {
                 log.error("orgMgtService|delete|errorByShopGroup|" + count4ShopGroup);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));

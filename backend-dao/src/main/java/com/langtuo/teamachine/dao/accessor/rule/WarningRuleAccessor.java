@@ -68,7 +68,7 @@ public class WarningRuleAccessor {
 
     public int update(WarningRulePO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getWarningRuleCode());
             deleteCacheList(po.getTenantCode());
         }
@@ -77,7 +77,7 @@ public class WarningRuleAccessor {
 
     public int insert(WarningRulePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getWarningRuleCode());
             deleteCacheList(po.getTenantCode());
         }
@@ -87,11 +87,11 @@ public class WarningRuleAccessor {
     public int deleteByWarningRuleCode(String tenantCode, String warningRuleCode) {
         WarningRulePO po = getByWarningRuleCode(tenantCode, warningRuleCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, warningRuleCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getWarningRuleCode());
             deleteCacheList(tenantCode);
         }

@@ -69,7 +69,7 @@ public class RoleAccessor {
 
     public int insert(RolePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getRoleCode());
             deleteCacheList(po.getTenantCode());
         }
@@ -78,7 +78,7 @@ public class RoleAccessor {
 
     public int update(RolePO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getRoleCode());
             deleteCacheList(po.getTenantCode());
         }
@@ -88,11 +88,11 @@ public class RoleAccessor {
     public int deleteByRoleCode(String tenantCode, String roleCode) {
         RolePO po = getByRoleCode(tenantCode, roleCode);
         if (po == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, roleCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(tenantCode, po.getRoleCode());
             deleteCacheList(tenantCode);
         }

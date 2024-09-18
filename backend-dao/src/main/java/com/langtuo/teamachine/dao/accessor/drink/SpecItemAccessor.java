@@ -61,7 +61,7 @@ public class SpecItemAccessor {
 
     public int insert(SpecItemPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecItemCode(), po.getSpecItemName());
             deleteCacheList(po.getTenantCode(), po.getSpecCode());
         }
@@ -70,7 +70,7 @@ public class SpecItemAccessor {
 
     public int update(SpecItemPO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getSpecItemCode(), po.getSpecItemName());
             deleteCacheList(po.getTenantCode(), po.getSpecCode());
         }
@@ -81,7 +81,7 @@ public class SpecItemAccessor {
         List<SpecItemPO> specItemPOList = mapper.selectList(tenantCode, specCode);
 
         int deleted = mapper.delete(tenantCode, specCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             for (SpecItemPO specItemPO : specItemPOList) {
                 deleteCacheOne(tenantCode, specItemPO.getSpecItemCode(), specItemPO.getSpecItemName());
             }

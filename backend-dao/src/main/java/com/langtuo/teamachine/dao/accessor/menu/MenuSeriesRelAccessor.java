@@ -38,7 +38,7 @@ public class MenuSeriesRelAccessor {
 
     public int insert(MenuSeriesRelPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getMenuCode());
         }
         return inserted;
@@ -46,7 +46,7 @@ public class MenuSeriesRelAccessor {
 
     public int deleteByMenuCode(String tenantCode, String menuCode) {
         int deleted = mapper.delete(tenantCode, menuCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, menuCode);
         }
         return deleted;

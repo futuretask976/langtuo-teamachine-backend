@@ -31,7 +31,7 @@ public class DrainRuleToppingAccessor {
 
     public int insert(DrainRuleToppingPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getDrainRuleCode());
         }
         return inserted;
@@ -39,7 +39,7 @@ public class DrainRuleToppingAccessor {
 
     public int deleteByDrainRuleCode(String tenantCode, String drainRuleCode) {
         int deleted = mapper.delete(tenantCode, drainRuleCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheList(tenantCode, drainRuleCode);
         }
         return deleted;

@@ -5,7 +5,6 @@ import com.langtuo.teamachine.dao.mapper.device.AndroidAppDispatchMapper;
 import com.langtuo.teamachine.dao.po.device.AndroidAppDispatchPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -34,7 +33,7 @@ public class AndroidAppDispatchAccessor {
 
     public int insert(AndroidAppDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getVersion());
         }
         return inserted;
@@ -42,7 +41,7 @@ public class AndroidAppDispatchAccessor {
 
     public int update(AndroidAppDispatchPO po) {
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getVersion());
         }
         return updated;
@@ -50,7 +49,7 @@ public class AndroidAppDispatchAccessor {
 
     public int deleteByVersion(String tenantCode, String version) {
         int deleted = mapper.delete(tenantCode, version);
-        if (deleted >= CommonConsts.DELETED_ZERO_ROW) {
+        if (deleted >= CommonConsts.DB_DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, version);
         }
         return deleted;

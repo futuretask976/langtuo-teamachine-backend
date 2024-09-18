@@ -32,7 +32,7 @@ public class ToppingBaseRuleAccessor {
 
     public int insert(ToppingBaseRulePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getTeaCode());
         }
         return inserted;
@@ -40,7 +40,7 @@ public class ToppingBaseRuleAccessor {
 
     public int deleteByTeaCode(String tenantCode, String teaCode) {
         int deleted = mapper.delete(tenantCode, teaCode);
-        if (deleted > CommonConsts.DELETED_ZERO_ROW) {
+        if (deleted > CommonConsts.DB_DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, teaCode);
         }
         return deleted;

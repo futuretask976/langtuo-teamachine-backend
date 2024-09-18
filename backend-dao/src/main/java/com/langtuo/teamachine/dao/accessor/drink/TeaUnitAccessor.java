@@ -36,7 +36,7 @@ public class TeaUnitAccessor {
 
     public int deleteByTeaCode(String tenantCode, String teaCode) {
         int deleted = mapper.delete(tenantCode, teaCode);
-        if (deleted > CommonConsts.DELETED_ZERO_ROW) {
+        if (deleted > CommonConsts.DB_DELETED_ZERO_ROW) {
             deleteCacheList(tenantCode, teaCode);
         }
         return deleted;

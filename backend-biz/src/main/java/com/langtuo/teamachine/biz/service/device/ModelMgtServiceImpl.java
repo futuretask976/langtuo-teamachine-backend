@@ -125,7 +125,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             }
 
             int inserted = modelAccessor.insert(po);
-            if (inserted != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("modelMgtService|putNewModel|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -133,7 +133,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             int deleted = modelPipelineAccessor.deleteByModelCode(po.getModelCode());
             for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
                 int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
-                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
                     log.error("modelMgtService|putNewPipeline|error|" + inserted);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
@@ -153,7 +153,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             }
 
             int updated = modelAccessor.update(po);
-            if (updated != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("modelMgtService|putUpdateModel|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -161,7 +161,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             int deleted = modelPipelineAccessor.deleteByModelCode(po.getModelCode());
             for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
                 int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
-                if (inserted4Pipeline != CommonConsts.NUM_ONE) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
                     log.error("modelMgtService|putUpdatePipeline|error|" + inserted4Pipeline);
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
@@ -181,13 +181,13 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         try {
             int countDeployByModelCode = deployAccessor.countByModelCode(modelCode);
-            if (CommonConsts.NUM_ZERO != countDeployByModelCode) {
+            if (CommonConsts.DB_COUNT_RESULT_ZERO != countDeployByModelCode) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
 
             int countMachineByModelCode = machineAccessor.countByModelCode(modelCode);
-            if (CommonConsts.NUM_ZERO != countMachineByModelCode) {
+            if (CommonConsts.DB_COUNT_RESULT_ZERO != countMachineByModelCode) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }

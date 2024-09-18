@@ -36,7 +36,7 @@ public class DrainRuleDispatchAccessor {
 
     public int insert(DrainRuleDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getDrainRuleCode());
         }
         return inserted;

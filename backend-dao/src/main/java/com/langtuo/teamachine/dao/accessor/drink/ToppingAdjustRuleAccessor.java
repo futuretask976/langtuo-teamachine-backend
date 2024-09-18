@@ -33,7 +33,7 @@ public class ToppingAdjustRuleAccessor {
 
     public int insert(ToppingAdjustRulePO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheList(po.getTenantCode(), po.getTeaCode(), po.getTeaUnitCode());
         }
         return inserted;
@@ -46,7 +46,7 @@ public class ToppingAdjustRuleAccessor {
                 .collect(Collectors.toList());
 
         int deleted = mapper.delete(tenantCode, teaCode);
-        if (deleted > CommonConsts.DELETED_ZERO_ROW) {
+        if (deleted > CommonConsts.DB_DELETED_ZERO_ROW) {
             for (String teaUnitCode : teaUnitCodeList) {
                 deleteCacheList(tenantCode, teaCode, teaUnitCode);
             }

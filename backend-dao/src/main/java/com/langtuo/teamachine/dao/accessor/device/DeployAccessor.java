@@ -6,7 +6,6 @@ import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.device.DeployMapper;
 import com.langtuo.teamachine.dao.mapper.record.MachineCodeSeqMapper;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
-import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.query.device.MachineDeployQuery;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
@@ -110,7 +109,7 @@ public class DeployAccessor {
 
     public int insert(DeployPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.INSERTED_ONE_ROW) {
+        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCountByModelCode(po.getModelCode());
@@ -121,11 +120,11 @@ public class DeployAccessor {
     public int update(DeployPO po) {
         DeployPO exist = mapper.selectOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
         if (exist == null) {
-            return CommonConsts.NUM_ZERO;
+            return CommonConsts.DB_UPDATED_ZERO_ROW;
         }
 
         int updated = mapper.update(po);
-        if (updated == CommonConsts.UPDATED_ONE_ROW) {
+        if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
             deleteCacheOne(po.getTenantCode(), po.getDeployCode(), po.getMachineCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCountByModelCode(exist.getModelCode());
@@ -137,14 +136,14 @@ public class DeployAccessor {
     public int deleteByDeployCode(String tenantCode, String deployCode) {
         DeployPO exist = getByDeployCode(tenantCode, deployCode);
         if (exist == null) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
         if (CommonConsts.DEPLOY_STATE_ENABLED == exist.getState()) {
-            return CommonConsts.DELETED_ZERO_ROW;
+            return CommonConsts.DB_DELETED_ZERO_ROW;
         }
 
         int deleted = mapper.delete(tenantCode, deployCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
+        if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
             deleteCacheOne(exist.getTenantCode(), exist.getDeployCode(), exist.getMachineCode());
             deleteCacheList(tenantCode);
             deleteCacheCountByModelCode(exist.getModelCode());
