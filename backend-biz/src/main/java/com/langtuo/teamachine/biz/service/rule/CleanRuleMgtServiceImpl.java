@@ -149,7 +149,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             }
 
             int inserted = cleanRuleAccessor.insert(po);
-            if (CommonConsts.NUM_ONE != inserted) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("cleanRuleMgtService|putNewCleanRule|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -157,7 +157,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
             for (CleanRuleStepPO stepPO : stepPOList) {
                 int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
-                if (CommonConsts.NUM_ONE != inserted4Step) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Step) {
                     log.error("cleanRuleMgtService|putNewStep|error|" + inserted4Step);
                 }
             }
@@ -166,7 +166,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     po.getCleanRuleCode());
             for (CleanRuleExceptPO exceptPO : exceptPOList) {
                 int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
-                if (CommonConsts.NUM_ONE != inserted) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                     log.error("cleanRuleMgtService|putNewExcept|error|" + inserted4Except);
                 }
             }
@@ -186,7 +186,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             }
 
             int updated = cleanRuleAccessor.update(po);
-            if (CommonConsts.NUM_ONE != updated) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("cleanRuleMgtService|putUpdateCleanRule|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
@@ -194,7 +194,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
             for (CleanRuleStepPO stepPO : stepPOList) {
                 int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
-                if (CommonConsts.NUM_ONE != inserted4Step) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Step) {
                     log.error("cleanRuleMgtService|putUpdateStep|error|" + inserted4Step);
                 }
             }
@@ -203,7 +203,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     po.getCleanRuleCode());
             for (CleanRuleExceptPO exceptPO : exceptPOList) {
                 int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
-                if (CommonConsts.NUM_ONE != inserted4Except) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Except) {
                     log.error("cleanRuleMgtService|putUpdateExcept|error|" + inserted4Except);
                 }
             }

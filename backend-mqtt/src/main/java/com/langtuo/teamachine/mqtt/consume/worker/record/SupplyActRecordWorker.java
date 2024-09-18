@@ -53,7 +53,7 @@ public class SupplyActRecordWorker implements Runnable {
             SupplyActRecordPO exist = supplyActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = supplyActRecordAccessor.insert(po);
-                if (CommonConsts.NUM_ONE != inserted) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                     log.error("supplyActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
                 }
             }

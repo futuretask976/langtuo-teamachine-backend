@@ -126,7 +126,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             }
 
             int inserted = adminAccessor.insert(po);
-            if (inserted != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("adminMgtService|putNew|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -153,7 +153,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             }
 
             int updated = adminAccessor.update(po);
-            if (updated != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("adminMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }

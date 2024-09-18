@@ -54,7 +54,7 @@ public class DrainActRecordWorker implements Runnable {
             DrainActRecordPO exist = drainActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = drainActRecordAccessor.insert(po);
-                if (CommonConsts.NUM_ONE != inserted) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                     log.error("drainActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
                 }
             }

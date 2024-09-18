@@ -114,7 +114,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             }
 
             int inserted = roleAccessor.insert(po);
-            if (CommonConsts.NUM_ONE != inserted) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("roleMgtService|putNewRole|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -122,7 +122,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(po.getTenantCode(), po.getRoleCode());
             for (RoleActRelPO actRelPO : actRelPOList) {
                 int inserted4actRel = roleActRelAccessor.insert(actRelPO);
-                if (CommonConsts.NUM_ONE != inserted) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                     log.error("roleMgtService|putNewActRel|error|" + inserted4actRel);
                 }
             }
@@ -148,7 +148,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             }
 
             int updated = roleAccessor.update(po);
-            if (CommonConsts.NUM_ONE != updated) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("roleMgtService|putUpdateRole|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -156,7 +156,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             int deleted4RoleActRel = roleActRelAccessor.deleteByRoleCode(po.getTenantCode(), po.getRoleCode());
             for (RoleActRelPO actRelPO : actRelPOList) {
                 int inserted4actRel = roleActRelAccessor.insert(actRelPO);
-                if (CommonConsts.NUM_ONE != updated) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4actRel) {
                     log.error("roleMgtService|putUpdateActRel|error|" + inserted4actRel);
                 }
             }

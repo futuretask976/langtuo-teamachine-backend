@@ -113,7 +113,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             }
 
             int inserted = shopGroupAccessor.insert(po);
-            if (CommonConsts.NUM_ONE != inserted) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("shopGroupMgtService|putNew|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -132,7 +132,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             }
 
             int updated = shopGroupAccessor.update(po);
-            if (CommonConsts.NUM_ONE != updated) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("shopGroupMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }

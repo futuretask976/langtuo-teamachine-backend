@@ -137,7 +137,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             }
 
             int inserted = warningRuleAccessor.insert(po);
-            if (CommonConsts.NUM_ONE != inserted) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("warningRuleMgtService|putNewWarningRule|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -157,7 +157,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             }
 
             int updated = warningRuleAccessor.update(po);
-            if (CommonConsts.NUM_ONE != updated) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("warningRuleMgtService|putUpdateWarningRule|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }

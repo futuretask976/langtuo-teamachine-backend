@@ -142,7 +142,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             }
 
             int inserted = drainRuleAccessor.insert(po);
-            if (CommonConsts.NUM_ONE != inserted) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("drainRuleMgtService|putNewDrainRule|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -150,7 +150,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
             for (DrainRuleToppingPO toppingPO : toppingPOList) {
                 int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
-                if (CommonConsts.NUM_ONE != inserted4Topping) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
                     log.error("drainRuleMgtService|putNewTopping|error|" + inserted4Topping);
                 }
             }
@@ -169,7 +169,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             }
 
             int updated = drainRuleAccessor.update(po);
-            if (CommonConsts.NUM_ONE != updated) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("drainRuleMgtService|putUpdateDrainRule|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -177,7 +177,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
             for (DrainRuleToppingPO toppingPO : toppingPOList) {
                 int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
-                if (CommonConsts.NUM_ONE != inserted4Topping) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
                     log.error("drainRuleMgtService|putUpdateTopping|error|" + inserted4Topping);
                 }
             }

@@ -54,7 +54,7 @@ public class CleanActRecordWorker implements Runnable {
             CleanActRecordPO exist = cleanActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = cleanActRecordAccessor.insert(po);
-                if (CommonConsts.NUM_ONE != inserted) {
+                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                     log.error("cleanActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
                 }
             }

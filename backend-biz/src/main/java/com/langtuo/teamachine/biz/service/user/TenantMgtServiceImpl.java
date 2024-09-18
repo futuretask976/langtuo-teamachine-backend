@@ -109,7 +109,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             }
 
             int inserted = tenantAccessor.insert(po);
-            if (inserted != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("tenantMgtService|putNew|error|" + inserted);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
@@ -128,7 +128,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             }
 
             int updated = tenantAccessor.update(po);
-            if (updated != CommonConsts.NUM_ONE) {
+            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("tenantMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
