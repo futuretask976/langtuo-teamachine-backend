@@ -2,6 +2,7 @@ package com.langtuo.teamachine.dao.accessor.menu;
 
 import com.langtuo.teamachine.dao.cache.RedisManager;
 import com.langtuo.teamachine.dao.mapper.menu.SeriesTeaRelMapper;
+import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.po.menu.SeriesTeaRelPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
@@ -32,15 +33,7 @@ public class SeriesTeaRelAccessor {
     }
 
     public int countByTeaCode(String tenantCode, String teaCode) {
-        // 首先访问缓存
-        Integer cached = getCacheCount(tenantCode, teaCode);
-        if (cached != null) {
-            return cached;
-        }
-
         int count = mapper.countByTeaCode(tenantCode, teaCode);
-
-        setCacheCount(tenantCode, teaCode, count);
         return count;
     }
 
@@ -62,22 +55,6 @@ public class SeriesTeaRelAccessor {
 
     private String getCacheListKey(String tenantCode, String seriesCode) {
         return "seriesTeaRelAcc-" + tenantCode + "-" + seriesCode;
-    }
-
-    private String getCacheCountKey(String tenantCode, String teaCode) {
-        return "seriesTeaRelAcc-cnt-" + tenantCode + "-" + teaCode;
-    }
-
-    private Integer getCacheCount(String tenantCode, String teaCode) {
-        String key = getCacheCountKey(tenantCode, teaCode);
-        Object cached = redisManager.getValue(key);
-        Integer count = (Integer) cached;
-        return count;
-    }
-
-    private void setCacheCount(String tenantCode, String teaCode, Integer count) {
-        String key = getCacheCountKey(tenantCode, teaCode);
-        redisManager.setValue(key, count);
     }
 
     private List<SeriesTeaRelPO> getCacheList(String tenantCode, String seriesCode) {

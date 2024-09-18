@@ -27,9 +27,6 @@
             <if test="teaCode != null">
                 AND tea_code = #{teaCode}
             </if>
-            <if test="teaName != null">
-                AND tea_name = #{teaName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="teaPOMap">

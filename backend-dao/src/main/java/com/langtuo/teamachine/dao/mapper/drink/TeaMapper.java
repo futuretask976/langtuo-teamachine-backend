@@ -20,8 +20,7 @@ public interface TeaMapper {
      * @param teaCode
      * @return
      */
-    TeaPO selectOne(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
-            @Param("teaName") String teaName);
+    TeaPO selectOne(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
 
     /**
      *

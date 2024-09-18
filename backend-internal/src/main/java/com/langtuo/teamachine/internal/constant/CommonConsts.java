@@ -249,6 +249,7 @@ public class CommonConsts {
     public static final String BIZ_CODE_ANDROID_APP_DISPATCHED = "androidAppDispatched";
     public static final String BIZ_CODE_TENANT_UPDATED = "tenantUpdated";
     public static final String BIZ_CODE_ACCURACY_TPL_UPDATED = "accuracyTplUpdated";
+    public static final String BIZ_CODE_ACCURACY_TPL_DELETED = "accuracyTplDeleted";
     public static final String BIZ_CODE_MENU_DISPATCH_REQUESTED = "menuDispatchRequested";
     public static final String BIZ_CODE_MENU_LIST_REQUESTED = "menuListRequested";
     public static final String BIZ_CODE_DRAIN_RULE_DISPATCH_REQUESTED = "drainRuleDispatchRequested";
@@ -259,6 +260,7 @@ public class CommonConsts {
      * dispatch 用的消息 bizCode
      */
     public static final String BIZ_CODE_DISPATCH_ACCURACY = "dispatchAccuracy";
+    public static final String BIZ_CODE_DELETE_ACCURACY = "deleteAccuracy";
     public static final String BIZ_CODE_DISPATCH_CLEAN_RULE = "dispatchCleanRule";
     public static final String BIZ_CODE_DISPATCH_MACHINE = "dispatchMachine";
     public static final String BIZ_CODE_DISPATCH_MENU = "dispatchMenu";

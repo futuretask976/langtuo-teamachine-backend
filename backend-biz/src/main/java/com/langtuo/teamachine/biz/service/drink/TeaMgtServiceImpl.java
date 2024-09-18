@@ -73,18 +73,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     }
 
     @Override
-    public TeaMachineResult<TeaDTO> getByName(String tenantCode, String teaName) {
-        try {
-            TeaPO po = teaAccessor.getByTeaName(tenantCode, teaName);
-            TeaDTO dto = convertToTeaDTO(po, true);
-            return TeaMachineResult.success(dto);
-        } catch (Exception e) {
-            log.error("teaMgtService|getByName|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-    }
-
-    @Override
     public TeaMachineResult<List<TeaDTO>> list(String tenantCode) {
         try {
             List<TeaPO> teaPOList = teaAccessor.list(tenantCode);

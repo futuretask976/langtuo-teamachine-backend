@@ -6,6 +6,7 @@ import com.langtuo.teamachine.biz.aync.threadpool.AsyncExeService;
 import com.langtuo.teamachine.biz.aync.worker.device.AndroidAppDispatchWorker;
 import com.langtuo.teamachine.biz.aync.worker.device.MachineDispatchWorker;
 import com.langtuo.teamachine.biz.aync.worker.device.ModelDispatchWorker;
+import com.langtuo.teamachine.biz.aync.worker.drink.AccuracyTplDeleteWorker;
 import com.langtuo.teamachine.biz.aync.worker.drink.AccuracyTplDispatchWorker;
 import com.langtuo.teamachine.biz.aync.worker.menu.MenuDispatch4InitWorker;
 import com.langtuo.teamachine.biz.aync.worker.menu.MenuDispatchWorker;
@@ -65,6 +66,7 @@ public class AsyncDispatcher implements InitializingBean {
         workerMap.put(CommonConsts.BIZ_CODE_ANDROID_APP_DISPATCHED, jsonPayload -> new AndroidAppDispatchWorker(jsonPayload));
         // drink 相关
         workerMap.put(CommonConsts.BIZ_CODE_ACCURACY_TPL_UPDATED, jsonPayload -> new AccuracyTplDispatchWorker(jsonPayload));
+        workerMap.put(CommonConsts.BIZ_CODE_ACCURACY_TPL_DELETED, jsonPayload -> new AccuracyTplDeleteWorker(jsonPayload));
         // menu 相关
         workerMap.put(CommonConsts.BIZ_CODE_MENU_DISPATCH_REQUESTED, jsonPayload -> new MenuDispatchWorker(jsonPayload));
         workerMap.put(CommonConsts.BIZ_CODE_MENU_LIST_REQUESTED, jsonPayload -> new MenuDispatch4InitWorker(jsonPayload));

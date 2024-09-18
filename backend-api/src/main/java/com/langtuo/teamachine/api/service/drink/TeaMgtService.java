@@ -18,13 +18,6 @@ public interface TeaMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<TeaDTO> getByName(String tenantCode, String teaName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<TeaDTO>> search(String tenantCode, String teaCode, String teaName,

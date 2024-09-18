@@ -23,29 +23,15 @@ public class TeaAccessor {
 
     public TeaPO getByTeaCode(String tenantCode, String teaCode) {
         // 首先访问缓存
-        TeaPO cached = getCache(tenantCode, teaCode, null);
+        TeaPO cached = getCache(tenantCode, teaCode);
         if (cached != null) {
             return cached;
         }
 
-        TeaPO po = mapper.selectOne(tenantCode, teaCode, null);
+        TeaPO po = mapper.selectOne(tenantCode, teaCode);
 
         // 设置缓存
-        setCachedTea(tenantCode, teaCode, null, po);
-        return po;
-    }
-
-    public TeaPO getByTeaName(String tenantCode, String teaName) {
-        // 首先访问缓存
-        TeaPO cached = getCache(tenantCode, null, teaName);
-        if (cached != null) {
-            return cached;
-        }
-
-        TeaPO po = mapper.selectOne(tenantCode, null, teaName);
-
-        // 设置缓存
-        setCachedTea(tenantCode, null, teaName, po);
+        setCachedTea(tenantCode, teaCode, po);
         return po;
     }
 
@@ -87,14 +73,14 @@ public class TeaAccessor {
     }
 
     public int update(TeaPO po) {
-        TeaPO exist = mapper.selectOne(po.getTenantCode(), po.getTeaCode(), po.getTeaName());
+        TeaPO exist = mapper.selectOne(po.getTenantCode(), po.getTeaCode());
         if (exist == null) {
             return CommonConsts.NUM_ZERO;
         }
 
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getTeaCode(), po.getTeaName());
+            deleteCacheOne(po.getTenantCode(), po.getTeaCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(exist.getTenantCode(), exist.getTeaTypeCode());
             deleteCacheCount(po.getTenantCode(), po.getTeaTypeCode());
@@ -110,7 +96,7 @@ public class TeaAccessor {
 
         int deleted = mapper.delete(tenantCode, teaCode);
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getTeaCode(), po.getTeaName());
+            deleteCacheOne(po.getTenantCode(), po.getTeaCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(po.getTenantCode(), po.getTeaTypeCode());
         }
@@ -146,16 +132,16 @@ public class TeaAccessor {
         redisManager.setValue(key, count);
     }
 
-    private String getCacheKey(String tenantCode, String teaCode, String teaName) {
-        return "teaAcc-" + tenantCode + "-" + teaCode + "-" + teaName;
+    private String getCacheKey(String tenantCode, String teaCode) {
+        return "teaAcc-" + tenantCode + "-" + teaCode;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "teaAcc-" + tenantCode;
     }
 
-    private TeaPO getCache(String tenantCode, String teaCode, String teaName) {
-        String key = getCacheKey(tenantCode, teaCode, teaName);
+    private TeaPO getCache(String tenantCode, String teaCode) {
+        String key = getCacheKey(tenantCode, teaCode);
         Object cached = redisManager.getValue(key);
         TeaPO po = (TeaPO) cached;
         return po;
@@ -173,14 +159,13 @@ public class TeaAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCachedTea(String tenantCode, String teaCode, String teaName, TeaPO po) {
-        String key = getCacheKey(tenantCode, teaCode, teaName);
+    private void setCachedTea(String tenantCode, String teaCode, TeaPO po) {
+        String key = getCacheKey(tenantCode, teaCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheOne(String tenantCode, String teaCode, String teaName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, teaCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, teaName));
+    private void deleteCacheOne(String tenantCode, String teaCode) {
+        redisManager.deleteKey(getCacheKey(tenantCode, teaCode));
     }
 
     private void deleteCacheList(String tenantCode) {
