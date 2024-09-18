@@ -22,24 +22,13 @@ public class CleanRuleAccessor {
     private RedisManager redisManager;
 
     public CleanRulePO getByCleanRuleCode(String tenantCode, String cleanRuleCode) {
-        CleanRulePO cached = setCache(tenantCode, cleanRuleCode, null);
+        CleanRulePO cached = setCache(tenantCode, cleanRuleCode);
         if (cached != null) {
             return cached;
         }
 
-        CleanRulePO po = mapper.selectOne(tenantCode, cleanRuleCode, null);
-        setCache(tenantCode, cleanRuleCode, null, po);
-        return po;
-    }
-
-    public CleanRulePO selectOneByCleanRuleName(String tenantCode, String cleanRuleName) {
-        CleanRulePO cached = setCache(tenantCode, null, cleanRuleName);
-        if (cached != null) {
-            return cached;
-        }
-
-        CleanRulePO po = mapper.selectOne(tenantCode, null, cleanRuleName);
-        setCache(tenantCode, null, cleanRuleName, po);
+        CleanRulePO po = mapper.selectOne(tenantCode, cleanRuleCode);
+        setCache(tenantCode, cleanRuleCode, po);
         return po;
     }
 
@@ -109,16 +98,16 @@ public class CleanRuleAccessor {
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String cleanRuleCode, String cleanRuleName) {
-        return "cleanRuleAcc-" + tenantCode + "-" + cleanRuleCode + "-" + cleanRuleName;
+    private String getCacheKey(String tenantCode, String cleanRuleCode) {
+        return "cleanRuleAcc-" + tenantCode + "-" + cleanRuleCode;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "cleanRuleAcc-" + tenantCode;
     }
 
-    private CleanRulePO setCache(String tenantCode, String cleanRuleCode, String cleanRuleName) {
-        String key = getCacheKey(tenantCode, cleanRuleCode, cleanRuleName);
+    private CleanRulePO setCache(String tenantCode, String cleanRuleCode) {
+        String key = getCacheKey(tenantCode, cleanRuleCode);
         Object cached = redisManager.getValue(key);
         CleanRulePO po = (CleanRulePO) cached;
         return po;
@@ -136,14 +125,13 @@ public class CleanRuleAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String cleanRuleCode, String cleanRuleName, CleanRulePO po) {
-        String key = getCacheKey(tenantCode, cleanRuleCode, cleanRuleName);
+    private void setCache(String tenantCode, String cleanRuleCode, CleanRulePO po) {
+        String key = getCacheKey(tenantCode, cleanRuleCode);
         redisManager.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String cleanRuleCode, String cleanRuleName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, cleanRuleCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, cleanRuleName));
+        redisManager.deleteKey(getCacheKey(tenantCode, cleanRuleCode));
     }
 
     private void deleteCacheList(String tenantCode) {

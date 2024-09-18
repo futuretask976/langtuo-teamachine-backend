@@ -49,13 +49,6 @@ public class AccuracyTplDeleteWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        AccuracyTplMgtService accuracyTplMgtService = SpringServiceUtils.getToppingAccuracyTplMgtService();
-        AccuracyTplDTO dto = getModel(accuracyTplMgtService.getByCode(tenantCode, templateCode));
-        if (dto == null) {
-            log.error("accuracyTplDispatchWorker|getTpl|error|stopWorker|" + dto);
-            return null;
-        }
-
         JSONObject jsonDeleteCont = new JSONObject();
         jsonDeleteCont.put(CommonConsts.JSON_KEY_TEMPLATE_CODE, templateCode);
         return jsonDeleteCont;

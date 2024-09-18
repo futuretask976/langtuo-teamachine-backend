@@ -33,21 +33,14 @@ public class MenuDispatchAccessor {
     }
 
     public List<MenuDispatchPO> listByShopGroupCode(String tenantCode, String shopGroupCode) {
-        List<MenuDispatchPO> cached = getCacheListByShopGroupCode(tenantCode, shopGroupCode);
-        if (cached != null) {
-            return cached;
-        }
-
         List<MenuDispatchPO> list = mapper.selectListByShopGroupCode(tenantCode, shopGroupCode);
-
-        setCacheListByShopGroupCode(tenantCode, shopGroupCode, list);
         return list;
     }
 
     public int insert(MenuDispatchPO po) {
         int inserted = mapper.insert(po);
         if (inserted == CommonConsts.INSERTED_ONE_ROW) {
-            deleteCacheList(po.getTenantCode(), po.getMenuCode(), po.getShopGroupCode());
+            deleteCacheList(po.getTenantCode(), po.getMenuCode());
         }
         return inserted;
     }
@@ -55,21 +48,15 @@ public class MenuDispatchAccessor {
     public int update(MenuDispatchPO po) {
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
-            deleteCacheList(po.getTenantCode(), po.getMenuCode(), po.getShopGroupCode());
+            deleteCacheList(po.getTenantCode(), po.getMenuCode());
         }
         return updated;
     }
 
     public int deleteByMenuCode(String tenantCode, String menuCode) {
-        List<MenuDispatchPO> existList = listByMenuCode(tenantCode, menuCode);
-        if (CollectionUtils.isEmpty(existList)) {
-            return CommonConsts.DELETED_ZERO_ROW;
-        }
-        String shopGroupCode = existList.get(0).getShopGroupCode();
-
         int deleted = mapper.delete(tenantCode, menuCode);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
-            deleteCacheList(tenantCode, menuCode, shopGroupCode);
+        if (deleted >= CommonConsts.DELETED_ONE_ROW) {
+            deleteCacheList(tenantCode, menuCode);
         }
         return deleted;
     }
@@ -78,19 +65,8 @@ public class MenuDispatchAccessor {
         return "menuDispatchAcc-" + tenantCode + "-" + menuCode;
     }
 
-    private String getCacheListKeyByShopGroupCode(String tenantCode, String shopGroupCode) {
-        return "menuDispatchAcc-byShopGroupCode-" + tenantCode + "-" + shopGroupCode;
-    }
-
     private List<MenuDispatchPO> getCacheList(String tenantCode, String menuCode) {
         String key = getCacheListKey(tenantCode, menuCode);
-        Object cached = redisManager.getValue(key);
-        List<MenuDispatchPO> poList = (List<MenuDispatchPO>) cached;
-        return poList;
-    }
-
-    private List<MenuDispatchPO> getCacheListByShopGroupCode(String tenantCode, String shopGroupCode) {
-        String key = getCacheListKey(tenantCode, shopGroupCode);
         Object cached = redisManager.getValue(key);
         List<MenuDispatchPO> poList = (List<MenuDispatchPO>) cached;
         return poList;
@@ -101,13 +77,7 @@ public class MenuDispatchAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCacheListByShopGroupCode(String tenantCode, String shopGroupCode, List<MenuDispatchPO> poList) {
-        String key = getCacheListKeyByShopGroupCode(tenantCode, shopGroupCode);
-        redisManager.setValue(key, poList);
-    }
-
-    private void deleteCacheList(String tenantCode, String menuCode, String shopGroupCode) {
+    private void deleteCacheList(String tenantCode, String menuCode) {
         redisManager.deleteKey(getCacheListKey(tenantCode, menuCode));
-        redisManager.deleteKey(getCacheListKeyByShopGroupCode(tenantCode, shopGroupCode));
     }
 }

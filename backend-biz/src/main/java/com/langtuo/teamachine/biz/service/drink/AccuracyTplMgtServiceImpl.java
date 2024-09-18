@@ -185,6 +185,14 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
         try {
             int deleted = accuracyTplAccessor.deleteByTplCode(tenantCode, templateCode);
+
+            // 异步发送消息准备配置信息分发
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_ACCURACY_TPL_DELETED);
+            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, tenantCode);
+            jsonPayload.put(CommonConsts.JSON_KEY_TEMPLATE_CODE, templateCode);
+            asyncDispatcher.dispatch(jsonPayload);
+
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("accuracyTplMgtService|delete|fatal|" + e.getMessage(), e);

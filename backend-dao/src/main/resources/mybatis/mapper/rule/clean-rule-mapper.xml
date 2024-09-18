@@ -25,9 +25,6 @@
             <if test="cleanRuleCode != null">
                 AND clean_rule_code = #{cleanRuleCode}
             </if>
-            <if test="cleanRuleName != null">
-                AND clean_rule_name = #{cleanRuleName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="cleanRulePOMap">

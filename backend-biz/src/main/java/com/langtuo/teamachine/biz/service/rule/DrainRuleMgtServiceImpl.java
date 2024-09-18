@@ -22,8 +22,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -52,65 +50,43 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
-    
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<DrainRuleDTO> getByCode(String tenantCode, String drainRuleCode) {
-        TeaMachineResult<DrainRuleDTO> teaMachineResult;
         try {
             DrainRulePO po = drainRuleAccessor.getByDrainRuleCode(tenantCode, drainRuleCode);
             DrainRuleDTO dto = convert(po);
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("drainRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
-    }
-
-    @Override
-    public TeaMachineResult<DrainRuleDTO> getByName(String tenantCode, String openRuleName) {
-        TeaMachineResult<DrainRuleDTO> teaMachineResult;
-        try {
-            DrainRulePO po = drainRuleAccessor.getByDrainRuleName(tenantCode, openRuleName);
-            DrainRuleDTO dto = convert(po);
-            teaMachineResult = TeaMachineResult.success(dto);
-        } catch (Exception e) {
-            log.error("drainRuleMgtService|getByName|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<DrainRuleDTO>> list(String tenantCode) {
-        TeaMachineResult<List<DrainRuleDTO>> teaMachineResult;
         try {
             List<DrainRulePO> poList = drainRuleAccessor.list(tenantCode);
             List<DrainRuleDTO> dtoList = convertToDrainRuleDTO(poList);
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("drainRuleMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<DrainRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
-        TeaMachineResult<List<DrainRuleDTO>> teaMachineResult;
         try {
             ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
             if (shopPO == null) {
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             }
 
             List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.listByShopGroupCode(
                     tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(drainRuleDispatchPOList)) {
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             }
 
             List<String> drainRuleCodeList = drainRuleDispatchPOList.stream()
@@ -119,12 +95,11 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             List<DrainRulePO> cleanRulePOList = drainRuleAccessor.listByDrainRuleCode(tenantCode,
                     drainRuleCodeList);
             List<DrainRuleDTO> drainRuleDTOList = convertToDrainRuleDTO(cleanRulePOList);
-            teaMachineResult = TeaMachineResult.success(drainRuleDTOList);
+            return TeaMachineResult.success(drainRuleDTOList);
         } catch (Exception e) {
             log.error("drainRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -133,17 +108,15 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<DrainRuleDTO>> teaMachineResult;
         try {
             PageInfo<DrainRulePO> pageInfo = drainRuleAccessor.search(tenantCode, openRuleCode,
                     openRuleName, pageNum, pageSize);
             List<DrainRuleDTO> dtoList = convertToDrainRuleDTO(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("drainRuleMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -225,12 +198,12 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         try {
             int deleted = drainRuleAccessor.deleteByDrainRuleCode(tenantCode, openRuleCode);
             int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(tenantCode, openRuleCode);
-            teaMachineResult = TeaMachineResult.success();
+            int deleted4Dispatch = drainRuleDispatchAccessor.deleteByDrainRuleCode(tenantCode, openRuleCode);
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("drainRuleMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -240,32 +213,29 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         }
 
         List<DrainRuleDispatchPO> poList = convert(request);
-        TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = drainRuleDispatchAccessor.deleteByCleanRuleCode(request.getTenantCode(),
+            int deleted = drainRuleDispatchAccessor.deleteByDrainRuleCode(request.getTenantCode(),
                     request.getDrainRuleCode());
             for (DrainRuleDispatchPO po : poList) {
                 drainRuleDispatchAccessor.insert(po);
             }
-            teaMachineResult = TeaMachineResult.success();
+
+            // 异步发送消息准备配置信息分发
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DRAIN_RULE_DISPATCH_REQUESTED);
+            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
+            jsonPayload.put(CommonConsts.JSON_KEY_DRAIN_RULE_CODE, request.getDrainRuleCode());
+            asyncDispatcher.dispatch(jsonPayload);
+
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("drainRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-
-        // 异步发送消息准备配置信息分发
-        JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DRAIN_RULE_DISPATCH_REQUESTED);
-        jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
-        jsonPayload.put(CommonConsts.JSON_KEY_DRAIN_RULE_CODE, request.getDrainRuleCode());
-        asyncDispatcher.dispatch(jsonPayload);
-
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByDrainRuleCode(String tenantCode, String openRuleCode) {
-        TeaMachineResult<DrainRuleDispatchDTO> teaMachineResult;
         try {
             DrainRuleDispatchDTO dto = new DrainRuleDispatchDTO();
             dto.setDrainRuleCode(openRuleCode);
@@ -277,12 +247,11 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
                         .collect(Collectors.toList()));
             }
 
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("drainRuleMgtService|getDispatchByDrainRuleCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<DrainRuleDTO> convertToDrainRuleDTO(List<DrainRulePO> poList) {

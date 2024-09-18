@@ -20,8 +20,7 @@ public interface WarningRuleMapper {
      * @param warningRuleCode
      * @return
      */
-    WarningRulePO selectOne(@Param("tenantCode") String tenantCode, @Param("warningRuleCode") String warningRuleCode,
-            @Param("warningRuleName") String warningRuleName);
+    WarningRulePO selectOne(@Param("tenantCode") String tenantCode, @Param("warningRuleCode") String warningRuleCode);
 
     /**
      *

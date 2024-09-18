@@ -21,8 +21,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -45,35 +43,16 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     @Resource
     private AsyncDispatcher asyncDispatcher;
 
-    @Autowired
-    private MessageSource messageSource;
-
     @Override
     public TeaMachineResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
-        TeaMachineResult<WarningRuleDTO> teaMachineResult;
         try {
             WarningRulePO po = warningRuleAccessor.getByWarningRuleCode(tenantCode, warningRuleCode);
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("warningRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
-    }
-
-    @Override
-    public TeaMachineResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName) {
-        TeaMachineResult<WarningRuleDTO> teaMachineResult;
-        try {
-            WarningRulePO po = warningRuleAccessor.getByWarningRuleName(tenantCode, warningRuleName);
-            WarningRuleDTO dto = convertToWarningRuleDTO(po);
-            teaMachineResult = TeaMachineResult.success(dto);
-        } catch (Exception e) {
-            log.error("warningRuleMgtService|getByName|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-        return teaMachineResult;
     }
 
     @Override
@@ -82,12 +61,11 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         try {
             List<WarningRulePO> poList = warningRuleAccessor.list(tenantCode);
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(poList);
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("warningRuleMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -96,13 +74,13 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         try {
             ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
             if (shopPO == null) {
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             }
 
             List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.listByShopGroupCode(
                     tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             }
 
             List<String> warningRuleCodeList = warningRuleDispatchPOList.stream()
@@ -111,12 +89,11 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRulePO> warningRulePOList = warningRuleAccessor.listByWarningRuleCode(tenantCode,
                     warningRuleCodeList);
             List<WarningRuleDTO> drainRuleDTOList = convertToWarningRuleDTO(warningRulePOList);
-            teaMachineResult = TeaMachineResult.success(drainRuleDTOList);
+            return TeaMachineResult.success(drainRuleDTOList);
         } catch (Exception e) {
             log.error("warningRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -130,12 +107,11 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             PageInfo<WarningRulePO> pageInfo = warningRuleAccessor.search(tenantCode, warningRuleCode,
                     warningRuleName, pageNum, pageSize);
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("warningRuleMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -198,15 +174,13 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = warningRuleAccessor.deleteByWarningRuleCode(tenantCode, warningRuleCode);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("warningRuleMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -216,32 +190,29 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         }
 
         List<WarningRuleDispatchPO> poList = convertToWarningRuleDTO(request);
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = warningRuleDispatchAccessor.deleteByWarningRuleCode(request.getTenantCode(),
                     request.getWarningRuleCode());
             for (WarningRuleDispatchPO po : poList) {
                 warningRuleDispatchAccessor.insert(po);
             }
-            teaMachineResult = TeaMachineResult.success();
+
+            // 异步发送消息准备配置信息分发
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_WARNING_RULE_DISPATCH_REQUESTED);
+            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
+            jsonPayload.put(CommonConsts.JSON_KEY_WARNING_RULE_CODE, request.getWarningRuleCode());
+            asyncDispatcher.dispatch(jsonPayload);
+
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("warningRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-
-        // 异步发送消息准备配置信息分发
-        JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_WARNING_RULE_DISPATCH_REQUESTED);
-        jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
-        jsonPayload.put(CommonConsts.JSON_KEY_WARNING_RULE_CODE, request.getWarningRuleCode());
-        asyncDispatcher.dispatch(jsonPayload);
-
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByWarningRuleCode(String tenantCode, String warningRuleCode) {
-        TeaMachineResult<WarningRuleDispatchDTO> teaMachineResult;
         try {
             WarningRuleDispatchDTO dto = new WarningRuleDispatchDTO();
             dto.setWarningRuleCode(warningRuleCode);
@@ -253,12 +224,11 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
                         .collect(Collectors.toList()));
             }
 
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("warningRuleMgtService|getDispatchByWarningRuleCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<WarningRuleDTO> convertToWarningRuleDTO(List<WarningRulePO> poList) {

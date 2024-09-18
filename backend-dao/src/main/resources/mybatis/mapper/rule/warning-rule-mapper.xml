@@ -27,9 +27,6 @@
             <if test="warningRuleCode !=null">
                 AND warning_rule_code = #{warningRuleCode}
             </if>
-            <if test="warningRuleName !=null">
-                AND warning_rule_name = #{warningRuleName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="warningRulePOMap">

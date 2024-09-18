@@ -26,8 +26,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -57,64 +55,42 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     @Resource
     private AsyncDispatcher asyncDispatcher;
 
-    @Autowired
-    private MessageSource messageSource;
-
     @Override
     public TeaMachineResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
-        TeaMachineResult<CleanRuleDTO> teaMachineResult;
         try {
             CleanRulePO po = cleanRuleAccessor.getByCleanRuleCode(tenantCode, cleanRuleCode);
             CleanRuleDTO dto = convert(po);
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("cleanRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
-    }
-
-    @Override
-    public TeaMachineResult<CleanRuleDTO> getByName(String tenantCode, String cleanRuleName) {
-        TeaMachineResult<CleanRuleDTO> teaMachineResult;
-        try {
-            CleanRulePO po = cleanRuleAccessor.selectOneByCleanRuleName(tenantCode, cleanRuleName);
-            CleanRuleDTO dto = convert(po);
-            teaMachineResult = TeaMachineResult.success(dto);
-        } catch (Exception e) {
-            log.error("cleanRuleMgtService|getByName|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<CleanRuleDTO>> list(String tenantCode) {
-        TeaMachineResult<List<CleanRuleDTO>> teaMachineResult;
         try {
             List<CleanRulePO> cleanRulePOList = cleanRuleAccessor.selectList(tenantCode);
             List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
-            teaMachineResult = TeaMachineResult.success(cleanRuleDTOList);
+            return TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
             log.error("cleanRuleMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
-        TeaMachineResult<List<CleanRuleDTO>> teaMachineResult;
         try {
             ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
             if (shopPO == null) {
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             }
 
             List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.listByShopGroupCode(
                     tenantCode, shopPO.getShopGroupCode());
             if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             }
 
             List<String> cleanRuleCodeList = cleanRuleDispatchPOList.stream()
@@ -123,12 +99,11 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             List<CleanRulePO> cleanRulePOList = cleanRuleAccessor.selectListByCleanRuleCode(tenantCode,
                     cleanRuleCodeList);
             List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
-            teaMachineResult = TeaMachineResult.success(cleanRuleDTOList);
+            return TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
             log.error("cleanRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -137,18 +112,16 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<CleanRuleDTO>> teaMachineResult;
         try {
             PageInfo<CleanRulePO> pageInfo = cleanRuleAccessor.search(tenantCode, cleanRuleCode, cleanRuleName,
                     pageNum, pageSize);
             List<CleanRuleDTO> dtoList = convertToCleanRuleDTO(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("cleanRuleMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -247,17 +220,16 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = cleanRuleAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
             int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
             int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
-            teaMachineResult = TeaMachineResult.success();
+            int deleted4Dispatch = cleanRuleDispatchAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("cleanRuleMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -274,25 +246,23 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             for (CleanRuleDispatchPO po : poList) {
                 cleanRuleDispatchAccessor.insert(po);
             }
-            teaMachineResult = TeaMachineResult.success();
+
+            // 异步发送消息准备配置信息分发
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_CLEAN_RULE_DISPATCH_REQUESTED);
+            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
+            jsonPayload.put(CommonConsts.JSON_KEY_CLEAN_RULE_CODE, request.getCleanRuleCode());
+            asyncDispatcher.dispatch(jsonPayload);
+
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("cleanRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-
-        // 异步发送消息准备配置信息分发
-        JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_CLEAN_RULE_DISPATCH_REQUESTED);
-        jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
-        jsonPayload.put(CommonConsts.JSON_KEY_CLEAN_RULE_CODE, request.getCleanRuleCode());
-        asyncDispatcher.dispatch(jsonPayload);
-
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<CleanRuleDispatchDTO> getDispatchByCleanRuleCode(String tenantCode, String cleanRuleCode) {
-        TeaMachineResult<CleanRuleDispatchDTO> teaMachineResult;
         try {
             CleanRuleDispatchDTO dto = new CleanRuleDispatchDTO();
             dto.setCleanRuleCode(cleanRuleCode);
@@ -304,12 +274,11 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                         .collect(Collectors.toList()));
             }
 
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("cleanRuleMgtService|getDispatchByCleanRuleCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<CleanRuleDTO> convertToCleanRuleDTO(List<CleanRulePO> poList) {

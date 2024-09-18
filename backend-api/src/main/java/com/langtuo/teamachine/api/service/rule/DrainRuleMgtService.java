@@ -19,13 +19,6 @@ public interface DrainRuleMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<DrainRuleDTO> getByName(String tenantCode, String drainRuleName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<DrainRuleDTO>> search(String tenantCode, String drainRuleCode, String drainRuleName,

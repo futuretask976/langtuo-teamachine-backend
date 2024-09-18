@@ -234,16 +234,15 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted4Series = menuAccessor.deleteByMenuCode(tenantCode, menuCode);
             int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteByMenuCode(tenantCode, menuCode);
-            teaMachineResult = TeaMachineResult.success();
+            int deleted4Dispatch = menuDispatchAccessor.deleteByMenuCode(tenantCode, menuCode);
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override

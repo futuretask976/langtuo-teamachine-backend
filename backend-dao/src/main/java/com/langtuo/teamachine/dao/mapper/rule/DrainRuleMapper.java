@@ -18,11 +18,9 @@ public interface DrainRuleMapper {
      *
      * @param tenantCode
      * @param drainRuleCode
-     * @param drainRuleName
      * @return
      */
-    DrainRulePO selectOne(@Param("tenantCode") String tenantCode, @Param("drainRuleCode") String drainRuleCode,
-            @Param("drainRuleName") String drainRuleName);
+    DrainRulePO selectOne(@Param("tenantCode") String tenantCode, @Param("drainRuleCode") String drainRuleCode);
 
     /**
      *

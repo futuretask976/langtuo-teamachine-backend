@@ -19,13 +19,6 @@ public interface WarningRuleMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<WarningRuleDTO> getByName(String tenantCode, String warningRuleName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<WarningRuleDTO>> search(String tenantCode, String warningRuleCode, String warningRuleName,

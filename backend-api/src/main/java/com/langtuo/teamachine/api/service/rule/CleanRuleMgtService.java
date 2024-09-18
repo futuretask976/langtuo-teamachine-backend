@@ -19,13 +19,6 @@ public interface CleanRuleMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<CleanRuleDTO> getByName(String tenantCode, String cleanRuleName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<CleanRuleDTO>> search(String tenantCode, String cleanRuleCode, String cleanRuleName,

@@ -20,8 +20,7 @@ public interface CleanRuleMapper {
      * @param cleanRuleCode
      * @return
      */
-    CleanRulePO selectOne(@Param("tenantCode") String tenantCode, @Param("cleanRuleCode") String cleanRuleCode,
-            @Param("cleanRuleName") String cleanRuleName);
+    CleanRulePO selectOne(@Param("tenantCode") String tenantCode, @Param("cleanRuleCode") String cleanRuleCode);
 
     /**
      *

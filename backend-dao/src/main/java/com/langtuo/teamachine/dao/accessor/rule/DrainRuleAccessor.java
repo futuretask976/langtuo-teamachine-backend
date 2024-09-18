@@ -22,24 +22,13 @@ public class DrainRuleAccessor {
     private RedisManager redisManager;
 
     public DrainRulePO getByDrainRuleCode(String tenantCode, String drainRuleCode) {
-        DrainRulePO cached = setCache(tenantCode, drainRuleCode, null);
+        DrainRulePO cached = setCache(tenantCode, drainRuleCode);
         if (cached != null) {
             return cached;
         }
 
-        DrainRulePO po = mapper.selectOne(tenantCode, drainRuleCode, null);
-        setCache(tenantCode, drainRuleCode, null, po);
-        return po;
-    }
-
-    public DrainRulePO getByDrainRuleName(String tenantCode, String drainRuleName) {
-        DrainRulePO cached = setCache(tenantCode, null, drainRuleName);
-        if (cached != null) {
-            return cached;
-        }
-
-        DrainRulePO po = mapper.selectOne(tenantCode, null, drainRuleName);
-        setCache(tenantCode, null, drainRuleName, po);
+        DrainRulePO po = mapper.selectOne(tenantCode, drainRuleCode);
+        setCache(tenantCode, drainRuleCode, po);
         return po;
     }
 
@@ -80,7 +69,7 @@ public class DrainRuleAccessor {
     public int update(DrainRulePO po) {
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getDrainRuleCode(), po.getDrainRuleName());
+            deleteCacheOne(po.getTenantCode(), po.getDrainRuleCode());
             deleteCacheList(po.getTenantCode());
         }
         return updated;
@@ -89,7 +78,7 @@ public class DrainRuleAccessor {
     public int insert(DrainRulePO po) {
         int inserted = mapper.insert(po);
         if (inserted == CommonConsts.INSERTED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getDrainRuleCode(), po.getDrainRuleName());
+            deleteCacheOne(po.getTenantCode(), po.getDrainRuleCode());
             deleteCacheList(po.getTenantCode());
         }
         return inserted;
@@ -103,22 +92,22 @@ public class DrainRuleAccessor {
 
         int deleted = mapper.delete(tenantCode, drainRuleCode);
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
-            deleteCacheOne(tenantCode, po.getDrainRuleCode(), po.getDrainRuleName());
+            deleteCacheOne(tenantCode, po.getDrainRuleCode());
             deleteCacheList(tenantCode);
         }
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String drainRuleCode, String drainRuleName) {
-        return "drainRuleAcc-" + tenantCode + "-" + drainRuleCode + "-" + drainRuleName;
+    private String getCacheKey(String tenantCode, String drainRuleCode) {
+        return "drainRuleAcc-" + tenantCode + "-" + drainRuleCode;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "drainRuleAcc-" + tenantCode;
     }
 
-    private DrainRulePO setCache(String tenantCode, String drainRuleCode, String drainRuleName) {
-        String key = getCacheKey(tenantCode, drainRuleCode, drainRuleName);
+    private DrainRulePO setCache(String tenantCode, String drainRuleCode) {
+        String key = getCacheKey(tenantCode, drainRuleCode);
         Object cached = redisManager.getValue(key);
         DrainRulePO po = (DrainRulePO) cached;
         return po;
@@ -136,14 +125,13 @@ public class DrainRuleAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String drainRuleCode, String drainRuleName, DrainRulePO po) {
-        String key = getCacheKey(tenantCode, drainRuleCode, drainRuleName);
+    private void setCache(String tenantCode, String drainRuleCode, DrainRulePO po) {
+        String key = getCacheKey(tenantCode, drainRuleCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheOne(String tenantCode, String drainRuleCode, String drainRuleName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, drainRuleCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, drainRuleName));
+    private void deleteCacheOne(String tenantCode, String drainRuleCode) {
+        redisManager.deleteKey(getCacheKey(tenantCode, drainRuleCode));
     }
 
     private void deleteCacheList(String tenantCode) {

@@ -41,27 +41,6 @@ public class BizUtils {
         return sb.toString();
     }
 
-    public static boolean removeFile(File root) {
-        if (root == null || !root.exists()) {
-            return true;
-        }
-
-        boolean result = false;
-        if (root.isFile()) {
-            result = root.delete();
-        } else {
-            File[] files = root.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
-                result = removeFile(file);
-            }
-            if (result) {
-                result = root.delete();
-            }
-        }
-        return result;
-    }
-
     public static boolean writeStrToFile(String outputCont, File outputFile) {
         if (StringUtils.isBlank(outputCont) || outputCont == null) {
             return false;
@@ -72,16 +51,6 @@ public class BizUtils {
             if (!deleted) {
                 return false;
             }
-        }
-
-        boolean removed = removeFile(outputFile.getParentFile());
-        if (!removed) {
-            return false;
-        }
-
-        boolean maked = outputFile.getParentFile().mkdirs();
-        if (!maked) {
-            return false;
         }
 
         try {

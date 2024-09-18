@@ -22,24 +22,13 @@ public class WarningRuleAccessor {
     private RedisManager redisManager;
 
     public WarningRulePO getByWarningRuleCode(String tenantCode, String warningRuleCode) {
-        WarningRulePO cached = setCache(tenantCode, warningRuleCode, null);
+        WarningRulePO cached = setCache(tenantCode, warningRuleCode);
         if (cached != null) {
             return cached;
         }
 
-        WarningRulePO po = mapper.selectOne(tenantCode, warningRuleCode, null);
-        setCache(tenantCode, warningRuleCode, null, po);
-        return po;
-    }
-
-    public WarningRulePO getByWarningRuleName(String tenantCode, String warningRuleName) {
-        WarningRulePO cached = setCache(tenantCode, null, warningRuleName);
-        if (cached != null) {
-            return cached;
-        }
-
-        WarningRulePO po = mapper.selectOne(tenantCode, null, warningRuleName);
-        setCache(tenantCode, null, warningRuleName, po);
+        WarningRulePO po = mapper.selectOne(tenantCode, warningRuleCode);
+        setCache(tenantCode, warningRuleCode, po);
         return po;
     }
 
@@ -80,7 +69,7 @@ public class WarningRuleAccessor {
     public int update(WarningRulePO po) {
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getWarningRuleCode(), po.getWarningRuleName());
+            deleteCacheOne(po.getTenantCode(), po.getWarningRuleCode());
             deleteCacheList(po.getTenantCode());
         }
         return updated;
@@ -89,7 +78,7 @@ public class WarningRuleAccessor {
     public int insert(WarningRulePO po) {
         int inserted = mapper.insert(po);
         if (inserted == CommonConsts.INSERTED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getWarningRuleCode(), po.getWarningRuleName());
+            deleteCacheOne(po.getTenantCode(), po.getWarningRuleCode());
             deleteCacheList(po.getTenantCode());
         }
         return inserted;
@@ -103,22 +92,22 @@ public class WarningRuleAccessor {
 
         int deleted = mapper.delete(tenantCode, warningRuleCode);
         if (deleted == CommonConsts.DELETED_ONE_ROW) {
-            deleteCacheOne(tenantCode, po.getWarningRuleCode(), po.getWarningRuleName());
+            deleteCacheOne(tenantCode, po.getWarningRuleCode());
             deleteCacheList(tenantCode);
         }
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String warningRuleCode, String warningRuleName) {
-        return "warningRuleAcc-" + tenantCode + "-" + warningRuleCode + "-" + warningRuleName;
+    private String getCacheKey(String tenantCode, String warningRuleCode) {
+        return "warningRuleAcc-" + tenantCode + "-" + warningRuleCode;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "warningRuleAcc-" + tenantCode;
     }
 
-    private WarningRulePO setCache(String tenantCode, String warningRuleCode, String warningRuleName) {
-        String key = getCacheKey(tenantCode, warningRuleCode, warningRuleName);
+    private WarningRulePO setCache(String tenantCode, String warningRuleCode) {
+        String key = getCacheKey(tenantCode, warningRuleCode);
         Object cached = redisManager.getValue(key);
         WarningRulePO po = (WarningRulePO) cached;
         return po;
@@ -136,14 +125,13 @@ public class WarningRuleAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String warningRuleCode, String warningRuleName, WarningRulePO po) {
-        String key = getCacheKey(tenantCode, warningRuleCode, warningRuleName);
+    private void setCache(String tenantCode, String warningRuleCode, WarningRulePO po) {
+        String key = getCacheKey(tenantCode, warningRuleCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheOne(String tenantCode, String warningRuleCode, String warningRuleName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, warningRuleCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, warningRuleName));
+    private void deleteCacheOne(String tenantCode, String warningRuleCode) {
+        redisManager.deleteKey(getCacheKey(tenantCode, warningRuleCode));
     }
 
     private void deleteCacheList(String tenantCode) {

@@ -23,9 +23,6 @@
             <if test="drainRuleCode != null">
                 AND drain_rule_code = #{drainRuleCode}
             </if>
-            <if test="drainRuleName != null">
-                AND drain_rule_name = #{drainRuleName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="drainRulePOMap">
