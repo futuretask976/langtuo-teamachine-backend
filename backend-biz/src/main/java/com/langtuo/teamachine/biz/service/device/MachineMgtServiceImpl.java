@@ -64,7 +64,6 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<MachineDTO>> teaMachineResult;
         try {
             PageInfo<MachinePO> pageInfo = machineAccessor.search(tenantCode, machineCode, screenCode, elecBoardCode,
                     shopCode, pageNum, pageSize);
@@ -72,47 +71,42 @@ public class MachineMgtServiceImpl implements MachineMgtService {
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            teaMachineResult = TeaMachineResult.success(new PageDTO<MachineDTO>(dtoList, pageInfo.getTotal(),
+            return TeaMachineResult.success(new PageDTO<MachineDTO>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("machineMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<MachineDTO>> list(String tenantCode) {
-        TeaMachineResult<List<MachineDTO>> teaMachineResult;
         try {
             List<MachinePO> list = machineAccessor.list(tenantCode);
             List<MachineDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("machineMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<MachineDTO>> listByShopCode(String tenantCode, String shopCode) {
-        TeaMachineResult<List<MachineDTO>> teaMachineResult;
         try {
             List<MachinePO> list = machineAccessor.listByShopCode(tenantCode, shopCode);
             List<MachineDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("machineMgtService|listByShopCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -121,7 +115,6 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<MachineDTO> teaMachineResult;
         try {
             // 激活时，设备端是不知道 tenantCode 的，只能通过 deployCode 查找和更新
             DeployPO existDeployPO = deployAccessor.getByDeployCode(request.getDeployCode());
@@ -146,15 +139,14 @@ public class MachineMgtServiceImpl implements MachineMgtService {
                 if (inserted != 1) {
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
-                teaMachineResult = TeaMachineResult.success(convert(machinePO));
+                return TeaMachineResult.success(convert(machinePO));
             } else {
-                teaMachineResult = TeaMachineResult.success(convert(existMachinePO));
+                return TeaMachineResult.success(convert(existMachinePO));
             }
         } catch (Exception e) {
             log.error("machineMgtService|activate|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -195,15 +187,13 @@ public class MachineMgtServiceImpl implements MachineMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = machineAccessor.deleteByMachineCode(tenantCode, machineCode);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("machineMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<MachineDTO> convert(List<MachinePO> poList) {

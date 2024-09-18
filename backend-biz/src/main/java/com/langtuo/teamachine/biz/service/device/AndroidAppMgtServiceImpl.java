@@ -40,15 +40,13 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
     @Override
     public TeaMachineResult<AndroidAppDTO> get(String version) {
-        TeaMachineResult<AndroidAppDTO> teaMachineResult;
         try {
             AndroidAppPO po = androidAppAccessor.getByVersion(version);
-            teaMachineResult = TeaMachineResult.success(convertToAndroidAppDTO(po));
+            return TeaMachineResult.success(convertToAndroidAppDTO(po));
         } catch (Exception e) {
             log.error("androidAppMgtService|get|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -56,17 +54,15 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<AndroidAppDTO>> teaMachineResult;
         try {
             PageInfo<AndroidAppPO> pageInfo = androidAppAccessor.search(version, pageNum, pageSize);
             List<AndroidAppDTO> dtoList = convertToAndroidAppDTO(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+            return TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("androidAppMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -131,7 +127,6 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
     @Override
     public TeaMachineResult<AndroidAppDispatchDTO> getDispatchByVersion(String tenantCode, String version) {
-        TeaMachineResult<AndroidAppDispatchDTO> teaMachineResult;
         try {
             AndroidAppDispatchDTO dto = new AndroidAppDispatchDTO();
             dto.setVersion(version);
@@ -144,12 +139,11 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
                         .collect(Collectors.toList()));
             }
 
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("androidAppMgtService|getDispatchByVersion|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private TeaMachineResult<Void> putNew(AndroidAppPO po) {

@@ -54,44 +54,38 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<DeployDTO>> teaMachineResult;
         try {
             PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
                     shopCode, state, pageNum, pageSize);
             List<DeployDTO> dtoList = convertToDeployPO(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+            return TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("deployMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<DeployDTO> getByCode(String tenantCode, String deployCode) {
-        TeaMachineResult<DeployDTO> teaMachineResult;
         try {
             DeployDTO dto = convertToDeployPO(deployAccessor.getByDeployCode(tenantCode, deployCode));
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("deployMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode) {
-        TeaMachineResult<DeployDTO> teaMachineResult;
         try {
             DeployDTO dto = convertToDeployPO(deployAccessor.getByMachineCode(tenantCode, machineCode));
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("deployMgtService|getByMachineCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -114,33 +108,28 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = deployAccessor.deleteByDeployCode(tenantCode, deployCode);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("deployMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<String> generateDeployCode() {
-        TeaMachineResult<String> teaMachineResult;
         try {
             String deployCode = BizUtils.genRandomStr(6);
-            teaMachineResult = TeaMachineResult.success(deployCode);
+            return TeaMachineResult.success(deployCode);
         } catch (Exception e) {
             log.error("deployMgtService|generateDeployCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<String> generateMachineCode() {
-        TeaMachineResult<String> teaMachineResult;
         try {
             long machineCodeSeqVal = deployAccessor.getNextSeqVal4MachineCode();
             String machineCode = String.valueOf(machineCodeSeqVal);
@@ -158,16 +147,14 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             String formattedDate = sdf.format(calendar.getTime());
             machineCode = formattedDate + machineCode;
 
-            teaMachineResult = TeaMachineResult.success(machineCode);
+            return TeaMachineResult.success(machineCode);
         } catch (Exception e) {
             log.error("deployMgtService|generateMachineCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private TeaMachineResult<Void> putNew(DeployPO po) {
-        TeaMachineResult<Void> teaMachineResult;
         try {
             DeployPO exist = deployAccessor.getByDeployCode(po.getTenantCode(), po.getDeployCode());
             if (exist != null) {
