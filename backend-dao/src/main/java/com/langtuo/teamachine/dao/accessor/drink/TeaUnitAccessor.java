@@ -55,6 +55,11 @@ public class TeaUnitAccessor {
         return count;
     }
 
+    public int countBySpecItemCode(String tenantCode, List<String> specItemCodeList) {
+        int count = mapper.countBySpecItemCode(tenantCode, specItemCodeList);
+        return count;
+    }
+
     private String getCacheListKey(String tenantCode, String teaCode) {
         return "teaUnitAcc-" + tenantCode + "-" + teaCode;
     }

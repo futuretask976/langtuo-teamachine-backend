@@ -76,4 +76,18 @@
             AND tenant_code = #{tenantCode}
             AND tea_code = #{teaCode}
     </delete>
+
+    <select id="countBySpecItemCode" resultType="int">
+        SELECT
+            COUNT(1)
+        FROM tea_unit
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            <if test="specItemCodeList != null and specItemCodeList.size() > 0">
+                AND spec_item_code IN
+                <foreach item="specItemCode" collection="specItemCodeList" open="(" separator="," close=")">
+                    #{specItemCode}
+                </foreach>
+            </if>
+    </select>
 </mapper>

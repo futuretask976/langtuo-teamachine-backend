@@ -16,6 +16,7 @@ import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -135,9 +136,21 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     private TeaMachineResult<Void> putUpdate(SpecPO po, List<SpecItemPO> specItemPOList) {
         try {
-            SpecPO exist = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
-            if (exist == null) {
+            SpecPO existSpecPO = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
+            if (existSpecPO == null) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+            }
+            List<SpecItemPO> existSpecItemPOList = specItemAccessor.listBySpecCode(po.getTenantCode(), po.getSpecCode());
+            if (!CollectionUtils.isEmpty(existSpecItemPOList)) {
+                List<SpecItemPO> deletedSpecItemPOList = filterDeletedSpecItemList(existSpecItemPOList, specItemPOList);
+                if (!CollectionUtils.isEmpty(deletedSpecItemPOList)) {
+                    int count = teaUnitAccessor.countBySpecItemCode(po.getTenantCode(), deletedSpecItemPOList.stream()
+                            .map(SpecItemPO::getSpecItemCode)
+                            .collect(Collectors.toList()));
+                    if (count > CommonConsts.NUM_ZERO) {
+                        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
+                    }
+                }
             }
 
             int updated = specAccessor.update(po);
@@ -161,6 +174,24 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         }
     }
 
+    private List<SpecItemPO> filterDeletedSpecItemList(List<SpecItemPO> existSpecItemPOList,
+            List<SpecItemPO> newSpecItemPOList) {
+        List<SpecItemPO> deleted = Lists.newArrayList();
+        for (SpecItemPO exist : existSpecItemPOList) {
+            boolean existNew = false;
+            for (SpecItemPO newSpecItemPO : newSpecItemPOList) {
+                if (exist.getSpecItemCode().equals(newSpecItemPO.getSpecItemCode())) {
+                    existNew = true;
+                    break;
+                }
+            }
+            if (!existNew) {
+                deleted.add(exist);
+            }
+        }
+        return deleted;
+    }
+
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String specCode) {
         if (StringUtils.isEmpty(tenantCode)) {
@@ -169,14 +200,13 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
         try {
             int countBySpecCode = teaUnitAccessor.countBySpecCode(tenantCode, specCode);
-            if (countBySpecCode == CommonConsts.DB_SELECT_RESULT_EMPTY) {
-                int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
-                int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
-                return TeaMachineResult.success();
-            } else {
+            if (countBySpecCode != CommonConsts.DB_SELECT_RESULT_EMPTY) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
+            int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
+            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("specMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));

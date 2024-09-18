@@ -51,4 +51,13 @@ public interface TeaUnitMapper {
      * @return
      */
     int countBySpecCode(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode);
+
+    /**
+     *
+     * @param tenantCode
+     * @param specItemCodeList
+     * @return
+     */
+    int countBySpecItemCode(@Param("tenantCode") String tenantCode,
+            @Param("specItemCodeList") List<String> specItemCodeList);
 }
