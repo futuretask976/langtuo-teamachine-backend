@@ -37,6 +37,13 @@ public class AndroidAppController {
         return rtn;
     }
 
+    @DeleteMapping(value = "/delete")
+    public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("version") String version) {
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, version);
+        return rtn;
+    }
+
     @PutMapping(value = "/dispatch/put")
     public TeaMachineResult<Void> putDispatch(@RequestBody AndroidAppDispatchPutRequest request) {
         TeaMachineResult<Void> rtn = service.putDispatch(request);

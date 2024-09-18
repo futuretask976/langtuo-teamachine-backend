@@ -84,20 +84,19 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String version) {
+    public TeaMachineResult<Void> delete(String tenantCode, String version) {
         if (StringUtils.isBlank(version)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = androidAppAccessor.deleteByVersion(version);
-            teaMachineResult = TeaMachineResult.success();
+            int deleted4App = androidAppAccessor.deleteByVersion(version);
+            int deleted4Dispatch = androidAppDispatchAccessor.deleteByVersion(tenantCode, version);
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("androidAppMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override

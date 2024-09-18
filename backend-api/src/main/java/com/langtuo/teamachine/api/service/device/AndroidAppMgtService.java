@@ -34,7 +34,7 @@ public interface AndroidAppMgtService {
      * @param version
      * @return
      */
-    TeaMachineResult<Void> delete(String version);
+    TeaMachineResult<Void> delete(String tenantCode, String version);
 
     /**
      *

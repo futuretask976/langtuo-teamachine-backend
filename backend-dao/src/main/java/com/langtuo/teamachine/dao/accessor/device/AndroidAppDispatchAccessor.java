@@ -32,22 +32,10 @@ public class AndroidAppDispatchAccessor {
         return list;
     }
 
-    public List<AndroidAppDispatchPO> listByShopGroupCode(String tenantCode, String shopGroupCode) {
-        List<AndroidAppDispatchPO> cached = getCacheListByShopGroupCode(tenantCode, shopGroupCode);
-        if (cached != null) {
-            return cached;
-        }
-
-        List<AndroidAppDispatchPO> list = mapper.selectListByShopGroupCode(tenantCode, shopGroupCode);
-
-        setCacheListByShopGroupCode(tenantCode, shopGroupCode, list);
-        return list;
-    }
-
     public int insert(AndroidAppDispatchPO po) {
         int inserted = mapper.insert(po);
         if (inserted == CommonConsts.INSERTED_ONE_ROW) {
-            deleteCacheList(po.getTenantCode(), po.getVersion(), po.getShopGroupCode());
+            deleteCacheList(po.getTenantCode(), po.getVersion());
         }
         return inserted;
     }
@@ -55,21 +43,15 @@ public class AndroidAppDispatchAccessor {
     public int update(AndroidAppDispatchPO po) {
         int updated = mapper.update(po);
         if (updated == CommonConsts.UPDATED_ONE_ROW) {
-            deleteCacheList(po.getTenantCode(), po.getVersion(), po.getShopGroupCode());
+            deleteCacheList(po.getTenantCode(), po.getVersion());
         }
         return updated;
     }
 
     public int deleteByVersion(String tenantCode, String version) {
-        List<AndroidAppDispatchPO> existList = listByVersion(tenantCode, version);
-        if (CollectionUtils.isEmpty(existList)) {
-            return CommonConsts.DELETED_ZERO_ROW;
-        }
-        String shopGroupCode = existList.get(0).getShopGroupCode();
-
         int deleted = mapper.delete(tenantCode, version);
-        if (deleted == CommonConsts.DELETED_ONE_ROW) {
-            deleteCacheList(tenantCode, version, shopGroupCode);
+        if (deleted >= CommonConsts.DELETED_ZERO_ROW) {
+            deleteCacheList(tenantCode, version);
         }
         return deleted;
     }
@@ -78,19 +60,8 @@ public class AndroidAppDispatchAccessor {
         return "menuDispatchAcc-" + tenantCode + "-" + version;
     }
 
-    private String getCacheListKeyByShopGroupCode(String tenantCode, String shopGroupCode) {
-        return "menuDispatchAcc-byShopGroupCode-" + tenantCode + "-" + shopGroupCode;
-    }
-
     private List<AndroidAppDispatchPO> getCacheList(String tenantCode, String version) {
         String key = getCacheListKey(tenantCode, version);
-        Object cached = redisManager.getValue(key);
-        List<AndroidAppDispatchPO> poList = (List<AndroidAppDispatchPO>) cached;
-        return poList;
-    }
-
-    private List<AndroidAppDispatchPO> getCacheListByShopGroupCode(String tenantCode, String shopGroupCode) {
-        String key = getCacheListKey(tenantCode, shopGroupCode);
         Object cached = redisManager.getValue(key);
         List<AndroidAppDispatchPO> poList = (List<AndroidAppDispatchPO>) cached;
         return poList;
@@ -101,13 +72,7 @@ public class AndroidAppDispatchAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCacheListByShopGroupCode(String tenantCode, String shopGroupCode, List<AndroidAppDispatchPO> poList) {
-        String key = getCacheListKeyByShopGroupCode(tenantCode, shopGroupCode);
-        redisManager.setValue(key, poList);
-    }
-
-    private void deleteCacheList(String tenantCode, String version, String shopGroupCode) {
+    private void deleteCacheList(String tenantCode, String version) {
         redisManager.deleteKey(getCacheListKey(tenantCode, version));
-        redisManager.deleteKey(getCacheListKeyByShopGroupCode(tenantCode, shopGroupCode));
     }
 }

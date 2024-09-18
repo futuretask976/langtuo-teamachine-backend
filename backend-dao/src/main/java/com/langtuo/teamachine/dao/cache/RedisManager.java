@@ -1,9 +1,12 @@
 package com.langtuo.teamachine.dao.cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -27,5 +30,11 @@ public class RedisManager {
 
     public void deleteKey(String key) {
         redisTemplate.delete(key);
+    }
+
+    @PreDestroy
+    public void onDestroy() {
+        LettuceConnectionFactory connectionFactory = (LettuceConnectionFactory) redisTemplate.getConnectionFactory();
+        connectionFactory.destroy();
     }
 }
