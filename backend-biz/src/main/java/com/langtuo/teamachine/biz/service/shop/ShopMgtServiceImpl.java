@@ -58,53 +58,46 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<ShopDTO>> teaMachineResult;
         try {
             PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCode,
                     pageNum, pageSize);
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+            return TeaMachineResult.success(new PageDTO<>(
                     convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("shopMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
-        TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {
             List<ShopPO> list = shopAccessor.listByShopGroupCode(tenantCode, shopGroupCode);
-            teaMachineResult = TeaMachineResult.success(convert(list));
+            return TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("shopMgtService|listByShopGroupCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<ShopDTO>> listByAdminOrg(String tenantCode) {
-        TeaMachineResult<List<ShopDTO>> teaMachineResult;
         try {
             List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.listByOrgName(
                     tenantCode, DaoUtils.getOrgNameListByAdmin(tenantCode));
             if (CollectionUtils.isEmpty(shopGroupPOList)) {
-                teaMachineResult = TeaMachineResult.success(null);
+                return TeaMachineResult.success(null);
             } else {
                 List<String> shopGroupCodeList = shopGroupPOList.stream()
                         .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
                         .collect(Collectors.toList());
                 List<ShopPO> list = shopAccessor.listByShopGroupCode(tenantCode, shopGroupCodeList);
-                teaMachineResult = TeaMachineResult.success(convert(list));
+                return TeaMachineResult.success(convert(list));
             }
         } catch (Exception e) {
             log.error("shopMgtService|listByAdminOrg|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -165,15 +158,13 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = shopAccessor.delete(tenantCode, shopGroupCode);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("shopMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -182,15 +173,13 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Integer> teaMachineResult;
         try {
             int cnt = shopAccessor.countByShopGroupCode(tenantCode, shopGroupCode);
-            teaMachineResult = TeaMachineResult.success(cnt);
+            return TeaMachineResult.success(cnt);
         } catch (Exception e) {
             log.error("shopMgtService|countByShopGroupCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<ShopDTO> convert(List<ShopPO> poList) {

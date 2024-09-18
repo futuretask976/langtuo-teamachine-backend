@@ -57,44 +57,38 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<ShopGroupDTO>> teaMachineResult;
         try {
             PageInfo<ShopGroupPO> pageInfo = shopGroupAccessor.search(tenantCode, shopGroupName,
                     pageNum, pageSize);
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+            return TeaMachineResult.success(new PageDTO<>(
                     convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("shopGroupMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<ShopGroupDTO>> list(String tenantCode) {
-        TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.list(tenantCode);
-            teaMachineResult = TeaMachineResult.success(convert(list));
+            return TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("shopGroupMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode) {
-        TeaMachineResult<List<ShopGroupDTO>> teaMachineResult;
         try {
             List<ShopGroupPO> list = shopGroupAccessor.listByOrgName(
                     tenantCode, DaoUtils.getOrgNameListByAdmin(tenantCode));
-            teaMachineResult = TeaMachineResult.success(convert(list));
+            return TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("shopGroupMgtService|listByAdminOrg|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -155,21 +149,19 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int count = shopAccessor.countByShopGroupCode(tenantCode, shopGroupCode);
             if (count == CommonConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted = shopGroupAccessor.deleteByShopGroupCode(tenantCode, shopGroupCode);
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
             log.error("shopGroupMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<ShopGroupDTO> convert(List<ShopGroupPO> poList) {
