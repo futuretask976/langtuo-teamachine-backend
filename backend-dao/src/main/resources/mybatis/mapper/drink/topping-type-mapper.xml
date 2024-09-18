@@ -73,9 +73,6 @@
             <if test="toppingTypeName != null">
                 , topping_type_name = #{toppingTypeName}
             </if>
-            <if test="state != null">
-                , state = #{state}
-            </if>
             <if test="comment != null">
                 , comment = #{comment}
             </if>

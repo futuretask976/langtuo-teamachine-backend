@@ -32,16 +32,14 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
     @Override
     public TeaMachineResult<List<TeaTypeDTO>> list(String tenantCode) {
-        TeaMachineResult<List<TeaTypeDTO>> teaMachineResult;
         try {
             List<TeaTypePO> list = accessor.list(tenantCode);
             List<TeaTypeDTO> dtoList = convert(list);
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("teaTypeMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -50,46 +48,40 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<TeaTypeDTO>> teaMachineResult;
         try {
             PageInfo<TeaTypePO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
             List<TeaTypeDTO> dtoList = convert(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("teaTypeMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<TeaTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
-        TeaMachineResult<TeaTypeDTO> teaMachineResult;
         try {
             TeaTypePO toppingTypePO = accessor.getByTeaTypeCode(tenantCode, toppingTypeCode);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
-            teaMachineResult = TeaMachineResult.success(tenantDTO);
+            return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("teaTypeMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<TeaTypeDTO> getByName(String tenantCode, String toppingTypeName) {
-        TeaMachineResult<TeaTypeDTO> teaMachineResult;
         try {
             TeaTypePO toppingTypePO = accessor.getByTeaName(tenantCode, toppingTypeName);
             TeaTypeDTO tenantDTO = convert(toppingTypePO);
-            teaMachineResult = TeaMachineResult.success(tenantDTO);
+            return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("teaTypeMgtService|getByName|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -149,21 +141,19 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int countByTeaTypeCode = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
             if (countByTeaTypeCode == CommonConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted = accessor.deleteByTeaTypeCode(tenantCode, teaTypeCode);
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
             log.error("teaTypeMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<TeaTypeDTO> convert(List<TeaTypePO> poList) {

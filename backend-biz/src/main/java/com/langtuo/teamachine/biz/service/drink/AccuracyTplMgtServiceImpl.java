@@ -39,18 +39,16 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
     @Override
     public TeaMachineResult<List<AccuracyTplDTO>> list(String tenantCode) {
-        TeaMachineResult<List<AccuracyTplDTO>> teaMachineResult;
         try {
             List<AccuracyTplPO> list = accuracyTplAccessor.list(tenantCode);
             List<AccuracyTplDTO> dtoList = list.stream()
                     .map(po -> convertToAccuracyTplPO(po))
                     .collect(Collectors.toList());
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("accuracyTplMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -59,48 +57,42 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<AccuracyTplDTO>> teaMachineResult;
         try {
             PageInfo<AccuracyTplPO> pageInfo = accuracyTplAccessor.search(tenantName, templateCode, templateName,
                     pageNum, pageSize);
             List<AccuracyTplDTO> dtoList = pageInfo.getList().stream()
                     .map(po -> convertToAccuracyTplPO(po))
                     .collect(Collectors.toList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("accuracyTplMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<AccuracyTplDTO> getByCode(String tenantCode, String specCode) {
-        TeaMachineResult<AccuracyTplDTO> teaMachineResult;
         try {
             AccuracyTplPO po = accuracyTplAccessor.getByTplCode(tenantCode, specCode);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("accuracyTplMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<AccuracyTplDTO> getByName(String tenantCode, String specName) {
-        TeaMachineResult<AccuracyTplDTO> teaMachineResult;
         try {
             AccuracyTplPO po = accuracyTplAccessor.getByTplName(tenantCode, specName);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("accuracyTplMgtService|getByName|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -191,15 +183,13 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = accuracyTplAccessor.deleteByTplCode(tenantCode, templateCode);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("accuracyTplMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private AccuracyTplDTO convertToAccuracyTplPO(AccuracyTplPO po) {

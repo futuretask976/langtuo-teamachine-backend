@@ -31,19 +31,17 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
     @Override
     public TeaMachineResult<List<ToppingTypeDTO>> list(String tenantCode) {
-        TeaMachineResult<List<ToppingTypeDTO>> teaMachineResult;
         try {
             List<ToppingTypePO> list = toppingTypeAccessor.selectList(tenantCode);
             List<ToppingTypeDTO> dtoList = list.stream()
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("toppingTypeMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -51,8 +49,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             String toppingTypeName, int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
-
-        TeaMachineResult<PageDTO<ToppingTypeDTO>> teaMachineResult;
+        
         try {
             PageInfo<ToppingTypePO> pageInfo = toppingTypeAccessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
@@ -60,43 +57,37 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
                     .map(po -> convert(po))
                     .collect(Collectors.toList());
 
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("toppingTypeMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<ToppingTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
-        TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
             ToppingTypePO toppingTypePO = toppingTypeAccessor.getByToppingTypeCode(tenantCode, toppingTypeCode);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
-
-            teaMachineResult = TeaMachineResult.success(tenantDTO);
+            return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("toppingTypeMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<ToppingTypeDTO> getByName(String tenantCode, String toppingTypeName) {
-        TeaMachineResult<ToppingTypeDTO> teaMachineResult;
         try {
             ToppingTypePO toppingTypePO = toppingTypeAccessor.getByToppingTypeName(tenantCode, toppingTypeName);
             ToppingTypeDTO tenantDTO = convert(toppingTypePO);
 
-            teaMachineResult = TeaMachineResult.success(tenantDTO);
+            return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("toppingTypeMgtService|getByName|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -157,21 +148,19 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int countByToppingTypeCode = toppingAccessor.countByToppingTypeCode(tenantCode, toppingTypeCode);
             if (countByToppingTypeCode == CommonConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted = toppingTypeAccessor.delete(tenantCode, toppingTypeCode);
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
             log.error("toppingTypeMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private ToppingTypeDTO convert(ToppingTypePO po) {

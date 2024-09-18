@@ -38,16 +38,14 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
     @Override
     public TeaMachineResult<List<SpecDTO>> list(String tenantCode) {
-        TeaMachineResult<List<SpecDTO>> teaMachineResult;
         try {
             List<SpecPO> list = specAccessor.list(tenantCode);
             List<SpecDTO> dtoList = convert(list);
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("specMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -56,46 +54,40 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<SpecDTO>> teaMachineResult;
         try {
             PageInfo<SpecPO> pageInfo = specAccessor.search(tenantName, specCode, specName,
                     pageNum, pageSize);
             List<SpecDTO> dtoList = convert(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("specMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<SpecDTO> getByCode(String tenantCode, String specCode) {
-        TeaMachineResult<SpecDTO> teaMachineResult;
         try {
             SpecPO po = specAccessor.getBySpecCode(tenantCode, specCode);
             SpecDTO dto = convert(po);
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("specMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<SpecDTO> getByName(String tenantCode, String specName) {
-        TeaMachineResult<SpecDTO> teaMachineResult;
         try {
             SpecPO po = specAccessor.getBySpecName(tenantCode, specName);
             SpecDTO dto = convert(po);
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("specMgtService|getByName|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -175,22 +167,20 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int countBySpecCode = teaUnitAccessor.countBySpecCode(tenantCode, specCode);
             if (countBySpecCode == CommonConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
                 int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
             log.error("specMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<SpecDTO> convert(List<SpecPO> poList) {

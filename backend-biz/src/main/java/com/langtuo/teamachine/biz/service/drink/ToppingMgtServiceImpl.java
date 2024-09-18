@@ -50,46 +50,40 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<ToppingDTO>> teaMachineResult;
         try {
             PageInfo<ToppingPO> pageInfo = toppingAccessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
             List<ToppingDTO> dtoList = convert(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("toppingMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<ToppingDTO> getByCode(String tenantCode, String toppingTypeCode) {
-        TeaMachineResult<ToppingDTO> teaMachineResult;
         try {
             ToppingPO toppingTypePO = toppingAccessor.getByToppingCode(tenantCode, toppingTypeCode);
             ToppingDTO tenantDTO = convert(toppingTypePO);
-            teaMachineResult = TeaMachineResult.success(tenantDTO);
+            return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("toppingMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<ToppingDTO> getByName(String tenantCode, String toppingTypeName) {
-        TeaMachineResult<ToppingDTO> teaMachineResult;
         try {
             ToppingPO toppingTypePO = toppingAccessor.getByToppingName(tenantCode, toppingTypeName);
             ToppingDTO tenantDTO = convert(toppingTypePO);
-            teaMachineResult = TeaMachineResult.success(tenantDTO);
+            return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("toppingMgtService|getByName|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -150,21 +144,19 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int countByToppingCode = toppingBaseRuleMapper.countByToppingCode(tenantCode, toppingCode);
             if (countByToppingCode == CommonConsts.DB_SELECT_RESULT_EMPTY) {
                 int deleted = toppingAccessor.deleteByToppingCode(tenantCode, toppingCode);
-                teaMachineResult = TeaMachineResult.success();
+                return TeaMachineResult.success();
             } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
             log.error("toppingMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
