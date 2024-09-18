@@ -78,16 +78,14 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
 
     @Override
     public TeaMachineResult<OrderActRecordDTO> get(String tenantCode, String idempotentMark) {
-        TeaMachineResult<OrderActRecordDTO> teaMachineResult;
         try {
             OrderActRecordPO po = orderActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
             OrderActRecordDTO dto = convert(po, true);
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("orderActRecordMgtService|get|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -96,7 +94,6 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<OrderActRecordDTO>> teaMachineResult;
         try {
             PageInfo<OrderActRecordPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
@@ -112,17 +109,16 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             }
 
             if (pageInfo == null) {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                return TeaMachineResult.success(new PageDTO<>(
                         null, 0, pageNum, pageSize));
             } else {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                return TeaMachineResult.success(new PageDTO<>(
                         convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("orderActRecordMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -131,15 +127,13 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = orderActRecordAccessor.delete(tenantCode, warningRuleCode);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("orderActRecordMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<OrderActRecordDTO> convert(List<OrderActRecordPO> poList, boolean fillDetail) {

@@ -53,15 +53,13 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
 
     @Override
     public TeaMachineResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark) {
-        TeaMachineResult<DrainActRecordDTO> teaMachineResult;
         try {
             DrainActRecordPO po = drainActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
-            teaMachineResult = TeaMachineResult.success(convert(po, true));
+            return TeaMachineResult.success(convert(po, true));
         } catch (Exception e) {
             log.error("drainActRecordMgtService|get|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -70,7 +68,6 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<DrainActRecordDTO>> teaMachineResult;
         try {
             PageInfo<DrainActRecordPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
@@ -86,17 +83,16 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
             }
 
             if (pageInfo == null) {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                return TeaMachineResult.success(new PageDTO<>(
                         null, 0, pageNum, pageSize));
             } else {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                return TeaMachineResult.success(new PageDTO<>(
                         convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("drainActRecordMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -105,15 +101,13 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = drainActRecordAccessor.delete(tenantCode, idempotentMark);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("drainActRecordMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<DrainActRecordDTO> convert(List<DrainActRecordPO> poList, boolean fillDetail) {

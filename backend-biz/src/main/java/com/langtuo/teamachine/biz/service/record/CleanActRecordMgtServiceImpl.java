@@ -53,15 +53,13 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
 
     @Override
     public TeaMachineResult<CleanActRecordDTO> get(String tenantCode, String idempotentMark) {
-        TeaMachineResult<CleanActRecordDTO> teaMachineResult;
         try {
             CleanActRecordPO po = cleanActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
-            teaMachineResult = TeaMachineResult.success(convert(po, true));
+            return TeaMachineResult.success(convert(po, true));
         } catch (Exception e) {
             log.error("cleanActRecordMgtService|get|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -70,7 +68,6 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<CleanActRecordDTO>> teaMachineResult;
         try {
             PageInfo<CleanActRecordPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
@@ -86,17 +83,16 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
             }
 
             if (pageInfo == null) {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                return TeaMachineResult.success(new PageDTO<>(
                         null, 0, pageNum, pageSize));
             } else {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                return TeaMachineResult.success(new PageDTO<>(
                         convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("cleanActRecordMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -104,16 +100,14 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
-
-        TeaMachineResult<Void> teaMachineResult;
+        
         try {
             int deleted = cleanActRecordAccessor.delete(tenantCode, idempotentMark);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("cleanActRecordMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<CleanActRecordDTO> convert(List<CleanActRecordPO> poList, boolean fillDetail) {

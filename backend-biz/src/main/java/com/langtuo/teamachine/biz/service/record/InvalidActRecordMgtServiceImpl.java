@@ -53,15 +53,13 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
 
     @Override
     public TeaMachineResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark) {
-        TeaMachineResult<InvalidActRecordDTO> teaMachineResult;
         try {
             InvalidActRecordPO po = invalidActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
-            teaMachineResult = TeaMachineResult.success(convert(po, true));
+            return TeaMachineResult.success(convert(po, true));
         } catch (Exception e) {
             log.error("invalidActRecordMgtService|get|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -70,7 +68,6 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<InvalidActRecordDTO>> teaMachineResult;
         try {
             PageInfo<InvalidActRecordPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
@@ -86,17 +83,16 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
             }
 
             if (pageInfo == null) {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                return TeaMachineResult.success(new PageDTO<>(
                         null, 0, pageNum, pageSize));
             } else {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
+                return TeaMachineResult.success(new PageDTO<>(
                         convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("invalidActRecordMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -105,15 +101,13 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = invalidActRecordAccessor.delete(tenantCode, warningRuleCode);
-            teaMachineResult = TeaMachineResult.success();
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("invalidActRecordMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 
     private List<InvalidActRecordDTO> convert(List<InvalidActRecordPO> poList, boolean fillDetail) {

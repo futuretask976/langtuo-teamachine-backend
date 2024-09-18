@@ -1,7 +1,10 @@
 package com.langtuo.teamachine.dao.config;
 
+import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.resource.DefaultClientResources;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -34,24 +37,31 @@ public class RedisConfig {
     @Value("${spring.redis.password}")
     private String password;
 
+    @Bean(destroyMethod = "shutdown")
+    @ConditionalOnMissingBean(ClientResources.class)
+    public DefaultClientResources lettuceClientResources() {
+        return DefaultClientResources.create();
+    }
+
     /**
      * 配置redis连接工厂
      * @return
      */
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
+    public RedisConnectionFactory redisConnectionFactory(DefaultClientResources defaultClientResources) {
         RedisStandaloneConfiguration serverConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
         // configuration.setUsername(userName);
         serverConfig.setPassword(password);
 
         LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+                .clientResources(defaultClientResources)
                 .commandTimeout(Duration.ofSeconds(REDIS_COMMAND_TIMEOUT))
                 .shutdownTimeout(Duration.ZERO)
-                .useSsl()
-                .disablePeerVerification()
+//                .useSsl()
+//                .disablePeerVerification()
                 .build();
 
-        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(serverConfig);
+        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(serverConfig, clientConfig);
         lettuceConnectionFactory.afterPropertiesSet();
         return lettuceConnectionFactory;
     }
