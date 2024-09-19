@@ -144,20 +144,6 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     }
 
     @Override
-    public TeaMachineResult<MenuDTO> getByName(String tenantCode, String seriesName) {
-        TeaMachineResult<MenuDTO> teaMachineResult;
-        try {
-            MenuPO toppingTypePO = menuAccessor.getByMenuName(tenantCode, seriesName);
-            MenuDTO tenantDTO = convert(toppingTypePO);
-            teaMachineResult = TeaMachineResult.success(tenantDTO);
-        } catch (Exception e) {
-            log.error("menuMgtService|getByName|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-        return teaMachineResult;
-    }
-
-    @Override
     public TeaMachineResult<Void> put(MenuPutRequest request) {
         if (request == null || !request.isValid()) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));

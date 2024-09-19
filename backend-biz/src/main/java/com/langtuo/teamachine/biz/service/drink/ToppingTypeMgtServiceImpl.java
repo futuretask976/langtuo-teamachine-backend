@@ -78,19 +78,6 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     }
 
     @Override
-    public TeaMachineResult<ToppingTypeDTO> getByName(String tenantCode, String toppingTypeName) {
-        try {
-            ToppingTypePO toppingTypePO = toppingTypeAccessor.getByToppingTypeName(tenantCode, toppingTypeName);
-            ToppingTypeDTO tenantDTO = convert(toppingTypePO);
-
-            return TeaMachineResult.success(tenantDTO);
-        } catch (Exception e) {
-            log.error("toppingTypeMgtService|getByName|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-    }
-
-    @Override
     public TeaMachineResult<Void> put(ToppingTypePutRequest request) {
         if (request == null || !request.isValid()) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));

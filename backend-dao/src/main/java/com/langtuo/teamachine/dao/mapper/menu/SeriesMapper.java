@@ -19,8 +19,7 @@ public interface SeriesMapper {
      * @param tenantCode
      * @return
      */
-    SeriesPO selectOne(@Param("tenantCode") String tenantCode, @Param("seriesCode") String seriesCode,
-            @Param("seriesName") String seriesName);
+    SeriesPO selectOne(@Param("tenantCode") String tenantCode, @Param("seriesCode") String seriesCode);
 
     /**
      *

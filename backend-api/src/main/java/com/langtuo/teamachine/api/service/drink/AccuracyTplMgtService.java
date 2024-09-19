@@ -17,13 +17,6 @@ public interface AccuracyTplMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<AccuracyTplDTO> getByName(String tenantCode, String templateName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<AccuracyTplDTO>> search(String tenantCode, String templateCode, String templateName,

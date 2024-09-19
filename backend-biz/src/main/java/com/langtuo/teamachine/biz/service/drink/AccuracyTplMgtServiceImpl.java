@@ -84,18 +84,6 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     }
 
     @Override
-    public TeaMachineResult<AccuracyTplDTO> getByName(String tenantCode, String specName) {
-        try {
-            AccuracyTplPO po = accuracyTplAccessor.getByTplName(tenantCode, specName);
-            AccuracyTplDTO dto = convertToAccuracyTplPO(po);
-            return TeaMachineResult.success(dto);
-        } catch (Exception e) {
-            log.error("accuracyTplMgtService|getByName|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-    }
-
-    @Override
     public TeaMachineResult<Void> put(AccuracyTplPutRequest request) {
         if (request == null || !request.isValid()) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));

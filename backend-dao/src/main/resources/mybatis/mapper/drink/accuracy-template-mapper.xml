@@ -27,9 +27,6 @@
             <if test="templateCode != null">
                 AND template_code = #{templateCode}
             </if>
-            <if test="templateName != null">
-                AND template_name = #{templateName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="accuracyTemplatePOMap">

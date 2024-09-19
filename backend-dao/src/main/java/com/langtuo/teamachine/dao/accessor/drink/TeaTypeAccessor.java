@@ -23,29 +23,15 @@ public class TeaTypeAccessor {
 
     public TeaTypePO getByTeaTypeCode(String tenantCode, String teaTypeCode) {
         // 首先访问缓存
-        TeaTypePO cached = getCache(tenantCode, teaTypeCode, null);
+        TeaTypePO cached = getCache(tenantCode, teaTypeCode);
         if (cached != null) {
             return cached;
         }
 
-        TeaTypePO po = mapper.selectOne(tenantCode, teaTypeCode, null);
+        TeaTypePO po = mapper.selectOne(tenantCode, teaTypeCode);
 
         // 设置缓存
-        setCache(tenantCode, teaTypeCode, null, po);
-        return po;
-    }
-
-    public TeaTypePO getByTeaName(String tenantCode, String teaName) {
-        // 首先访问缓存
-        TeaTypePO cached = getCache(tenantCode, null, teaName);
-        if (cached != null) {
-            return cached;
-        }
-
-        TeaTypePO po = mapper.selectOne(tenantCode, null, teaName);
-
-        // 设置缓存
-        setCache(tenantCode, null, teaName, po);
+        setCache(tenantCode, teaTypeCode, po);
         return po;
     }
 
@@ -108,16 +94,16 @@ public class TeaTypeAccessor {
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String teaTypeCode, String teaName) {
-        return "teaTypeAcc-" + tenantCode + "-" + teaTypeCode + "-" + teaName;
+    private String getCacheKey(String tenantCode, String teaTypeCode) {
+        return "teaTypeAcc-" + tenantCode + "-" + teaTypeCode;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "teaTypeAcc-" + tenantCode;
     }
 
-    private TeaTypePO getCache(String tenantCode, String teaTypeCode, String teaName) {
-        String key = getCacheKey(tenantCode, teaTypeCode, teaName);
+    private TeaTypePO getCache(String tenantCode, String teaTypeCode) {
+        String key = getCacheKey(tenantCode, teaTypeCode);
         Object cached = redisManager.getValue(key);
         TeaTypePO po = (TeaTypePO) cached;
         return po;
@@ -135,14 +121,13 @@ public class TeaTypeAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String teaTypeCode, String teaName, TeaTypePO po) {
-        String key = getCacheKey(tenantCode, teaTypeCode, teaName);
+    private void setCache(String tenantCode, String teaTypeCode, TeaTypePO po) {
+        String key = getCacheKey(tenantCode, teaTypeCode);
         redisManager.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String teaTypeCode, String teaTypeName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, teaTypeCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, teaTypeName));
+        redisManager.deleteKey(getCacheKey(tenantCode, teaTypeCode));
     }
 
     private void deleteCacheList(String tenantCode) {

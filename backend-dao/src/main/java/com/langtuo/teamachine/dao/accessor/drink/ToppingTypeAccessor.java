@@ -23,29 +23,15 @@ public class ToppingTypeAccessor {
 
     public ToppingTypePO getByToppingTypeCode(String tenantCode, String toppingTypeCode) {
         // 首先访问缓存
-        ToppingTypePO cached = getCache(tenantCode, toppingTypeCode, null);
+        ToppingTypePO cached = getCache(tenantCode, toppingTypeCode);
         if (cached != null) {
             return cached;
         }
 
-        ToppingTypePO po = mapper.selectOne(tenantCode, toppingTypeCode, null);
+        ToppingTypePO po = mapper.selectOne(tenantCode, toppingTypeCode);
 
         // 设置缓存
-        setCache(tenantCode, toppingTypeCode, null, po);
-        return po;
-    }
-
-    public ToppingTypePO getByToppingTypeName(String tenantCode, String toppingTypeName) {
-        // 首先访问缓存
-        ToppingTypePO cached = getCache(tenantCode, null, toppingTypeName);
-        if (cached != null) {
-            return cached;
-        }
-
-        ToppingTypePO po = mapper.selectOne(tenantCode, null, toppingTypeName);
-
-        // 设置缓存
-        setCache(tenantCode, null, toppingTypeName, po);
+        setCache(tenantCode, toppingTypeCode, po);
         return po;
     }
 
@@ -109,16 +95,16 @@ public class ToppingTypeAccessor {
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String toppingTypeCode, String toppingTypeName) {
-        return "toppingTypeAcc-" + tenantCode + "-" + toppingTypeCode + "-" + toppingTypeName;
+    private String getCacheKey(String tenantCode, String toppingTypeCode) {
+        return "toppingTypeAcc-" + tenantCode + "-" + toppingTypeCode;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "toppingTypeAcc-" + tenantCode;
     }
 
-    private ToppingTypePO getCache(String tenantCode, String toppingTypeCode, String toppingTypeName) {
-        String key = getCacheKey(tenantCode, toppingTypeCode, toppingTypeName);
+    private ToppingTypePO getCache(String tenantCode, String toppingTypeCode) {
+        String key = getCacheKey(tenantCode, toppingTypeCode);
         Object cached = redisManager.getValue(key);
         ToppingTypePO po = (ToppingTypePO) cached;
         return po;
@@ -136,14 +122,13 @@ public class ToppingTypeAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String toppingTypeCode, String toppingTypeName, ToppingTypePO po) {
-        String key = getCacheKey(tenantCode, toppingTypeCode, toppingTypeName);
+    private void setCache(String tenantCode, String toppingTypeCode, ToppingTypePO po) {
+        String key = getCacheKey(tenantCode, toppingTypeCode);
         redisManager.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String toppingTypeCode, String toppingTypeName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, toppingTypeCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, toppingTypeName));
+        redisManager.deleteKey(getCacheKey(tenantCode, toppingTypeCode));
     }
 
     private void deleteCacheList(String tenantCode) {

@@ -21,7 +21,7 @@ public interface AccuracyTplMapper {
      * @param templateName
      * @return
      */
-    AccuracyTplPO selectOne(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode, @Param("templateName") String templateName);
+    AccuracyTplPO selectOne(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode);
 
     /**
      *

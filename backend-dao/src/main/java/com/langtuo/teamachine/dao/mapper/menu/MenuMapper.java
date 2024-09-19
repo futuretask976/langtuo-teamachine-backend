@@ -19,8 +19,7 @@ public interface MenuMapper {
      * @param tenantCode
      * @return
      */
-    MenuPO selectOne(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode,
-            @Param("menuName") String menuName);
+    MenuPO selectOne(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode);
 
     /**
      *

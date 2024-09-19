@@ -23,9 +23,6 @@
             <if test="seriesCode != null">
                 AND series_code = #{seriesCode}
             </if>
-            <if test="seriesName != null">
-                AND series_name = #{seriesName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="seriesPOMap">

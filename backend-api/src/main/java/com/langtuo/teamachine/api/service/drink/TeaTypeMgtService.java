@@ -17,13 +17,6 @@ public interface TeaTypeMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<TeaTypeDTO> getByName(String tenantCode, String teaTypeName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<TeaTypeDTO>> search(String tenantCode, String teaTypeCode, String teaTypeName,

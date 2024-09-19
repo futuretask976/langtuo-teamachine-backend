@@ -20,8 +20,7 @@ public interface ToppingTypeMapper {
      * @param toppingTypeCode
      * @return
      */
-    ToppingTypePO selectOne(@Param("tenantCode") String tenantCode,
-            @Param("toppingTypeCode") String toppingTypeCode, @Param("toppingTypeName") String toppingTypeName);
+    ToppingTypePO selectOne(@Param("tenantCode") String tenantCode, @Param("toppingTypeCode") String toppingTypeCode);
 
     /**
      *

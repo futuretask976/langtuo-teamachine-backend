@@ -23,29 +23,15 @@ public class SeriesAccessor {
 
     public SeriesPO getBySeriesCode(String tenantCode, String seriesCode) {
         // 首先访问缓存
-        SeriesPO cached = getCache(tenantCode, seriesCode, null);
+        SeriesPO cached = getCache(tenantCode, seriesCode);
         if (cached != null) {
             return cached;
         }
 
-        SeriesPO po = mapper.selectOne(tenantCode, seriesCode, null);
+        SeriesPO po = mapper.selectOne(tenantCode, seriesCode);
 
         // 设置缓存
-        setCache(tenantCode, seriesCode, null, po);
-        return po;
-    }
-
-    public SeriesPO getBySeriesName(String tenantCode, String seriesName) {
-        // 首先访问缓存
-        SeriesPO cached = getCache(tenantCode, null, seriesName);
-        if (cached != null) {
-            return cached;
-        }
-
-        SeriesPO po = mapper.selectOne(tenantCode, null, seriesName);
-
-        // 设置缓存
-        setCache(tenantCode, null, seriesName, po);
+        setCache(tenantCode, seriesCode, po);
         return po;
     }
 
@@ -109,16 +95,16 @@ public class SeriesAccessor {
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String seriesCode, String seriesName) {
-        return "seriesAcc-" + tenantCode + "-" + seriesCode + "-" + seriesName;
+    private String getCacheKey(String tenantCode, String seriesCode) {
+        return "seriesAcc-" + tenantCode + "-" + seriesCode;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "seriesAcc-" + tenantCode;
     }
 
-    private SeriesPO getCache(String tenantCode, String seriesCode, String seriesName) {
-        String key = getCacheKey(tenantCode, seriesCode, seriesName);
+    private SeriesPO getCache(String tenantCode, String seriesCode) {
+        String key = getCacheKey(tenantCode, seriesCode);
         Object cached = redisManager.getValue(key);
         SeriesPO po = (SeriesPO) cached;
         return po;
@@ -136,14 +122,13 @@ public class SeriesAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String seriesCode, String seriesName, SeriesPO po) {
-        String key = getCacheKey(tenantCode, seriesCode, seriesName);
+    private void setCache(String tenantCode, String seriesCode, SeriesPO po) {
+        String key = getCacheKey(tenantCode, seriesCode);
         redisManager.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String seriesCode, String seriesName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, seriesCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, seriesName));
+        redisManager.deleteKey(getCacheKey(tenantCode, seriesCode));
     }
 
     private void deleteCacheList(String tenantCode) {

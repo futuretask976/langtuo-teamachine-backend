@@ -17,13 +17,6 @@ public interface ToppingTypeMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<ToppingTypeDTO> getByName(String tenantCode, String toppingTypeName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<ToppingTypeDTO>> search(String tenantCode, String toppingTypeCode, String toppingTypeName,

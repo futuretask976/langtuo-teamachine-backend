@@ -23,29 +23,15 @@ public class AccuracyTplAccessor {
 
     public AccuracyTplPO getByTplCode(String tenantCode, String templateCode) {
         // 首先访问缓存
-        AccuracyTplPO cached = getCache(tenantCode, templateCode, null);
+        AccuracyTplPO cached = getCache(tenantCode, templateCode);
         if (cached != null) {
             return cached;
         }
 
-        AccuracyTplPO po = mapper.selectOne(tenantCode, templateCode, null);
+        AccuracyTplPO po = mapper.selectOne(tenantCode, templateCode);
 
         // 设置缓存
-        setCache(tenantCode, templateCode, null, po);
-        return po;
-    }
-
-    public AccuracyTplPO getByTplName(String tenantCode, String templateName) {
-        // 首先访问缓存
-        AccuracyTplPO cached = getCache(tenantCode, null, templateName);
-        if (cached != null) {
-            return cached;
-        }
-
-        AccuracyTplPO po = mapper.selectOne(tenantCode, null, templateName);
-
-        // 设置缓存
-        setCache(tenantCode, null, templateName, po);
+        setCache(tenantCode, templateCode, po);
         return po;
     }
 
@@ -109,16 +95,16 @@ public class AccuracyTplAccessor {
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String templateCode, String templateName) {
-        return "accuracyTplAcc-" + tenantCode + "-" + templateCode + "-" + templateName;
+    private String getCacheKey(String tenantCode, String templateCode) {
+        return "accuracyTplAcc-" + tenantCode + "-" + templateCode;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "accuracyTplAcc-" + tenantCode;
     }
 
-    private AccuracyTplPO getCache(String tenantCode, String templateCode, String templateName) {
-        String key = getCacheKey(tenantCode, templateCode, templateName);
+    private AccuracyTplPO getCache(String tenantCode, String templateCode) {
+        String key = getCacheKey(tenantCode, templateCode);
         Object cached = redisManager.getValue(key);
         AccuracyTplPO po = (AccuracyTplPO) cached;
         return po;
@@ -136,14 +122,13 @@ public class AccuracyTplAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String templateCode, String templateName, AccuracyTplPO po) {
-        String key = getCacheKey(tenantCode, templateCode, templateName);
+    private void setCache(String tenantCode, String templateCode, AccuracyTplPO po) {
+        String key = getCacheKey(tenantCode, templateCode);
         redisManager.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String templateCode, String templateName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, templateCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, templateName));
+        redisManager.deleteKey(getCacheKey(tenantCode, templateCode));
     }
 
     private void deleteCacheList(String tenantCode) {

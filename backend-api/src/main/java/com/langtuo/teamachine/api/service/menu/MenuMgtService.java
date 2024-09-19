@@ -19,13 +19,6 @@ public interface MenuMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<MenuDTO> getByName(String tenantCode, String menuName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<MenuDTO>> search(String tenantCode, String menuCode, String menuName,

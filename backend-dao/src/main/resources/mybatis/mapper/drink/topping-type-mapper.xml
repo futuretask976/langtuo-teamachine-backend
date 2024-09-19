@@ -20,9 +20,6 @@
         SELECT * FROM topping_type
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            <if test="toppingTypeName != null">
-                AND topping_type_name = #{toppingTypeName}
-            </if>
             <if test="toppingTypeCode != null">
                 AND topping_type_code = #{toppingTypeCode}
             </if>
