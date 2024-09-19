@@ -28,7 +28,7 @@ public class ToppingAccessor {
             return cached;
         }
 
-        ToppingPO po = mapper.selectOne(tenantCode, toppingCode, null);
+        ToppingPO po = mapper.selectOne(tenantCode, toppingCode);
 
         // 设置缓存
         setCache(tenantCode, toppingCode, po);
@@ -73,7 +73,7 @@ public class ToppingAccessor {
     }
 
     public int update(ToppingPO po) {
-        ToppingPO exist = mapper.selectOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
+        ToppingPO exist = mapper.selectOne(po.getTenantCode(), po.getToppingCode());
         if (exist == null) {
             return CommonConsts.DB_UPDATED_ZERO_ROW;
         }
