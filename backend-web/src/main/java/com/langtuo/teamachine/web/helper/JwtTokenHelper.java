@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -113,7 +114,14 @@ public class JwtTokenHelper {
      * @param userDetails 从数据库中查询出来的用户信息
      */
     public boolean validateToken(String token, UserDetails userDetails) {
+        if (StringUtils.isBlank(token) || userDetails == null) {
+            return false;
+        }
+
         String username = getUserNameFromToken(token);
+        if (StringUtils.isBlank(username)) {
+            return false;
+        }
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
