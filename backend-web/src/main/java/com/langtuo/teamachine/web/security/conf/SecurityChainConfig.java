@@ -147,9 +147,11 @@ public class SecurityChainConfig {
                 .antMatchers(WebConsts.ANT_PATTERN_TOPPING_TYPE_PATH).hasAnyRole(
                         PermitActEnum.TOPPING_TYPE_MGT.getPermitActCode())
                 .antMatchers(WebConsts.ANT_PATTERN_TOPPING_PATH).hasAnyRole(
-                        PermitActEnum.TOPPING_MGT.getPermitActCode())
+                        PermitActEnum.TOPPING_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
                 .antMatchers(WebConsts.ANT_PATTERN_SEPC_PATH).hasAnyRole(
-                        PermitActEnum.SPEC_MGT.getPermitActCode())
+                        PermitActEnum.SPEC_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
                 .antMatchers(WebConsts.ANT_PATTERN_TEA_TYPE_PATH).hasAnyRole(
                         PermitActEnum.TEA_TYPE_MGT.getPermitActCode())
                 .antMatchers(WebConsts.ANT_PATTERN_TEA_PATH).hasAnyRole(
