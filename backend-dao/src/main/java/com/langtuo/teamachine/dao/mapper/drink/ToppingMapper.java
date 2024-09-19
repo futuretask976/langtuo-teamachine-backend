@@ -20,8 +20,7 @@ public interface ToppingMapper {
      * @param toppingCode
      * @return
      */
-    ToppingPO selectOne(@Param("tenantCode") String tenantCode, @Param("toppingCode") String toppingCode,
-            @Param("toppingName") String toppingName);
+    ToppingPO selectOne(@Param("tenantCode") String tenantCode, @Param("toppingCode") String toppingCode);
 
     /**
      *

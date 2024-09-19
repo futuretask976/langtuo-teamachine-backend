@@ -27,9 +27,6 @@
         SELECT * FROM topping
         WHERE 1 = 1
             and tenant_code = #{tenantCode}
-            <if test="toppingName != null">
-                AND topping_name = #{toppingName}
-            </if>
             <if test="toppingCode != null">
                 AND topping_code = #{toppingCode}
             </if>

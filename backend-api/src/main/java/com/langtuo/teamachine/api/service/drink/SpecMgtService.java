@@ -18,13 +18,6 @@ public interface SpecMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<SpecDTO> getByName(String tenantCode, String specName);
-
-    /**
-     *
      * @return
      */
     TeaMachineResult<PageDTO<SpecDTO>> search(String tenantCode, String specCode, String specName,

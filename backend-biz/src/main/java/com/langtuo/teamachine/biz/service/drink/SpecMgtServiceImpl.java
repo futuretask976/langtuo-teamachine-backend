@@ -80,18 +80,6 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     }
 
     @Override
-    public TeaMachineResult<SpecDTO> getByName(String tenantCode, String specName) {
-        try {
-            SpecPO po = specAccessor.getBySpecName(tenantCode, specName);
-            SpecDTO dto = convert(po);
-            return TeaMachineResult.success(dto);
-        } catch (Exception e) {
-            log.error("specMgtService|getByName|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-    }
-
-    @Override
     public TeaMachineResult<Void> put(SpecPutRequest request) {
         if (request == null || !request.isValid()) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));

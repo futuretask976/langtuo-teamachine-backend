@@ -23,29 +23,15 @@ public class SpecAccessor {
 
     public SpecPO getBySpecCode(String tenantCode, String specCode) {
         // 首先访问缓存
-        SpecPO cached = getCache(tenantCode, specCode, null);
+        SpecPO cached = getCache(tenantCode, specCode);
         if (cached != null) {
             return cached;
         }
 
-        SpecPO po = mapper.selectOne(tenantCode, specCode, null);
+        SpecPO po = mapper.selectOne(tenantCode, specCode);
 
         // 设置缓存
-        setCache(tenantCode, specCode, null, po);
-        return po;
-    }
-
-    public SpecPO getBySpecName(String tenantCode, String specName) {
-        // 首先访问缓存
-        SpecPO cached = getCache(tenantCode, null, specName);
-        if (cached != null) {
-            return cached;
-        }
-
-        SpecPO po = mapper.selectOne(tenantCode, null, specName);
-
-        // 设置缓存
-        setCache(tenantCode, null, specName, po);
+        setCache(tenantCode, specCode, po);
         return po;
     }
 
@@ -80,7 +66,7 @@ public class SpecAccessor {
     public int insert(SpecPO po) {
         int inserted = mapper.insert(po);
         if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecName());
+            deleteCacheOne(po.getTenantCode(), po.getSpecCode());
             deleteCacheList(po.getTenantCode());
         }
         return inserted;
@@ -89,7 +75,7 @@ public class SpecAccessor {
     public int update(SpecPO po) {
         int updated = mapper.update(po);
         if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getSpecCode(), po.getSpecName());
+            deleteCacheOne(po.getTenantCode(), po.getSpecCode());
             deleteCacheList(po.getTenantCode());
         }
         return updated;
@@ -103,22 +89,22 @@ public class SpecAccessor {
 
         int deleted = mapper.delete(tenantCode, specCode);
         if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
-            deleteCacheOne(tenantCode, po.getSpecCode(), po.getSpecName());
+            deleteCacheOne(tenantCode, po.getSpecCode());
             deleteCacheList(tenantCode);
         }
         return deleted;
     }
 
-    private String getCacheKey(String tenantCode, String specCode, String specName) {
-        return "specAcc-" + tenantCode + "-" + specCode + "-" + specName;
+    private String getCacheKey(String tenantCode, String specCode) {
+        return "specAcc-" + tenantCode + "-" + specCode;
     }
 
     private String getCacheListKey(String tenantCode) {
         return "specAcc-" + tenantCode;
     }
 
-    private SpecPO getCache(String tenantCode, String specCode, String specName) {
-        String key = getCacheKey(tenantCode, specCode, specName);
+    private SpecPO getCache(String tenantCode, String specCode) {
+        String key = getCacheKey(tenantCode, specCode);
         Object cached = redisManager.getValue(key);
         SpecPO po = (SpecPO) cached;
         return po;
@@ -136,14 +122,13 @@ public class SpecAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String specCode, String specName, SpecPO po) {
-        String key = getCacheKey(tenantCode, specCode, specName);
+    private void setCache(String tenantCode, String specCode, SpecPO po) {
+        String key = getCacheKey(tenantCode, specCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheOne(String tenantCode, String specCode, String specName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, specCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, specName));
+    private void deleteCacheOne(String tenantCode, String specCode) {
+        redisManager.deleteKey(getCacheKey(tenantCode, specCode));
     }
 
     private void deleteCacheList(String tenantCode) {

@@ -23,9 +23,6 @@
             <if test="specCode != null">
                 AND spec_code = #{specCode}
             </if>
-            <if test="specName != null">
-                AND spec_name = #{specName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="specPOMap">

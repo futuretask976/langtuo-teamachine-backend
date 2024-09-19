@@ -20,7 +20,7 @@ public interface SpecMapper {
      * @param specCode
      * @return
      */
-    SpecPO selectOne(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode, @Param("specName") String specName);
+    SpecPO selectOne(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode);
 
     /**
      *

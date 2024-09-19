@@ -23,7 +23,7 @@ public class ToppingAccessor {
 
     public ToppingPO getByToppingCode(String tenantCode, String toppingCode) {
         // 首先访问缓存
-        ToppingPO cached = getCache(tenantCode, toppingCode, null);
+        ToppingPO cached = getCache(tenantCode, toppingCode);
         if (cached != null) {
             return cached;
         }
@@ -31,21 +31,7 @@ public class ToppingAccessor {
         ToppingPO po = mapper.selectOne(tenantCode, toppingCode, null);
 
         // 设置缓存
-        setCache(tenantCode, toppingCode, null, po);
-        return po;
-    }
-
-    public ToppingPO getByToppingName(String tenantCode, String toppingName) {
-        // 首先访问缓存
-        ToppingPO cached = getCache(tenantCode, null, toppingName);
-        if (cached != null) {
-            return cached;
-        }
-        
-        ToppingPO po = mapper.selectOne(tenantCode, null, toppingName);
-
-        // 设置缓存
-        setCache(tenantCode, null, toppingName, po);
+        setCache(tenantCode, toppingCode, po);
         return po;
     }
 
@@ -94,7 +80,7 @@ public class ToppingAccessor {
 
         int updated = mapper.update(po);
         if (updated == CommonConsts.DB_UPDATED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
+            deleteCacheOne(po.getTenantCode(), po.getToppingCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(exist.getTenantCode(), exist.getToppingTypeCode());
             deleteCacheCount(po.getTenantCode(), po.getToppingTypeCode());
@@ -110,7 +96,7 @@ public class ToppingAccessor {
 
         int deleted = mapper.delete(tenantCode, toppingCode);
         if (deleted == CommonConsts.DB_DELETED_ONE_ROW) {
-            deleteCacheOne(po.getTenantCode(), po.getToppingCode(), po.getToppingName());
+            deleteCacheOne(po.getTenantCode(), po.getToppingCode());
             deleteCacheList(po.getTenantCode());
             deleteCacheCount(po.getTenantCode(), po.getToppingTypeCode());
         }
@@ -130,8 +116,8 @@ public class ToppingAccessor {
         return count;
     }
 
-    private String getCacheKey(String tenantCode, String toppingCode, String toppingName) {
-        return "toppingAcc-" + tenantCode + "-" + toppingCode + "-" + toppingName;
+    private String getCacheKey(String tenantCode, String toppingCode) {
+        return "toppingAcc-" + tenantCode + "-" + toppingCode;
     }
 
     private String getCacheListKey(String tenantCode) {
@@ -154,8 +140,8 @@ public class ToppingAccessor {
         redisManager.setValue(key, count);
     }
 
-    private ToppingPO getCache(String tenantCode, String toppingCode, String toppingName) {
-        String key = getCacheKey(tenantCode, toppingCode, toppingName);
+    private ToppingPO getCache(String tenantCode, String toppingCode) {
+        String key = getCacheKey(tenantCode, toppingCode);
         Object cached = redisManager.getValue(key);
         ToppingPO po = (ToppingPO) cached;
         return po;
@@ -173,14 +159,13 @@ public class ToppingAccessor {
         redisManager.setValue(key, poList);
     }
 
-    private void setCache(String tenantCode, String toppingCode, String toppingName, ToppingPO po) {
-        String key = getCacheKey(tenantCode, toppingCode, toppingName);
+    private void setCache(String tenantCode, String toppingCode, ToppingPO po) {
+        String key = getCacheKey(tenantCode, toppingCode);
         redisManager.setValue(key, po);
     }
 
-    private void deleteCacheOne(String tenantCode, String toppingCode, String toppingName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, toppingCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, toppingName));
+    private void deleteCacheOne(String tenantCode, String toppingCode) {
+        redisManager.deleteKey(getCacheKey(tenantCode, toppingCode));
     }
 
     private void deleteCacheList(String tenantCode) {
