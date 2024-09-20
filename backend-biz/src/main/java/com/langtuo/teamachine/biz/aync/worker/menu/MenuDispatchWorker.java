@@ -19,6 +19,7 @@ import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
+import com.langtuo.teamachine.internal.util.DateUtils;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -63,37 +65,48 @@ public class MenuDispatchWorker implements Runnable {
             log.info("menuDispatchWorker|getDispatchCont|error|stopWorker|" + dispatchCont);
             return;
         }
-        File outputFile = new File("dispatch/menu_output.json");
-        boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), outputFile);
-        if (!wrote) {
-            log.info("menuDispatchWorker|writeStrToFile|failed|stopWorker");
-            return;
-        }
-        String ossPath = uploadOSS(outputFile);
-        if (StringUtils.isBlank(ossPath)) {
-            log.info("menuDispatchWorker|uploadOSS|failed|stopWorker");
-            return;
-        }
-        String md5AsHex = calcMD5Hex(outputFile);
-        if (StringUtils.isBlank(md5AsHex)) {
-            log.info("menuDispatchWorker|calcMD5Hex|failed|stopWorker");
-            return;
-        }
 
-        JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MENU);
-        jsonMsg.put(CommonConsts.JSON_KEY_MD5_AS_HEX, md5AsHex);
-        jsonMsg.put(CommonConsts.JSON_KEY_OSS_PATH, ossPath);
+        String menuCode = dispatchCont.getString("menuCode");
+        Date gmtModified = dispatchCont.getDate("gmtModified");
+        String timeExt = DateUtils.transformYMDHMS(gmtModified);
+        File outputFile = new File("dispatch/menu-" + menuCode + "-" + timeExt + ".json");
 
-        // 准备发送
-        List<String> machineCodeList = getMachineCodeList();
-        if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.info("menuDispatchWorker|getMachineCodeList|empty|stopWorker");
-        }
+        try {
+            boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), outputFile);
+            if (!wrote) {
+                log.info("menuDispatchWorker|writeStrToFile|failed|stopWorker");
+                return;
+            }
+            String ossPath = uploadOSS(outputFile);
+            if (StringUtils.isBlank(ossPath)) {
+                log.info("menuDispatchWorker|uploadOSS|failed|stopWorker");
+                return;
+            }
+            String md5AsHex = calcMD5Hex(outputFile);
+            if (StringUtils.isBlank(md5AsHex)) {
+                log.info("menuDispatchWorker|calcMD5Hex|failed|stopWorker");
+                return;
+            }
 
-        MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
-        for (String machineCode : machineCodeList) {
-            mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
+            JSONObject jsonMsg = new JSONObject();
+            jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MENU);
+            jsonMsg.put(CommonConsts.JSON_KEY_MD5_AS_HEX, md5AsHex);
+            jsonMsg.put(CommonConsts.JSON_KEY_OSS_PATH, ossPath);
+
+            // 准备发送
+            List<String> machineCodeList = getMachineCodeList();
+            if (CollectionUtils.isEmpty(machineCodeList)) {
+                log.info("menuDispatchWorker|getMachineCodeList|empty|stopWorker");
+            }
+
+            MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
+            for (String machineCode : machineCodeList) {
+                mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
+            }
+        } catch (Exception e) {
+            log.error("menuDispatchWorker|run|fatal|" + e.getMessage(), e);
+        } finally {
+            outputFile.delete();
         }
     }
 
