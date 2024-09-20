@@ -3,10 +3,10 @@ package com.langtuo.teamachine.biz.service.drink;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.SpecDTO;
-import com.langtuo.teamachine.api.model.drink.SpecItemDTO;
 import com.langtuo.teamachine.api.request.drink.SpecPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.SpecMgtService;
+import com.langtuo.teamachine.biz.convert.drink.SpecMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.SpecItemAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.TeaUnitAccessor;
@@ -25,6 +25,9 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.biz.convert.drink.SpecMgtConvertor.convertToSpecDTO;
+import static com.langtuo.teamachine.biz.convert.drink.SpecMgtConvertor.convertToSpecItemPO;
+
 @Component
 @Slf4j
 public class SpecMgtServiceImpl implements SpecMgtService {
@@ -41,7 +44,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     public TeaMachineResult<List<SpecDTO>> list(String tenantCode) {
         try {
             List<SpecPO> list = specAccessor.list(tenantCode);
-            List<SpecDTO> dtoList = convert(list);
+            List<SpecDTO> dtoList = SpecMgtConvertor.convertToSpecDTO(list);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("specMgtService|list|fatal|" + e.getMessage(), e);
@@ -58,7 +61,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         try {
             PageInfo<SpecPO> pageInfo = specAccessor.search(tenantName, specCode, specName,
                     pageNum, pageSize);
-            List<SpecDTO> dtoList = convert(pageInfo.getList());
+            List<SpecDTO> dtoList = SpecMgtConvertor.convertToSpecDTO(pageInfo.getList());
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -71,7 +74,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     public TeaMachineResult<SpecDTO> getByCode(String tenantCode, String specCode) {
         try {
             SpecPO po = specAccessor.getBySpecCode(tenantCode, specCode);
-            SpecDTO dto = convert(po);
+            SpecDTO dto = SpecMgtConvertor.convertToSpecDTO(po);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("specMgtService|getByCode|fatal|" + e.getMessage(), e);
@@ -85,7 +88,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        SpecPO po = convert(request);
+        SpecPO po = convertToSpecDTO(request);
         List<SpecItemPO> specItemPOList = convertToSpecItemPO(request);
         if (request.isPutNew()) {
             return putNew(po, specItemPOList);
@@ -199,92 +202,5 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             log.error("specMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-    }
-
-    private List<SpecDTO> convert(List<SpecPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<SpecDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private SpecDTO convert(SpecPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        SpecDTO dto = new SpecDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setSpecCode(po.getSpecCode());
-        dto.setSpecName(po.getSpecName());
-        dto.setComment(po.getComment());
-        dto.setExtraInfo(po.getExtraInfo());
-
-        List<SpecItemPO> poList = specItemAccessor.listBySpecCode(po.getTenantCode(), po.getSpecCode());
-        if (!CollectionUtils.isEmpty(poList)) {
-            dto.setSpecItemList(poList.stream().map(item -> convert(item)).collect(Collectors.toList()));
-        }
-        return dto;
-    }
-
-    private List<SpecItemDTO> convertToSpecItemDTO(List<SpecItemPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        return poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-    }
-
-    private SpecItemDTO convert(SpecItemPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        SpecItemDTO dto = new SpecItemDTO();
-        dto.setSpecCode(po.getSpecCode());
-        dto.setSpecItemCode(po.getSpecItemCode());
-        dto.setSpecItemName(po.getSpecItemName());
-        dto.setOuterSpecItemCode(po.getOuterSpecItemCode());
-        return dto;
-    }
-
-    private SpecPO convert(SpecPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        SpecPO po = new SpecPO();
-        po.setSpecCode(request.getSpecCode());
-        po.setSpecName(request.getSpecName());
-        po.setComment(request.getComment());
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
-        return po;
-    }
-
-    private List<SpecItemPO> convertToSpecItemPO(SpecPutRequest specPutRequest) {
-        if (specPutRequest == null || CollectionUtils.isEmpty(specPutRequest.getSpecItemList())) {
-            return null;
-        }
-
-        List<SpecItemPO> specItemPOList = specPutRequest.getSpecItemList().stream()
-                .map(item -> {
-                    SpecItemPO po = new SpecItemPO();
-                    po.setSpecCode(specPutRequest.getSpecCode());
-                    po.setTenantCode(specPutRequest.getTenantCode());
-                    po.setSpecCode(specPutRequest.getSpecCode());
-                    po.setSpecItemCode(item.getSpecItemCode());
-                    po.setSpecItemName(item.getSpecItemName());
-                    po.setOuterSpecItemCode(item.getOuterSpecItemCode());
-                    return po;
-                }).collect(Collectors.toList());
-        return specItemPOList;
     }
 }

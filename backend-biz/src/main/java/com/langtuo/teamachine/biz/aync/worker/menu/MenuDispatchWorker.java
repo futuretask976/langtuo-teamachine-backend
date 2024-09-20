@@ -13,13 +13,14 @@ import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchHistoryAccessor;
 import com.langtuo.teamachine.dao.config.OSSConfig;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
+import com.langtuo.teamachine.dao.po.menu.MenuDispatchHistoryPO;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
-import com.langtuo.teamachine.internal.util.DateUtils;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +31,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -49,64 +49,66 @@ public class MenuDispatchWorker implements Runnable {
      */
     private String menuCode;
 
+    /**
+     * 菜单的修改时间
+     */
+    private String menuGmtModifiedYMDHMS;
+
     public MenuDispatchWorker(JSONObject jsonPayload) {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.menuCode = jsonPayload.getString(CommonConsts.JSON_KEY_MENU_CODE);
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)) {
-            log.error("menuDispatch4InitWorker|init|illegalArgument|" + tenantCode + "|" + menuCode);
+        this.menuGmtModifiedYMDHMS = jsonPayload.getString(CommonConsts.JSON_KEY_MENU_GMTMODIFIED_YMDHMS);
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)
+                || StringUtils.isBlank(menuGmtModifiedYMDHMS)) {
+            log.error("menuDispatchWorker|init|illegalArgument|" + tenantCode + "|" + menuCode);
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
     }
 
     @Override
     public void run() {
+        MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchOssAccessor();
+        String fileName = getMenuFileName();
+        MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
+                CommonConsts.MENU_DISPATCH_INIT_FALSE, fileName);
+        if (existOssPO != null) {
+            sendToMachine(getSendMsg(existOssPO));
+        }
+
         JSONObject dispatchCont = getDispatchCont();
         if (dispatchCont == null) {
-            log.info("menuDispatchWorker|getDispatchCont|error|stopWorker|" + dispatchCont);
             return;
         }
 
-        String menuCode = dispatchCont.getString("menuCode");
-        Date gmtModified = dispatchCont.getDate("gmtModified");
-        String timeExt = DateUtils.transformYMDHMS(gmtModified);
-        File outputFile = new File("dispatch/menu-" + menuCode + "-" + timeExt + ".json");
-
+        File tmpFile = new File(CommonConsts.MENU_OUTPUT_PATH + fileName);
         try {
-            boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), outputFile);
+            boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), tmpFile);
             if (!wrote) {
                 log.info("menuDispatchWorker|writeStrToFile|failed|stopWorker");
                 return;
             }
-            String ossPath = uploadOSS(outputFile);
-            if (StringUtils.isBlank(ossPath)) {
-                log.info("menuDispatchWorker|uploadOSS|failed|stopWorker");
-                return;
-            }
-            String md5AsHex = calcMD5Hex(outputFile);
+            String md5AsHex = calcMD5Hex(tmpFile);
             if (StringUtils.isBlank(md5AsHex)) {
                 log.info("menuDispatchWorker|calcMD5Hex|failed|stopWorker");
                 return;
             }
-
-            JSONObject jsonMsg = new JSONObject();
-            jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MENU);
-            jsonMsg.put(CommonConsts.JSON_KEY_MD5_AS_HEX, md5AsHex);
-            jsonMsg.put(CommonConsts.JSON_KEY_OSS_PATH, ossPath);
-
-            // 准备发送
-            List<String> machineCodeList = getMachineCodeList();
-            if (CollectionUtils.isEmpty(machineCodeList)) {
-                log.info("menuDispatchWorker|getMachineCodeList|empty|stopWorker");
+            String ossPath = uploadOSS(tmpFile);
+            if (StringUtils.isBlank(ossPath)) {
+                log.info("menuDispatchWorker|uploadOSS|failed|stopWorker");
+                return;
             }
 
-            MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
-            for (String machineCode : machineCodeList) {
-                mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
+            MenuDispatchHistoryPO newOssPO = getNewOssPO(fileName, md5AsHex);
+            int inserted = menuDispatchHistoryAccessor.insert(newOssPO);
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+                log.error("menuDispatchWorker|insertOssInfo|error|" + inserted);
             }
+
+            sendToMachine(getSendMsg(newOssPO));
         } catch (Exception e) {
             log.error("menuDispatchWorker|run|fatal|" + e.getMessage(), e);
         } finally {
-            outputFile.delete();
+            tmpFile.delete();
         }
     }
 
@@ -219,5 +221,43 @@ public class MenuDispatchWorker implements Runnable {
             }
         }
         return md5AsHex;
+    }
+
+    private JSONObject getSendMsg(MenuDispatchHistoryPO po) {
+        JSONObject jsonMsg = new JSONObject();
+        jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MENU);
+        jsonMsg.put(CommonConsts.JSON_KEY_MD5_AS_HEX, po.getMd5());
+        jsonMsg.put(CommonConsts.JSON_KEY_OSS_PATH,
+                OSSConfig.OSS_MENU_PATH + OSSConfig.OSS_PATH_SEPARATOR + po.getFileName());
+        return jsonMsg;
+    }
+
+    private void sendToMachine(JSONObject jsonMsg) {
+        // 准备发送
+        List<String> machineCodeList = getMachineCodeList();
+        if (CollectionUtils.isEmpty(machineCodeList)) {
+            log.info("menuDispatchWorker|getMachineCodeList|empty|stopWorker");
+        }
+
+        MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
+        for (String machineCode : machineCodeList) {
+            mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
+        }
+    }
+
+    private String getMenuFileName() {
+        String fileName = CommonConsts.MENU_OUTPUT_FILENAME_PREFIX + menuCode
+                + CommonConsts.HORIZONTAL_BAR + menuGmtModifiedYMDHMS
+                + CommonConsts.MENU_OUTPUT_PATH_EXT;
+        return fileName;
+    }
+
+    private MenuDispatchHistoryPO getNewOssPO(String fileName, String md5AsHex) {
+        MenuDispatchHistoryPO newOssPO = new MenuDispatchHistoryPO();
+        newOssPO.setTenantCode(tenantCode);
+        newOssPO.setInit(CommonConsts.MENU_DISPATCH_INIT_FALSE);
+        newOssPO.setFileName(fileName);
+        newOssPO.setMd5(md5AsHex);
+        return newOssPO;
     }
 }

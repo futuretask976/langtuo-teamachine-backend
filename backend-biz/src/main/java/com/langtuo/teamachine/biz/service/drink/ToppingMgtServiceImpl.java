@@ -6,6 +6,7 @@ import com.langtuo.teamachine.api.model.drink.ToppingDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.ToppingMgtService;
+import com.langtuo.teamachine.biz.convert.drink.ToppingMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.mapper.drink.ToppingBaseRuleMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingPO;
@@ -15,11 +16,11 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.drink.ToppingMgtConvertor.convertToToppingDTO;
 
 @Component
 @Slf4j
@@ -35,7 +36,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         TeaMachineResult<List<ToppingDTO>> teaMachineResult;
         try {
             List<ToppingPO> list = toppingAccessor.list(tenantCode);
-            List<ToppingDTO> dtoList = convert(list);
+            List<ToppingDTO> dtoList = ToppingMgtConvertor.convertToToppingDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("toppingMgtService|list|fatal|" + e.getMessage(), e);
@@ -53,7 +54,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
         try {
             PageInfo<ToppingPO> pageInfo = toppingAccessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
-            List<ToppingDTO> dtoList = convert(pageInfo.getList());
+            List<ToppingDTO> dtoList = ToppingMgtConvertor.convertToToppingDTO(pageInfo.getList());
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -66,7 +67,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
     public TeaMachineResult<ToppingDTO> getByCode(String tenantCode, String toppingTypeCode) {
         try {
             ToppingPO toppingTypePO = toppingAccessor.getByToppingCode(tenantCode, toppingTypeCode);
-            ToppingDTO tenantDTO = convert(toppingTypePO);
+            ToppingDTO tenantDTO = ToppingMgtConvertor.convertToToppingDTO(toppingTypePO);
             return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("toppingMgtService|getByCode|fatal|" + e.getMessage(), e);
@@ -80,7 +81,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        ToppingPO toppingTypePO = convert(request);
+        ToppingPO toppingTypePO = convertToToppingDTO(request);
         if (request.isPutNew()) {
             return putNew(toppingTypePO);
         } else {
@@ -162,59 +163,5 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
-    }
-
-    private List<ToppingDTO> convert(List<ToppingPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<ToppingDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private ToppingDTO convert(ToppingPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        ToppingDTO dto = new ToppingDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setToppingTypeCode(po.getToppingTypeCode());
-        dto.setToppingCode(po.getToppingCode());
-        dto.setToppingName(po.getToppingName());
-        dto.setState(po.getState());
-        dto.setValidHourPeriod(po.getValidHourPeriod());
-        dto.setCleanHourPeriod(po.getCleanHourPeriod());
-        dto.setMeasureUnit(po.getMeasureUnit());
-        dto.setConvertCoefficient(po.getConvertCoefficient());
-        dto.setFlowSpeed(po.getFlowSpeed());
-        dto.setComment(po.getComment());
-        po.setExtraInfo(po.getExtraInfo());
-        return dto;
-    }
-
-    private ToppingPO convert(ToppingPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        ToppingPO po = new ToppingPO();
-        po.setToppingTypeCode(request.getToppingTypeCode());
-        po.setToppingName(request.getToppingName());
-        po.setToppingCode(request.getToppingCode());
-        po.setState(request.getState());
-        po.setValidHourPeriod(request.getValidHourPeriod());
-        po.setCleanHourPeriod(request.getCleanHourPeriod());
-        po.setMeasureUnit(request.getMeasureUnit());
-        po.setConvertCoefficient(request.getConvertCoefficient());
-        po.setFlowSpeed(request.getFlowSpeed());
-        po.setTenantCode(request.getTenantCode());
-        po.setComment(request.getComment());
-        po.setExtraInfo(po.getExtraInfo());
-        return po;
     }
 }

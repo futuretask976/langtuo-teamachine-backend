@@ -211,11 +211,11 @@ public class DefaultTeaParser implements TeaParser {
                 List<SpecItemRulePutRequest> specItemRulePutRequestList = Lists.newArrayList();
                 for (SpecItemPO specItemPO : specItemPOList) {
                     if (newTeaUnitCode.length() > CommonConsts.STR_LENGTH_ZERO) {
-                        newTeaUnitCode.append(CommonConsts.STR_HORIZONTAL_BAR);
+                        newTeaUnitCode.append(CommonConsts.HORIZONTAL_BAR);
                     }
                     newTeaUnitCode.append(specItemPO.getSpecItemCode());
                     if (newTeaUnitName.length() > CommonConsts.STR_LENGTH_ZERO) {
-                        newTeaUnitName.append(CommonConsts.STR_HORIZONTAL_BAR);
+                        newTeaUnitName.append(CommonConsts.HORIZONTAL_BAR);
                     }
                     newTeaUnitName.append(specItemPO.getSpecItemName());
 

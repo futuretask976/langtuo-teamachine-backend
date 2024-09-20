@@ -33,8 +33,8 @@ public class MenuController {
 
     @GetMapping(value = "/trigger")
     public TeaMachineResult<Void> trigger(@RequestParam("tenantCode") String tenantCode
-            , @RequestParam("shopCode") String shopCode, @RequestParam("machineCode") String machineCode) {
-        TeaMachineResult<Void> rtn = service.triggerDispatchByShopCode(tenantCode, shopCode, machineCode);
+            , @RequestParam("shopGroupCode") String shopGroupCode, @RequestParam("machineCode") String machineCode) {
+        TeaMachineResult<Void> rtn = service.triggerDispatchByShopGroupCode(tenantCode, shopGroupCode, machineCode);
         return rtn;
     }
 

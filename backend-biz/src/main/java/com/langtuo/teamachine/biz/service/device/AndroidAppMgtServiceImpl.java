@@ -26,6 +26,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.biz.convert.device.AndroidAppMgtConvertor.*;
+
 @Component
 @Slf4j
 public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
@@ -100,7 +102,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         if (request == null) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
-        List<AndroidAppDispatchPO> poList = convert(request);
+        List<AndroidAppDispatchPO> poList = convertToAndroidAppDispatchPO(request);
 
         TeaMachineResult<Void> teaMachineResult;
         try {
@@ -183,57 +185,5 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
             log.error("androidAppMgtService|putUpdate|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
-    }
-
-    private List<AndroidAppDTO> convertToAndroidAppDTO(List<AndroidAppPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        return poList.stream()
-                .map(this::convertToAndroidAppDTO)
-                .collect(Collectors.toList());
-    }
-
-    private AndroidAppDTO convertToAndroidAppDTO(AndroidAppPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        AndroidAppDTO dto = new AndroidAppDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setExtraInfo(po.getExtraInfo());
-        dto.setVersion(po.getVersion());
-        dto.setOssPath(po.getOssPath());
-        dto.setComment(po.getComment());
-        return dto;
-    }
-
-    private AndroidAppPO convertToAndroidAppPO(AndroidAppPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        AndroidAppPO po = new AndroidAppPO();
-        po.setExtraInfo(request.getExtraInfo());
-        po.setVersion(request.getVersion());
-        po.setOssPath(request.getOssPath());
-        po.setComment(request.getComment());
-        return po;
-    }
-
-    private List<AndroidAppDispatchPO> convert(AndroidAppDispatchPutRequest request) {
-        String tenantCode = request.getTenantCode();
-        String version = request.getVersion();
-
-        return request.getShopGroupCodeList().stream()
-                .map(shopGroupCode -> {
-                    AndroidAppDispatchPO po = new AndroidAppDispatchPO();
-                    po.setTenantCode(tenantCode);
-                    po.setVersion(version);
-                    po.setShopGroupCode(shopGroupCode);
-                    return po;
-                }).collect(Collectors.toList());
     }
 }

@@ -6,6 +6,7 @@ import com.langtuo.teamachine.api.model.drink.ToppingTypeDTO;
 import com.langtuo.teamachine.api.request.drink.ToppingTypePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.ToppingTypeMgtService;
+import com.langtuo.teamachine.biz.convert.drink.ToppingTypeMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingTypeAccessor;
 import com.langtuo.teamachine.dao.po.drink.ToppingTypePO;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.drink.ToppingTypeMgtConvertor.convertToToppingTypeDTO;
 
 @Component
 @Slf4j
@@ -34,7 +37,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         try {
             List<ToppingTypePO> list = toppingTypeAccessor.selectList(tenantCode);
             List<ToppingTypeDTO> dtoList = list.stream()
-                    .map(po -> convert(po))
+                    .map(po -> ToppingTypeMgtConvertor.convertToToppingTypeDTO(po))
                     .collect(Collectors.toList());
 
             return TeaMachineResult.success(dtoList);
@@ -54,7 +57,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             PageInfo<ToppingTypePO> pageInfo = toppingTypeAccessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
             List<ToppingTypeDTO> dtoList = pageInfo.getList().stream()
-                    .map(po -> convert(po))
+                    .map(po -> ToppingTypeMgtConvertor.convertToToppingTypeDTO(po))
                     .collect(Collectors.toList());
 
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
@@ -69,7 +72,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     public TeaMachineResult<ToppingTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
         try {
             ToppingTypePO toppingTypePO = toppingTypeAccessor.getByToppingTypeCode(tenantCode, toppingTypeCode);
-            ToppingTypeDTO tenantDTO = convert(toppingTypePO);
+            ToppingTypeDTO tenantDTO = ToppingTypeMgtConvertor.convertToToppingTypeDTO(toppingTypePO);
             return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("toppingTypeMgtService|getByCode|fatal|" + e.getMessage(), e);
@@ -83,7 +86,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        ToppingTypePO toppingTypePO = convert(request);
+        ToppingTypePO toppingTypePO = convertToToppingTypeDTO(request);
         if (request.isPutNew()) {
             return putNew(toppingTypePO);
         } else {
@@ -148,38 +151,5 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             log.error("toppingTypeMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-    }
-
-    private ToppingTypeDTO convert(ToppingTypePO po) {
-        if (po == null) {
-            return null;
-        }
-
-        ToppingTypeDTO dto = new ToppingTypeDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setToppingTypeCode(po.getToppingTypeCode());
-        dto.setToppingTypeName(po.getToppingTypeName());
-        dto.setComment(po.getComment());
-        po.setExtraInfo(po.getExtraInfo());
-
-        int toppingCount = toppingAccessor.countByToppingTypeCode(po.getTenantCode(), po.getToppingTypeCode());
-        dto.setToppingCount(toppingCount);
-
-        return dto;
-    }
-
-    private ToppingTypePO convert(ToppingTypePutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        ToppingTypePO po = new ToppingTypePO();
-        po.setToppingTypeCode(request.getToppingTypeCode());
-        po.setToppingTypeName(request.getToppingTypeName());
-        po.setTenantCode(request.getTenantCode());
-        po.setComment(request.getComment());
-        po.setExtraInfo(po.getExtraInfo());
-        return po;
     }
 }

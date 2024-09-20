@@ -36,14 +36,7 @@ public interface MenuMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode);
-
-    /**
-     *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode);
+    TeaMachineResult<Void> triggerDispatchByShopGroupCode(String tenantCode, String shopGroupCode, String machineCode);
 
     /**
      *

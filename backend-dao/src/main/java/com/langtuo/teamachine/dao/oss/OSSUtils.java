@@ -88,13 +88,13 @@ public class OSSUtils {
 
         // 获取文件名
         String fileName = file.getName();
-        // 获取文件后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        // 最后上传生成的文件名
-        String finalFileName = System.currentTimeMillis() + "" + new SecureRandom().nextInt(0x0400)
-                + suffixName;
+//        // 获取文件后缀名
+//        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+//        // 最后上传生成的文件名
+//        String finalFileName = System.currentTimeMillis() + "" + new SecureRandom().nextInt(0x0400)
+//                + suffixName;
         // OSS中的文件夹名
-        String objectName = ossPath + OSSConfig.OSS_PATH_SEPARATOR +  finalFileName;
+        String objectName = ossPath + OSSConfig.OSS_PATH_SEPARATOR +  fileName; // finalFileName;
 
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(

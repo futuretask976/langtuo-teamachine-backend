@@ -5,7 +5,7 @@ import com.langtuo.teamachine.dao.accessor.device.AndroidAppDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.*;
-import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.*;
 import com.langtuo.teamachine.dao.accessor.record.*;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.DrainRuleDispatchAccessor;
@@ -19,6 +19,24 @@ public class SpringAccessorUtils {
     public static OrderToppingActRecordAccessor getOrderToppingActRecordAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         OrderToppingActRecordAccessor accessor = appContext.getBean(OrderToppingActRecordAccessor.class);
+        return accessor;
+    }
+
+    public static MenuAccessor getMenuAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        MenuAccessor accessor = appContext.getBean(MenuAccessor.class);
+        return accessor;
+    }
+
+    public static MenuSeriesRelAccessor getMenuSeriesRelAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        MenuSeriesRelAccessor accessor = appContext.getBean(MenuSeriesRelAccessor.class);
+        return accessor;
+    }
+
+    public static SeriesTeaRelAccessor getSeriesTeaRelAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        SeriesTeaRelAccessor accessor = appContext.getBean(SeriesTeaRelAccessor.class);
         return accessor;
     }
 
@@ -166,6 +184,12 @@ public class SpringAccessorUtils {
         return accessor;
     }
 
+    public static AccuracyTplToppingAccessor getAccuracyTplToppingAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        AccuracyTplToppingAccessor accessor = appContext.getBean(AccuracyTplToppingAccessor.class);
+        return accessor;
+    }
+
     public static SpecItemAccessor getSpecItemAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         SpecItemAccessor accessor = appContext.getBean(SpecItemAccessor.class);
@@ -181,6 +205,12 @@ public class SpringAccessorUtils {
     public static AndroidAppDispatchAccessor getAndroidAppDispatchAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         AndroidAppDispatchAccessor accessor = appContext.getBean(AndroidAppDispatchAccessor.class);
+        return accessor;
+    }
+
+    public static MenuDispatchHistoryAccessor getMenuDispatchOssAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        MenuDispatchHistoryAccessor accessor = appContext.getBean(MenuDispatchHistoryAccessor.class);
         return accessor;
     }
 }

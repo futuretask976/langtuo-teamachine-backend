@@ -3,7 +3,6 @@ package com.langtuo.teamachine.biz.service.menu;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesDTO;
-import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
 import com.langtuo.teamachine.api.request.menu.SeriesPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
@@ -24,7 +23,8 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.menu.SeriesMgtConvertor.*;
 
 @Component
 @Slf4j
@@ -80,7 +80,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
         TeaMachineResult<SeriesDTO> teaMachineResult;
         try {
             SeriesPO toppingTypePO = seriesAccessor.getBySeriesCode(tenantCode, seriesCode);
-            SeriesDTO seriesDTO = convert(toppingTypePO);
+            SeriesDTO seriesDTO = convertToSeriesDTO(toppingTypePO);
             teaMachineResult = TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
             log.error("seriesMgtService|getByCode|fatal|" + e.getMessage(), e);
@@ -201,77 +201,5 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
-    }
-
-    private List<SeriesDTO> convertToSeriesDTO(List<SeriesPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<SeriesDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private SeriesDTO convert(SeriesPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        SeriesDTO dto = new SeriesDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setComment(po.getComment());
-        dto.setExtraInfo(po.getExtraInfo());
-        dto.setSeriesCode(po.getSeriesCode());
-        dto.setSeriesName(po.getSeriesName());
-
-        List<SeriesTeaRelPO> seriesTeaRelPOList = seriesTeaRelAccessor.listBySeriesCode(
-                po.getTenantCode(), po.getSeriesCode());
-        dto.setSeriesTeaRelList(convert(seriesTeaRelPOList));
-        return dto;
-    }
-
-    private SeriesPO convertSeriesPO(SeriesPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        SeriesPO po = new SeriesPO();
-        po.setTenantCode(request.getTenantCode());
-        po.setComment(request.getComment());
-        po.setExtraInfo(request.getExtraInfo());
-        po.setSeriesCode(request.getSeriesCode());
-        po.setSeriesName(request.getSeriesName());
-        return po;
-    }
-
-    private List<SeriesTeaRelDTO> convert(List<SeriesTeaRelPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        return poList.stream().map(po -> {
-            SeriesTeaRelDTO dto = new SeriesTeaRelDTO();
-            dto.setSeriesCode(po.getSeriesCode());
-            dto.setTeaCode(po.getTeaCode());
-            return dto;
-        }).collect(Collectors.toList());
-    }
-
-    private List<SeriesTeaRelPO> convertToSeriesTeaRelPO(SeriesPutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getSeriesTeaRelList())) {
-            return null;
-        }
-
-        return request.getSeriesTeaRelList().stream()
-                .map(seriesTeaRelPutRequest -> {
-                    SeriesTeaRelPO po = new SeriesTeaRelPO();
-                    po.setTenantCode(request.getTenantCode());
-                    po.setSeriesCode(seriesTeaRelPutRequest.getSeriesCode());
-                    po.setTeaCode(seriesTeaRelPutRequest.getTeaCode());
-                    return po;
-                }).collect(Collectors.toList());
     }
 }

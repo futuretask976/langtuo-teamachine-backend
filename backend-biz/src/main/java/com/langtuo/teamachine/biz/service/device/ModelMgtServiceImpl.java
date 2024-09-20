@@ -3,13 +3,12 @@ package com.langtuo.teamachine.biz.service.device;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.model.device.ModelDTO;
-import com.langtuo.teamachine.api.model.device.ModelPipelineDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
 import com.langtuo.teamachine.api.request.device.ModelPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import com.langtuo.teamachine.biz.aync.AsyncDispatcher;
+import com.langtuo.teamachine.biz.convert.device.ModelMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
@@ -26,7 +25,8 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.device.ModelMgtConvertor.*;
 
 @Component
 @Slf4j
@@ -79,11 +79,11 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     public TeaMachineResult<ModelDTO> get(String modelCode) {
         try {
             ModelPO modelPO = modelAccessor.getByModelCode(modelCode);
-            ModelDTO modelDTO = convert(modelPO);
+            ModelDTO modelDTO = ModelMgtConvertor.convertToModelDTO(modelPO);
 
             List<ModelPipelinePO> pipelinePOList = modelPipelineAccessor.listByModelCode(modelCode);
             if (!CollectionUtils.isEmpty(pipelinePOList)) {
-                modelDTO.setPipelineList(convert(pipelinePOList));
+                modelDTO.setPipelineList(ModelMgtConvertor.convertToModelPipelineDTO(pipelinePOList));
             }
             return TeaMachineResult.success(modelDTO);
         } catch (Exception e) {
@@ -98,8 +98,8 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        ModelPO modelPO = convert(request);
-        List<ModelPipelinePO> modelPipelinePOList = convert(modelPO.getModelCode(), request.getPipelineList());
+        ModelPO modelPO = ModelMgtConvertor.convertToModelDTO(request);
+        List<ModelPipelinePO> modelPipelinePOList = ModelMgtConvertor.convertToModelDTO(modelPO.getModelCode(), request.getPipelineList());
 
         TeaMachineResult<Void> teaMachineResult;
         if (request.isPutNew()) {
@@ -199,72 +199,5 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             log.error("modelMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-    }
-
-    private List<ModelDTO> convertToModelDTO(List<ModelPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<ModelDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private ModelDTO convert(ModelPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        ModelDTO dto = new ModelDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setModelCode(po.getModelCode());
-        dto.setEnableFlowAll(po.getEnableFlowAll());
-        return dto;
-    }
-
-    private ModelPO convert(ModelPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        ModelPO po = new ModelPO();
-        po.setModelCode(request.getModelCode());
-        po.setEnableFlowAll(request.getEnableFlowAll());
-        return po;
-    }
-
-    private List<ModelPipelinePO> convert(String modelCode, List<ModelPipelinePutRequest> requestList) {
-        if (CollectionUtils.isEmpty(requestList)) {
-            return null;
-        }
-
-        List<ModelPipelinePO> resultList = requestList.stream().map(request -> {
-            ModelPipelinePO po = new ModelPipelinePO();
-            po.setModelCode(modelCode);
-            po.setPipelineNum(request.getPipelineNum());
-            po.setEnableFreeze(request.getEnableFreeze());
-            po.setEnableWarm(request.getEnableWarm());
-            return po;
-        }).collect(Collectors.toList());
-        return resultList;
-    }
-
-    private List<ModelPipelineDTO> convert(List<ModelPipelinePO> pipelinePOList) {
-        if (CollectionUtils.isEmpty(pipelinePOList)) {
-            return null;
-        }
-
-        List<ModelPipelineDTO> resultList = pipelinePOList.stream().map(po -> {
-            ModelPipelineDTO dto = new ModelPipelineDTO();
-            dto.setModelCode(po.getModelCode());
-            dto.setPipelineNum(po.getPipelineNum());
-            dto.setEnableFreeze(po.getEnableFreeze());
-            dto.setEnableWarm(po.getEnableWarm());
-            return dto;
-        }).collect(Collectors.toList());
-        return resultList;
     }
 }

@@ -25,6 +25,9 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.biz.convert.drink.AccuracyTplMgtConvertor.convertToAccuracyTplPO;
+import static com.langtuo.teamachine.biz.convert.drink.AccuracyTplMgtConvertor.convertToAccuracyTplToppingPO;
+
 @Component
 @Slf4j
 public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
@@ -186,67 +189,5 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             log.error("accuracyTplMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-    }
-
-    private AccuracyTplDTO convertToAccuracyTplPO(AccuracyTplPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        AccuracyTplDTO dto = new AccuracyTplDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setComment(po.getComment());
-        dto.setExtraInfo(po.getExtraInfo());
-        dto.setTemplateCode(po.getTemplateCode());
-        dto.setTemplateName(po.getTemplateName());
-        dto.setOverMode(po.getOverMode());
-        dto.setOverAmount(po.getOverAmount());
-        dto.setUnderMode(po.getUnderMode());
-        dto.setUnderAmount(po.getUnderAmount());
-
-        List<AccuracyTplToppingPO> toppingPOList = accuracyTplToppingAccessor.listByTplCode(
-                po.getTenantCode(), po.getTemplateCode());
-        if (!CollectionUtils.isEmpty(toppingPOList)) {
-            List<String> toppingCodeList = Lists.newArrayList();
-            for (AccuracyTplToppingPO toppingPO : toppingPOList) {
-                toppingCodeList.add(toppingPO.getToppingCode());
-            }
-            dto.setToppingCodeList(toppingCodeList);
-        }
-        return dto;
-    }
-
-    private AccuracyTplPO convertToAccuracyTplPO(AccuracyTplPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        AccuracyTplPO po = new AccuracyTplPO();
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
-        po.setTemplateCode(request.getTemplateCode());
-        po.setTemplateName(request.getTemplateName());
-        po.setOverMode(request.getOverUnit());
-        po.setOverAmount(request.getOverAmount());
-        po.setUnderMode(request.getUnderUnit());
-        po.setUnderAmount(request.getUnderAmount());
-        po.setComment(request.getComment());
-        return po;
-    }
-
-    private List<AccuracyTplToppingPO> convertToAccuracyTplToppingPO(AccuracyTplPutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getToppingCodeList())) {
-            return null;
-        }
-
-        return request.getToppingCodeList().stream()
-                .map(toppingCode -> {
-                    AccuracyTplToppingPO po = new AccuracyTplToppingPO();
-                    po.setTenantCode(request.getTenantCode());
-                    po.setTemplateCode(request.getTemplateCode());
-                    po.setToppingCode(toppingCode);
-                    return po;
-                }).collect(Collectors.toList());
     }
 }

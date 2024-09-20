@@ -6,6 +6,7 @@ import com.langtuo.teamachine.api.model.drink.TeaTypeDTO;
 import com.langtuo.teamachine.api.request.drink.TeaTypePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.TeaTypeMgtService;
+import com.langtuo.teamachine.biz.convert.drink.TeaTypeMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.drink.TeaAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.TeaTypeAccessor;
 import com.langtuo.teamachine.dao.po.drink.TeaTypePO;
@@ -15,11 +16,11 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.drink.TeaTypeMgtConvertor.convertToTeaTypePO;
 
 @Component
 @Slf4j
@@ -34,7 +35,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     public TeaMachineResult<List<TeaTypeDTO>> list(String tenantCode) {
         try {
             List<TeaTypePO> list = accessor.list(tenantCode);
-            List<TeaTypeDTO> dtoList = convert(list);
+            List<TeaTypeDTO> dtoList = TeaTypeMgtConvertor.convertToTeaTypePO(list);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("teaTypeMgtService|list|fatal|" + e.getMessage(), e);
@@ -51,7 +52,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         try {
             PageInfo<TeaTypePO> pageInfo = accessor.search(tenantName, toppingTypeCode, toppingTypeName,
                     pageNum, pageSize);
-            List<TeaTypeDTO> dtoList = convert(pageInfo.getList());
+            List<TeaTypeDTO> dtoList = TeaTypeMgtConvertor.convertToTeaTypePO(pageInfo.getList());
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -64,7 +65,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     public TeaMachineResult<TeaTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
         try {
             TeaTypePO toppingTypePO = accessor.getByTeaTypeCode(tenantCode, toppingTypeCode);
-            TeaTypeDTO tenantDTO = convert(toppingTypePO);
+            TeaTypeDTO tenantDTO = convertToTeaTypePO(toppingTypePO);
             return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("teaTypeMgtService|getByCode|fatal|" + e.getMessage(), e);
@@ -78,7 +79,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaTypePO teaTypePO = convert(request);
+        TeaTypePO teaTypePO = TeaTypeMgtConvertor.convertToTeaTypePO(request);
         if (request.isPutNew()) {
             return putNew(teaTypePO);
         } else {
@@ -142,49 +143,5 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             log.error("teaTypeMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-    }
-
-    private List<TeaTypeDTO> convert(List<TeaTypePO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<TeaTypeDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private TeaTypeDTO convert(TeaTypePO po) {
-        if (po == null) {
-            return null;
-        }
-
-        TeaTypeDTO dto = new TeaTypeDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setTeaTypeCode(po.getTeaTypeCode());
-        dto.setTeaTypeName(po.getTeaTypeName());
-        dto.setComment(po.getComment());
-        po.setExtraInfo(po.getExtraInfo());
-
-        int teaCount = teaAccessor.countByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
-        dto.setTeaCount(teaCount);
-
-        return dto;
-    }
-
-    private TeaTypePO convert(TeaTypePutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        TeaTypePO po = new TeaTypePO();
-        po.setTeaTypeCode(request.getTeaTypeCode());
-        po.setTeaTypeName(request.getTeaTypeName());
-        po.setTenantCode(request.getTenantCode());
-        po.setComment(request.getComment());
-        po.setExtraInfo(request.getExtraInfo());
-        return po;
     }
 }

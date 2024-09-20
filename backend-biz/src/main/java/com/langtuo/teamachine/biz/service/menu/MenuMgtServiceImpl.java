@@ -21,6 +21,7 @@ import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
+import com.langtuo.teamachine.internal.util.DateUtils;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,8 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.menu.MenuMgtConvertor.*;
 
 @Component
 @Slf4j
@@ -56,53 +59,23 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Override
     public TeaMachineResult<List<MenuDTO>> list(String tenantCode) {
-        TeaMachineResult<List<MenuDTO>> teaMachineResult;
         try {
             List<MenuPO> list = menuAccessor.list(tenantCode);
             List<MenuDTO> dtoList = convertToMenuDTO(list);
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("menuMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
-    public TeaMachineResult<List<MenuDTO>> listByShopCode(String tenantCode, String shopCode) {
-        TeaMachineResult<List<MenuDTO>> teaMachineResult;
-        try {
-            ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
-            if (shopPO == null) {
-                teaMachineResult = TeaMachineResult.success();
-            }
-
-            List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByShopGroupCode(
-                    tenantCode, shopPO.getShopGroupCode());
-            if (CollectionUtils.isEmpty(menuDispatchPOList)) {
-                teaMachineResult = TeaMachineResult.success();
-            }
-
-            List<String> menuCodeList = menuDispatchPOList.stream()
-                    .map(MenuDispatchPO::getMenuCode)
-                    .collect(Collectors.toList());
-            List<MenuPO> cleanRulePOList = menuAccessor.listByMenuCode(tenantCode,
-                    menuCodeList);
-            List<MenuDTO> menuDTOList = convertToMenuDTO(cleanRulePOList);
-            teaMachineResult = TeaMachineResult.success(menuDTOList);
-        } catch (Exception e) {
-            log.error("menuMgtService|listByShopCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-        return teaMachineResult;
-    }
-
-    @Override
-    public TeaMachineResult<Void> triggerDispatchByShopCode(String tenantCode, String shopCode, String machineCode) {
+    public TeaMachineResult<Void> triggerDispatchByShopGroupCode(String tenantCode, String shopGroupCode,
+                String machineCode) {
         JSONObject jsonPayload = new JSONObject();
         jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_MENU_LIST_REQUESTED);
         jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, tenantCode);
-        jsonPayload.put(CommonConsts.JSON_KEY_SHOP_CODE, shopCode);
+        jsonPayload.put(CommonConsts.JSON_KEY_SHOP_GROUP_CODE, shopGroupCode);
         jsonPayload.put(CommonConsts.JSON_KEY_MACHINE_CODE, machineCode);
         asyncDispatcher.dispatch(jsonPayload);
 
@@ -115,32 +88,28 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<MenuDTO>> teaMachineResult;
         try {
             PageInfo<MenuPO> pageInfo = menuAccessor.search(tenantName, seriesCode, seriesName,
                     pageNum, pageSize);
             List<MenuDTO> dtoList = convertToMenuDTO(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("menuMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<MenuDTO> getByCode(String tenantCode, String seriesCode) {
-        TeaMachineResult<MenuDTO> teaMachineResult;
         try {
             MenuPO toppingTypePO = menuAccessor.getByMenuCode(tenantCode, seriesCode);
-            MenuDTO seriesDTO = convert(toppingTypePO);
-            teaMachineResult = TeaMachineResult.success(seriesDTO);
+            MenuDTO seriesDTO = convertToMenuDTO(toppingTypePO);
+            return TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
             log.error("menuMgtService|getByCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -236,34 +205,37 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         if (request == null) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
-        List<MenuDispatchPO> poList = convert(request);
+        List<MenuDispatchPO> poList = convertToMenuDispatchPO(request);
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = menuDispatchAccessor.deleteByMenuCode(request.getTenantCode(),
-                    request.getMenuCode());
+            MenuPO menuPO = menuAccessor.getByMenuCode(request.getTenantCode(), request.getMenuCode());
+            if (menuPO == null) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+            }
+
+            int deleted = menuDispatchAccessor.deleteByMenuCode(request.getTenantCode(), request.getMenuCode());
             for (MenuDispatchPO po : poList) {
                 menuDispatchAccessor.insert(po);
             }
-            teaMachineResult = TeaMachineResult.success();
+
+            // 异步发送消息准备配置信息分发
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_MENU_DISPATCH_REQUESTED);
+            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
+            jsonPayload.put(CommonConsts.JSON_KEY_MENU_CODE, request.getMenuCode());
+            jsonPayload.put(CommonConsts.JSON_KEY_MENU_GMTMODIFIED_YMDHMS,
+                    DateUtils.transformYMDHMS(menuPO.getGmtModified()));
+            asyncDispatcher.dispatch(jsonPayload);
+
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|putDispatch|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-
-        // 异步发送消息准备配置信息分发
-        JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_MENU_DISPATCH_REQUESTED);
-        jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
-        jsonPayload.put(CommonConsts.JSON_KEY_MENU_CODE, request.getMenuCode());
-        asyncDispatcher.dispatch(jsonPayload);
-
-        return teaMachineResult;
     }
 
     @Override
     public TeaMachineResult<MenuDispatchDTO> getDispatchByMenuCode(String tenantCode, String menuCode) {
-        TeaMachineResult<MenuDispatchDTO> teaMachineResult;
         try {
             MenuDispatchDTO dto = new MenuDispatchDTO();
             dto.setMenuCode(menuCode);
@@ -275,99 +247,10 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                         .collect(Collectors.toList()));
             }
 
-            teaMachineResult = TeaMachineResult.success(dto);
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("menuMgtService|getDispatchByMenuCode|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
-    }
-
-    private List<MenuDTO> convertToMenuDTO(List<MenuPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<MenuDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private MenuDTO convert(MenuPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        MenuDTO dto = new MenuDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setComment(po.getComment());
-        dto.setExtraInfo(po.getExtraInfo());
-        dto.setMenuCode(po.getMenuCode());
-        dto.setMenuName(po.getMenuName());
-        dto.setValidFrom(po.getValidFrom());
-
-        List<MenuSeriesRelPO> seriesTeaRelPOList = menuSeriesRelAccessor.listBySeriesCode(
-                po.getTenantCode(), po.getMenuCode());
-        dto.setMenuSeriesRelList(convert(seriesTeaRelPOList));
-        return dto;
-    }
-
-    private MenuPO convertMenuPO(MenuPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        MenuPO po = new MenuPO();
-        po.setTenantCode(request.getTenantCode());
-        po.setComment(request.getComment());
-        po.setExtraInfo(request.getExtraInfo());
-        po.setMenuCode(request.getMenuCode());
-        po.setMenuName(request.getMenuName());
-        po.setValidFrom(request.getValidFrom());
-        return po;
-    }
-
-    private List<MenuSeriesRelDTO> convert(List<MenuSeriesRelPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        return poList.stream().map(po -> {
-            MenuSeriesRelDTO dto = new MenuSeriesRelDTO();
-            dto.setSeriesCode(po.getSeriesCode());
-            dto.setMenuCode(po.getMenuCode());
-            return dto;
-        }).collect(Collectors.toList());
-    }
-
-    private List<MenuSeriesRelPO> convertToMenuSeriesRelPO(MenuPutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getMenuSeriesRelList())) {
-            return null;
-        }
-
-        return request.getMenuSeriesRelList().stream()
-                .map(menuSeriesRelPutRequest -> {
-                    MenuSeriesRelPO po = new MenuSeriesRelPO();
-                    po.setTenantCode(request.getTenantCode());
-                    po.setSeriesCode(menuSeriesRelPutRequest.getSeriesCode());
-                    po.setMenuCode(menuSeriesRelPutRequest.getMenuCode());
-                    return po;
-                }).collect(Collectors.toList());
-    }
-
-    private List<MenuDispatchPO> convert(MenuDispatchPutRequest request) {
-        String tenantCode = request.getTenantCode();
-        String menuCode = request.getMenuCode();
-
-        return request.getShopGroupCodeList().stream()
-                .map(shopGroupCode -> {
-                    MenuDispatchPO po = new MenuDispatchPO();
-                    po.setTenantCode(tenantCode);
-                    po.setMenuCode(menuCode);
-                    po.setShopGroupCode(shopGroupCode);
-                    return po;
-                }).collect(Collectors.toList());
     }
 }

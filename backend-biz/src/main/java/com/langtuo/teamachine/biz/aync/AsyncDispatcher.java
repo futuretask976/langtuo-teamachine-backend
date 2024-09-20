@@ -8,7 +8,7 @@ import com.langtuo.teamachine.biz.aync.worker.device.MachineDispatchWorker;
 import com.langtuo.teamachine.biz.aync.worker.device.ModelDispatchWorker;
 import com.langtuo.teamachine.biz.aync.worker.drink.AccuracyTplDeleteWorker;
 import com.langtuo.teamachine.biz.aync.worker.drink.AccuracyTplDispatchWorker;
-import com.langtuo.teamachine.biz.aync.worker.menu.MenuDispatch4InitWorker;
+import com.langtuo.teamachine.biz.aync.worker.menu.MenuDispatchListWorker;
 import com.langtuo.teamachine.biz.aync.worker.menu.MenuDispatchWorker;
 import com.langtuo.teamachine.biz.aync.worker.rule.CleanRuleDispatchWorker;
 import com.langtuo.teamachine.biz.aync.worker.rule.DrainRuleDispatchWorker;
@@ -69,7 +69,7 @@ public class AsyncDispatcher implements InitializingBean {
         workerMap.put(CommonConsts.BIZ_CODE_ACCURACY_TPL_DELETED, jsonPayload -> new AccuracyTplDeleteWorker(jsonPayload));
         // menu 相关
         workerMap.put(CommonConsts.BIZ_CODE_MENU_DISPATCH_REQUESTED, jsonPayload -> new MenuDispatchWorker(jsonPayload));
-        workerMap.put(CommonConsts.BIZ_CODE_MENU_LIST_REQUESTED, jsonPayload -> new MenuDispatch4InitWorker(jsonPayload));
+        workerMap.put(CommonConsts.BIZ_CODE_MENU_LIST_REQUESTED, jsonPayload -> new MenuDispatchListWorker(jsonPayload));
         // rule 相关
         workerMap.put(CommonConsts.BIZ_CODE_DRAIN_RULE_DISPATCH_REQUESTED, jsonPayload -> new DrainRuleDispatchWorker(jsonPayload));
         workerMap.put(CommonConsts.BIZ_CODE_CLEAN_RULE_DISPATCH_REQUESTED, jsonPayload -> new CleanRuleDispatchWorker(jsonPayload));

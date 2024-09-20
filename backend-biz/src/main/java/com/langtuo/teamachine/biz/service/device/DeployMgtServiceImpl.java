@@ -12,7 +12,6 @@ import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
-import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
@@ -22,13 +21,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.device.DeployMgtConvertor.convertToDeployPO;
 
 @Component
 @Slf4j
@@ -197,55 +196,5 @@ public class DeployMgtServiceImpl implements DeployMgtService {
                 .getDeployHandler()
                 .export(tenantCode);
         return TeaMachineResult.success(xssfWorkbook);
-    }
-
-    private DeployPO convertToDeployPO(DeployPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        DeployPO po = new DeployPO();
-        po.setDeployCode(request.getDeployCode());
-        po.setModelCode(request.getModelCode());
-        po.setMachineCode(request.getMachineCode());
-        po.setShopCode(request.getShopCode());
-        po.setState(request.getState());
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(po.getExtraInfo());
-        return po;
-    }
-
-    private List<DeployDTO> convertToDeployPO(List<DeployPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<DeployDTO> list = poList.stream()
-                .map(po -> convertToDeployPO(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private DeployDTO convertToDeployPO(DeployPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        DeployDTO dto = new DeployDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setTenantCode(po.getTenantCode());
-        dto.setDeployCode(po.getDeployCode());
-        dto.setMachineCode(po.getMachineCode());
-        dto.setModelCode(po.getModelCode());
-        dto.setState(po.getState());
-        dto.setExtraInfo(po.getExtraInfo());
-
-        ShopPO shopPO = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
-        if (shopPO != null) {
-            dto.setShopCode(shopPO.getShopCode());
-            dto.setShopName(shopPO.getShopName());
-        }
-        return dto;
     }
 }
