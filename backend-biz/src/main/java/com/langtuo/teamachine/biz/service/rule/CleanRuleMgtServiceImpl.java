@@ -6,7 +6,6 @@ import com.langtuo.teamachine.biz.aync.AsyncDispatcher;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDispatchDTO;
-import com.langtuo.teamachine.api.model.rule.CleanRuleStepDTO;
 import com.langtuo.teamachine.api.request.rule.CleanRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.CleanRulePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
@@ -31,8 +30,9 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.rule.CleanRuleMgtConvertor.*;
 
 @Component
 @Slf4j
@@ -59,7 +59,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     public TeaMachineResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
         try {
             CleanRulePO po = cleanRuleAccessor.getByCleanRuleCode(tenantCode, cleanRuleCode);
-            CleanRuleDTO dto = convert(po);
+            CleanRuleDTO dto = convertToCleanRuleStepDTO(po);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("cleanRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
@@ -238,7 +238,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        List<CleanRuleDispatchPO> poList = convert(request);
+        List<CleanRuleDispatchPO> poList = convertToCleanRuleStepDTO(request);
         TeaMachineResult<Void> teaMachineResult;
         try {
             int deleted = cleanRuleDispatchAccessor.deleteByCleanRuleCode(request.getTenantCode(),
@@ -279,144 +279,5 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             log.error("cleanRuleMgtService|getDispatchByCleanRuleCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-    }
-
-    private List<CleanRuleDTO> convertToCleanRuleDTO(List<CleanRulePO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<CleanRuleDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private CleanRuleDTO convert(CleanRulePO po) {
-        if (po == null) {
-            return null;
-        }
-
-        CleanRuleDTO dto = new CleanRuleDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setExtraInfo(po.getExtraInfo());
-        dto.setCleanRuleCode(po.getCleanRuleCode());
-        dto.setCleanRuleName(po.getCleanRuleName());
-        dto.setPermitBatch(po.getPermitBatch());
-        dto.setPermitRemind(po.getPermitRemind());
-
-        List<CleanRuleStepPO> cleanRuleStepPOList = cleanRuleStepAccessor.listByCleanRuleCode(
-                po.getTenantCode(), dto.getCleanRuleCode());
-        if (!CollectionUtils.isEmpty(cleanRuleStepPOList)) {
-            dto.setCleanRuleStepList(convert(cleanRuleStepPOList));
-        }
-        List<CleanRuleExceptPO> cleanRuleExceptPOList = cleanRuleExceptAccessor.listByCleanRuleCode(
-                po.getTenantCode(), dto.getCleanRuleCode());
-        if (!CollectionUtils.isEmpty(cleanRuleExceptPOList)) {
-            dto.setExceptToppingCodeList(cleanRuleExceptPOList.stream()
-                    .map(cleanRuleExceptPO -> cleanRuleExceptPO.getExceptToppingCode())
-                    .collect(Collectors.toList()));
-        }
-        return dto;
-    }
-
-    private List<CleanRuleStepDTO> convert(List<CleanRuleStepPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<CleanRuleStepDTO> list = poList.stream()
-                .map(po -> {
-                    CleanRuleStepDTO dto = new CleanRuleStepDTO();
-                    dto.setTenantCode(po.getTenantCode());
-                    dto.setCleanRuleCode(po.getCleanRuleCode());
-                    dto.setCleanContent(po.getCleanContent());
-                    dto.setRemindContent(po.getRemindContent());
-                    dto.setRemindTitle(po.getRemindTitle());
-                    dto.setSoakMin(po.getSoakMin());
-                    dto.setStepIndex(po.getStepIndex());
-                    dto.setFlushIntervalMin(po.getFlushIntervalMin());
-                    dto.setWashSec(po.getWashSec());
-                    dto.setFlushSec(po.getFlushSec());
-                    dto.setStepIndex(po.getStepIndex());
-                    dto.setNeedConfirm(po.getNeedConfirm());
-                    dto.setCleanAgentType(po.getCleanAgentType());
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private CleanRulePO convertToCleanRulePO(CleanRulePutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        CleanRulePO po = new CleanRulePO();
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
-        po.setCleanRuleCode(request.getCleanRuleCode());
-        po.setCleanRuleName(request.getCleanRuleName());
-        po.setPermitBatch(request.getPermitBatch());
-        po.setPermitRemind(request.getPermitRemind());
-        return po;
-    }
-
-    private List<CleanRuleStepPO> convertToCleanRuleStepPO(CleanRulePutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getCleanRuleStepList())) {
-            return null;
-        }
-
-        List<CleanRuleStepPO> list = request.getCleanRuleStepList().stream()
-                .filter(Objects::nonNull)
-                .map(cleanRuleStepPutRequest -> {
-                    CleanRuleStepPO po = new CleanRuleStepPO();
-                    po.setTenantCode(request.getTenantCode());
-                    po.setCleanRuleCode(request.getCleanRuleCode());
-                    po.setCleanContent(cleanRuleStepPutRequest.getCleanContent());
-                    po.setRemindContent(cleanRuleStepPutRequest.getRemindContent());
-                    po.setRemindTitle(cleanRuleStepPutRequest.getRemindTitle());
-                    po.setSoakMin(cleanRuleStepPutRequest.getSoakMin());
-                    po.setStepIndex(cleanRuleStepPutRequest.getStepIndex());
-                    po.setFlushIntervalMin(cleanRuleStepPutRequest.getFlushIntervalMin());
-                    po.setWashSec(cleanRuleStepPutRequest.getWashSec());
-                    po.setFlushSec(cleanRuleStepPutRequest.getFlushSec());
-                    po.setStepIndex(cleanRuleStepPutRequest.getStepIndex());
-                    po.setNeedConfirm(cleanRuleStepPutRequest.getNeedConfirm());
-                    po.setCleanAgentType(cleanRuleStepPutRequest.getCleanAgentType());
-                    return po;
-                }).collect(Collectors.toList());
-        return list;
-    }
-
-    private List<CleanRuleDispatchPO> convert(CleanRuleDispatchPutRequest request) {
-        String tenantCode = request.getTenantCode();
-        String cleanRuleCode = request.getCleanRuleCode();
-
-        return request.getShopGroupCodeList().stream()
-                .map(shopGroupCode -> {
-                    CleanRuleDispatchPO po = new CleanRuleDispatchPO();
-                    po.setTenantCode(tenantCode);
-                    po.setCleanRuleCode(cleanRuleCode);
-                    po.setShopGroupCode(shopGroupCode);
-                    return po;
-                }).collect(Collectors.toList());
-    }
-
-    private List<CleanRuleExceptPO> convertToCleanRuleExceptPO(CleanRulePutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getExceptToppingCodeList())) {
-            return null;
-        }
-
-        List<CleanRuleExceptPO> poList = request.getExceptToppingCodeList().stream()
-                .map(exceptToppingCode -> {
-                    CleanRuleExceptPO po = new CleanRuleExceptPO();
-                    po.setExceptToppingCode(exceptToppingCode);
-                    po.setTenantCode(request.getTenantCode());
-                    po.setCleanRuleCode(request.getCleanRuleCode());
-                    return po;
-                }).collect(Collectors.toList());
-        return poList;
     }
 }

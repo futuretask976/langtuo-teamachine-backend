@@ -28,6 +28,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.biz.convert.rule.WarningRuleMgtConvertor.*;
+
 @Component
 @Slf4j
 public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
@@ -229,70 +231,5 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             log.error("warningRuleMgtService|getDispatchByWarningRuleCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-    }
-
-    private List<WarningRuleDTO> convertToWarningRuleDTO(List<WarningRulePO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<WarningRuleDTO> list = poList.stream()
-                .map(po -> convertToWarningRuleDTO(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private WarningRuleDTO convertToWarningRuleDTO(WarningRulePO po) {
-        if (po == null) {
-            return null;
-        }
-
-        WarningRuleDTO dto = new WarningRuleDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setTenantCode(po.getTenantCode());
-        dto.setComment(po.getComment());
-        dto.setExtraInfo(po.getExtraInfo());
-        dto.setWarningRuleCode(po.getWarningRuleCode());
-        dto.setWarningRuleName(po.getWarningRuleName());
-        dto.setWarningContent(po.getWarningContent());
-        dto.setWarningType(po.getWarningType());
-        dto.setThreshold(po.getThreshold());
-        dto.setThresholdMode(po.getThresholdMode());
-        dto.setComment(po.getComment());
-        return dto;
-    }
-
-    private WarningRulePO convertToWarningRuleDTO(WarningRulePutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        WarningRulePO po = new WarningRulePO();
-        po.setTenantCode(request.getTenantCode());
-        po.setComment(request.getComment());
-        po.setExtraInfo(request.getExtraInfo());
-        po.setWarningRuleCode(request.getWarningRuleCode());
-        po.setWarningRuleName(request.getWarningRuleName());
-        po.setWarningContent(request.getWarningContent());
-        po.setWarningType(request.getWarningType());
-        po.setThreshold(request.getThreshold());
-        po.setThresholdMode(request.getThresholdMode());
-        po.setComment(request.getComment());
-        return po;
-    }
-
-    private List<WarningRuleDispatchPO> convertToWarningRuleDTO(WarningRuleDispatchPutRequest request) {
-        String tenantCode = request.getTenantCode();
-        String warningRuleCode = request.getWarningRuleCode();
-
-        return request.getShopGroupCodeList().stream()
-                .map(shopGroupCode -> {
-                    WarningRuleDispatchPO po = new WarningRuleDispatchPO();
-                    po.setTenantCode(tenantCode);
-                    po.setWarningRuleCode(warningRuleCode);
-                    po.setShopGroupCode(shopGroupCode);
-                    return po;
-                }).collect(Collectors.toList());
     }
 }

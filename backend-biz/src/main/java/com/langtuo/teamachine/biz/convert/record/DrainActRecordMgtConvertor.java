@@ -15,7 +15,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DrainActRecordMgtAccessor {
+public class DrainActRecordMgtConvertor {
     public static List<DrainActRecordDTO> convertToDrainActRecordDTO(List<DrainActRecordPO> poList, boolean fillDetail) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;

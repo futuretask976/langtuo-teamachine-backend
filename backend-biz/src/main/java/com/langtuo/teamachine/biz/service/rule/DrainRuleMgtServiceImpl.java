@@ -6,15 +6,14 @@ import com.langtuo.teamachine.biz.aync.AsyncDispatcher;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDispatchDTO;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDTO;
-import com.langtuo.teamachine.api.model.rule.DrainRuleToppingDTO;
 import com.langtuo.teamachine.api.request.rule.DrainRuleDispatchPutRequest;
 import com.langtuo.teamachine.api.request.rule.DrainRulePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
+import com.langtuo.teamachine.biz.convert.rule.DrainRuleMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.*;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
-import com.langtuo.teamachine.dao.po.drink.ToppingPO;
 import com.langtuo.teamachine.dao.po.rule.*;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -27,8 +26,9 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.rule.DrainRuleMgtConvertor.*;
 
 @Component
 @Slf4j
@@ -55,7 +55,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     public TeaMachineResult<DrainRuleDTO> getByCode(String tenantCode, String drainRuleCode) {
         try {
             DrainRulePO po = drainRuleAccessor.getByDrainRuleCode(tenantCode, drainRuleCode);
-            DrainRuleDTO dto = convert(po);
+            DrainRuleDTO dto = DrainRuleMgtConvertor.convertToDrainRuleDTO(po);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("drainRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
@@ -212,7 +212,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        List<DrainRuleDispatchPO> poList = convert(request);
+        List<DrainRuleDispatchPO> poList = DrainRuleMgtConvertor.convertToDrainRuleDTO(request);
         try {
             int deleted = drainRuleDispatchAccessor.deleteByDrainRuleCode(request.getTenantCode(),
                     request.getDrainRuleCode());
@@ -252,110 +252,5 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             log.error("drainRuleMgtService|getDispatchByDrainRuleCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-    }
-
-    private List<DrainRuleDTO> convertToDrainRuleDTO(List<DrainRulePO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<DrainRuleDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private DrainRuleDTO convert(DrainRulePO po) {
-        if (po == null) {
-            return null;
-        }
-
-        DrainRuleDTO dto = new DrainRuleDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setTenantCode(po.getTenantCode());
-        dto.setExtraInfo(po.getExtraInfo());
-        dto.setDrainRuleCode(po.getDrainRuleCode());
-        dto.setDrainRuleName(po.getDrainRuleName());
-        dto.setDefaultRule(po.getDefaultRule());
-
-        List<DrainRuleToppingPO> poList = drainRuleToppingAccessor.listByDrainRuleCode(
-                po.getTenantCode(), po.getDrainRuleCode());
-        if (!CollectionUtils.isEmpty(poList)) {
-            dto.setToppingRuleList(convertToDrainRuleToppingDTO(poList));
-        }
-        return dto;
-    }
-
-    private List<DrainRuleToppingDTO> convertToDrainRuleToppingDTO(List<DrainRuleToppingPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<DrainRuleToppingDTO> list = poList.stream()
-                .map(po -> {
-                    DrainRuleToppingDTO dto = new DrainRuleToppingDTO();
-                    dto.setTenantCode(po.getTenantCode());
-                    dto.setDrainRuleCode(po.getDrainRuleCode());
-                    dto.setToppingCode(po.getToppingCode());
-                    dto.setFlushSec(po.getFlushSec());
-                    dto.setFlushWeight(po.getFlushWeight());
-
-                    ToppingPO toppingPO = toppingAccessor.getByToppingCode(
-                            po.getTenantCode(), po.getToppingCode());
-                    if (toppingPO != null) {
-                        dto.setToppingName(toppingPO.getToppingName());
-                    }
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private DrainRulePO convertToDrainRulePO(DrainRulePutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        DrainRulePO po = new DrainRulePO();
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
-        po.setDrainRuleCode(request.getDrainRuleCode());
-        po.setDrainRuleName(request.getDrainRuleName());
-        po.setDefaultRule(request.getDefaultRule());
-        return po;
-    }
-
-    private List<DrainRuleToppingPO> convertToDrainRuleIncludePO(DrainRulePutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getToppingRuleList())) {
-            return null;
-        }
-
-        List<DrainRuleToppingPO> list = request.getToppingRuleList().stream()
-                .filter(Objects::nonNull)
-                .map(openRuleToppingPutRequest -> {
-                    DrainRuleToppingPO po = new DrainRuleToppingPO();
-                    po.setTenantCode(request.getTenantCode());
-                    po.setDrainRuleCode(request.getDrainRuleCode());
-                    po.setToppingCode(openRuleToppingPutRequest.getToppingCode());
-                    po.setFlushSec(openRuleToppingPutRequest.getFlushSec());
-                    po.setFlushWeight(openRuleToppingPutRequest.getFlushWeight());
-                    return po;
-                }).collect(Collectors.toList());
-        return list;
-    }
-
-    private List<DrainRuleDispatchPO> convert(DrainRuleDispatchPutRequest request) {
-        String tenantCode = request.getTenantCode();
-        String openRuleCode = request.getDrainRuleCode();
-
-        return request.getShopGroupCodeList().stream()
-                .map(shopGroupCode -> {
-                    DrainRuleDispatchPO po = new DrainRuleDispatchPO();
-                    po.setTenantCode(tenantCode);
-                    po.setDrainRuleCode(openRuleCode);
-                    po.setShopGroupCode(shopGroupCode);
-                    return po;
-                }).collect(Collectors.toList());
     }
 }

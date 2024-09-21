@@ -7,9 +7,7 @@ import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.*;
 import com.langtuo.teamachine.dao.accessor.menu.*;
 import com.langtuo.teamachine.dao.accessor.record.*;
-import com.langtuo.teamachine.dao.accessor.rule.CleanRuleDispatchAccessor;
-import com.langtuo.teamachine.dao.accessor.rule.DrainRuleDispatchAccessor;
-import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
+import com.langtuo.teamachine.dao.accessor.rule.*;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.*;
@@ -49,6 +47,18 @@ public class SpringAccessorUtils {
     public static CleanRuleDispatchAccessor getCleanRuleDispatchAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         CleanRuleDispatchAccessor accessor = appContext.getBean(CleanRuleDispatchAccessor.class);
+        return accessor;
+    }
+
+    public static CleanRuleExceptAccessor getCleanRuleExceptAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        CleanRuleExceptAccessor accessor = appContext.getBean(CleanRuleExceptAccessor.class);
+        return accessor;
+    }
+
+    public static CleanRuleStepAccessor getCleanRuleStepAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        CleanRuleStepAccessor accessor = appContext.getBean(CleanRuleStepAccessor.class);
         return accessor;
     }
 
@@ -187,6 +197,12 @@ public class SpringAccessorUtils {
     public static ToppingAccessor getToppingAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         ToppingAccessor accessor = appContext.getBean(ToppingAccessor.class);
+        return accessor;
+    }
+
+    public static DrainRuleToppingAccessor getDrainRuleToppingAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        DrainRuleToppingAccessor accessor = appContext.getBean(DrainRuleToppingAccessor.class);
         return accessor;
     }
 
