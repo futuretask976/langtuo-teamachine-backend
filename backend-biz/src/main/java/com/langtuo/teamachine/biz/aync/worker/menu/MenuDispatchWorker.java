@@ -1,32 +1,14 @@
 package com.langtuo.teamachine.biz.aync.worker.menu;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.model.drink.TeaDTO;
-import com.langtuo.teamachine.api.model.menu.MenuDTO;
-import com.langtuo.teamachine.api.model.menu.SeriesDTO;
-import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
-import com.langtuo.teamachine.api.service.drink.TeaMgtService;
-import com.langtuo.teamachine.api.service.menu.MenuMgtService;
-import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
-import com.langtuo.teamachine.biz.convert.drink.TeaMgtConvertor;
-import com.langtuo.teamachine.biz.convert.menu.MenuMgtConvertor;
-import com.langtuo.teamachine.biz.convert.menu.SeriesMgtConvertor;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
-import com.langtuo.teamachine.dao.accessor.drink.TeaAccessor;
-import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchHistoryAccessor;
-import com.langtuo.teamachine.dao.accessor.menu.SeriesAccessor;
 import com.langtuo.teamachine.dao.config.OSSConfig;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
-import com.langtuo.teamachine.dao.po.drink.TeaPO;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchHistoryPO;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
-import com.langtuo.teamachine.dao.po.menu.MenuPO;
-import com.langtuo.teamachine.dao.po.menu.SeriesPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -41,10 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
 public class MenuDispatchWorker implements Runnable {
@@ -76,15 +55,15 @@ public class MenuDispatchWorker implements Runnable {
 
     @Override
     public void run() {
-        MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchOssAccessor();
         String fileName = getMenuFileName();
+        MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchOssAccessor();
         MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
                 CommonConsts.MENU_DISPATCH_INIT_FALSE, fileName);
         if (existOssPO != null) {
             sendToMachine(getSendMsg(existOssPO));
         }
 
-        JSONObject dispatchCont = getDispatchCont();
+        JSONObject dispatchCont = BizUtils.getMenuDispatchCont(tenantCode, menuCode);
         if (dispatchCont == null) {
             return;
         }
@@ -119,74 +98,6 @@ public class MenuDispatchWorker implements Runnable {
         } finally {
             tmpFile.delete();
         }
-    }
-
-    private JSONObject getDispatchCont() {
-        MenuAccessor menuAccessor = SpringAccessorUtils.getMenuAccessor();
-        MenuPO menuPO = menuAccessor.getByMenuCode(tenantCode, menuCode);
-        MenuDTO menuDTO = MenuMgtConvertor.convertToMenuDTO(menuPO);
-        if (menuDTO == null) {
-            log.info("menuDispatchWorker|getMenu|null|stopWorker");
-            return null;
-        }
-
-        List<SeriesDTO> seriesDTOList = menuDTO.getMenuSeriesRelList().stream()
-                .map(menuSeriesRelDTO -> {
-                    SeriesAccessor seriesAccessor = SpringAccessorUtils.getSeriesAccessor();
-                    SeriesPO seriesPO = seriesAccessor.getBySeriesCode(tenantCode, menuSeriesRelDTO.getSeriesCode());
-                    SeriesDTO seriesDTO = SeriesMgtConvertor.convertToSeriesDTO(seriesPO);
-                    return seriesDTO;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(seriesDTOList)) {
-            log.info("menuDispatchWorker|getSeriesList|empty|stopWorker");
-            return null;
-        }
-        List<String> teaCodeList = seriesDTOList.stream()
-                .map(seriesDTO -> {
-                    List<SeriesTeaRelDTO> seriesTeaRelList = seriesDTO.getSeriesTeaRelList();
-                    if (CollectionUtils.isEmpty(seriesTeaRelList)) {
-                        return null;
-                    }
-                    return seriesTeaRelList.stream()
-                            .map(seriesTeaRelDTO -> seriesTeaRelDTO.getTeaCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(teaCodeList)) {
-            log.info("menuDispatchWorker|getTeaList|empty|stopWorker");
-            return null;
-        }
-
-        TeaMgtService teaMgtService = SpringServiceUtils.getTeaMgtService();
-
-        List<TeaDTO> teaList = teaCodeList.stream()
-                .map(teaCode -> {
-                    TeaAccessor teaAccessor = SpringAccessorUtils.getTeaAccessor();
-                    TeaPO teaPO = teaAccessor.getByTeaCode(tenantCode, teaCode);
-                    TeaDTO teaDTO = TeaMgtConvertor.convertToTeaDTO(teaPO, true);
-                    return teaDTO;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        // 拼接需要输出的内容
-        JSONObject jsonMenu = (JSONObject) JSON.toJSON(menuDTO);
-        jsonMenu.remove("menuSeriesRelList");
-        jsonMenu.put("seriesList", new JSONArray());
-        for (SeriesDTO seriesDTO : seriesDTOList) {
-            JSONObject seriesJSON = (JSONObject) JSON.toJSON(seriesDTO);
-            seriesJSON.remove("seriesTeaRelList");
-            seriesJSON.put("teaList", new JSONArray());
-            for (TeaDTO teaDTO : teaList) {
-                seriesJSON.getJSONArray("teaList").add(JSON.toJSON(teaDTO));
-            }
-            jsonMenu.getJSONArray("seriesList").add(seriesJSON);
-        }
-        return jsonMenu;
     }
 
     private List<String> getMachineCodeList() {

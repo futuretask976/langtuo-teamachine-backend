@@ -1,28 +1,105 @@
 package com.langtuo.teamachine.biz.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.langtuo.teamachine.api.model.drink.TeaDTO;
+import com.langtuo.teamachine.api.model.menu.MenuDTO;
+import com.langtuo.teamachine.api.model.menu.SeriesDTO;
+import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
+import com.langtuo.teamachine.biz.convert.drink.TeaMgtConvertor;
+import com.langtuo.teamachine.biz.convert.menu.MenuMgtConvertor;
+import com.langtuo.teamachine.biz.convert.menu.SeriesMgtConvertor;
+import com.langtuo.teamachine.dao.accessor.drink.TeaAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.SeriesAccessor;
 import com.langtuo.teamachine.dao.config.OSSConfig;
-import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
-import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
-import com.langtuo.teamachine.dao.po.shop.ShopPO;
-import com.langtuo.teamachine.dao.po.user.AdminPO;
+import com.langtuo.teamachine.dao.po.drink.TeaPO;
+import com.langtuo.teamachine.dao.po.menu.MenuPO;
+import com.langtuo.teamachine.dao.po.menu.SeriesPO;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
 import java.io.*;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class BizUtils {
+    public static JSONObject getMenuDispatchCont(String tenantCode, String menuCode) {
+        MenuAccessor menuAccessor = SpringAccessorUtils.getMenuAccessor();
+        MenuPO menuPO = menuAccessor.getByMenuCode(tenantCode, menuCode);
+        MenuDTO menuDTO = MenuMgtConvertor.convertToMenuDTO(menuPO);
+        if (menuDTO == null) {
+            log.info("BizUtils|getMenu|null|stopWorker");
+            return null;
+        }
+
+        List<SeriesDTO> seriesDTOList = menuDTO.getMenuSeriesRelList().stream()
+                .map(menuSeriesRelDTO -> {
+                    SeriesAccessor seriesAccessor = SpringAccessorUtils.getSeriesAccessor();
+                    SeriesPO seriesPO = seriesAccessor.getBySeriesCode(tenantCode, menuSeriesRelDTO.getSeriesCode());
+                    SeriesDTO seriesDTO = SeriesMgtConvertor.convertToSeriesDTO(seriesPO);
+                    return seriesDTO;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(seriesDTOList)) {
+            log.info("BizUtils|getSeriesList|empty|stopWorker");
+            return null;
+        }
+        List<String> teaCodeList = seriesDTOList.stream()
+                .map(seriesDTO -> {
+                    List<SeriesTeaRelDTO> seriesTeaRelList = seriesDTO.getSeriesTeaRelList();
+                    if (CollectionUtils.isEmpty(seriesTeaRelList)) {
+                        return null;
+                    }
+                    return seriesTeaRelList.stream()
+                            .map(seriesTeaRelDTO -> seriesTeaRelDTO.getTeaCode())
+                            .collect(Collectors.toList());
+                })
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(teaCodeList)) {
+            log.info("BizUtils|getTeaList|empty|stopWorker");
+            return null;
+        }
+
+        List<TeaDTO> teaList = teaCodeList.stream()
+                .map(teaCode -> {
+                    TeaAccessor teaAccessor = SpringAccessorUtils.getTeaAccessor();
+                    TeaPO teaPO = teaAccessor.getByTeaCode(tenantCode, teaCode);
+                    TeaDTO teaDTO = TeaMgtConvertor.convertToTeaDTO(teaPO, true);
+                    return teaDTO;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        // 拼接需要输出的内容
+        JSONObject jsonMenu = (JSONObject) JSON.toJSON(menuDTO);
+        jsonMenu.remove("menuSeriesRelList");
+        jsonMenu.put("seriesList", new JSONArray());
+        for (SeriesDTO seriesDTO : seriesDTOList) {
+            JSONObject seriesJSON = (JSONObject) JSON.toJSON(seriesDTO);
+            seriesJSON.remove("seriesTeaRelList");
+            seriesJSON.put("teaList", new JSONArray());
+            for (TeaDTO teaDTO : teaList) {
+                seriesJSON.getJSONArray("teaList").add(JSON.toJSON(teaDTO));
+            }
+            jsonMenu.getJSONArray("seriesList").add(seriesJSON);
+        }
+        return jsonMenu;
+    }
+
     /**
      *
      * @param length

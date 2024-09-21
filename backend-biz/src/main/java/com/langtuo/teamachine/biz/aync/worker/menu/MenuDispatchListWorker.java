@@ -1,22 +1,12 @@
 package com.langtuo.teamachine.biz.aync.worker.menu;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.langtuo.teamachine.api.model.drink.TeaDTO;
-import com.langtuo.teamachine.api.model.menu.MenuDTO;
-import com.langtuo.teamachine.api.model.menu.SeriesDTO;
-import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
-import com.langtuo.teamachine.api.service.drink.TeaMgtService;
-import com.langtuo.teamachine.api.service.menu.MenuMgtService;
-import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
-import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchHistoryAccessor;
 import com.langtuo.teamachine.dao.config.OSSConfig;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchHistoryPO;
-import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
@@ -28,10 +18,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
 public class MenuDispatchListWorker implements Runnable {
@@ -109,88 +95,18 @@ public class MenuDispatchListWorker implements Runnable {
     }
 
     private JSONArray getDispatchCont() {
-        MenuDispatchAccessor menuDispatchAccessor = SpringAccessorUtils.getMenuDispatchAccessor();
-        List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByShopGroupCode(tenantCode, shopGroupCode);
-
-        MenuMgtService menuMgtService = SpringServiceUtils.getMenuMgtService();
         List<MenuPO> menuPOList = DaoUtils.getMenuPOListByShopGroupCode(tenantCode, shopGroupCode);
-
-                getModel(menuMgtService.listByShopCode(tenantCode, shopCode));
-        if (CollectionUtils.isEmpty(menuDTOList)) {
+        if (CollectionUtils.isEmpty(menuPOList)) {
             log.info("menuDispatchInitWorker|getMenu|empty|stopWorker");
             return null;
         }
 
         JSONArray arr = new JSONArray();
-        for (MenuDTO menuDTO : menuDTOList) {
-            JSONObject menuDispatchCont = getDispatchCont4Menu(menuDTO.getMenuCode());
+        for (MenuPO menuPO : menuPOList) {
+            JSONObject menuDispatchCont = BizUtils.getMenuDispatchCont(tenantCode, menuPO.getMenuCode());
             arr.add(menuDispatchCont);
         }
         return arr;
-    }
-
-    private JSONObject getDispatchCont4Menu(String menuCode) {
-        MenuMgtService menuMgtService = SpringServiceUtils.getMenuMgtService();
-        MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
-        if (menuDTO == null) {
-            log.info("menuDispatchInitWorker|getMenu|null|stopWorker");
-            return null;
-        }
-
-        SeriesMgtService seriesMgtService = SpringServiceUtils.getSeriesMgtService();
-        List<SeriesDTO> seriesList = menuDTO.getMenuSeriesRelList().stream()
-                .map(menuSeriesRelDTO -> {
-                    SeriesDTO seriesDTO = getModel(seriesMgtService.getByCode(
-                            tenantCode, menuSeriesRelDTO.getSeriesCode()));
-                    return seriesDTO;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(seriesList)) {
-            log.info("menuDispatchInitWorker|getSeriesList|empty|stopWorker");
-            return null;
-        }
-        List<String> teaCodeList = seriesList.stream()
-                .map(seriesDTO -> {
-                    List<SeriesTeaRelDTO> seriesTeaRelList = seriesDTO.getSeriesTeaRelList();
-                    if (CollectionUtils.isEmpty(seriesTeaRelList)) {
-                        return null;
-                    }
-                    return seriesTeaRelList.stream()
-                            .map(seriesTeaRelDTO -> seriesTeaRelDTO.getTeaCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(teaCodeList)) {
-            log.info("menuDispatchInitWorker|getTeaList|empty|stopWorker");
-            return null;
-        }
-
-        TeaMgtService teaMgtService = SpringServiceUtils.getTeaMgtService();
-        List<TeaDTO> teaList = teaCodeList.stream()
-                .map(teaCode -> {
-                    TeaDTO teaDTO = getModel(teaMgtService.getByCode(tenantCode, teaCode));
-                    return teaDTO;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        // 拼接需要输出的内容
-        JSONObject jsonMenu = (JSONObject) JSON.toJSON(menuDTO);
-        jsonMenu.remove("menuSeriesRelList");
-        jsonMenu.put("seriesList", new JSONArray());
-        for (SeriesDTO seriesDTO : seriesList) {
-            JSONObject seriesJSON = (JSONObject) JSON.toJSON(seriesDTO);
-            seriesJSON.remove("seriesTeaRelList");
-            seriesJSON.put("teaList", new JSONArray());
-            for (TeaDTO teaDTO : teaList) {
-                seriesJSON.getJSONArray("teaList").add(JSON.toJSON(teaDTO));
-            }
-            jsonMenu.getJSONArray("seriesList").add(seriesJSON);
-        }
-        return jsonMenu;
     }
 
     private String getMenuListFileName() {
