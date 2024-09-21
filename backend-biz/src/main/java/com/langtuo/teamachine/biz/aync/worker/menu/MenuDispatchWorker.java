@@ -66,6 +66,11 @@ public class MenuDispatchWorker implements Runnable {
                 return;
             }
 
+            if (tmpFile.exists()) {
+                log.info("menuDispatchWorker|tmpFileCheck|exist|stopWorker|" + tmpFile.getAbsolutePath());
+                return;
+            }
+
             JSONObject dispatchCont = BizUtils.getMenuDispatchCont(tenantCode, menuCode);
             if (dispatchCont == null) {
                 return;
@@ -73,7 +78,7 @@ public class MenuDispatchWorker implements Runnable {
 
             boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), tmpFile);
             if (!wrote) {
-                log.info("menuDispatchWorker|writeStrToFile|failed|stopWorker");
+                log.info("menuDispatchWorker|writeStrToFile|failed|stopWorker|" + tmpFile.getAbsolutePath());
                 return;
             }
             String md5AsHex = calcMD5Hex(tmpFile);

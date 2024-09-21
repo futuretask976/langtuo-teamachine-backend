@@ -41,43 +41,48 @@ public class MenuDispatchListWorker implements Runnable {
         this.shopGroupCode = jsonPayload.getString(CommonConsts.JSON_KEY_SHOP_GROUP_CODE);
         this.machineCode = jsonPayload.getString(CommonConsts.JSON_KEY_MACHINE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode) || StringUtils.isBlank(machineCode)) {
-            log.error("menuDispatchInitWorker|init|illegalArgument|" + tenantCode + "|" + shopGroupCode + "|" + machineCode);
+            log.error("menuDispatchListWorker|init|illegalArgument|" + tenantCode + "|" + shopGroupCode + "|" + machineCode);
             throw new IllegalArgumentException("tenantCode or shopGroupCode or machineCode is blank");
         }
     }
 
     @Override
     public void run() {
-        MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchHistoryAccessor();
         String fileName = getMenuListFileName();
-        MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
-                CommonConsts.MENU_DISPATCH_INIT_FALSE, fileName);
-        if (existOssPO != null) {
-            sendToMachine(getSendMsg(existOssPO));
-            return;
-        }
-
-        JSONArray dispatchCont = getDispatchCont();
-        if (dispatchCont == null) {
-            log.info("menuDispatchInitWorker|getDispatchCont|error|stopWorker|" + dispatchCont);
-            return;
-        }
-
         File tmpFile = new File(CommonConsts.MENU_OUTPUT_PATH + fileName);
         try {
+            MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchHistoryAccessor();
+            MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
+                    CommonConsts.MENU_DISPATCH_INIT_FALSE, fileName);
+            if (existOssPO != null) {
+                sendToMachine(getSendMsg(existOssPO));
+                return;
+            }
+
+            if (tmpFile.exists()) {
+                log.info("menuDispatchListWorker|tmpFileCheck|exist|stopWorker|" + tmpFile.getAbsolutePath());
+                return;
+            }
+
+            JSONArray dispatchCont = getDispatchCont();
+            if (dispatchCont == null) {
+                log.info("menuDispatchListWorker|getDispatchCont|error|stopWorker|" + dispatchCont);
+                return;
+            }
+
             boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), tmpFile);
             if (!wrote) {
-                log.info("menuDispatchInitWorker|writeStrToFile|failed|stopWorker");
+                log.info("menuDispatchListWorker|writeStrToFile|failed|stopWorker");
                 return;
             }
             String ossPath = BizUtils.uploadOSS(tmpFile);
             if (StringUtils.isBlank(ossPath)) {
-                log.info("menuDispatchInitWorker|uploadOSS|failed|stopWorker");
+                log.info("menuDispatchListWorker|uploadOSS|failed|stopWorker");
                 return;
             }
             String md5AsHex = BizUtils.calcMD5Hex(tmpFile);
             if (StringUtils.isBlank(md5AsHex)) {
-                log.info("menuDispatchInitWorker|calcMD5Hex|failed|stopWorker");
+                log.info("menuDispatchListWorker|calcMD5Hex|failed|stopWorker");
                 return;
             }
 
@@ -89,7 +94,7 @@ public class MenuDispatchListWorker implements Runnable {
 
             sendToMachine(getSendMsg(newOssPO));
         } catch (Exception e) {
-            log.error("menuDispatchInitWorker|run|fatal|" + e.getMessage(), e);
+            log.error("menuDispatchListWorker|run|fatal|" + e.getMessage(), e);
         } finally {
             tmpFile.delete();
         }
@@ -98,7 +103,7 @@ public class MenuDispatchListWorker implements Runnable {
     private JSONArray getDispatchCont() {
         List<MenuPO> menuPOList = DaoUtils.getMenuPOListByShopGroupCode(tenantCode, shopGroupCode);
         if (CollectionUtils.isEmpty(menuPOList)) {
-            log.info("menuDispatchInitWorker|getMenu|empty|stopWorker");
+            log.info("menuDispatchListWorker|getMenu|empty|stopWorker");
             return null;
         }
 
