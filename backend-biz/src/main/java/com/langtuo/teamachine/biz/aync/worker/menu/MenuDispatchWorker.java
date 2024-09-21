@@ -10,14 +10,23 @@ import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
+import com.langtuo.teamachine.biz.convert.drink.TeaMgtConvertor;
+import com.langtuo.teamachine.biz.convert.menu.MenuMgtConvertor;
+import com.langtuo.teamachine.biz.convert.menu.SeriesMgtConvertor;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.drink.TeaAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchHistoryAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.SeriesAccessor;
 import com.langtuo.teamachine.dao.config.OSSConfig;
 import com.langtuo.teamachine.dao.oss.OSSUtils;
+import com.langtuo.teamachine.dao.po.drink.TeaPO;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchHistoryPO;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
+import com.langtuo.teamachine.dao.po.menu.MenuPO;
+import com.langtuo.teamachine.dao.po.menu.SeriesPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -113,18 +122,19 @@ public class MenuDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        MenuMgtService menuMgtService = SpringServiceUtils.getMenuMgtService();
-        MenuDTO menuDTO = getModel(menuMgtService.getByCode(tenantCode, menuCode));
+        MenuAccessor menuAccessor = SpringAccessorUtils.getMenuAccessor();
+        MenuPO menuPO = menuAccessor.getByMenuCode(tenantCode, menuCode);
+        MenuDTO menuDTO = MenuMgtConvertor.convertToMenuDTO(menuPO);
         if (menuDTO == null) {
             log.info("menuDispatchWorker|getMenu|null|stopWorker");
             return null;
         }
 
-        SeriesMgtService seriesMgtService = SpringServiceUtils.getSeriesMgtService();
         List<SeriesDTO> seriesDTOList = menuDTO.getMenuSeriesRelList().stream()
                 .map(menuSeriesRelDTO -> {
-                    SeriesDTO seriesDTO = getModel(seriesMgtService.getByCode(
-                            tenantCode, menuSeriesRelDTO.getSeriesCode()));
+                    SeriesAccessor seriesAccessor = SpringAccessorUtils.getSeriesAccessor();
+                    SeriesPO seriesPO = seriesAccessor.getBySeriesCode(tenantCode, menuSeriesRelDTO.getSeriesCode());
+                    SeriesDTO seriesDTO = SeriesMgtConvertor.convertToSeriesDTO(seriesPO);
                     return seriesDTO;
                 })
                 .filter(Objects::nonNull)
@@ -152,9 +162,12 @@ public class MenuDispatchWorker implements Runnable {
         }
 
         TeaMgtService teaMgtService = SpringServiceUtils.getTeaMgtService();
+
         List<TeaDTO> teaList = teaCodeList.stream()
                 .map(teaCode -> {
-                    TeaDTO teaDTO = getModel(teaMgtService.getByCode(tenantCode, teaCode));
+                    TeaAccessor teaAccessor = SpringAccessorUtils.getTeaAccessor();
+                    TeaPO teaPO = teaAccessor.getByTeaCode(tenantCode, teaCode);
+                    TeaDTO teaDTO = TeaMgtConvertor.convertToTeaDTO(teaPO, true);
                     return teaDTO;
                 })
                 .filter(Objects::nonNull)

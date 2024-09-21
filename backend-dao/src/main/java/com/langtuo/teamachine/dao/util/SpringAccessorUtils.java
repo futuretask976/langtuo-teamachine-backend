@@ -30,6 +30,12 @@ public class SpringAccessorUtils {
         return accessor;
     }
 
+    public static SeriesAccessor getSeriesAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        SeriesAccessor accessor = appContext.getBean(SeriesAccessor.class);
+        return accessor;
+    }
+
     public static SeriesTeaRelAccessor getSeriesTeaRelAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         SeriesTeaRelAccessor accessor = appContext.getBean(SeriesTeaRelAccessor.class);

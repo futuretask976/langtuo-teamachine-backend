@@ -1,9 +1,9 @@
 package com.langtuo.teamachine.biz.convert.drink;
 
-import com.langtuo.teamachine.api.model.drink.TeaTypeDTO;
+import com.langtuo.teamachine.api.model.drink.*;
 import com.langtuo.teamachine.api.request.drink.TeaTypePutRequest;
-import com.langtuo.teamachine.dao.accessor.drink.TeaAccessor;
-import com.langtuo.teamachine.dao.po.drink.TeaTypePO;
+import com.langtuo.teamachine.dao.accessor.drink.*;
+import com.langtuo.teamachine.dao.po.drink.*;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import org.springframework.util.CollectionUtils;
 
