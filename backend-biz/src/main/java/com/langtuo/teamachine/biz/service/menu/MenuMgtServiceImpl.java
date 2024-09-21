@@ -14,7 +14,6 @@ import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuSeriesRelAccessor;
-import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.mapper.menu.MenuDispatchHistoryMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
@@ -50,9 +49,6 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
     @Resource
     private MenuDispatchHistoryMapper menuDispatchHistoryMapper;
-
-    @Resource
-    private ShopAccessor shopAccessor;
 
     @Resource
     private AsyncDispatcher asyncDispatcher;

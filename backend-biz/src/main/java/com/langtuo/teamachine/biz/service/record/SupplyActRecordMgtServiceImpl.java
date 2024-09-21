@@ -18,14 +18,12 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.langtuo.teamachine.biz.convert.record.SupplyActRecordMgtConvertor.*;
+import static com.langtuo.teamachine.biz.convert.record.SupplyActRecordMgtConvertor.convertToSupplyActRecordDTO;
 
 @Component
 @Slf4j
@@ -44,9 +42,6 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
 
     @Resource
     private ShopGroupMgtService shopGroupMgtService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<SupplyActRecordDTO> get(String tenantCode, String idempotentMark) {

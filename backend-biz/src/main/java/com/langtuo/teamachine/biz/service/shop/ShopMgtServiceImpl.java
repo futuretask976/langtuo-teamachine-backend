@@ -18,8 +18,6 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -27,7 +25,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.langtuo.teamachine.biz.convert.shop.ShopMgtConvertor.*;
+import static com.langtuo.teamachine.biz.convert.shop.ShopMgtConvertor.convertToShopPO;
 
 @Component
 @Slf4j
@@ -43,9 +41,6 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     @Resource
     private ShopGroupAccessor shopGroupAccessor;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<ShopDTO> getByCode(String tenantCode, String shopCode) {

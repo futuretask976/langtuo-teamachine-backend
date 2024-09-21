@@ -5,13 +5,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.OrderActRecordDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
-import com.langtuo.teamachine.dao.accessor.drink.*;
 import com.langtuo.teamachine.dao.accessor.record.OrderActRecordAccessor;
-import com.langtuo.teamachine.dao.accessor.record.OrderSpecItemActRecordAccessor;
-import com.langtuo.teamachine.dao.accessor.record.OrderToppingActRecordAccessor;
-import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
-import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -20,53 +14,18 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.langtuo.teamachine.biz.convert.record.OrderActRecordMgtConvertor.*;
+import static com.langtuo.teamachine.biz.convert.record.OrderActRecordMgtConvertor.convertToOrderActRecordDTO;
 
 @Component
 @Slf4j
 public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     @Resource
     private OrderActRecordAccessor orderActRecordAccessor;
-
-    @Resource
-    private OrderSpecItemActRecordAccessor orderSpecItemActRecordAccessor;
-
-    @Resource
-    private OrderToppingActRecordAccessor orderToppingActRecordAccessor;
-
-    @Resource
-    private ShopGroupAccessor shopGroupAccessor;
-
-    @Resource
-    private ShopAccessor shopAccessor;
-
-    @Resource
-    private ToppingAccessor toppingAccessor;
-
-    @Resource
-    private SpecAccessor specAccessor;
-
-    @Resource
-    private SpecItemAccessor specItemAccessor;
-
-    @Resource
-    private ShopGroupMgtService shopGroupMgtService;
-
-    @Resource
-    private TeaTypeAccessor teaTypeAccessor;
-
-    @Resource
-    private TeaAccessor teaAccessor;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<OrderActRecordDTO> get(String tenantCode, String idempotentMark) {

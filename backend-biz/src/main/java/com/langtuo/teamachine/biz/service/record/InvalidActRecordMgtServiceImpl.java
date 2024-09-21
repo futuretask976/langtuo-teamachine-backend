@@ -10,10 +10,7 @@ import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
-import com.langtuo.teamachine.dao.po.drink.ToppingPO;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
-import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
-import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
@@ -21,14 +18,10 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.langtuo.teamachine.biz.convert.record.InvalidActRecordMgtConvertor.convertToInvalidActRecordDTO;
 
@@ -49,9 +42,6 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
 
     @Resource
     private ShopGroupMgtService shopGroupMgtService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<InvalidActRecordDTO> get(String tenantCode, String idempotentMark) {

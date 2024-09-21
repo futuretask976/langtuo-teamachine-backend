@@ -1,16 +1,14 @@
 package com.langtuo.teamachine.web.controller;
 
 import com.google.common.collect.Lists;
-import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
+import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderSpecItemActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderToppingActRecordPutRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +25,6 @@ import java.util.List;
 public class MqttController {
     @Resource
     private OrderActRecordMgtService orderActRecordMgtService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     /**
      * url: http://localhost:8080/teamachinebackend/mqtt/test

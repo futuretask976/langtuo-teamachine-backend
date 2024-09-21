@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.biz.service.device;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.model.device.DeployDTO;
 import com.langtuo.teamachine.api.request.device.DeployPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.DeployMgtService;
@@ -18,8 +18,6 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -43,9 +41,6 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
     @Resource
     private ExcelHandlerFactory excelHandlerFactory;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,

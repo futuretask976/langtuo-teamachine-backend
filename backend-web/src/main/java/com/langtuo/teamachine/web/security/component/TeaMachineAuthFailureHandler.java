@@ -7,7 +7,6 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import com.langtuo.teamachine.web.constant.WebConsts;
 import com.langtuo.teamachine.web.helper.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -19,9 +18,6 @@ import java.io.IOException;
 public class TeaMachineAuthFailureHandler implements AuthenticationFailureHandler {
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,

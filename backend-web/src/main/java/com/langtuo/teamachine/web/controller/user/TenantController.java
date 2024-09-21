@@ -6,13 +6,10 @@ import com.langtuo.teamachine.api.request.user.TenantPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("/userset/tenant")
@@ -20,9 +17,6 @@ import java.util.Locale;
 public class TenantController {
     @Resource
     private TenantMgtService service;
-
-    @Autowired
-    private MessageSource messageSource;
     
     @GetMapping(value = "/get")
     public TeaMachineResult<TenantDTO> get(@RequestParam("tenantCode") String tenantCode) {

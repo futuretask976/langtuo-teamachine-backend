@@ -10,8 +10,6 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import com.langtuo.teamachine.web.constant.WebConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +31,6 @@ import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 public class TeaController {
     @Resource
     private TeaMgtService service;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @GetMapping(value = "/get")
     public TeaMachineResult<TeaDTO> get(@RequestParam("tenantCode") String tenantCode,
