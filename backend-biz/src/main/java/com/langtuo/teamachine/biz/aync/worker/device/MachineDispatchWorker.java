@@ -4,7 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.service.device.MachineMgtService;
+import com.langtuo.teamachine.biz.convert.device.MachineMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
+import com.langtuo.teamachine.dao.po.device.MachinePO;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +54,9 @@ public class MachineDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        MachineMgtService machineMgtService = SpringServiceUtils.getMachineMgtService();
-        MachineDTO dto = getModel(machineMgtService.getByCode(tenantCode, machineCode));
+        MachineAccessor machineAccessor = SpringAccessorUtils.getMachineItemAccessor();
+        MachinePO po = machineAccessor.getByMachineCode(tenantCode, machineCode);
+        MachineDTO dto = MachineMgtConvertor.convert(po);
         if (dto == null) {
             log.error("machineDispatchWorker|getMachine|error|stopWorker|" + dto);
             return null;

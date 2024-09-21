@@ -5,8 +5,12 @@ import com.langtuo.teamachine.api.model.device.ModelDTO;
 import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
+import com.langtuo.teamachine.biz.convert.device.ModelMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
+import com.langtuo.teamachine.dao.po.device.ModelPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -54,8 +58,9 @@ public class ModelDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        ModelMgtService modelMgtService = SpringServiceUtils.getModelMgtService();
-        ModelDTO dto = getModel(modelMgtService.get(modelCode));
+        ModelAccessor modelAccessor = SpringAccessorUtils.getModelAccessor();
+        ModelPO po = modelAccessor.getByModelCode(modelCode);
+        ModelDTO dto = ModelMgtConvertor.convertToModelDTO(po);
         if (dto == null) {
             log.error("machineDispatchWorker|getModel|error|stopWorker|" + dto);
             return null;

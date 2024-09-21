@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.rule.WarningRuleDTO;
 import com.langtuo.teamachine.api.service.rule.WarningRuleMgtService;
+import com.langtuo.teamachine.biz.convert.rule.WarningRuleMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.rule.WarningRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.WarningRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
+import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -63,8 +66,9 @@ public class WarningRuleDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        WarningRuleMgtService warningRuleMgtService = SpringServiceUtils.getWarningRuleMgtService();
-        WarningRuleDTO dto = getModel(warningRuleMgtService.getByCode(tenantCode, warningRuleCode));
+        WarningRuleAccessor warningRuleAccessor = SpringAccessorUtils.getWarningRuleAccessor();
+        WarningRulePO po = warningRuleAccessor.getByWarningRuleCode(tenantCode, warningRuleCode);
+        WarningRuleDTO dto = WarningRuleMgtConvertor.convertToWarningRuleDTO(po);
         if (dto == null) {
             log.error("warningRuleDispatchWorker|getRule|error|stopWorker|" + dto);
             return null;

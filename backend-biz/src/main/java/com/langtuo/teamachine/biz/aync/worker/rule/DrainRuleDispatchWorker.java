@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDTO;
 import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
+import com.langtuo.teamachine.biz.convert.rule.DrainRuleMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.rule.DrainRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.DrainRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.po.rule.DrainRuleDispatchPO;
+import com.langtuo.teamachine.dao.po.rule.DrainRulePO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -67,8 +70,9 @@ public class DrainRuleDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        DrainRuleMgtService drainRuleMgtService = SpringServiceUtils.getDrainRuleMgtService() ;
-        DrainRuleDTO dto = getModel(drainRuleMgtService.getByCode(tenantCode, drainRuleCode));
+        DrainRuleAccessor drainRuleAccessor = SpringAccessorUtils.getDrainRuleAccessor();
+        DrainRulePO po = drainRuleAccessor.getByDrainRuleCode(tenantCode, drainRuleCode);
+        DrainRuleDTO dto = DrainRuleMgtConvertor.convertToDrainRuleDTO(po);
         if (dto == null) {
             log.error("drainRuleDispatchWorker|getRule|error|stopWorker|" + dto);
             return null;

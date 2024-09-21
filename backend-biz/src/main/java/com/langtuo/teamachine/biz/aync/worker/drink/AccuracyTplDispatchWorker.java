@@ -3,7 +3,11 @@ package com.langtuo.teamachine.biz.aync.worker.drink;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.drink.AccuracyTplDTO;
 import com.langtuo.teamachine.api.service.drink.AccuracyTplMgtService;
+import com.langtuo.teamachine.biz.convert.drink.AccuracyTplMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.drink.AccuracyTplAccessor;
+import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.produce.MqttProducer;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +53,9 @@ public class AccuracyTplDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        AccuracyTplMgtService accuracyTplMgtService = SpringServiceUtils.getToppingAccuracyTplMgtService();
-        AccuracyTplDTO dto = getModel(accuracyTplMgtService.getByCode(tenantCode, templateCode));
+        AccuracyTplAccessor accuracyTplAccessor = SpringAccessorUtils.getAccuracyTplAccessor();
+        AccuracyTplPO po = accuracyTplAccessor.getByTplCode(tenantCode, templateCode);
+        AccuracyTplDTO dto = AccuracyTplMgtConvertor.convertToAccuracyTplPO(po);
         if (dto == null) {
             log.error("accuracyTplDispatchWorker|getTpl|error|stopWorker|" + dto);
             return null;

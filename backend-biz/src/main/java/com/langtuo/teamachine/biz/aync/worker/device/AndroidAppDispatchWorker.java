@@ -3,9 +3,12 @@ package com.langtuo.teamachine.biz.aync.worker.device;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.AndroidAppDTO;
 import com.langtuo.teamachine.api.service.device.AndroidAppMgtService;
+import com.langtuo.teamachine.biz.convert.device.AndroidAppMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.device.AndroidAppAccessor;
 import com.langtuo.teamachine.dao.accessor.device.AndroidAppDispatchAccessor;
 import com.langtuo.teamachine.dao.po.device.AndroidAppDispatchPO;
+import com.langtuo.teamachine.dao.po.device.AndroidAppPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -82,8 +85,9 @@ public class AndroidAppDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        AndroidAppMgtService androidAppMgtService = SpringServiceUtils.getAndroidAppMgtService();
-        AndroidAppDTO dto = getModel(androidAppMgtService.get(version));
+        AndroidAppAccessor androidAppAccessor = SpringAccessorUtils.getAndroidAppAccessor();
+        AndroidAppPO po = androidAppAccessor.getByVersion(version);
+        AndroidAppDTO dto = AndroidAppMgtConvertor.convertToAndroidAppDTO(po);
         if (dto == null) {
             log.error("androidAppDispatchWorker|getAndroidApp|error|stopWorker|" + dto);
             return null;

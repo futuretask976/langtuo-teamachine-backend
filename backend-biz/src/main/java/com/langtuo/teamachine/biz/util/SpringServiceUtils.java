@@ -21,30 +21,6 @@ public class SpringServiceUtils {
         return service;
     }
 
-    public static MachineMgtService getMachineMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MachineMgtService service = appContext.getBean(MachineMgtService.class);
-        return service;
-    }
-
-    public static ModelMgtService getModelMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        ModelMgtService service = appContext.getBean(ModelMgtService.class);
-        return service;
-    }
-
-    public static AndroidAppMgtService getAndroidAppMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        AndroidAppMgtService service = appContext.getBean(AndroidAppMgtService.class);
-        return service;
-    }
-
-    public static AccuracyTplMgtService getToppingAccuracyTplMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        AccuracyTplMgtService service = appContext.getBean(AccuracyTplMgtService.class);
-        return service;
-    }
-
     public static MenuMgtService getMenuMgtService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         MenuMgtService service = appContext.getBean(MenuMgtService.class);
@@ -60,24 +36,6 @@ public class SpringServiceUtils {
     public static TeaMgtService getTeaMgtService() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         TeaMgtService service = appContext.getBean(TeaMgtService.class);
-        return service;
-    }
-
-    public static DrainRuleMgtService getDrainRuleMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        DrainRuleMgtService service = appContext.getBean(DrainRuleMgtService.class);
-        return service;
-    }
-
-    public static CleanRuleMgtService getCleanRuleMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        CleanRuleMgtService service = appContext.getBean(CleanRuleMgtService.class);
-        return service;
-    }
-
-    public static WarningRuleMgtService getWarningRuleMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        WarningRuleMgtService service = appContext.getBean(WarningRuleMgtService.class);
         return service;
     }
 }

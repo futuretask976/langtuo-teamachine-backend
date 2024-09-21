@@ -1,9 +1,7 @@
 package com.langtuo.teamachine.dao.util;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.langtuo.teamachine.dao.accessor.device.AndroidAppDispatchAccessor;
-import com.langtuo.teamachine.dao.accessor.device.DeployAccessor;
-import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
+import com.langtuo.teamachine.dao.accessor.device.*;
 import com.langtuo.teamachine.dao.accessor.drink.*;
 import com.langtuo.teamachine.dao.accessor.menu.*;
 import com.langtuo.teamachine.dao.accessor.record.*;
@@ -68,6 +66,12 @@ public class SpringAccessorUtils {
         return accessor;
     }
 
+    public static WarningRuleAccessor getWarningRuleAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        WarningRuleAccessor accessor = appContext.getBean(WarningRuleAccessor.class);
+        return accessor;
+    }
+
     public static WarningRuleDispatchAccessor getWarningRuleDispatchAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         WarningRuleDispatchAccessor accessor = appContext.getBean(WarningRuleDispatchAccessor.class);
@@ -113,6 +117,18 @@ public class SpringAccessorUtils {
     public static AdminAccessor getAdminAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         AdminAccessor accessor = appContext.getBean(AdminAccessor.class);
+        return accessor;
+    }
+
+    public static ModelAccessor getModelAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        ModelAccessor accessor = appContext.getBean(ModelAccessor.class);
+        return accessor;
+    }
+
+    public static AndroidAppAccessor getAndroidAppAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        AndroidAppAccessor accessor = appContext.getBean(AndroidAppAccessor.class);
         return accessor;
     }
 
@@ -200,6 +216,18 @@ public class SpringAccessorUtils {
         return accessor;
     }
 
+    public static DrainRuleAccessor getDrainRuleAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        DrainRuleAccessor accessor = appContext.getBean(DrainRuleAccessor.class);
+        return accessor;
+    }
+
+    public static CleanRuleAccessor getCleanRuleAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        CleanRuleAccessor accessor = appContext.getBean(CleanRuleAccessor.class);
+        return accessor;
+    }
+
     public static DrainRuleToppingAccessor getDrainRuleToppingAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         DrainRuleToppingAccessor accessor = appContext.getBean(DrainRuleToppingAccessor.class);
@@ -209,6 +237,12 @@ public class SpringAccessorUtils {
     public static AccuracyTplToppingAccessor getAccuracyTplToppingAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         AccuracyTplToppingAccessor accessor = appContext.getBean(AccuracyTplToppingAccessor.class);
+        return accessor;
+    }
+
+    public static AccuracyTplAccessor getAccuracyTplAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        AccuracyTplAccessor accessor = appContext.getBean(AccuracyTplAccessor.class);
         return accessor;
     }
 

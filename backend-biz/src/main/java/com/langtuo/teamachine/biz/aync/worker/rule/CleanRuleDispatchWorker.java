@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.rule.CleanRuleDTO;
 import com.langtuo.teamachine.api.service.rule.CleanRuleMgtService;
+import com.langtuo.teamachine.biz.convert.rule.CleanRuleMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
+import com.langtuo.teamachine.dao.accessor.rule.CleanRuleAccessor;
 import com.langtuo.teamachine.dao.accessor.rule.CleanRuleDispatchAccessor;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO;
+import com.langtuo.teamachine.dao.po.rule.CleanRulePO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -67,8 +70,9 @@ public class CleanRuleDispatchWorker implements Runnable {
     }
 
     private JSONObject getDispatchCont() {
-        CleanRuleMgtService cleanRuleMgtService = SpringServiceUtils.getCleanRuleMgtService();
-        CleanRuleDTO dto = getModel(cleanRuleMgtService.getByCode(tenantCode, cleanRuleCode));
+        CleanRuleAccessor cleanRuleAccessor = SpringAccessorUtils.getCleanRuleAccessor();
+        CleanRulePO po = cleanRuleAccessor.getByCleanRuleCode(tenantCode, cleanRuleCode);
+        CleanRuleDTO dto = CleanRuleMgtConvertor.convertToCleanRuleStepDTO(po);
         if (dto == null) {
             log.error("cleanRuleDispatchWorker|getRule|error|stopWorker|" + dto);
             return null;
