@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @TeaMachineSQLScan
 @Repository
@@ -38,4 +40,14 @@ public interface MenuDispatchHistoryMapper {
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("init") int init,
             @Param("fileName") String fileName);
+
+    /**
+     *
+     * @param tenantCode
+     * @param init
+     * @param fileNameList
+     * @return
+     */
+    int deleteByFileNameList(@Param("tenantCode") String tenantCode, @Param("init") int init,
+               @Param("fileNameList") List<String> fileNameList);
 }

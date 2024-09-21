@@ -48,4 +48,17 @@
             AND init = #{init}
             AND file_name = #{fileName}
     </delete>
+
+    <delete id="deleteByFileNameList">
+        DELETE FROM menu_dispatch_history
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
+            AND init = #{init}
+            <if test="fileNameList != null and fileNameList.size() > 0">
+                AND file_name IN
+                <foreach item="fileName" collection="fileNameList" open="(" separator="," close=")">
+                    #{fileName}
+                </foreach>
+            </if>
+    </delete>
 </mapper>
