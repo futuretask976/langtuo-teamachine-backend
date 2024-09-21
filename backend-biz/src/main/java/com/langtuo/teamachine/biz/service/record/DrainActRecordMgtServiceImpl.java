@@ -28,6 +28,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.biz.convert.record.DrainActRecordMgtAccessor.convertToDrainActRecordDTO;
+
 @Component
 @Slf4j
 public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
@@ -50,7 +52,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
     public TeaMachineResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark) {
         try {
             DrainActRecordPO po = drainActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
-            return TeaMachineResult.success(convert(po, true));
+            return TeaMachineResult.success(convertToDrainActRecordDTO(po, true));
         } catch (Exception e) {
             log.error("drainActRecordMgtService|get|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -82,7 +84,8 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
                         null, 0, pageNum, pageSize));
             } else {
                 return TeaMachineResult.success(new PageDTO<>(
-                        convert(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
+                        convertToDrainActRecordDTO(pageInfo.getList(), false),
+                        pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("drainActRecordMgtService|search|fatal|" + e.getMessage(), e);
@@ -103,53 +106,5 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
             log.error("drainActRecordMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-    }
-
-    private List<DrainActRecordDTO> convert(List<DrainActRecordPO> poList, boolean fillDetail) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<DrainActRecordDTO> list = poList.stream()
-                .map(po -> convert(po, fillDetail))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private DrainActRecordDTO convert(DrainActRecordPO po, boolean fillDetail) {
-        if (po == null) {
-            return null;
-        }
-
-        DrainActRecordDTO dto = new DrainActRecordDTO();
-        dto.setExtraInfo(po.getExtraInfo());
-        dto.setIdempotentMark(po.getIdempotentMark());
-        dto.setMachineCode(po.getMachineCode());
-        dto.setShopCode(po.getShopCode());
-        dto.setShopGroupCode(po.getShopGroupCode());
-        dto.setDrainStartTime(po.getDrainStartTime());
-        dto.setDrainEndTime(po.getDrainEndTime());
-        dto.setToppingCode(po.getToppingCode());
-        dto.setPipelineNum(po.getPipelineNum());
-        dto.setDrainType(po.getDrainType());
-        dto.setDrainRuleCode(po.getDrainRuleCode());
-        dto.setFlushSec(po.getFlushSec());
-        dto.setFlushWeight(po.getFlushWeight());
-
-        if (fillDetail) {
-            ToppingPO toppingPO = toppingAccessor.getByToppingCode(po.getTenantCode(), po.getToppingCode());
-            if (toppingPO != null) {
-                dto.setToppingName(toppingPO.getToppingName());
-            }
-            ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
-            if (shopGroupPO != null) {
-                dto.setShopGroupName(shopGroupPO.getShopGroupName());
-            }
-            ShopPO shopPO = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
-            if (shopPO != null) {
-                dto.setShopName(shopPO.getShopName());
-            }
-        }
-        return dto;
     }
 }

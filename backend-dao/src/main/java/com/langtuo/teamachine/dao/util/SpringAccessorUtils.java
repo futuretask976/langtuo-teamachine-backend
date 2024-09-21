@@ -160,6 +160,12 @@ public class SpringAccessorUtils {
         return accessor;
     }
 
+    public static TeaTypeAccessor getTeaTypeAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        TeaTypeAccessor accessor = appContext.getBean(TeaTypeAccessor.class);
+        return accessor;
+    }
+
     public static ToppingBaseRuleAccessor getToppingBaseRuleAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         ToppingBaseRuleAccessor accessor = appContext.getBean(ToppingBaseRuleAccessor.class);
@@ -193,6 +199,12 @@ public class SpringAccessorUtils {
     public static SpecItemAccessor getSpecItemAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         SpecItemAccessor accessor = appContext.getBean(SpecItemAccessor.class);
+        return accessor;
+    }
+
+    public static SpecAccessor getSpecAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        SpecAccessor accessor = appContext.getBean(SpecAccessor.class);
         return accessor;
     }
 
