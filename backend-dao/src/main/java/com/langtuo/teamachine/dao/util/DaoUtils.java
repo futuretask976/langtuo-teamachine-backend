@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.dao.util;
 
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
@@ -178,5 +179,17 @@ public class DaoUtils {
         List<MenuPO> menuPOList = SpringAccessorUtils.getMenuAccessor().listByMenuCode(tenantCode,
                 menuCodeList);
         return menuPOList;
+    }
+
+    public static List<String> getShopGroupCodeListByMenuCode(String tenantCode, String menuCode) {
+        MenuDispatchAccessor menuDispatchAccessor = SpringAccessorUtils.getMenuDispatchAccessor();
+        List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByMenuCode(tenantCode, menuCode);
+        if (CollectionUtils.isEmpty(menuDispatchPOList)) {
+            return null;
+        }
+
+        return menuDispatchPOList.stream()
+                .map(MenuDispatchPO::getShopGroupCode)
+                .collect(Collectors.toList());
     }
 }
