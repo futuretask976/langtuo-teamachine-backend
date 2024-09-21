@@ -27,6 +27,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.biz.convert.shop.ShopMgtConvertor.*;
+
 @Component
 @Slf4j
 public class ShopMgtServiceImpl implements ShopMgtService {
@@ -48,7 +50,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     @Override
     public TeaMachineResult<ShopDTO> getByCode(String tenantCode, String shopCode) {
         ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
-        ShopDTO shopDTO = convert(shopPO);
+        ShopDTO shopDTO = convertToShopPO(shopPO);
         return TeaMachineResult.success(shopDTO);
     }
 
@@ -62,7 +64,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCode,
                     pageNum, pageSize);
             return TeaMachineResult.success(new PageDTO<>(
-                    convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
+                    convertToShopPO(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("shopMgtService|search|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -73,7 +75,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     public TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         try {
             List<ShopPO> list = shopAccessor.listByShopGroupCode(tenantCode, shopGroupCode);
-            return TeaMachineResult.success(convert(list));
+            return TeaMachineResult.success(convertToShopPO(list));
         } catch (Exception e) {
             log.error("shopMgtService|listByShopGroupCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -92,7 +94,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
                         .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
                         .collect(Collectors.toList());
                 List<ShopPO> list = shopAccessor.listByShopGroupCode(tenantCode, shopGroupCodeList);
-                return TeaMachineResult.success(convert(list));
+                return TeaMachineResult.success(convertToShopPO(list));
             }
         } catch (Exception e) {
             log.error("shopMgtService|listByAdminOrg|fatal|" + e.getMessage(), e);
@@ -106,7 +108,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        ShopPO shopPO = convert(request);
+        ShopPO shopPO = convertToShopPO(request);
         if (request.isPutNew()) {
             return putNew(shopPO);
         } else {
@@ -180,55 +182,5 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             log.error("shopMgtService|countByShopGroupCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-    }
-
-    private List<ShopDTO> convert(List<ShopPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<ShopDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private ShopDTO convert(ShopPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        ShopDTO dto = new ShopDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setShopCode(po.getShopCode());
-        dto.setShopName(po.getShopName());
-        dto.setShopType(po.getShopType());
-        dto.setComment(po.getComment());
-        dto.setExtraInfo(po.getExtraInfo());
-
-        ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
-        if (shopGroupPO != null) {
-            dto.setShopGroupCode(shopGroupPO.getShopGroupCode());
-            dto.setShopGroupName(shopGroupPO.getShopGroupName());
-        }
-
-        return dto;
-    }
-
-    private ShopPO convert(ShopPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        ShopPO po = new ShopPO();
-        po.setShopName(request.getShopName());
-        po.setShopCode(request.getShopCode());
-        po.setShopGroupCode(request.getShopGroupCode());
-        po.setShopType(request.getShopType());
-        po.setComment(request.getComment());
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
-        return po;
     }
 }

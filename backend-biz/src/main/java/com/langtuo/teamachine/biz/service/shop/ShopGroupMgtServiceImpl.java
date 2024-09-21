@@ -26,6 +26,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.langtuo.teamachine.biz.convert.shop.ShopGroupMgtConvertor.*;
+
 @Component
 @Slf4j
 public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
@@ -162,51 +164,5 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             log.error("shopGroupMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-    }
-
-    private List<ShopGroupDTO> convert(List<ShopGroupPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<ShopGroupDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private ShopGroupDTO convert(ShopGroupPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        ShopGroupDTO dto = new ShopGroupDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setShopGroupCode(po.getShopGroupCode());
-        dto.setShopGroupName(po.getShopGroupName());
-        dto.setComment(po.getComment());
-        dto.setExtraInfo(po.getExtraInfo());
-        dto.setOrgName(po.getOrgName());
-
-        int shopCount = shopAccessor.countByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
-        dto.setShopCount(shopCount);
-
-        return dto;
-    }
-
-    private ShopGroupPO convert(ShopGroupPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        ShopGroupPO po = new ShopGroupPO();
-        po.setShopGroupName(request.getShopGroupName());
-        po.setShopGroupCode(request.getShopGroupCode());
-        po.setComment(request.getComment());
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
-        po.setOrgName(request.getOrgName());
-        return po;
     }
 }
