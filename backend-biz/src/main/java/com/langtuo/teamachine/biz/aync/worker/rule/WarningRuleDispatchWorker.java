@@ -84,7 +84,7 @@ public class WarningRuleDispatchWorker implements Runnable {
             return null;
         }
 
-        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCode(tenantCode,
                 warningRuleDispatchPOList.stream()
                         .map(WarningRuleDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));

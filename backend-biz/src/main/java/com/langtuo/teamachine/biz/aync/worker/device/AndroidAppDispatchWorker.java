@@ -2,7 +2,6 @@ package com.langtuo.teamachine.biz.aync.worker.device;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.AndroidAppDTO;
-import com.langtuo.teamachine.api.service.device.AndroidAppMgtService;
 import com.langtuo.teamachine.biz.convert.device.AndroidAppMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.dao.accessor.device.AndroidAppAccessor;
@@ -19,8 +18,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
 public class AndroidAppDispatchWorker implements Runnable {
@@ -76,7 +73,7 @@ public class AndroidAppDispatchWorker implements Runnable {
             return null;
         }
 
-        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCode(tenantCode,
                 androidAppDispatchPOList.stream()
                         .map(AndroidAppDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));

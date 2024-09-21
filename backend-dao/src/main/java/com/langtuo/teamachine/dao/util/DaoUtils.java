@@ -1,7 +1,5 @@
 package com.langtuo.teamachine.dao.util;
 
-import com.langtuo.teamachine.api.model.menu.MenuDTO;
-import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
@@ -66,7 +64,7 @@ public class DaoUtils {
      * @param tenantCode
      * @return
      */
-    public static List<String> getShopCodeListByShopGroupCodeList(String tenantCode, List<String> shopGroupCodeList) {
+    public static List<String> getShopCodeListByShopGroupCode(String tenantCode, List<String> shopGroupCodeList) {
         if (CollectionUtils.isEmpty(shopGroupCodeList)) {
             return null;
         }

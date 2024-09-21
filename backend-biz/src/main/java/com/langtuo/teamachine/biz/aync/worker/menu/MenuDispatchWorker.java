@@ -115,7 +115,7 @@ public class MenuDispatchWorker implements Runnable {
             return null;
         }
 
-        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCode(tenantCode,
                 menuDispatchPOList.stream()
                         .map(MenuDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));

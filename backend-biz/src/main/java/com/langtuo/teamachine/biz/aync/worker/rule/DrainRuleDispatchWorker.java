@@ -3,7 +3,6 @@ package com.langtuo.teamachine.biz.aync.worker.rule;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.rule.DrainRuleDTO;
-import com.langtuo.teamachine.api.service.rule.DrainRuleMgtService;
 import com.langtuo.teamachine.biz.convert.rule.DrainRuleMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.dao.accessor.rule.DrainRuleAccessor;
@@ -20,8 +19,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
 public class DrainRuleDispatchWorker implements Runnable {
@@ -91,7 +88,7 @@ public class DrainRuleDispatchWorker implements Runnable {
             return null;
         }
 
-        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCode(tenantCode,
                 drainRuleDispatchPOList.stream()
                         .map(DrainRuleDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));
