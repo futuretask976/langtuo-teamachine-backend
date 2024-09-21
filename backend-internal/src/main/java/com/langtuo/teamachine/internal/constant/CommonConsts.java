@@ -72,8 +72,8 @@ public class CommonConsts {
     /**
      * 是否初始化触发，0：不是，1：是
      */
-    public static final int MENU_DISPATCH_INIT_FALSE = 0;
-    public static final int MENU_DISPATCH_INIT_TRUE = 1;
+    public static final int MENU_DISPATCH_LIST_FALSE = 0;
+    public static final int MENU_DISPATCH_LIST_TRUE = 1;
 
     /**
      * 菜单分发输出文件路径前缀，和扩展名

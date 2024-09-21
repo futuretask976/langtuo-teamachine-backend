@@ -34,6 +34,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class BizUtils {
+    public static String getMenuListFileName(String shopGroupCode) {
+        String fileName = CommonConsts.MENU_OUTPUT_FILENAME_PREFIX + shopGroupCode
+                + CommonConsts.MENU_OUTPUT_PATH_EXT;
+        return fileName;
+    }
+
     public static JSONObject getMenuDispatchCont(String tenantCode, String menuCode) {
         MenuAccessor menuAccessor = SpringAccessorUtils.getMenuAccessor();
         MenuPO menuPO = menuAccessor.getByMenuCode(tenantCode, menuCode);

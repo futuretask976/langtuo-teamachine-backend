@@ -2,31 +2,31 @@ package com.langtuo.teamachine.biz.service.menu;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.biz.aync.AsyncDispatcher;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
-import com.langtuo.teamachine.api.model.menu.MenuSeriesRelDTO;
 import com.langtuo.teamachine.api.request.menu.MenuDispatchPutRequest;
 import com.langtuo.teamachine.api.request.menu.MenuPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.menu.MenuMgtService;
+import com.langtuo.teamachine.biz.aync.AsyncDispatcher;
+import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuSeriesRelAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
+import com.langtuo.teamachine.dao.mapper.menu.MenuDispatchHistoryMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
-import com.langtuo.teamachine.dao.po.shop.ShopPO;
+import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.DateUtils;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -49,13 +49,13 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     private MenuDispatchAccessor menuDispatchAccessor;
 
     @Resource
+    private MenuDispatchHistoryMapper menuDispatchHistoryMapper;
+
+    @Resource
     private ShopAccessor shopAccessor;
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Override
     public TeaMachineResult<List<MenuDTO>> list(String tenantCode) {
@@ -148,6 +148,9 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
+
+            deleteMenuDispatchlistHistory(po.getTenantCode(), po.getMenuCode());
+
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|putUpdate|fatal|" + e.getMessage(), e);
@@ -176,6 +179,9 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
+
+            deleteMenuDispatchlistHistory(po.getTenantCode(), po.getMenuCode());
+
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|putUpdate|fatal|" + e.getMessage(), e);
@@ -193,6 +199,9 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             int deleted4Series = menuAccessor.deleteByMenuCode(tenantCode, menuCode);
             int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteByMenuCode(tenantCode, menuCode);
             int deleted4Dispatch = menuDispatchAccessor.deleteByMenuCode(tenantCode, menuCode);
+
+            deleteMenuDispatchlistHistory(tenantCode, menuCode);
+
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|delete|fatal|" + e.getMessage(), e);
@@ -252,5 +261,19 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             log.error("menuMgtService|getDispatchByMenuCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
+    }
+
+    private void deleteMenuDispatchlistHistory(String tenantCode, String menuCode) {
+        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByMenuCode(tenantCode, menuCode);
+        if (CollectionUtils.isEmpty(shopGroupCodeList)) {
+            return;
+        }
+
+        List<String> fileNameList = Lists.newArrayList();
+        for (String shopGroupCode : shopGroupCodeList) {
+            fileNameList.add(BizUtils.getMenuListFileName(shopGroupCode));
+        }
+        int deleted = menuDispatchHistoryMapper.deleteByFileNameList(tenantCode, CommonConsts.MENU_DISPATCH_LIST_TRUE,
+                fileNameList);
     }
 }

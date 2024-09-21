@@ -60,7 +60,7 @@ public class MenuDispatchWorker implements Runnable {
         try {
             MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchHistoryAccessor();
             MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
-                    CommonConsts.MENU_DISPATCH_INIT_FALSE, fileName);
+                    CommonConsts.MENU_DISPATCH_LIST_FALSE, fileName);
             if (existOssPO != null) {
                 sendToMachine(getSendMsg(existOssPO));
                 return;
@@ -185,7 +185,7 @@ public class MenuDispatchWorker implements Runnable {
     private MenuDispatchHistoryPO getNewOssPO(String fileName, String md5AsHex) {
         MenuDispatchHistoryPO newOssPO = new MenuDispatchHistoryPO();
         newOssPO.setTenantCode(tenantCode);
-        newOssPO.setInit(CommonConsts.MENU_DISPATCH_INIT_FALSE);
+        newOssPO.setInit(CommonConsts.MENU_DISPATCH_LIST_FALSE);
         newOssPO.setFileName(fileName);
         newOssPO.setMd5(md5AsHex);
         return newOssPO;

@@ -48,12 +48,12 @@ public class MenuDispatchListWorker implements Runnable {
 
     @Override
     public void run() {
-        String fileName = getMenuListFileName();
+        String fileName = BizUtils.getMenuListFileName(shopGroupCode);
         File tmpFile = new File(CommonConsts.MENU_OUTPUT_PATH + fileName);
         try {
             MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchHistoryAccessor();
             MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
-                    CommonConsts.MENU_DISPATCH_INIT_FALSE, fileName);
+                    CommonConsts.MENU_DISPATCH_LIST_FALSE, fileName);
             if (existOssPO != null) {
                 sendToMachine(getSendMsg(existOssPO));
                 return;
@@ -115,12 +115,6 @@ public class MenuDispatchListWorker implements Runnable {
         return arr;
     }
 
-    private String getMenuListFileName() {
-        String fileName = CommonConsts.MENU_OUTPUT_FILENAME_PREFIX + shopGroupCode
-                + CommonConsts.MENU_OUTPUT_PATH_EXT;
-        return fileName;
-    }
-
     private JSONObject getSendMsg(MenuDispatchHistoryPO po) {
         JSONObject jsonMsg = new JSONObject();
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MENU_LIST);
@@ -138,7 +132,7 @@ public class MenuDispatchListWorker implements Runnable {
     private MenuDispatchHistoryPO getNewOssPO(String fileName, String md5AsHex) {
         MenuDispatchHistoryPO newOssPO = new MenuDispatchHistoryPO();
         newOssPO.setTenantCode(tenantCode);
-        newOssPO.setInit(CommonConsts.MENU_DISPATCH_INIT_TRUE);
+        newOssPO.setInit(CommonConsts.MENU_DISPATCH_LIST_TRUE);
         newOssPO.setFileName(fileName);
         newOssPO.setMd5(md5AsHex);
         return newOssPO;
