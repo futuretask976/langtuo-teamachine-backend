@@ -3,6 +3,7 @@ package com.langtuo.teamachine.dao.config;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -44,19 +46,44 @@ public class RedisConfig {
     }
 
     /**
+     * GenericObjectPoolConfig 连接池配置
+     *
+     * @return
+     */
+    @Bean
+    public GenericObjectPoolConfig genericObjectPoolConfig() {
+        GenericObjectPoolConfig genericObjectPoolConfig = new GenericObjectPoolConfig();
+        genericObjectPoolConfig.setMaxIdle(30);
+        genericObjectPoolConfig.setMinIdle(1);
+        genericObjectPoolConfig.setMaxTotal(1000);
+        genericObjectPoolConfig.setMaxWaitMillis(5000);
+        return genericObjectPoolConfig;
+    }
+
+    /**
      * 配置redis连接工厂
      * @return
      */
     @Bean
-    public RedisConnectionFactory redisConnectionFactory(DefaultClientResources defaultClientResources) {
+    public RedisConnectionFactory redisConnectionFactory(DefaultClientResources defaultClientResources,
+            GenericObjectPoolConfig genericObjectPoolingConfig) {
         RedisStandaloneConfiguration serverConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
         // configuration.setUsername(userName);
         serverConfig.setPassword(password);
 
-        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+//        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+//                .clientResources(defaultClientResources)
+//                .commandTimeout(Duration.ofSeconds(REDIS_COMMAND_TIMEOUT))
+//                .shutdownTimeout(Duration.ZERO)
+////                .useSsl()
+////                .disablePeerVerification()
+//                .build();
+
+        LettuceClientConfiguration clientConfig = LettucePoolingClientConfiguration.builder()
                 .clientResources(defaultClientResources)
                 .commandTimeout(Duration.ofSeconds(REDIS_COMMAND_TIMEOUT))
                 .shutdownTimeout(Duration.ZERO)
+                .poolConfig(genericObjectPoolingConfig)
 //                .useSsl()
 //                .disablePeerVerification()
                 .build();
