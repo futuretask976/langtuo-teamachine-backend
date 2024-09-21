@@ -39,6 +39,18 @@ public class RedisConfig {
     @Value("${spring.redis.password}")
     private String password;
 
+    @Value("${spring.redis.maxIdle}")
+    private int maxIdle;
+
+    @Value("${spring.redis.minIdle}")
+    private int minIdle;
+
+    @Value("${spring.redis.maxTotal}")
+    private int maxTotal;
+
+    @Value("${spring.redis.maxWaitMillis}")
+    private int maxWaitMillis;
+
     @Bean(destroyMethod = "shutdown")
     @ConditionalOnMissingBean(ClientResources.class)
     public DefaultClientResources lettuceClientResources() {
@@ -53,10 +65,10 @@ public class RedisConfig {
     @Bean
     public GenericObjectPoolConfig genericObjectPoolConfig() {
         GenericObjectPoolConfig genericObjectPoolConfig = new GenericObjectPoolConfig();
-        genericObjectPoolConfig.setMaxIdle(30);
-        genericObjectPoolConfig.setMinIdle(1);
-        genericObjectPoolConfig.setMaxTotal(1000);
-        genericObjectPoolConfig.setMaxWaitMillis(5000);
+        genericObjectPoolConfig.setMaxIdle(maxIdle);
+        genericObjectPoolConfig.setMinIdle(minIdle);
+        genericObjectPoolConfig.setMaxTotal(maxTotal);
+        genericObjectPoolConfig.setMaxWaitMillis(maxWaitMillis);
         return genericObjectPoolConfig;
     }
 
