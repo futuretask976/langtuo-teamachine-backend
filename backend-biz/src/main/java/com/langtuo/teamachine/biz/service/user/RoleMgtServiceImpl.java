@@ -6,7 +6,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.request.user.RolePutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.RoleMgtService;
-import com.langtuo.teamachine.biz.util.BizUtils;
+import com.langtuo.teamachine.biz.convert.user.RoleMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
@@ -20,15 +20,14 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.user.RoleMgtConvertor.*;
 
 @Component
 @Slf4j
@@ -48,7 +47,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
     @Override
     public TeaMachineResult<RoleDTO> getByCode(String tenantCode, String roleCode) {
         RolePO rolePO = roleAccessor.getByRoleCode(tenantCode, roleCode);
-        RoleDTO roleDTO = convert(rolePO);
+        RoleDTO roleDTO = RoleMgtConvertor.convertToRoleDTO(rolePO);
         return TeaMachineResult.success(roleDTO);
     }
 
@@ -59,7 +58,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         try {
             PageInfo<RolePO> pageInfo = roleAccessor.search(tenantCode, roleName, pageNum, pageSize);
-            return TeaMachineResult.success(new PageDTO<>(convert(pageInfo.getList()), pageInfo.getTotal(),
+            return TeaMachineResult.success(new PageDTO<>(convertToRoleDTO(pageInfo.getList()), pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("roleMgtService|search|fatal|" + e.getMessage(), e);
@@ -82,7 +81,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                 }).collect(Collectors.toList());
             }
 
-            List<RoleDTO> dtoList = convert(list);
+            List<RoleDTO> dtoList = convertToRoleDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("roleMgtService|list|fatal|" + e.getMessage(), e);
@@ -97,7 +96,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        RolePO rolePO = convert(request);
+        RolePO rolePO = convertToRolePO(request);
         List<RoleActRelPO> roleActRelPOList = convertRoleActRel(request);
         if (request.isPutNew()) {
             return putNew(rolePO, roleActRelPOList);
@@ -201,85 +200,5 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         return teaMachineResult;
     }
 
-    private List<RoleDTO> convert(List<RolePO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
 
-        List<RoleDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private RoleDTO convert(RolePO po) {
-        if (po == null) {
-            return null;
-        }
-
-        RoleDTO dto = new RoleDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setRoleCode(po.getRoleCode());
-        dto.setRoleName(po.getRoleName());
-        dto.setSysReserved(po.getSysReserved());
-        dto.setComment(po.getComment());
-        dto.setExtraInfo(po.getExtraInfo());
-
-        List<RoleActRelPO> roleActRelPOList = roleActRelAccessor.listByRoleCode(
-                po.getTenantCode(), po.getRoleCode());
-        if (!CollectionUtils.isEmpty(roleActRelPOList)) {
-            dto.setPermitActCodeList(roleActRelPOList.stream()
-                    .map(item -> item.getPermitActCode())
-                    .collect(Collectors.toList()));
-        }
-
-        int adminCount = adminAccessor.countByRoleCode(po.getTenantCode(), po.getRoleCode());
-        dto.setAdminCount(adminCount);
-
-        return dto;
-    }
-
-    private RolePO convert(RolePutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        RolePO po = new RolePO();
-        po.setRoleCode(request.getRoleCode());
-        po.setRoleName(request.getRoleName());
-        po.setSysReserved(request.getSysReserved());
-        po.setComment(request.getComment());
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
-        return po;
-    }
-
-    private List<RoleActRelPO> convertRoleActRel(RolePutRequest request) {
-        if (request == null || CollectionUtils.isEmpty(request.getPermitActCodeList())) {
-            return null;
-        }
-
-        return request.getPermitActCodeList().stream().map(item -> {
-            RoleActRelPO po = new RoleActRelPO();
-            po.setRoleCode(request.getRoleCode());
-            po.setTenantCode(request.getTenantCode());
-            po.setPermitActCode(item);
-            return po;
-        }).collect(Collectors.toList());
-    }
-
-    private String getAdminName() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new IllegalArgumentException("couldn't find login session");
-        }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String adminLoginName = userDetails.getUsername();
-        if (StringUtils.isBlank(adminLoginName)) {
-            throw new IllegalArgumentException("couldn't find login session");
-        }
-
-        return adminLoginName;
-    }
 }

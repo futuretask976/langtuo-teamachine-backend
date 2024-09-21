@@ -9,7 +9,6 @@ import com.langtuo.teamachine.api.service.user.AdminMgtService;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.RoleAccessor;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
-import com.langtuo.teamachine.dao.po.user.RolePO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
@@ -17,12 +16,11 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.user.AdminMgtConvertor.*;
 
 @Component
 @Slf4j
@@ -75,7 +73,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        AdminPO po = convert(request);
+        AdminPO po = convertToAdminPO(request);
         if (request.isPutNew()) {
             return putNew(po);
         } else {
@@ -162,54 +160,5 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             log.error("adminMgtService|putUpdate|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
-    }
-
-    private List<AdminDTO> convertToAdminDTO(List<AdminPO> poList) {
-        if (CollectionUtils.isEmpty(poList) ) {
-            return null;
-        }
-
-        return poList.stream()
-                .map(po -> convertToAdminDTO(po))
-                .collect(Collectors.toList());
-    }
-
-    private AdminDTO convertToAdminDTO(AdminPO adminPO) {
-        if (adminPO == null) {
-            return null;
-        }
-
-        AdminDTO dto = new AdminDTO();
-        dto.setGmtCreated(adminPO.getGmtCreated());
-        dto.setGmtModified(adminPO.getGmtModified());
-        dto.setTenantCode(adminPO.getTenantCode());
-        dto.setComment(adminPO.getComment());
-        dto.setExtraInfo(adminPO.getExtraInfo());
-        dto.setLoginName(adminPO.getLoginName());
-        dto.setLoginPass(adminPO.getLoginPass());
-        dto.setOrgName(adminPO.getOrgName());
-
-        RolePO rolePO = roleAccessor.getByRoleCode(adminPO.getTenantCode(), adminPO.getRoleCode());
-        if (rolePO != null) {
-            dto.setRoleCode(rolePO.getRoleCode());
-            dto.setRoleName(rolePO.getRoleName());
-        }
-        return dto;
-    }
-
-    private AdminPO convert(AdminPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        AdminPO po = new AdminPO();
-        po.setLoginName(request.getLoginName());
-        po.setLoginPass(request.getLoginPass());
-        po.setRoleCode(request.getRoleCode());
-        po.setOrgName(request.getOrgName());
-        po.setComment(request.getComment());
-        po.setTenantCode(request.getTenantCode());
-        po.setExtraInfo(request.getExtraInfo());
-        return po;
     }
 }

@@ -15,13 +15,12 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.user.OrgMgtConvertor.*;
 
 @Component
 @Slf4j
@@ -40,7 +39,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         TeaMachineResult<OrgDTO> teaMachineResult;
         try {
             OrgNode orgNode = orgAccessor.findTopOrgNode(tenantCode);
-            teaMachineResult = TeaMachineResult.success(convert(orgNode));
+            teaMachineResult = TeaMachineResult.success(convertToOrgDTO(orgNode));
         } catch (Exception e) {
             log.error("orgMgtService|getTop|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -53,7 +52,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         TeaMachineResult<List<OrgDTO>> teaMachineResult;
         try {
             List<OrgNode> orgNodeList = orgAccessor.listByParentOrgName(tenantCode, orgName);
-            teaMachineResult = TeaMachineResult.success(convert(orgNodeList));
+            teaMachineResult = TeaMachineResult.success(convertToOrgDTO(orgNodeList));
         } catch (Exception e) {
             log.error("orgMgtService|listByParent|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -66,7 +65,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         TeaMachineResult<List<OrgDTO>> teaMachineResult;
         try {
             List<OrgNode> nodeList = orgAccessor.list(tenantCode);
-            List<OrgDTO> dtoList = convert(nodeList);
+            List<OrgDTO> dtoList = convertToOrgDTO(nodeList);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("orgMgtService|list|fatal|" + e.getMessage(), e);
@@ -84,7 +83,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         TeaMachineResult<PageDTO<OrgDTO>> teaMachineResult;
         try {
             PageInfo<OrgNode> pageInfo = orgAccessor.search(tenantCode, orgName, pageNum, pageSize);
-            List<OrgDTO> dtoList = convert(pageInfo.getList());
+            List<OrgDTO> dtoList = convertToOrgDTO(pageInfo.getList());
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
@@ -99,7 +98,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         TeaMachineResult<OrgDTO> teaMachineResult;
         try {
             OrgNode orgNode = orgAccessor.getByOrgName(tenantCode, orgName);
-            OrgDTO orgDTO = convert(orgNode);
+            OrgDTO orgDTO = convertToOrgDTO(orgNode);
             teaMachineResult = TeaMachineResult.success(orgDTO);
         } catch (Exception e) {
             log.error("orgMgtService|get|fatal|" + e.getMessage(), e);
@@ -114,7 +113,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        OrgNode orgNode = convert(request);
+        OrgNode orgNode = convertToOrgNode(request);
         if (request.isPutNew()) {
             return putNew(orgNode);
         } else {
@@ -189,49 +188,5 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             log.error("orgMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-    }
-
-    private List<OrgDTO> convert(List<OrgNode> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<OrgDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private OrgDTO convert(OrgNode node) {
-        if (node == null) {
-            return null;
-        }
-
-        OrgDTO dto = new OrgDTO();
-        dto.setGmtCreated(node.getGmtCreated());
-        dto.setGmtModified(node.getGmtModified());
-        dto.setOrgName(node.getOrgName());
-        dto.setParentOrgName(node.getParentOrgName());
-
-        if (!CollectionUtils.isEmpty(node.getChildren())) {
-            List<OrgDTO> children = Lists.newArrayList();
-            for (OrgNode orgNode : node.getChildren()) {
-                children.add(convert(orgNode));
-            }
-            dto.setChildren(children);
-        }
-        return dto;
-    }
-
-    private OrgNode convert(OrgPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        OrgNode node = new OrgNode();
-        node.setTenantCode(request.getTenantCode());
-        node.setOrgName(request.getOrgName());
-        node.setParentOrgName(request.getParentOrgName());
-        return node;
     }
 }

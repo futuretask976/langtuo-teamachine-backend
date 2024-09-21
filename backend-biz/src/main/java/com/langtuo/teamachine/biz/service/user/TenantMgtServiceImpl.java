@@ -8,6 +8,7 @@ import com.langtuo.teamachine.api.model.user.TenantDTO;
 import com.langtuo.teamachine.api.request.user.TenantPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.TenantMgtService;
+import com.langtuo.teamachine.biz.convert.user.TenantMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.po.user.TenantPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -16,11 +17,11 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.user.TenantMgtConvertor.*;
 
 @Component
 @Slf4j
@@ -36,7 +37,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         TeaMachineResult<List<TenantDTO>> teaMachineResult;
         try {
             List<TenantPO> list = tenantAccessor.list();
-            List<TenantDTO> dtoList = convert(list);
+            List<TenantDTO> dtoList = TenantMgtConvertor.convertToTenantDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("tenantMgtService|list|fatal|" + e.getMessage(), e);
@@ -54,7 +55,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         TeaMachineResult<PageDTO<TenantDTO>> teaMachineResult;
         try {
             PageInfo<TenantPO> pageInfo = tenantAccessor.search(tenantName, contactPerson, pageNum, pageSize);
-            List<TenantDTO> dtoList = convert(pageInfo.getList());
+            List<TenantDTO> dtoList = TenantMgtConvertor.convertToTenantDTO(pageInfo.getList());
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
@@ -69,7 +70,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
         TeaMachineResult<TenantDTO> teaMachineResult;
         try {
             TenantPO tenantPO = tenantAccessor.selectOneByTenantCode(tenantCode);
-            TenantDTO tenantDTO = convert(tenantPO);
+            TenantDTO tenantDTO = convertToTenantDTO(tenantPO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
             log.error("tenantMgtService|get|fatal|" + e.getMessage(), e);
@@ -84,7 +85,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TenantPO tenantPO = convert(request);
+        TenantPO tenantPO = convertToTenantPO(request);
         TeaMachineResult<Void> teaMachineResult;
         if (request.isPutNew()) {
             teaMachineResult = putNew(tenantPO);
@@ -154,48 +155,5 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
-    }
-
-    private List<TenantDTO> convert(List<TenantPO> poList) {
-        if (CollectionUtils.isEmpty(poList)) {
-            return null;
-        }
-
-        List<TenantDTO> list = poList.stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-        return list;
-    }
-
-    private TenantDTO convert(TenantPO po) {
-        if (po == null) {
-            return null;
-        }
-
-        TenantDTO dto = new TenantDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setTenantCode(po.getTenantCode());
-        dto.setTenantName(po.getTenantName());
-        dto.setContactPerson(po.getContactPerson());
-        dto.setContactPhone(po.getContactPhone());
-        dto.setComment(po.getComment());
-        po.setExtraInfo(po.getExtraInfo());
-        return dto;
-    }
-
-    private TenantPO convert(TenantPutRequest request) {
-        if (request == null) {
-            return null;
-        }
-
-        TenantPO po = new TenantPO();
-        po.setTenantCode(request.getTenantCode());
-        po.setTenantName(request.getTenantName());
-        po.setContactPerson(request.getContactPerson());
-        po.setContactPhone(request.getContactPhone());
-        po.setComment(request.getComment());
-        po.setExtraInfo(po.getExtraInfo());
-        return po;
     }
 }
