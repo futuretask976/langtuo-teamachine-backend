@@ -56,20 +56,21 @@ public class MenuDispatchWorker implements Runnable {
     @Override
     public void run() {
         String fileName = getMenuFileName();
-        MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchOssAccessor();
-        MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
-                CommonConsts.MENU_DISPATCH_INIT_FALSE, fileName);
-        if (existOssPO != null) {
-            sendToMachine(getSendMsg(existOssPO));
-        }
-
-        JSONObject dispatchCont = BizUtils.getMenuDispatchCont(tenantCode, menuCode);
-        if (dispatchCont == null) {
-            return;
-        }
-
         File tmpFile = new File(CommonConsts.MENU_OUTPUT_PATH + fileName);
         try {
+            MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchHistoryAccessor();
+            MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
+                    CommonConsts.MENU_DISPATCH_INIT_FALSE, fileName);
+            if (existOssPO != null) {
+                sendToMachine(getSendMsg(existOssPO));
+                return;
+            }
+
+            JSONObject dispatchCont = BizUtils.getMenuDispatchCont(tenantCode, menuCode);
+            if (dispatchCont == null) {
+                return;
+            }
+
             boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), tmpFile);
             if (!wrote) {
                 log.info("menuDispatchWorker|writeStrToFile|failed|stopWorker");

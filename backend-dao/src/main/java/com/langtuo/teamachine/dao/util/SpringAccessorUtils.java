@@ -276,7 +276,7 @@ public class SpringAccessorUtils {
         return accessor;
     }
 
-    public static MenuDispatchHistoryAccessor getMenuDispatchOssAccessor() {
+    public static MenuDispatchHistoryAccessor getMenuDispatchHistoryAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         MenuDispatchHistoryAccessor accessor = appContext.getBean(MenuDispatchHistoryAccessor.class);
         return accessor;

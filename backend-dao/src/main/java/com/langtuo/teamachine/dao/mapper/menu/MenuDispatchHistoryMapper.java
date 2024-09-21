@@ -10,16 +10,16 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface MenuDispatchOssMapper {
+public interface MenuDispatchHistoryMapper {
     /**
      *
      * @param tenantCode
      * @param init
-     * @param ossPath
+     * @param fileName
      * @return
      */
     MenuDispatchHistoryPO selectOne(@Param("tenantCode") String tenantCode, @Param("init") int init,
-                                    @Param("ossPath") String ossPath);
+                                    @Param("fileName") String fileName);
 
     /**
      *
@@ -33,9 +33,9 @@ public interface MenuDispatchOssMapper {
      *
      * @param tenantCode
      * @param init
-     * @param ossPath
+     * @param fileName
      * @return
      */
     int delete(@Param("tenantCode") String tenantCode, @Param("init") int init,
-            @Param("ossPath") String ossPath);
+            @Param("fileName") String fileName);
 }

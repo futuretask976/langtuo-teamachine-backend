@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.menu;
 
-import com.langtuo.teamachine.dao.mapper.menu.MenuDispatchOssMapper;
+import com.langtuo.teamachine.dao.mapper.menu.MenuDispatchHistoryMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchHistoryPO;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 @Component
 public class MenuDispatchHistoryAccessor {
     @Resource
-    private MenuDispatchOssMapper mapper;
+    private MenuDispatchHistoryMapper mapper;
 
     public MenuDispatchHistoryPO getByFileName(String tenantCode, int init, String fileName) {
         MenuDispatchHistoryPO menuDispatchHistoryPO = mapper.selectOne(tenantCode, init, fileName);

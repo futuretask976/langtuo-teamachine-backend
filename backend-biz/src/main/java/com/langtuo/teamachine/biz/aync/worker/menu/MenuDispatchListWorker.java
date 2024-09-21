@@ -48,12 +48,13 @@ public class MenuDispatchListWorker implements Runnable {
 
     @Override
     public void run() {
-        MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchOssAccessor();
+        MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchHistoryAccessor();
         String fileName = getMenuListFileName();
         MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
                 CommonConsts.MENU_DISPATCH_INIT_FALSE, fileName);
         if (existOssPO != null) {
             sendToMachine(getSendMsg(existOssPO));
+            return;
         }
 
         JSONArray dispatchCont = getDispatchCont();
