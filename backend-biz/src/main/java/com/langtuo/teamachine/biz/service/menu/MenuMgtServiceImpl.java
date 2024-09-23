@@ -13,8 +13,8 @@ import com.langtuo.teamachine.biz.aync.AsyncDispatcher;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchCacheAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuSeriesRelAccessor;
-import com.langtuo.teamachine.dao.mapper.menu.MenuDispatchHistoryMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
@@ -48,7 +48,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     private MenuDispatchAccessor menuDispatchAccessor;
 
     @Resource
-    private MenuDispatchHistoryMapper menuDispatchHistoryMapper;
+    private MenuDispatchCacheAccessor menuDispatchCacheAccessor;
 
     @Resource
     private AsyncDispatcher asyncDispatcher;
@@ -145,7 +145,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 }
             }
 
-            deleteMenuDispatchlistHistory(po.getTenantCode(), po.getMenuCode());
+            deleteMenuDispatchCache(po.getTenantCode(), po.getMenuCode());
 
             return TeaMachineResult.success();
         } catch (Exception e) {
@@ -176,7 +176,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 }
             }
 
-            deleteMenuDispatchlistHistory(po.getTenantCode(), po.getMenuCode());
+            deleteMenuDispatchCache(po.getTenantCode(), po.getMenuCode());
 
             return TeaMachineResult.success();
         } catch (Exception e) {
@@ -196,7 +196,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteByMenuCode(tenantCode, menuCode);
             int deleted4Dispatch = menuDispatchAccessor.deleteByMenuCode(tenantCode, menuCode);
 
-            deleteMenuDispatchlistHistory(tenantCode, menuCode);
+            deleteMenuDispatchCache(tenantCode, menuCode);
 
             return TeaMachineResult.success();
         } catch (Exception e) {
@@ -259,7 +259,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         }
     }
 
-    private void deleteMenuDispatchlistHistory(String tenantCode, String menuCode) {
+    private void deleteMenuDispatchCache(String tenantCode, String menuCode) {
         List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByMenuCode(tenantCode, menuCode);
         if (CollectionUtils.isEmpty(shopGroupCodeList)) {
             return;
@@ -269,7 +269,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         for (String shopGroupCode : shopGroupCodeList) {
             fileNameList.add(BizUtils.getMenuListFileName(shopGroupCode));
         }
-        int deleted = menuDispatchHistoryMapper.deleteByFileNameList(tenantCode, CommonConsts.MENU_DISPATCH_LIST_TRUE,
+        int deleted = menuDispatchCacheAccessor.deleteByFileNameList(tenantCode, CommonConsts.MENU_DISPATCH_LIST_TRUE,
                 fileNameList);
     }
 }

@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.mapper.menu;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
-import com.langtuo.teamachine.dao.po.menu.MenuDispatchHistoryPO;
+import com.langtuo.teamachine.dao.po.menu.MenuDispatchCachePO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface MenuDispatchHistoryMapper {
+public interface MenuDispatchCacheMapper {
     /**
      *
      * @param tenantCode
@@ -20,8 +20,8 @@ public interface MenuDispatchHistoryMapper {
      * @param fileName
      * @return
      */
-    MenuDispatchHistoryPO selectOne(@Param("tenantCode") String tenantCode, @Param("init") int init,
-                                    @Param("fileName") String fileName);
+    MenuDispatchCachePO selectOne(@Param("tenantCode") String tenantCode, @Param("init") int init,
+                                  @Param("fileName") String fileName);
 
     /**
      *
@@ -29,7 +29,7 @@ public interface MenuDispatchHistoryMapper {
      * @return
      */
     @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
-    int insert(MenuDispatchHistoryPO po);
+    int insert(MenuDispatchCachePO po);
 
     /**
      *
@@ -38,8 +38,8 @@ public interface MenuDispatchHistoryMapper {
      * @param fileName
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("init") int init,
-            @Param("fileName") String fileName);
+    int deleteByFileName(@Param("tenantCode") String tenantCode, @Param("init") int init,
+                         @Param("fileName") String fileName);
 
     /**
      *
@@ -50,4 +50,11 @@ public interface MenuDispatchHistoryMapper {
      */
     int deleteByFileNameList(@Param("tenantCode") String tenantCode, @Param("init") int init,
                @Param("fileNameList") List<String> fileNameList);
+
+    /**
+     *
+     * @param tenantCode
+     * @return
+     */
+    int clear(@Param("tenantCode") String tenantCode);
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class MenuDispatchHistoryPO {
+public class MenuDispatchCachePO {
     /**
      * 数据表id
      */

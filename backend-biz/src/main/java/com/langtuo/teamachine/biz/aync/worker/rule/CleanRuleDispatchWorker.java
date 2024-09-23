@@ -84,7 +84,7 @@ public class CleanRuleDispatchWorker implements Runnable {
         List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.listByCleanRuleCode(
                 tenantCode, cleanRuleCode);
         if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
-            log.info("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + cleanRuleDispatchPOList);
+            log.error("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + cleanRuleDispatchPOList);
             return null;
         }
 

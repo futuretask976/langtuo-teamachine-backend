@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.menu.MenuDispatchHistoryMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.menu.MenuDispatchHistoryPO" id="menuDispatchHistoryPOMap">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.menu.MenuDispatchCacheMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.menu.MenuDispatchCachePO" id="menuDispatchCachePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -15,7 +15,7 @@
         <result property="md5" column="md5"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="menuDispatchHistoryPOMap">
+    <select id="selectOne" resultMap="menuDispatchCachePOMap">
         SELECT * FROM menu_dispatch_history
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
@@ -23,7 +23,7 @@
             AND file_name = #{fileName}
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.menu.MenuDispatchHistoryPO">
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.menu.MenuDispatchCachePO">
         INSERT INTO menu_dispatch_history (
             gmt_created
             , gmt_modified
@@ -41,7 +41,7 @@
         )
     </insert>
 
-    <delete id="delete">
+    <delete id="deleteByFileName">
         DELETE FROM menu_dispatch_history
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
@@ -60,5 +60,11 @@
                     #{fileName}
                 </foreach>
             </if>
+    </delete>
+
+    <delete id="clear">
+        DELETE FROM menu_dispatch_history
+        WHERE 1 = 1
+            AND tenant_code = #{tenantCode}
     </delete>
 </mapper>

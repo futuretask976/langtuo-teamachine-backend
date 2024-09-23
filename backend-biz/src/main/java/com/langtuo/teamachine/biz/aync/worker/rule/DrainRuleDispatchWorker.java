@@ -84,7 +84,7 @@ public class DrainRuleDispatchWorker implements Runnable {
         List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.listByDrainRuleCode(
                 tenantCode, drainRuleCode);
         if (CollectionUtils.isEmpty(drainRuleDispatchPOList)) {
-            log.info("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + drainRuleDispatchPOList);
+            log.error("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + drainRuleDispatchPOList);
             return null;
         }
 

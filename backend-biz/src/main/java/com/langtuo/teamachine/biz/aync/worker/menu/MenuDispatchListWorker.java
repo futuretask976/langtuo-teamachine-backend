@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
-import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchHistoryAccessor;
+import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchCacheAccessor;
 import com.langtuo.teamachine.dao.config.OSSConfig;
-import com.langtuo.teamachine.dao.po.menu.MenuDispatchHistoryPO;
+import com.langtuo.teamachine.dao.po.menu.MenuDispatchCachePO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
@@ -51,8 +51,8 @@ public class MenuDispatchListWorker implements Runnable {
         String fileName = BizUtils.getMenuListFileName(shopGroupCode);
         File tmpFile = new File(CommonConsts.MENU_OUTPUT_PATH + fileName);
         try {
-            MenuDispatchHistoryAccessor menuDispatchHistoryAccessor = SpringAccessorUtils.getMenuDispatchHistoryAccessor();
-            MenuDispatchHistoryPO existOssPO = menuDispatchHistoryAccessor.getByFileName(tenantCode,
+            MenuDispatchCacheAccessor menuDispatchCacheAccessor = SpringAccessorUtils.getMenuDispatchHistoryAccessor();
+            MenuDispatchCachePO existOssPO = menuDispatchCacheAccessor.getByFileName(tenantCode,
                     CommonConsts.MENU_DISPATCH_LIST_FALSE, fileName);
             if (existOssPO != null) {
                 sendToMachine(getSendMsg(existOssPO));
@@ -60,34 +60,34 @@ public class MenuDispatchListWorker implements Runnable {
             }
 
             if (tmpFile.exists()) {
-                log.info("menuDispatchListWorker|tmpFileCheck|exist|stopWorker|" + tmpFile.getAbsolutePath());
+                log.error("menuDispatchListWorker|tmpFileCheck|exist|stopWorker|" + tmpFile.getAbsolutePath());
                 return;
             }
 
             JSONArray dispatchCont = getDispatchCont();
             if (dispatchCont == null) {
-                log.info("menuDispatchListWorker|getDispatchCont|error|stopWorker|" + dispatchCont);
+                log.error("menuDispatchListWorker|getDispatchCont|error|stopWorker|" + dispatchCont);
                 return;
             }
 
             boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), tmpFile);
             if (!wrote) {
-                log.info("menuDispatchListWorker|writeStrToFile|failed|stopWorker");
+                log.error("menuDispatchListWorker|writeStrToFile|failed|stopWorker");
                 return;
             }
             String ossPath = BizUtils.uploadOSS(tmpFile);
             if (StringUtils.isBlank(ossPath)) {
-                log.info("menuDispatchListWorker|uploadOSS|failed|stopWorker");
+                log.error("menuDispatchListWorker|uploadOSS|failed|stopWorker");
                 return;
             }
             String md5AsHex = BizUtils.calcMD5Hex(tmpFile);
             if (StringUtils.isBlank(md5AsHex)) {
-                log.info("menuDispatchListWorker|calcMD5Hex|failed|stopWorker");
+                log.error("menuDispatchListWorker|calcMD5Hex|failed|stopWorker");
                 return;
             }
 
-            MenuDispatchHistoryPO newOssPO = getNewOssPO(fileName, md5AsHex);
-            int inserted = menuDispatchHistoryAccessor.insert(newOssPO);
+            MenuDispatchCachePO newOssPO = getNewOssPO(fileName, md5AsHex);
+            int inserted = menuDispatchCacheAccessor.insert(newOssPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("menuDispatchWorker|insertOssInfo|error|" + inserted);
             }
@@ -103,7 +103,7 @@ public class MenuDispatchListWorker implements Runnable {
     private JSONArray getDispatchCont() {
         List<MenuPO> menuPOList = DaoUtils.getMenuPOListByShopGroupCode(tenantCode, shopGroupCode);
         if (CollectionUtils.isEmpty(menuPOList)) {
-            log.info("menuDispatchListWorker|getMenu|empty|stopWorker");
+            log.error("menuDispatchListWorker|getMenu|empty|stopWorker");
             return null;
         }
 
@@ -115,7 +115,7 @@ public class MenuDispatchListWorker implements Runnable {
         return arr;
     }
 
-    private JSONObject getSendMsg(MenuDispatchHistoryPO po) {
+    private JSONObject getSendMsg(MenuDispatchCachePO po) {
         JSONObject jsonMsg = new JSONObject();
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MENU_LIST);
         jsonMsg.put(CommonConsts.JSON_KEY_MD5_AS_HEX, po.getMd5());
@@ -129,8 +129,8 @@ public class MenuDispatchListWorker implements Runnable {
         mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
     }
 
-    private MenuDispatchHistoryPO getNewOssPO(String fileName, String md5AsHex) {
-        MenuDispatchHistoryPO newOssPO = new MenuDispatchHistoryPO();
+    private MenuDispatchCachePO getNewOssPO(String fileName, String md5AsHex) {
+        MenuDispatchCachePO newOssPO = new MenuDispatchCachePO();
         newOssPO.setTenantCode(tenantCode);
         newOssPO.setInit(CommonConsts.MENU_DISPATCH_LIST_TRUE);
         newOssPO.setFileName(fileName);

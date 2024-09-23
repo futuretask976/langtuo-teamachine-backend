@@ -100,12 +100,10 @@ public class MqttConsumer implements InitializingBean {
         }
 
         JSONObject jsonPayload = JSONObject.parseObject(payload);
-        log.info("received msg, payload=" + payload);
-
         String bizCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_BIZ_CODE);
         Function<JSONObject, Runnable> function = workerMap.get(bizCode);
         if (function == null) {
-            log.info("mqttConsumer|dispatch|noMatch|" + bizCode);
+            log.error("mqttConsumer|dispatch|noMatch|" + bizCode);
         }
         ConsumeExeService.getExeService().submit(function.apply(jsonPayload));
     }

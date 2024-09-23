@@ -276,9 +276,9 @@ public class SpringAccessorUtils {
         return accessor;
     }
 
-    public static MenuDispatchHistoryAccessor getMenuDispatchHistoryAccessor() {
+    public static MenuDispatchCacheAccessor getMenuDispatchHistoryAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MenuDispatchHistoryAccessor accessor = appContext.getBean(MenuDispatchHistoryAccessor.class);
+        MenuDispatchCacheAccessor accessor = appContext.getBean(MenuDispatchCacheAccessor.class);
         return accessor;
     }
 }

@@ -34,6 +34,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class BizUtils {
+    public static String getMenuFileName(String menuCode, String menuGmtModifiedYMDHMS) {
+        String fileName = CommonConsts.MENU_OUTPUT_FILENAME_PREFIX + menuCode
+                + CommonConsts.HORIZONTAL_BAR + menuGmtModifiedYMDHMS
+                + CommonConsts.MENU_OUTPUT_PATH_EXT;
+        return fileName;
+    }
+
     public static String getMenuListFileName(String shopGroupCode) {
         String fileName = CommonConsts.MENU_OUTPUT_FILENAME_PREFIX + shopGroupCode
                 + CommonConsts.MENU_OUTPUT_PATH_EXT;
@@ -45,7 +52,7 @@ public class BizUtils {
         MenuPO menuPO = menuAccessor.getByMenuCode(tenantCode, menuCode);
         MenuDTO menuDTO = MenuMgtConvertor.convertToMenuDTO(menuPO);
         if (menuDTO == null) {
-            log.info("BizUtils|getMenu|null|stopWorker");
+            log.error("BizUtils|getMenu|null|stopWorker");
             return null;
         }
 
@@ -59,7 +66,7 @@ public class BizUtils {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(seriesDTOList)) {
-            log.info("BizUtils|getSeriesList|empty|stopWorker");
+            log.error("BizUtils|getSeriesList|empty|stopWorker");
             return null;
         }
         List<String> teaCodeList = seriesDTOList.stream()
@@ -76,7 +83,7 @@ public class BizUtils {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(teaCodeList)) {
-            log.info("BizUtils|getTeaList|empty|stopWorker");
+            log.error("BizUtils|getTeaList|empty|stopWorker");
             return null;
         }
 
@@ -171,7 +178,7 @@ public class BizUtils {
         try {
             ossPath = OSSUtils.uploadFile(file, OSSConfig.OSS_MENU_PATH);
         } catch (FileNotFoundException e) {
-            log.info("bizUtils|uploadFileToOSS|fatal|" + e.getMessage());
+            log.error("bizUtils|uploadFileToOSS|fatal|" + e.getMessage());
         }
         return ossPath;
     }
@@ -183,13 +190,13 @@ public class BizUtils {
             fileInputStream = new FileInputStream(file);
             md5AsHex = DigestUtils.md5DigestAsHex(fileInputStream);
         } catch (IOException e) {
-            log.info("bizUtils|calcMD5Hex|fatal|" + e.getMessage());
+            log.error("bizUtils|calcMD5Hex|fatal|" + e.getMessage());
         } finally {
             if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    log.info("bizUtils|closeFileInputStream|fatal|" + e.getMessage());
+                    log.error("bizUtils|closeFileInputStream|fatal|" + e.getMessage());
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.biz.service.drink;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.langtuo.teamachine.api.model.*;
 import com.langtuo.teamachine.api.model.drink.*;
@@ -8,6 +9,7 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.biz.excel.ExcelHandlerFactory;
 import com.langtuo.teamachine.dao.accessor.drink.*;
+import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchCacheAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesTeaRelAccessor;
 import com.langtuo.teamachine.dao.po.drink.*;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -40,6 +42,9 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
     @Resource
     private SeriesTeaRelAccessor seriesTeaRelAccessor;
+
+    @Resource
+    private MenuDispatchCacheAccessor menuDispatchCacheAccessor;
 
     @Resource
     private ExcelHandlerFactory excelHandlerFactory;
@@ -140,6 +145,9 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                     log.error("teaMgtService|putNewToppingAdjustRule|error|" + inserted4ToppingAdjustRule);
                 }
             }
+
+            int cleared = menuDispatchCacheAccessor.clear(teaPO.getTenantCode());
+
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("teaMgtService|putNew|fatal|" + e.getMessage(), e);
@@ -157,7 +165,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
             int updated4Tea = teaAccessor.update(teaPO);
             if (CommonConsts.DB_UPDATED_ONE_ROW != updated4Tea) {
-                log.error("teaMgtService|putUpdateTea|error|" + updated4Tea);
+                log.error("teaMgtService|putUpdateTea|error|" + JSONObject.toJSONString(teaPO));
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
@@ -165,7 +173,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             for (TeaUnitPO teaUnitPO : teaUnitPOList) {
                 int inserted4TeaUnit = teaUnitAccessor.insert(teaUnitPO);
                 if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4TeaUnit) {
-                    log.error("teaMgtService|putUpdateTeaUnit|error|" + inserted4TeaUnit);
+                    log.error("teaMgtService|putUpdateTeaUnit|error|" + JSONObject.toJSONString(teaUnitPO));
                 }
             }
 
@@ -173,7 +181,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             for (ToppingBaseRulePO toppingBaseRulePO : toppingBaseRulePOList) {
                 int inserted4ToppingBaseRule = toppingBaseRuleAccessor.insert(toppingBaseRulePO);
                 if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4ToppingBaseRule) {
-                    log.error("teaMgtService|putUpdateToppingBaseRule|error|" + inserted4ToppingBaseRule);
+                    log.error("teaMgtService|putUpdateToppingBaseRule|error|" +
+                            JSONObject.toJSONString(toppingBaseRulePO));
                 }
             }
 
@@ -181,9 +190,13 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             for (ToppingAdjustRulePO toppingAdjustRulePO : toppingAdjustRulePOList) {
                 int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(toppingAdjustRulePO);
                 if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4ToppingAdjustRule) {
-                    log.error("teaMgtService|putUpdateToppingAdjustRule|error|" + inserted4ToppingAdjustRule);
+                    log.error("teaMgtService|putUpdateToppingAdjustRule|error|" +
+                            JSONObject.toJSONString(toppingAdjustRulePO));
                 }
             }
+
+            int cleared = menuDispatchCacheAccessor.clear(teaPO.getTenantCode());
+
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("teaMgtService|putUpdate|fatal|" + e.getMessage(), e);
@@ -199,16 +212,19 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
         try {
             int count = seriesTeaRelAccessor.countByTeaCode(tenantCode, teaCode);
-            if (count == CommonConsts.DB_SELECT_ZERO_ROW) {
-                int deleted4Tea = teaAccessor.deleteByTeaCode(tenantCode, teaCode);
-                int deleted4TeaUnit = teaUnitAccessor.deleteByTeaCode(tenantCode, teaCode);
-                int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(tenantCode, teaCode);
-                int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.deleteByTeaCode(tenantCode, teaCode);
-                return TeaMachineResult.success();
-            } else {
+            if (CommonConsts.DB_SELECT_ZERO_ROW != count) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
+
+            int deleted4Tea = teaAccessor.deleteByTeaCode(tenantCode, teaCode);
+            int deleted4TeaUnit = teaUnitAccessor.deleteByTeaCode(tenantCode, teaCode);
+            int deleted4ToppingBaseRule = toppingBaseRuleAccessor.deleteByTeaCode(tenantCode, teaCode);
+            int deleted4ToppingAdjustRule = toppingAdjustRuleAccessor.deleteByTeaCode(tenantCode, teaCode);
+
+            int cleared = menuDispatchCacheAccessor.clear(tenantCode);
+
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("teaMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));

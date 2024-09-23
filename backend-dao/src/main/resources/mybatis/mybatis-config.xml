@@ -70,7 +70,7 @@
         <mapper resource="mybatis/mapper/menu/series-tea-rel-mapper.xml"/>
         <mapper resource="mybatis/mapper/menu/menu-series-rel-mapper.xml"/>
         <mapper resource="mybatis/mapper/menu/menu-dispatch-mapper.xml"/>
-        <mapper resource="mybatis/mapper/menu/menu-dispatch-history-mapper.xml"/>
+        <mapper resource="mybatis/mapper/menu/menu-dispatch-cache-mapper.xml"/>
         <!-- 食安规则 -->
         <mapper resource="mybatis/mapper/rule/clean-rule-mapper.xml"/>
         <mapper resource="mybatis/mapper/rule/clean-rule-step-mapper.xml"/>
