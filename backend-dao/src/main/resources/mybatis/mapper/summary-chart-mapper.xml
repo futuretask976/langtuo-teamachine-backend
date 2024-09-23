@@ -79,6 +79,7 @@
             AND order_created_day >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 14 DAY), '%Y-%m-%d')
         GROUP BY tea_code
         ORDER BY order_created_day DESC
+        LIMIT 5
     </select>
 
     <select id="select4ToppingAmtChart" resultType="java.util.HashMap">
@@ -92,6 +93,7 @@
             AND order_created_day >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 14 DAY), '%Y-%m-%d')
         GROUP BY topping_code
         ORDER BY amount DESC
+        LIMIT 5
     </select>
 
     <select id="select4SpecItemAmtChart" resultType="java.util.HashMap">
@@ -105,5 +107,6 @@
             AND order_created_day >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 14 DAY), '%Y-%m-%d')
         GROUP BY spec_item_code
         ORDER BY amount DESC
+        LIMIT 5
     </select>
 </mapper>

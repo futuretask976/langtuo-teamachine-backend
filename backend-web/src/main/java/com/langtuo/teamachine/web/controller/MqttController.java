@@ -3,8 +3,11 @@ package com.langtuo.teamachine.web.controller;
 import com.google.common.collect.Lists;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
+import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
+import com.langtuo.teamachine.internal.util.DateUtils;
 import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.mqtt.consume.worker.record.OrderActRecordWorker;
 import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderSpecItemActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderToppingActRecordPutRequest;
@@ -15,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,7 +54,7 @@ public class MqttController {
     public TeaMachineResult<Void> testOrderAct(Model model) {
         log.info("/mqtt/testorderact entering: " + (model == null ? null : model.toString()));
         try {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 15; i++) {
                 OrderActRecordPutRequest request = new OrderActRecordPutRequest();
                 request.setTenantCode("tenant_001");
                 request.setExtraInfo(new HashMap(){{
@@ -62,24 +64,30 @@ public class MqttController {
                 request.setMachineCode("machine_444");
                 request.setShopCode("shop_002");
                 request.setShopGroupCode("shopGroup_03");
-                request.setOrderGmtCreated(new Date());
+                request.setOrderGmtCreated(DateUtils.getDate(-3));
                 request.setTeaTypeCode("TEA_TYPE_01");
-                request.setTeaCode("TEA_08");
+
+//                request.setTeaCode("TEA_06");
+                request.setTeaCode("TEA_07");
+//                request.setTeaCode("TEA_08");
+
                 request.setOuterOrderId(String.valueOf(System.currentTimeMillis()));
                 request.setState(2);
 
                 List<OrderSpecItemActRecordPutRequest> specItemList = Lists.newArrayList();
                 OrderSpecItemActRecordPutRequest specItemReq1 = new OrderSpecItemActRecordPutRequest();
                 specItemReq1.setSpecCode("SPEC_SWEET");
-                specItemReq1.setSpecName("甜度");
+
                 specItemReq1.setSpecItemCode("SPEC_ITEM_7_SWEET");
-                specItemReq1.setSpecItemName("7分糖");
+//                specItemReq1.setSpecItemCode("SPEC_ITEM_5_SWEET");
+
                 specItemList.add(specItemReq1);
                 OrderSpecItemActRecordPutRequest specItemReq2 = new OrderSpecItemActRecordPutRequest();
                 specItemReq2.setSpecCode("SPEC_BEIXING");
-                specItemReq2.setSpecName("杯型");
+
                 specItemReq2.setSpecItemCode("SPEC_ITEM_BIG");
-                specItemReq2.setSpecItemName("大杯");
+//                specItemReq2.setSpecItemCode("SPEC_ITEM_SMALL");
+
                 specItemList.add(specItemReq2);
                 request.setSpecItemList(specItemList);
 
@@ -87,18 +95,17 @@ public class MqttController {
                 OrderToppingActRecordPutRequest toppingReq1 = new OrderToppingActRecordPutRequest();
                 toppingReq1.setStepIndex(1);
                 toppingReq1.setToppingCode("topping_004");
-                toppingReq1.setToppingName("物料4");
-                toppingReq1.setActualAmount(20);
+                toppingReq1.setActualAmount(BizUtils.calcRandom(1, 99));
                 toppingList.add(toppingReq1);
                 OrderToppingActRecordPutRequest toppingReq2 = new OrderToppingActRecordPutRequest();
-                toppingReq2.setStepIndex(1);
+                toppingReq2.setStepIndex(2);
                 toppingReq2.setToppingCode("topping_005");
-                toppingReq1.setToppingName("物料5");
-                toppingReq2.setActualAmount(30);
+                toppingReq2.setActualAmount(BizUtils.calcRandom(1, 99));
                 toppingList.add(toppingReq2);
                 request.setToppingList(toppingList);
 
-                // orderActRecordMgtService.put(request);
+                OrderActRecordWorker orderActRecordWorker = new OrderActRecordWorker(request);
+                orderActRecordWorker.run();
 
                 Thread.sleep(1000 * 2);
             }

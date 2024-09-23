@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.biz.testor.record;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
@@ -19,10 +18,7 @@ import com.langtuo.teamachine.mqtt.request.record.OrderToppingActRecordPutReques
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderActRecordTestor {
     public static void main(String args[]) {
@@ -64,13 +60,11 @@ public class OrderActRecordTestor {
             OrderToppingActRecordPutRequest toppingReq1 = new OrderToppingActRecordPutRequest();
             toppingReq1.setStepIndex(1);
             toppingReq1.setToppingCode("topping_002");
-            toppingReq1.setToppingName("物料2");
             toppingReq1.setActualAmount(20);
             toppingList.add(toppingReq1);
             OrderToppingActRecordPutRequest toppingReq2 = new OrderToppingActRecordPutRequest();
             toppingReq2.setStepIndex(1);
             toppingReq2.setToppingCode("topping_003");
-            toppingReq1.setToppingName("物料3");
             toppingReq2.setActualAmount(30);
             toppingList.add(toppingReq2);
             request.setToppingList(toppingList);
@@ -117,23 +111,17 @@ public class OrderActRecordTestor {
 
         specItemReq = new OrderSpecItemActRecordPutRequest();
         specItemReq.setSpecCode("SPEC_SWEET");
-        specItemReq.setSpecName("甜度");
         specItemReq.setSpecItemCode("SPEC_ITEM_7_SWEET");
-        specItemReq.setSpecItemName("7分糖");
         list.add(specItemReq);
 
         specItemReq = new OrderSpecItemActRecordPutRequest();
         specItemReq.setSpecCode("SPEC_SWEET");
-        specItemReq.setSpecName("甜度");
         specItemReq.setSpecItemCode("SPEC_ITEM_5_SWEET");
-        specItemReq.setSpecItemName("5分糖");
         list.add(specItemReq);
 
         specItemReq = new OrderSpecItemActRecordPutRequest();
         specItemReq.setSpecCode("SPEC_SWEET");
-        specItemReq.setSpecName("甜度");
         specItemReq.setSpecItemCode("SPEC_ITEM_5_SWEET");
-        specItemReq.setSpecItemName("5分糖");
         list.add(specItemReq);
 
         int idx = BizUtils.calcRandom(1, list.size());
@@ -146,23 +134,17 @@ public class OrderActRecordTestor {
 
         specItemReq = new OrderSpecItemActRecordPutRequest();
         specItemReq.setSpecCode("SPEC_BEIXING");
-        specItemReq.setSpecName("杯型");
         specItemReq.setSpecItemCode("SPEC_ITEM_BIG");
-        specItemReq.setSpecItemName("大杯");
         list.add(specItemReq);
 
         specItemReq = new OrderSpecItemActRecordPutRequest();
         specItemReq.setSpecCode("SPEC_BEIXING");
-        specItemReq.setSpecName("杯型");
         specItemReq.setSpecItemCode("SPEC_ITEM_MIDDLE");
-        specItemReq.setSpecItemName("中杯");
         list.add(specItemReq);
 
         specItemReq = new OrderSpecItemActRecordPutRequest();
         specItemReq.setSpecCode("SPEC_BEIXING");
-        specItemReq.setSpecName("杯型");
         specItemReq.setSpecItemCode("SPEC_ITEM_SMALL");
-        specItemReq.setSpecItemName("小杯");
         list.add(specItemReq);
 
         int idx = BizUtils.calcRandom(1, list.size());
@@ -175,16 +157,12 @@ public class OrderActRecordTestor {
 
         specItemReq = new OrderSpecItemActRecordPutRequest();
         specItemReq.setSpecCode("SPEC_TEMP");
-        specItemReq.setSpecName("温度");
         specItemReq.setSpecItemCode("SPEC_ITEM_WARM");
-        specItemReq.setSpecItemName("热饮");
         list.add(specItemReq);
 
         specItemReq = new OrderSpecItemActRecordPutRequest();
         specItemReq.setSpecCode("SPEC_TEMP");
-        specItemReq.setSpecName("温度");
         specItemReq.setSpecItemCode("SPEC_ITEM_FREEZE");
-        specItemReq.setSpecItemName("冰饮");
         list.add(specItemReq);
 
         int idx = BizUtils.calcRandom(1, list.size());

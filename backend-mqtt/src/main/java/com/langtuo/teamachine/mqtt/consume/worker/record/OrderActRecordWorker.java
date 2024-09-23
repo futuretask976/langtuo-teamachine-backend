@@ -26,6 +26,10 @@ public class OrderActRecordWorker implements Runnable {
      */
     private List<OrderActRecordPutRequest> requestList = Lists.newArrayList();
 
+    public OrderActRecordWorker(OrderActRecordPutRequest request) {
+        requestList.add(request);
+    }
+
     public OrderActRecordWorker(JSONObject jsonPayload) {
         JSONArray jsonList = jsonPayload.getJSONArray(MqttConsts.RECEIVE_KEY_LIST);
         jsonList.forEach(jsonObject -> {

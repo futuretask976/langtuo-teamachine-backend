@@ -36,19 +36,9 @@ public class OrderActRecordPutRequest {
     private String shopCode;
 
     /**
-     * 店铺名称
-     */
-    private String shopName;
-
-    /**
      * 店铺组编码
      */
     private String shopGroupCode;
-
-    /**
-     * 店铺组名称
-     */
-    private String shopGroupName;
 
     /**
      * 订单生成时间
@@ -102,13 +92,7 @@ public class OrderActRecordPutRequest {
         if (!RegexUtils.isValidCode(shopCode, true)) {
             return false;
         }
-        if (!RegexUtils.isValidCode(shopName, true)) {
-            return false;
-        }
         if (!RegexUtils.isValidCode(shopGroupCode, true)) {
-            return false;
-        }
-        if (!RegexUtils.isValidCode(shopGroupName, true)) {
             return false;
         }
         if (!RegexUtils.isValidCode(outerOrderId, true)) {

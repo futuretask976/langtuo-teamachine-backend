@@ -89,7 +89,7 @@ public class OrderReportServiceImpl implements OrderReportService {
         List<OrderToppingReportPO> existToppingReportList = orderToppingReportByShopAccessor.listByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(existSpecItemReportList)) {
-            int deleted = orderSpecItemReportByShopAccessor.delete(tenantCode, orderCreatedDay);
+            int deleted = orderToppingReportByShopAccessor.delete(tenantCode, orderCreatedDay);
         }
         List<OrderToppingReportPO> toppingReportByShopPOList = orderToppingReportByShopAccessor.calcByOrderCreatedDay(
                 tenantCode, orderCreatedDay);

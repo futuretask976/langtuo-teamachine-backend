@@ -26,14 +26,14 @@
             order_specitem_act.spec_item_code,
             COUNT(1) AS amount
         FROM order_act_record AS order_act
-        LEFT JOIN
-            order_specitem_act_record AS order_specitem_act
-        ON 1 = 1
+            LEFT JOIN
+                order_specitem_act_record AS order_specitem_act
+            ON order_act.idempotent_mark = order_specitem_act.idempotent_mark
+        WHERE 1 = 1
             AND order_act.tenant_code = #{tenantCode}
             AND DATE(order_act.order_gmt_created) = #{orderCreatedDay}
             AND TIME(order_act.order_gmt_created) >= '00:00:00'
             AND TIME(order_act.order_gmt_created) &lt; '24:00:00'
-            AND order_act.idempotent_mark = order_specitem_act.idempotent_mark
         GROUP BY
             order_act.tenant_code, #{orderCreatedDay}, order_act.shop_group_code, order_act.shop_code, order_specitem_act.spec_item_code
     </select>

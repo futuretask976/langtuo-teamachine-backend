@@ -16,20 +16,12 @@ public class OrderToppingActRecordPutRequest {
     private String toppingCode;
 
     /**
-     * 设备名称
-     */
-    private String toppingName;
-
-    /**
      * 实际数量
      */
     private int actualAmount;
 
     public boolean isValid() {
         if (!RegexUtils.isValidCode(toppingCode, true)) {
-            return false;
-        }
-        if (!RegexUtils.isValidName(toppingName, true)) {
             return false;
         }
         if (stepIndex <= 0) {

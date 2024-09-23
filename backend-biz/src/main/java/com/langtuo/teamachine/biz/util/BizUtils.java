@@ -207,7 +207,7 @@ public class BizUtils {
     }
 
     public static int calcRandom(int min, int max) {
-        Random random = new Random();
+        Random random = new Random(System.currentTimeMillis());
         int randomNumber = random.nextInt(max - min + 1) + min;
         return randomNumber;
     }
