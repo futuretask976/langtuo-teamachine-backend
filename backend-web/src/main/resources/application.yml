@@ -9,7 +9,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   profiles:
-    active: dev # @spring.profiles.active@
+    active: dev
   servlet:
     multipart:
       enabled: true # 开启文件上传
