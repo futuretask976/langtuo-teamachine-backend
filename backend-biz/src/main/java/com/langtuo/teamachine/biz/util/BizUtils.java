@@ -106,7 +106,10 @@ public class BizUtils {
             seriesJSON.remove("seriesTeaRelList");
             seriesJSON.put("teaList", new JSONArray());
             for (TeaDTO teaDTO : teaList) {
-                seriesJSON.getJSONArray("teaList").add(JSON.toJSON(teaDTO));
+                JSONObject jsonTea = (JSONObject) JSON.toJSON(teaDTO);
+                jsonTea.remove("actStepList");
+                jsonTea.remove("specRuleList");
+                seriesJSON.getJSONArray("teaList").add(jsonTea);
             }
             jsonMenu.getJSONArray("seriesList").add(seriesJSON);
         }

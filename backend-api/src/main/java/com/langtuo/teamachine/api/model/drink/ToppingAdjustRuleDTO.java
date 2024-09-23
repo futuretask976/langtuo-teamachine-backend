@@ -2,10 +2,11 @@ package com.langtuo.teamachine.api.model.drink;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class ToppingAdjustRuleDTO {
+    public static final int ADJUST_TYPE_DECREASE = 0;
+    public static final int ADJUST_TYPE_INCREASE = 1;
+
     /**
      * 茶品unit编码
      */
@@ -50,4 +51,12 @@ public class ToppingAdjustRuleDTO {
      * 计量单位，0：克，1：毫升
      */
     private int measureUnit;
+
+    public int getActualAmount() {
+        if (ADJUST_TYPE_DECREASE == adjustType) {
+            return baseAmount - adjustAmount;
+        } else {
+            return baseAmount + adjustAmount;
+        }
+    }
 }

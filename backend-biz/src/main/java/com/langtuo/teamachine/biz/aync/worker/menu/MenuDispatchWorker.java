@@ -92,13 +92,13 @@ public class MenuDispatchWorker implements Runnable {
                 return;
             }
 
-            MenuDispatchCachePO newOssPO = getNewHistoryPO(fileName, md5AsHex);
-            int inserted = menuDispatchCacheAccessor.insert(newOssPO);
+            MenuDispatchCachePO newCachePO = getNewHistoryPO(fileName, md5AsHex);
+            int inserted = menuDispatchCacheAccessor.insert(newCachePO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("menuDispatchWorker|insertOssInfo|error|" + inserted);
+                log.error("menuDispatchWorker|insertOssInfo|error|" + JSONObject.toJSONString(newCachePO));
             }
 
-            sendToMachine(getSendMsg(newOssPO));
+            sendToMachine(getSendMsg(newCachePO));
         } catch (Exception e) {
             log.error("menuDispatchWorker|run|fatal|" + e.getMessage(), e);
         } finally {
@@ -176,11 +176,11 @@ public class MenuDispatchWorker implements Runnable {
     }
 
     private MenuDispatchCachePO getNewHistoryPO(String fileName, String md5AsHex) {
-        MenuDispatchCachePO newHistoryPO = new MenuDispatchCachePO();
-        newHistoryPO.setTenantCode(tenantCode);
-        newHistoryPO.setInit(CommonConsts.MENU_DISPATCH_LIST_FALSE);
-        newHistoryPO.setFileName(fileName);
-        newHistoryPO.setMd5(md5AsHex);
-        return newHistoryPO;
+        MenuDispatchCachePO newCachePO = new MenuDispatchCachePO();
+        newCachePO.setTenantCode(tenantCode);
+        newCachePO.setInit(CommonConsts.MENU_DISPATCH_LIST_FALSE);
+        newCachePO.setFileName(fileName);
+        newCachePO.setMd5(md5AsHex);
+        return newCachePO;
     }
 }
