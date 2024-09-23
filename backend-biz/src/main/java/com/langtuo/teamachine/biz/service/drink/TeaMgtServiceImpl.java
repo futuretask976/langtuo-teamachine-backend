@@ -39,15 +39,6 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     private ToppingBaseRuleAccessor toppingBaseRuleAccessor;
 
     @Resource
-    private SpecAccessor specAccessor;
-
-    @Resource
-    private SpecItemAccessor specItemAccessor;
-
-    @Resource
-    private ToppingAccessor toppingAccessor;
-
-    @Resource
     private SeriesTeaRelAccessor seriesTeaRelAccessor;
 
     @Resource
