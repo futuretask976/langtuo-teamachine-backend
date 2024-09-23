@@ -6,6 +6,7 @@ import com.langtuo.teamachine.api.model.menu.SeriesDTO;
 import com.langtuo.teamachine.api.request.menu.SeriesPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.menu.SeriesMgtService;
+import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchCacheAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuSeriesRelAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesTeaRelAccessor;
@@ -17,7 +18,6 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -35,6 +35,9 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
     @Resource
     private MenuSeriesRelAccessor menuSeriesRelAccessor;
+
+    @Resource
+    private MenuDispatchCacheAccessor menuDispatchCacheAccessor;
 
     @Override
     public TeaMachineResult<List<SeriesDTO>> list(String tenantCode) {
@@ -92,30 +95,11 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
 
         SeriesPO seriesPO = convertSeriesPO(request);
         List<SeriesTeaRelPO> seriesTeaRelPOList = convertToSeriesTeaRelPO(request);
-
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            SeriesPO exist = seriesAccessor.getBySeriesCode(seriesPO.getTenantCode(),
-                    seriesPO.getSeriesCode());
-            if (exist != null) {
-                int updated = seriesAccessor.update(seriesPO);
-            } else {
-                int inserted = seriesAccessor.insert(seriesPO);
-            }
-
-            int deleted4SeriesTeaRel = seriesTeaRelAccessor.deleteBySeriesCode(seriesPO.getTenantCode(), seriesPO.getSeriesCode());
-            if (!CollectionUtils.isEmpty(seriesTeaRelPOList)) {
-                for (SeriesTeaRelPO seriesTeaRelPO : seriesTeaRelPOList) {
-                    seriesTeaRelAccessor.insert(seriesTeaRelPO);
-                }
-            }
-
-            teaMachineResult = TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("put error: " + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        if (request.isPutNew()) {
+            return putNew(seriesPO, seriesTeaRelPOList);
+        } else {
+            return putUpdate(seriesPO, seriesTeaRelPOList);
         }
-        return teaMachineResult;
     }
 
     private TeaMachineResult<Void> putNew(SeriesPO po, List<SeriesTeaRelPO> teaRelPOList) {
@@ -139,6 +123,9 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
+
+            int cleared = menuDispatchCacheAccessor.clear(po.getTenantCode());
+
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("seriesMgtService|putUpdate|fatal|" + e.getMessage(), e);
@@ -167,6 +154,9 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
+
+            int cleared = menuDispatchCacheAccessor.clear(po.getTenantCode());
+
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("seriesMgtService|putUpdate|fatal|" + e.getMessage(), e);
@@ -180,21 +170,22 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
             int count = menuSeriesRelAccessor.countBySeriesCode(tenantCode, seriesCode);
-            if (count == CommonConsts.DB_SELECT_ZERO_ROW) {
-                int deleted4Series = seriesAccessor.deleteBySeriesCode(tenantCode, seriesCode);
-                int deleted4SeriesTeaRel = seriesTeaRelAccessor.deleteBySeriesCode(tenantCode, seriesCode);
-                teaMachineResult = TeaMachineResult.success();
-            } else {
-                teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+            if (CommonConsts.DB_SELECT_ZERO_ROW != count) {
+                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
+
+            int deleted4Series = seriesAccessor.deleteBySeriesCode(tenantCode, seriesCode);
+            int deleted4SeriesTeaRel = seriesTeaRelAccessor.deleteBySeriesCode(tenantCode, seriesCode);
+
+            int cleared = menuDispatchCacheAccessor.clear(tenantCode);
+
+            return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("seriesMgtService|delete|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-        return teaMachineResult;
     }
 }

@@ -16,7 +16,7 @@
     </resultMap>
 
     <select id="selectOne" resultMap="menuDispatchCachePOMap">
-        SELECT * FROM menu_dispatch_history
+        SELECT * FROM menu_dispatch_cache
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND init = #{init}
@@ -24,7 +24,7 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.menu.MenuDispatchCachePO">
-        INSERT INTO menu_dispatch_history (
+        INSERT INTO menu_dispatch_cache (
             gmt_created
             , gmt_modified
             , tenant_code
@@ -42,7 +42,7 @@
     </insert>
 
     <delete id="deleteByFileName">
-        DELETE FROM menu_dispatch_history
+        DELETE FROM menu_dispatch_cache
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND init = #{init}
@@ -50,7 +50,7 @@
     </delete>
 
     <delete id="deleteByFileNameList">
-        DELETE FROM menu_dispatch_history
+        DELETE FROM menu_dispatch_cache
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND init = #{init}
@@ -63,7 +63,7 @@
     </delete>
 
     <delete id="clear">
-        DELETE FROM menu_dispatch_history
+        DELETE FROM menu_dispatch_cache
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
     </delete>
