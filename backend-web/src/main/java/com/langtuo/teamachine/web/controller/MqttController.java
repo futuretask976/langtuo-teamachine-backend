@@ -54,7 +54,8 @@ public class MqttController {
     public TeaMachineResult<Void> testOrderAct(Model model) {
         log.info("/mqtt/testorderact entering: " + (model == null ? null : model.toString()));
         try {
-            for (int i = 0; i < 15; i++) {
+            log.info("mqttController|loop|begin");
+            for (int i = 0; i < 3; i++) {
                 OrderActRecordPutRequest request = new OrderActRecordPutRequest();
                 request.setTenantCode("tenant_001");
                 request.setExtraInfo(new HashMap(){{
@@ -64,11 +65,11 @@ public class MqttController {
                 request.setMachineCode("machine_444");
                 request.setShopCode("shop_002");
                 request.setShopGroupCode("shopGroup_03");
-                request.setOrderGmtCreated(DateUtils.getDate(-3));
+                request.setOrderGmtCreated(DateUtils.getDate(-5));
                 request.setTeaTypeCode("TEA_TYPE_01");
 
-//                request.setTeaCode("TEA_06");
-                request.setTeaCode("TEA_07");
+                request.setTeaCode("TEA_06");
+//                request.setTeaCode("TEA_07");
 //                request.setTeaCode("TEA_08");
 
                 request.setOuterOrderId(String.valueOf(System.currentTimeMillis()));
@@ -78,8 +79,8 @@ public class MqttController {
                 OrderSpecItemActRecordPutRequest specItemReq1 = new OrderSpecItemActRecordPutRequest();
                 specItemReq1.setSpecCode("SPEC_SWEET");
 
-                specItemReq1.setSpecItemCode("SPEC_ITEM_7_SWEET");
-//                specItemReq1.setSpecItemCode("SPEC_ITEM_5_SWEET");
+//                specItemReq1.setSpecItemCode("SPEC_ITEM_7_SWEET");
+                specItemReq1.setSpecItemCode("SPEC_ITEM_5_SWEET");
 
                 specItemList.add(specItemReq1);
                 OrderSpecItemActRecordPutRequest specItemReq2 = new OrderSpecItemActRecordPutRequest();
@@ -94,12 +95,12 @@ public class MqttController {
                 List<OrderToppingActRecordPutRequest> toppingList = Lists.newArrayList();
                 OrderToppingActRecordPutRequest toppingReq1 = new OrderToppingActRecordPutRequest();
                 toppingReq1.setStepIndex(1);
-                toppingReq1.setToppingCode("topping_004");
+                toppingReq1.setToppingCode("topping_001");
                 toppingReq1.setActualAmount(BizUtils.calcRandom(1, 99));
                 toppingList.add(toppingReq1);
                 OrderToppingActRecordPutRequest toppingReq2 = new OrderToppingActRecordPutRequest();
                 toppingReq2.setStepIndex(2);
-                toppingReq2.setToppingCode("topping_005");
+                toppingReq2.setToppingCode("topping_003");
                 toppingReq2.setActualAmount(BizUtils.calcRandom(1, 99));
                 toppingList.add(toppingReq2);
                 request.setToppingList(toppingList);
@@ -109,6 +110,7 @@ public class MqttController {
 
                 Thread.sleep(1000 * 2);
             }
+            log.info("mqttController|loop|end");
         } catch (Exception e) {
             log.error("test error: " + e.getMessage(), e);
         }

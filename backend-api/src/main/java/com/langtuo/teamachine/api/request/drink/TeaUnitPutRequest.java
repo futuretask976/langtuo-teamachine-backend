@@ -45,9 +45,11 @@ public class TeaUnitPutRequest {
      */
     public boolean isValid() {
         if (!RegexUtils.isValidCode(teaUnitCode, true)) {
+            System.out.println("$$$$$ teaUnitCode invalid: " + teaUnitCode);
             return false;
         }
         if (!RegexUtils.isValidName(teaUnitName, true)) {
+            System.out.println("$$$$$ teaUnitName invalid: " + teaUnitName);
             return false;
         }
         if (!isValidSpecItemRuleList()) {

@@ -109,21 +109,27 @@ public class TeaPutRequest {
      */
     public boolean isValid() {
         if (!RegexUtils.isValidCode(tenantCode, true)) {
+            System.out.println("$$$$$ tenantCode invalid: " + tenantCode);
             return false;
         }
         if (!RegexUtils.isValidComment(comment, false)) {
+            System.out.println("$$$$$ comment invalid: " + comment);
             return false;
         }
         if (!RegexUtils.isValidCode(teaCode, true)) {
+            System.out.println("$$$$$ teaCode invalid: " + teaCode);
             return false;
         }
         if (!RegexUtils.isValidName(teaName, true)) {
+            System.out.println("$$$$$ teaCode invalid: " + teaCode);
             return false;
         }
         if (!RegexUtils.isValidCode(outerTeaCode, true)) {
+            System.out.println("$$$$$ outerTeaCode invalid: " + outerTeaCode);
             return false;
         }
         if (!RegexUtils.isValidCode(teaTypeCode, true)) {
+            System.out.println("$$$$$ teaTypeCode invalid: " + teaTypeCode);
             return false;
         }
         if (!isValidTeaUnitList()) {
