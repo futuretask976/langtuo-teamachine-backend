@@ -5,89 +5,53 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.drink.TeaUnitMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.drink.TeaUnitPO" id="teaUnitPO">
+    <resultMap type="com.langtuo.teamachine.dao.po.drink.TeaUnitPO" id="teaUnitPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
+        <result property="tenantCode" column="tenant_code"/>
+        <result property="teaCode" column="tea_code"/>
         <result property="teaUnitCode" column="tea_unit_code"/>
         <result property="teaUnitName" column="tea_unit_Name"/>
-        <result property="teaCode" column="tea_code"/>
-        <result property="specCode" column="spec_code"/>
-        <result property="specItemCode" column="spec_item_code"/>
-        <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="teaUnitPO">
-        SELECT * FROM tea_unit
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
-            <if test="teaCode != null">
-                AND tea_code = #{teaCode}
-            </if>
-            <if test="teaUnitCode != null">
-                AND tea_unit_code = #{teaUnitCode}
-            </if>
-            <if test="teaUnitName != null">
-                AND tea_unit_name = #{teaUnitName}
-            </if>
-    </select>
-
-    <select id="selectList" resultMap="teaUnitPO">
+    <select id="selectOne" resultMap="teaUnitPOMap">
         SELECT * FROM tea_unit
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND tea_code = #{teaCode}
+            AND tea_unit_code = #{teaUnitCode}
     </select>
 
-    <select id="countBySpecCode" resultType="int">
-        SELECT COUNT(1) FROM tea_unit
+    <select id="selectListByTeaCode" resultMap="teaUnitPOMap">
+        SELECT * FROM tea_unit
         WHERE 1 = 1
-        AND tenant_code = #{tenantCode}
-        <if test="toppingTypeCode != null">
-            AND spec_code = #{specCode}
-        </if>
+            AND tenant_code = #{tenantCode}
+            AND tea_code = #{teaCode}
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.TeaUnitPO">
         INSERT INTO tea_unit (
             gmt_created
             , gmt_modified
+            , tenant_code
+            , tea_code
             , tea_unit_code
             , tea_unit_name
-            , tea_code
-            , spec_code
-            , spec_item_code
-            , tenant_code
         ) VALUES (
             now()
             , now()
+            , #{tenantCode}
+            , #{teaCode}
             , #{teaUnitCode}
             , #{teaUnitName}
-            , #{teaCode}
-            , #{specCode}
-            , #{specItemCode}
-            , #{tenantCode}
         )
     </insert>
 
-    <delete id="delete">
+    <delete id="deleteByTeaCode">
         DELETE FROM tea_unit
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND tea_code = #{teaCode}
     </delete>
-
-    <select id="countBySpecItemCode" resultType="int">
-        SELECT
-            COUNT(1)
-        FROM tea_unit
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
-            <if test="specItemCodeList != null and specItemCodeList.size() > 0">
-                AND spec_item_code IN
-                <foreach item="specItemCode" collection="specItemCodeList" open="(" separator="," close=")">
-                    #{specItemCode}
-                </foreach>
-            </if>
-    </select>
 </mapper>

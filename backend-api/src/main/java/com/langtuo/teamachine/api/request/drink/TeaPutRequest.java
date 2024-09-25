@@ -56,14 +56,19 @@ public class TeaPutRequest {
     private Map<String, String> extraInfo;
 
     /**
+     *
+     */
+    private List<ToppingBaseRulePutRequest> toppingBaseRuleList;
+
+    /**
+     *
+     */
+    private List<SpecItemRulePutRequest> specItemRuleList;
+
+    /**
      * 茶-物料关系列表
      */
     private List<TeaUnitPutRequest> teaUnitList;
-
-    /**
-     * 物料基础规则
-     */
-    private List<ActStepPutRequest> actStepList;
 
     /**
      * 是否新建
@@ -80,62 +85,36 @@ public class TeaPutRequest {
         this.teaUnitList.add(request);
     }
 
-    public void addToppingBaseRule(int stepIndex, ToppingBaseRulePutRequest request) {
-        if (request == null) {
-            return;
-        }
-        if (this.actStepList == null) {
-            this.actStepList = Lists.newArrayList();
-        }
-        boolean added = false;
-        for (ActStepPutRequest actStepPutRequest : this.actStepList) {
-            if (stepIndex == actStepPutRequest.getStepIndex()) {
-                actStepPutRequest.getToppingBaseRuleList().add(request);
-                added = true;
-                break;
-            }
-        }
-        if (!added) {
-            ActStepPutRequest actStepPutRequest = new ActStepPutRequest();
-            actStepPutRequest.setStepIndex(stepIndex);
-            actStepPutRequest.setToppingBaseRuleList(Lists.newArrayList(request));
-            this.actStepList.add(actStepPutRequest);
-        }
-    }
-
     /**
      * 参数校验
      * @return
      */
     public boolean isValid() {
         if (!RegexUtils.isValidCode(tenantCode, true)) {
-            System.out.println("$$$$$ tenantCode invalid: " + tenantCode);
             return false;
         }
         if (!RegexUtils.isValidComment(comment, false)) {
-            System.out.println("$$$$$ comment invalid: " + comment);
             return false;
         }
         if (!RegexUtils.isValidCode(teaCode, true)) {
-            System.out.println("$$$$$ teaCode invalid: " + teaCode);
             return false;
         }
         if (!RegexUtils.isValidName(teaName, true)) {
-            System.out.println("$$$$$ teaCode invalid: " + teaCode);
             return false;
         }
         if (!RegexUtils.isValidCode(outerTeaCode, true)) {
-            System.out.println("$$$$$ outerTeaCode invalid: " + outerTeaCode);
             return false;
         }
         if (!RegexUtils.isValidCode(teaTypeCode, true)) {
-            System.out.println("$$$$$ teaTypeCode invalid: " + teaTypeCode);
+            return false;
+        }
+        if (!isValidToppingBaseRuleList()) {
+            return false;
+        }
+        if (!isValidSpecItemRuleList()) {
             return false;
         }
         if (!isValidTeaUnitList()) {
-            return false;
-        }
-        if (!isValidActStepList()) {
             return false;
         }
         return true;
@@ -153,12 +132,24 @@ public class TeaPutRequest {
         return true;
     }
 
-    private boolean isValidActStepList() {
-        if (CollectionUtils.isEmpty(actStepList)) {
+    private boolean isValidToppingBaseRuleList() {
+        if (CollectionUtils.isEmpty(toppingBaseRuleList)) {
             return false;
         }
-        for (ActStepPutRequest s : actStepList) {
-            if (!s.isValid()) {
+        for (ToppingBaseRulePutRequest m : toppingBaseRuleList) {
+            if (!m.isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isValidSpecItemRuleList() {
+        if (CollectionUtils.isEmpty(specItemRuleList)) {
+            return false;
+        }
+        for (SpecItemRulePutRequest m : specItemRuleList) {
+            if (!m.isValid()) {
                 return false;
             }
         }

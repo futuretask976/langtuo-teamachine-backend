@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.rule;
 
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.rule.DrainRuleToppingMapper;
 import com.langtuo.teamachine.dao.po.rule.DrainRuleToppingPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -15,7 +15,7 @@ public class DrainRuleToppingAccessor {
     private DrainRuleToppingMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public List<DrainRuleToppingPO> listByDrainRuleCode(String tenantCode, String drainRuleCode) {
         List<DrainRuleToppingPO> cached = getCacheList(tenantCode, drainRuleCode);
@@ -51,17 +51,17 @@ public class DrainRuleToppingAccessor {
 
     private List<DrainRuleToppingPO> getCacheList(String tenantCode, String openRuleCode) {
         String key = getCacheListKey(tenantCode, openRuleCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<DrainRuleToppingPO> poList = (List<DrainRuleToppingPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, String openRuleCode, List<DrainRuleToppingPO> poList) {
         String key = getCacheListKey(tenantCode, openRuleCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void deleteCacheList(String tenantCode, String openRuleCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode, openRuleCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, openRuleCode));
     }
 }

@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.device;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.device.MachineMapper;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.query.device.MachineQuery;
@@ -19,7 +19,7 @@ public class MachineAccessor {
     private MachineMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public MachinePO getByMachineCode(String tenantCode, String machineCode) {
         // 首先访问缓存
@@ -146,50 +146,50 @@ public class MachineAccessor {
 
     private MachinePO getCache(String tenantCode, String machineCode) {
         String key = getCacheKey(tenantCode, machineCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         MachinePO po = (MachinePO) cached;
         return po;
     }
 
     private List<MachinePO> getCacheList(String tenantCode, String shopCode) {
         String key = getCacheListKey(tenantCode, shopCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<MachinePO> poList = (List<MachinePO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, String shopCode, List<MachinePO> poList) {
         String key = getCacheListKey(tenantCode, shopCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String machineCode, MachinePO po) {
         String key = getCacheKey(tenantCode, machineCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private Integer getCacheCountByModelCode(String modelCode) {
         String key = getCacheCountKeyByModelCode(modelCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private void setCacheCount(String modelCode, Integer count) {
         String key = getCacheCountKeyByModelCode(modelCode);
-        redisManager.setValue(key, count);
+        redisManager4Accessor.setValue(key, count);
     }
 
     private void deleteCacheOne(String tenantCode, String machineCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, machineCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, machineCode));
     }
 
     private void deleteCacheList(String tenantCode, String shopCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode, shopCode));
-        redisManager.deleteKey(getCacheListKey(tenantCode, null));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, shopCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, null));
     }
 
     private void deleteCacheCountByModelCode(String modelCode) {
-        redisManager.deleteKey(getCacheCountKeyByModelCode(modelCode));
+        redisManager4Accessor.deleteKey(getCacheCountKeyByModelCode(modelCode));
     }
 }

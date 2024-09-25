@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.user;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.user.RoleMapper;
 import com.langtuo.teamachine.dao.po.user.RolePO;
 import com.langtuo.teamachine.dao.query.user.AdminRoleQuery;
@@ -19,7 +19,7 @@ public class RoleAccessor {
     private RoleMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public RolePO getByRoleCode(String tenantCode, String roleCode) {
         // 超级管理员特殊逻辑
@@ -109,34 +109,34 @@ public class RoleAccessor {
 
     private RolePO getCache(String tenantCode, String roleCode) {
         String key = getCacheKey(tenantCode, roleCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         RolePO po = (RolePO) cached;
         return po;
     }
 
     private List<RolePO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<RolePO> poList = (List<RolePO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<RolePO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String roleCode, RolePO po) {
         String key = getCacheKey(tenantCode, roleCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String roleCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, roleCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, roleCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 
     private RolePO getSysSuperRole(String tenantCode, String roleCode) {

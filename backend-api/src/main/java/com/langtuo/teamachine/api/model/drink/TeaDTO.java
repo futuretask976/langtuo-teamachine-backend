@@ -59,17 +59,17 @@ public class TeaDTO {
     private String imgLink;
 
     /**
+     *
+     */
+    private List<ToppingBaseRuleDTO> toppingBaseRuleList;
+
+    /**
+     *
+     */
+    private List<SpecItemRuleDTO> specItemRuleList;
+
+    /**
      * 茶-物料关系列表
      */
     private List<TeaUnitDTO> teaUnitList;
-
-    /**
-     *
-     */
-    private List<ActStepDTO> actStepList;
-
-    /**
-     *
-     */
-    private List<SpecRuleDTO> specRuleList;
 }

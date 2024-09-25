@@ -258,6 +258,12 @@ public class SpringAccessorUtils {
         return accessor;
     }
 
+    public static SpecItemRuleAccessor getTeaSpecItemAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        SpecItemRuleAccessor accessor = appContext.getBean(SpecItemRuleAccessor.class);
+        return accessor;
+    }
+
     public static SpecAccessor getSpecAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         SpecAccessor accessor = appContext.getBean(SpecAccessor.class);

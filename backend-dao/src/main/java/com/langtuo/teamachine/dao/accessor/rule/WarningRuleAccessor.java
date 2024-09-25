@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.rule;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.rule.WarningRuleMapper;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.query.rule.WarningRuleQuery;
@@ -19,7 +19,7 @@ public class WarningRuleAccessor {
     private WarningRuleMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public WarningRulePO getByWarningRuleCode(String tenantCode, String warningRuleCode) {
         WarningRulePO cached = setCache(tenantCode, warningRuleCode);
@@ -108,33 +108,33 @@ public class WarningRuleAccessor {
 
     private WarningRulePO setCache(String tenantCode, String warningRuleCode) {
         String key = getCacheKey(tenantCode, warningRuleCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         WarningRulePO po = (WarningRulePO) cached;
         return po;
     }
 
     private List<WarningRulePO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<WarningRulePO> poList = (List<WarningRulePO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<WarningRulePO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String warningRuleCode, WarningRulePO po) {
         String key = getCacheKey(tenantCode, warningRuleCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String warningRuleCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, warningRuleCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, warningRuleCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 }

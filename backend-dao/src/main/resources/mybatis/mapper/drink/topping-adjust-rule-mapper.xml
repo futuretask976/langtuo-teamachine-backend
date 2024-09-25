@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.drink.ToppingAdjustRuleMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.drink.ToppingAdjustRulePO" id="toppingAdjustPOMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.drink.ToppingAdjustRulePO" id="teaToppingAdjustPOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -19,7 +19,7 @@
         <result property="adjustAmount" column="adjust_amount"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="toppingAdjustPOMap">
+    <select id="selectOne" resultMap="teaToppingAdjustPOMap">
         SELECT * FROM topping_adjust_rule
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
@@ -34,7 +34,7 @@
             </if>
     </select>
 
-    <select id="selectList" resultMap="toppingAdjustPOMap">
+    <select id="selectList" resultMap="teaToppingAdjustPOMap">
         SELECT * FROM topping_adjust_rule
         WHERE 1 = 1
         AND tenant_code = #{tenantCode}

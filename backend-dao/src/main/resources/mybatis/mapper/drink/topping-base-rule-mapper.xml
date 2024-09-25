@@ -5,7 +5,7 @@
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
 <mapper namespace="com.langtuo.teamachine.dao.mapper.drink.ToppingBaseRuleMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.drink.ToppingBaseRulePO" id="toppingBasePOMap">
+    <resultMap type="com.langtuo.teamachine.dao.po.drink.ToppingBaseRulePO" id="teaToppingBasePOMap">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -16,7 +16,7 @@
         <result property="baseAmount" column="base_amount"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="toppingBasePOMap">
+    <select id="selectOne" resultMap="teaToppingBasePOMap">
         SELECT * FROM topping_base_rule
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
@@ -31,7 +31,7 @@
             </if>
     </select>
 
-    <select id="selectList" resultMap="toppingBasePOMap">
+    <select id="selectList" resultMap="teaToppingBasePOMap">
         SELECT * FROM topping_base_rule
         WHERE 1 = 1
         AND tenant_code = #{tenantCode}

@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.drink.ToppingMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingPO;
 import com.langtuo.teamachine.dao.query.drink.ToppingQuery;
@@ -19,7 +19,7 @@ public class ToppingAccessor {
     private ToppingMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public ToppingPO getByToppingCode(String tenantCode, String toppingCode) {
         // 首先访问缓存
@@ -130,49 +130,49 @@ public class ToppingAccessor {
 
     private Integer getCacheCount(String tenantCode, String toppingTypeCode) {
         String key = getCacheCountKey(tenantCode, toppingTypeCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private void setCacheCount(String tenantCode, String toppingTypeCode, Integer count) {
         String key = getCacheCountKey(tenantCode, toppingTypeCode);
-        redisManager.setValue(key, count);
+        redisManager4Accessor.setValue(key, count);
     }
 
     private ToppingPO getCache(String tenantCode, String toppingCode) {
         String key = getCacheKey(tenantCode, toppingCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         ToppingPO po = (ToppingPO) cached;
         return po;
     }
 
     private List<ToppingPO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<ToppingPO> poList = (List<ToppingPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<ToppingPO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String toppingCode, ToppingPO po) {
         String key = getCacheKey(tenantCode, toppingCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String toppingCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, toppingCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, toppingCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 
     private void deleteCacheCount(String tenantCode, String toppingTypeCode) {
-        redisManager.deleteKey(getCacheCountKey(tenantCode, toppingTypeCode));
+        redisManager4Accessor.deleteKey(getCacheCountKey(tenantCode, toppingTypeCode));
     }
 }

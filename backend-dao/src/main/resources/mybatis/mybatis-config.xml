@@ -60,6 +60,7 @@
         <mapper resource="mybatis/mapper/drink/tea-type-mapper.xml"/>
         <mapper resource="mybatis/mapper/drink/tea-mapper.xml"/>
         <mapper resource="mybatis/mapper/drink/tea-unit-mapper.xml"/>
+        <mapper resource="mybatis/mapper/drink/spec-item-rule-mapper.xml"/>
         <mapper resource="mybatis/mapper/drink/topping-base-rule-mapper.xml"/>
         <mapper resource="mybatis/mapper/drink/topping-adjust-rule-mapper.xml"/>
         <mapper resource="mybatis/mapper/drink/accuracy-template-mapper.xml"/>

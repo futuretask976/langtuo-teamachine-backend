@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.user;
 
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.constant.PermitActEnum;
 import com.langtuo.teamachine.dao.mapper.user.RoleActRelMapper;
 import com.langtuo.teamachine.dao.po.user.RoleActRelPO;
@@ -17,7 +17,7 @@ public class RoleActRelAccessor {
     private RoleActRelMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public List<RoleActRelPO> listByRoleCode(String tenantCode, String roleCode) {
         // 超级管理员特殊逻辑
@@ -61,18 +61,18 @@ public class RoleActRelAccessor {
 
     private List<RoleActRelPO> getCacheList(String tenantCode, String roleCode) {
         String key = getCacheListKey(tenantCode, roleCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<RoleActRelPO> poList = (List<RoleActRelPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, String roleCode, List<RoleActRelPO> poList) {
         String key = getCacheListKey(tenantCode, roleCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void deleteCacheList(String tenantCode, String roleCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode, roleCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, roleCode));
     }
 
     public List<RoleActRelPO> getSysSuperRoleActRel(String tenantCode, String roleCode) {

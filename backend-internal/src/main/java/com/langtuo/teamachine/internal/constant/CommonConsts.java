@@ -25,7 +25,10 @@ public class CommonConsts {
      */
     public static final int AMOUNT_ZERO = 0;
 
-
+    /**
+     * 列表首个元素
+     */
+    public static final int LIST_INDEX_FIRST = 0;
 
     /**
      * 数字 1

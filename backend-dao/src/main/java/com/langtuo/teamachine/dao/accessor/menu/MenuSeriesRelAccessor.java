@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.menu;
 
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.menu.MenuSeriesRelMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuSeriesRelPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -15,7 +15,7 @@ public class MenuSeriesRelAccessor {
     private MenuSeriesRelMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public List<MenuSeriesRelPO> listBySeriesCode(String tenantCode, String seriesCode) {
         // 首先访问缓存
@@ -58,17 +58,17 @@ public class MenuSeriesRelAccessor {
 
     private List<MenuSeriesRelPO> getCacheList(String tenantCode, String seriesCode) {
         String key = getCacheListKey(tenantCode, seriesCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<MenuSeriesRelPO> poList = (List<MenuSeriesRelPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, String seriesCode, List<MenuSeriesRelPO> poList) {
         String key = getCacheListKey(tenantCode, seriesCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void deleteCacheList(String tenantCode, String seriesCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode, seriesCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, seriesCode));
     }
 }

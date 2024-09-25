@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class TeaUnitPO {
+public class SpecItemRulePO {
     /**
      * 数据表id
      */
@@ -32,12 +32,12 @@ public class TeaUnitPO {
     private String teaCode;
 
     /**
-     * 茶品unit编码
+     * 规格编码
      */
-    private String teaUnitCode;
+    private String specCode;
 
     /**
-     * 茶品unit名称
+     * 规格项编码
      */
-    private String teaUnitName;
+    private String specItemCode;
 }

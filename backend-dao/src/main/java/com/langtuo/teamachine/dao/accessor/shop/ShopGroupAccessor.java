@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.shop;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.shop.ShopGroupMapper;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.query.shop.ShopGroupQuery;
@@ -19,7 +19,7 @@ public class ShopGroupAccessor {
     private ShopGroupMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public ShopGroupPO getByShopGroupCode(String tenantCode, String shopGroupCode) {
         // 首先访问缓存
@@ -131,14 +131,14 @@ public class ShopGroupAccessor {
 
     private Integer getCacheCountByOrgName(String tenantCode, String orgName) {
         String key = getCacheCountKeyByOrgName(tenantCode, orgName);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private void setCacheCountByOrgName(String tenantCode, String orgName, Integer count) {
         String key = getCacheCountKeyByOrgName(tenantCode, orgName);
-        redisManager.setValue(key, count);
+        redisManager4Accessor.setValue(key, count);
     }
 
     private String getCacheCountKeyByOrgName(String tenantCode, String orgName) {
@@ -163,49 +163,49 @@ public class ShopGroupAccessor {
 
     private ShopGroupPO getCache(String tenantCode, String shopGroupCode) {
         String key = getCacheKey(tenantCode, shopGroupCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         ShopGroupPO po = (ShopGroupPO) cached;
         return po;
     }
 
     private List<ShopGroupPO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<ShopGroupPO> poList = (List<ShopGroupPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<ShopGroupPO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String shopGroupCode, ShopGroupPO po) {
         String key = getCacheKey(tenantCode, shopGroupCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private List<ShopGroupPO> getCacheListByOrgNameList(String tenantCode, List<String> orgNameList) {
         String key = getCacheListKeyByOrgNameList(tenantCode, orgNameList);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<ShopGroupPO> poList = (List<ShopGroupPO>) cached;
         return poList;
     }
 
     private void setCacheListByOrgNameList(String tenantCode, List<String> orgNameList, List<ShopGroupPO> poList) {
         String key = getCacheListKeyByOrgNameList(tenantCode, orgNameList);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void deleteCacheOne(String tenantCode, String shopGroupCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, shopGroupCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, shopGroupCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 
     private void deleteCacheCountByOrgName(String tenantCode, String orgName) {
-        redisManager.deleteKey(getCacheCountKeyByOrgName(tenantCode, orgName));
+        redisManager4Accessor.deleteKey(getCacheCountKeyByOrgName(tenantCode, orgName));
     }
 }

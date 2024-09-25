@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.dao.mapper.drink;
 
-import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
 import com.langtuo.teamachine.dao.query.drink.AccuracyTplQuery;
@@ -18,7 +17,6 @@ public interface AccuracyTplMapper {
      *
      * @param tenantCode
      * @param templateCode
-     * @param templateName
      * @return
      */
     AccuracyTplPO selectOne(@Param("tenantCode") String tenantCode, @Param("templateCode") String templateCode);
@@ -40,7 +38,6 @@ public interface AccuracyTplMapper {
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
     int insert(AccuracyTplPO po);
 
     /**

@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.drink;
 
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.drink.SpecItemMapper;
 import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -15,7 +15,7 @@ public class SpecItemAccessor {
     private SpecItemMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public SpecItemPO getBySpecItemCode(String tenantCode, String specItemCode) {
         // 首先访问缓存
@@ -100,14 +100,14 @@ public class SpecItemAccessor {
 
     private SpecItemPO getCache(String tenantCode, String specItemCode, String specItemName) {
         String key = getCacheKey(tenantCode, specItemCode, specItemName);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         SpecItemPO po = (SpecItemPO) cached;
         return po;
     }
 
     private List<SpecItemPO> getCacheList(String tenantCode, String specCode) {
         String key = getCacheListKey(tenantCode, specCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
 
         List<SpecItemPO> poList = (List<SpecItemPO>) cached;
         return poList;
@@ -115,20 +115,20 @@ public class SpecItemAccessor {
 
     private void setCacheList(String tenantCode, String specCode, List<SpecItemPO> poList) {
         String key = getCacheListKey(tenantCode, specCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String specItemCode, String specItemName, SpecItemPO po) {
         String key = getCacheKey(tenantCode, specItemCode, specItemName);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String specItemCode, String specItemName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, specItemCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, specItemName));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, specItemCode, null));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, null, specItemName));
     }
 
     private void deleteCacheList(String tenantCode, String specCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode, specCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, specCode));
     }
 }

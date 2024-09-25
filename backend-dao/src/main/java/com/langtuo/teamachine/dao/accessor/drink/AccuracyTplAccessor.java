@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.drink.AccuracyTplMapper;
 import com.langtuo.teamachine.dao.po.drink.AccuracyTplPO;
 import com.langtuo.teamachine.dao.query.drink.AccuracyTplQuery;
@@ -19,7 +19,7 @@ public class AccuracyTplAccessor {
     private AccuracyTplMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public AccuracyTplPO getByTplCode(String tenantCode, String templateCode) {
         // 首先访问缓存
@@ -105,33 +105,33 @@ public class AccuracyTplAccessor {
 
     private AccuracyTplPO getCache(String tenantCode, String templateCode) {
         String key = getCacheKey(tenantCode, templateCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         AccuracyTplPO po = (AccuracyTplPO) cached;
         return po;
     }
 
     private List<AccuracyTplPO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<AccuracyTplPO> poList = (List<AccuracyTplPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<AccuracyTplPO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String templateCode, AccuracyTplPO po) {
         String key = getCacheKey(tenantCode, templateCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String templateCode, String templateName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, templateCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, templateCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 }

@@ -21,11 +21,9 @@ public class SpecItemRulePutRequest {
      */
     public boolean isValid() {
         if (!RegexUtils.isValidCode(specCode, true)) {
-            System.out.println("$$$$$ specCode invalid: " + specCode);
             return false;
         }
         if (!RegexUtils.isValidCode(specItemCode, true)) {
-            System.out.println("$$$$$ specItemCode invalid: " + specItemCode);
             return false;
         }
         return true;

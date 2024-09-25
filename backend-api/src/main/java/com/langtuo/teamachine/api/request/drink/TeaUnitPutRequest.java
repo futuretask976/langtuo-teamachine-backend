@@ -22,11 +22,6 @@ public class TeaUnitPutRequest {
     /**
      *
      */
-    private List<SpecItemRulePutRequest> specItemRuleList;
-
-    /**
-     *
-     */
     private List<ToppingAdjustRulePutRequest> toppingAdjustRuleList;
 
     public void addToppingAdjustRulePutRequest(ToppingAdjustRulePutRequest request) {
@@ -45,30 +40,13 @@ public class TeaUnitPutRequest {
      */
     public boolean isValid() {
         if (!RegexUtils.isValidCode(teaUnitCode, true)) {
-            System.out.println("$$$$$ teaUnitCode invalid: " + teaUnitCode);
             return false;
         }
         if (!RegexUtils.isValidName(teaUnitName, true)) {
-            System.out.println("$$$$$ teaUnitName invalid: " + teaUnitName);
-            return false;
-        }
-        if (!isValidSpecItemRuleList()) {
             return false;
         }
         if (!isValidToppingAdjustRuleList()) {
             return false;
-        }
-        return true;
-    }
-
-    private boolean isValidSpecItemRuleList() {
-        if (CollectionUtils.isEmpty(specItemRuleList)) {
-            return false;
-        }
-        for (SpecItemRulePutRequest m : specItemRuleList) {
-            if (!m.isValid()) {
-                return false;
-            }
         }
         return true;
     }

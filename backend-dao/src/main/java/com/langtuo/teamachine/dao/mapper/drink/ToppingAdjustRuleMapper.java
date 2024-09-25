@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.dao.mapper.drink;
 
-import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.po.drink.ToppingAdjustRulePO;
 import org.apache.ibatis.annotations.Mapper;
@@ -20,21 +19,20 @@ public interface ToppingAdjustRuleMapper {
      * @return
      */
     ToppingAdjustRulePO selectOne(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
-            @Param("teaUnitCode") String teaUnitCode, @Param("toppingCode") String toppingCode);
+                                  @Param("teaUnitCode") String teaUnitCode, @Param("toppingCode") String toppingCode);
 
     /**
      *
      * @return
      */
     List<ToppingAdjustRulePO> selectList(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
-            @Param("teaUnitCode") String teaUnitCode);
+                                         @Param("teaUnitCode") String teaUnitCode);
 
     /**
      *
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
     int insert(ToppingAdjustRulePO po);
 
     /**

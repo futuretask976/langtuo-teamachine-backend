@@ -16,11 +16,14 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.langtuo.teamachine.biz.convert.drink.TeaMgtConvertor.convertToSpecItemRulePutRequest;
 
 public class DefaultTeaParser implements TeaParser {
     @Override
@@ -195,52 +198,56 @@ public class DefaultTeaParser implements TeaParser {
         for (TeaPutRequest teaPutRequest : teaPutRequestList) {
             // 需要构造 actStepList
             List<TeaUnitPutRequest> teaUnitList = teaPutRequest.getTeaUnitList();
-            for (TeaUnitPutRequest teaUnitPutRequest : teaUnitList) {
-                String teaUnitName = teaUnitPutRequest.getTeaUnitName();
-                String[] teaUnitNameParts = teaUnitName.split("-");
-
-                List<SpecItemPO> specItemPOList = Lists.newArrayList();
-                for (String specItemName : teaUnitNameParts) {
-                    SpecItemPO specItemPO = SpringAccessorUtils.getSpecItemAccessor().getBySpecItemName(tenantCode,
-                            specItemName);
-                    specItemPOList.add(specItemPO);
-                }
-                specItemPOList.sort((o1, o2) -> o1.getSpecCode().compareTo(o2.getSpecCode()));
-                StringBuffer newTeaUnitCode = new StringBuffer();
-                StringBuffer newTeaUnitName = new StringBuffer();
-                List<SpecItemRulePutRequest> specItemRulePutRequestList = Lists.newArrayList();
-                for (SpecItemPO specItemPO : specItemPOList) {
-                    if (newTeaUnitCode.length() > CommonConsts.STR_LENGTH_ZERO) {
-                        newTeaUnitCode.append(CommonConsts.HORIZONTAL_BAR);
-                    }
-                    newTeaUnitCode.append(specItemPO.getSpecItemCode());
-                    if (newTeaUnitName.length() > CommonConsts.STR_LENGTH_ZERO) {
-                        newTeaUnitName.append(CommonConsts.HORIZONTAL_BAR);
-                    }
-                    newTeaUnitName.append(specItemPO.getSpecItemName());
-
-                    SpecItemRulePutRequest specItemRulePutRequest = new SpecItemRulePutRequest();
-                    specItemRulePutRequest.setSpecCode(specItemPO.getSpecCode());
-                    specItemRulePutRequest.setSpecItemCode(specItemPO.getSpecItemCode());
-                    specItemRulePutRequestList.add(specItemRulePutRequest);
-                }
-                teaUnitPutRequest.setTeaUnitCode(newTeaUnitCode.toString());
-                teaUnitPutRequest.setTeaUnitName(newTeaUnitName.toString());
-                teaUnitPutRequest.setSpecItemRuleList(specItemRulePutRequestList);
-
-                if (teaPutRequest.getActStepList() == null) {
-                    List<ToppingAdjustRulePutRequest> adjustRuleList = teaUnitPutRequest.getToppingAdjustRuleList();
-                    for (ToppingAdjustRulePutRequest adjustRule : adjustRuleList) {
-                        ToppingBaseRulePutRequest baseRulePutRequest = new ToppingBaseRulePutRequest();
-                        baseRulePutRequest.setToppingCode(adjustRule.getToppingCode());
-                        baseRulePutRequest.setBaseAmount(CommonConsts.AMOUNT_ZERO);
-                        // 通过添加 toppingBaseRule，会自动构造 actStepList
-                        teaPutRequest.addToppingBaseRule(adjustRule.getStepIndex(), baseRulePutRequest);
-                    }
-                }
-            }
+            teaPutRequest.setToppingBaseRuleList(getToppingBaseRulePutRequest(teaUnitList));
+            teaPutRequest.setSpecItemRuleList(getSpecItemRulePutRequestList(teaPutRequest.getTenantCode(),
+                    teaUnitList));
         }
         return teaPutRequestList;
+    }
+
+    private List<SpecItemRulePutRequest> getSpecItemRulePutRequestList(String tenantCode,
+            List<TeaUnitPutRequest> teaUnitPutRequestList) {
+        if (CollectionUtils.isEmpty(teaUnitPutRequestList)) {
+            return null;
+        }
+
+        Map<String, SpecItemPO> specItemPOMap = Maps.newHashMap();
+        for (TeaUnitPutRequest teaUnitPutRequest : teaUnitPutRequestList) {
+            String teaUnitName = teaUnitPutRequest.getTeaUnitName();
+            String[] teaUnitNameParts = teaUnitName.split(CommonConsts.HORIZONTAL_BAR);
+
+            for (String specItemName : teaUnitNameParts) {
+                SpecItemPO specItemPO = SpringAccessorUtils.getSpecItemAccessor().getBySpecItemName(tenantCode,
+                        specItemName);
+                specItemPOMap.putIfAbsent(specItemPO.getSpecItemCode(), specItemPO);
+            }
+        }
+
+        List<SpecItemRulePutRequest> specItemRulePutRequestList = Lists.newArrayList();
+        for (Map.Entry<String, SpecItemPO> entry : specItemPOMap.entrySet()) {
+            specItemRulePutRequestList.add(convertToSpecItemRulePutRequest(entry.getValue()));
+        }
+        return specItemRulePutRequestList;
+    }
+
+    private List<ToppingBaseRulePutRequest> getToppingBaseRulePutRequest(
+            List<TeaUnitPutRequest> teaUnitPutRequestList) {
+        if (CollectionUtils.isEmpty(teaUnitPutRequestList)) {
+            return null;
+        }
+
+        TeaUnitPutRequest teaUnitPutRequest = teaUnitPutRequestList.get(CommonConsts.LIST_INDEX_FIRST);
+        List<ToppingAdjustRulePutRequest> toppingAdjustRulePutRequestList = teaUnitPutRequest.getToppingAdjustRuleList();
+
+        List<ToppingBaseRulePutRequest> toppingBaseRulePutRequestList = Lists.newArrayList();
+        for (ToppingAdjustRulePutRequest toppingAdjustRulePutRequest : toppingAdjustRulePutRequestList) {
+            ToppingBaseRulePutRequest toppingBaseRulePutRequest = new ToppingBaseRulePutRequest();
+            toppingBaseRulePutRequest.setStepIndex(toppingAdjustRulePutRequest.getStepIndex());
+            toppingBaseRulePutRequest.setToppingCode(toppingAdjustRulePutRequest.getToppingCode());
+            toppingBaseRulePutRequest.setBaseAmount(CommonConsts.AMOUNT_ZERO);
+            toppingBaseRulePutRequestList.add(toppingBaseRulePutRequest);
+        }
+        return toppingBaseRulePutRequestList;
     }
 
     private void addMergedRegion4RowRange(Sheet sheet, Cell cell, int rowRange) {

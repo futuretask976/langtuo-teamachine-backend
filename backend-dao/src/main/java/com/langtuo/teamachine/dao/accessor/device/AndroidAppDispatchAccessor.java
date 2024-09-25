@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.device;
 
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.device.AndroidAppDispatchMapper;
 import com.langtuo.teamachine.dao.po.device.AndroidAppDispatchPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -15,7 +15,7 @@ public class AndroidAppDispatchAccessor {
     private AndroidAppDispatchMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public List<AndroidAppDispatchPO> listByVersion(String tenantCode, String version) {
         // 首先访问缓存
@@ -61,17 +61,17 @@ public class AndroidAppDispatchAccessor {
 
     private List<AndroidAppDispatchPO> getCacheList(String tenantCode, String version) {
         String key = getCacheListKey(tenantCode, version);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<AndroidAppDispatchPO> poList = (List<AndroidAppDispatchPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, String version, List<AndroidAppDispatchPO> poList) {
         String key = getCacheListKey(tenantCode, version);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void deleteCacheList(String tenantCode, String version) {
-        redisManager.deleteKey(getCacheListKey(tenantCode, version));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, version));
     }
 }

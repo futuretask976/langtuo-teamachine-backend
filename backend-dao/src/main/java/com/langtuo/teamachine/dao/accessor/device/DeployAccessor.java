@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.device;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.device.DeployMapper;
 import com.langtuo.teamachine.dao.mapper.record.MachineCodeSeqMapper;
 import com.langtuo.teamachine.dao.po.device.DeployPO;
@@ -23,7 +23,7 @@ public class DeployAccessor {
     private MachineCodeSeqMapper machineCodeSeqMapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     /**
      * 取值步长
@@ -177,14 +177,14 @@ public class DeployAccessor {
 
     private Integer getCacheCountByModelCode(String modelCode) {
         String key = getCacheCountKeyByModelCode(modelCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private void setCacheCount(String modelCode, Integer count) {
         String key = getCacheCountKeyByModelCode(modelCode);
-        redisManager.setValue(key, count);
+        redisManager4Accessor.setValue(key, count);
     }
 
     private String getCacheCountKeyByModelCode(String modelCode) {
@@ -201,38 +201,38 @@ public class DeployAccessor {
 
     private DeployPO getCache(String tenantCode, String deployCode, String machineCode) {
         String key = getCacheKey(tenantCode, deployCode, machineCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         DeployPO po = (DeployPO) cached;
         return po;
     }
 
     private List<DeployPO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<DeployPO> poList = (List<DeployPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<DeployPO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String deployCode, String machineCode, DeployPO po) {
         String key = getCacheKey(tenantCode, deployCode, machineCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String deployCode, String machineCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, deployCode, null));
-        redisManager.deleteKey(getCacheKey(tenantCode, null, machineCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, deployCode, null));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, null, machineCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 
     private void deleteCacheCountByModelCode(String modelCode) {
-        redisManager.deleteKey(getCacheCountKeyByModelCode(modelCode));
+        redisManager4Accessor.deleteKey(getCacheCountKeyByModelCode(modelCode));
     }
 }

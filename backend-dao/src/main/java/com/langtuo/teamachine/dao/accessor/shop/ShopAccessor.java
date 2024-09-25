@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.shop;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.shop.ShopMapper;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.query.shop.ShopQuery;
@@ -19,7 +19,7 @@ public class ShopAccessor {
     private ShopMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public ShopPO getByShopCode(String tenantCode, String shopCode) {
         // 首先访问缓存
@@ -152,62 +152,62 @@ public class ShopAccessor {
 
     private Integer getCacheCount(String tenantCode, String shopGroupCode) {
         String key = getCacheCountKey(tenantCode, shopGroupCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private void setCacheCount(String tenantCode, String shopGroupCode, Integer count) {
         String key = getCacheCountKey(tenantCode, shopGroupCode);
-        redisManager.setValue(key, count);
+        redisManager4Accessor.setValue(key, count);
     }
 
     private List<ShopPO> getCacheListByOrgNameList(String tenantCode, List<String> shopGroupCodeList) {
         String key = getCacheListKeyByOrgNameList(tenantCode, shopGroupCodeList);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<ShopPO> poList = (List<ShopPO>) cached;
         return poList;
     }
 
     private void setCacheListByOrgNameList(String tenantCode, List<String> orgNameList, List<ShopPO> poList) {
         String key = getCacheListKeyByOrgNameList(tenantCode, orgNameList);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private ShopPO getCache(String tenantCode, String shopCode) {
         String key = getCacheKey(tenantCode, shopCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         ShopPO po = (ShopPO) cached;
         return po;
     }
 
     private List<ShopPO> getCacheList(String tenantCode, String shopGroupCode) {
         String key = getCacheListKey(tenantCode, shopGroupCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<ShopPO> poList = (List<ShopPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, String shopGroupCode, List<ShopPO> poList) {
         String key = getCacheListKey(tenantCode, shopGroupCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void getCache(String tenantCode, String shopCode, ShopPO po) {
         String key = getCacheKey(tenantCode, shopCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String shopCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, shopCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, shopCode));
     }
 
     private void deleteCacheList(String tenantCode, String shopGroupCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode, shopGroupCode));
-        redisManager.deleteKey(getCacheListKey(tenantCode, null));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, shopGroupCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, null));
     }
 
     private void deleteCacheCount(String tenantCode, String shopGroupCode) {
-        redisManager.deleteKey(getCacheCountKey(tenantCode, shopGroupCode));
+        redisManager4Accessor.deleteKey(getCacheCountKey(tenantCode, shopGroupCode));
     }
 }

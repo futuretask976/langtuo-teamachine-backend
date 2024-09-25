@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.drink;
 
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.drink.ToppingAdjustRuleMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingAdjustRulePO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -17,7 +17,7 @@ public class ToppingAdjustRuleAccessor {
     private ToppingAdjustRuleMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public List<ToppingAdjustRulePO> listByTeaUnitCode(String tenantCode, String teaCode, String teaUnitCode) {
         List<ToppingAdjustRulePO> cached = getCacheList(tenantCode, teaCode, teaUnitCode);
@@ -60,17 +60,17 @@ public class ToppingAdjustRuleAccessor {
 
     private List<ToppingAdjustRulePO> getCacheList(String tenantCode, String teaCode, String teaUnitCode) {
         String key = getCacheListKey(tenantCode, teaCode, teaUnitCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<ToppingAdjustRulePO> poList = (List<ToppingAdjustRulePO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, String teaCode, String teaUnitCode, List<ToppingAdjustRulePO> poList) {
         String key = getCacheListKey(tenantCode, teaCode, teaUnitCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void deleteCacheList(String tenantCode, String teaCode, String teaUnitCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode, teaCode, teaUnitCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, teaCode, teaUnitCode));
     }
 }

@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.drink;
 
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.drink.ToppingBaseRuleMapper;
 import com.langtuo.teamachine.dao.po.drink.ToppingBaseRulePO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -16,7 +16,7 @@ public class ToppingBaseRuleAccessor {
     private ToppingBaseRuleMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public List<ToppingBaseRulePO> listByTeaCode(String tenantCode, String teaCode) {
         List<ToppingBaseRulePO> cached = getCacheList(tenantCode, teaCode);
@@ -69,29 +69,29 @@ public class ToppingBaseRuleAccessor {
 
     private Integer getCacheCount(String tenantCode, String toppingCode) {
         String key = getCacheCountKey(tenantCode, toppingCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private void setCacheCount(String tenantCode, String toppingCode, Integer count) {
         String key = getCacheCountKey(tenantCode, toppingCode);
-        redisManager.setValue(key, count);
+        redisManager4Accessor.setValue(key, count);
     }
 
     private List<ToppingBaseRulePO> getCacheList(String tenantCode, String teaCode) {
         String key = getCacheListKey(tenantCode, teaCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<ToppingBaseRulePO> poList = (List<ToppingBaseRulePO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, String teaCode, List<ToppingBaseRulePO> poList) {
         String key = getCacheListKey(tenantCode, teaCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void deleteCacheList(String tenantCode, String teaCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode, teaCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, teaCode));
     }
 }

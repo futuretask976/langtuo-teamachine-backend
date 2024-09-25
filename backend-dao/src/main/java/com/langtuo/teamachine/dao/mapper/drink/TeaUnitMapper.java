@@ -20,13 +20,13 @@ public interface TeaUnitMapper {
      * @return
      */
     TeaUnitPO selectOne(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode,
-            @Param("teaUnitCode") String teaUnitCode, @Param("teaUnitName") String teaUnitName);
+            @Param("teaUnitCode") String teaUnitCode);
 
     /**
      *
      * @return
      */
-    List<TeaUnitPO> selectList(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
+    List<TeaUnitPO> selectListByTeaCode(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
 
     /**
      *
@@ -42,22 +42,5 @@ public interface TeaUnitMapper {
      * @param teaCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
-
-    /**
-     *
-     * @param tenantCode
-     * @param specCode
-     * @return
-     */
-    int countBySpecCode(@Param("tenantCode") String tenantCode, @Param("specCode") String specCode);
-
-    /**
-     *
-     * @param tenantCode
-     * @param specItemCodeList
-     * @return
-     */
-    int countBySpecItemCode(@Param("tenantCode") String tenantCode,
-            @Param("specItemCodeList") List<String> specItemCodeList);
+    int deleteByTeaCode(@Param("tenantCode") String tenantCode, @Param("teaCode") String teaCode);
 }

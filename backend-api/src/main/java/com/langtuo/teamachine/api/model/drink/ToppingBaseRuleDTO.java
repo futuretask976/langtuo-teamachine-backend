@@ -2,8 +2,6 @@ package com.langtuo.teamachine.api.model.drink;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class ToppingBaseRuleDTO {
     /**
@@ -17,22 +15,17 @@ public class ToppingBaseRuleDTO {
     private String toppingCode;
 
     /**
-     * 基础用量
-     */
-    private int baseAmount;
-
-    /**
      * 物料名称
      */
     private String toppingName;
 
     /**
-     * 计量单位，0：克，1：毫升
+     * 基础用量
      */
-    private Integer measureUnit;
+    private int baseAmount;
 
     /**
-     * 状态，0：禁用，1：启用
+     * 计量单位
      */
-    private Integer state;
+    private int measureUnit;
 }

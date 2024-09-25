@@ -1,7 +1,6 @@
 package com.langtuo.teamachine.api.request.drink;
 
 import com.langtuo.teamachine.api.utils.CollectionUtils;
-import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 
 import java.util.List;

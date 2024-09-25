@@ -9,9 +9,9 @@ import com.langtuo.teamachine.api.service.drink.SpecMgtService;
 import com.langtuo.teamachine.biz.convert.drink.SpecMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.drink.SpecAccessor;
 import com.langtuo.teamachine.dao.accessor.drink.SpecItemAccessor;
-import com.langtuo.teamachine.dao.accessor.drink.TeaUnitAccessor;
-import com.langtuo.teamachine.dao.po.drink.SpecPO;
+import com.langtuo.teamachine.dao.accessor.drink.SpecItemRuleAccessor;
 import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
+import com.langtuo.teamachine.dao.po.drink.SpecPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
@@ -38,7 +38,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     private SpecItemAccessor specItemAccessor;
 
     @Resource
-    private TeaUnitAccessor teaUnitAccessor;
+    private SpecItemRuleAccessor specItemRuleAccessor;
 
     @Override
     public TeaMachineResult<List<SpecDTO>> list(String tenantCode) {
@@ -135,11 +135,13 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             if (!CollectionUtils.isEmpty(existSpecItemPOList)) {
                 List<SpecItemPO> deletedSpecItemPOList = filterDeletedSpecItemList(existSpecItemPOList, specItemPOList);
                 if (!CollectionUtils.isEmpty(deletedSpecItemPOList)) {
-                    int count = teaUnitAccessor.countBySpecItemCode(po.getTenantCode(), deletedSpecItemPOList.stream()
+                    int count = specItemRuleAccessor.countBySpecItemCode(po.getTenantCode(),
+                            deletedSpecItemPOList.stream()
                             .map(SpecItemPO::getSpecItemCode)
                             .collect(Collectors.toList()));
                     if (count > CommonConsts.DB_COUNT_RESULT_ZERO) {
-                        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
+                        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                                ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
                     }
                 }
             }
@@ -190,7 +192,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         }
 
         try {
-            int countBySpecCode = teaUnitAccessor.countBySpecCode(tenantCode, specCode);
+            int countBySpecCode = specItemRuleAccessor.countBySpecCode(tenantCode, specCode);
             if (countBySpecCode != CommonConsts.DB_SELECT_ZERO_ROW) {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));

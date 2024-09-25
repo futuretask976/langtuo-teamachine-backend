@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.accessor.device;
 
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.device.ModelPipelineMapper;
 import com.langtuo.teamachine.dao.po.device.ModelPipelinePO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -15,7 +15,7 @@ public class ModelPipelineAccessor {
     private ModelPipelineMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public List<ModelPipelinePO> listByModelCode(String modelCode) {
         // 首先访问缓存
@@ -59,21 +59,21 @@ public class ModelPipelineAccessor {
 
     private List<ModelPipelinePO> getCacheList(String modelCode) {
         String key = getCacheKey(modelCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<ModelPipelinePO> poList = (List<ModelPipelinePO>) cached;
         return poList;
     }
 
     private void setCacheList(List<ModelPipelinePO> poList) {
         String key = getCacheListKey();
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void deleteCacheOne(String modelCode) {
-        redisManager.deleteKey(getCacheKey(modelCode));
+        redisManager4Accessor.deleteKey(getCacheKey(modelCode));
     }
 
     private void deleteCacheList() {
-        redisManager.deleteKey(getCacheListKey());
+        redisManager4Accessor.deleteKey(getCacheListKey());
     }
 }

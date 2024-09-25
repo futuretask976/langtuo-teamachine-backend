@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.user;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.user.AdminMapper;
 import com.langtuo.teamachine.dao.po.user.AdminPO;
 import com.langtuo.teamachine.dao.query.user.AdminQuery;
@@ -19,7 +19,7 @@ public class AdminAccessor {
     private AdminMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public AdminPO getByLoginName(String tenantCode, String loginName) {
         // 超级管理员特殊逻辑
@@ -156,66 +156,66 @@ public class AdminAccessor {
 
     private Integer getCacheCountByRoleCode(String tenantCode, String roleCode) {
         String key = getCacheCountKeyByRoleCode(tenantCode, roleCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private Integer getCacheCountByOrgName(String tenantCode, String orgName) {
         String key = getCacheCountKeyByOrgName(tenantCode, orgName);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private void setCacheCountByRoleCode(String tenantCode, String roleCode, Integer count) {
         String key = getCacheCountKeyByRoleCode(tenantCode, roleCode);
-        redisManager.setValue(key, count);
+        redisManager4Accessor.setValue(key, count);
     }
 
     private void setCacheCountByOrgName(String tenantCode, String orgName, Integer count) {
         String key = getCacheCountKeyByOrgName(tenantCode, orgName);
-        redisManager.setValue(key, count);
+        redisManager4Accessor.setValue(key, count);
     }
 
     private AdminPO getCache(String tenantCode, String loginName) {
         String key = getCacheKey(tenantCode, loginName);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         AdminPO po = (AdminPO) cached;
         return po;
     }
 
     private List<AdminPO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<AdminPO> poList = (List<AdminPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<AdminPO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String loginName, AdminPO po) {
         String key = getCacheKey(tenantCode, loginName);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String loginName) {
-        redisManager.deleteKey(getCacheKey(tenantCode, loginName));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, loginName));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 
     private void deleteCacheCountByRoleCode(String tenantCode, String roleCode) {
-        redisManager.deleteKey(getCacheCountKeyByRoleCode(tenantCode, roleCode));
+        redisManager4Accessor.deleteKey(getCacheCountKeyByRoleCode(tenantCode, roleCode));
     }
 
     private void deleteCacheCountByOrgName(String tenantCode, String orgName) {
-        redisManager.deleteKey(getCacheCountKeyByOrgName(tenantCode, orgName));
+        redisManager4Accessor.deleteKey(getCacheCountKeyByOrgName(tenantCode, orgName));
     }
 
     private AdminPO getSysSuperAdmin(String tenantCode, String loginName) {

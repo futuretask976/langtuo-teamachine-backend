@@ -12,11 +12,11 @@ import java.util.concurrent.TimeUnit;
  * 参考：https://blog.csdn.net/weixin_36586564/article/details/86002413
  */
 @Component
-public class RedisManager {
+public class RedisManager4Accessor {
     /**
      * 缓存过期时间
      */
-    private static final long TIMEOUT = 30L;
+    private static final long TIMEOUT = 60L;
     private static final TimeUnit TIME_UNIT_MIN = TimeUnit.MINUTES;
 
     @Autowired

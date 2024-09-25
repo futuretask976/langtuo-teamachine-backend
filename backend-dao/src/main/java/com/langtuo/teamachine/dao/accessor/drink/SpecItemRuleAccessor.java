@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
-import com.langtuo.teamachine.dao.mapper.drink.TeaUnitMapper;
-import com.langtuo.teamachine.dao.po.drink.TeaUnitPO;
+import com.langtuo.teamachine.dao.mapper.drink.SpecItemRuleMapper;
+import com.langtuo.teamachine.dao.po.drink.SpecItemRulePO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
 
@@ -10,27 +10,27 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class TeaUnitAccessor {
+public class SpecItemRuleAccessor {
     @Resource
-    private TeaUnitMapper mapper;
+    private SpecItemRuleMapper mapper;
 
     @Resource
     private RedisManager4Accessor redisManager4Accessor;
 
-    public List<TeaUnitPO> listByTeaCode(String tenantCode, String teaCode) {
+    public List<SpecItemRulePO> listByTeaCode(String tenantCode, String teaCode) {
         // 首先访问缓存
-        List<TeaUnitPO> cachedList = getCacheList(tenantCode, teaCode);
+        List<SpecItemRulePO> cachedList = getCacheList(tenantCode, teaCode);
         if (cachedList != null) {
             return cachedList;
         }
 
-        List<TeaUnitPO> list = mapper.selectListByTeaCode(tenantCode, teaCode);
+        List<SpecItemRulePO> list = mapper.selectListByTeaCode(tenantCode, teaCode);
 
         setCacheList(tenantCode, teaCode, list);
         return list;
     }
 
-    public int insert(TeaUnitPO po) {
+    public int insert(SpecItemRulePO po) {
         return mapper.insert(po);
     }
 
@@ -42,13 +42,30 @@ public class TeaUnitAccessor {
         return deleted;
     }
 
+    public int countBySpecCode(String tenantCode, String specCode) {
+        // 首先访问缓存
+        Integer cached = getCacheCount(tenantCode, specCode);
+        if (cached != null) {
+            return cached;
+        }
+
+        int count = mapper.countBySpecCode(tenantCode, specCode);
+
+        setCacheCount(tenantCode, specCode, count);
+        return count;
+    }
+
+    public int countBySpecItemCode(String tenantCode, List<String> specItemCodeList) {
+        int count = mapper.countBySpecItemCode(tenantCode, specItemCodeList);
+        return count;
+    }
 
     private String getCacheListKey(String tenantCode, String teaCode) {
-        return "teaUnitAcc-" + tenantCode + "-" + teaCode;
+        return "teaSpecItemAcc-" + tenantCode + "-" + teaCode;
     }
 
     private String getCacheCountKey(String tenantCode, String specCode) {
-        return "teaUnitAcc-cnt-" + tenantCode + "-" + specCode;
+        return "teaSpecItemAcc-cnt-" + tenantCode + "-" + specCode;
     }
 
     private Integer getCacheCount(String tenantCode, String specCode) {
@@ -63,14 +80,14 @@ public class TeaUnitAccessor {
         redisManager4Accessor.setValue(key, count);
     }
 
-    private List<TeaUnitPO> getCacheList(String tenantCode, String teaCode) {
+    private List<SpecItemRulePO> getCacheList(String tenantCode, String teaCode) {
         String key = getCacheListKey(tenantCode, teaCode);
         Object cached = redisManager4Accessor.getValue(key);
-        List<TeaUnitPO> poList = (List<TeaUnitPO>) cached;
+        List<SpecItemRulePO> poList = (List<SpecItemRulePO>) cached;
         return poList;
     }
 
-    private void setCacheList(String tenantCode, String teaCode, List<TeaUnitPO> poList) {
+    private void setCacheList(String tenantCode, String teaCode, List<SpecItemRulePO> poList) {
         String key = getCacheListKey(tenantCode, teaCode);
         redisManager4Accessor.setValue(key, poList);
     }

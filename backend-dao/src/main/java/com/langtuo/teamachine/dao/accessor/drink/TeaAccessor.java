@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.drink.TeaMapper;
 import com.langtuo.teamachine.dao.po.drink.TeaPO;
 import com.langtuo.teamachine.dao.query.drink.TeaQuery;
@@ -19,7 +19,7 @@ public class TeaAccessor {
     private TeaMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public TeaPO getByTeaCode(String tenantCode, String teaCode) {
         // 首先访问缓存
@@ -122,14 +122,14 @@ public class TeaAccessor {
 
     private Integer getCacheCount(String tenantCode, String teaTypeCode) {
         String key = getCacheCountKey(tenantCode, teaTypeCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         Integer count = (Integer) cached;
         return count;
     }
 
     private void setCacheCount(String tenantCode, String teaTypeCode, Integer count) {
         String key = getCacheCountKey(tenantCode, teaTypeCode);
-        redisManager.setValue(key, count);
+        redisManager4Accessor.setValue(key, count);
     }
 
     private String getCacheKey(String tenantCode, String teaCode) {
@@ -142,37 +142,37 @@ public class TeaAccessor {
 
     private TeaPO getCache(String tenantCode, String teaCode) {
         String key = getCacheKey(tenantCode, teaCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         TeaPO po = (TeaPO) cached;
         return po;
     }
 
     private List<TeaPO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<TeaPO> poList = (List<TeaPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<TeaPO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCachedTea(String tenantCode, String teaCode, TeaPO po) {
         String key = getCacheKey(tenantCode, teaCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String teaCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, teaCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, teaCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 
     private void deleteCacheCount(String tenantCode, String teaTypeCode) {
-        redisManager.deleteKey(getCacheCountKey(tenantCode, teaTypeCode));
+        redisManager4Accessor.deleteKey(getCacheCountKey(tenantCode, teaTypeCode));
     }
 }

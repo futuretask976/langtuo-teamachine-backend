@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.rule;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.rule.DrainRuleMapper;
 import com.langtuo.teamachine.dao.po.rule.DrainRulePO;
 import com.langtuo.teamachine.dao.query.rule.DrainRuleQuery;
@@ -19,7 +19,7 @@ public class DrainRuleAccessor {
     private DrainRuleMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public DrainRulePO getByDrainRuleCode(String tenantCode, String drainRuleCode) {
         DrainRulePO cached = setCache(tenantCode, drainRuleCode);
@@ -108,33 +108,33 @@ public class DrainRuleAccessor {
 
     private DrainRulePO setCache(String tenantCode, String drainRuleCode) {
         String key = getCacheKey(tenantCode, drainRuleCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         DrainRulePO po = (DrainRulePO) cached;
         return po;
     }
 
     private List<DrainRulePO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<DrainRulePO> poList = (List<DrainRulePO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<DrainRulePO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String drainRuleCode, DrainRulePO po) {
         String key = getCacheKey(tenantCode, drainRuleCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String drainRuleCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, drainRuleCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, drainRuleCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 }

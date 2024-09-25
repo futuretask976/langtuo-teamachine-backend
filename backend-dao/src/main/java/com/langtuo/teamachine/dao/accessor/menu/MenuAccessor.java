@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.menu;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.menu.MenuMapper;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.query.menu.MenuQuery;
@@ -19,7 +19,7 @@ public class MenuAccessor {
     private MenuMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public MenuPO getByMenuCode(String tenantCode, String menuCode) {
         // 首先访问缓存
@@ -111,33 +111,33 @@ public class MenuAccessor {
 
     private MenuPO getCache(String tenantCode, String menuCode) {
         String key = getCacheKey(tenantCode, menuCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         MenuPO po = (MenuPO) cached;
         return po;
     }
 
     private List<MenuPO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<MenuPO> poList = (List<MenuPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<MenuPO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String menuCode, MenuPO po) {
         String key = getCacheKey(tenantCode, menuCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String menuCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, menuCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, menuCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 }

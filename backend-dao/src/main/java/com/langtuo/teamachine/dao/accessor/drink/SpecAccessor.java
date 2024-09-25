@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.drink;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.cache.RedisManager;
+import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.drink.SpecMapper;
 import com.langtuo.teamachine.dao.po.drink.SpecPO;
 import com.langtuo.teamachine.dao.query.drink.SpecQuery;
@@ -19,7 +19,7 @@ public class SpecAccessor {
     private SpecMapper mapper;
 
     @Resource
-    private RedisManager redisManager;
+    private RedisManager4Accessor redisManager4Accessor;
 
     public SpecPO getBySpecCode(String tenantCode, String specCode) {
         // 首先访问缓存
@@ -105,33 +105,33 @@ public class SpecAccessor {
 
     private SpecPO getCache(String tenantCode, String specCode) {
         String key = getCacheKey(tenantCode, specCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         SpecPO po = (SpecPO) cached;
         return po;
     }
 
     private List<SpecPO> getCacheList(String tenantCode) {
         String key = getCacheListKey(tenantCode);
-        Object cached = redisManager.getValue(key);
+        Object cached = redisManager4Accessor.getValue(key);
         List<SpecPO> poList = (List<SpecPO>) cached;
         return poList;
     }
 
     private void setCacheList(String tenantCode, List<SpecPO> poList) {
         String key = getCacheListKey(tenantCode);
-        redisManager.setValue(key, poList);
+        redisManager4Accessor.setValue(key, poList);
     }
 
     private void setCache(String tenantCode, String specCode, SpecPO po) {
         String key = getCacheKey(tenantCode, specCode);
-        redisManager.setValue(key, po);
+        redisManager4Accessor.setValue(key, po);
     }
 
     private void deleteCacheOne(String tenantCode, String specCode) {
-        redisManager.deleteKey(getCacheKey(tenantCode, specCode));
+        redisManager4Accessor.deleteKey(getCacheKey(tenantCode, specCode));
     }
 
     private void deleteCacheList(String tenantCode) {
-        redisManager.deleteKey(getCacheListKey(tenantCode));
+        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode));
     }
 }
