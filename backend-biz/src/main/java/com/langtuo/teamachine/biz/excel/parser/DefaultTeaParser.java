@@ -12,6 +12,7 @@ import com.langtuo.teamachine.biz.util.ExcelUtils;
 import com.langtuo.teamachine.dao.po.drink.*;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -131,6 +132,7 @@ public class DefaultTeaParser implements TeaParser {
             if (cell4TeaCode != null) {
                 // 表示来到了新的 tea,开始新的茶品部分
                 lastTeaPutRequest = new TeaPutRequest();
+                lastTeaPutRequest.setPutNew(true);
                 lastTeaPutRequest.setTenantCode(tenantCode);
                 teaPutRequestList.add(lastTeaPutRequest);
 
@@ -167,7 +169,8 @@ public class DefaultTeaParser implements TeaParser {
 
                 // 设置 teaUnitName
                 String teaUnitName = cell4TeaUnitName.getStringCellValue();
-                lastTeaUnitPutRequest.setTeaUnitName(teaUnitName);
+                lastTeaUnitPutRequest.setTeaUnitName(getTeaUnitName(tenantCode, teaUnitName));
+                lastTeaUnitPutRequest.setTeaUnitCode(getTeaUnitCode(tenantCode, teaUnitName));
             }
 
             // 设置步骤序号
@@ -365,5 +368,37 @@ public class DefaultTeaParser implements TeaParser {
         teaInfoPart.setImgLink(teaPO.getImgLink());
         teaInfoPart.setState(teaPO.getState());
         return teaInfoPart;
+    }
+
+    private String getTeaUnitName(String tenantCode, String inputTeaUnitName) {
+        if (StringUtils.isBlank(inputTeaUnitName)) {
+            return null;
+        }
+
+        String[] specItemNameArr = inputTeaUnitName.split(CommonConsts.HORIZONTAL_BAR);
+        List<String> specItemNameList = Lists.newArrayList();
+        for (String specItemName : specItemNameArr) {
+            specItemNameList.add(specItemName);
+        }
+        specItemNameList.sort((o1, o2) -> o2.compareTo(o1));
+        return String.join(CommonConsts.HORIZONTAL_BAR, specItemNameList);
+    }
+
+    private String getTeaUnitCode(String tenantCode, String inputTeaUnitName) {
+        if (StringUtils.isBlank(inputTeaUnitName)) {
+            return null;
+        }
+
+        String[] specItemNameArr = inputTeaUnitName.split(CommonConsts.HORIZONTAL_BAR);
+        List<String> specItemCodeList = Lists.newArrayList();
+        for (String specItemName : specItemNameArr) {
+            SpecItemPO specItemPO = SpringAccessorUtils.getSpecItemAccessor().getBySpecItemName(tenantCode,
+                    specItemName);
+            if (specItemPO != null) {
+                specItemCodeList.add(specItemPO.getSpecItemCode());
+            }
+        }
+        specItemCodeList.sort((o1, o2) -> o2.compareTo(o1));
+        return String.join(CommonConsts.HORIZONTAL_BAR, specItemCodeList);
     }
 }
