@@ -20,6 +20,21 @@ public class RegexUtils {
         return false;
     }
 
+    public static boolean isValidLongCode(String input, boolean required) {
+        if (StringUtils.isBlank(input)) {
+            if (!required) {
+                return true;
+            }
+        } else {
+            String pattern = "^[A-Za-z0-9_\\-]{0,100}$";
+            boolean isMatch = Pattern.matches(pattern, input);
+            if (isMatch) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isValidName(String input, boolean required) {
         if (StringUtils.isBlank(input)) {
             if (!required) {
@@ -27,6 +42,21 @@ public class RegexUtils {
             }
         } else {
             String pattern = "^[A-Za-z0-9_\\-\\u4e00-\\u9fa5]{0,50}$";
+            boolean isMatch = Pattern.matches(pattern, input);
+            if (isMatch) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isValidLongName(String input, boolean required) {
+        if (StringUtils.isBlank(input)) {
+            if (!required) {
+                return true;
+            }
+        } else {
+            String pattern = "^[A-Za-z0-9_\\-\\u4e00-\\u9fa5]{0,100}$";
             boolean isMatch = Pattern.matches(pattern, input);
             if (isMatch) {
                 return true;

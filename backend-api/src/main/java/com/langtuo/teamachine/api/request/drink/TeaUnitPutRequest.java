@@ -39,10 +39,10 @@ public class TeaUnitPutRequest {
      * @return
      */
     public boolean isValid() {
-        if (!RegexUtils.isValidCode(teaUnitCode, true)) {
+        if (!RegexUtils.isValidLongCode(teaUnitCode, true)) {
             return false;
         }
-        if (!RegexUtils.isValidName(teaUnitName, true)) {
+        if (!RegexUtils.isValidLongName(teaUnitName, true)) {
             return false;
         }
         if (!isValidToppingAdjustRuleList()) {
