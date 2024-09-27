@@ -1,7 +1,6 @@
 package com.langtuo.teamachine.dao.util;
 
 import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
-import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchAccessor;
 import com.langtuo.teamachine.dao.accessor.user.TenantAccessor;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
 import com.langtuo.teamachine.dao.po.device.MachinePO;
@@ -98,6 +97,7 @@ public class DaoUtils {
         if (CollectionUtils.isEmpty(shopGroupPOList)) {
             return null;
         }
+
         List<String> shopGroupCodeList = shopGroupPOList.stream()
                 .map(ShopGroupPO::getShopGroupCode)
                 .collect(Collectors.toList());
@@ -115,6 +115,7 @@ public class DaoUtils {
         if (CollectionUtils.isEmpty(shopGroupPOList)) {
             return null;
         }
+
         List<String> shopGroupCodeList = shopGroupPOList.stream()
                 .map(ShopGroupPO::getShopGroupCode)
                 .collect(Collectors.toList());
@@ -161,6 +162,7 @@ public class DaoUtils {
         if (authentication == null) {
             throw new IllegalArgumentException("couldn't find login session");
         }
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String adminLoginName = userDetails.getUsername();
         if (StringUtils.isBlank(adminLoginName)) {
@@ -189,19 +191,5 @@ public class DaoUtils {
         List<MenuPO> menuPOList = SpringAccessorUtils.getMenuAccessor().listByMenuCode(tenantCode,
                 menuCodeList);
         return menuPOList;
-    }
-
-    public static List<String> getShopGroupCodeListByMenuCode(String tenantCode, String menuCode,
-            List<String> shopGroupCodeList) {
-        MenuDispatchAccessor menuDispatchAccessor = SpringAccessorUtils.getMenuDispatchAccessor();
-        List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByMenuCode(tenantCode, menuCode,
-                shopGroupCodeList);
-        if (CollectionUtils.isEmpty(menuDispatchPOList)) {
-            return null;
-        }
-
-        return menuDispatchPOList.stream()
-                .map(MenuDispatchPO::getShopGroupCode)
-                .collect(Collectors.toList());
     }
 }
