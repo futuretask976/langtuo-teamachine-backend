@@ -15,20 +15,10 @@ import java.util.List;
 public interface CleanRuleDispatchMapper {
     /**
      *
-     * @param tenantCode
-     * @param cleanRuleCode
-     * @param shopGroupCode
-     * @return
-     */
-    CleanRuleDispatchPO selectOne(@Param("tenantCode") String tenantCode, @Param("cleanRuleCode") String cleanRuleCode, 
-            @Param("shopGroupCode") String shopGroupCode);
-
-    /**
-     *
      * @return
      */
     List<CleanRuleDispatchPO> selectList(@Param("tenantCode") String tenantCode,
-            @Param("cleanRuleCode") String cleanRuleCode);
+            @Param("cleanRuleCode") String cleanRuleCode, @Param("shopGroupCodeList") List<String> shopGroupCodeList);
 
     /**
      *
@@ -58,5 +48,6 @@ public interface CleanRuleDispatchMapper {
      * @param cleanRuleCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("cleanRuleCode") String cleanRuleCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("cleanRuleCode") String cleanRuleCode,
+            @Param("shopGroupCodeList") List<String> shopGroupCodeList);
 }

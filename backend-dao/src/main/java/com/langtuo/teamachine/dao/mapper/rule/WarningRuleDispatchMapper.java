@@ -15,20 +15,11 @@ import java.util.List;
 public interface WarningRuleDispatchMapper {
     /**
      *
-     * @param tenantCode
-     * @param warningRuleCode
-     * @param shopGroupCode
-     * @return
-     */
-    WarningRuleDispatchPO selectOne(@Param("tenantCode") String tenantCode, @Param("warningRuleCode") String warningRuleCode, 
-            @Param("shopGroupCode") String shopGroupCode);
-
-    /**
-     *
      * @return
      */
     List<WarningRuleDispatchPO> selectList(@Param("tenantCode") String tenantCode,
-            @Param("warningRuleCode") String warningRuleCode);
+            @Param("warningRuleCode") String warningRuleCode,
+            @Param("shopGroupCodeList") List<String> shopGroupCodeList);
 
     /**
      *
@@ -58,5 +49,6 @@ public interface WarningRuleDispatchMapper {
      * @param warningRuleCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("warningRuleCode") String warningRuleCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("warningRuleCode") String warningRuleCode,
+            @Param("shopGroupCodeList") List<String> shopGroupCodeList);
 }

@@ -28,12 +28,18 @@ public class DrainRuleDispatchWorker implements Runnable {
     private String tenantCode;
 
     /**
+     * 管理面登录名称
+     */
+    private String loginName;
+
+    /**
      * 开业规则编码
      */
     private String drainRuleCode;
 
     public DrainRuleDispatchWorker(JSONObject jsonPayload) {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
+        this.loginName = jsonPayload.getString(CommonConsts.JSON_KEY_LOGIN_NAME);
         this.drainRuleCode = jsonPayload.getString(CommonConsts.JSON_KEY_DRAIN_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(drainRuleCode)) {
             log.error("drainRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + drainRuleCode);
@@ -51,7 +57,7 @@ public class DrainRuleDispatchWorker implements Runnable {
 
         JSONObject jsonMsg = new JSONObject();
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_DRAIN_RULE);
-        jsonMsg.put(CommonConsts.JSON_KEY_OPEN_RULE, jsonDispatchCont);
+        jsonMsg.put(CommonConsts.JSON_KEY_DRAIN_RULE, jsonDispatchCont);
 
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
@@ -80,15 +86,16 @@ public class DrainRuleDispatchWorker implements Runnable {
     }
 
     private List<String> getMachineCodeList() {
+        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginName(tenantCode, loginName);
         DrainRuleDispatchAccessor drainRuleDispatchAccessor = SpringAccessorUtils.getDrainRuleDispatchAccessor();
         List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.listByDrainRuleCode(
-                tenantCode, drainRuleCode);
+                tenantCode, drainRuleCode, shopGroupCodeList);
         if (CollectionUtils.isEmpty(drainRuleDispatchPOList)) {
             log.error("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + drainRuleDispatchPOList);
             return null;
         }
 
-        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCode(tenantCode,
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
                 drainRuleDispatchPOList.stream()
                         .map(DrainRuleDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));

@@ -73,7 +73,7 @@ public class AndroidAppDispatchWorker implements Runnable {
             return null;
         }
 
-        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCode(tenantCode,
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
                 androidAppDispatchPOList.stream()
                         .map(AndroidAppDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));

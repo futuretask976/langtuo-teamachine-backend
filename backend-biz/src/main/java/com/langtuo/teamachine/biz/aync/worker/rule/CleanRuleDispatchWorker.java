@@ -28,12 +28,18 @@ public class CleanRuleDispatchWorker implements Runnable {
     private String tenantCode;
 
     /**
+     * 管理面登录名称
+     */
+    private String loginName;
+
+    /**
      * 清洁规则编码
      */
     private String cleanRuleCode;
 
     public CleanRuleDispatchWorker(JSONObject jsonPayload) {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
+        this.loginName = jsonPayload.getString(CommonConsts.JSON_KEY_LOGIN_NAME);
         this.cleanRuleCode = jsonPayload.getString(CommonConsts.JSON_KEY_CLEAN_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(cleanRuleCode)) {
             log.error("cleanRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + cleanRuleCode);
@@ -80,15 +86,16 @@ public class CleanRuleDispatchWorker implements Runnable {
     }
 
     private List<String> getMachineCodeList() {
+        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginName(tenantCode, loginName);
         CleanRuleDispatchAccessor cleanRuleDispatchAccessor = SpringAccessorUtils.getCleanRuleDispatchAccessor();
         List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.listByCleanRuleCode(
-                tenantCode, cleanRuleCode);
+                tenantCode, cleanRuleCode, shopGroupCodeList);
         if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
             log.error("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + cleanRuleDispatchPOList);
             return null;
         }
 
-        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCode(tenantCode,
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
                 cleanRuleDispatchPOList.stream()
                         .map(CleanRuleDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));

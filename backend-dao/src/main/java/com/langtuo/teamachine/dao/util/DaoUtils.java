@@ -65,7 +65,7 @@ public class DaoUtils {
      * @param tenantCode
      * @return
      */
-    public static List<String> getShopCodeListByShopGroupCode(String tenantCode, List<String> shopGroupCodeList) {
+    public static List<String> getShopCodeListByShopGroupCodeList(String tenantCode, List<String> shopGroupCodeList) {
         if (CollectionUtils.isEmpty(shopGroupCodeList)) {
             return null;
         }
@@ -83,52 +83,42 @@ public class DaoUtils {
     }
 
     /**
-     * 根据当前登录的管理员获取其下属的店铺编码列表
-     * @param tenantCode
-     * @return
-     */
-    public static List<String> getShopCodeListByAdmin(String tenantCode) {
-        List<String> orgNameListByAdmin = getOrgNameListByAdmin(tenantCode);
-        if (CollectionUtils.isEmpty(orgNameListByAdmin)) {
-            return null;
-        }
-
-        List<String> shopGroupCodeList = getShopGroupCodeListByAdmin(tenantCode);
-        if (CollectionUtils.isEmpty(shopGroupCodeList)) {
-            return null;
-        }
-
-        List<ShopPO> shopPOList = SpringAccessorUtils.getShopAccessor().listByShopGroupCode(tenantCode,
-                shopGroupCodeList);
-        if (CollectionUtils.isEmpty(shopPOList)) {
-            return null;
-        }
-        List<String> shopCodeListByAdmin = shopPOList.stream()
-                .map(ShopPO::getShopCode)
-                .collect(Collectors.toList());
-        return shopCodeListByAdmin;
-    }
-
-    /**
      * 根据当前登录的管理员获取其下属的店铺组编码列表
      * @param tenantCode
      * @return
      */
-    public static List<String> getShopGroupCodeListByAdmin(String tenantCode) {
-        List<String> orgNameListByAdmin = getOrgNameListByAdmin(tenantCode);
-        if (CollectionUtils.isEmpty(orgNameListByAdmin)) {
+    public static List<String> getShopGroupCodeListByLoginSession(String tenantCode) {
+        List<String> orgNameList = getOrgNameListByLoginSession(tenantCode);
+        if (CollectionUtils.isEmpty(orgNameList)) {
             return null;
         }
 
         List<ShopGroupPO> shopGroupPOList = SpringAccessorUtils.getShopGroupAccessor()
-                .listByOrgName(tenantCode, orgNameListByAdmin);
+                .listByOrgName(tenantCode, orgNameList);
         if (CollectionUtils.isEmpty(shopGroupPOList)) {
             return null;
         }
-        List<String> shopGroupCodeListByAdmin = shopGroupPOList.stream()
+        List<String> shopGroupCodeList = shopGroupPOList.stream()
                 .map(ShopGroupPO::getShopGroupCode)
                 .collect(Collectors.toList());
-        return shopGroupCodeListByAdmin;
+        return shopGroupCodeList;
+    }
+
+    public static List<String> getShopGroupCodeListByLoginName(String tenantCode, String loginName) {
+        List<String> orgNameList = getOrgNameListByLoginName(tenantCode, loginName);
+        if (CollectionUtils.isEmpty(orgNameList)) {
+            return null;
+        }
+
+        List<ShopGroupPO> shopGroupPOList = SpringAccessorUtils.getShopGroupAccessor()
+                .listByOrgName(tenantCode, orgNameList);
+        if (CollectionUtils.isEmpty(shopGroupPOList)) {
+            return null;
+        }
+        List<String> shopGroupCodeList = shopGroupPOList.stream()
+                .map(ShopGroupPO::getShopGroupCode)
+                .collect(Collectors.toList());
+        return shopGroupCodeList;
     }
 
     /**
@@ -136,8 +126,23 @@ public class DaoUtils {
      * @param tenantCode
      * @return
      */
-    public static List<String> getOrgNameListByAdmin(String tenantCode) {
-        AdminPO adminPO = getLoginAdminPO(tenantCode);
+    public static List<String> getOrgNameListByLoginSession(String tenantCode) {
+        AdminPO adminPO = getAdminPOByLoginSession(tenantCode);
+        String orgName = adminPO.getOrgName();
+        List<OrgNode> orgPOList = SpringAccessorUtils.getOrgAccessor().listByParentOrgName(tenantCode, orgName);
+        List<String> orgNameList = orgPOList.stream()
+                .map(OrgNode::getOrgName)
+                .collect(Collectors.toList());
+        return orgNameList;
+    }
+
+    /**
+     * 根据当前登录的管理员获取其下属的组织名称列表
+     * @param tenantCode
+     * @return
+     */
+    public static List<String> getOrgNameListByLoginName(String tenantCode, String loginName) {
+        AdminPO adminPO = getAdminPOByLoginName(tenantCode, loginName);
         String orgName = adminPO.getOrgName();
         List<OrgNode> orgPOList = SpringAccessorUtils.getOrgAccessor().listByParentOrgName(tenantCode, orgName);
         List<String> orgNameList = orgPOList.stream()
@@ -151,7 +156,7 @@ public class DaoUtils {
      * @param tenantCode
      * @return
      */
-    public static AdminPO getLoginAdminPO(String tenantCode) {
+    public static AdminPO getAdminPOByLoginSession(String tenantCode) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             throw new IllegalArgumentException("couldn't find login session");
@@ -163,6 +168,11 @@ public class DaoUtils {
         }
 
         AdminPO adminPO = SpringAccessorUtils.getAdminAccessor().getByLoginName(tenantCode, adminLoginName);
+        return adminPO;
+    }
+
+    public static AdminPO getAdminPOByLoginName(String tenantCode, String loginName) {
+        AdminPO adminPO = SpringAccessorUtils.getAdminAccessor().getByLoginName(tenantCode, loginName);
         return adminPO;
     }
 
@@ -181,9 +191,11 @@ public class DaoUtils {
         return menuPOList;
     }
 
-    public static List<String> getShopGroupCodeListByMenuCode(String tenantCode, String menuCode) {
+    public static List<String> getShopGroupCodeListByMenuCode(String tenantCode, String menuCode,
+            List<String> shopGroupCodeList) {
         MenuDispatchAccessor menuDispatchAccessor = SpringAccessorUtils.getMenuDispatchAccessor();
-        List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByMenuCode(tenantCode, menuCode);
+        List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByMenuCode(tenantCode, menuCode,
+                shopGroupCodeList);
         if (CollectionUtils.isEmpty(menuDispatchPOList)) {
             return null;
         }

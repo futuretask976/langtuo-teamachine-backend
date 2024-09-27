@@ -69,7 +69,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
                 pageInfo = drainActRecordAccessor.searchByShopGroupCode(tenantCode, Lists.newArrayList(shopGroupCode),
                         pageNum, pageSize);
             } else {
-                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByAdmin(tenantCode);
+                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
                 pageInfo = drainActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCodeList,
                         pageNum, pageSize);
             }

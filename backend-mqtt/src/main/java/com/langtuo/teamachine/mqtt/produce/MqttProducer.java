@@ -53,7 +53,6 @@ public class MqttProducer implements InitializingBean {
     }
 
     public void sendP2PMsgByTenant(String tenantCode, String machineCode, String payload) {
-        machineCode = "gxAliyunMqttDemo";
         String topic = tenantCode + MqttConsts.TENANT_PARENT_P2P_TOPIC_POSTFIX + machineCode;
         try {
             log.info("$$$$$ MqttProducer#sendP2PMsgByTenant topic=" + topic + ", payload=" + payload);

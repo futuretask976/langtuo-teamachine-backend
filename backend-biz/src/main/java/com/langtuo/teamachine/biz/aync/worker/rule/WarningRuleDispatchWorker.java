@@ -28,12 +28,18 @@ public class WarningRuleDispatchWorker implements Runnable {
     private String tenantCode;
 
     /**
+     * 管理面登录名称
+     */
+    private String loginName;
+
+    /**
      * 预警规则编码
      */
     private String warningRuleCode;
 
     public WarningRuleDispatchWorker(JSONObject jsonPayload) {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
+        this.loginName = jsonPayload.getString(CommonConsts.JSON_KEY_LOGIN_NAME);
         this.warningRuleCode = jsonPayload.getString(CommonConsts.JSON_KEY_WARNING_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(warningRuleCode)) {
             log.error("drainRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + warningRuleCode);
@@ -76,15 +82,16 @@ public class WarningRuleDispatchWorker implements Runnable {
     }
 
     private List<String> getMachineCodeList() {
+        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginName(tenantCode, loginName);
         WarningRuleDispatchAccessor warningRuleDispatchAccessor = SpringAccessorUtils.getWarningRuleDispatchAccessor();
         List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.listByWarningRuleCode(
-                tenantCode, warningRuleCode);
+                tenantCode, warningRuleCode, shopGroupCodeList);
         if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
             log.error("warningRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + warningRuleDispatchPOList);
             return null;
         }
 
-        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCode(tenantCode,
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
                 warningRuleDispatchPOList.stream()
                         .map(WarningRuleDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));

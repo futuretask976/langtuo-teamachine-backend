@@ -16,6 +16,7 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.rule.WarningRuleDispatchPO;
 import com.langtuo.teamachine.dao.po.rule.WarningRulePO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
+import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
@@ -193,8 +194,9 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
         List<WarningRuleDispatchPO> poList = convertToWarningRuleDTO(request);
         try {
+            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(request.getTenantCode());
             int deleted = warningRuleDispatchAccessor.deleteByWarningRuleCode(request.getTenantCode(),
-                    request.getWarningRuleCode());
+                    request.getWarningRuleCode(), shopGroupCodeList);
             for (WarningRuleDispatchPO po : poList) {
                 warningRuleDispatchAccessor.insert(po);
             }
@@ -219,7 +221,9 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             WarningRuleDispatchDTO dto = new WarningRuleDispatchDTO();
             dto.setWarningRuleCode(warningRuleCode);
 
-            List<WarningRuleDispatchPO> poList = warningRuleDispatchAccessor.listByWarningRuleCode(tenantCode, warningRuleCode);
+            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
+            List<WarningRuleDispatchPO> poList = warningRuleDispatchAccessor.listByWarningRuleCode(tenantCode,
+                    warningRuleCode, shopGroupCodeList);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())

@@ -139,7 +139,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(po.getRoleCode())) {
-                AdminPO adminPO = DaoUtils.getLoginAdminPO(po.getTenantCode());
+                AdminPO adminPO = DaoUtils.getAdminPOByLoginSession(po.getTenantCode());
                 if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(adminPO.getRoleCode())) {
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                             ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN_ROLE));
@@ -180,7 +180,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(roleCode)) {
             if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(roleCode)) {
-                AdminPO adminPO = DaoUtils.getLoginAdminPO(tenantCode);
+                AdminPO adminPO = DaoUtils.getAdminPOByLoginSession(tenantCode);
                 if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(adminPO.getRoleCode())) {
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                             ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN_ROLE));

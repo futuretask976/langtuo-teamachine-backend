@@ -41,7 +41,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public TeaMachineResult<OrgDTO> getTop(String tenantCode) {
         TeaMachineResult<OrgDTO> teaMachineResult;
         try {
-            AdminPO adminPO = DaoUtils.getLoginAdminPO(tenantCode);
+            AdminPO adminPO = DaoUtils.getAdminPOByLoginSession(tenantCode);
             OrgNode orgNode = orgAccessor.getByOrgName(tenantCode, adminPO.getOrgName());
             teaMachineResult = TeaMachineResult.success(convertToOrgDTO(orgNode));
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     @Override
     public TeaMachineResult<List<OrgDTO>> list(String tenantCode) {
         try {
-            AdminPO adminPO = DaoUtils.getLoginAdminPO(tenantCode);
+            AdminPO adminPO = DaoUtils.getAdminPOByLoginSession(tenantCode);
             List<OrgNode> nodeList = orgAccessor.listByParentOrgName(tenantCode, adminPO.getOrgName());
             List<OrgDTO> dtoList = convertToOrgDTO(nodeList);
             return TeaMachineResult.success(dtoList);

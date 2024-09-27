@@ -79,7 +79,7 @@ public class OrgAccessor {
     }
 
     public PageInfo<OrgNode> search(String tenantCode, String orgName, int pageNum, int pageSize) {
-        AdminPO adminPO = DaoUtils.getLoginAdminPO(tenantCode);
+        AdminPO adminPO = DaoUtils.getAdminPOByLoginSession(tenantCode);
         List<OrgNode> nodeList = listByParentOrgName(tenantCode, adminPO.getOrgName());
         if (CollectionUtils.isEmpty(nodeList)) {
             PageInfo<OrgNode> pageInfo = new PageInfo(null);

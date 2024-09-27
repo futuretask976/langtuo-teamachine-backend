@@ -56,7 +56,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
-            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByAdmin(tenantCode);
+            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
 
             PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCode,
                     pageNum, pageSize, shopGroupCodeList);
@@ -83,7 +83,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     public TeaMachineResult<List<ShopDTO>> listByAdminOrg(String tenantCode) {
         try {
             List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.listByOrgName(
-                    tenantCode, DaoUtils.getOrgNameListByAdmin(tenantCode));
+                    tenantCode, DaoUtils.getOrgNameListByLoginSession(tenantCode));
             if (CollectionUtils.isEmpty(shopGroupPOList)) {
                 return TeaMachineResult.success(null);
             } else {

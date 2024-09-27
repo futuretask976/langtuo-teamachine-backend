@@ -53,7 +53,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
-            List<String> orgNameList = DaoUtils.getOrgNameListByAdmin(tenantCode);
+            List<String> orgNameList = DaoUtils.getOrgNameListByLoginSession(tenantCode);
 
             PageInfo<ShopGroupPO> pageInfo = shopGroupAccessor.search(tenantCode, shopGroupName,
                     pageNum, pageSize, orgNameList);
@@ -80,7 +80,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     public TeaMachineResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode) {
         try {
             List<ShopGroupPO> list = shopGroupAccessor.listByOrgName(
-                    tenantCode, DaoUtils.getOrgNameListByAdmin(tenantCode));
+                    tenantCode, DaoUtils.getOrgNameListByLoginSession(tenantCode));
             return TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("shopGroupMgtService|listByAdminOrg|fatal|" + e.getMessage(), e);

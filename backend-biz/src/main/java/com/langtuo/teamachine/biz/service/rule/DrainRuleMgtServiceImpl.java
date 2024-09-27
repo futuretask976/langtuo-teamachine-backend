@@ -16,6 +16,7 @@ import com.langtuo.teamachine.dao.accessor.rule.*;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.po.rule.*;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
+import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
@@ -189,16 +190,16 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String openRuleCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String drainRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = drainRuleAccessor.deleteByDrainRuleCode(tenantCode, openRuleCode);
-            int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(tenantCode, openRuleCode);
-            int deleted4Dispatch = drainRuleDispatchAccessor.deleteByDrainRuleCode(tenantCode, openRuleCode);
+            int deleted = drainRuleAccessor.deleteByDrainRuleCode(tenantCode, drainRuleCode);
+            int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(tenantCode, drainRuleCode);
+            int deleted4Dispatch = drainRuleDispatchAccessor.deleteAllByDrainRuleCode(tenantCode, drainRuleCode);
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("drainRuleMgtService|delete|fatal|" + e.getMessage(), e);
@@ -214,8 +215,9 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
         List<DrainRuleDispatchPO> poList = DrainRuleMgtConvertor.convertToDrainRuleDTO(request);
         try {
+            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(request.getTenantCode());
             int deleted = drainRuleDispatchAccessor.deleteByDrainRuleCode(request.getTenantCode(),
-                    request.getDrainRuleCode());
+                    request.getDrainRuleCode(), shopGroupCodeList);
             for (DrainRuleDispatchPO po : poList) {
                 drainRuleDispatchAccessor.insert(po);
             }
@@ -235,12 +237,14 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     }
 
     @Override
-    public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByDrainRuleCode(String tenantCode, String openRuleCode) {
+    public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByDrainRuleCode(String tenantCode, String drainRuleCode) {
         try {
             DrainRuleDispatchDTO dto = new DrainRuleDispatchDTO();
-            dto.setDrainRuleCode(openRuleCode);
+            dto.setDrainRuleCode(drainRuleCode);
 
-            List<DrainRuleDispatchPO> poList = drainRuleDispatchAccessor.listByDrainRuleCode(tenantCode, openRuleCode);
+            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
+            List<DrainRuleDispatchPO> poList = drainRuleDispatchAccessor.listByDrainRuleCode(tenantCode, drainRuleCode,
+                    shopGroupCodeList);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())

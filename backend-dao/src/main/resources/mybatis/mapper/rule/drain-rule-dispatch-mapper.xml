@@ -14,24 +14,18 @@
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
-    <select id="selectOne" resultMap="drainRuleDispatchPOMap">
-        SELECT * FROM drain_rule_dispatch
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
-            <if test="drainRuleCode != null">
-                AND drain_rule_code = #{drainRuleCode}
-            </if>
-            <if test="shopGroupCode != null">
-                AND shop_group_code = #{shopGroupCode}
-            </if>
-    </select>
-
     <select id="selectList" resultMap="drainRuleDispatchPOMap">
         SELECT * FROM drain_rule_dispatch
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             <if test="drainRuleCode != null">
                 AND drain_rule_code = #{drainRuleCode}
+            </if>
+            <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
+                AND shop_group_code IN
+                <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
+                    #{orgName}
+                </foreach>
             </if>
     </select>
 
@@ -64,6 +58,14 @@
         DELETE FROM drain_rule_dispatch
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            AND drain_rule_code = #{drainRuleCode}
+            <if test="drainRuleCode != null">
+                AND drain_rule_code = #{drainRuleCode}
+            </if>
+            <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
+                AND shop_group_code IN
+                <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
+                    #{orgName}
+                </foreach>
+            </if>
     </delete>
 </mapper>

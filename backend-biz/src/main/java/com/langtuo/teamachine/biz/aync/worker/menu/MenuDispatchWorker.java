@@ -33,6 +33,11 @@ public class MenuDispatchWorker implements Runnable {
     private String tenantCode;
 
     /**
+     * 管理面登录名称
+     */
+    private String loginName;
+
+    /**
      * 菜单编码
      */
     private String menuCode;
@@ -44,6 +49,7 @@ public class MenuDispatchWorker implements Runnable {
 
     public MenuDispatchWorker(JSONObject jsonPayload) {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
+        this.loginName = jsonPayload.getString(CommonConsts.JSON_KEY_LOGIN_NAME);
         this.menuCode = jsonPayload.getString(CommonConsts.JSON_KEY_MENU_CODE);
         this.menuGmtModifiedYMDHMS = jsonPayload.getString(CommonConsts.JSON_KEY_MENU_GMTMODIFIED_YMDHMS);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)
@@ -107,15 +113,16 @@ public class MenuDispatchWorker implements Runnable {
     }
 
     private List<String> getMachineCodeList() {
+        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginName(tenantCode, loginName);
         MenuDispatchAccessor menuDispatchAccessor = SpringAccessorUtils.getMenuDispatchAccessor();
         List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByMenuCode(
-                tenantCode, menuCode);
+                tenantCode, menuCode, shopGroupCodeList);
         if (CollectionUtils.isEmpty(menuDispatchPOList)) {
             log.error("menuDispatchWorker|getDispatch|null|stopWorker");
             return null;
         }
 
-        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCode(tenantCode,
+        List<String> shopCodeList = DaoUtils.getShopCodeListByShopGroupCodeList(tenantCode,
                 menuDispatchPOList.stream()
                         .map(MenuDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));

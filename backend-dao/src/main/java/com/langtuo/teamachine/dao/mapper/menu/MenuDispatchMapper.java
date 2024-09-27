@@ -15,19 +15,10 @@ import java.util.List;
 public interface MenuDispatchMapper {
     /**
      *
-     * @param tenantCode
-     * @param menuCode
-     * @param shopGroupCode
      * @return
      */
-    MenuDispatchPO selectOne(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode,
-            @Param("shopGroupCode") String shopGroupCode);
-
-    /**
-     *
-     * @return
-     */
-    List<MenuDispatchPO> selectList(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode);
+    List<MenuDispatchPO> selectList(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode,
+            @Param("shopGroupCodeList") List<String> shopGroupCodeList);
 
     /**
      *
@@ -57,5 +48,6 @@ public interface MenuDispatchMapper {
      * @param menuCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("menuCode") String menuCode,
+            @Param("shopGroupCodeList") List<String> shopGroupCodeList);
 }

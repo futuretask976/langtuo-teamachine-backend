@@ -143,7 +143,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             }
 
             if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(exist.getRoleCode())) {
-                AdminPO loginAdminPO = DaoUtils.getLoginAdminPO(po.getTenantCode());
+                AdminPO loginAdminPO = DaoUtils.getAdminPOByLoginSession(po.getTenantCode());
                 if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(loginAdminPO.getRoleCode())) {
                     return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
                             ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN));

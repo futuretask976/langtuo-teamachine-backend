@@ -69,7 +69,7 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
                 pageInfo = invalidActRecordAccessor.searchByShopGroupCode(tenantCode, Lists.newArrayList(shopGroupCode),
                         pageNum, pageSize);
             } else {
-                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByAdmin(tenantCode);
+                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
                 pageInfo = invalidActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCodeList,
                         pageNum, pageSize);
             }

@@ -1,9 +1,7 @@
 package com.langtuo.teamachine.dao.accessor.rule;
 
-import com.langtuo.teamachine.dao.cache.RedisManager4Accessor;
 import com.langtuo.teamachine.dao.mapper.rule.CleanRuleDispatchMapper;
 import com.langtuo.teamachine.dao.po.rule.CleanRuleDispatchPO;
-import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -14,18 +12,9 @@ public class CleanRuleDispatchAccessor {
     @Resource
     private CleanRuleDispatchMapper mapper;
 
-    @Resource
-    private RedisManager4Accessor redisManager4Accessor;
-
-    public List<CleanRuleDispatchPO> listByCleanRuleCode(String tenantCode, String cleanRuleCode) {
-        List<CleanRuleDispatchPO> cached = getCacheList(tenantCode, cleanRuleCode);
-        if (cached != null) {
-            return cached;
-        }
-        
-        List<CleanRuleDispatchPO> list = mapper.selectList(tenantCode, cleanRuleCode);
-        
-        setCacheList(tenantCode, cleanRuleCode, list);
+    public List<CleanRuleDispatchPO> listByCleanRuleCode(String tenantCode, String cleanRuleCode,
+            List<String> shopGroupCodeList) {
+        List<CleanRuleDispatchPO> list = mapper.selectList(tenantCode, cleanRuleCode, shopGroupCodeList);
         return list;
     }
 
@@ -36,35 +25,16 @@ public class CleanRuleDispatchAccessor {
 
     public int insert(CleanRuleDispatchPO po) {
         int inserted = mapper.insert(po);
-        if (inserted == CommonConsts.DB_INSERTED_ONE_ROW) {
-            deleteCacheList(po.getTenantCode(), po.getCleanRuleCode());
-        }
         return inserted;
     }
 
-    public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
-        int deleted = mapper.delete(tenantCode, cleanRuleCode);
-        deleteCacheList(tenantCode, cleanRuleCode);
+    public int deleteByCleanRuleCode(String tenantCode, String cleanRuleCode, List<String> shopGroupCodeList) {
+        int deleted = mapper.delete(tenantCode, cleanRuleCode, shopGroupCodeList);
         return deleted;
     }
 
-    private String getCacheListKey(String tenantCode, String cleanRuleCode) {
-        return "cleanRuleDispatchAcc-" + tenantCode + "-" + cleanRuleCode;
-    }
-
-    private List<CleanRuleDispatchPO> getCacheList(String tenantCode, String cleanRuleCode) {
-        String key = getCacheListKey(tenantCode, cleanRuleCode);
-        Object cached = redisManager4Accessor.getValue(key);
-        List<CleanRuleDispatchPO> poList = (List<CleanRuleDispatchPO>) cached;
-        return poList;
-    }
-
-    private void setCacheList(String tenantCode, String cleanRuleCode, List<CleanRuleDispatchPO> poList) {
-        String key = getCacheListKey(tenantCode, cleanRuleCode);
-        redisManager4Accessor.setValue(key, poList);
-    }
-
-    private void deleteCacheList(String tenantCode, String cleanRuleCode) {
-        redisManager4Accessor.deleteKey(getCacheListKey(tenantCode, cleanRuleCode));
+    public int deleteAllByCleanRuleCode(String tenantCode, String cleanRuleCode) {
+        int deleted = mapper.delete(tenantCode, cleanRuleCode, null);
+        return deleted;
     }
 }

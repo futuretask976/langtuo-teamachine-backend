@@ -145,7 +145,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 }
             }
 
-            deleteMenuDispatchCache(po.getTenantCode(), po.getMenuCode());
+            deleteMenuDispatchCache(po.getTenantCode());
 
             return TeaMachineResult.success();
         } catch (Exception e) {
@@ -176,7 +176,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 }
             }
 
-            deleteMenuDispatchCache(po.getTenantCode(), po.getMenuCode());
+            deleteMenuDispatchCache(po.getTenantCode());
 
             return TeaMachineResult.success();
         } catch (Exception e) {
@@ -194,9 +194,11 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         try {
             int deleted4Series = menuAccessor.deleteByMenuCode(tenantCode, menuCode);
             int deleted4SeriesTeaRel = menuSeriesRelAccessor.deleteByMenuCode(tenantCode, menuCode);
-            int deleted4Dispatch = menuDispatchAccessor.deleteByMenuCode(tenantCode, menuCode);
 
-            deleteMenuDispatchCache(tenantCode, menuCode);
+            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
+            int deleted4Dispatch = menuDispatchAccessor.deleteByMenuCode(tenantCode, menuCode, shopGroupCodeList);
+
+            deleteMenuDispatchCache(tenantCode);
 
             return TeaMachineResult.success();
         } catch (Exception e) {
@@ -218,7 +220,9 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
-            int deleted = menuDispatchAccessor.deleteByMenuCode(request.getTenantCode(), request.getMenuCode());
+            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(menuPO.getTenantCode());
+            int deleted = menuDispatchAccessor.deleteByMenuCode(request.getTenantCode(), request.getMenuCode(),
+                    shopGroupCodeList);
             for (MenuDispatchPO po : poList) {
                 menuDispatchAccessor.insert(po);
             }
@@ -245,7 +249,8 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             MenuDispatchDTO dto = new MenuDispatchDTO();
             dto.setMenuCode(menuCode);
 
-            List<MenuDispatchPO> poList = menuDispatchAccessor.listByMenuCode(tenantCode, menuCode);
+            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
+            List<MenuDispatchPO> poList = menuDispatchAccessor.listByMenuCode(tenantCode, menuCode, shopGroupCodeList);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
                         .map(po -> po.getShopGroupCode())
@@ -259,8 +264,8 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         }
     }
 
-    private void deleteMenuDispatchCache(String tenantCode, String menuCode) {
-        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByMenuCode(tenantCode, menuCode);
+    private void deleteMenuDispatchCache(String tenantCode) {
+        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
         if (CollectionUtils.isEmpty(shopGroupCodeList)) {
             return;
         }
@@ -271,5 +276,8 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         }
         int deleted = menuDispatchCacheAccessor.deleteByFileNameList(tenantCode, CommonConsts.MENU_DISPATCH_LIST_TRUE,
                 fileNameList);
+        if (deleted == CommonConsts.DB_DELETED_ZERO_ROW) {
+            log.error("menuMgtService|deleteMenuDispatchCache|error|" + deleted + "|" + tenantCode);
+        }
     }
 }

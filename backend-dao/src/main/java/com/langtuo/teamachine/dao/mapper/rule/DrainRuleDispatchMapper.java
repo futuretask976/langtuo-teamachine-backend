@@ -15,20 +15,10 @@ import java.util.List;
 public interface DrainRuleDispatchMapper {
     /**
      *
-     * @param tenantCode
-     * @param drainRuleCode
-     * @param shopGroupCode
-     * @return
-     */
-    DrainRuleDispatchPO selectOne(@Param("tenantCode") String tenantCode, @Param("drainRuleCode") String drainRuleCode,
-            @Param("shopGroupCode") String shopGroupCode);
-
-    /**
-     *
      * @return
      */
     List<DrainRuleDispatchPO> selectList(@Param("tenantCode") String tenantCode,
-            @Param("drainRuleCode") String drainRuleCode);
+            @Param("drainRuleCode") String drainRuleCode, @Param("shopGroupCodeList") List<String> shopGroupCodeList);
 
     /**
      *
@@ -58,5 +48,6 @@ public interface DrainRuleDispatchMapper {
      * @param drainRuleCode
      * @return
      */
-    int delete(@Param("tenantCode") String tenantCode, @Param("drainRuleCode") String drainRuleCode);
+    int delete(@Param("tenantCode") String tenantCode, @Param("drainRuleCode") String drainRuleCode,
+            @Param("shopGroupCodeList") List<String> shopGroupCodeList);
 }

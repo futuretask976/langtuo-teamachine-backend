@@ -140,7 +140,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                 pageInfo = orderTeaReportByShopAccessor.searchByShopGroupCode(tenantCode,
                         Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopGroupCode), pageNum, pageSize);
             } else {
-                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByAdmin(tenantCode);
+                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
                 pageInfo = orderTeaReportByShopAccessor.searchByShopGroupCode(tenantCode,
                         Lists.newArrayList(orderCreatedDay), shopGroupCodeList, pageNum, pageSize);
             }
@@ -172,7 +172,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                 pageInfo = orderSpecItemReportByShopAccessor.searchByShopGroupCode(tenantCode,
                         Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopGroupCode), pageNum, pageSize);
             } else {
-                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByAdmin(tenantCode);
+                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
                 pageInfo = orderSpecItemReportByShopAccessor.searchByShopGroupCode(tenantCode,
                         Lists.newArrayList(orderCreatedDay), shopGroupCodeList, pageNum, pageSize);
             }
@@ -205,7 +205,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                 pageInfo = orderToppingReportByShopAccessor.searchByShopGroupCode(tenantCode,
                         Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopGroupCode), pageNum, pageSize);
             } else {
-                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByAdmin(tenantCode);
+                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
                 pageInfo = orderToppingReportByShopAccessor.searchByShopGroupCode(tenantCode,
                         Lists.newArrayList(orderCreatedDay), shopGroupCodeList, pageNum, pageSize);
             }
