@@ -24,7 +24,7 @@
             <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
                 AND shop_group_code IN
                 <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
-                    #{orgName}
+                    #{shopGroupCode}
                 </foreach>
             </if>
     </select>
@@ -64,7 +64,7 @@
             <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
                 AND shop_group_code IN
                 <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
-                    #{orgName}
+                    #{shopGroupCode}
                 </foreach>
             </if>
     </delete>

@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -228,12 +229,8 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             }
 
             // 异步发送消息准备配置信息分发
-            JSONObject jsonPayload = new JSONObject();
-            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_MENU_DISPATCH_REQUESTED);
-            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
-            jsonPayload.put(CommonConsts.JSON_KEY_MENU_CODE, request.getMenuCode());
-            jsonPayload.put(CommonConsts.JSON_KEY_MENU_GMTMODIFIED_YMDHMS,
-                    DateUtils.transformYMDHMS(menuPO.getGmtModified()));
+            JSONObject jsonPayload = getAsyncDispatchMsg(request.getTenantCode(), request.getMenuCode(),
+                    menuPO.getGmtModified());
             asyncDispatcher.dispatch(jsonPayload);
 
             return TeaMachineResult.success();
@@ -279,5 +276,17 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         if (deleted == CommonConsts.DB_DELETED_ZERO_ROW) {
             log.error("menuMgtService|deleteMenuDispatchCache|error|" + deleted + "|" + tenantCode);
         }
+    }
+
+    private JSONObject getAsyncDispatchMsg(String tenantCode, String menuCode, Date gmtModified) {
+        // 异步发送消息准备配置信息分发
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_MENU_DISPATCH_REQUESTED);
+        jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, tenantCode);
+        jsonPayload.put(CommonConsts.JSON_KEY_LOGIN_NAME, DaoUtils.getAdminPOByLoginSession(tenantCode).getLoginName());
+        jsonPayload.put(CommonConsts.JSON_KEY_MENU_CODE, menuCode);
+        jsonPayload.put(CommonConsts.JSON_KEY_MENU_GMTMODIFIED_YMDHMS,
+                DateUtils.transformYMDHMS(gmtModified));
+        return jsonPayload;
     }
 }
