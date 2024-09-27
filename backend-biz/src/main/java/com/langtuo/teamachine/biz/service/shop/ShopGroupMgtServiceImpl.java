@@ -53,8 +53,10 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
+            List<String> orgNameList = DaoUtils.getOrgNameListByAdmin(tenantCode);
+
             PageInfo<ShopGroupPO> pageInfo = shopGroupAccessor.search(tenantCode, shopGroupName,
-                    pageNum, pageSize);
+                    pageNum, pageSize, orgNameList);
             return TeaMachineResult.success(new PageDTO<>(
                     convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {

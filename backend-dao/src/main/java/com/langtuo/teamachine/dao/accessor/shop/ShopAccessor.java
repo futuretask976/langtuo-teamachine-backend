@@ -63,13 +63,15 @@ public class ShopAccessor {
         return list;
     }
 
-    public PageInfo<ShopPO> search(String tenantCode, String shopName, String shopGroupCode, int pageNum, int pageSize) {
+    public PageInfo<ShopPO> search(String tenantCode, String shopName, String shopGroupCode, int pageNum, int pageSize,
+            List<String> shopGroupCodeList) {
         PageHelper.startPage(pageNum, pageSize);
 
         ShopQuery shopQuery = new ShopQuery();
         shopQuery.setTenantCode(tenantCode);
         shopQuery.setShopName(StringUtils.isBlank(shopName) ? null : shopName);
         shopQuery.setShopGroupCode(StringUtils.isBlank(shopGroupCode) ? null : shopGroupCode);
+        shopQuery.setShopGroupCodeList(shopGroupCodeList);
         List<ShopPO> list = mapper.search(shopQuery);
 
         PageInfo<ShopPO> pageInfo = new PageInfo(list);

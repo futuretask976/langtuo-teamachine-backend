@@ -2,6 +2,8 @@ package com.langtuo.teamachine.dao.query.shop;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ShopQuery {
     /**
@@ -23,4 +25,9 @@ public class ShopQuery {
      * 租户编码
      */
     private String tenantCode;
+
+    /**
+     * 组织架构列表
+     */
+    private List<String> shopGroupCodeList;
 }

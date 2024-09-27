@@ -4,7 +4,9 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.langtuo.teamachine.dao.mapper.user.OrgMapper;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
+import com.langtuo.teamachine.dao.po.user.AdminPO;
 import com.langtuo.teamachine.dao.po.user.OrgPO;
+import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
@@ -77,7 +79,8 @@ public class OrgAccessor {
     }
 
     public PageInfo<OrgNode> search(String tenantCode, String orgName, int pageNum, int pageSize) {
-        List<OrgNode> nodeList = listOrgNode(tenantCode);
+        AdminPO adminPO = DaoUtils.getLoginAdminPO(tenantCode);
+        List<OrgNode> nodeList = listByParentOrgName(tenantCode, adminPO.getOrgName());
         if (CollectionUtils.isEmpty(nodeList)) {
             PageInfo<OrgNode> pageInfo = new PageInfo(null);
             pageInfo.setTotal(0);

@@ -53,7 +53,7 @@ public class MenuDispatchListWorker implements Runnable {
         try {
             MenuDispatchCacheAccessor menuDispatchCacheAccessor = SpringAccessorUtils.getMenuDispatchHistoryAccessor();
             MenuDispatchCachePO existOssPO = menuDispatchCacheAccessor.getByFileName(tenantCode,
-                    CommonConsts.MENU_DISPATCH_LIST_FALSE, fileName);
+                    CommonConsts.MENU_DISPATCH_LIST_TRUE, fileName);
             if (existOssPO != null) {
                 sendToMachine(getSendMsg(existOssPO));
                 return;
@@ -86,7 +86,7 @@ public class MenuDispatchListWorker implements Runnable {
                 return;
             }
 
-            MenuDispatchCachePO newOssPO = getNewOssPO(fileName, md5AsHex);
+            MenuDispatchCachePO newOssPO = getNewCachePO(fileName, md5AsHex);
             int inserted = menuDispatchCacheAccessor.insert(newOssPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("menuDispatchWorker|insertOssInfo|error|" + inserted);
@@ -129,12 +129,12 @@ public class MenuDispatchListWorker implements Runnable {
         mqttProducer.sendP2PMsgByTenant(tenantCode, machineCode, jsonMsg.toJSONString());
     }
 
-    private MenuDispatchCachePO getNewOssPO(String fileName, String md5AsHex) {
-        MenuDispatchCachePO newOssPO = new MenuDispatchCachePO();
-        newOssPO.setTenantCode(tenantCode);
-        newOssPO.setInit(CommonConsts.MENU_DISPATCH_LIST_TRUE);
-        newOssPO.setFileName(fileName);
-        newOssPO.setMd5(md5AsHex);
-        return newOssPO;
+    private MenuDispatchCachePO getNewCachePO(String fileName, String md5AsHex) {
+        MenuDispatchCachePO newCachePO = new MenuDispatchCachePO();
+        newCachePO.setTenantCode(tenantCode);
+        newCachePO.setInit(CommonConsts.MENU_DISPATCH_LIST_TRUE);
+        newCachePO.setFileName(fileName);
+        newCachePO.setMd5(md5AsHex);
+        return newCachePO;
     }
 }

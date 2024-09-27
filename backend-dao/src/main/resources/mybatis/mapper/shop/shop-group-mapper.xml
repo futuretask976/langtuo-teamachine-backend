@@ -54,6 +54,12 @@
         <if test="tenantCode != null">
             AND tenant_code = #{tenantCode}
         </if>
+        <if test="orgNameList != null and orgNameList.size() > 0">
+            AND org_name IN
+            <foreach item="orgName" collection="orgNameList" open="(" separator="," close=")">
+                #{orgName}
+            </foreach>
+        </if>
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.shop.ShopGroupPO">

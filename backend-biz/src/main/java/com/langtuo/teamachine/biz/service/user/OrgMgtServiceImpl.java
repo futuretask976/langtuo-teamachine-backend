@@ -1,8 +1,8 @@
 package com.langtuo.teamachine.biz.service.user;
 
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.model.user.OrgDTO;
 import com.langtuo.teamachine.api.request.user.OrgPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.user.OrgMgtService;
@@ -10,6 +10,8 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
 import com.langtuo.teamachine.dao.node.user.OrgNode;
+import com.langtuo.teamachine.dao.po.user.AdminPO;
+import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
@@ -20,7 +22,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.langtuo.teamachine.biz.convert.user.OrgMgtConvertor.*;
+import static com.langtuo.teamachine.biz.convert.user.OrgMgtConvertor.convertToOrgDTO;
+import static com.langtuo.teamachine.biz.convert.user.OrgMgtConvertor.convertToOrgNode;
 
 @Component
 @Slf4j
@@ -38,7 +41,8 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     public TeaMachineResult<OrgDTO> getTop(String tenantCode) {
         TeaMachineResult<OrgDTO> teaMachineResult;
         try {
-            OrgNode orgNode = orgAccessor.findTopOrgNode(tenantCode);
+            AdminPO adminPO = DaoUtils.getLoginAdminPO(tenantCode);
+            OrgNode orgNode = orgAccessor.getByOrgName(tenantCode, adminPO.getOrgName());
             teaMachineResult = TeaMachineResult.success(convertToOrgDTO(orgNode));
         } catch (Exception e) {
             log.error("orgMgtService|getTop|fatal|" + e.getMessage(), e);
@@ -62,16 +66,15 @@ public class OrgMgtServiceImpl implements OrgMgtService {
 
     @Override
     public TeaMachineResult<List<OrgDTO>> list(String tenantCode) {
-        TeaMachineResult<List<OrgDTO>> teaMachineResult;
         try {
-            List<OrgNode> nodeList = orgAccessor.list(tenantCode);
+            AdminPO adminPO = DaoUtils.getLoginAdminPO(tenantCode);
+            List<OrgNode> nodeList = orgAccessor.listByParentOrgName(tenantCode, adminPO.getOrgName());
             List<OrgDTO> dtoList = convertToOrgDTO(nodeList);
-            teaMachineResult = TeaMachineResult.success(dtoList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("orgMgtService|list|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
@@ -80,17 +83,14 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<OrgDTO>> teaMachineResult;
         try {
             PageInfo<OrgNode> pageInfo = orgAccessor.search(tenantCode, orgName, pageNum, pageSize);
             List<OrgDTO> dtoList = convertToOrgDTO(pageInfo.getList());
-            teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orgMgtService|search|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override

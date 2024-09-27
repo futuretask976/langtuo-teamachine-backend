@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.mqtt.produce;
 
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.mqtt.server.ServerProducer;
 import com.alibaba.mqtt.server.config.ChannelConfig;
 import com.alibaba.mqtt.server.config.ProducerConfig;
@@ -8,7 +7,6 @@ import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.produce.callback.MqttSendCallback;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +53,7 @@ public class MqttProducer implements InitializingBean {
     }
 
     public void sendP2PMsgByTenant(String tenantCode, String machineCode, String payload) {
-        machineCode = "machine_333";
+        machineCode = "gxAliyunMqttDemo";
         String topic = tenantCode + MqttConsts.TENANT_PARENT_P2P_TOPIC_POSTFIX + machineCode;
         try {
             log.info("$$$$$ MqttProducer#sendP2PMsgByTenant topic=" + topic + ", payload=" + payload);
