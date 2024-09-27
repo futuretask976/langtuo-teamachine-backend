@@ -5,11 +5,7 @@ import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.record.SupplyActRecordDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.SupplyActRecordMgtService;
-import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
-import com.langtuo.teamachine.dao.accessor.drink.ToppingAccessor;
 import com.langtuo.teamachine.dao.accessor.record.SupplyActRecordAccessor;
-import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
-import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.po.record.SupplyActRecordPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -30,18 +26,6 @@ import static com.langtuo.teamachine.biz.convert.record.SupplyActRecordMgtConver
 public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService {
     @Resource
     private SupplyActRecordAccessor supplyActRecordAccessor;
-
-    @Resource
-    private ToppingAccessor toppingAccessor;
-
-    @Resource
-    private ShopGroupAccessor shopGroupAccessor;
-
-    @Resource
-    private ShopAccessor shopAccessor;
-
-    @Resource
-    private ShopGroupMgtService shopGroupMgtService;
 
     @Override
     public TeaMachineResult<SupplyActRecordDTO> get(String tenantCode, String idempotentMark) {
