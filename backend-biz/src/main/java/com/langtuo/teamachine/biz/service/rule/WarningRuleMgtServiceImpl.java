@@ -202,10 +202,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             }
 
             // 异步发送消息准备配置信息分发
-            JSONObject jsonPayload = new JSONObject();
-            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_WARNING_RULE_DISPATCH_REQUESTED);
-            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
-            jsonPayload.put(CommonConsts.JSON_KEY_WARNING_RULE_CODE, request.getWarningRuleCode());
+            JSONObject jsonPayload = getAsyncDispatchMsg(request.getTenantCode(), request.getWarningRuleCode());
             asyncDispatcher.dispatch(jsonPayload);
 
             return TeaMachineResult.success();
@@ -235,5 +232,14 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             log.error("warningRuleMgtService|getDispatchByWarningRuleCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
+    }
+
+    private JSONObject getAsyncDispatchMsg(String tenantCode, String warningCode) {
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_WARNING_RULE_DISPATCH_REQUESTED);
+        jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, tenantCode);
+        jsonPayload.put(CommonConsts.JSON_KEY_LOGIN_NAME, DaoUtils.getAdminPOByLoginSession(tenantCode).getLoginName());
+        jsonPayload.put(CommonConsts.JSON_KEY_WARNING_RULE_CODE, warningCode);
+        return jsonPayload;
     }
 }

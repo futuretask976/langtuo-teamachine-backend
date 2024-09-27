@@ -71,9 +71,9 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     @Override
     public TeaMachineResult<List<CleanRuleDTO>> list(String tenantCode) {
         try {
-            List<CleanRulePO> cleanRulePOList = cleanRuleAccessor.selectList(tenantCode);
-            List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
-            return TeaMachineResult.success(cleanRuleDTOList);
+            List<CleanRulePO> poList = cleanRuleAccessor.selectList(tenantCode);
+            List<CleanRuleDTO> dtoList = convertToCleanRuleDTO(poList);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("cleanRuleMgtService|list|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -249,10 +249,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             }
 
             // 异步发送消息准备配置信息分发
-            JSONObject jsonPayload = new JSONObject();
-            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_CLEAN_RULE_DISPATCH_REQUESTED);
-            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
-            jsonPayload.put(CommonConsts.JSON_KEY_CLEAN_RULE_CODE, request.getCleanRuleCode());
+            JSONObject jsonPayload = getAsyncDispatchMsg(request.getTenantCode(), request.getCleanRuleCode());
             asyncDispatcher.dispatch(jsonPayload);
 
             return TeaMachineResult.success();
@@ -281,5 +278,14 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             log.error("cleanRuleMgtService|getDispatchByCleanRuleCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
+    }
+
+    private JSONObject getAsyncDispatchMsg(String tenantCode, String cleanRuleCode) {
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_CLEAN_RULE_DISPATCH_REQUESTED);
+        jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, tenantCode);
+        jsonPayload.put(CommonConsts.JSON_KEY_LOGIN_NAME, DaoUtils.getAdminPOByLoginSession(tenantCode).getLoginName());
+        jsonPayload.put(CommonConsts.JSON_KEY_CLEAN_RULE_CODE, cleanRuleCode);
+        return jsonPayload;
     }
 }

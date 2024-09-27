@@ -223,10 +223,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             }
 
             // 异步发送消息准备配置信息分发
-            JSONObject jsonPayload = new JSONObject();
-            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DRAIN_RULE_DISPATCH_REQUESTED);
-            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
-            jsonPayload.put(CommonConsts.JSON_KEY_DRAIN_RULE_CODE, request.getDrainRuleCode());
+            JSONObject jsonPayload = getAsyncDispatchMsg(request.getTenantCode(), request.getDrainRuleCode());
             asyncDispatcher.dispatch(jsonPayload);
 
             return TeaMachineResult.success();
@@ -256,5 +253,14 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             log.error("drainRuleMgtService|getDispatchByDrainRuleCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
+    }
+
+    private JSONObject getAsyncDispatchMsg(String tenantCode, String cleanRuleCode) {
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DRAIN_RULE_DISPATCH_REQUESTED);
+        jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, tenantCode);
+        jsonPayload.put(CommonConsts.JSON_KEY_LOGIN_NAME, DaoUtils.getAdminPOByLoginSession(tenantCode).getLoginName());
+        jsonPayload.put(CommonConsts.JSON_KEY_DRAIN_RULE_CODE, cleanRuleCode);
+        return jsonPayload;
     }
 }
