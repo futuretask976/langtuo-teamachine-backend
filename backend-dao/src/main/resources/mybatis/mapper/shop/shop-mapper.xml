@@ -27,15 +27,6 @@
             </if>
     </select>
 
-    <select id="selectList" resultMap="shopPOMap">
-        SELECT * FROM shop
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
-            <if test="shopGroupCode != null">
-                AND shop_group_code = #{shopGroupCode}
-            </if>
-    </select>
-
     <select id="selectListByShopGroupCodeList" resultMap="shopPOMap">
         SELECT * FROM shop
         WHERE 1 = 1
@@ -46,15 +37,6 @@
                 #{shopGroupCode}
             </foreach>
         </if>
-    </select>
-
-    <select id="countByShopGroupCode" resultType="int">
-        SELECT COUNT(1) FROM shop
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
-            <if test="shopGroupCode != null">
-                AND shop_group_code = #{shopGroupCode}
-            </if>
     </select>
 
     <select id="search" resultMap="shopPOMap">
@@ -131,4 +113,13 @@
             and tenant_code = #{tenantCode}
             and shop_code = #{shopCode}
     </delete>
+
+    <select id="countByShopGroupCode" resultType="int">
+        SELECT COUNT(1) FROM shop
+        WHERE 1 = 1
+        AND tenant_code = #{tenantCode}
+        <if test="shopGroupCode != null">
+            AND shop_group_code = #{shopGroupCode}
+        </if>
+    </select>
 </mapper>

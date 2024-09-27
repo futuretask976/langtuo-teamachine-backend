@@ -8,8 +8,6 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopGroupMgtService;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
-import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
-import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
 import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -33,12 +31,6 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     @Resource
     private ShopAccessor shopAccessor;
 
-    @Resource
-    private AdminAccessor adminAccessor;
-
-    @Resource
-    private OrgAccessor orgAccessor;
-
     @Override
     public TeaMachineResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode) {
         ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupCode(tenantCode, shopGroupCode);
@@ -56,6 +48,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             List<String> orgNameList = DaoUtils.getOrgNameListByLoginSession(tenantCode);
             PageInfo<ShopGroupPO> pageInfo = shopGroupAccessor.search(tenantCode, shopGroupName,
                     pageNum, pageSize, orgNameList);
+
             return TeaMachineResult.success(new PageDTO<>(
                     convert(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
@@ -72,18 +65,6 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
             return TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("shopGroupMgtService|list|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-    }
-
-    @Override
-    public TeaMachineResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode) {
-        try {
-            List<ShopGroupPO> list = shopGroupAccessor.list(tenantCode,
-                    DaoUtils.getOrgNameListByLoginSession(tenantCode));
-            return TeaMachineResult.success(convert(list));
-        } catch (Exception e) {
-            log.error("shopGroupMgtService|listByAdminOrg|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }

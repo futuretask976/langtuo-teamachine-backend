@@ -25,12 +25,6 @@ public interface ShopGroupMapper {
      *
      * @return
      */
-    List<ShopGroupPO> selectList(String tenantCode);
-
-    /**
-     *
-     * @return
-     */
     List<ShopGroupPO> selectListByOrgNameList(@Param("tenantCode") String tenantCode,
             @Param("orgNameList") List<String> orgNameList);
 

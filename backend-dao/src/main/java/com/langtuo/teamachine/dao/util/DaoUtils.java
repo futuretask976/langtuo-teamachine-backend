@@ -69,7 +69,7 @@ public class DaoUtils {
             return null;
         }
 
-        List<ShopPO> shopPOList = SpringAccessorUtils.getShopAccessor().listByShopGroupCode(tenantCode,
+        List<ShopPO> shopPOList = SpringAccessorUtils.getShopAccessor().listByShopGroupCodeList(tenantCode,
                 shopGroupCodeList);
         if (CollectionUtils.isEmpty(shopPOList)) {
             return null;

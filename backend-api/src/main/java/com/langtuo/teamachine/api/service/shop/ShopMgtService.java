@@ -30,13 +30,6 @@ public interface ShopMgtService {
 
     /**
      *
-     * @param tenantCode
-     * @return
-     */
-    TeaMachineResult<List<ShopDTO>> listByAdminOrg(String tenantCode);
-
-    /**
-     *
      * @param request
      * @return
      */

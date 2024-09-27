@@ -26,12 +26,6 @@
         </if>
     </select>
 
-    <select id="selectList" resultMap="shopGroupPOMap">
-        SELECT * FROM shop_group
-        WHERE 1 = 1
-        AND tenant_code = #{tenantCode}
-    </select>
-
     <select id="selectListByOrgNameList" resultMap="shopGroupPOMap">
         SELECT * FROM shop_group
         WHERE 1 = 1

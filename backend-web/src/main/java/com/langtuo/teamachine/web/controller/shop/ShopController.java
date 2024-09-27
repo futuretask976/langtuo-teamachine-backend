@@ -29,12 +29,6 @@ public class ShopController {
         TeaMachineResult<List<ShopDTO>> rtn = service.listByShopGroupCode(tenantCode, shopGroupCode);
         return rtn;
     }
-
-    @GetMapping(value = "/listbyadminorg")
-    public TeaMachineResult<List<ShopDTO>> listByAdminOrg(@RequestParam("tenantCode") String tenantCode) {
-        TeaMachineResult<List<ShopDTO>> rtn = service.listByAdminOrg(tenantCode);
-        return rtn;
-    }
     
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<ShopDTO>> search(@RequestParam("tenantCode") String tenantCode,

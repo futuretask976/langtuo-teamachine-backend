@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.biz.service.shop;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.shop.ShopPutRequest;
@@ -10,7 +11,6 @@ import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
 import com.langtuo.teamachine.dao.accessor.user.OrgAccessor;
-import com.langtuo.teamachine.dao.po.shop.ShopGroupPO;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
@@ -19,11 +19,9 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.langtuo.teamachine.biz.convert.shop.ShopMgtConvertor.convertToShopPO;
 
@@ -57,9 +55,9 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
         try {
             List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-
             PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCode,
                     pageNum, pageSize, shopGroupCodeList);
+
             return TeaMachineResult.success(new PageDTO<>(
                     convertToShopPO(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
@@ -70,31 +68,15 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     @Override
     public TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
         try {
-            List<ShopPO> list = shopAccessor.listByShopGroupCode(tenantCode, shopGroupCode);
+            List<ShopPO> list = shopAccessor.listByShopGroupCodeList(tenantCode, Lists.newArrayList(shopGroupCode));
             return TeaMachineResult.success(convertToShopPO(list));
         } catch (Exception e) {
             log.error("shopMgtService|listByShopGroupCode|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-        }
-    }
-
-    @Override
-    public TeaMachineResult<List<ShopDTO>> listByAdminOrg(String tenantCode) {
-        try {
-            List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.list(tenantCode,
-                    DaoUtils.getOrgNameListByLoginSession(tenantCode));
-            if (CollectionUtils.isEmpty(shopGroupPOList)) {
-                return TeaMachineResult.success(null);
-            } else {
-                List<String> shopGroupCodeList = shopGroupPOList.stream()
-                        .map(shopGroupDTO -> shopGroupDTO.getShopGroupCode())
-                        .collect(Collectors.toList());
-                List<ShopPO> list = shopAccessor.listByShopGroupCode(tenantCode, shopGroupCodeList);
-                return TeaMachineResult.success(convertToShopPO(list));
-            }
-        } catch (Exception e) {
-            log.error("shopMgtService|listByAdminOrg|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
