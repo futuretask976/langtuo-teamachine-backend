@@ -92,8 +92,7 @@ public class DaoUtils {
             return null;
         }
 
-        List<ShopGroupPO> shopGroupPOList = SpringAccessorUtils.getShopGroupAccessor()
-                .listByOrgName(tenantCode, orgNameList);
+        List<ShopGroupPO> shopGroupPOList = SpringAccessorUtils.getShopGroupAccessor().list(tenantCode, orgNameList);
         if (CollectionUtils.isEmpty(shopGroupPOList)) {
             return null;
         }
@@ -110,8 +109,7 @@ public class DaoUtils {
             return null;
         }
 
-        List<ShopGroupPO> shopGroupPOList = SpringAccessorUtils.getShopGroupAccessor()
-                .listByOrgName(tenantCode, orgNameList);
+        List<ShopGroupPO> shopGroupPOList = SpringAccessorUtils.getShopGroupAccessor().list(tenantCode, orgNameList);
         if (CollectionUtils.isEmpty(shopGroupPOList)) {
             return null;
         }

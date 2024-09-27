@@ -86,6 +86,7 @@ public class WebConsts {
     // 饮品生产
     public static final String ANT_PATTERN_TOPPING_TYPE_LIST_PATH = "/drinkset/topping/type/list/**";
     public static final String ANT_PATTERN_TEA_TYPE_LIST_PATH = "/drinkset/tea/type/list/**";
+    public static final String ANT_PATTERN_TEA_LIST_PATH = "/drinkset/tea/list/**";
     public static final String ANT_PATTERN_TOPPING_TYPE_PATH = "/drinkset/topping/type/**";
     public static final String ANT_PATTERN_TOPPING_PATH = "/drinkset/topping/**";
     public static final String ANT_PATTERN_SEPC_PATH = "/drinkset/spec/**";

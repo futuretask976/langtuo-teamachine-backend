@@ -82,8 +82,8 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     @Override
     public TeaMachineResult<List<ShopDTO>> listByAdminOrg(String tenantCode) {
         try {
-            List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.listByOrgName(
-                    tenantCode, DaoUtils.getOrgNameListByLoginSession(tenantCode));
+            List<ShopGroupPO> shopGroupPOList = shopGroupAccessor.list(tenantCode,
+                    DaoUtils.getOrgNameListByLoginSession(tenantCode));
             if (CollectionUtils.isEmpty(shopGroupPOList)) {
                 return TeaMachineResult.success(null);
             } else {

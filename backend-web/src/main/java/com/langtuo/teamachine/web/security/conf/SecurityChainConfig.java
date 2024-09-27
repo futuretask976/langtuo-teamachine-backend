@@ -144,6 +144,8 @@ public class SecurityChainConfig {
                 .antMatchers(WebConsts.ANT_PATTERN_TEA_TYPE_LIST_PATH).hasAnyRole(
                         PermitActEnum.TEA_TYPE_MGT.getPermitActCode(),
                         PermitActEnum.TEA_MGT.getPermitActCode())
+                .antMatchers(WebConsts.ANT_PATTERN_TEA_LIST_PATH).hasAnyRole(
+                        PermitActEnum.SERIES_MGT.getPermitActCode())
                 .antMatchers(WebConsts.ANT_PATTERN_TOPPING_TYPE_PATH).hasAnyRole(
                         PermitActEnum.TOPPING_TYPE_MGT.getPermitActCode())
                 .antMatchers(WebConsts.ANT_PATTERN_TOPPING_PATH).hasAnyRole(

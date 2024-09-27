@@ -54,7 +54,6 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
 
         try {
             List<String> orgNameList = DaoUtils.getOrgNameListByLoginSession(tenantCode);
-
             PageInfo<ShopGroupPO> pageInfo = shopGroupAccessor.search(tenantCode, shopGroupName,
                     pageNum, pageSize, orgNameList);
             return TeaMachineResult.success(new PageDTO<>(
@@ -68,7 +67,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     @Override
     public TeaMachineResult<List<ShopGroupDTO>> list(String tenantCode) {
         try {
-            List<ShopGroupPO> list = shopGroupAccessor.list(tenantCode);
+            List<String> orgNameList = DaoUtils.getOrgNameListByLoginSession(tenantCode);
+            List<ShopGroupPO> list = shopGroupAccessor.list(tenantCode, orgNameList);
             return TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("shopGroupMgtService|list|fatal|" + e.getMessage(), e);
@@ -79,8 +79,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     @Override
     public TeaMachineResult<List<ShopGroupDTO>> listByAdminOrg(String tenantCode) {
         try {
-            List<ShopGroupPO> list = shopGroupAccessor.listByOrgName(
-                    tenantCode, DaoUtils.getOrgNameListByLoginSession(tenantCode));
+            List<ShopGroupPO> list = shopGroupAccessor.list(tenantCode,
+                    DaoUtils.getOrgNameListByLoginSession(tenantCode));
             return TeaMachineResult.success(convert(list));
         } catch (Exception e) {
             log.error("shopGroupMgtService|listByAdminOrg|fatal|" + e.getMessage(), e);
