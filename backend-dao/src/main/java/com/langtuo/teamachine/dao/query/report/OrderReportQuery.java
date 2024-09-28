@@ -7,7 +7,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 @Data
-public class OrderAmtReportQuery {
+public class OrderReportQuery {
     /**
      * 租户编码
      */
@@ -17,6 +17,16 @@ public class OrderAmtReportQuery {
      * 店铺编码列表
      */
     private List<String> orderCreatedDayList;
+
+    /**
+     * 店铺组编码列表
+     */
+    private List<String> shopGroupCodeList;
+
+    /**
+     * 店铺编码列表
+     */
+    private List<String> shopCodeList;
 
     /**
      * 添加店铺编码

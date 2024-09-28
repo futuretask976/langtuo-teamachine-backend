@@ -2,19 +2,20 @@ package com.langtuo.teamachine.biz.service.report;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.langtuo.teamachine.api.model.PageDTO;
-import com.langtuo.teamachine.api.model.report.OrderAmtReportDTO;
-import com.langtuo.teamachine.api.model.report.OrderSpecItemReportDTO;
-import com.langtuo.teamachine.api.model.report.OrderTeaReportDTO;
-import com.langtuo.teamachine.api.model.report.OrderToppingReportDTO;
+import com.langtuo.teamachine.api.model.report.OrderReportByDayDTO;
+import com.langtuo.teamachine.api.model.report.OrderSpecItemReportByDayDTO;
+import com.langtuo.teamachine.api.model.report.OrderTeaReportByDayDTO;
+import com.langtuo.teamachine.api.model.report.OrderToppingReportByDayDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.report.OrderReportService;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
-import com.langtuo.teamachine.dao.accessor.report.OrderAmtReportAccessor;
-import com.langtuo.teamachine.dao.accessor.report.OrderSpecItemReportByShopAccessor;
-import com.langtuo.teamachine.dao.accessor.report.OrderTeaReportByShopAccessor;
-import com.langtuo.teamachine.dao.accessor.report.OrderToppingReportByShopAccessor;
-import com.langtuo.teamachine.dao.po.report.OrderAmtReportPO;
+import com.langtuo.teamachine.dao.accessor.report.OrderReportAccessor;
+import com.langtuo.teamachine.dao.accessor.report.OrderSpecItemReport;
+import com.langtuo.teamachine.dao.accessor.report.OrderTeaReport;
+import com.langtuo.teamachine.dao.accessor.report.OrderToppingReport;
+import com.langtuo.teamachine.dao.po.report.OrderReportPO;
 import com.langtuo.teamachine.dao.po.report.OrderSpecItemReportPO;
 import com.langtuo.teamachine.dao.po.report.OrderTeaReportPO;
 import com.langtuo.teamachine.dao.po.report.OrderToppingReportPO;
@@ -28,22 +29,22 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Component
 @Slf4j
 public class OrderReportServiceImpl implements OrderReportService {
     @Resource
-    private OrderAmtReportAccessor orderAmtReportAccessor;
+    private OrderReportAccessor orderReportAccessor;
 
     @Resource
-    private OrderSpecItemReportByShopAccessor orderSpecItemReportByShopAccessor;
+    private OrderSpecItemReport orderSpecItemReport;
 
     @Resource
-    private OrderTeaReportByShopAccessor orderTeaReportByShopAccessor;
+    private OrderTeaReport orderTeaReport;
 
     @Resource
-    private OrderToppingReportByShopAccessor orderToppingReportByShopAccessor;
+    private OrderToppingReport orderToppingReport;
 
     @Override
     public TeaMachineResult<Void> calc(String tenantCode, String orderCreatedDay) {
@@ -51,280 +52,286 @@ public class OrderReportServiceImpl implements OrderReportService {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        OrderAmtReportPO existAmtReport = orderAmtReportAccessor.getByOrderCreatedDay(tenantCode, orderCreatedDay);
-        if (existAmtReport != null) {
-            int deleted = orderAmtReportAccessor.delete(tenantCode, orderCreatedDay);
-        }
-        OrderAmtReportPO amtReportPO = orderAmtReportAccessor.calcByOrderCreatedDay(tenantCode, orderCreatedDay);
-        if (amtReportPO != null) {
-            int inserted4OrderAmtReport = orderAmtReportAccessor.insert(amtReportPO);
+        int deleted4Order = orderReportAccessor.delete(tenantCode, orderCreatedDay);
+        List<OrderReportPO> orderReportPOList = orderReportAccessor.calcByOrderCreatedDay(tenantCode, orderCreatedDay);
+        if (!CollectionUtils.isEmpty(orderReportPOList)) {
+            for (OrderReportPO po : orderReportPOList) {
+                int inserted4OrderReport = orderReportAccessor.insert(po);
+            }
         }
 
-        List<OrderTeaReportPO> existTeaReportList = orderTeaReportByShopAccessor.listByOrderCreatedDay(
-                tenantCode, orderCreatedDay);
-        if (!CollectionUtils.isEmpty(existTeaReportList)) {
-            int deleted = orderTeaReportByShopAccessor.delete(tenantCode, orderCreatedDay);
-        }
-        List<OrderTeaReportPO> teaReportByShopPOList = orderTeaReportByShopAccessor.calcByOrderCreatedDay(
+        int deleted4OrderTea = orderTeaReport.delete(tenantCode, orderCreatedDay);
+        List<OrderTeaReportPO> teaReportByShopPOList = orderTeaReport.calcByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(teaReportByShopPOList)) {
-            for (OrderTeaReportPO orderTeaReportPO : teaReportByShopPOList) {
-                int inserted = orderTeaReportByShopAccessor.insert(orderTeaReportPO);
+            for (OrderTeaReportPO po : teaReportByShopPOList) {
+                int inserted = orderTeaReport.insert(po);
             }
         }
 
-        List<OrderSpecItemReportPO> existSpecItemReportList = orderSpecItemReportByShopAccessor.listByOrderCreatedDay(
-                tenantCode, orderCreatedDay);
-        if (!CollectionUtils.isEmpty(existSpecItemReportList)) {
-            int deleted = orderSpecItemReportByShopAccessor.delete(tenantCode, orderCreatedDay);
-        }
-        List<OrderSpecItemReportPO> specItemReportByShopPOList = orderSpecItemReportByShopAccessor.calcByOrderCreatedDay(
+        int deleted4OrderSpecItem = orderSpecItemReport.delete(tenantCode, orderCreatedDay);
+        List<OrderSpecItemReportPO> specItemReportByShopPOList = orderSpecItemReport.calcByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(specItemReportByShopPOList)) {
-            for (OrderSpecItemReportPO specItemReportPO : specItemReportByShopPOList) {
-                int inserted = orderSpecItemReportByShopAccessor.insert(specItemReportPO);
+            for (OrderSpecItemReportPO po : specItemReportByShopPOList) {
+                int inserted = orderSpecItemReport.insert(po);
             }
         }
 
-        List<OrderToppingReportPO> existToppingReportList = orderToppingReportByShopAccessor.listByOrderCreatedDay(
-                tenantCode, orderCreatedDay);
-        if (!CollectionUtils.isEmpty(existSpecItemReportList)) {
-            int deleted = orderToppingReportByShopAccessor.delete(tenantCode, orderCreatedDay);
-        }
-        List<OrderToppingReportPO> toppingReportByShopPOList = orderToppingReportByShopAccessor.calcByOrderCreatedDay(
+        int deleted4OrderTopping = orderToppingReport.delete(tenantCode, orderCreatedDay);
+        List<OrderToppingReportPO> toppingReportByShopPOList = orderToppingReport.calcByOrderCreatedDay(
                 tenantCode, orderCreatedDay);
         if (!CollectionUtils.isEmpty(toppingReportByShopPOList)) {
-            toppingReportByShopPOList.forEach(orderToppingReportPO -> {
-                int inserted = orderToppingReportByShopAccessor.insert(orderToppingReportPO);
-            });
+            for (OrderToppingReportPO po : toppingReportByShopPOList) {
+                int inserted = orderToppingReport.insert(po);
+            }
         }
 
         return TeaMachineResult.success();
     }
 
     @Override
-    public TeaMachineResult<PageDTO<OrderAmtReportDTO>> searchAmtReport(String tenantCode,
-            String orderCreatedDay, int pageNum, int pageSize) {
+    public TeaMachineResult<PageDTO<OrderReportByDayDTO>> searchOrderReport(String tenantCode, String orderCreatedDay,
+                                                                            int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
-        TeaMachineResult<PageDTO<OrderAmtReportDTO>> teaMachineResult;
-        try {
-            PageInfo<OrderAmtReportPO> pageInfo = orderAmtReportAccessor.search(tenantCode,
-                    Lists.newArrayList(orderCreatedDay), pageNum, pageSize);
-            if (pageInfo == null) {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        null, 0, pageNum, pageSize));
-            } else {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        convertToOrderAmtReportDTO(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
-            }
+        List orderCreatedDayList = null;
+        if (!StringUtils.isBlank(orderCreatedDay)) {
+            orderCreatedDayList = Lists.newArrayList(orderCreatedDay);
+        }
 
+        try {
+            PageInfo<OrderReportPO> pageInfo = orderReportAccessor.search(tenantCode, orderCreatedDayList,
+                    pageNum, pageSize);
+            if (pageInfo == null) {
+                return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
+            }
+            return TeaMachineResult.success(new PageDTO<>(convertToOrderReportByDayDTO(pageInfo.getList()),
+                    pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orderReportService|searchAmtReport|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
-    public TeaMachineResult<PageDTO<OrderTeaReportDTO>> searchTeaReport(String tenantCode,
-            String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
-        TeaMachineResult<PageDTO<OrderTeaReportDTO>> teaMachineResult;
+    public TeaMachineResult<PageDTO<OrderTeaReportByDayDTO>> searchTeaReport(String tenantCode, String orderCreatedDay,
+                                                                             String shopGroupCode, String shopCode, int pageNum, int pageSize) {
+        List orderCreatedDayList = null;
+        if (!StringUtils.isBlank(orderCreatedDay)) {
+            orderCreatedDayList = Lists.newArrayList(orderCreatedDay);
+        }
+
         try {
             PageInfo<OrderTeaReportPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
-                pageInfo = orderTeaReportByShopAccessor.searchByShopCode(tenantCode,
-                        Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopCode), pageNum, pageSize);
+                pageInfo = orderTeaReport.searchByShopCode(tenantCode, orderCreatedDayList,
+                        Lists.newArrayList(shopCode), pageNum, pageSize);
             } else if (!StringUtils.isBlank(shopGroupCode)) {
-                pageInfo = orderTeaReportByShopAccessor.searchByShopGroupCode(tenantCode,
-                        Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopGroupCode), pageNum, pageSize);
+                pageInfo = orderTeaReport.searchByShopGroupCode(tenantCode, orderCreatedDayList,
+                        Lists.newArrayList(shopGroupCode), pageNum, pageSize);
             } else {
                 List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-                pageInfo = orderTeaReportByShopAccessor.searchByShopGroupCode(tenantCode,
-                        Lists.newArrayList(orderCreatedDay), shopGroupCodeList, pageNum, pageSize);
+                pageInfo = orderTeaReport.searchByShopGroupCode(tenantCode, orderCreatedDayList,
+                        shopGroupCodeList, pageNum, pageSize);
             }
 
             if (pageInfo == null) {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        null, 0, pageNum, pageSize));
-            } else {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        convertToOrderTeaReportByShopDTO(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
+                return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
             }
+            return TeaMachineResult.success(new PageDTO<>(convertToOrderTeaReportByDayDTO(pageInfo.getList()),
+                    pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orderReportService|searchTeaReport|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
-    public TeaMachineResult<PageDTO<OrderSpecItemReportDTO>> searchSpecItemReport(String tenantCode,
-            String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
-        TeaMachineResult<PageDTO<OrderSpecItemReportDTO>> teaMachineResult;
+    public TeaMachineResult<PageDTO<OrderSpecItemReportByDayDTO>> searchSpecItemReport(String tenantCode,
+                                                                                       String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
+        List orderCreatedDayList = null;
+        if (!StringUtils.isBlank(orderCreatedDay)) {
+            orderCreatedDayList = Lists.newArrayList(orderCreatedDay);
+        }
+
         try {
             PageInfo<OrderSpecItemReportPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
-                pageInfo = orderSpecItemReportByShopAccessor.searchByShopCode(tenantCode,
-                        Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopCode), pageNum, pageSize);
+                pageInfo = orderSpecItemReport.searchByShopCode(tenantCode, orderCreatedDayList,
+                        Lists.newArrayList(shopCode), pageNum, pageSize);
             } else if (!StringUtils.isBlank(shopGroupCode)) {
-                pageInfo = orderSpecItemReportByShopAccessor.searchByShopGroupCode(tenantCode,
-                        Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopGroupCode), pageNum, pageSize);
+                pageInfo = orderSpecItemReport.searchByShopGroupCode(tenantCode, orderCreatedDayList,
+                        Lists.newArrayList(shopGroupCode), pageNum, pageSize);
             } else {
                 List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-                pageInfo = orderSpecItemReportByShopAccessor.searchByShopGroupCode(tenantCode,
-                        Lists.newArrayList(orderCreatedDay), shopGroupCodeList, pageNum, pageSize);
+                pageInfo = orderSpecItemReport.searchByShopGroupCode(tenantCode, orderCreatedDayList,
+                        shopGroupCodeList, pageNum, pageSize);
             }
 
             if (pageInfo == null) {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        null, 0, pageNum, pageSize));
-            } else {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        convertToOrderSpecItemReportByShopDTO(pageInfo.getList()), pageInfo.getTotal(),
-                        pageNum, pageSize));
+                return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
             }
+            return TeaMachineResult.success(new PageDTO<>(convertToOrderSpecItemReportByDayDTO(pageInfo.getList()),
+                    pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orderReportService|searchSpecItemReport|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
     @Override
-    public TeaMachineResult<PageDTO<OrderToppingReportDTO>> searchToppingReport(String tenantCode,
-            String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
-        TeaMachineResult<PageDTO<OrderToppingReportDTO>> teaMachineResult;
+    public TeaMachineResult<PageDTO<OrderToppingReportByDayDTO>> searchToppingReport(String tenantCode,
+                                                                                     String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
+        List orderCreatedDayList = null;
+        if (!StringUtils.isBlank(orderCreatedDay)) {
+            orderCreatedDayList = Lists.newArrayList(orderCreatedDay);
+        }
+
         try {
             PageInfo<OrderToppingReportPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
-                pageInfo = orderToppingReportByShopAccessor.searchByShopCode(tenantCode,
-                        Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopCode), pageNum, pageSize);
+                pageInfo = orderToppingReport.searchByShopCode(tenantCode, orderCreatedDayList,
+                        Lists.newArrayList(shopCode), pageNum, pageSize);
             } else if (!StringUtils.isBlank(shopGroupCode)) {
-                pageInfo = orderToppingReportByShopAccessor.searchByShopGroupCode(tenantCode,
-                        Lists.newArrayList(orderCreatedDay), Lists.newArrayList(shopGroupCode), pageNum, pageSize);
+                pageInfo = orderToppingReport.searchByShopGroupCode(tenantCode, orderCreatedDayList,
+                        Lists.newArrayList(shopGroupCode), pageNum, pageSize);
             } else {
                 List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-                pageInfo = orderToppingReportByShopAccessor.searchByShopGroupCode(tenantCode,
-                        Lists.newArrayList(orderCreatedDay), shopGroupCodeList, pageNum, pageSize);
+                pageInfo = orderToppingReport.searchByShopGroupCode(tenantCode, orderCreatedDayList,
+                        shopGroupCodeList, pageNum, pageSize);
             }
 
             if (pageInfo == null) {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        null, 0, pageNum, pageSize));
-            } else {
-                teaMachineResult = TeaMachineResult.success(new PageDTO<>(
-                        convertToOrderToppingReportByShopDTO(pageInfo.getList()), pageInfo.getTotal(),
-                        pageNum, pageSize));
+                return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
             }
+            return TeaMachineResult.success(new PageDTO<>(convertToOrderToppingReportByDayDTO(pageInfo.getList()),
+                    pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orderReportService|searchToppingReport|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
-        return teaMachineResult;
     }
 
-    private List<OrderAmtReportDTO> convertToOrderAmtReportDTO(List<OrderAmtReportPO> poList) {
+    private List<OrderReportByDayDTO> convertToOrderReportByDayDTO(List<OrderReportPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
-        return poList.stream()
-                .map(po -> convertToOrderAmtReportDTO(po))
-                .collect(Collectors.toList());
-    }
-
-    private OrderAmtReportDTO convertToOrderAmtReportDTO(OrderAmtReportPO po) {
-        if (po == null) {
-            return null;
+        Map<String, OrderReportByDayDTO> mapByDay = Maps.newHashMap();
+        for (OrderReportPO po : poList) {
+            OrderReportByDayDTO exist = mapByDay.get(po.getOrderCreatedDay());
+            if (exist == null) {
+                exist = new OrderReportByDayDTO();
+                exist.setOrderCreatedDay(po.getOrderCreatedDay());
+                mapByDay.put(po.getOrderCreatedDay(), exist);
+            }
+            exist.setAmount(exist.getAmount() + po.getAmount());
         }
 
-        OrderAmtReportDTO dto = new OrderAmtReportDTO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setOrderCreatedDay(po.getOrderCreatedDay());
-        dto.setAmount(po.getAmount());
-        return dto;
+        List<OrderReportByDayDTO> resultList = Lists.newArrayList();
+        for (Map.Entry<String, OrderReportByDayDTO> entry : mapByDay.entrySet()) {
+            resultList.add(entry.getValue());
+        }
+        return resultList;
     }
 
-    private List<OrderTeaReportPO> convertToOrderTeaReportByShopDTO(List<OrderTeaReportPO> poList) {
+    private List<OrderTeaReportByDayDTO> convertToOrderTeaReportByDayDTO(List<OrderTeaReportPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
-        return poList.stream()
-                .map(po -> convertToOrderTeaReportByShopDTO(po))
-                .collect(Collectors.toList());
-    }
+        Map<String, Map<String, OrderTeaReportByDayDTO>> mapByDay = Maps.newHashMap();
+        for (OrderTeaReportPO po : poList) {
+            Map<String, OrderTeaReportByDayDTO> mapByTopping = mapByDay.get(po.getOrderCreatedDay());
+            if (mapByTopping == null) {
+                mapByTopping = Maps.newHashMap();
+                mapByDay.put(po.getOrderCreatedDay(), mapByTopping);
+            }
 
-    private OrderTeaReportPO convertToOrderTeaReportByShopDTO(OrderTeaReportPO po) {
-        if (po == null) {
-            return null;
+            OrderTeaReportByDayDTO exist = mapByTopping.get(po.getTeaCode());
+            if (exist == null) {
+                exist = new OrderTeaReportByDayDTO();
+                exist.setOrderCreatedDay(po.getOrderCreatedDay());
+                exist.setTeaCode(po.getTeaCode());
+                mapByTopping.put(po.getTeaCode(), exist);
+            }
+            exist.setAmount(exist.getAmount() + po.getAmount());
         }
 
-        OrderTeaReportPO dto = new OrderTeaReportPO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setOrderCreatedDay(po.getOrderCreatedDay());
-        dto.setShopGroupCode(po.getShopGroupCode());
-        dto.setShopCode(po.getShopCode());
-        dto.setTeaCode(po.getTeaCode());
-        dto.setAmount(po.getAmount());
-        return dto;
+        List<OrderTeaReportByDayDTO> resultList = Lists.newArrayList();
+        for (Map.Entry<String, Map<String, OrderTeaReportByDayDTO>> entryByDay : mapByDay.entrySet()) {
+            for (Map.Entry<String, OrderTeaReportByDayDTO> entryByTopping : entryByDay.getValue().entrySet()) {
+                resultList.add(entryByTopping.getValue());
+            }
+        }
+        return resultList;
     }
 
-    private List<OrderSpecItemReportPO> convertToOrderSpecItemReportByShopDTO(
+    private List<OrderSpecItemReportByDayDTO> convertToOrderSpecItemReportByDayDTO(
             List<OrderSpecItemReportPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
-        return poList.stream()
-                .map(po -> convertToOrderSpecItemReportByShopDTO(po))
-                .collect(Collectors.toList());
-    }
+        Map<String, Map<String, OrderSpecItemReportByDayDTO>> mapByDay = Maps.newHashMap();
+        for (OrderSpecItemReportPO po : poList) {
+            Map<String, OrderSpecItemReportByDayDTO> mapByTopping = mapByDay.get(po.getOrderCreatedDay());
+            if (mapByTopping == null) {
+                mapByTopping = Maps.newHashMap();
+                mapByDay.put(po.getOrderCreatedDay(), mapByTopping);
+            }
 
-    private OrderSpecItemReportPO convertToOrderSpecItemReportByShopDTO(OrderSpecItemReportPO po) {
-        if (po == null) {
-            return null;
+            OrderSpecItemReportByDayDTO exist = mapByTopping.get(po.getSpecItemCode());
+            if (exist == null) {
+                exist = new OrderSpecItemReportByDayDTO();
+                exist.setOrderCreatedDay(po.getOrderCreatedDay());
+                exist.setSpecItemCode(po.getSpecItemCode());
+                mapByTopping.put(po.getSpecItemCode(), exist);
+            }
+            exist.setAmount(exist.getAmount() + po.getAmount());
         }
 
-        OrderSpecItemReportPO dto = new OrderSpecItemReportPO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setOrderCreatedDay(po.getOrderCreatedDay());
-        dto.setShopGroupCode(po.getShopGroupCode());
-        dto.setShopCode(po.getShopCode());
-        dto.setSpecItemCode(po.getSpecItemCode());
-        dto.setAmount(po.getAmount());
-        return dto;
+        List<OrderSpecItemReportByDayDTO> resultList = Lists.newArrayList();
+        for (Map.Entry<String, Map<String, OrderSpecItemReportByDayDTO>> entryByDay : mapByDay.entrySet()) {
+            for (Map.Entry<String, OrderSpecItemReportByDayDTO> entryByTopping : entryByDay.getValue().entrySet()) {
+                resultList.add(entryByTopping.getValue());
+            }
+        }
+        return resultList;
     }
 
-    private List<OrderToppingReportPO> convertToOrderToppingReportByShopDTO(
+    private List<OrderToppingReportByDayDTO> convertToOrderToppingReportByDayDTO(
             List<OrderToppingReportPO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
-        return poList.stream()
-                .map(po -> convertToOrderToppingReportByShopDTO(po))
-                .collect(Collectors.toList());
-    }
+        Map<String, Map<String, OrderToppingReportByDayDTO>> mapByDay = Maps.newHashMap();
+        for (OrderToppingReportPO po : poList) {
+            Map<String, OrderToppingReportByDayDTO> mapByTopping = mapByDay.get(po.getOrderCreatedDay());
+            if (mapByTopping == null) {
+                mapByTopping = Maps.newHashMap();
+                mapByDay.put(po.getOrderCreatedDay(), mapByTopping);
+            }
 
-    private OrderToppingReportPO convertToOrderToppingReportByShopDTO(OrderToppingReportPO po) {
-        if (po == null) {
-            return null;
+            OrderToppingReportByDayDTO exist = mapByTopping.get(po.getToppingCode());
+            if (exist == null) {
+                exist = new OrderToppingReportByDayDTO();
+                exist.setOrderCreatedDay(po.getOrderCreatedDay());
+                exist.setToppingCode(po.getToppingCode());
+                mapByTopping.put(po.getToppingCode(), exist);
+            }
+            exist.setAmount(exist.getAmount() + po.getAmount());
         }
 
-        OrderToppingReportPO dto = new OrderToppingReportPO();
-        dto.setGmtCreated(po.getGmtCreated());
-        dto.setGmtModified(po.getGmtModified());
-        dto.setOrderCreatedDay(po.getOrderCreatedDay());
-        dto.setShopGroupCode(po.getShopGroupCode());
-        dto.setShopCode(po.getShopCode());
-        dto.setToppingCode(po.getToppingCode());
-        dto.setAmount(po.getAmount());
-        return dto;
+        List<OrderToppingReportByDayDTO> resultList = Lists.newArrayList();
+        for (Map.Entry<String, Map<String, OrderToppingReportByDayDTO>> entryByDay : mapByDay.entrySet()) {
+            for (Map.Entry<String, OrderToppingReportByDayDTO> entryByTopping : entryByDay.getValue().entrySet()) {
+                resultList.add(entryByTopping.getValue());
+            }
+        }
+        return resultList;
     }
 }

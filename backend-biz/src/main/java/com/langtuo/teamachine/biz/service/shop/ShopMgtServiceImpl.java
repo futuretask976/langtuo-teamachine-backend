@@ -7,6 +7,7 @@ import com.langtuo.teamachine.api.model.shop.ShopDTO;
 import com.langtuo.teamachine.api.request.shop.ShopPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.shop.ShopMgtService;
+import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.dao.accessor.shop.ShopAccessor;
 import com.langtuo.teamachine.dao.accessor.shop.ShopGroupAccessor;
 import com.langtuo.teamachine.dao.accessor.user.AdminAccessor;
@@ -54,9 +55,21 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
+            List<String> shopGroupCodeListParam = Lists.newArrayList();
+            if (StringUtils.isBlank(shopGroupCode)) {
+                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
+                if (CollectionUtils.isEmpty(shopGroupCodeList)) {
+                    return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
+                } else {
+                    shopGroupCodeListParam.addAll(shopGroupCodeList);
+                }
+            } else {
+                shopGroupCodeListParam.add(shopGroupCode);
+            }
+
             List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-            PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCode,
-                    pageNum, pageSize, shopGroupCodeList);
+            PageInfo<ShopPO> pageInfo = shopAccessor.search(tenantCode, shopName, shopGroupCodeListParam,
+                    pageNum, pageSize);
 
             return TeaMachineResult.success(new PageDTO<>(
                     convertToShopPO(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
@@ -68,12 +81,24 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
     @Override
     public TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
+        if (StringUtils.isBlank(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
-            List<ShopPO> list = shopAccessor.listByShopGroupCodeList(tenantCode, Lists.newArrayList(shopGroupCode));
+            List<String> shopGroupCodeListParam = Lists.newArrayList();
+            if (StringUtils.isBlank(shopGroupCode)) {
+                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
+                if (CollectionUtils.isEmpty(shopGroupCodeList)) {
+                    return TeaMachineResult.success(null);
+                } else {
+                    shopGroupCodeListParam.addAll(shopGroupCodeList);
+                }
+            } else {
+                shopGroupCodeListParam.add(shopGroupCode);
+            }
+
+            List<ShopPO> list = shopAccessor.listByShopGroupCodeList(tenantCode, shopGroupCodeListParam);
             return TeaMachineResult.success(convertToShopPO(list));
         } catch (Exception e) {
             log.error("shopMgtService|listByShopGroupCode|fatal|" + e.getMessage(), e);

@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 一个namespace对应一个Mapper类（原来的dao） -->
-<mapper namespace="com.langtuo.teamachine.dao.mapper.report.OrderToppingReportByShopMapper">
-    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderToppingReportPO" id="orderToppingReportByShopPOMapper">
+<mapper namespace="com.langtuo.teamachine.dao.mapper.report.OrderSpecItemReportMapper">
+    <resultMap type="com.langtuo.teamachine.dao.po.report.OrderSpecItemReportPO" id="orderSpecItemReportMapper">
         <result property="id" column="id"/>
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -13,40 +13,33 @@
         <result property="orderCreatedDay" column="order_created_day"/>
         <result property="shopGroupCode" column="shop_group_code"/>
         <result property="shopCode" column="shop_code"/>
-        <result property="toppingCode" column="topping_code"/>
+        <result property="specItemCode" column="spec_item_code"/>
         <result property="amount" column="amount"/>
     </resultMap>
 
-    <select id="calcByDay" resultMap="orderToppingReportByShopPOMapper">
+    <select id="calcByDay" resultMap="orderSpecItemReportMapper">
         SELECT
             order_act.tenant_code,
             #{orderCreatedDay} AS order_created_day,
             order_act.shop_group_code,
             order_act.shop_code,
-            order_topping_act.topping_code,
+            order_specitem_act.spec_item_code,
             COUNT(1) AS amount
         FROM order_act_record AS order_act
             LEFT JOIN
-                order_topping_act_record AS order_topping_act
-            ON order_act.idempotent_mark = order_topping_act.idempotent_mark
+                order_specitem_act_record AS order_specitem_act
+            ON order_act.idempotent_mark = order_specitem_act.idempotent_mark
         WHERE 1 = 1
             AND order_act.tenant_code = #{tenantCode}
             AND DATE(order_act.order_gmt_created) = #{orderCreatedDay}
             AND TIME(order_act.order_gmt_created) >= '00:00:00'
             AND TIME(order_act.order_gmt_created) &lt; '24:00:00'
         GROUP BY
-            order_act.tenant_code, #{orderCreatedDay}, order_act.shop_group_code, order_act.shop_code, order_topping_act.topping_code
+            order_act.tenant_code, #{orderCreatedDay}, order_act.shop_group_code, order_act.shop_code, order_specitem_act.spec_item_code
     </select>
 
-    <select id="selectListByDay" resultMap="orderToppingReportByShopPOMapper">
-        SELECT * FROM order_topping_report_by_shop
-        WHERE 1 = 1
-            AND tenant_code = #{tenantCode}
-            AND order_created_day = #{orderCreatedDay}
-    </select>
-
-    <select id="search" resultMap="orderToppingReportByShopPOMapper">
-        SELECT * FROM order_topping_report_by_shop
+    <select id="search" resultMap="orderSpecItemReportMapper">
+        SELECT * FROM order_specitem_report
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             <if test="orderCreatedDayList != null and orderCreatedDayList.size() > 0">
@@ -69,15 +62,15 @@
             </if>
     </select>
 
-    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.report.OrderToppingReportPO">
-        INSERT INTO order_topping_report_by_shop (
+    <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.report.OrderSpecItemReportPO">
+        INSERT INTO order_specitem_report (
             gmt_created
             , gmt_modified
             , tenant_code
             , order_created_day
             , shop_group_code
             , shop_code
-            , topping_code
+            , spec_item_code
             , amount
         ) VALUES (
             now()
@@ -86,13 +79,13 @@
             , #{orderCreatedDay}
             , #{shopGroupCode}
             , #{shopCode}
-            , #{toppingCode}
+            , #{specItemCode}
             , #{amount}
         )
     </insert>
 
     <delete id="delete">
-        DELETE FROM order_topping_report_by_shop
+        DELETE FROM order_specitem_report
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND order_created_day = #{orderCreatedDay}

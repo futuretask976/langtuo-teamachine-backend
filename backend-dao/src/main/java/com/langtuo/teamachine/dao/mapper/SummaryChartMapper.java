@@ -1,9 +1,6 @@
 package com.langtuo.teamachine.dao.mapper;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
-import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
-import com.langtuo.teamachine.dao.po.report.OrderAmtReportPO;
-import com.langtuo.teamachine.dao.query.report.OrderAmtReportQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

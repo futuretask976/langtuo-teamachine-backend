@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 @TeaMachineSQLScan
 @Repository
-public interface OrderSpecItemReportByShopMapper {
+public interface OrderSpecItemReportMapper {
     /**
      *
      * @param tenantCode
@@ -21,15 +21,6 @@ public interface OrderSpecItemReportByShopMapper {
      * @return
      */
     List<OrderSpecItemReportPO> calcByDay(@Param("tenantCode") String tenantCode,
-            @Param("orderCreatedDay") String orderCreatedDay);
-
-    /**
-     *
-     * @param tenantCode
-     * @param orderCreatedDay
-     * @return
-     */
-    List<OrderSpecItemReportPO> selectListByDay(@Param("tenantCode") String tenantCode,
             @Param("orderCreatedDay") String orderCreatedDay);
 
     /**

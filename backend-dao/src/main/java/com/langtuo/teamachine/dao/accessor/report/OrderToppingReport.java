@@ -2,7 +2,7 @@ package com.langtuo.teamachine.dao.accessor.report;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.dao.mapper.report.OrderToppingReportByShopMapper;
+import com.langtuo.teamachine.dao.mapper.report.OrderToppingReportMapper;
 import com.langtuo.teamachine.dao.po.report.OrderToppingReportPO;
 import com.langtuo.teamachine.dao.query.report.OrderToppingReportByShopQuery;
 import org.springframework.stereotype.Component;
@@ -11,16 +11,12 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class OrderToppingReportByShopAccessor {
+public class OrderToppingReport {
     @Resource
-    private OrderToppingReportByShopMapper mapper;
+    private OrderToppingReportMapper mapper;
 
     public List<OrderToppingReportPO> calcByOrderCreatedDay(String tenantCode, String orderCreatedDay) {
         return mapper.calcByDay(tenantCode, orderCreatedDay);
-    }
-
-    public List<OrderToppingReportPO> listByOrderCreatedDay(String tenantCode, String orderCreatedDay) {
-        return mapper.selectListByDay(tenantCode, orderCreatedDay);
     }
 
     public PageInfo<OrderToppingReportPO> searchByShopGroupCode(String tenantCode,

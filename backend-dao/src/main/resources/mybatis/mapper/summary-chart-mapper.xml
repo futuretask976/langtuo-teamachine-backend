@@ -10,7 +10,7 @@
             order_created_day AS orderCreatedDay,
             tea_code AS teaCode,
             SUM(amount) AS amount
-        FROM order_tea_report_by_shop
+        FROM order_tea_report
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND order_created_day >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 14 DAY), '%Y-%m-%d')
@@ -59,7 +59,7 @@
                 SELECT
                     order_created_day,
                     SUM(amount) AS total
-                FROM order_tea_report_by_shop
+                FROM order_tea_report
                 WHERE 1 = 1
                     AND tenant_code = #{tenantCode}
                 GROUP BY order_created_day
@@ -73,7 +73,7 @@
         SELECT
             tea_code AS teaCode,
             SUM(amount) AS amount
-        FROM order_tea_report_by_shop
+        FROM order_tea_report
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND order_created_day >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 14 DAY), '%Y-%m-%d')
@@ -87,7 +87,7 @@
             topping_code AS toppingCode,
             SUM(amount) AS amount
         FROM
-            order_topping_report_by_shop
+            order_topping_report
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND order_created_day >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 14 DAY), '%Y-%m-%d')
@@ -101,7 +101,7 @@
             spec_item_code AS specItemCode,
             SUM(amount) AS amount
         FROM
-            order_specitem_report_by_shop
+            order_specitem_report
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
             AND order_created_day >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 14 DAY), '%Y-%m-%d')
