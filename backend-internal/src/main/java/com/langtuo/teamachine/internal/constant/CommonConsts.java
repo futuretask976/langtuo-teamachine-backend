@@ -21,6 +21,11 @@ public class CommonConsts {
     public static final int STR_LENGTH_ZERO = 0;
 
     /**
+     * 集合长度为 0
+     */
+    public static final int COLLECTION_LENGTH_ZERO = 0;
+
+    /**
      * 数量 0
      */
     public static final int AMOUNT_ZERO = 0;

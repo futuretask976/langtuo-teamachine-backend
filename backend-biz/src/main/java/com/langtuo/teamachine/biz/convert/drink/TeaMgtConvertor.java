@@ -7,8 +7,11 @@ import com.langtuo.teamachine.api.request.drink.*;
 import com.langtuo.teamachine.dao.accessor.drink.*;
 import com.langtuo.teamachine.dao.po.drink.*;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -176,11 +179,30 @@ public class TeaMgtConvertor {
             TeaUnitPO po = new TeaUnitPO();
             po.setTenantCode(request.getTenantCode());
             po.setTeaCode(request.getTeaCode());
-            po.setTeaUnitCode(teaUnitPutRequest.getTeaUnitCode());
+            po.setTeaUnitCode(sortTeaUnitCode(teaUnitPutRequest.getTeaUnitCode()));
             po.setTeaUnitName(teaUnitPutRequest.getTeaUnitName());
             teaUnitPOList.add(po);
         }
         return teaUnitPOList;
+    }
+
+    public static String sortTeaUnitCode(String teaUnitCode) {
+        if (StringUtils.isBlank(teaUnitCode)) {
+            return teaUnitCode;
+        }
+
+        String[] codeArr = teaUnitCode.split(CommonConsts.HORIZONTAL_BAR);
+        Arrays.sort(codeArr, String.CASE_INSENSITIVE_ORDER);
+
+        // 3. 使用newSeparator重新拼接排序后的字符串数组
+        StringBuffer result = new StringBuffer();
+        for (String str : codeArr) {
+            if (result.length() > CommonConsts.COLLECTION_LENGTH_ZERO) {
+                result.append(CommonConsts.HORIZONTAL_BAR);
+            }
+            result.append(str);
+        }
+        return result.toString();
     }
 
     public static List<ToppingAdjustRulePO> convertToToppingAdjustRulePO(TeaPutRequest request) {
@@ -194,7 +216,7 @@ public class TeaMgtConvertor {
                 ToppingAdjustRulePO po = new ToppingAdjustRulePO();
                 po.setTenantCode(request.getTenantCode());
                 po.setTeaCode(request.getTeaCode());
-                po.setTeaUnitCode(teaUnitPutRequest.getTeaUnitCode());
+                po.setTeaUnitCode(sortTeaUnitCode(teaUnitPutRequest.getTeaUnitCode()));
 
                 po.setStepIndex(toppingAdjustRulePutRequest.getStepIndex());
                 po.setToppingCode(toppingAdjustRulePutRequest.getToppingCode());

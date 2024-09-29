@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class OrderToppingReport {
+public class OrderToppingReportAccessor {
     @Resource
     private OrderToppingReportMapper mapper;
 

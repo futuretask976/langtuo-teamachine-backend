@@ -115,8 +115,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     }
 
     private TeaMachineResult<Void> putNew(TeaPO teaPO, List<ToppingBaseRulePO> toppingBaseRulePOList,
-                                          List<SpecItemRulePO> specItemRulePOList, List<TeaUnitPO> teaUnitPOList,
-                                          List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
+            List<SpecItemRulePO> specItemRulePOList, List<TeaUnitPO> teaUnitPOList,
+            List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
         try {
             TeaPO exist = teaAccessor.getByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             if (exist != null) {
@@ -139,8 +139,8 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     }
 
     private TeaMachineResult<Void> putUpdate(TeaPO teaPO, List<ToppingBaseRulePO> toppingBaseRulePOList,
-                                             List<SpecItemRulePO> specItemRulePOList, List<TeaUnitPO> teaUnitPOList,
-                                             List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
+            List<SpecItemRulePO> specItemRulePOList, List<TeaUnitPO> teaUnitPOList,
+            List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
         try {
             TeaPO exist = teaAccessor.getByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
             if (exist == null) {
