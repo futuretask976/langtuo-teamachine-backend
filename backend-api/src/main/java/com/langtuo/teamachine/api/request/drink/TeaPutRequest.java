@@ -63,6 +63,11 @@ public class TeaPutRequest {
     /**
      *
      */
+    private List<SpecRulePutRequest> specRuleList;
+
+    /**
+     *
+     */
     private List<SpecItemRulePutRequest> specItemRuleList;
 
     /**

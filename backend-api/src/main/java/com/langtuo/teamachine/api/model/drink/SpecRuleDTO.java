@@ -1,6 +1,7 @@
 package com.langtuo.teamachine.api.model.drink;
 
 import lombok.Data;
+import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
 
@@ -20,4 +21,15 @@ public class SpecRuleDTO {
      *
      */
     private List<SpecItemRuleDTO> specItemRuleList;
+
+    public void addSpecItemRule(SpecItemRuleDTO specItemRuleDTO) {
+        if (specItemRuleDTO == null) {
+            return;
+        }
+
+        if (specItemRuleList == null) {
+            specItemRuleList = Lists.newArrayList();
+        }
+        specItemRuleList.add(specItemRuleDTO);
+    }
 }

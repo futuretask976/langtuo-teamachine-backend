@@ -66,6 +66,11 @@ public class TeaDTO {
     /**
      *
      */
+    private List<SpecRuleDTO> specRuleList;
+
+    /**
+     *
+     */
     private List<SpecItemRuleDTO> specItemRuleList;
 
     /**

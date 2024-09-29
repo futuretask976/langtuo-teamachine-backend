@@ -9,6 +9,7 @@ import com.langtuo.teamachine.dao.po.drink.*;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.parameters.P;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -68,7 +69,7 @@ public class TeaMgtConvertor {
             // teaSpecItemPOList 不应该为空
             return;
         }
-        teaDTO.setSpecItemRuleList(convertToSpecItemRuleDTO(specItemRulePOList));
+        teaDTO.setSpecRuleList(convertToSpecRuleDTO(specItemRulePOList));
 
         TeaUnitAccessor teaUnitAccessor = SpringAccessorUtils.getTeaUnitAccessor();
         List<TeaUnitPO> teaUnitPOList = teaUnitAccessor.listByTeaCode(tenantCode, teaDTO.getTeaCode());
@@ -252,13 +253,15 @@ public class TeaMgtConvertor {
         }
 
         List<SpecItemRulePO> specItemRulePOList = Lists.newArrayList();
-        for (SpecItemRulePutRequest specItemRulePutRequest : request.getSpecItemRuleList()) {
-            SpecItemRulePO specItemRulePO = new SpecItemRulePO();
-            specItemRulePO.setTenantCode(request.getTenantCode());
-            specItemRulePO.setTeaCode(request.getTeaCode());
-            specItemRulePO.setSpecCode(specItemRulePutRequest.getSpecCode());
-            specItemRulePO.setSpecItemCode(specItemRulePutRequest.getSpecItemCode());
-            specItemRulePOList.add(specItemRulePO);
+        for (SpecRulePutRequest specRulePutRequest : request.getSpecRuleList()) {
+            for (SpecItemRulePutRequest specItemRulePutRequest : specRulePutRequest.getSpecItemRuleList()) {
+                SpecItemRulePO specItemRulePO = new SpecItemRulePO();
+                specItemRulePO.setTenantCode(request.getTenantCode());
+                specItemRulePO.setTeaCode(request.getTeaCode());
+                specItemRulePO.setSpecCode(specRulePutRequest.getSpecCode());
+                specItemRulePO.setSpecItemCode(specItemRulePutRequest.getSpecItemCode());
+                specItemRulePOList.add(specItemRulePO);
+            }
         }
         return specItemRulePOList;
     }
@@ -293,33 +296,48 @@ public class TeaMgtConvertor {
         return dto;
     }
 
-    public static List<SpecItemRuleDTO> convertToSpecItemRuleDTO(List<SpecItemRulePO> poList) {
+    public static List<SpecRuleDTO> convertToSpecRuleDTO(List<SpecItemRulePO> poList) {
         if (CollectionUtils.isEmpty(poList)) {
             return null;
         }
 
-        return poList.stream()
-                .map(po -> convertToSpecItemRuleDTO(po))
-                .collect(Collectors.toList());
+        Map<String, SpecRuleDTO> specRuleDTOMap = Maps.newHashMap();
+        for (SpecItemRulePO po : poList) {
+            SpecRuleDTO specRuleDTO = specRuleDTOMap.get(po.getSpecCode());
+            if (specRuleDTO == null) {
+                specRuleDTO = new SpecRuleDTO();
+                specRuleDTO.setSpecCode(po.getSpecCode());
+
+                SpecPO specPO = SpringAccessorUtils.getSpecAccessor().getBySpecCode(po.getTenantCode(),
+                        po.getSpecCode());
+                if (specPO != null) {
+                    specRuleDTO.setSpecName(specPO.getSpecName());
+                }
+                specRuleDTOMap.put(specRuleDTO.getSpecCode(), specRuleDTO);
+            }
+            specRuleDTO.addSpecItemRule(convertToSpecItemRuleDTO(specRuleDTO, po));
+        }
+
+        List<SpecRuleDTO> resultList = Lists.newArrayList();
+        for (Map.Entry<String, SpecRuleDTO> entry : specRuleDTOMap.entrySet()) {
+            resultList.add(entry.getValue());
+        }
+        return resultList;
     }
 
-    public static SpecItemRuleDTO convertToSpecItemRuleDTO(SpecItemRulePO po) {
-        if (po == null) {
+    public static SpecItemRuleDTO convertToSpecItemRuleDTO(SpecRuleDTO specRuleDTO, SpecItemRulePO specItemRulePO) {
+        if (specItemRulePO == null) {
             return null;
         }
 
         SpecItemRuleDTO dto = new SpecItemRuleDTO();
-        dto.setSpecCode(po.getSpecCode());
-        dto.setSpecItemCode(po.getSpecItemCode());
-
-        SpecAccessor specAccessor = SpringAccessorUtils.getSpecAccessor();
-        SpecPO specPO = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
-        if (specPO != null) {
-            dto.setSpecName(specPO.getSpecName());
-        }
+        dto.setSpecCode(specItemRulePO.getSpecCode());
+        dto.setSpecName(specRuleDTO.getSpecName());
+        dto.setSpecItemCode(specItemRulePO.getSpecItemCode());
 
         SpecItemAccessor specItemAccessor = SpringAccessorUtils.getSpecItemAccessor();
-        SpecItemPO specItemPO = specItemAccessor.getBySpecItemCode(po.getTenantCode(), po.getSpecItemCode());
+        SpecItemPO specItemPO = specItemAccessor.getBySpecItemCode(specItemRulePO.getTenantCode(),
+                specItemRulePO.getSpecItemCode());
         if (specItemPO != null) {
             dto.setSpecItemName(specItemPO.getSpecItemName());
         }
