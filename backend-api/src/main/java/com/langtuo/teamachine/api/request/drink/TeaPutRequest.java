@@ -66,11 +66,6 @@ public class TeaPutRequest {
     private List<SpecRulePutRequest> specRuleList;
 
     /**
-     *
-     */
-    private List<SpecItemRulePutRequest> specItemRuleList;
-
-    /**
      * 茶-物料关系列表
      */
     private List<TeaUnitPutRequest> teaUnitList;
@@ -116,7 +111,7 @@ public class TeaPutRequest {
         if (!isValidToppingBaseRuleList()) {
             return false;
         }
-        if (!isValidSpecItemRuleList()) {
+        if (!isValidSpecRuleList()) {
             return false;
         }
         if (!isValidTeaUnitList()) {
@@ -137,23 +132,23 @@ public class TeaPutRequest {
         return true;
     }
 
-    private boolean isValidToppingBaseRuleList() {
-        if (CollectionUtils.isEmpty(toppingBaseRuleList)) {
+    private boolean isValidSpecRuleList() {
+        if (CollectionUtils.isEmpty(specRuleList)) {
             return false;
         }
-        for (ToppingBaseRulePutRequest m : toppingBaseRuleList) {
-            if (!m.isValid()) {
+        for (SpecRulePutRequest s : specRuleList) {
+            if (!s.isValid()) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean isValidSpecItemRuleList() {
-        if (CollectionUtils.isEmpty(specItemRuleList)) {
+    private boolean isValidToppingBaseRuleList() {
+        if (CollectionUtils.isEmpty(toppingBaseRuleList)) {
             return false;
         }
-        for (SpecItemRulePutRequest m : specItemRuleList) {
+        for (ToppingBaseRulePutRequest m : toppingBaseRuleList) {
             if (!m.isValid()) {
                 return false;
             }

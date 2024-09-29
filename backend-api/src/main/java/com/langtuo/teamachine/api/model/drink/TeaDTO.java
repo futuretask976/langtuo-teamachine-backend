@@ -69,11 +69,6 @@ public class TeaDTO {
     private List<SpecRuleDTO> specRuleList;
 
     /**
-     *
-     */
-    private List<SpecItemRuleDTO> specItemRuleList;
-
-    /**
      * 茶-物料关系列表
      */
     private List<TeaUnitDTO> teaUnitList;

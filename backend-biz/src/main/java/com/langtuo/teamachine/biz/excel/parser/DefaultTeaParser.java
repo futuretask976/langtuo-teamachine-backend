@@ -202,13 +202,12 @@ public class DefaultTeaParser implements TeaParser {
             // 需要构造 actStepList
             List<TeaUnitPutRequest> teaUnitList = teaPutRequest.getTeaUnitList();
             teaPutRequest.setToppingBaseRuleList(getToppingBaseRulePutRequest(teaUnitList));
-            teaPutRequest.setSpecItemRuleList(getSpecItemRulePutRequestList(teaPutRequest.getTenantCode(),
-                    teaUnitList));
+            teaPutRequest.setSpecRuleList(getSpecRulePutRequestList(teaPutRequest.getTenantCode(), teaUnitList));
         }
         return teaPutRequestList;
     }
 
-    private List<SpecItemRulePutRequest> getSpecItemRulePutRequestList(String tenantCode,
+    private List<SpecRulePutRequest> getSpecRulePutRequestList(String tenantCode,
             List<TeaUnitPutRequest> teaUnitPutRequestList) {
         if (CollectionUtils.isEmpty(teaUnitPutRequestList)) {
             return null;
@@ -226,11 +225,23 @@ public class DefaultTeaParser implements TeaParser {
             }
         }
 
-        List<SpecItemRulePutRequest> specItemRulePutRequestList = Lists.newArrayList();
+        Map<String, SpecRulePutRequest> specRulePutRequestMap = Maps.newHashMap();
         for (Map.Entry<String, SpecItemPO> entry : specItemPOMap.entrySet()) {
-            specItemRulePutRequestList.add(convertToSpecItemRulePutRequest(entry.getValue()));
+            SpecItemPO specItemPO = entry.getValue();
+            SpecRulePutRequest specRulePutRequest = specRulePutRequestMap.get(specItemPO.getSpecCode());
+            if (specRulePutRequest == null) {
+                specRulePutRequest = new SpecRulePutRequest();
+                specRulePutRequest.setSpecCode(specItemPO.getSpecCode());
+                specRulePutRequestMap.put(specRulePutRequest.getSpecCode(), specRulePutRequest);
+            }
+            specRulePutRequest.addSpecItemRulePutRequest(convertToSpecItemRulePutRequest(specItemPO));
         }
-        return specItemRulePutRequestList;
+
+        List<SpecRulePutRequest> list = Lists.newArrayList();
+        for (Map.Entry<String, SpecRulePutRequest> entry : specRulePutRequestMap.entrySet()) {
+            list.add(entry.getValue());
+        }
+        return list;
     }
 
     private List<ToppingBaseRulePutRequest> getToppingBaseRulePutRequest(
