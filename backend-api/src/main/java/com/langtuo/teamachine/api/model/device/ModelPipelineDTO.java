@@ -2,8 +2,6 @@ package com.langtuo.teamachine.api.model.device;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class ModelPipelineDTO {
     /**
@@ -25,4 +23,9 @@ public class ModelPipelineDTO {
      * 是否支持加热，0：不支持，1：支持
      */
     private int enableWarm;
+
+    /**
+     * 容量
+     */
+    private int capacity;
 }

@@ -20,6 +20,11 @@ public class ModelPipelinePutRequest {
     private int enableWarm;
 
     /**
+     * 容量
+     */
+    private int capacity;
+
+    /**
      * 是否新建
      */
     private boolean putNew;
@@ -30,6 +35,9 @@ public class ModelPipelinePutRequest {
      */
     public boolean isValid() {
         if (pipelineNum == 0) {
+            return false;
+        }
+        if (capacity == 0) {
             return false;
         }
         return true;

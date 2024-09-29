@@ -58,6 +58,7 @@ public class ModelMgtConvertor {
             po.setPipelineNum(request.getPipelineNum());
             po.setEnableFreeze(request.getEnableFreeze());
             po.setEnableWarm(request.getEnableWarm());
+            po.setCapacity(request.getCapacity());
             return po;
         }).collect(Collectors.toList());
         return resultList;
@@ -74,6 +75,7 @@ public class ModelMgtConvertor {
             dto.setPipelineNum(po.getPipelineNum());
             dto.setEnableFreeze(po.getEnableFreeze());
             dto.setEnableWarm(po.getEnableWarm());
+            dto.setCapacity(po.getCapacity());
             return dto;
         }).collect(Collectors.toList());
         return resultList;

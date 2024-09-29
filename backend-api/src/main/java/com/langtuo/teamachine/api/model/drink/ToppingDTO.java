@@ -76,4 +76,14 @@ public class ToppingDTO {
      * 流速
      */
     private int flowSpeed;
+
+    /**
+     * 阈值类型，0：绝对值，1：百分比
+     */
+    private int thresholdMode;
+
+    /**
+     * 阈值
+     */
+    private int threshold;
 }

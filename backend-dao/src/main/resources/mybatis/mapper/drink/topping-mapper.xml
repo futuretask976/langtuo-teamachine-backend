@@ -18,6 +18,8 @@
         <result property="cleanHourPeriod" column="clean_hour_period"/>
         <result property="convertCoefficient" column="convert_coefficient"/>
         <result property="flowSpeed" column="flow_speed"/>
+        <result property="thresholdMode" column="threshold_mode"/>
+        <result property="threshold" column="threshold"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
@@ -72,6 +74,8 @@
             , `clean_hour_period`
             , `convert_coefficient`
             , `flow_speed`
+            , threshold_mode
+            , threshold
             , `tenant_code`
             , `comment`
             , `extra_info`
@@ -87,6 +91,8 @@
             , #{cleanHourPeriod}
             , #{convertCoefficient}
             , #{flowSpeed}
+            , #{thresholdMode}
+            , #{threshold}
             , #{tenantCode}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
@@ -120,6 +126,12 @@
             </if>
             <if test="flowSpeed != null">
                 , flow_speed = #{flowSpeed}
+            </if>
+            <if test="thresholdMode != null">
+                , threshold_mode = #{thresholdMode}
+            </if>
+            <if test="threshold != null">
+                , threshold = #{threshold}
             </if>
             <if test="comment != null">
                 , comment = #{comment}

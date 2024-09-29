@@ -13,6 +13,7 @@
         <result property="pipelineNum" column="pipeline_num"/>
         <result property="enableWarm" column="enable_warm"/>
         <result property="enableFreeze" column="enable_freeze"/>
+        <result property="capacity" column="capacity"/>
     </resultMap>
 
     <select id="selectOne" resultMap="machineModelPipelinePOMap">
@@ -38,6 +39,7 @@
             , pipeline_num
             , enable_warm
             , enable_freeze
+            , capacity
         ) VALUES (
             now()
             , now()
@@ -45,6 +47,7 @@
             , #{pipelineNum}
             , #{enableWarm}
             , #{enableFreeze}
+            , #{capacity}
         )
     </insert>
 
@@ -57,6 +60,9 @@
             </if>
             <if test="enableFreeze != null">
                 , enable_freeze = #{enableFreeze}
+            </if>
+            <if test="capacity != null">
+                , capacity = #{capacity}
             </if>
         WHERE model_code = #{modelCode}
             AND pipeline_num = #{pipelineNum}

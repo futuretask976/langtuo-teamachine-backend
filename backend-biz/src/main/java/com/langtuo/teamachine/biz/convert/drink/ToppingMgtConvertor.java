@@ -38,6 +38,8 @@ public class ToppingMgtConvertor {
         dto.setConvertCoefficient(po.getConvertCoefficient());
         dto.setFlowSpeed(po.getFlowSpeed());
         dto.setComment(po.getComment());
+        dto.setThresholdMode(po.getThresholdMode());
+        dto.setThreshold(po.getThreshold());
         po.setExtraInfo(po.getExtraInfo());
         return dto;
     }
@@ -59,7 +61,9 @@ public class ToppingMgtConvertor {
         po.setFlowSpeed(request.getFlowSpeed());
         po.setTenantCode(request.getTenantCode());
         po.setComment(request.getComment());
-        po.setExtraInfo(po.getExtraInfo());
+        po.setExtraInfo(request.getExtraInfo());
+        po.setThresholdMode(request.getThresholdMode());
+        po.setThreshold(request.getThreshold());
         return po;
     }
 }

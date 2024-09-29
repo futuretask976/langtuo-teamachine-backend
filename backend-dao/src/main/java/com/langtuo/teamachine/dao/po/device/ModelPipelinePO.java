@@ -40,4 +40,9 @@ public class ModelPipelinePO {
      * 是否支持冷藏，0：不支持，1：支持
      */
     private int enableFreeze;
+
+    /**
+     * 容量
+     */
+    private int capacity;
 }
