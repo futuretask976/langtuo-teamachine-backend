@@ -40,4 +40,9 @@ public class TeaUnitPO {
      * 茶品unit名称
      */
     private String teaUnitName;
+
+    /**
+     * 外部茶品编码
+     */
+    private String outerTeaUnitCode;
 }

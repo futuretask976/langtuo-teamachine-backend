@@ -13,6 +13,7 @@
         <result property="teaCode" column="tea_code"/>
         <result property="teaUnitCode" column="tea_unit_code"/>
         <result property="teaUnitName" column="tea_unit_Name"/>
+        <result property="outerTeaUnitCode" column="outer_tea_unit_code"/>
     </resultMap>
 
     <select id="selectOne" resultMap="teaUnitPOMap">
@@ -38,6 +39,7 @@
             , tea_code
             , tea_unit_code
             , tea_unit_name
+            , outer_tea_unit_code
         ) VALUES (
             now()
             , now()
@@ -45,6 +47,7 @@
             , #{teaCode}
             , #{teaUnitCode}
             , #{teaUnitName}
+            , #{outerTeaUnitCode}
         )
     </insert>
 

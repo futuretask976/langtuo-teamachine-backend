@@ -179,11 +179,8 @@ public class TeaMgtConvertor {
             TeaUnitPO po = new TeaUnitPO();
             po.setTenantCode(request.getTenantCode());
             po.setTeaCode(request.getTeaCode());
-            if (request.isPutNew()) {
-                po.setTeaUnitCode(sortTeaUnitCode(teaUnitPutRequest.getTeaUnitCode()));
-            } else {
-                po.setTeaUnitCode(teaUnitPutRequest.getTeaUnitCode());
-            }
+            po.setTeaUnitCode(sortTeaUnitCode(teaUnitPutRequest.getTeaUnitCode()));
+            po.setOuterTeaUnitCode(sortTeaUnitCode(teaUnitPutRequest.getOuterTeaUnitCode()));
             po.setTeaUnitName(teaUnitPutRequest.getTeaUnitName());
             teaUnitPOList.add(po);
         }
@@ -219,11 +216,7 @@ public class TeaMgtConvertor {
                 ToppingAdjustRulePO po = new ToppingAdjustRulePO();
                 po.setTenantCode(request.getTenantCode());
                 po.setTeaCode(request.getTeaCode());
-                if (request.isPutNew()) {
-                    po.setTeaUnitCode(sortTeaUnitCode(teaUnitPutRequest.getTeaUnitCode()));
-                } else {
-                    po.setTeaUnitCode(teaUnitPutRequest.getTeaUnitCode());
-                }
+                po.setTeaUnitCode(sortTeaUnitCode(teaUnitPutRequest.getTeaUnitCode()));
                 po.setStepIndex(toppingAdjustRulePutRequest.getStepIndex());
                 po.setToppingCode(toppingAdjustRulePutRequest.getToppingCode());
                 po.setAdjustType(toppingAdjustRulePutRequest.getAdjustType());

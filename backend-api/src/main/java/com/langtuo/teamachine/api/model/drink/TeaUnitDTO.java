@@ -17,6 +17,11 @@ public class TeaUnitDTO {
     private String teaUnitName;
 
     /**
+     * 外部茶品编码
+     */
+    private String outerTeaUnitCode;
+
+    /**
      *
      */
     private List<ToppingAdjustRuleDTO> toppingAdjustRuleList;

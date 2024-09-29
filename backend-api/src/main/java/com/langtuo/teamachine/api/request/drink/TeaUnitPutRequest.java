@@ -20,6 +20,11 @@ public class TeaUnitPutRequest {
     private String teaUnitName;
 
     /**
+     * 外部茶品编码
+     */
+    private String outerTeaUnitCode;
+
+    /**
      *
      */
     private List<ToppingAdjustRulePutRequest> toppingAdjustRuleList;
