@@ -198,7 +198,6 @@ public class TeaMgtConvertor {
         String[] codeArr = teaUnitCode.split(CommonConsts.HORIZONTAL_BAR);
         Arrays.sort(codeArr, String.CASE_INSENSITIVE_ORDER);
 
-        // 3. 使用newSeparator重新拼接排序后的字符串数组
         StringBuffer result = new StringBuffer();
         for (String str : codeArr) {
             if (result.length() > CommonConsts.COLLECTION_LENGTH_ZERO) {
