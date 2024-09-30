@@ -2,7 +2,6 @@ package com.langtuo.teamachine.mqtt.threadpool;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.PreDestroy;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -35,8 +34,7 @@ public class ConsumeExeService {
         return executorService;
     }
 
-    @PreDestroy
-    public static void onDestroy() {
+    public static void destroy() {
         if (executorService != null) {
             try {
                 log.info("$$$$$ consumeExeService|onDestroy|beginning");

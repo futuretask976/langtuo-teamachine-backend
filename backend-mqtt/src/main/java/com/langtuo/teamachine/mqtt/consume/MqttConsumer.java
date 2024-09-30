@@ -64,9 +64,12 @@ public class MqttConsumer implements InitializingBean {
         try {
             log.info("$$$$$ mqttConsumer|onDestroy|beginning");
             serverConsumer.stop();
+            log.info("$$$$$ mqttConsumer|onDestroy|ending");
         } catch (IOException e) {
             log.error("mqttConsumer|stopServerConsumer|fatal|" + e.getMessage(), e);
         }
+
+        ConsumeExeService.destroy();
     }
 
     public void initServerConsumer() throws IOException, TimeoutException {

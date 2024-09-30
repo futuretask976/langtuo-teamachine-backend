@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -40,6 +41,11 @@ public class AsyncDispatcher implements InitializingBean {
                 }
             }
         }
+    }
+
+    @PreDestroy
+    public void onDestroy() {
+        AsyncExeService.destroy();
     }
 
     public void dispatch(JSONObject jsonPayload) {
