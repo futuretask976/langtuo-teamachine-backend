@@ -34,7 +34,7 @@ public class OSSConfig {
     /**
      *
      */
-    public static final String OSS_MENU_PATH = "teamachine/menu";
+    public static final String OSS_MENU_PATH = "menu";
 
     /**
      *
