@@ -4,8 +4,11 @@ import com.langtuo.teamachine.api.model.device.ModelDTO;
 import com.langtuo.teamachine.api.model.device.ModelPipelineDTO;
 import com.langtuo.teamachine.api.request.device.ModelPipelinePutRequest;
 import com.langtuo.teamachine.api.request.device.ModelPutRequest;
+import com.langtuo.teamachine.dao.accessor.device.ModelPipelineAccessor;
 import com.langtuo.teamachine.dao.po.device.ModelPO;
 import com.langtuo.teamachine.dao.po.device.ModelPipelinePO;
+import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -33,7 +36,29 @@ public class ModelMgtConvertor {
         dto.setGmtModified(po.getGmtModified());
         dto.setModelCode(po.getModelCode());
         dto.setEnableFlowAll(po.getEnableFlowAll());
+
+        ModelPipelineAccessor modelPipelineAccessor = SpringAccessorUtils.getModelPipelineAccessor();
+        List<ModelPipelinePO> modelPipelinePOList = modelPipelineAccessor.listByModelCode(po.getModelCode());
+        dto.setPipelineList(convertToModelPipelineDTO(modelPipelinePOList));
         return dto;
+    }
+
+    public static List<ModelPipelineDTO> convertToModelPipelineDTO(List<ModelPipelinePO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        List<ModelPipelineDTO> resultList = Lists.newArrayList();
+        for (ModelPipelinePO po : poList) {
+            ModelPipelineDTO dto = new ModelPipelineDTO();
+            dto.setModelCode(po.getModelCode());
+            dto.setPipelineNum(po.getPipelineNum());
+            dto.setEnableFreeze(po.getEnableFreeze());
+            dto.setEnableWarm(po.getEnableWarm());
+            dto.setCapacity(po.getCapacity());
+            resultList.add(dto);
+        }
+        return resultList;
     }
 
     public static ModelPO convertToModelDTO(ModelPutRequest request) {
@@ -60,23 +85,6 @@ public class ModelMgtConvertor {
             po.setEnableWarm(request.getEnableWarm());
             po.setCapacity(request.getCapacity());
             return po;
-        }).collect(Collectors.toList());
-        return resultList;
-    }
-
-    public static List<ModelPipelineDTO> convertToModelPipelineDTO(List<ModelPipelinePO> pipelinePOList) {
-        if (CollectionUtils.isEmpty(pipelinePOList)) {
-            return null;
-        }
-
-        List<ModelPipelineDTO> resultList = pipelinePOList.stream().map(po -> {
-            ModelPipelineDTO dto = new ModelPipelineDTO();
-            dto.setModelCode(po.getModelCode());
-            dto.setPipelineNum(po.getPipelineNum());
-            dto.setEnableFreeze(po.getEnableFreeze());
-            dto.setEnableWarm(po.getEnableWarm());
-            dto.setCapacity(po.getCapacity());
-            return dto;
         }).collect(Collectors.toList());
         return resultList;
     }

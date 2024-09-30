@@ -132,6 +132,12 @@ public class SpringAccessorUtils {
         return accessor;
     }
 
+    public static ModelPipelineAccessor getModelPipelineAccessor() {
+        ApplicationContext appContext = SpringUtil.getApplicationContext();
+        ModelPipelineAccessor accessor = appContext.getBean(ModelPipelineAccessor.class);
+        return accessor;
+    }
+
     public static AndroidAppAccessor getAndroidAppAccessor() {
         ApplicationContext appContext = SpringUtil.getApplicationContext();
         AndroidAppAccessor accessor = appContext.getBean(AndroidAppAccessor.class);

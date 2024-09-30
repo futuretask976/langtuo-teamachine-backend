@@ -2,8 +2,8 @@ package com.langtuo.teamachine.biz.service.device;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
-import com.langtuo.teamachine.api.model.device.ModelDTO;
 import com.langtuo.teamachine.api.model.PageDTO;
+import com.langtuo.teamachine.api.model.device.ModelDTO;
 import com.langtuo.teamachine.api.request.device.ModelPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.device.ModelMgtService;
@@ -21,12 +21,11 @@ import com.langtuo.teamachine.internal.util.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.langtuo.teamachine.biz.convert.device.ModelMgtConvertor.*;
+import static com.langtuo.teamachine.biz.convert.device.ModelMgtConvertor.convertToModelDTO;
 
 @Component
 @Slf4j
@@ -80,11 +79,6 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         try {
             ModelPO modelPO = modelAccessor.getByModelCode(modelCode);
             ModelDTO modelDTO = ModelMgtConvertor.convertToModelDTO(modelPO);
-
-            List<ModelPipelinePO> pipelinePOList = modelPipelineAccessor.listByModelCode(modelCode);
-            if (!CollectionUtils.isEmpty(pipelinePOList)) {
-                modelDTO.setPipelineList(ModelMgtConvertor.convertToModelPipelineDTO(pipelinePOList));
-            }
             return TeaMachineResult.success(modelDTO);
         } catch (Exception e) {
             log.error("modelMgtService|get|fatal|" + e.getMessage(), e);
