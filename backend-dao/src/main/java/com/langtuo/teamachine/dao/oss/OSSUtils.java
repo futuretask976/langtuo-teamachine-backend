@@ -17,9 +17,10 @@ import com.aliyuncs.profile.IClientProfile;
 import com.langtuo.teamachine.dao.config.OSSConfig;
 import com.langtuo.teamachine.dao.po.security.OSSTokenPO;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
-import java.security.SecureRandom;
 import java.util.Date;
 
 public class OSSUtils {
@@ -137,5 +138,10 @@ public class OSSUtils {
                 ossClient.shutdown();
             }
         }
+    }
+
+    public static void main(String args[]) {
+        OSSTokenPO po = OSSUtils.getSTS();
+        System.out.println(po);
     }
 }
