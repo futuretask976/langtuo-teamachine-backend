@@ -75,7 +75,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     }
 
     @Override
-    public TeaMachineResult<ModelDTO> get(String modelCode) {
+    public TeaMachineResult<ModelDTO> getByModelCode(String modelCode) {
         try {
             ModelPO modelPO = modelAccessor.getByModelCode(modelCode);
             ModelDTO modelDTO = ModelMgtConvertor.convertToModelDTO(modelPO);
@@ -168,7 +168,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String modelCode) {
+    public TeaMachineResult<Void> deleteByModelCode(String modelCode) {
         if (StringUtils.isEmpty(modelCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

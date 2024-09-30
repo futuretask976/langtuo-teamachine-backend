@@ -30,7 +30,7 @@ public class DeployController {
     @GetMapping(value = "/get")
     public TeaMachineResult<DeployDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("deployCode") String deployCode) {
-        TeaMachineResult<DeployDTO> rtn = service.getByCode(tenantCode, deployCode);
+        TeaMachineResult<DeployDTO> rtn = service.getByDeployCode(tenantCode, deployCode);
         return rtn;
     }
 
@@ -55,7 +55,7 @@ public class DeployController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam(name = "tenantCode") String tenantCode,
             @RequestParam("deployCode") String deployCode) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, deployCode);
+        TeaMachineResult<Void> rtn = service.deleteByDeployCode(tenantCode, deployCode);
         return rtn;
     }
 

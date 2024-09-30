@@ -74,7 +74,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     }
 
     @Override
-    public TeaMachineResult<SeriesDTO> getByCode(String tenantCode, String seriesCode) {
+    public TeaMachineResult<SeriesDTO> getBySeriesCode(String tenantCode, String seriesCode) {
         TeaMachineResult<SeriesDTO> teaMachineResult;
         try {
             SeriesPO toppingTypePO = seriesAccessor.getBySeriesCode(tenantCode, seriesCode);
@@ -165,7 +165,7 @@ public class SeriesMgtServiceImpl implements SeriesMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String seriesCode) {
+    public TeaMachineResult<Void> deleteBySeriesCode(String tenantCode, String seriesCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

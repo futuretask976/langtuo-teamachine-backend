@@ -13,7 +13,7 @@ public interface AccuracyTplMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<AccuracyTplDTO> getByCode(String tenantCode, String templateCode);
+    TeaMachineResult<AccuracyTplDTO> getByTplCode(String tenantCode, String templateCode);
 
     /**
      *
@@ -42,5 +42,5 @@ public interface AccuracyTplMgtService {
      * @param templateCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String templateCode);
+    TeaMachineResult<Void> deleteByTplCode(String tenantCode, String templateCode);
 }

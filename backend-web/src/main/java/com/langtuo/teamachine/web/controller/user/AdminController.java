@@ -20,7 +20,7 @@ public class AdminController {
     @GetMapping(value = "/get")
     public TeaMachineResult<AdminDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("loginName") String loginName) {
-        TeaMachineResult<AdminDTO> rtn = service.get(tenantCode, loginName);
+        TeaMachineResult<AdminDTO> rtn = service.getByLoginName(tenantCode, loginName);
         return rtn;
     }
     
@@ -42,7 +42,7 @@ public class AdminController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("loginName") String loginName) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, loginName);
+        TeaMachineResult<Void> rtn = service.deleteByLoginName(tenantCode, loginName);
         return rtn;
     }
 }

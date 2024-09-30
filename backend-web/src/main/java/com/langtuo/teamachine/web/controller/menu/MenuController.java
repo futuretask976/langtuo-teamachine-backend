@@ -21,7 +21,7 @@ public class MenuController {
     @GetMapping(value = "/get")
     public TeaMachineResult<MenuDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("menuCode") String menuCode) {
-        TeaMachineResult<MenuDTO> rtn = service.getByCode(tenantCode, menuCode);
+        TeaMachineResult<MenuDTO> rtn = service.getByMenuCode(tenantCode, menuCode);
         return rtn;
     }
 
@@ -57,7 +57,7 @@ public class MenuController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("menuCode") String menuCode) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, menuCode);
+        TeaMachineResult<Void> rtn = service.deleteByMenuCode(tenantCode, menuCode);
         return rtn;
     }
 

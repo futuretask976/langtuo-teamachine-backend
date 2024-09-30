@@ -52,7 +52,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     }
 
     @Override
-    public TeaMachineResult<List<OrgDTO>> listByParent(String tenantCode, String orgName) {
+    public TeaMachineResult<List<OrgDTO>> listByParentOrgName(String tenantCode, String orgName) {
         TeaMachineResult<List<OrgDTO>> teaMachineResult;
         try {
             List<OrgNode> orgNodeList = orgAccessor.listByParentOrgName(tenantCode, orgName);
@@ -94,7 +94,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     }
 
     @Override
-    public TeaMachineResult<OrgDTO> get(String tenantCode, String orgName) {
+    public TeaMachineResult<OrgDTO> getByOrgName(String tenantCode, String orgName) {
         TeaMachineResult<OrgDTO> teaMachineResult;
         try {
             OrgNode orgNode = orgAccessor.getByOrgName(tenantCode, orgName);
@@ -162,7 +162,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String orgName) {
+    public TeaMachineResult<Void> deleteByOrgName(String tenantCode, String orgName) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

@@ -13,7 +13,7 @@ public interface SeriesMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<SeriesDTO> getByCode(String tenantCode, String seriesCode);
+    TeaMachineResult<SeriesDTO> getBySeriesCode(String tenantCode, String seriesCode);
 
     /**
      *
@@ -42,5 +42,5 @@ public interface SeriesMgtService {
      * @param seriesCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String seriesCode);
+    TeaMachineResult<Void> deleteBySeriesCode(String tenantCode, String seriesCode);
 }

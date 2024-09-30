@@ -19,7 +19,7 @@ public class AccuracyTplController {
     @GetMapping(value = "/get")
     public TeaMachineResult<AccuracyTplDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("templateCode") String templateCode) {
-        TeaMachineResult<AccuracyTplDTO> rtn = service.getByCode(tenantCode, templateCode);
+        TeaMachineResult<AccuracyTplDTO> rtn = service.getByTplCode(tenantCode, templateCode);
         return rtn;
     }
 
@@ -48,7 +48,7 @@ public class AccuracyTplController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("templateCode") String templateCode) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, templateCode);
+        TeaMachineResult<Void> rtn = service.deleteByTplCode(tenantCode, templateCode);
         return rtn;
     }
 }

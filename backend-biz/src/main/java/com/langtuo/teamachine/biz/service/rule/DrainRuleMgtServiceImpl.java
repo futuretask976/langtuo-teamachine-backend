@@ -53,7 +53,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
-    public TeaMachineResult<DrainRuleDTO> getByCode(String tenantCode, String drainRuleCode) {
+    public TeaMachineResult<DrainRuleDTO> getByDrainRuleCode(String tenantCode, String drainRuleCode) {
         try {
             DrainRulePO po = drainRuleAccessor.getByDrainRuleCode(tenantCode, drainRuleCode);
             DrainRuleDTO dto = DrainRuleMgtConvertor.convertToDrainRuleDTO(po);
@@ -190,7 +190,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String drainRuleCode) {
+    public TeaMachineResult<Void> deleteByDrainRuleCode(String tenantCode, String drainRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

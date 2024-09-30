@@ -21,7 +21,7 @@ public class CleanRuleController {
     @GetMapping(value = "/get")
     public TeaMachineResult<CleanRuleDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("cleanRuleCode") String cleanRuleCode) {
-        TeaMachineResult<CleanRuleDTO> rtn = service.getByCode(tenantCode, cleanRuleCode);
+        TeaMachineResult<CleanRuleDTO> rtn = service.getByCleanRuleCode(tenantCode, cleanRuleCode);
         return rtn;
     }
     
@@ -57,7 +57,7 @@ public class CleanRuleController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("cleanRuleCode") String cleanRuleCode) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, cleanRuleCode);
+        TeaMachineResult<Void> rtn = service.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
         return rtn;
     }
     

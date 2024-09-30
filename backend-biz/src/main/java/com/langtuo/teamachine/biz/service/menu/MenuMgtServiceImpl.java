@@ -98,7 +98,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     }
 
     @Override
-    public TeaMachineResult<MenuDTO> getByCode(String tenantCode, String seriesCode) {
+    public TeaMachineResult<MenuDTO> getByMenuCode(String tenantCode, String seriesCode) {
         try {
             MenuPO toppingTypePO = menuAccessor.getByMenuCode(tenantCode, seriesCode);
             MenuDTO seriesDTO = convertToMenuDTO(toppingTypePO);
@@ -187,7 +187,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String menuCode) {
+    public TeaMachineResult<Void> deleteByMenuCode(String tenantCode, String menuCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

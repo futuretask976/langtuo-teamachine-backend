@@ -20,7 +20,7 @@ public class MachineController {
     @GetMapping(value = "/get")
     public TeaMachineResult<MachineDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("machineCode") String machineCode) {
-        TeaMachineResult<MachineDTO> rtn = service.getByCode(tenantCode, machineCode);
+        TeaMachineResult<MachineDTO> rtn = service.getByMachineCode(tenantCode, machineCode);
         return rtn;
     }
 
@@ -57,7 +57,7 @@ public class MachineController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("machineCode") String machineCode) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, machineCode);
+        TeaMachineResult<Void> rtn = service.deleteByMachineCode(tenantCode, machineCode);
         return rtn;
     }
 }

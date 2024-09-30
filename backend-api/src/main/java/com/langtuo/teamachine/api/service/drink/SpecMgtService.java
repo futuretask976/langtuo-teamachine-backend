@@ -2,7 +2,6 @@ package com.langtuo.teamachine.api.service.drink;
 
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.drink.SpecDTO;
-import com.langtuo.teamachine.api.model.drink.SpecItemDTO;
 import com.langtuo.teamachine.api.request.drink.SpecPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 
@@ -14,7 +13,7 @@ public interface SpecMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<SpecDTO> getByCode(String tenantCode, String specCode);
+    TeaMachineResult<SpecDTO> getBySpecCode(String tenantCode, String specCode);
 
     /**
      *
@@ -43,5 +42,5 @@ public interface SpecMgtService {
      * @param specCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String specCode);
+    TeaMachineResult<Void> deleteBySpecCode(String tenantCode, String specCode);
 }

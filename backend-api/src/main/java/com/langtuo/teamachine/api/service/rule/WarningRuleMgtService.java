@@ -15,7 +15,7 @@ public interface WarningRuleMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode);
+    TeaMachineResult<WarningRuleDTO> getByWarningRuleCode(String tenantCode, String warningRuleCode);
 
     /**
      *
@@ -51,7 +51,7 @@ public interface WarningRuleMgtService {
      * @param warningRuleCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String warningRuleCode);
+    TeaMachineResult<Void> deleteByWarningRuleCode(String tenantCode, String warningRuleCode);
 
     /**
      *

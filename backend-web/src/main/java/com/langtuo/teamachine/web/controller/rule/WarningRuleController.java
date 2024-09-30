@@ -21,7 +21,7 @@ public class WarningRuleController {
     @GetMapping(value = "/get")
     public TeaMachineResult<WarningRuleDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("warningRuleCode") String warningRuleCode) {
-        TeaMachineResult<WarningRuleDTO> rtn = service.getByCode(tenantCode, warningRuleCode);
+        TeaMachineResult<WarningRuleDTO> rtn = service.getByWarningRuleCode(tenantCode, warningRuleCode);
         return rtn;
     }
 
@@ -51,7 +51,7 @@ public class WarningRuleController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("warningRuleCode") String warningRuleCode) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, warningRuleCode);
+        TeaMachineResult<Void> rtn = service.deleteByWarningRuleCode(tenantCode, warningRuleCode);
         return rtn;
     }
 

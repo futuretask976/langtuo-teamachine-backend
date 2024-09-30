@@ -13,7 +13,7 @@ public interface TeaTypeMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<TeaTypeDTO> getByCode(String tenantCode, String teaTypeCode);
+    TeaMachineResult<TeaTypeDTO> getByTeaTypeCode(String tenantCode, String teaTypeCode);
 
     /**
      *
@@ -42,5 +42,5 @@ public interface TeaTypeMgtService {
      * @param teaTypeCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String teaTypeCode);
+    TeaMachineResult<Void> deleteByTeaTypeCode(String tenantCode, String teaTypeCode);
 }

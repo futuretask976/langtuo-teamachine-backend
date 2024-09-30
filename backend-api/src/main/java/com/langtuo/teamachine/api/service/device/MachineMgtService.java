@@ -14,7 +14,7 @@ public interface MachineMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<MachineDTO> getByCode(String tenantCode, String machineCode);
+    TeaMachineResult<MachineDTO> getByMachineCode(String tenantCode, String machineCode);
 
     /**
      *
@@ -57,5 +57,5 @@ public interface MachineMgtService {
      * @param machineCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String machineCode);
+    TeaMachineResult<Void> deleteByMachineCode(String tenantCode, String machineCode);
 }

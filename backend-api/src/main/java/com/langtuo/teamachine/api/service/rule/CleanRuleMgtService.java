@@ -15,7 +15,7 @@ public interface CleanRuleMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode);
+    TeaMachineResult<CleanRuleDTO> getByCleanRuleCode(String tenantCode, String cleanRuleCode);
 
     /**
      *
@@ -51,7 +51,7 @@ public interface CleanRuleMgtService {
      * @param cleanRuleCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String cleanRuleCode);
+    TeaMachineResult<Void> deleteByCleanRuleCode(String tenantCode, String cleanRuleCode);
 
     /**
      *

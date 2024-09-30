@@ -57,7 +57,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
-    public TeaMachineResult<CleanRuleDTO> getByCode(String tenantCode, String cleanRuleCode) {
+    public TeaMachineResult<CleanRuleDTO> getByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         try {
             CleanRulePO po = cleanRuleAccessor.getByCleanRuleCode(tenantCode, cleanRuleCode);
             CleanRuleDTO dto = convertToCleanRuleStepDTO(po);
@@ -216,7 +216,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String cleanRuleCode) {
+    public TeaMachineResult<Void> deleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

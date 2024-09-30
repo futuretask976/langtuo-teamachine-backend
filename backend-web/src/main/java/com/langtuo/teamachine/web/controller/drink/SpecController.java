@@ -19,7 +19,7 @@ public class SpecController {
     @GetMapping(value = "/get")
     public TeaMachineResult<SpecDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("specCode") String specCode) {
-        TeaMachineResult<SpecDTO> rtn = service.getByCode(tenantCode, specCode);
+        TeaMachineResult<SpecDTO> rtn = service.getBySpecCode(tenantCode, specCode);
         return rtn;
     }
 
@@ -48,7 +48,7 @@ public class SpecController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("specCode") String specCode) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, specCode);
+        TeaMachineResult<Void> rtn = service.deleteBySpecCode(tenantCode, specCode);
         return rtn;
     }
 }

@@ -19,7 +19,7 @@ public class OrgController {
     @GetMapping(value = "/get")
     public TeaMachineResult<OrgDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("orgName") String orgName) {
-        TeaMachineResult<OrgDTO> rtn = service.get(tenantCode, orgName);
+        TeaMachineResult<OrgDTO> rtn = service.getByOrgName(tenantCode, orgName);
         return rtn;
     }
     
@@ -52,7 +52,7 @@ public class OrgController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("orgName") String orgName) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, orgName);
+        TeaMachineResult<Void> rtn = service.deleteByOrgName(tenantCode, orgName);
         return rtn;
     }
 }

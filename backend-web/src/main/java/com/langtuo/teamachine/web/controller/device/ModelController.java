@@ -18,7 +18,7 @@ public class ModelController {
 
     @GetMapping(value = "/get")
     public TeaMachineResult<ModelDTO> get(@RequestParam("modelCode") String modelCode) {
-        TeaMachineResult<ModelDTO> rtn = service.get(modelCode);
+        TeaMachineResult<ModelDTO> rtn = service.getByModelCode(modelCode);
         return rtn;
     }
 
@@ -44,7 +44,7 @@ public class ModelController {
 
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("modelCode") String modelCode) {
-        TeaMachineResult<Void> rtn = service.delete(modelCode);
+        TeaMachineResult<Void> rtn = service.deleteByModelCode(modelCode);
         return rtn;
     }
 }

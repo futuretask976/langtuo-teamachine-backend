@@ -15,7 +15,7 @@ public interface MenuMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<MenuDTO> getByCode(String tenantCode, String menuCode);
+    TeaMachineResult<MenuDTO> getByMenuCode(String tenantCode, String menuCode);
 
     /**
      *
@@ -51,7 +51,7 @@ public interface MenuMgtService {
      * @param menuCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String menuCode);
+    TeaMachineResult<Void> deleteByMenuCode(String tenantCode, String menuCode);
 
     /**
      *

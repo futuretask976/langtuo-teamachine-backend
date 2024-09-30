@@ -13,7 +13,7 @@ public interface DeployMgtService {
      * @param deployCode
      * @return
      */
-    TeaMachineResult<DeployDTO> getByCode(String tenantCode, String deployCode);
+    TeaMachineResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode);
 
     /**
      *
@@ -43,7 +43,7 @@ public interface DeployMgtService {
      * @param deployCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String deployCode);
+    TeaMachineResult<Void> deleteByDeployCode(String tenantCode, String deployCode);
 
     /**
      *

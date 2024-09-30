@@ -69,7 +69,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     }
 
     @Override
-    public TeaMachineResult<ToppingTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
+    public TeaMachineResult<ToppingTypeDTO> getByToppingTypeCode(String tenantCode, String toppingTypeCode) {
         try {
             ToppingTypePO toppingTypePO = toppingTypeAccessor.getByToppingTypeCode(tenantCode, toppingTypeCode);
             ToppingTypeDTO tenantDTO = ToppingTypeMgtConvertor.convertToToppingTypeDTO(toppingTypePO);
@@ -133,7 +133,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String toppingTypeCode) {
+    public TeaMachineResult<Void> deleteByToppingTypeCode(String tenantCode, String toppingTypeCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

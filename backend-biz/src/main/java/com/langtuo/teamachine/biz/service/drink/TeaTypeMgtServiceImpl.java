@@ -62,7 +62,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     }
 
     @Override
-    public TeaMachineResult<TeaTypeDTO> getByCode(String tenantCode, String toppingTypeCode) {
+    public TeaMachineResult<TeaTypeDTO> getByTeaTypeCode(String tenantCode, String toppingTypeCode) {
         try {
             TeaTypePO toppingTypePO = accessor.getByTeaTypeCode(tenantCode, toppingTypeCode);
             TeaTypeDTO tenantDTO = convertToTeaTypePO(toppingTypePO);
@@ -125,7 +125,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String teaTypeCode) {
+    public TeaMachineResult<Void> deleteByTeaTypeCode(String tenantCode, String teaTypeCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

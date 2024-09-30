@@ -2,9 +2,6 @@ package com.langtuo.teamachine.biz.aync.worker.device;
 
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.model.device.ModelDTO;
-import com.langtuo.teamachine.api.model.user.TenantDTO;
-import com.langtuo.teamachine.api.service.device.ModelMgtService;
-import com.langtuo.teamachine.api.service.user.TenantMgtService;
 import com.langtuo.teamachine.biz.convert.device.ModelMgtConvertor;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.dao.accessor.device.ModelAccessor;
@@ -17,10 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getListModel;
-import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
 @Slf4j
 public class ModelDispatchWorker implements Runnable {
@@ -48,7 +41,6 @@ public class ModelDispatchWorker implements Runnable {
         JSONObject jsonMsg = new JSONObject();
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MODEL);
         jsonMsg.put(CommonConsts.JSON_KEY_MODEL, jsonDispatchCont);
-
 
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         List<String> tenantCodeList = DaoUtils.getTenantCodeList();

@@ -32,7 +32,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     private RoleAccessor roleAccessor;
 
     @Override
-    public TeaMachineResult<AdminDTO> get(String tenantCode, String loginName) {
+    public TeaMachineResult<AdminDTO> getByLoginName(String tenantCode, String loginName) {
         AdminPO adminPO = adminAccessor.getByLoginName(tenantCode, loginName);
         return TeaMachineResult.success(convertToAdminDTO(adminPO));
     }
@@ -82,7 +82,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String loginName) {
+    public TeaMachineResult<Void> deleteByLoginName(String tenantCode, String loginName) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(loginName)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

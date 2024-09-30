@@ -19,7 +19,7 @@ public class AndroidAppController {
 
     @GetMapping(value = "/get")
     public TeaMachineResult<AndroidAppDTO> get(@RequestParam("version") String version) {
-        TeaMachineResult<AndroidAppDTO> rtn = service.get(version);
+        TeaMachineResult<AndroidAppDTO> rtn = service.getByVersion(version);
         return rtn;
     }
 

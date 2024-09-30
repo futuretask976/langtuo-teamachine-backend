@@ -14,7 +14,7 @@ public interface TeaMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<TeaDTO> getByCode(String tenantCode, String teaCode);
+    TeaMachineResult<TeaDTO> getByTeaCode(String tenantCode, String teaCode);
 
     /**
      *
@@ -43,7 +43,7 @@ public interface TeaMgtService {
      * @param teaCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String teaCode);
+    TeaMachineResult<Void> deleteByTeaCode(String tenantCode, String teaCode);
 
     /**
      *

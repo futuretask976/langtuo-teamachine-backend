@@ -61,7 +61,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     @Override
-    public TeaMachineResult<DeployDTO> getByCode(String tenantCode, String deployCode) {
+    public TeaMachineResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode) {
         try {
             DeployDTO dto = convertToDeployPO(deployAccessor.getByDeployCode(tenantCode, deployCode));
             return TeaMachineResult.success(dto);
@@ -97,7 +97,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String deployCode) {
+    public TeaMachineResult<Void> deleteByDeployCode(String tenantCode, String deployCode) {
         if (StringUtils.isEmpty(tenantCode) || StringUtils.isBlank(deployCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

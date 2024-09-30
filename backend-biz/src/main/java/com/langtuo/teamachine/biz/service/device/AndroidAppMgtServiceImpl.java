@@ -41,7 +41,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
-    public TeaMachineResult<AndroidAppDTO> get(String version) {
+    public TeaMachineResult<AndroidAppDTO> getByVersion(String version) {
         try {
             AndroidAppPO po = androidAppAccessor.getByVersion(version);
             return TeaMachineResult.success(convertToAndroidAppDTO(po));

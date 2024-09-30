@@ -13,7 +13,7 @@ public interface OrgMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<OrgDTO> get(String tenantCode, String orgName);
+    TeaMachineResult<OrgDTO> getByOrgName(String tenantCode, String orgName);
 
     /**
      *
@@ -27,7 +27,7 @@ public interface OrgMgtService {
      * @param orgName
      * @return
      */
-    TeaMachineResult<List<OrgDTO>> listByParent(String tenantCode, String orgName);
+    TeaMachineResult<List<OrgDTO>> listByParentOrgName(String tenantCode, String orgName);
 
     /**
      *
@@ -54,5 +54,5 @@ public interface OrgMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String orgName);
+    TeaMachineResult<Void> deleteByOrgName(String tenantCode, String orgName);
 }

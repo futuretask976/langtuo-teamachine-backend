@@ -54,7 +54,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
-    public TeaMachineResult<MachineDTO> getByCode(String tenantCode, String machineCode) {
+    public TeaMachineResult<MachineDTO> getByMachineCode(String tenantCode, String machineCode) {
         MachinePO machinePO = machineAccessor.getByMachineCode(tenantCode, machineCode);
         MachineDTO adminRoleDTO = convert(machinePO);
         return TeaMachineResult.success(adminRoleDTO);
@@ -184,7 +184,7 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String machineCode) {
+    public TeaMachineResult<Void> deleteByMachineCode(String tenantCode, String machineCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

@@ -1,7 +1,6 @@
 package com.langtuo.teamachine.web.security.service;
 
 import com.langtuo.teamachine.api.model.device.DeployDTO;
-import com.langtuo.teamachine.api.model.device.MachineDTO;
 import com.langtuo.teamachine.api.model.user.AdminDTO;
 import com.langtuo.teamachine.api.model.user.RoleDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
@@ -58,7 +57,7 @@ public class TeaMachineUserDetailService implements UserDetailsService {
     }
 
     public UserDetails loadMachineUserDetails(String tenantCode, String deployCode, String machineCode) {
-        DeployDTO deployDTO = getModel(deployMgtService.getByCode(tenantCode, deployCode));
+        DeployDTO deployDTO = getModel(deployMgtService.getByDeployCode(tenantCode, deployCode));
         if (deployDTO == null) {
             return null;
         }
@@ -71,7 +70,7 @@ public class TeaMachineUserDetailService implements UserDetailsService {
     }
 
     public UserDetails loadAdminUserDetails(String tenantCode, String loginName) {
-        TeaMachineResult<AdminDTO> adminResult = adminMgtService.get(tenantCode, loginName);
+        TeaMachineResult<AdminDTO> adminResult = adminMgtService.getByLoginName(tenantCode, loginName);
         if (adminResult == null && !adminResult.isSuccess() || adminResult.getModel() == null) {
             return null;
         }

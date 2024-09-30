@@ -47,7 +47,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
-    public TeaMachineResult<WarningRuleDTO> getByCode(String tenantCode, String warningRuleCode) {
+    public TeaMachineResult<WarningRuleDTO> getByWarningRuleCode(String tenantCode, String warningRuleCode) {
         try {
             WarningRulePO po = warningRuleAccessor.getByWarningRuleCode(tenantCode, warningRuleCode);
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
@@ -172,7 +172,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String warningRuleCode) {
+    public TeaMachineResult<Void> deleteByWarningRuleCode(String tenantCode, String warningRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

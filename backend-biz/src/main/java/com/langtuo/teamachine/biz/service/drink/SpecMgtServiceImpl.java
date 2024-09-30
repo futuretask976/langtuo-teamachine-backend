@@ -71,7 +71,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     }
 
     @Override
-    public TeaMachineResult<SpecDTO> getByCode(String tenantCode, String specCode) {
+    public TeaMachineResult<SpecDTO> getBySpecCode(String tenantCode, String specCode) {
         try {
             SpecPO po = specAccessor.getBySpecCode(tenantCode, specCode);
             SpecDTO dto = SpecMgtConvertor.convertToSpecDTO(po);
@@ -186,7 +186,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String specCode) {
+    public TeaMachineResult<Void> deleteBySpecCode(String tenantCode, String specCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

@@ -19,7 +19,7 @@ public class ToppingController {
     @GetMapping(value = "/get")
     public TeaMachineResult<ToppingDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("toppingCode") String toppingCode) {
-        TeaMachineResult<ToppingDTO> rtn = service.getByCode(tenantCode, toppingCode);
+        TeaMachineResult<ToppingDTO> rtn = service.getByToppingCode(tenantCode, toppingCode);
         return rtn;
     }
 
@@ -48,7 +48,7 @@ public class ToppingController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("toppingCode") String toppingCode) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, toppingCode);
+        TeaMachineResult<Void> rtn = service.deleteByToppingCode(tenantCode, toppingCode);
         return rtn;
     }
 }

@@ -19,7 +19,7 @@ public class ShopController {
     @GetMapping(value = "/get")
     public TeaMachineResult<ShopDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopCode") String shopCode) {
-        TeaMachineResult<ShopDTO> rtn = service.getByCode(tenantCode, shopCode);
+        TeaMachineResult<ShopDTO> rtn = service.getByShopCode(tenantCode, shopCode);
         return rtn;
     }
 
@@ -48,7 +48,7 @@ public class ShopController {
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("shopCode") String shopCode) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, shopCode);
+        TeaMachineResult<Void> rtn = service.deleteByShopCode(tenantCode, shopCode);
         return rtn;
     }
 }

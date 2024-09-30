@@ -15,7 +15,7 @@ public interface DrainRuleMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<DrainRuleDTO> getByCode(String tenantCode, String drainRuleCode);
+    TeaMachineResult<DrainRuleDTO> getByDrainRuleCode(String tenantCode, String drainRuleCode);
 
     /**
      *
@@ -51,7 +51,7 @@ public interface DrainRuleMgtService {
      * @param drainRuleCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String drainRuleCode);
+    TeaMachineResult<Void> deleteByDrainRuleCode(String tenantCode, String drainRuleCode);
 
     /**
      *

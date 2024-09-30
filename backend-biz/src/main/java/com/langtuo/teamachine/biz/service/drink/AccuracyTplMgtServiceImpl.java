@@ -75,7 +75,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     }
 
     @Override
-    public TeaMachineResult<AccuracyTplDTO> getByCode(String tenantCode, String specCode) {
+    public TeaMachineResult<AccuracyTplDTO> getByTplCode(String tenantCode, String specCode) {
         try {
             AccuracyTplPO po = accuracyTplAccessor.getByTplCode(tenantCode, specCode);
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
@@ -169,7 +169,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String templateCode) {
+    public TeaMachineResult<Void> deleteByTplCode(String tenantCode, String templateCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

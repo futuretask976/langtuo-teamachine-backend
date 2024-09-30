@@ -13,7 +13,7 @@ public interface AdminMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<AdminDTO> get(String tenantCode, String loginName);
+    TeaMachineResult<AdminDTO> getByLoginName(String tenantCode, String loginName);
 
     /**
      *
@@ -42,7 +42,7 @@ public interface AdminMgtService {
      * @param loginName
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String loginName);
+    TeaMachineResult<Void> deleteByLoginName(String tenantCode, String loginName);
 
     /**
      *

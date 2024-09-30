@@ -3,7 +3,6 @@ package com.langtuo.teamachine.api.service.device;
 import com.langtuo.teamachine.api.model.PageDTO;
 import com.langtuo.teamachine.api.model.device.AndroidAppDTO;
 import com.langtuo.teamachine.api.model.device.AndroidAppDispatchDTO;
-import com.langtuo.teamachine.api.model.menu.MenuDispatchDTO;
 import com.langtuo.teamachine.api.request.device.AndroidAppDispatchPutRequest;
 import com.langtuo.teamachine.api.request.device.AndroidAppPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
@@ -14,7 +13,7 @@ public interface AndroidAppMgtService {
      * @param version
      * @return
      */
-    TeaMachineResult<AndroidAppDTO> get(String version);
+    TeaMachineResult<AndroidAppDTO> getByVersion(String version);
 
     /**
      *

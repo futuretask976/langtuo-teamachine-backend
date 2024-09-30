@@ -13,7 +13,7 @@ public interface ModelMgtService {
      * @param modelCode
      * @return
      */
-    TeaMachineResult<ModelDTO> get(String modelCode);
+    TeaMachineResult<ModelDTO> getByModelCode(String modelCode);
 
     /**
      *
@@ -39,5 +39,5 @@ public interface ModelMgtService {
      * @param modelCode
      * @return
      */
-    TeaMachineResult<Void> delete(String modelCode);
+    TeaMachineResult<Void> deleteByModelCode(String modelCode);
 }

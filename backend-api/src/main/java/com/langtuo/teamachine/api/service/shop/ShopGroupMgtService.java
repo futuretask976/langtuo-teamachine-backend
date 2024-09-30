@@ -13,7 +13,7 @@ public interface ShopGroupMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode);
+    TeaMachineResult<ShopGroupDTO> getByShopGroupCode(String tenantCode, String shopGroupCode);
 
     /**
      *
@@ -41,5 +41,5 @@ public interface ShopGroupMgtService {
      * @param shopGroupCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String shopGroupCode);
+    TeaMachineResult<Void> deleteByShopGroupCode(String tenantCode, String shopGroupCode);
 }

@@ -53,7 +53,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     private ExcelHandlerFactory excelHandlerFactory;
 
     @Override
-    public TeaMachineResult<TeaDTO> getByCode(String tenantCode, String teaCode) {
+    public TeaMachineResult<TeaDTO> getByTeaCode(String tenantCode, String teaCode) {
         try {
             TeaPO po = teaAccessor.getByTeaCode(tenantCode, teaCode);
             TeaDTO dto = convertToTeaDTO(po, true);
@@ -203,7 +203,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String teaCode) {
+    public TeaMachineResult<Void> deleteByTeaCode(String tenantCode, String teaCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

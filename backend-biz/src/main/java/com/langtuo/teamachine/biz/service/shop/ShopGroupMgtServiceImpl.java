@@ -32,7 +32,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     private ShopAccessor shopAccessor;
 
     @Override
-    public TeaMachineResult<ShopGroupDTO> getByCode(String tenantCode, String shopGroupCode) {
+    public TeaMachineResult<ShopGroupDTO> getByShopGroupCode(String tenantCode, String shopGroupCode) {
         ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupCode(tenantCode, shopGroupCode);
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
         return TeaMachineResult.success(shopGroupDTO);
@@ -122,7 +122,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String shopGroupCode) {
+    public TeaMachineResult<Void> deleteByShopGroupCode(String tenantCode, String shopGroupCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }

@@ -13,7 +13,7 @@ public interface ToppingMgtService {
      * @param tenantCode
      * @return
      */
-    TeaMachineResult<ToppingDTO> getByCode(String tenantCode, String toppingCode);
+    TeaMachineResult<ToppingDTO> getByToppingCode(String tenantCode, String toppingCode);
 
     /**
      *
@@ -42,7 +42,7 @@ public interface ToppingMgtService {
      * @param toppingCode
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String toppingCode);
+    TeaMachineResult<Void> deleteByToppingCode(String tenantCode, String toppingCode);
 
     /**
      *
