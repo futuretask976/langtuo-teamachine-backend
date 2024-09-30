@@ -1,10 +1,10 @@
 package com.langtuo.teamachine.mqtt.produce;
 
 import com.alibaba.mqtt.server.ServerProducer;
+import com.alibaba.mqtt.server.callback.SendCallback;
 import com.alibaba.mqtt.server.config.ChannelConfig;
 import com.alibaba.mqtt.server.config.ProducerConfig;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
-import com.langtuo.teamachine.mqtt.produce.callback.MqttSendCallback;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -38,7 +38,6 @@ public class MqttProducer implements InitializingBean {
     public void onDestroy() {
         if (serverProducer != null) {
             try {
-                log.info("$$$$$ MqttProducer#onDestroy entering");
                 serverProducer.stop();
             } catch (IOException e) {
                 log.error("mqttProducer|stopServerProducer|fatal|" + e.getMessage(), e);
@@ -55,9 +54,18 @@ public class MqttProducer implements InitializingBean {
     public void sendP2PMsgByTenant(String tenantCode, String machineCode, String payload) {
         String topic = tenantCode + MqttConsts.TENANT_PARENT_P2P_TOPIC_POSTFIX + machineCode;
         try {
-            log.info("$$$$$ MqttProducer#sendP2PMsgByTenant topic=" + topic + ", payload=" + payload);
-            serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new MqttSendCallback());
-        } catch (IOException e) {
+            serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new SendCallback() {
+                @Override
+                public void onSuccess(String s) {
+                    log.info("$$$$$ mqttProducer|sendP2PMsg|onSuccess|" + topic + "|" + payload);
+                }
+
+                @Override
+                public void onFail() {
+                    log.info("$$$$$ mqttProducer|sendP2PMsg|onFail|" + topic + "|" + payload);
+                }
+            });
+        } catch (Throwable e) {
             log.error("mqttProducer|sendP2PMsgByTenant|fatal|" + e.getMessage(), e);
         }
     }
@@ -65,9 +73,18 @@ public class MqttProducer implements InitializingBean {
     public void sendBroadcastMsgByTenant(String tenantCode, String payload) {
         String topic = tenantCode + MqttConsts.TENANT_PARENT_TOPIC_POSTFIX + MqttConsts.TOPIC_SEPERATOR + "broadcast";
         try {
-            log.info("$$$$$ MqttProducer#sendBroadcastMsgByTenant topic=" + topic + ", payload=" + payload);
-            serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new MqttSendCallback());
-        } catch (IOException e) {
+            serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new SendCallback() {
+                @Override
+                public void onSuccess(String s) {
+                    log.info("$$$$$ mqttProducer|sendBroadcastMsg|onSuccess|" + topic + "|" + payload);
+                }
+
+                @Override
+                public void onFail() {
+                    log.info("$$$$$ mqttProducer|sendBroadcastMsg|onFail|" + topic + "|" + payload);
+                }
+            });
+        } catch (Throwable e) {
             log.error("mqttProducer|sendBroadcastMsgByTenant|fatal|" + e.getMessage(), e);
         }
     }

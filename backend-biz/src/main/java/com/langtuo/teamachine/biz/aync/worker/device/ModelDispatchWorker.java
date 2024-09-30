@@ -45,7 +45,9 @@ public class ModelDispatchWorker implements Runnable {
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         List<String> tenantCodeList = DaoUtils.getTenantCodeList();
         for (String tenantCode : tenantCodeList) {
+            log.info("$$$$$ modelDispatchWorker|beforeCallSendBroadcast|" + tenantCode + "|" + jsonMsg.toJSONString());
             mqttProducer.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
+            log.info("$$$$$ modelDispatchWorker|afterCallSendBroadcast|" + tenantCode + "|" + jsonMsg.toJSONString());
         }
     }
 
