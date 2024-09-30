@@ -42,6 +42,10 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
     @Override
     public TeaMachineResult<AndroidAppDTO> getByVersion(String version) {
+        if (StringUtils.isBlank(version)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
         try {
             AndroidAppPO po = androidAppAccessor.getByVersion(version);
             return TeaMachineResult.success(convertToAndroidAppDTO(po));
@@ -53,6 +57,9 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
     @Override
     public TeaMachineResult<PageDTO<AndroidAppDTO>> search(String version, int pageNum, int pageSize) {
+        if (StringUtils.isBlank(version)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
@@ -83,7 +90,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String version) {
-        if (StringUtils.isBlank(version)) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(version)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
@@ -129,6 +136,10 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
     @Override
     public TeaMachineResult<AndroidAppDispatchDTO> getDispatchByVersion(String tenantCode, String version) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(version)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
         try {
             AndroidAppDispatchDTO dto = new AndroidAppDispatchDTO();
             dto.setVersion(version);
@@ -149,7 +160,6 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     }
 
     private TeaMachineResult<Void> putNew(AndroidAppPO po) {
-        TeaMachineResult<Void> teaMachineResult;
         try {
             AndroidAppPO exist = androidAppAccessor.getByVersion(po.getVersion());
             if (exist != null) {

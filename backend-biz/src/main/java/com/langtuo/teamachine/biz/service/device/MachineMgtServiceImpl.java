@@ -53,14 +53,26 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Override
     public TeaMachineResult<MachineDTO> getByMachineCode(String tenantCode, String machineCode) {
-        MachinePO machinePO = machineAccessor.getByMachineCode(tenantCode, machineCode);
-        MachineDTO adminRoleDTO = convert(machinePO);
-        return TeaMachineResult.success(adminRoleDTO);
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
+        try {
+            MachinePO machinePO = machineAccessor.getByMachineCode(tenantCode, machineCode);
+            MachineDTO adminRoleDTO = convert(machinePO);
+            return TeaMachineResult.success(adminRoleDTO);
+        } catch (Exception e) {
+            log.error("machineMgtService|getByMachineCode|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+        }
     }
 
     @Override
     public TeaMachineResult<PageDTO<MachineDTO>> search(String tenantCode, String machineCode, String screenCode,
             String elecBoardCode, String shopCode, int pageNum, int pageSize) {
+        if (StringUtils.isBlank(tenantCode)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
@@ -81,6 +93,10 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Override
     public TeaMachineResult<List<MachineDTO>> list(String tenantCode) {
+        if (StringUtils.isBlank(tenantCode)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
         try {
             List<MachinePO> list = machineAccessor.list(tenantCode);
             List<MachineDTO> dtoList = list.stream()
@@ -96,6 +112,10 @@ public class MachineMgtServiceImpl implements MachineMgtService {
 
     @Override
     public TeaMachineResult<List<MachineDTO>> listByShopCode(String tenantCode, String shopCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopCode)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
         try {
             List<MachinePO> list = machineAccessor.listByShopCode(tenantCode, shopCode);
             List<MachineDTO> dtoList = list.stream()

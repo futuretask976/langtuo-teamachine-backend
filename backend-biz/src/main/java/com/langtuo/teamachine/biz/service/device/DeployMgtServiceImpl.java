@@ -45,6 +45,9 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     @Override
     public TeaMachineResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
             String shopCode, Integer state, int pageNum, int pageSize) {
+        if (StringUtils.isBlank(tenantCode)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
@@ -62,6 +65,10 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
     @Override
     public TeaMachineResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(deployCode)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
         try {
             DeployDTO dto = convertToDeployPO(deployAccessor.getByDeployCode(tenantCode, deployCode));
             return TeaMachineResult.success(dto);
@@ -73,6 +80,10 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
     @Override
     public TeaMachineResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
         try {
             DeployDTO dto = convertToDeployPO(deployAccessor.getByMachineCode(tenantCode, machineCode));
             return TeaMachineResult.success(dto);

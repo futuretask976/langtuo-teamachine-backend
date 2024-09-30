@@ -76,6 +76,10 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
     @Override
     public TeaMachineResult<ModelDTO> getByModelCode(String modelCode) {
+        if (StringUtils.isBlank(modelCode)) {
+            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
         try {
             ModelPO modelPO = modelAccessor.getByModelCode(modelCode);
             ModelDTO modelDTO = ModelMgtConvertor.convertToModelDTO(modelPO);
