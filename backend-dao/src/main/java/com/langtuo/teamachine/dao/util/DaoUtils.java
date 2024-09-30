@@ -28,7 +28,9 @@ public class DaoUtils {
         if (CollectionUtils.isEmpty(list)) {
             return null;
         }
-        return list.stream().map(TenantPO::getTenantCode).collect(Collectors.toList());
+        return list.stream()
+                .map(TenantPO::getTenantCode)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -186,8 +188,7 @@ public class DaoUtils {
         List<String> menuCodeList = menuDispatchPOList.stream()
                 .map(MenuDispatchPO::getMenuCode)
                 .collect(Collectors.toList());
-        List<MenuPO> menuPOList = SpringAccessorUtils.getMenuAccessor().listByMenuCode(tenantCode,
-                menuCodeList);
+        List<MenuPO> menuPOList = SpringAccessorUtils.getMenuAccessor().listByMenuCode(tenantCode, menuCodeList);
         return menuPOList;
     }
 }
