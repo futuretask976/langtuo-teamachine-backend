@@ -62,13 +62,11 @@ public class MqttConsumer implements InitializingBean {
 
         // 先关闭 MQTT 消息消费
         try {
-            log.info("$$$$$ MqttConsumer#onDestroy entering");
+            log.info("$$$$$ mqttConsumer|onDestroy|beginning");
             serverConsumer.stop();
         } catch (IOException e) {
             log.error("mqttConsumer|stopServerConsumer|fatal|" + e.getMessage(), e);
         }
-        // 再关闭消费线程池
-        ConsumeExeService.waitUntilTerminate();
     }
 
     public void initServerConsumer() throws IOException, TimeoutException {

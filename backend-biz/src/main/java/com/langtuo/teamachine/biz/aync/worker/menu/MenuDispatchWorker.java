@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.biz.aync.worker.menu;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
@@ -77,7 +78,7 @@ public class MenuDispatchWorker implements Runnable {
                 return;
             }
 
-            JSONObject dispatchCont = BizUtils.getMenuDispatchCont(tenantCode, menuCode);
+            JSONArray dispatchCont = getDispatchCont();
             if (dispatchCont == null) {
                 return;
             }
@@ -162,7 +163,7 @@ public class MenuDispatchWorker implements Runnable {
 
     private JSONObject getSendMsg(MenuDispatchCachePO po) {
         JSONObject jsonMsg = new JSONObject();
-        jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MENU);
+        jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MENU_LIST);
         jsonMsg.put(CommonConsts.JSON_KEY_MD5_AS_HEX, po.getMd5());
         jsonMsg.put(CommonConsts.JSON_KEY_OSS_PATH,
                 OSSConfig.OSS_MENU_PATH + OSSConfig.OSS_PATH_SEPARATOR + po.getFileName());
@@ -189,5 +190,11 @@ public class MenuDispatchWorker implements Runnable {
         newCachePO.setFileName(fileName);
         newCachePO.setMd5(md5AsHex);
         return newCachePO;
+    }
+
+    private JSONArray getDispatchCont() {
+        JSONArray arr = new JSONArray();
+        arr.add(BizUtils.getMenuDispatchCont(tenantCode, menuCode));
+        return arr;
     }
 }

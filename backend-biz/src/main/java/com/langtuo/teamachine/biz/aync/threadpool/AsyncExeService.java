@@ -2,6 +2,7 @@ package com.langtuo.teamachine.biz.aync.threadpool;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PreDestroy;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -34,10 +35,11 @@ public class AsyncExeService {
         return executorService;
     }
 
-    public void waitUntilTerminate() {
+    @PreDestroy
+    public void onDestroy() {
         if (executorService != null) {
             try {
-                log.info("asyncExeService|awaitTermination|beginning");
+                log.info("$$$$$ asyncExeService|onDestroy|beginning");
                 // 启动关闭流程
                 executorService.shutdown();
                 if (!executorService.awaitTermination(AWAIT_TERMINATION_TIMEOUT, TimeUnit.SECONDS)) {

@@ -3,7 +3,10 @@ package com.langtuo.teamachine.mqtt.threadpool;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PreDestroy;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ConsumeExeService {
@@ -32,10 +35,11 @@ public class ConsumeExeService {
         return executorService;
     }
 
-    public static void waitUntilTerminate() {
+    @PreDestroy
+    public static void onDestroy() {
         if (executorService != null) {
             try {
-                log.info("consumeExeService|awaitTermination|beginning");
+                log.info("$$$$$ consumeExeService|onDestroy|beginning");
                 // 启动关闭流程
                 executorService.shutdown();
                 if (!executorService.awaitTermination(AWAIT_TERMINATION_TIMEOUT, TimeUnit.SECONDS)) {

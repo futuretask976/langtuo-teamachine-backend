@@ -38,6 +38,7 @@ public class MqttProducer implements InitializingBean {
     public void onDestroy() {
         if (serverProducer != null) {
             try {
+                log.info("$$$$$ mqttProducer|onDestroy|beginning");
                 serverProducer.stop();
             } catch (IOException e) {
                 log.error("mqttProducer|stopServerProducer|fatal|" + e.getMessage(), e);
