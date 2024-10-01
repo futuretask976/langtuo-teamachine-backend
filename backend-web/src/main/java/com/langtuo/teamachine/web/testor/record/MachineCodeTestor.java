@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.biz.testor.record;
+package com.langtuo.teamachine.web.testor.record;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.record.MachineCodeSeqMapper;

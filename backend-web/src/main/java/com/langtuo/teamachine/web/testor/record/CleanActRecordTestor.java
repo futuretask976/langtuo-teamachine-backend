@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.biz.testor.record;
+package com.langtuo.teamachine.web.testor.record;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -11,7 +11,6 @@ import com.langtuo.teamachine.mqtt.request.record.CleanActRecordPutRequest;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class CleanActRecordTestor {

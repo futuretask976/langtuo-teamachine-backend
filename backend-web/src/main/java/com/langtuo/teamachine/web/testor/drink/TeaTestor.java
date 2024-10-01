@@ -1,4 +1,4 @@
-//package com.langtuo.teamachine.biz.testor.drink;
+package com.langtuo.teamachine.web.testor.drink;//package com.langtuo.teamachine.biz.testor.drink;
 //
 //import com.google.common.collect.Lists;
 //import com.langtuo.teamachine.api.request.drink.*;

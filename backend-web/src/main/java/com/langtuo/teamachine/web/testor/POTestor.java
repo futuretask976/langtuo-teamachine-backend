@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.biz.testor;
+package com.langtuo.teamachine.web.testor;
 
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.user.AdminMapper;

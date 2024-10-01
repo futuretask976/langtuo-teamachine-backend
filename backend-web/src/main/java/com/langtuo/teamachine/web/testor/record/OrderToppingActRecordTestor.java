@@ -1,11 +1,11 @@
-package com.langtuo.teamachine.biz.testor.record;
+package com.langtuo.teamachine.web.testor.record;
 
 import com.google.common.collect.Lists;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
 import com.langtuo.teamachine.dao.mapper.record.InvalidActRecordMapper;
-import com.langtuo.teamachine.dao.mapper.record.OrderSpecItemActRecordMapper;
+import com.langtuo.teamachine.dao.mapper.record.OrderToppingActRecordMapper;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
-import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
+import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
 import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderSpecItemActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderToppingActRecordPutRequest;
@@ -17,15 +17,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OrderSpecItemActRecordTestor {
+public class OrderToppingActRecordTestor {
     public static void main(String args[]) {
         insert();
-//        select();
     }
 
     public static void insert() {
         SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrderSpecItemActRecordMapper mapper = sqlSession.getMapper(OrderSpecItemActRecordMapper.class);
+        OrderToppingActRecordMapper mapper = sqlSession.getMapper(OrderToppingActRecordMapper.class);
 
         OrderActRecordPutRequest request = new OrderActRecordPutRequest();
         request.setTenantCode("tenant_001");
@@ -64,8 +63,8 @@ public class OrderSpecItemActRecordTestor {
         toppingList.add(toppingReq2);
         request.setToppingList(toppingList);
 
-        List<OrderSpecItemActRecordPO> poList = convertToSpecItemActRecordPO(request);
-        for (OrderSpecItemActRecordPO po : poList) {
+        List<OrderToppingActRecordPO> poList = convertToOrderToppingActRecordPO(request);
+        for (OrderToppingActRecordPO po : poList) {
             mapper.insert(po);
         }
 
@@ -89,18 +88,19 @@ public class OrderSpecItemActRecordTestor {
         sqlSession.close();
     }
 
-    private static List<OrderSpecItemActRecordPO> convertToSpecItemActRecordPO(OrderActRecordPutRequest request) {
+    private static List<OrderToppingActRecordPO> convertToOrderToppingActRecordPO(OrderActRecordPutRequest request) {
         if (request == null || CollectionUtils.isEmpty(request.getSpecItemList())) {
             return null;
         }
 
-        List<OrderSpecItemActRecordPO> specItemList = request.getSpecItemList().stream()
-                .map(orderSpecItemActRecordPutRequest -> {
-                    OrderSpecItemActRecordPO po = new OrderSpecItemActRecordPO();
+        List<OrderToppingActRecordPO> specItemList = request.getToppingList().stream()
+                .map(orderToppingActRecordPutRequest -> {
+                    OrderToppingActRecordPO po = new OrderToppingActRecordPO();
                     po.setTenantCode(request.getTenantCode());
                     po.setIdempotentMark("1723700246767");
-                    po.setSpecCode(orderSpecItemActRecordPutRequest.getSpecCode());
-                    po.setSpecItemCode(orderSpecItemActRecordPutRequest.getSpecItemCode());
+                    po.setStepIndex(orderToppingActRecordPutRequest.getStepIndex());
+                    po.setToppingCode(orderToppingActRecordPutRequest.getToppingCode());
+                    po.setActualAmount(orderToppingActRecordPutRequest.getActualAmount());
                     return po;
                 }).collect(Collectors.toList());
         return specItemList;

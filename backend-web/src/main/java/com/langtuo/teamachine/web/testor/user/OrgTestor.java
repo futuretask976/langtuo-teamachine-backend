@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.biz.testor.user;
+package com.langtuo.teamachine.web.testor.user;
 
 import com.google.common.collect.Maps;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;

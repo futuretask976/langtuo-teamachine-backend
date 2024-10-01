@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.biz.testor;
+package com.langtuo.teamachine.web.testor;
 
 import java.util.Arrays;
 

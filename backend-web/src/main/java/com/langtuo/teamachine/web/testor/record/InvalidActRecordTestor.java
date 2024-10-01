@@ -1,4 +1,4 @@
-package com.langtuo.teamachine.biz.testor.record;
+package com.langtuo.teamachine.web.testor.record;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
