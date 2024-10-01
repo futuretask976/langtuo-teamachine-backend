@@ -36,19 +36,20 @@ public class MqttProducer implements InitializingBean {
 
     @PreDestroy
     public void onDestroy() {
-        log.info("$$$$$ mqttProducer|onDestroy|entering");
+        System.out.println("$$$$$ mqttProducer|onDestroy|entering");
         if (serverProducer == null) {
             return;
         }
 
         try {
-            log.info("$$$$$ mqttProducer|stopProducer|before");
+            System.out.println("$$$$$ mqttProducer|stopProducer|before");
             serverProducer.stop();
-            log.info("$$$$$ mqttProducer|stopProducer|after");
+            System.out.println("$$$$$ mqttProducer|stopProducer|after");
         } catch (IOException e) {
-            log.error("mqttProducer|stopServerProducer|fatal|" + e.getMessage(), e);
+            System.out.println("mqttProducer|stopServerProducer|fatal|" + e.getMessage());
+            e.printStackTrace();
         }
-        log.info("$$$$$ mqttProducer|onDestroy|exiting");
+        System.out.println("$$$$$ mqttProducer|onDestroy|exiting");
     }
 
     public void init() throws IOException, TimeoutException {
