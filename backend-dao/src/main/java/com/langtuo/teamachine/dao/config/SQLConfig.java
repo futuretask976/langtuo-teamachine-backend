@@ -52,7 +52,7 @@ public class SQLConfig {
     @Value("${teamachine.database.password}")
     private String password;
 
-    @Bean(name = DATA_SOURCE_NAME)
+    @Bean(name = DATA_SOURCE_NAME, destroyMethod = "close")
     @Primary
     public DataSource getSQLDatasource() {
         HikariDataSource hikariDataSource = new HikariDataSource();
