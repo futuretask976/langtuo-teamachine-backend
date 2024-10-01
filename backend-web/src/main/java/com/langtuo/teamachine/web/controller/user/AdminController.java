@@ -20,7 +20,7 @@ public class AdminController {
     @GetMapping(value = "/get")
     public TeaMachineResult<AdminDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("loginName") String loginName) {
-        log.info("adminController|get|entering|" + tenantCode + "|" + loginName);
+        log.info("adminController|get|entering|" + tenantCode + "|" + loginName + "|001");
         TeaMachineResult<AdminDTO> rtn = service.getByLoginName(tenantCode, loginName);
         return rtn;
     }

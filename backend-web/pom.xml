@@ -149,7 +149,6 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>teamachinebackend</warName>
-                    <!-- webXml>src/main/webapp/WEB-INF/web.xml</webXml -->
                 </configuration>
             </plugin>
             <plugin>

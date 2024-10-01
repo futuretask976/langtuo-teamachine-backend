@@ -13,6 +13,7 @@ public class TeaMachineServletContextListener implements ServletContextListener 
     public void contextInitialized(ServletContextEvent sce) {
         // 应用启动时的操作
         log.info("teaMachineServletContextListener|contextInitialized|entering");
+        System.out.println("teaMachineServletContextListener|contextInitialized|entering");
         log.info("teaMachineServletContextListener|contextInitialized|exiting");
     }
 
