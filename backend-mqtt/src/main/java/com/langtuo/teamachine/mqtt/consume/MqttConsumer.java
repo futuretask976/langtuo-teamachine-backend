@@ -56,20 +56,20 @@ public class MqttConsumer implements InitializingBean {
 
     @PreDestroy
     public void onDestroy() {
+        log.info("$$$$$ mqttConsumer|onDestroy|entering");
         if (serverConsumer == null) {
             return;
         }
 
         // 先关闭 MQTT 消息消费
         try {
-            log.info("$$$$$ mqttConsumer|onDestroy|beginning");
+            log.info("$$$$$ mqttConsumer|stopConsumer|before");
             serverConsumer.stop();
-            log.info("$$$$$ mqttConsumer|onDestroy|ending");
+            log.info("$$$$$ mqttConsumer|stopConsumer|after");
         } catch (IOException e) {
             log.error("mqttConsumer|stopServerConsumer|fatal|" + e.getMessage(), e);
         }
-
-        ConsumeExeService.destroy();
+        log.info("$$$$$ mqttConsumer|onDestroy|exiting");
     }
 
     public void initServerConsumer() throws IOException, TimeoutException {
