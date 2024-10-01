@@ -35,6 +35,7 @@ public class AsyncExeService {
     }
 
     public static void destroy() {
+        log.info("$$$$$ asyncExeService|onDestroy|entering");
         if (executorService != null) {
             try {
                 log.info("$$$$$ asyncExeService|onDestroy|beginning");
@@ -50,5 +51,6 @@ public class AsyncExeService {
                 Thread.currentThread().interrupt();
             }
         }
+        log.info("$$$$$ asyncExeService|onDestroy|exiting");
     }
 }

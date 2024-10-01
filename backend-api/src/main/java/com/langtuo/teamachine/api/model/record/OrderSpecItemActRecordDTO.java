@@ -2,8 +2,10 @@ package com.langtuo.teamachine.api.model.record;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class OrderSpecItemActRecordDTO {
+public class OrderSpecItemActRecordDTO implements Serializable {
     /**
      * 规格编码
      */

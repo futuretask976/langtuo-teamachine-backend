@@ -2,8 +2,10 @@ package com.langtuo.teamachine.api.model.drink;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class ToppingAdjustRuleDTO {
+public class ToppingAdjustRuleDTO implements Serializable {
     public static final int ADJUST_TYPE_DECREASE = 0;
     public static final int ADJUST_TYPE_INCREASE = 1;
 

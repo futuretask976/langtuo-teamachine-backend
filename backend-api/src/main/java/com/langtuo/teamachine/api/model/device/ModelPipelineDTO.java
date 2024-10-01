@@ -2,8 +2,10 @@ package com.langtuo.teamachine.api.model.device;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class ModelPipelineDTO {
+public class ModelPipelineDTO implements Serializable {
     /**
      * 型号编码
      */

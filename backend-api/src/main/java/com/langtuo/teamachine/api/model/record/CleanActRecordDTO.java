@@ -2,11 +2,12 @@ package com.langtuo.teamachine.api.model.record;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
 @Data
-public class CleanActRecordDTO {
+public class CleanActRecordDTO implements Serializable  {
     /**
      * 数据表记录插入时间
      */

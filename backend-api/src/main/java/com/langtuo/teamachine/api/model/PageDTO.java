@@ -2,10 +2,11 @@ package com.langtuo.teamachine.api.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class PageDTO<T> {
+public class PageDTO<T> implements Serializable {
     /**
      * 每页展示的记录数
      */

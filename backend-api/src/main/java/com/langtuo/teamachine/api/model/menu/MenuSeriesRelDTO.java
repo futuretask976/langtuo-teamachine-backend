@@ -2,10 +2,10 @@ package com.langtuo.teamachine.api.model.menu;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.io.Serializable;
 
 @Data
-public class MenuSeriesRelDTO {
+public class MenuSeriesRelDTO implements Serializable {
     /**
      * 菜单编码
      */

@@ -2,11 +2,12 @@ package com.langtuo.teamachine.api.model.device;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
 @Data
-public class MachineDTO {
+public class MachineDTO implements Serializable {
     /**
      * 数据表记录插入时间
      */

@@ -2,10 +2,10 @@ package com.langtuo.teamachine.api.model.rule;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.io.Serializable;
 
 @Data
-public class CleanRuleStepDTO {
+public class CleanRuleStepDTO implements Serializable {
     /**
      * 租户编码
      */

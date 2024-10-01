@@ -3,10 +3,11 @@ package com.langtuo.teamachine.api.model.drink;
 import com.google.common.collect.Lists;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class ActStepDTO {
+public class ActStepDTO implements Serializable {
     /**
      *
      */

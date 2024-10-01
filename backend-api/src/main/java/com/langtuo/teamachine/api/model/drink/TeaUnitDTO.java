@@ -2,10 +2,11 @@ package com.langtuo.teamachine.api.model.drink;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class TeaUnitDTO {
+public class TeaUnitDTO implements Serializable {
     /**
      * 茶品单位编码
      */

@@ -2,8 +2,10 @@ package com.langtuo.teamachine.api.model.user;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class PermitActDTO {
+public class PermitActDTO implements Serializable {
     /**
      * 权限编码
      */

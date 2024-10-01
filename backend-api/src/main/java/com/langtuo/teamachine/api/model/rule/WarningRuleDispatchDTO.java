@@ -2,10 +2,11 @@ package com.langtuo.teamachine.api.model.rule;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class WarningRuleDispatchDTO {
+public class WarningRuleDispatchDTO implements Serializable {
     /**
      * 预警规则编码
      */

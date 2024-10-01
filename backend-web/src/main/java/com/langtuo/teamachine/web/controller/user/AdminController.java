@@ -20,6 +20,7 @@ public class AdminController {
     @GetMapping(value = "/get")
     public TeaMachineResult<AdminDTO> get(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("loginName") String loginName) {
+        log.info("adminController|get|entering|" + tenantCode + "|" + loginName);
         TeaMachineResult<AdminDTO> rtn = service.getByLoginName(tenantCode, loginName);
         return rtn;
     }
@@ -29,6 +30,8 @@ public class AdminController {
             @RequestParam(name = "loginName", required = false) String loginName,
             @RequestParam(name = "roleCode", required = false) String roleCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        log.info("adminController|search|entering|" + tenantCode + "|" + loginName);
+        System.out.println("adminController|search|entering|" + tenantCode + "|" + loginName);
         TeaMachineResult<PageDTO<AdminDTO>> rtn = service.search(tenantCode, loginName, roleCode, pageNum, pageSize);
         return rtn;
     }

@@ -2,10 +2,11 @@ package com.langtuo.teamachine.api.model.rule;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class DrainRuleDispatchDTO {
+public class DrainRuleDispatchDTO implements Serializable {
     /**
      * 开业规则编码
      */

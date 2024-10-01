@@ -2,8 +2,10 @@ package com.langtuo.teamachine.api.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class ErrorMsgDTO {
+public class ErrorMsgDTO implements Serializable {
     /**
      * 错误编码
      */

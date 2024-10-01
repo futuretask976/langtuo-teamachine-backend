@@ -2,8 +2,10 @@ package com.langtuo.teamachine.api.model.record;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class OrderToppingActRecordDTO {
+public class OrderToppingActRecordDTO implements Serializable {
     /**
      * 步骤序号
      */

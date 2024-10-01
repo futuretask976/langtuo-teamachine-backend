@@ -35,6 +35,7 @@ public class ConsumeExeService {
     }
 
     public static void destroy() {
+        log.info("$$$$$ consumeExeService|onDestroy|entering");
         if (executorService != null) {
             try {
                 log.info("$$$$$ consumeExeService|onDestroy|beginning");
@@ -50,5 +51,6 @@ public class ConsumeExeService {
                 Thread.currentThread().interrupt();
             }
         }
+        log.info("$$$$$ consumeExeService|onDestroy|exiting");
     }
 }

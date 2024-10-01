@@ -3,10 +3,11 @@ package com.langtuo.teamachine.api.model.drink;
 import lombok.Data;
 import org.apache.commons.compress.utils.Lists;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class SpecRuleDTO {
+public class SpecRuleDTO implements Serializable {
     /**
      * 规格编码
      */

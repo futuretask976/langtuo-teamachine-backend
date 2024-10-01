@@ -2,8 +2,10 @@ package com.langtuo.teamachine.api.model.drink;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class ToppingBaseRuleDTO {
+public class ToppingBaseRuleDTO implements Serializable {
     /**
      * 步骤序号
      */

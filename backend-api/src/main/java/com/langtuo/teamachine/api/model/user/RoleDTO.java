@@ -2,12 +2,13 @@ package com.langtuo.teamachine.api.model.user;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Data
-public class RoleDTO {
+public class RoleDTO implements Serializable {
     /**
      * 数据表记录插入时间
      */

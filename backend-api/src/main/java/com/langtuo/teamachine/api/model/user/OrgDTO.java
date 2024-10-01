@@ -2,11 +2,12 @@ package com.langtuo.teamachine.api.model.user;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class OrgDTO {
+public class OrgDTO implements Serializable {
     /**
      * 数据表记录插入时间
      */

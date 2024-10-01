@@ -2,10 +2,10 @@ package com.langtuo.teamachine.api.model.drink;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.io.Serializable;
 
 @Data
-public class SpecItemDTO {
+public class SpecItemDTO implements Serializable {
     /**
      * 规格编码
      */
