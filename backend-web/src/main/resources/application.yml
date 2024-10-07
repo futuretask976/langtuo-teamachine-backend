@@ -6,6 +6,9 @@ spring:
     username: miya
     password: password@1
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      max-lifetime: 1770000
   locale: zh_CN
   messages:
     basename: messages
