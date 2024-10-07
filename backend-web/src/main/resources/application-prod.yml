@@ -15,12 +15,6 @@ spring:
     maxWaitMillis: 5000 # 最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制
 
 teamachine:
-  database:
-    host: rm-cn-28t3ppz9e0001yho.rwlb.rds.aliyuncs.com
-    port: 3306
-    dbname: gx_mysql_demo
-    username: miya
-    password: password@1
   jwt:
     tokenHeader: Authorization # JWT 存储的请求头
     secret: teamachine-secret # JWT 加解密使用的密钥

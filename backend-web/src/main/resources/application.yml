@@ -1,6 +1,11 @@
 spring:
   application:
     name: teamachine-backend
+  datasource:
+    url: jdbc:mysql://rm-cn-28t3ppz9e0001yho.rwlb.rds.aliyuncs.com:3306/gx_mysql_demo?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: miya
+    password: password@1
+    driver-class-name: com.mysql.cj.jdbc.Driver
   locale: zh_CN
   messages:
     basename: messages
@@ -29,8 +34,8 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
   mapper-locations:
-    - classpath:dao/*.xml
-    - classpath*:com/**/mapper/*.xml
+    - classpath*:mybatis/mapper/**/*.xml
+  type-aliases-package: com.langtuo.teamachine.dao.typehandler
 
 
 

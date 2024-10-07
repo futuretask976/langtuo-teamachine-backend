@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.dao.mapper.report;
 
-import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
 import com.langtuo.teamachine.dao.po.report.OrderTeaReportPO;
 import com.langtuo.teamachine.dao.query.report.OrderTeaReportByShopQuery;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Mapper
-@TeaMachineSQLScan
 @Repository
 public interface OrderTeaReportMapper {
     /**

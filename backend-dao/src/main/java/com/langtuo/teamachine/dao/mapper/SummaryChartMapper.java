@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.dao.mapper;
 
-import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -9,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-@TeaMachineSQLScan
 @Repository
 public interface SummaryChartMapper {
     /**

@@ -1,7 +1,6 @@
 package com.langtuo.teamachine.dao.mapper.shop;
 
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
-import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.query.shop.ShopQuery;
 import org.apache.ibatis.annotations.Mapper;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Mapper
-@TeaMachineSQLScan
 @Repository
 public interface ShopMapper {
     /**

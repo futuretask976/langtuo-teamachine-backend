@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE configuration
-        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
-<configuration>
-    <settings>
-        <!-- 关闭日志 -->
-        <setting name="logImpl" value="org.apache.ibatis.logging.nologging.NoLoggingImpl"/>
-    </settings>
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE configuration-->
+<!--        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"-->
+<!--        "http://mybatis.org/dtd/mybatis-3-config.dtd">-->
+<!--<configuration>-->
+<!--    <settings>-->
+<!--        &lt;!&ndash; 关闭日志 &ndash;&gt;-->
+<!--        <setting name="logImpl" value="org.apache.ibatis.logging.nologging.NoLoggingImpl"/>-->
+<!--    </settings>-->
 
-    <typeAliases>
-        <typeAlias type="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" alias="MapStringTypeHandler"/>
-    </typeAliases>
-    <typeHandlers>
-        <typeHandler handler="MapStringTypeHandler" jdbcType="VARCHAR" javaType="java.util.Map"/>
-    </typeHandlers>
+<!--    <typeAliases>-->
+<!--        <typeAlias type="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" alias="MapStringTypeHandler"/>-->
+<!--    </typeAliases>-->
+<!--    <typeHandlers>-->
+<!--        <typeHandler handler="MapStringTypeHandler" jdbcType="VARCHAR" javaType="java.util.Map"/>-->
+<!--    </typeHandlers>-->
 
-    <plugins>
-        <plugin interceptor="com.langtuo.teamachine.dao.interceptor.LangTuoTableShardInterceptor" />
-        <plugin interceptor="com.github.pagehelper.PageInterceptor" />
-    </plugins>
+<!--    <plugins>-->
+<!--        <plugin interceptor="com.langtuo.teamachine.dao.interceptor.LangTuoTableShardInterceptor" />-->
+<!--        <plugin interceptor="com.github.pagehelper.PageInterceptor" />-->
+<!--    </plugins>-->
 
 <!--    <environments default="development">-->
 <!--        <environment id="development">-->
@@ -32,68 +32,68 @@
 <!--        </environment>-->
 <!--    </environments>-->
 
-    <mappers>
-        <!-- 每一个Mapper.xml都要在Mybatis核心配置文件中注册！ -->
-        <mapper resource="mybatis/mapper/summary-chart-mapper.xml"/>
-        <!-- 设备 -->
-        <mapper resource="mybatis/mapper/device/model-mapper.xml"/>
-        <mapper resource="mybatis/mapper/device/model-pipeline-mapper.xml"/>
-        <mapper resource="mybatis/mapper/device/machine-mapper.xml"/>
-        <mapper resource="mybatis/mapper/device/deploy-mapper.xml"/>
-        <mapper resource="mybatis/mapper/device/machine-code-seq-mapper.xml"/>
-        <mapper resource="mybatis/mapper/device/android-app-mapper.xml"/>
-        <mapper resource="mybatis/mapper/device/android-app-dispatch-mapper.xml"/>
-        <!-- 用户 -->
-        <mapper resource="mybatis/mapper/user/tenant-mapper.xml"/>
-        <mapper resource="mybatis/mapper/user/admin-mapper.xml"/>
-        <mapper resource="mybatis/mapper/user/role-mapper.xml"/>
-        <mapper resource="mybatis/mapper/user/role-act-rel-mapper.xml"/>
-        <mapper resource="mybatis/mapper/user/organization-mapper.xml"/>
-        <!-- 店铺 -->
-        <mapper resource="mybatis/mapper/shop/shop-group-mapper.xml"/>
-        <mapper resource="mybatis/mapper/shop/shop-mapper.xml"/>
-        <!-- 饮品生产 -->
-        <mapper resource="mybatis/mapper/drink/topping-type-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/topping-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/spec-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/spec-item-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/tea-type-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/tea-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/tea-unit-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/spec-item-rule-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/topping-base-rule-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/topping-adjust-rule-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/accuracy-template-mapper.xml"/>
-        <mapper resource="mybatis/mapper/drink/accuracy-template-topping-mapper.xml"/>
-        <!-- 菜单 -->
-        <mapper resource="mybatis/mapper/menu/series-mapper.xml"/>
-        <mapper resource="mybatis/mapper/menu/menu-mapper.xml"/>
-        <mapper resource="mybatis/mapper/menu/series-tea-rel-mapper.xml"/>
-        <mapper resource="mybatis/mapper/menu/menu-series-rel-mapper.xml"/>
-        <mapper resource="mybatis/mapper/menu/menu-dispatch-mapper.xml"/>
-        <mapper resource="mybatis/mapper/menu/menu-dispatch-cache-mapper.xml"/>
-        <!-- 食安规则 -->
-        <mapper resource="mybatis/mapper/rule/clean-rule-mapper.xml"/>
-        <mapper resource="mybatis/mapper/rule/clean-rule-step-mapper.xml"/>
-        <mapper resource="mybatis/mapper/rule/clean-rule-except-mapper.xml"/>
-        <mapper resource="mybatis/mapper/rule/clean-rule-dispatch-mapper.xml"/>
-        <mapper resource="mybatis/mapper/rule/drain-rule-mapper.xml"/>
-        <mapper resource="mybatis/mapper/rule/drain-rule-topping-mapper.xml"/>
-        <mapper resource="mybatis/mapper/rule/drain-rule-dispatch-mapper.xml"/>
-        <mapper resource="mybatis/mapper/rule/warning-rule-mapper.xml"/>
-        <mapper resource="mybatis/mapper/rule/warning-rule-dispatch-mapper.xml"/>
-        <!-- 日常记录 -->
-        <mapper resource="mybatis/mapper/record/invalid-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/record/supply-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/record/clean-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/record/drain-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/record/order-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/record/order-specitem-act-record-mapper.xml"/>
-        <mapper resource="mybatis/mapper/record/order-topping-act-record-mapper.xml"/>
-        <!-- 报表 -->
-        <mapper resource="mybatis/mapper/report/order-report-mapper.xml"/>
-        <mapper resource="mybatis/mapper/report/order-specitem-report-mapper.xml"/>
-        <mapper resource="mybatis/mapper/report/order-tea-report-mapper.xml"/>
-        <mapper resource="mybatis/mapper/report/order-topping-report-mapper.xml"/>
-    </mappers>
-</configuration>
+<!--    <mappers>-->
+<!--        &lt;!&ndash; 每一个Mapper.xml都要在Mybatis核心配置文件中注册！ &ndash;&gt;-->
+<!--        <mapper resource="mybatis/mapper/summary-chart-mapper.xml"/>-->
+<!--        &lt;!&ndash; 设备 &ndash;&gt;-->
+<!--        <mapper resource="mybatis/mapper/device/model-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/device/model-pipeline-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/device/machine-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/device/deploy-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/device/machine-code-seq-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/device/android-app-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/device/android-app-dispatch-mapper.xml"/>-->
+<!--        &lt;!&ndash; 用户 &ndash;&gt;-->
+<!--        <mapper resource="mybatis/mapper/user/tenant-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/user/admin-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/user/role-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/user/role-act-rel-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/user/organization-mapper.xml"/>-->
+<!--        &lt;!&ndash; 店铺 &ndash;&gt;-->
+<!--        <mapper resource="mybatis/mapper/shop/shop-group-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/shop/shop-mapper.xml"/>-->
+<!--        &lt;!&ndash; 饮品生产 &ndash;&gt;-->
+<!--        <mapper resource="mybatis/mapper/drink/topping-type-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/topping-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/spec-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/spec-item-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/tea-type-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/tea-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/tea-unit-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/spec-item-rule-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/topping-base-rule-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/topping-adjust-rule-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/accuracy-template-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/drink/accuracy-template-topping-mapper.xml"/>-->
+<!--        &lt;!&ndash; 菜单 &ndash;&gt;-->
+<!--        <mapper resource="mybatis/mapper/menu/series-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/menu/menu-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/menu/series-tea-rel-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/menu/menu-series-rel-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/menu/menu-dispatch-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/menu/menu-dispatch-cache-mapper.xml"/>-->
+<!--        &lt;!&ndash; 食安规则 &ndash;&gt;-->
+<!--        <mapper resource="mybatis/mapper/rule/clean-rule-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/rule/clean-rule-step-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/rule/clean-rule-except-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/rule/clean-rule-dispatch-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/rule/drain-rule-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/rule/drain-rule-topping-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/rule/drain-rule-dispatch-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/rule/warning-rule-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/rule/warning-rule-dispatch-mapper.xml"/>-->
+<!--        &lt;!&ndash; 日常记录 &ndash;&gt;-->
+<!--        <mapper resource="mybatis/mapper/record/invalid-act-record-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/record/supply-act-record-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/record/clean-act-record-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/record/drain-act-record-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/record/order-act-record-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/record/order-specitem-act-record-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/record/order-topping-act-record-mapper.xml"/>-->
+<!--        &lt;!&ndash; 报表 &ndash;&gt;-->
+<!--        <mapper resource="mybatis/mapper/report/order-report-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/report/order-specitem-report-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/report/order-tea-report-mapper.xml"/>-->
+<!--        <mapper resource="mybatis/mapper/report/order-topping-report-mapper.xml"/>-->
+<!--    </mappers>-->
+<!--</configuration>-->

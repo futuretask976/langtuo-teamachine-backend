@@ -1,6 +1,5 @@
 package com.langtuo.teamachine.dao.mapper.drink;
 
-import com.langtuo.teamachine.dao.annotation.TeaMachineSQLScan;
 import com.langtuo.teamachine.dao.po.drink.ToppingAdjustRulePO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Mapper
-@TeaMachineSQLScan
 @Repository
 public interface ToppingAdjustRuleMapper {
     /**
