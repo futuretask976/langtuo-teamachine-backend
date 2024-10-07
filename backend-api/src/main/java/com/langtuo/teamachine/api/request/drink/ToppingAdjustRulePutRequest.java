@@ -41,11 +41,11 @@ public class ToppingAdjustRulePutRequest {
      */
     public boolean isValid() {
         if (stepIndex <= 0) {
-            System.out.println("$$$$$ stepIndex invalid: " + stepIndex);
+            System.out.println("stepIndex invalid: " + stepIndex);
             return false;
         }
         if (!RegexUtils.isValidCode(toppingCode, true)) {
-            System.out.println("$$$$$ toppingCode invalid: " + toppingCode);
+            System.out.println("toppingCode invalid: " + toppingCode);
             return false;
         }
         return true;

@@ -8,7 +8,7 @@
 //public class TeaMachineShutdownHook implements ApplicationListener<ContextClosedEvent> {
 //    @Override
 //    public void onApplicationEvent(ContextClosedEvent event) {
-//        System.out.println("$$$$$ teaMachineShutdownHook|onApplicationEvent|entering");
-//        System.out.println("$$$$$ teaMachineShutdownHook|onApplicationEvent|exiting");
+//        System.out.println("teaMachineShutdownHook|onApplicationEvent|entering");
+//        System.out.println("teaMachineShutdownHook|onApplicationEvent|exiting");
 //    }
 //}

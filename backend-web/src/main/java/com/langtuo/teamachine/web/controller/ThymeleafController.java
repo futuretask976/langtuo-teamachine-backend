@@ -15,7 +15,7 @@ public class ThymeleafController {
     @GetMapping(value = "/")
     public String index(Model model) {
         try {
-            System.out.println("$$$$$ ThymeleafController#index entering");
+            System.out.println("ThymeleafController#index entering");
             model.addAttribute("msg","Thymeleaf入门案例...");
             return "index";
         } catch (Exception e) {

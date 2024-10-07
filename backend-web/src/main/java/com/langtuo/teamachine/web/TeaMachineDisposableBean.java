@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class TeaMachineDisposableBean implements DisposableBean {
     @Override
     public void destroy() throws Exception {
-        System.out.println("$$$$$ ## teaMachineDisposableBean|destroy|entering");
-        System.out.println("$$$$$ ## teaMachineDisposableBean|destroy|exiting");
+        System.out.println("teaMachineDisposableBean|destroy|entering");
+        System.out.println("teaMachineDisposableBean|destroy|exiting");
     }
 }

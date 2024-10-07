@@ -56,7 +56,7 @@ public class MqttConsumer implements InitializingBean {
 
     @PreDestroy
     public void onDestroy() {
-        System.out.println("$$$$$ mqttConsumer|onDestroy|entering");
+        System.out.println("mqttConsumer|onDestroy|entering");
         if (serverConsumer == null) {
             return;
         }
@@ -70,7 +70,7 @@ public class MqttConsumer implements InitializingBean {
             System.out.println("mqttConsumer|stopServerConsumer|fatal|" + e.getMessage());
             e.printStackTrace();
         }
-        System.out.println("$$$$$ mqttConsumer|onDestroy|exiting");
+        System.out.println("mqttConsumer|onDestroy|exiting");
     }
 
     public void initServerConsumer() throws IOException, TimeoutException {
