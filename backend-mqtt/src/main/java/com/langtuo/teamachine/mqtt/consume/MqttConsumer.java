@@ -65,8 +65,10 @@ public class MqttConsumer implements InitializingBean {
         try {
             System.out.println("$$$$$ mqttConsumer|stopConsumer|before");
             serverConsumer.stop();
+            serverConsumer = null;
+            Thread.sleep(1000 * 5);
             System.out.println("$$$$$ mqttConsumer|stopConsumer|after");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("mqttConsumer|stopServerConsumer|fatal|" + e.getMessage());
             e.printStackTrace();
         }

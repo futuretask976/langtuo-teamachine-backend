@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 
 @Component
@@ -42,10 +44,16 @@ public class MqttProducer implements InitializingBean {
         }
 
         try {
-            System.out.println("$$$$$ mqttProducer|stopProducer|before");
             serverProducer.stop();
-            System.out.println("$$$$$ mqttProducer|stopProducer|after");
-        } catch (IOException e) {
+
+            Field schedulerField = ServerProducer.class.getDeclaredField("scheduler");
+            schedulerField.setAccessible(true);
+            ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) schedulerField.get(
+                    serverProducer);
+            scheduledThreadPoolExecutor.shutdownNow();
+
+            serverProducer = null;
+        } catch (Exception e) {
             System.out.println("mqttProducer|stopServerProducer|fatal|" + e.getMessage());
             e.printStackTrace();
         }
