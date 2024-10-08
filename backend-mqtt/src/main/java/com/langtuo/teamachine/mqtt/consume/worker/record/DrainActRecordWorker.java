@@ -74,7 +74,6 @@ public class DrainActRecordWorker implements Runnable {
         DrainActRecordPO po = new DrainActRecordPO();
         po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
-        po.setExtraInfo(request.getExtraInfo());
         po.setIdempotentMark(request.getIdempotentMark());
         po.setMachineCode(request.getMachineCode());
         po.setShopCode(request.getShopCode());
