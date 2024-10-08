@@ -113,7 +113,7 @@ public class CleanActRecordPutRequest {
         if (!RegexUtils.isValidCode(shopGroupCode, true)) {
             return false;
         }
-        if (!(cleanType == 0 && !RegexUtils.isValidCode(cleanRuleCode, true))) {
+        if (cleanType == 0 && !RegexUtils.isValidCode(cleanRuleCode, true)) {
             return false;
         }
         if (cleanStartTime == null) {

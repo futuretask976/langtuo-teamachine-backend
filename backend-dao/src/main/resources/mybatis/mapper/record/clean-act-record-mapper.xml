@@ -21,8 +21,6 @@
         <result property="pipelineNum" column="pipeline_num"/>
         <result property="cleanType" column="clean_type"/>
         <result property="cleanRuleCode" column="clean_rule_code"/>
-        <result property="openRuleCode" column="open_rule_code"/>
-        <result property="closeRuleCode" column="close_rule_code"/>
         <result property="cleanContent" column="clean_content"/>
         <result property="washSec" column="wash_sec"/>
         <result property="soakMin" column="soak_min"/>
@@ -79,8 +77,6 @@
             , pipeline_num
             , clean_type
             , clean_rule_code
-            , open_rule_code
-            , close_rule_code
             , wash_sec
             , soak_min
             , flush_interval_min
@@ -101,8 +97,6 @@
             , #{pipelineNum}
             , #{cleanType}
             , #{cleanRuleCode}
-            , #{openRuleCode}
-            , #{closeRuleCode}
             , #{washSec}
             , #{soakMin}
             , #{flushIntervalMin}
