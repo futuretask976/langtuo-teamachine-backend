@@ -44,7 +44,7 @@ public class OrderActRecordMgtConvertor {
         dto.setMachineCode(po.getMachineCode());
         dto.setShopCode(po.getShopCode());
         dto.setShopGroupCode(po.getShopGroupCode());
-        dto.setOrderGmtCreated(new Date());
+        dto.setOrderGmtCreated(po.getOrderGmtCreated());
         dto.setOuterOrderId(po.getOuterOrderId());
         dto.setState(po.getState());
 
