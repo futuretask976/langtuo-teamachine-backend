@@ -22,6 +22,9 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
+/**
+ * @author Jiaqing
+ */
 @Component
 @Slf4j
 public class MqttConsumer implements InitializingBean {

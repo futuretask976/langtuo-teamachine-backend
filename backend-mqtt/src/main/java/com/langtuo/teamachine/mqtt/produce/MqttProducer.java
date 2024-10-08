@@ -17,6 +17,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * @author Jiaqing
+ */
 @Component
 @Slf4j
 public class MqttProducer implements InitializingBean {

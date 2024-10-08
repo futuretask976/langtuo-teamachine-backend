@@ -19,9 +19,9 @@ import java.util.Map;
 import java.util.Properties;
 
 @Intercepts({@Signature(
-        type = StatementHandler.class,
-        method = "prepare",
-        args = {Connection.class, Integer.class}
+    type = StatementHandler.class,
+    method = "prepare",
+    args = {Connection.class, Integer.class}
 )})
 public class LangTuoTableShardInterceptor implements Interceptor {
     /**
@@ -120,16 +120,16 @@ public class LangTuoTableShardInterceptor implements Interceptor {
     private Map<String, String> getColumnValue(String[] columns, BoundSql boundSql) {
         Object parameterObject = boundSql.getParameterObject();
         if (parameterObject == null) {
-            throw new RuntimeException("分表参数异常！");
+            throw new IllegalArgumentException("illegal argument for table shard");
         }
 
         // 判断参数类型获取参数值
         Map<String, Object> paramMap;
-        if (parameterObject instanceof MapperMethod.ParamMap) { // 查询条件是ParamMap
+        if (parameterObject instanceof MapperMethod.ParamMap) { // 查询条件是 ParamMap
             paramMap = (MapperMethod.ParamMap) parameterObject;
-        } else if (parameterObject instanceof Map) { // 查询条件是Map
+        } else if (parameterObject instanceof Map) { // 查询条件是 Map
             paramMap = (Map) parameterObject;
-        } else { // 查询条件是其他bean
+        } else { // 查询条件是其他 Bean
             paramMap = BeanUtil.beanToMap(parameterObject);
         }
 

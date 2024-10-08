@@ -15,6 +15,9 @@ import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
 
+/**
+ * @author Jiaqing
+ */
 @Slf4j
 public class SupplyActRecordWorker implements Runnable {
     /**

@@ -6,6 +6,9 @@ import lombok.Data;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * @author Jiaqing
+ */
 @Data
 public class SupplyActRecordPutRequest {
     /**

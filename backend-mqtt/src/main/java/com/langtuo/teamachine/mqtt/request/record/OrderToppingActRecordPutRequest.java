@@ -3,6 +3,9 @@ package com.langtuo.teamachine.mqtt.request.record;
 import com.langtuo.teamachine.api.utils.RegexUtils;
 import lombok.Data;
 
+/**
+ * @author Jiaqing
+ */
 @Data
 public class OrderToppingActRecordPutRequest {
     /**

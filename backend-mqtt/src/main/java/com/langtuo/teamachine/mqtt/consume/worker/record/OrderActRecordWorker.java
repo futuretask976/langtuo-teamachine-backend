@@ -19,6 +19,9 @@ import org.apache.commons.compress.utils.Lists;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author Jiaqing
+ */
 @Slf4j
 public class OrderActRecordWorker implements Runnable {
     /**

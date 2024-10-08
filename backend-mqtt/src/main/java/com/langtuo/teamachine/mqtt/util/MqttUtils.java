@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 import java.security.*;
 
 /**
- * @author miya
+ * @author jiaqing
  */
 @Slf4j
 public class MqttUtils {
