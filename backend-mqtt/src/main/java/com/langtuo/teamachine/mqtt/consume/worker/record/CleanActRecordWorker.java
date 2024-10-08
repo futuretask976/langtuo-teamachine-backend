@@ -44,8 +44,7 @@ public class CleanActRecordWorker implements Runnable {
         }
     }
 
-    private void put(CleanActRecordPutRequest request) {
-        if (request == null || !request.isValid()) {
+    private void put(CleanActRecordPutRequest request) {if (request == null || !request.isValid()) {
             log.error("cleanActRecordWorker|put|illegalArgument|"
                     + request == null ? null : JSONObject.toJSONString(request));
             return;

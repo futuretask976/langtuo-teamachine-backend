@@ -103,7 +103,6 @@ public class MqttConsumer implements InitializingBean {
         if (StringUtils.isBlank(payload)) {
             return;
         }
-        log.debug("$$$$$ mqttConsumer|dispatch|entering|" + payload);
         log.info("$$$$$ mqttConsumer|dispatch|entering|" + payload);
 
         JSONObject jsonPayload = JSONObject.parseObject(payload);

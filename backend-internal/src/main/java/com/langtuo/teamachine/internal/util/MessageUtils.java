@@ -6,6 +6,8 @@ import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.util.Locale;
 
@@ -16,7 +18,7 @@ public class MessageUtils {
         ErrorMsgDTO errorMsgDTO = new ErrorMsgDTO();
         errorMsgDTO.setErrorCode(errorCodeEnum.getErrorCode());
         errorMsgDTO.setErrorMsg(messageSource.getMessage(errorCodeEnum.getErrorCode(), null,
-                Locale.getDefault()));
+                LocaleContextHolder.getLocale()));
         return errorMsgDTO;
     }
 

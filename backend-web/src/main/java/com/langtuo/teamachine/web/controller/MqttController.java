@@ -14,14 +14,18 @@ import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderSpecItemActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderToppingActRecordPutRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Jiaqing
@@ -136,6 +140,25 @@ public class MqttController {
             cleanActRecordWorker.run();
         } catch (Exception e) {
             log.error("test error: " + e.getMessage(), e);
+        }
+        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
+    }
+
+    /**
+     * url: http://localhost:8080/teamachinebackend/mqtt/putlocale?locale=1
+     * @param locale
+     * @return
+     */
+    @GetMapping(value = "/putlocale")
+    public TeaMachineResult<Void> putLocale(
+            @RequestParam(name = "tenantCode", required = false) String locale) {
+        log.info("/mqtt/putLocale entering: " + (locale == null ? null : locale.toString()));
+        if (StringUtils.isBlank(locale)) {
+            LocaleContextHolder.setLocale(Locale.SIMPLIFIED_CHINESE);
+        } else if (locale.equals("2")) {
+            LocaleContextHolder.setLocale(Locale.CHINA);
+        } else {
+            LocaleContextHolder.setLocale(Locale.ENGLISH);
         }
         return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
     }
