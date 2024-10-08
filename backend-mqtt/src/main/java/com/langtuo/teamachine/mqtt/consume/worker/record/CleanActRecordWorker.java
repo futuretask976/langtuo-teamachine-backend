@@ -72,6 +72,7 @@ public class CleanActRecordWorker implements Runnable {
         }
 
         CleanActRecordPO po = new CleanActRecordPO();
+        po.setTenantCode(request.getTenantCode());
         po.setExtraInfo(request.getExtraInfo());
         po.setIdempotentMark(request.getIdempotentMark());
         po.setMachineCode(request.getMachineCode());

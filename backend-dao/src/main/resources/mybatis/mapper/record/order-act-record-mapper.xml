@@ -33,6 +33,7 @@
         SELECT * FROM order_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+        ORDER BY gmt_modified DESC
     </select>
 
     <select id="search" resultMap="orderActRecordPOMap">
@@ -51,6 +52,7 @@
                     #{shopCode}
                 </foreach>
             </if>
+        ORDER BY gmt_modified DESC
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.record.OrderActRecordPO">
