@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * @author Jiaqing
+ */
 @RestController
 @RequestMapping("/userset/admin")
 @Slf4j

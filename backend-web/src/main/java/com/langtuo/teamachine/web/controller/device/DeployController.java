@@ -20,6 +20,9 @@ import java.io.IOException;
 
 import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
+/**
+ * @author Jiaqing
+ */
 @RestController
 @RequestMapping("/deviceset/deploy")
 @Slf4j

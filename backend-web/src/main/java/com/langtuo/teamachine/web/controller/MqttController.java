@@ -21,6 +21,9 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author Jiaqing
+ */
 @RestController
 @RequestMapping("/mqtt")
 @Slf4j

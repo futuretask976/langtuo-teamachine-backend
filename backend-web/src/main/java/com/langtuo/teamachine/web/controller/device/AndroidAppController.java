@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * @author Jiaqing
+ */
 @RestController
 @RequestMapping("/deviceset/android/app")
 public class AndroidAppController {

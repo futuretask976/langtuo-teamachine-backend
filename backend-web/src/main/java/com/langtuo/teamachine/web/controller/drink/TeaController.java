@@ -25,6 +25,9 @@ import java.util.List;
 
 import static com.langtuo.teamachine.api.result.TeaMachineResult.getModel;
 
+/**
+ * @author Jiaqing
+ */
 @RestController
 @RequestMapping("/drinkset/tea")
 @Slf4j
