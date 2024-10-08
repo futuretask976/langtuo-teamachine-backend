@@ -10,8 +10,16 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import java.util.Locale;
 
+/**
+ * @author Jiaqing
+ */
 @Configuration
 public class I18nConfig implements WebMvcConfigurer {
+    /**
+     * 用于变更 locale 的参数名称
+     */
+    private static final String LOCALE_CHANGE_PARAM_NAME = "language";
+
     @Bean
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
@@ -22,7 +30,7 @@ public class I18nConfig implements WebMvcConfigurer {
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-        localeChangeInterceptor.setParamName("lang"); // 可以通过URL参数改变语言
+        localeChangeInterceptor.setParamName(LOCALE_CHANGE_PARAM_NAME); // 可以通过 URL 参数改变语言
         return localeChangeInterceptor;
     }
 
