@@ -89,7 +89,7 @@
     </appender>
 
     <!--日志输出到文件-->
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="APP_DEBUG"/>
         <appender-ref ref="APP_INFO"/>
         <appender-ref ref="APP_ERROR"/>

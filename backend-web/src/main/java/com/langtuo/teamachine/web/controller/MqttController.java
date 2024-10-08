@@ -130,7 +130,7 @@ public class MqttController {
     @GetMapping(value = "/testcleanact")
     public TeaMachineResult<Void> testCleanAct(Model model) {
         log.info("/mqtt/testcleanact entering: " + (model == null ? null : model.toString()));
-        String c = "{\"bizCode\":\"cleanActRecord\",\"list\":[{\"cleanContent\":1,\"cleanEndTime\":1728367355906,\"cleanRuleCode\":\"CLEAN_02\",\"cleanStartTime\":1728367355906,\"cleanType\":1,\"closeRuleCode\":\"CLEAN_02\",\"flushIntervalMin\":40,\"flushSec\":30,\"idempotentMark\":\"20241008020235_20240904000004_cleanAct_0\",\"machineCode\":\"20240904000004\",\"openRuleCode\":\"CLEAN_02\",\"pipelineNum\":1,\"shopCode\":\"shop_333\",\"shopGroupCode\":\"shopGroup_07\",\"soakMin\":20,\"tenantCode\":\"tenant_001\",\"toppingCode\":\"topping_333\",\"valid\":true,\"washSec\":10}]}";
+        String c = "{\"bizCode\":\"cleanActRecord\",\"list\":[{\"cleanContent\":1,\"cleanEndTime\":1728367883993,\"cleanRuleCode\":\"CLEAN_02\",\"cleanStartTime\":1728367883994,\"cleanType\":1,\"closeRuleCode\":\"CLEAN_02\",\"flushIntervalMin\":40,\"flushSec\":30,\"idempotentMark\":\"20241008021123_20240904000004_cleanAct_2\",\"machineCode\":\"20240904000004\",\"openRuleCode\":\"CLEAN_02\",\"pipelineNum\":1,\"shopCode\":\"shop_333\",\"shopGroupCode\":\"shopGroup_07\",\"soakMin\":20,\"tenantCode\":\"tenant_001\",\"toppingCode\":\"topping_333\",\"valid\":true,\"washSec\":10}]}";
         try {
             CleanActRecordWorker cleanActRecordWorker = new CleanActRecordWorker(JSONObject.parseObject(c));
             cleanActRecordWorker.run();
