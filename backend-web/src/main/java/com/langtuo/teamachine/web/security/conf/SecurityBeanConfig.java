@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.web.security.conf;
 
-import com.langtuo.teamachine.web.helper.JwtTokenHelper;
+import com.langtuo.teamachine.web.util.JwtTokenUtils;
 import com.langtuo.teamachine.web.security.component.*;
 import com.langtuo.teamachine.web.security.encoder.MD5PasswordEncoder;
 import com.langtuo.teamachine.web.security.service.TeaMachineUserDetailService;
@@ -49,8 +49,8 @@ public class SecurityBeanConfig {
     }
 
     @Bean
-    public JwtTokenHelper gxJwtTokenHelper() {
-        return new JwtTokenHelper();
+    public JwtTokenUtils gxJwtTokenHelper() {
+        return new JwtTokenUtils();
     }
 
     /**

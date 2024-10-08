@@ -3,7 +3,7 @@ package com.langtuo.teamachine.web.security.component;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.web.constant.WebConsts;
-import com.langtuo.teamachine.web.helper.JwtTokenHelper;
+import com.langtuo.teamachine.web.util.JwtTokenUtils;
 import com.langtuo.teamachine.web.model.LoginSuccessDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
     private String tokenHead;
 
     @Autowired
-    private JwtTokenHelper jwtTokenHelper;
+    private JwtTokenUtils jwtTokenUtils;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -40,7 +40,7 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
 
         // 构建返回内容
         LoginSuccessDTO dto = new LoginSuccessDTO();
-        dto.setJwtToken(tokenHead + jwtTokenHelper.generateToken(authUser));
+        dto.setJwtToken(tokenHead + jwtTokenUtils.generateToken(authUser));
         dto.setLoginName(authUser.getUsername());
         TeaMachineResult<LoginSuccessDTO> result = TeaMachineResult.success(dto);
         response.getWriter().println(JSONObject.toJSONString(result));

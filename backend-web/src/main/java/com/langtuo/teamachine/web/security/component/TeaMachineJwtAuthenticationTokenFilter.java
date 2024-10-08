@@ -1,7 +1,7 @@
 package com.langtuo.teamachine.web.security.component;
 
 import com.langtuo.teamachine.web.constant.WebConsts;
-import com.langtuo.teamachine.web.helper.JwtTokenHelper;
+import com.langtuo.teamachine.web.util.JwtTokenUtils;
 import com.langtuo.teamachine.web.security.service.TeaMachineUserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,7 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
     private TeaMachineUserDetailService teaMachineUserDetailService;
 
     @Autowired
-    private JwtTokenHelper jwtTokenHelper;
+    private JwtTokenUtils jwtTokenUtils;
 
     @Value("${teamachine.jwt.tokenHeader}")
     private String tokenHeader;
@@ -48,10 +48,10 @@ public class TeaMachineJwtAuthenticationTokenFilter extends OncePerRequestFilter
             String authHeader = request.getHeader(this.tokenHeader);
             if (authHeader != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String authToken = authHeader.substring(this.tokenHead.length());
-                String tenantCode = jwtTokenHelper.getTenantCodeFromToken(authToken);
-                String userName = jwtTokenHelper.getUserNameFromToken(authToken);
+                String tenantCode = jwtTokenUtils.getTenantCodeFromToken(authToken);
+                String userName = jwtTokenUtils.getUserNameFromToken(authToken);
                 UserDetails userDetails = this.teaMachineUserDetailService.loadAdminUserDetails(tenantCode, userName);
-                if (jwtTokenHelper.validateToken(authToken, userDetails)) {
+                if (jwtTokenUtils.validateToken(authToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -6,12 +6,13 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
- * Spring工具类
- * Created by macro on 2020/3/3.
+ * @author Jiaqing
  */
 @Component
 public class SpringHelper implements ApplicationContextAware {
-
+    /**
+     * Spring 应用程序上下文
+     */
     private static ApplicationContext applicationContext;
 
     /**
