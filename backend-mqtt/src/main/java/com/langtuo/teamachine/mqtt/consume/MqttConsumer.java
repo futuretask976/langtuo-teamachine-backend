@@ -104,6 +104,7 @@ public class MqttConsumer implements InitializingBean {
             return;
         }
         log.debug("$$$$$ mqttConsumer|dispatch|entering|" + payload);
+        log.info("$$$$$ mqttConsumer|dispatch|entering|" + payload);
 
         JSONObject jsonPayload = JSONObject.parseObject(payload);
         String bizCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_BIZ_CODE);

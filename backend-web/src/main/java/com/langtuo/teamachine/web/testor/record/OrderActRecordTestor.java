@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.web.testor.record;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.dao.helper.SqlSessionFactoryHelper;
@@ -27,13 +28,13 @@ public class OrderActRecordTestor {
     }
 
     public static void insert() {
-        SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
-        OrderActRecordMapper orderActRecordMapper = sqlSession.getMapper(OrderActRecordMapper.class);
-        OrderSpecItemActRecordMapper orderSpecItemActRecordMapper = sqlSession.getMapper(OrderSpecItemActRecordMapper.class);
-        OrderToppingActRecordMapper orderToppingActRecordMapper = sqlSession.getMapper(OrderToppingActRecordMapper.class);
+//        SqlSession sqlSession = SqlSessionFactoryHelper.getSqlSession();
+//        OrderActRecordMapper orderActRecordMapper = sqlSession.getMapper(OrderActRecordMapper.class);
+//        OrderSpecItemActRecordMapper orderSpecItemActRecordMapper = sqlSession.getMapper(OrderSpecItemActRecordMapper.class);
+//        OrderToppingActRecordMapper orderToppingActRecordMapper = sqlSession.getMapper(OrderToppingActRecordMapper.class);
 
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 1; i++) {
             OrderActRecordPutRequest request = new OrderActRecordPutRequest();
             request.setTenantCode("tenant_001");
             request.setIdempotentMark(String.valueOf(System.currentTimeMillis()));
@@ -69,24 +70,26 @@ public class OrderActRecordTestor {
             toppingList.add(toppingReq2);
             request.setToppingList(toppingList);
 
-            OrderActRecordPO orderActRecordPO = OrderActRecordWorker.convertToOrderActRecordPO(request);
-            orderActRecordMapper.insert(orderActRecordPO);
+            System.out.println(JSONObject.toJSON(request));
 
-            List<OrderSpecItemActRecordPO> orderSpecItemActRecordPOList =
-                    OrderActRecordWorker.convertToSpecItemActRecordPO(request);
-            for (OrderSpecItemActRecordPO orderSpecItemActRecordPO : orderSpecItemActRecordPOList) {
-                orderSpecItemActRecordMapper.insert(orderSpecItemActRecordPO);
-            }
-
-            List<OrderToppingActRecordPO> orderToppingActRecordPOList =
-                    OrderActRecordWorker.convertToOrderToppingActRecordPO(request);
-            for (OrderToppingActRecordPO orderToppingActRecordPO : orderToppingActRecordPOList) {
-                orderToppingActRecordMapper.insert(orderToppingActRecordPO);
-            }
+//            OrderActRecordPO orderActRecordPO = OrderActRecordWorker.convertToOrderActRecordPO(request);
+//            orderActRecordMapper.insert(orderActRecordPO);
+//
+//            List<OrderSpecItemActRecordPO> orderSpecItemActRecordPOList =
+//                    OrderActRecordWorker.convertToSpecItemActRecordPO(request);
+//            for (OrderSpecItemActRecordPO orderSpecItemActRecordPO : orderSpecItemActRecordPOList) {
+//                orderSpecItemActRecordMapper.insert(orderSpecItemActRecordPO);
+//            }
+//
+//            List<OrderToppingActRecordPO> orderToppingActRecordPOList =
+//                    OrderActRecordWorker.convertToOrderToppingActRecordPO(request);
+//            for (OrderToppingActRecordPO orderToppingActRecordPO : orderToppingActRecordPOList) {
+//                orderToppingActRecordMapper.insert(orderToppingActRecordPO);
+//            }
         }
 
-        sqlSession.commit();
-        sqlSession.close();
+//        sqlSession.commit();
+//        sqlSession.close();
     }
 
     public static void select() {

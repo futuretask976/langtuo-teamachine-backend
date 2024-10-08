@@ -1,5 +1,6 @@
 package com.langtuo.teamachine.web.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
@@ -7,6 +8,7 @@ import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.DateUtils;
 import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.mqtt.consume.worker.record.CleanActRecordWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.record.OrderActRecordWorker;
 import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.request.record.OrderSpecItemActRecordPutRequest;
@@ -114,6 +116,24 @@ public class MqttController {
                 Thread.sleep(100);
             }
             log.info("mqttController|loop|end");
+        } catch (Exception e) {
+            log.error("test error: " + e.getMessage(), e);
+        }
+        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
+    }
+
+    /**
+     * url: http://localhost:8080/teamachinebackend/mqtt/testcleanact
+     * @param model
+     * @return
+     */
+    @GetMapping(value = "/testcleanact")
+    public TeaMachineResult<Void> testCleanAct(Model model) {
+        log.info("/mqtt/testcleanact entering: " + (model == null ? null : model.toString()));
+        String c = "{\"bizCode\":\"cleanActRecord\",\"list\":[{\"cleanContent\":1,\"cleanEndTime\":1728367355906,\"cleanRuleCode\":\"CLEAN_02\",\"cleanStartTime\":1728367355906,\"cleanType\":1,\"closeRuleCode\":\"CLEAN_02\",\"flushIntervalMin\":40,\"flushSec\":30,\"idempotentMark\":\"20241008020235_20240904000004_cleanAct_0\",\"machineCode\":\"20240904000004\",\"openRuleCode\":\"CLEAN_02\",\"pipelineNum\":1,\"shopCode\":\"shop_333\",\"shopGroupCode\":\"shopGroup_07\",\"soakMin\":20,\"tenantCode\":\"tenant_001\",\"toppingCode\":\"topping_333\",\"valid\":true,\"washSec\":10}]}";
+        try {
+            CleanActRecordWorker cleanActRecordWorker = new CleanActRecordWorker(JSONObject.parseObject(c));
+            cleanActRecordWorker.run();
         } catch (Exception e) {
             log.error("test error: " + e.getMessage(), e);
         }
