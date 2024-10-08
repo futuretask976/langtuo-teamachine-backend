@@ -5,8 +5,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 /**
- * 当前类用于在Tomcat中启动
- * @author miya
+ * 当前类用于在 Tomcat 中启动
+ * @author Jiaqing
  */
 @Slf4j
 public class TeaMachineBackendServletInitializer extends SpringBootServletInitializer {

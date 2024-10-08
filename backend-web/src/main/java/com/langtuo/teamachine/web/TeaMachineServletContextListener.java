@@ -11,6 +11,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
+/**
+ * @author Jiaqing
+ */
 public class TeaMachineServletContextListener implements ServletContextListener {
     /**
      * 等待销毁的时间
