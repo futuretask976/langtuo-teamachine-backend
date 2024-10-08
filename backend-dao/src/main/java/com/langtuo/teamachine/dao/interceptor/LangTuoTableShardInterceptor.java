@@ -96,7 +96,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
         String id = mappedStatement.getId();
         String className = id.substring(0, id.lastIndexOf("."));
         String methodName = id.substring(id.lastIndexOf(".") + 1);
-        // 获取pageHelper拦截方法
+        // 获取 pageHelper 拦截方法
         if (methodName.endsWith("_COUNT")) {
             methodName = methodName.replace("_COUNT", "");
         }
@@ -111,11 +111,14 @@ public class LangTuoTableShardInterceptor implements Interceptor {
     }
 
     /**
-     * 获取sql参数值
+     * 获取 SQL 参数值
      *
-     * @param columns  参数名称
-     * @param boundSql sql元数据
-     * @return 参数列表
+     * @param columns
+     *     参数名称
+     * @param boundSql
+     *     SQL元数据
+     * @return
+     *     参数列表
      */
     private Map<String, String> getColumnValue(String[] columns, BoundSql boundSql) {
         Object parameterObject = boundSql.getParameterObject();
