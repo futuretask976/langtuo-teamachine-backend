@@ -23,7 +23,7 @@ import java.util.Properties;
     method = "prepare",
     args = {Connection.class, Integer.class}
 )})
-public class LangTuoTableShardInterceptor implements Interceptor {
+public class TeaMachineTableShardInterceptor implements Interceptor {
     /**
      *
      */
@@ -48,7 +48,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
         String originalSql = statementHandler.getBoundSql().getSql();
-        // System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql=%s\n", originalSql);
+        System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql=%s\n", originalSql);
 
         // 获取mapper元信息
         MetaObject metaObject = MetaObject.forObject(statementHandler,
@@ -79,7 +79,7 @@ public class LangTuoTableShardInterceptor implements Interceptor {
 
         String tableName = "your_table_" + computeTableSuffix(columnValueMap); // 根据实际逻辑计算表后缀
         String modifiedSql = originalSql.replaceAll("your_table", tableName);
-        // System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql2=%s\n", originalSql);
+        System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql2=%s\n", originalSql);
 
         // 拦截并替换sql
         metaObject.setValue(DELEGATE_BOUND_SQL_SQL, modifiedSql);

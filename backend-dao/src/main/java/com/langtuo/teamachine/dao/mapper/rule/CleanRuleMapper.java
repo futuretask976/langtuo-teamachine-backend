@@ -38,7 +38,6 @@ public interface CleanRuleMapper {
      * @param cleanRulePO
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
     int insert(CleanRulePO cleanRulePO);
 
     /**

@@ -23,7 +23,6 @@ public interface CleanRuleExceptMapper {
      * @param cleanRuleExceptPO
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
     int insert(CleanRuleExceptPO cleanRuleExceptPO);
 
     /**

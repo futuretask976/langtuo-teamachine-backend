@@ -31,7 +31,6 @@ public interface TeaUnitMapper {
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
     int insert(TeaUnitPO po);
 
     /**
