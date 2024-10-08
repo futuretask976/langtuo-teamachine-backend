@@ -48,18 +48,16 @@ public class TeaMachineTableShardInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
         String originalSql = statementHandler.getBoundSql().getSql();
-        System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql=%s\n", originalSql);
 
-        // 获取mapper元信息
+        // 获取 Mapper 元信息
         MetaObject metaObject = MetaObject.forObject(statementHandler,
                 SystemMetaObject.DEFAULT_OBJECT_FACTORY,
                 SystemMetaObject.DEFAULT_OBJECT_WRAPPER_FACTORY,
                 defaultReflectorFactory);
-        // 获取MappedStatement
+        // 获取 MappedStatement
         MappedStatement mappedStatement = (MappedStatement) metaObject.getValue(DELEGATE_MAPPER_STATEMENT);
-        // 获取SQL元数据
+        // 获取 SQL 元数据
         BoundSql boundSql = (BoundSql) metaObject.getValue(DELEGATE_BOUND_SQL);
-        // System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept boundSql=%s\n", boundSql.getSql());
 
         // 拦截分表逻辑，获取注解
         TeaMachineTableShard annotation = getAnnotation(mappedStatement);
@@ -67,6 +65,7 @@ public class TeaMachineTableShardInterceptor implements Interceptor {
         if (annotation == null || !annotation.tableShardOpen()) {
             return invocation.proceed();
         }
+        System.out.printf("$$$$$ teaMachineTableShardInterceptor|getSql|originalSql=%s\n", originalSql);
 
         // 获取入参值，根据入参值进行分表
         Map<String, String> columnValueMap = getColumnValue(annotation.columns(), boundSql);
@@ -75,14 +74,13 @@ public class TeaMachineTableShardInterceptor implements Interceptor {
         // 获取默认表名称
         String defaultName = annotation.defaultName();
         // 新表名称
-        String newName = defaultName;
+        String newName = shardName + computeTableSuffix(columnValueMap); // 根据实际逻辑计算表后缀;
 
-        String tableName = "your_table_" + computeTableSuffix(columnValueMap); // 根据实际逻辑计算表后缀
-        String modifiedSql = originalSql.replaceAll("your_table", tableName);
-        System.out.printf("$$$$$ LangTuoTableShardInterceptor#intercept originalSql2=%s\n", originalSql);
+        String modifiedSql = originalSql.replaceAll(defaultName, newName);
+        System.out.printf("$$$$$ teaMachineTableShardInterceptor|replaceSql|modifiedSql=%s\n", modifiedSql);
 
-        // 拦截并替换sql
-        metaObject.setValue(DELEGATE_BOUND_SQL_SQL, modifiedSql);
+        // 拦截并替换 SQL
+        metaObject.setValue(DELEGATE_BOUND_SQL_SQL, originalSql);
         return invocation.proceed();
     }
 

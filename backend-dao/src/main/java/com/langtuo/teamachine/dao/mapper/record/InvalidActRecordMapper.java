@@ -18,6 +18,7 @@ public interface InvalidActRecordMapper {
      * @param idempotentMark
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "invalid_act_record_shard_", columns = "tenantCode", defaultName = "invalid_act_record")
     InvalidActRecordPO selectOne(@Param("tenantCode") String tenantCode,
             @Param("idempotentMark") String idempotentMark);
 
@@ -25,12 +26,14 @@ public interface InvalidActRecordMapper {
      * Only for test
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "invalid_act_record_shard_", columns = "tenantCode", defaultName = "invalid_act_record")
     List<InvalidActRecordPO> selectList(@Param("tenantCode") String tenantCode);
 
     /**
      *
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "invalid_act_record_shard_", columns = "tenantCode", defaultName = "invalid_act_record")
     List<InvalidActRecordPO> search(InvalidActRecordQuery query);
 
     /**
@@ -38,7 +41,7 @@ public interface InvalidActRecordMapper {
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "invalid_act_record_shard_", columns = "tenantCode", defaultName = "invalid_act_record")
     int insert(InvalidActRecordPO po);
 
     /**
@@ -47,6 +50,7 @@ public interface InvalidActRecordMapper {
      * @param idempotentMark
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "invalid_act_record_shard_", columns = "tenantCode", defaultName = "invalid_act_record")
     int delete(@Param("tenantCode") String tenantCode,
             @Param("idempotentMark") String idempotentMark);
 }

@@ -18,6 +18,7 @@ public interface CleanActRecordMapper {
      * @param idempotentMark
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "clean_act_record_shard_", columns = "tenantCode", defaultName = "clean_act_record")
     CleanActRecordPO selectOne(@Param("tenantCode") String tenantCode,
             @Param("idempotentMark") String idempotentMark);
 
@@ -25,6 +26,7 @@ public interface CleanActRecordMapper {
      *
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "clean_act_record_shard_", columns = "tenantCode", defaultName = "clean_act_record")
     List<CleanActRecordPO> search(CleanActRecordQuery query);
 
     /**
@@ -32,7 +34,7 @@ public interface CleanActRecordMapper {
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "clean_act_record_shard_", columns = "tenantCode", defaultName = "clean_act_record")
     int insert(CleanActRecordPO po);
 
     /**
@@ -41,6 +43,7 @@ public interface CleanActRecordMapper {
      * @param idempotentMark
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "clean_act_record_shard_", columns = "tenantCode", defaultName = "clean_act_record")
     int delete(@Param("tenantCode") String tenantCode,
             @Param("idempotentMark") String idempotentMark);
 }

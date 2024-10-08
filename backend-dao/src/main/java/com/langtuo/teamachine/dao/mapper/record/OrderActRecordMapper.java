@@ -18,12 +18,14 @@ public interface OrderActRecordMapper {
      * @param idempotentMark
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_act_record_shard_", columns = "tenantCode", defaultName = "order_act_record")
     OrderActRecordPO selectOne(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
 
     /**
      *
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_act_record_shard_", columns = "tenantCode", defaultName = "order_act_record")
     List<OrderActRecordPO> search(OrderActRecordQuery query);
 
     /**
@@ -31,7 +33,7 @@ public interface OrderActRecordMapper {
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_act_record_shard_", columns = "tenantCode", defaultName = "order_act_record")
     int insert(OrderActRecordPO po);
 
     /**
@@ -40,5 +42,6 @@ public interface OrderActRecordMapper {
      * @param idempotentMark
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_act_record_shard_", columns = "tenantCode", defaultName = "order_act_record")
     int delete(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
 }

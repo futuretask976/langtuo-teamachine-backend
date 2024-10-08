@@ -15,6 +15,7 @@ public interface OrderToppingActRecordMapper {
      *
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_topping_act_record_shard_", columns = "tenantCode", defaultName = "order_topping_act_record")
     List<OrderToppingActRecordPO> selectList(@Param("tenantCode") String tenantCode,
             @Param("idempotentMark") String idempotentMark);
 
@@ -23,14 +24,15 @@ public interface OrderToppingActRecordMapper {
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "table_new", columns = "version", defaultName = "table")
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_topping_act_record_shard_", columns = "tenantCode", defaultName = "order_topping_act_record")
     int insert(OrderToppingActRecordPO po);
 
     /**
      * 
      * @param tenantCode
-     * @param orderId
+     * @param idempotentMark
      * @return
      */
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_topping_act_record_shard_", columns = "tenantCode", defaultName = "order_topping_act_record")
     int delete(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
 }
