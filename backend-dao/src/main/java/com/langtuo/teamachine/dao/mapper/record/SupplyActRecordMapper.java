@@ -18,7 +18,6 @@ public interface SupplyActRecordMapper {
      * @param idempotentMark
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "supply_act_record_shard_", columns = "tenantCode", defaultName = "supply_act_record")
     SupplyActRecordPO selectOne(@Param("tenantCode") String tenantCode,
             @Param("idempotentMark") String idempotentMark);
 
@@ -26,14 +25,12 @@ public interface SupplyActRecordMapper {
      * Only for test
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "supply_act_record_shard_", columns = "tenantCode", defaultName = "supply_act_record")
     List<SupplyActRecordPO> selectList(@Param("tenantCode") String tenantCode);
 
     /**
      *
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "supply_act_record_shard_", columns = "tenantCode", defaultName = "supply_act_record")
     List<SupplyActRecordPO> search(SupplyActRecordQuery query);
 
     /**
@@ -41,7 +38,6 @@ public interface SupplyActRecordMapper {
      * @param supplyActRecordPO
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "supply_act_record_shard_", columns = "tenantCode", defaultName = "supply_act_record")
     int insert(SupplyActRecordPO supplyActRecordPO);
 
     /**
@@ -49,7 +45,6 @@ public interface SupplyActRecordMapper {
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "supply_act_record_shard_", columns = "tenantCode", defaultName = "supply_act_record")
     int update(SupplyActRecordPO po);
 
     /**
@@ -58,7 +53,5 @@ public interface SupplyActRecordMapper {
      * @param idempotentMark
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "supply_act_record_shard_", columns = "tenantCode", defaultName = "supply_act_record")
-    int delete(@Param("tenantCode") String tenantCode,
-            @Param("idempotentMark") String idempotentMark);
+    int delete(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
 }

@@ -18,7 +18,6 @@ public interface DrainActRecordMapper {
      * @param idempotentMark
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "drain_act_record_shard_", columns = "tenantCode", defaultName = "drain_act_record")
     DrainActRecordPO selectOne(@Param("tenantCode") String tenantCode,
             @Param("idempotentMark") String idempotentMark);
 
@@ -26,7 +25,6 @@ public interface DrainActRecordMapper {
      *
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "drain_act_record_shard_", columns = "tenantCode", defaultName = "drain_act_record")
     List<DrainActRecordPO> search(DrainActRecordQuery query);
 
     /**
@@ -34,7 +32,6 @@ public interface DrainActRecordMapper {
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "drain_act_record_shard_", columns = "tenantCode", defaultName = "drain_act_record")
     int insert(DrainActRecordPO po);
 
     /**
@@ -43,7 +40,5 @@ public interface DrainActRecordMapper {
      * @param idempotentMark
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "drain_act_record_shard_", columns = "tenantCode", defaultName = "drain_act_record")
-    int delete(@Param("tenantCode") String tenantCode,
-            @Param("idempotentMark") String idempotentMark);
+    int delete(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
 }
