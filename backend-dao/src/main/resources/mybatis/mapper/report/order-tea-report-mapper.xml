@@ -105,6 +105,7 @@
                     #{shopCode}
                 </foreach>
             </if>
+        ORDER BY order_created_day DESC
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.report.OrderTeaReportPO">

@@ -15,7 +15,7 @@
             AND tenant_code = #{tenantCode}
             AND order_created_day >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 14 DAY), '%Y-%m-%d')
         GROUP BY order_created_day, tea_code
-        ORDER BY order_created_day, tea_code ASC
+        ORDER BY order_created_day DESC, tea_code ASC
     </select>
 
     <select id="select4OrgShopChart" resultType="java.util.HashMap">
@@ -66,7 +66,7 @@
                 ORDER BY order_created_day DESC
                 LIMIT 14
             ) AS tmpTab
-        GROUP BY order_created_day
+        GROUP BY order_created_day DESC
     </select>
 
     <select id="select4TeaAmtChart" resultType="java.util.HashMap">

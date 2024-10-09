@@ -234,6 +234,7 @@ public class OrderReportServiceImpl implements OrderReportService {
         for (Map.Entry<String, OrderReportByDayDTO> entry : mapByDay.entrySet()) {
             resultList.add(entry.getValue());
         }
+        resultList.sort((a, b) -> b.getOrderCreatedDay().compareTo(a.getOrderCreatedDay()));
         return resultList;
     }
 
@@ -266,6 +267,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                 resultList.add(entryByTopping.getValue());
             }
         }
+        resultList.sort((a, b) -> b.getOrderCreatedDay().compareTo(a.getOrderCreatedDay()));
         return resultList;
     }
 
@@ -299,6 +301,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                 resultList.add(entryByTopping.getValue());
             }
         }
+        resultList.sort((a, b) -> b.getOrderCreatedDay().compareTo(a.getOrderCreatedDay()));
         return resultList;
     }
 
@@ -332,6 +335,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                 resultList.add(entryByTopping.getValue());
             }
         }
+        resultList.sort((a, b) -> b.getOrderCreatedDay().compareTo(a.getOrderCreatedDay()));
         return resultList;
     }
 }

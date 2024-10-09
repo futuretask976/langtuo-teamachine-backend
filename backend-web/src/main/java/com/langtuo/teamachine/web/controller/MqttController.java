@@ -64,7 +64,7 @@ public class MqttController {
         log.info("/mqtt/testorderact entering: " + (model == null ? null : model.toString()));
         try {
             log.info("mqttController|loop|begin");
-            for (int i = 0; i < 15; i++) {
+            for (int i = 0; i < 10; i++) {
                 OrderActRecordPutRequest request = new OrderActRecordPutRequest();
                 request.setTenantCode("tenant_001");
                 request.setExtraInfo(new HashMap(){{
@@ -72,13 +72,13 @@ public class MqttController {
                 }});
                 request.setIdempotentMark(String.valueOf(System.currentTimeMillis()));
                 request.setMachineCode("machine_444");
-                request.setShopCode("shop_004");
-                request.setShopGroupCode("shopGroup_02");
-                request.setOrderGmtCreated(DateUtils.getDate(-1));
+                request.setShopCode("shop_005");
+                request.setShopGroupCode("shopGroup_03");
+                request.setOrderGmtCreated(DateUtils.getDate(-2));
                 request.setTeaTypeCode("TEA_TYPE_01");
 
-                request.setTeaCode("TEA_06");
-//                request.setTeaCode("TEA_07");
+//                request.setTeaCode("TEA_06");
+                request.setTeaCode("TEA_07");
 //                request.setTeaCode("TEA_08");
 
                 request.setOuterOrderId(String.valueOf(System.currentTimeMillis()));
@@ -88,15 +88,15 @@ public class MqttController {
                 OrderSpecItemActRecordPutRequest specItemReq1 = new OrderSpecItemActRecordPutRequest();
 
                 specItemReq1.setSpecCode("SPEC_SWEET");
-                specItemReq1.setSpecItemCode("SPEC_ITEM_7_SWEET");
-//                specItemReq1.setSpecItemCode("SPEC_ITEM_5_SWEET");
+//                specItemReq1.setSpecItemCode("SPEC_ITEM_7_SWEET");
+                specItemReq1.setSpecItemCode("SPEC_ITEM_5_SWEET");
 
                 specItemList.add(specItemReq1);
                 OrderSpecItemActRecordPutRequest specItemReq2 = new OrderSpecItemActRecordPutRequest();
 
                 specItemReq2.setSpecCode("SPEC_BEIXING");
-//                specItemReq2.setSpecItemCode("SPEC_ITEM_BIG");
-                specItemReq2.setSpecItemCode("SPEC_ITEM_SMALL");
+                specItemReq2.setSpecItemCode("SPEC_ITEM_BIG");
+//                specItemReq2.setSpecItemCode("SPEC_ITEM_SMALL");
 
                 specItemList.add(specItemReq2);
                 request.setSpecItemList(specItemList);
