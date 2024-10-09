@@ -26,6 +26,7 @@
         SELECT * FROM order_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            AND shop_group_code = #{shopGroupCode}
             AND idempotent_mark = #{idempotentMark}
     </select>
 
@@ -33,6 +34,7 @@
         SELECT * FROM order_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            AND shop_group_code = #{shopGroupCode}
         ORDER BY gmt_modified DESC
     </select>
 
@@ -40,12 +42,7 @@
         SELECT * FROM order_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
-            <if test="shopGroupCodeList != null and shopGroupCodeList.size() > 0">
-                AND shop_group_code IN
-                <foreach item="shopGroupCode" collection="shopGroupCodeList" open="(" separator="," close=")">
-                    #{shopGroupCode}
-                </foreach>
-            </if>
+            AND shop_group_code = #{shopGroupCode}
             <if test="shopCodeList != null and shopCodeList.size() > 0">
                 AND shop_code IN
                 <foreach item="shopCode" collection="shopCodeList" open="(" separator="," close=")">
@@ -91,6 +88,7 @@
         DELETE FROM order_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            AND shop_group_code = #{shopGroupCode}
             AND idempotent_mark = #{idempotentMark}
     </delete>
 </mapper>

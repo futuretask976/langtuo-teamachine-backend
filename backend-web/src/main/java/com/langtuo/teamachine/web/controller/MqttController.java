@@ -64,7 +64,7 @@ public class MqttController {
         log.info("/mqtt/testorderact entering: " + (model == null ? null : model.toString()));
         try {
             log.info("mqttController|loop|begin");
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 15; i++) {
                 OrderActRecordPutRequest request = new OrderActRecordPutRequest();
                 request.setTenantCode("tenant_001");
                 request.setExtraInfo(new HashMap(){{
@@ -74,7 +74,7 @@ public class MqttController {
                 request.setMachineCode("machine_444");
                 request.setShopCode("shop_004");
                 request.setShopGroupCode("shopGroup_02");
-                request.setOrderGmtCreated(DateUtils.getDate(-4));
+                request.setOrderGmtCreated(DateUtils.getDate(-1));
                 request.setTeaTypeCode("TEA_TYPE_01");
 
                 request.setTeaCode("TEA_06");

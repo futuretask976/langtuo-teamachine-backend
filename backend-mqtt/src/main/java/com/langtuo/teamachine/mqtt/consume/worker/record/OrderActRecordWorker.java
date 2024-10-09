@@ -65,7 +65,7 @@ public class OrderActRecordWorker implements Runnable {
         try {
             OrderActRecordAccessor orderActRecordAccessor = SpringAccessorUtils.getOrderActRecordAccessor();
             OrderActRecordPO exist = orderActRecordAccessor.getByIdempotentMark(po.getTenantCode(),
-                    po.getIdempotentMark());
+                    po.getShopGroupCode(), po.getIdempotentMark());
             if (exist == null) {
                 int inserted = orderActRecordAccessor.insert(po);
             }
@@ -73,7 +73,7 @@ public class OrderActRecordWorker implements Runnable {
             OrderSpecItemActRecordAccessor orderSpecItemActRecordAccessor =
                     SpringAccessorUtils.getOrderSpecItemActRecordAccessor();
             int deleted4SpecItemActRec = orderSpecItemActRecordAccessor.delete(po.getTenantCode(),
-                    po.getIdempotentMark());
+                    po.getShopGroupCode(), po.getIdempotentMark());
             for (OrderSpecItemActRecordPO orderSpecItemActRecordPO : orderSpecItemActRecordPOList) {
                 int inserted4SpecItemActRec = orderSpecItemActRecordAccessor.insert(orderSpecItemActRecordPO);
             }
@@ -81,7 +81,7 @@ public class OrderActRecordWorker implements Runnable {
             OrderToppingActRecordAccessor orderToppingActRecordAccessor =
                     SpringAccessorUtils.getOrderToppingActRecordAccessor();
             int deleted4ToppingActRec = orderToppingActRecordAccessor.delete(po.getTenantCode(),
-                    po.getIdempotentMark());
+                    po.getShopGroupCode(), po.getIdempotentMark());
             for (OrderToppingActRecordPO orderToppingActRecordPO : orderToppingActRecordPOList) {
                 int inserted4ToppingActRec = orderToppingActRecordAccessor.insert(orderToppingActRecordPO);
             }
@@ -119,6 +119,7 @@ public class OrderActRecordWorker implements Runnable {
                 .map(orderSpecItemActRecordPutRequest -> {
                     OrderSpecItemActRecordPO po = new OrderSpecItemActRecordPO();
                     po.setTenantCode(request.getTenantCode());
+                    po.setShopGroupCode(request.getShopGroupCode());
                     po.setIdempotentMark(request.getIdempotentMark());
                     po.setSpecCode(orderSpecItemActRecordPutRequest.getSpecCode());
                     po.setSpecItemCode(orderSpecItemActRecordPutRequest.getSpecItemCode());
@@ -136,6 +137,7 @@ public class OrderActRecordWorker implements Runnable {
                 .map(orderToppingActRecordPutRequest -> {
                     OrderToppingActRecordPO po = new OrderToppingActRecordPO();
                     po.setTenantCode(request.getTenantCode());
+                    po.setShopGroupCode(request.getShopGroupCode());
                     po.setIdempotentMark(request.getIdempotentMark());
                     po.setStepIndex(orderToppingActRecordPutRequest.getStepIndex());
                     po.setToppingCode(orderToppingActRecordPutRequest.getToppingCode());

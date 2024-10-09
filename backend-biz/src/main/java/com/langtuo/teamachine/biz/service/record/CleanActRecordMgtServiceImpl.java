@@ -47,14 +47,14 @@ public class CleanActRecordMgtServiceImpl implements CleanActRecordMgtService {
         try {
             PageInfo<CleanActRecordPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
-                pageInfo = cleanActRecordAccessor.searchByShopCode(tenantCode, Lists.newArrayList(shopCode),
+                pageInfo = cleanActRecordAccessor.searchByShopCodeList(tenantCode, Lists.newArrayList(shopCode),
                         pageNum, pageSize);
             } else if (!StringUtils.isBlank(shopGroupCode)) {
-                pageInfo = cleanActRecordAccessor.searchByShopGroupCode(tenantCode, Lists.newArrayList(shopGroupCode),
+                pageInfo = cleanActRecordAccessor.searchByShopGroupCodeList(tenantCode, Lists.newArrayList(shopGroupCode),
                         pageNum, pageSize);
             } else {
                 List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-                pageInfo = cleanActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCodeList,
+                pageInfo = cleanActRecordAccessor.searchByShopGroupCodeList(tenantCode, shopGroupCodeList,
                         pageNum, pageSize);
             }
 

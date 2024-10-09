@@ -13,7 +13,7 @@ public interface OrderActRecordMgtService {
      * @param idempotentMark
      * @return
      */
-    TeaMachineResult<OrderActRecordDTO> get(String tenantCode, String idempotentMark);
+    TeaMachineResult<OrderActRecordDTO> get(String tenantCode, String shopGroupCode, String idempotentMark);
 
     /**
      *
@@ -28,5 +28,5 @@ public interface OrderActRecordMgtService {
      * @param idempotentMark
      * @return
      */
-    TeaMachineResult<Void> delete(String tenantCode, String idempotentMark);
+    TeaMachineResult<Void> delete(String tenantCode, String shopGroupCode, String idempotentMark);
 }

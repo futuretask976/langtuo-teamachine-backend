@@ -47,14 +47,14 @@ public class InvalidActRecordMgtServiceImpl implements InvalidActRecordMgtServic
         try {
             PageInfo<InvalidActRecordPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
-                pageInfo = invalidActRecordAccessor.searchByShopCode(tenantCode, Lists.newArrayList(shopCode),
+                pageInfo = invalidActRecordAccessor.searchByShopCodeList(tenantCode, Lists.newArrayList(shopCode),
                         pageNum, pageSize);
             } else if (!StringUtils.isBlank(shopGroupCode)) {
-                pageInfo = invalidActRecordAccessor.searchByShopGroupCode(tenantCode, Lists.newArrayList(shopGroupCode),
+                pageInfo = invalidActRecordAccessor.searchByShopGroupCodeList(tenantCode, Lists.newArrayList(shopGroupCode),
                         pageNum, pageSize);
             } else {
                 List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-                pageInfo = invalidActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCodeList,
+                pageInfo = invalidActRecordAccessor.searchByShopGroupCodeList(tenantCode, shopGroupCodeList,
                         pageNum, pageSize);
             }
 

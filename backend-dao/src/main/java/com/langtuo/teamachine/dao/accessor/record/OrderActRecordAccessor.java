@@ -15,29 +15,30 @@ public class OrderActRecordAccessor {
     @Resource
     private OrderActRecordMapper mapper;
 
-    public OrderActRecordPO getByIdempotentMark(String tenantCode, String idempotentMark) {
-        return mapper.selectOne(tenantCode, idempotentMark);
+    public OrderActRecordPO getByIdempotentMark(String tenantCode, String shopGroupCode, String idempotentMark) {
+        return mapper.selectOne(tenantCode, shopGroupCode, idempotentMark);
     }
 
-    public PageInfo<OrderActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+    public PageInfo<OrderActRecordPO> searchByShopGroupCode(String tenantCode, String shopGroupCode,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         OrderActRecordQuery query = new OrderActRecordQuery();
         query.setTenantCode(tenantCode);
-        query.addAllShopGroupCode(shopGroupCodeList);
+        query.setShopGroupCode(shopGroupCode);
         List<OrderActRecordPO> list = mapper.search(query);
 
         PageInfo<OrderActRecordPO> pageInfo = new PageInfo(list);
         return pageInfo;
     }
 
-    public PageInfo<OrderActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
-            int pageNum, int pageSize) {
+    public PageInfo<OrderActRecordPO> searchByShopCodeList(String tenantCode, String shopGroupCode,
+            List<String> shopCodeList, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
         OrderActRecordQuery query = new OrderActRecordQuery();
         query.setTenantCode(tenantCode);
+        query.setShopGroupCode(shopGroupCode);
         query.addAllShopCode(shopCodeList);
         List<OrderActRecordPO> list = mapper.search(query);
 
@@ -49,7 +50,7 @@ public class OrderActRecordAccessor {
         return mapper.insert(po);
     }
 
-    public int delete(String tenantCode, String idempotentMark) {
-        return mapper.delete(tenantCode, idempotentMark);
+    public int delete(String tenantCode, String shopGroupCode, String idempotentMark) {
+        return mapper.delete(tenantCode, shopGroupCode, idempotentMark);
     }
 }

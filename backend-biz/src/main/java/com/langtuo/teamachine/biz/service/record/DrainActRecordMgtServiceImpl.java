@@ -47,14 +47,14 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
         try {
             PageInfo<DrainActRecordPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
-                pageInfo = drainActRecordAccessor.searchByShopCode(tenantCode, Lists.newArrayList(shopCode),
+                pageInfo = drainActRecordAccessor.searchByShopCodeList(tenantCode, Lists.newArrayList(shopCode),
                         pageNum, pageSize);
             } else if (!StringUtils.isBlank(shopGroupCode)) {
-                pageInfo = drainActRecordAccessor.searchByShopGroupCode(tenantCode, Lists.newArrayList(shopGroupCode),
+                pageInfo = drainActRecordAccessor.searchByShopGroupCodeList(tenantCode, Lists.newArrayList(shopGroupCode),
                         pageNum, pageSize);
             } else {
                 List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-                pageInfo = drainActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCodeList,
+                pageInfo = drainActRecordAccessor.searchByShopGroupCodeList(tenantCode, shopGroupCodeList,
                         pageNum, pageSize);
             }
 

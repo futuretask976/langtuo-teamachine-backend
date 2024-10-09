@@ -2,6 +2,7 @@ package com.langtuo.teamachine.dao.interceptor;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.langtuo.teamachine.dao.annotation.TeaMachineTableShard;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -71,22 +72,37 @@ public class TeaMachineTableShardInterceptor implements Interceptor {
         Map<String, String> columnValueMap = getColumnValue(annotation.columns(), boundSql);
         // 获取替换表名称
         String shardName = annotation.shardName();
-        // 获取默认表名称
-        String defaultName = annotation.defaultName();
+        // 获取原始表名称
+        String originName = annotation.originName();
+        // 获取新表名称
+        String newName = originName;
         // 新表名称
-        String newName = shardName + computeTableSuffix(columnValueMap); // 根据实际逻辑计算表后缀;
+        String suffix = computeTableSuffix(columnValueMap); // 根据实际逻辑计算表后缀;
+        if (!StringUtils.isBlank(suffix)) {
+            newName = shardName + suffix;
+        }
 
-        String modifiedSql = originalSql.replaceAll(defaultName, newName);
+        String modifiedSql = originalSql.replaceAll(originName, newName);
         System.out.printf("$$$$$ teaMachineTableShardInterceptor|replaceSql|modifiedSql=%s\n", modifiedSql);
 
         // 拦截并替换 SQL
-        metaObject.setValue(DELEGATE_BOUND_SQL_SQL, originalSql);
+        metaObject.setValue(DELEGATE_BOUND_SQL_SQL, modifiedSql);
         return invocation.proceed();
     }
 
     private String computeTableSuffix(Map<String, String> columnValueMap) {
-        // 实现分表逻辑，如通过用户 ID 取模等
-        return "01"; // 示例返回值
+        String shopGroupCode = columnValueMap.get("shopGroupCode");
+        if (StringUtils.isBlank(shopGroupCode)) {
+            return null;
+        }
+
+        int tmp = 0;
+        for (char c : shopGroupCode.toCharArray()) {
+            tmp = tmp + c;
+        }
+
+        int suffix = tmp % 4;
+        return "0" + String.valueOf(suffix);
     }
 
     private TeaMachineTableShard getAnnotation(MappedStatement mappedStatement) throws ClassNotFoundException {

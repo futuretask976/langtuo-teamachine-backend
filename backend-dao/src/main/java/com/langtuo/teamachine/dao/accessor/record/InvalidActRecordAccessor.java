@@ -19,7 +19,7 @@ public class InvalidActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<InvalidActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+    public PageInfo<InvalidActRecordPO> searchByShopGroupCodeList(String tenantCode, List<String> shopGroupCodeList,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
@@ -32,7 +32,7 @@ public class InvalidActRecordAccessor {
         return pageInfo;
     }
 
-    public PageInfo<InvalidActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
+    public PageInfo<InvalidActRecordPO> searchByShopCodeList(String tenantCode, List<String> shopCodeList,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 

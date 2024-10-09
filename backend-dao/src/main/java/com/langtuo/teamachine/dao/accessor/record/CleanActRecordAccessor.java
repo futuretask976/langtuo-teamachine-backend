@@ -19,7 +19,7 @@ public class CleanActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<CleanActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+    public PageInfo<CleanActRecordPO> searchByShopGroupCodeList(String tenantCode, List<String> shopGroupCodeList,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
@@ -32,7 +32,7 @@ public class CleanActRecordAccessor {
         return pageInfo;
     }
 
-    public PageInfo<CleanActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
+    public PageInfo<CleanActRecordPO> searchByShopCodeList(String tenantCode, List<String> shopCodeList,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 

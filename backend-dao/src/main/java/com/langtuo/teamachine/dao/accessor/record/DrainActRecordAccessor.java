@@ -19,7 +19,7 @@ public class DrainActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<DrainActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+    public PageInfo<DrainActRecordPO> searchByShopGroupCodeList(String tenantCode, List<String> shopGroupCodeList,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
@@ -32,7 +32,7 @@ public class DrainActRecordAccessor {
         return pageInfo;
     }
 
-    public PageInfo<DrainActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
+    public PageInfo<DrainActRecordPO> searchByShopCodeList(String tenantCode, List<String> shopCodeList,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 

@@ -17,6 +17,6 @@ public @interface TeaMachineTableShard {
     // 对应参数
     String[] columns();
 
-    // 默认表名
-    String defaultName();
+    //原始表名
+    String originName();
 }

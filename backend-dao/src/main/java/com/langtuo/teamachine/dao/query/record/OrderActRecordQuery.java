@@ -15,28 +15,14 @@ public class OrderActRecordQuery {
     private String tenantCode;
 
     /**
-     * 店铺组编码列表
+     * 店铺组编码
      */
-    private List<String> shopGroupCodeList;
+    private String shopGroupCode;
 
     /**
      * 店铺编码列表
      */
     private List<String> shopCodeList;
-
-    /**
-     * 添加店铺编码
-     * @param shopGroupCodeList
-     */
-    public void addAllShopGroupCode(List<String> shopGroupCodeList) {
-        if (CollectionUtils.isEmpty(shopGroupCodeList)) {
-            return;
-        }
-        if (this.shopGroupCodeList == null) {
-            this.shopGroupCodeList = Lists.newArrayList();
-        }
-        this.shopGroupCodeList.addAll(shopGroupCodeList);
-    }
 
     /**
      * 添加店铺编码

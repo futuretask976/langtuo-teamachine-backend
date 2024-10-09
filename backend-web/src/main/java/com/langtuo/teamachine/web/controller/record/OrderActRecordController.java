@@ -19,14 +19,15 @@ public class OrderActRecordController {
     
     @GetMapping(value = "/get")
     public TeaMachineResult<OrderActRecordDTO> get(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("shopGroupCode") String shopGroupCode,
             @RequestParam("idempotentMark") String idempotentMark) {
-        TeaMachineResult<OrderActRecordDTO> rtn = service.get(tenantCode, idempotentMark);
+        TeaMachineResult<OrderActRecordDTO> rtn = service.get(tenantCode, shopGroupCode, idempotentMark);
         return rtn;
     }
     
     @GetMapping(value = "/search")
     public TeaMachineResult<PageDTO<OrderActRecordDTO>> search(@RequestParam("tenantCode") String tenantCode,
-            @RequestParam(name = "shopGroupCode", required = false) String shopGroupCode,
+            @RequestParam("shopGroupCode") String shopGroupCode,
             @RequestParam(name = "shopCode", required = false) String shopCode,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
         TeaMachineResult<PageDTO<OrderActRecordDTO>> rtn = service.search(tenantCode, shopGroupCode, shopCode,
@@ -36,8 +37,9 @@ public class OrderActRecordController {
 
     @DeleteMapping(value = "/delete")
     public TeaMachineResult<Void> delete(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("shopGroupCode") String shopGroupCode,
             @RequestParam("idempotentMark") String idempotentMark) {
-        TeaMachineResult<Void> rtn = service.delete(tenantCode, idempotentMark);
+        TeaMachineResult<Void> rtn = service.delete(tenantCode, shopGroupCode, idempotentMark);
         return rtn;
     }
 }

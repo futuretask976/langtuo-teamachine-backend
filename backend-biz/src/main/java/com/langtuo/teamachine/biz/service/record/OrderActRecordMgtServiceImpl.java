@@ -7,7 +7,6 @@ import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import com.langtuo.teamachine.dao.accessor.record.OrderActRecordAccessor;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
-import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.MessageUtils;
@@ -28,9 +27,10 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     private OrderActRecordAccessor orderActRecordAccessor;
 
     @Override
-    public TeaMachineResult<OrderActRecordDTO> get(String tenantCode, String idempotentMark) {
+    public TeaMachineResult<OrderActRecordDTO> get(String tenantCode, String shopGroupCode, String idempotentMark) {
         try {
-            OrderActRecordPO po = orderActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
+            OrderActRecordPO po = orderActRecordAccessor.getByIdempotentMark(tenantCode, shopGroupCode,
+                    idempotentMark);
             OrderActRecordDTO dto = convertToOrderActRecordDTO(po, true);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
@@ -48,23 +48,17 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
         try {
             PageInfo<OrderActRecordPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
-                pageInfo = orderActRecordAccessor.searchByShopCode(tenantCode, Lists.newArrayList(shopCode),
-                        pageNum, pageSize);
-            } else if (!StringUtils.isBlank(shopGroupCode)) {
-                pageInfo = orderActRecordAccessor.searchByShopGroupCode(tenantCode, Lists.newArrayList(shopGroupCode),
-                        pageNum, pageSize);
+                pageInfo = orderActRecordAccessor.searchByShopCodeList(tenantCode, shopGroupCode,
+                        Lists.newArrayList(shopCode), pageNum, pageSize);
             } else {
-                List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-                pageInfo = orderActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCodeList,
-                        pageNum, pageSize);
+                pageInfo = orderActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCode, pageNum, pageSize);
             }
 
             if (pageInfo == null) {
-                return TeaMachineResult.success(new PageDTO<>(
-                        null, 0, pageNum, pageSize));
+                return TeaMachineResult.success(new PageDTO<>(null, 0, pageNum, pageSize));
             } else {
-                return TeaMachineResult.success(new PageDTO<>(
-                        convertToOrderActRecordDTO(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
+                return TeaMachineResult.success(new PageDTO<>(convertToOrderActRecordDTO(pageInfo.getList(),
+                        false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
             log.error("orderActRecordMgtService|search|fatal|" + e.getMessage(), e);
@@ -73,13 +67,13 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
     }
 
     @Override
-    public TeaMachineResult<Void> delete(String tenantCode, String warningRuleCode) {
+    public TeaMachineResult<Void> delete(String tenantCode, String shopGroupCode, String warningRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
-            int deleted = orderActRecordAccessor.delete(tenantCode, warningRuleCode);
+            int deleted = orderActRecordAccessor.delete(tenantCode, shopGroupCode, warningRuleCode);
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("orderActRecordMgtService|delete|fatal|" + e.getMessage(), e);

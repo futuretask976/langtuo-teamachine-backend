@@ -15,16 +15,16 @@ public interface OrderSpecItemActRecordMapper {
      *
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_specitem_act_record_shard_", columns = "tenantCode", defaultName = "order_specitem_act_record")
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_specitem_act_record_sharding_", columns = {"tenantCode", "shopGroupCode"}, originName = "order_specitem_act_record")
     List<OrderSpecItemActRecordPO> selectList(@Param("tenantCode") String tenantCode,
-            @Param("idempotentMark") String idempotentMark);
+            @Param("shopGroupCode") String shopGroupCode, @Param("idempotentMark") String idempotentMark);
 
     /**
      *
      * @param po
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_specitem_act_record_shard_", columns = "tenantCode", defaultName = "order_specitem_act_record")
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_specitem_act_record_sharding_", columns = {"tenantCode", "shopGroupCode"}, originName = "order_specitem_act_record")
     int insert(OrderSpecItemActRecordPO po);
 
     /**
@@ -33,6 +33,6 @@ public interface OrderSpecItemActRecordMapper {
      * @param idempotentMark
      * @return
      */
-    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_specitem_act_record_shard_", columns = "tenantCode", defaultName = "order_specitem_act_record")
-    int delete(@Param("tenantCode") String tenantCode, @Param("idempotentMark") String idempotentMark);
+    @TeaMachineTableShard(tableShardOpen = true, shardName = "order_specitem_act_record_sharding_", columns = {"tenantCode", "shopGroupCode"}, originName = "order_specitem_act_record")
+    int delete(@Param("tenantCode") String tenantCode, @Param("shopGroupCode") String shopGroupCode, @Param("idempotentMark") String idempotentMark);
 }

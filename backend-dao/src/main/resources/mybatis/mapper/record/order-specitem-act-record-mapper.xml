@@ -10,6 +10,7 @@
         <result property="gmtCreated" column="gmt_created"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="tenantCode" column="tenant_code"/>
+        <result property="shopGroupCode" column="shop_group_code"/>
         <result property="idempotentMark" column="idempotent_mark"/>
         <result property="specCode" column="spec_code"/>
         <result property="specItemCode" column="spec_item_code"/>
@@ -19,6 +20,7 @@
         SELECT * FROM order_specitem_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            AND shop_group_code = #{shopGroupCode}
             AND idempotent_mark = #{idempotentMark}
     </select>
 
@@ -27,6 +29,7 @@
             gmt_created
             , gmt_modified
             , tenant_code
+            , shop_group_code
             , idempotent_mark
             , spec_code
             , spec_item_code
@@ -34,6 +37,7 @@
             now()
             , now()
             , #{tenantCode}
+            , #{shopGroupCode}
             , #{idempotentMark}
             , #{specCode}
             , #{specItemCode}
@@ -44,6 +48,7 @@
         DELETE FROM order_specitem_act_record
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}
+            AND shop_group_code = #{shopGroupCode}
             AND idempotent_mark = #{idempotentMark}
     </delete>
 </mapper>

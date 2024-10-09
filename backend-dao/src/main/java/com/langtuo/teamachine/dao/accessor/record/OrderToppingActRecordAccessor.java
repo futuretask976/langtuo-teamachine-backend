@@ -12,8 +12,9 @@ public class OrderToppingActRecordAccessor {
     @Resource
     private OrderToppingActRecordMapper mapper;
 
-    public List<OrderToppingActRecordPO> listByIdempotentMark(String tenantCode, String idempotentMark) {
-        List<OrderToppingActRecordPO> list = mapper.selectList(tenantCode, idempotentMark);
+    public List<OrderToppingActRecordPO> listByIdempotentMark(String tenantCode, String shopGroupCode,
+            String idempotentMark) {
+        List<OrderToppingActRecordPO> list = mapper.selectList(tenantCode, shopGroupCode, idempotentMark);
         return list;
     }
 
@@ -21,7 +22,7 @@ public class OrderToppingActRecordAccessor {
         return mapper.insert(po);
     }
 
-    public int delete(String tenantCode, String idempotentMark) {
-        return mapper.delete(tenantCode, idempotentMark);
+    public int delete(String tenantCode, String shopGroupCode, String idempotentMark) {
+        return mapper.delete(tenantCode, shopGroupCode, idempotentMark);
     }
 }

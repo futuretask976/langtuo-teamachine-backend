@@ -48,14 +48,14 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
         try {
             PageInfo<SupplyActRecordPO> pageInfo = null;
             if (!StringUtils.isBlank(shopCode)) {
-                pageInfo = supplyActRecordAccessor.searchByShopCode(tenantCode, Lists.newArrayList(shopCode),
+                pageInfo = supplyActRecordAccessor.searchByShopCodeList(tenantCode, Lists.newArrayList(shopCode),
                         pageNum, pageSize);
             } else if (!StringUtils.isBlank(shopGroupCode)) {
-                pageInfo = supplyActRecordAccessor.searchByShopGroupCode(tenantCode, Lists.newArrayList(shopGroupCode),
+                pageInfo = supplyActRecordAccessor.searchByShopGroupCodeList(tenantCode, Lists.newArrayList(shopGroupCode),
                         pageNum, pageSize);
             } else {
                 List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
-                pageInfo = supplyActRecordAccessor.searchByShopGroupCode(tenantCode, shopGroupCodeList,
+                pageInfo = supplyActRecordAccessor.searchByShopGroupCodeList(tenantCode, shopGroupCodeList,
                         pageNum, pageSize);
             }
 

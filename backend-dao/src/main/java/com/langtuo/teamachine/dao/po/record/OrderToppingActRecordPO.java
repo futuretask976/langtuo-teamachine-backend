@@ -27,6 +27,11 @@ public class OrderToppingActRecordPO {
     private String tenantCode;
 
     /**
+     * 店铺组编码
+     */
+    private String shopGroupCode;
+
+    /**
      * 幂等标记
      */
     private String idempotentMark;

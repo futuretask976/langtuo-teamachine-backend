@@ -19,7 +19,7 @@ public class SupplyActRecordAccessor {
         return mapper.selectOne(tenantCode, idempotentMark);
     }
 
-    public PageInfo<SupplyActRecordPO> searchByShopGroupCode(String tenantCode, List<String> shopGroupCodeList,
+    public PageInfo<SupplyActRecordPO> searchByShopGroupCodeList(String tenantCode, List<String> shopGroupCodeList,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
@@ -32,7 +32,7 @@ public class SupplyActRecordAccessor {
         return pageInfo;
     }
 
-    public PageInfo<SupplyActRecordPO> searchByShopCode(String tenantCode, List<String> shopCodeList,
+    public PageInfo<SupplyActRecordPO> searchByShopCodeList(String tenantCode, List<String> shopCodeList,
             int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 

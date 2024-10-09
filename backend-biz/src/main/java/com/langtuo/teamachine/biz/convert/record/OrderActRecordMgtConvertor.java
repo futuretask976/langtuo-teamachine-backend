@@ -76,12 +76,12 @@ public class OrderActRecordMgtConvertor {
 
             OrderSpecItemActRecordAccessor orderSpecItemActRecordAccessor = SpringAccessorUtils.getOrderSpecItemActRecordAccessor();
             List<OrderSpecItemActRecordPO> specItemActRecordList = orderSpecItemActRecordAccessor.listByIdempotentMark(
-                    po.getTenantCode(), po.getIdempotentMark());
+                    po.getTenantCode(), po.getShopGroupCode(), po.getIdempotentMark());
             dto.setSpecItemList(convertToOrderSpecItemActRecordDTO(specItemActRecordList));
 
             OrderToppingActRecordAccessor orderToppingActRecordAccessor = SpringAccessorUtils.getOrderToppingActRecordAccessor();
             List<OrderToppingActRecordPO> toppingActRecordList = orderToppingActRecordAccessor.listByIdempotentMark(
-                    po.getTenantCode(), po.getIdempotentMark());
+                    po.getTenantCode(), po.getShopGroupCode(), po.getIdempotentMark());
             dto.setToppingList(convertToOrderToppingActRecordDTO((toppingActRecordList)));
         }
         return dto;
