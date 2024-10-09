@@ -4,8 +4,12 @@ import java.util.Arrays;
 
 public class SortTestor {
     public static void main(String args[]) {
-        String result = formatGoodsCode("DFji-Abed1-2Jkl-0b2dfc-ajioKl", "-");
-        System.out.println(result);
+        System.out.println(15 % 4);
+        System.out.println(16 % 4);
+        System.out.println(17 % 4);
+        System.out.println(18 % 4);
+        System.out.println(19 % 4);
+        System.out.println(20 % 4);
     }
 
     public static String formatGoodsCode(String input, String separator) {

@@ -85,8 +85,7 @@ public class TeaMachineTableShardInterceptor implements Interceptor {
     }
 
     private String computeTableSuffix(Map<String, String> columnValueMap) {
-        // System.out.printf("$$$$$ LangTuoTableShardInterceptor#computeTableSuffix columnValues=%s\n", columnValueMap);
-        // 实现分表逻辑，如通过用户ID取模等
+        // 实现分表逻辑，如通过用户 ID 取模等
         return "01"; // 示例返回值
     }
 
