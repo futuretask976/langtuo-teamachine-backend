@@ -3,8 +3,10 @@ package com.langtuo.teamachine.biz.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.langtuo.teamachine.api.model.drink.TeaDTO;
 import com.langtuo.teamachine.api.model.menu.MenuDTO;
+import com.langtuo.teamachine.api.model.menu.MenuSeriesRelDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesDTO;
 import com.langtuo.teamachine.api.model.menu.SeriesTeaRelDTO;
 import com.langtuo.teamachine.biz.convert.drink.TeaMgtConvertor;
@@ -21,6 +23,7 @@ import com.langtuo.teamachine.dao.po.menu.SeriesPO;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
@@ -28,6 +31,7 @@ import org.springframework.util.DigestUtils;
 import java.io.*;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -48,54 +52,61 @@ public class BizUtils {
     }
 
     public static JSONObject getMenuDispatchCont(String tenantCode, String menuCode) {
+        // 获取菜单
         MenuAccessor menuAccessor = SpringAccessorUtils.getMenuAccessor();
         MenuPO menuPO = menuAccessor.getByMenuCode(tenantCode, menuCode);
         MenuDTO menuDTO = MenuMgtConvertor.convertToMenuDTO(menuPO);
-        if (menuDTO == null) {
-            log.error("BizUtils|getMenu|null|stopWorker");
+        if (menuDTO == null || CollectionUtils.isEmpty(menuDTO.getMenuSeriesRelList())) {
+            log.error("BizUtils|getMenu|menuNullOrSeriesRelListNull|stopWorker|" + tenantCode + "|" + menuCode);
             return null;
         }
 
-        List<SeriesDTO> seriesDTOList = menuDTO.getMenuSeriesRelList().stream()
-                .map(menuSeriesRelDTO -> {
-                    SeriesAccessor seriesAccessor = SpringAccessorUtils.getSeriesAccessor();
-                    SeriesPO seriesPO = seriesAccessor.getBySeriesCode(tenantCode, menuSeriesRelDTO.getSeriesCode());
-                    SeriesDTO seriesDTO = SeriesMgtConvertor.convertToSeriesDTO(seriesPO);
-                    return seriesDTO;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        // 获取系列列表
+        List<SeriesDTO> seriesDTOList = Lists.newArrayList();
+        for (MenuSeriesRelDTO menuSeriesRelDTO : menuDTO.getMenuSeriesRelList()) {
+            SeriesAccessor seriesAccessor = SpringAccessorUtils.getSeriesAccessor();
+            SeriesPO seriesPO = seriesAccessor.getBySeriesCode(tenantCode, menuSeriesRelDTO.getSeriesCode());
+            SeriesDTO seriesDTO = SeriesMgtConvertor.convertToSeriesDTO(seriesPO);
+            if (seriesDTO == null || CollectionUtils.isEmpty(seriesDTO.getSeriesTeaRelList())) {
+                continue;
+            }
+            seriesDTOList.add(seriesDTO);
+        }
         if (CollectionUtils.isEmpty(seriesDTOList)) {
-            log.error("BizUtils|getSeriesList|empty|stopWorker");
-            return null;
-        }
-        List<String> teaCodeList = seriesDTOList.stream()
-                .map(seriesDTO -> {
-                    List<SeriesTeaRelDTO> seriesTeaRelList = seriesDTO.getSeriesTeaRelList();
-                    if (CollectionUtils.isEmpty(seriesTeaRelList)) {
-                        return null;
-                    }
-                    return seriesTeaRelList.stream()
-                            .map(seriesTeaRelDTO -> seriesTeaRelDTO.getTeaCode())
-                            .collect(Collectors.toList());
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(teaCodeList)) {
-            log.error("BizUtils|getTeaList|empty|stopWorker");
+            log.error("BizUtils|getSeriesList|seriesDTOListEmpty|stopWorker|" + tenantCode + "|" + menuCode);
             return null;
         }
 
-        List<TeaDTO> teaList = teaCodeList.stream()
-                .map(teaCode -> {
-                    TeaAccessor teaAccessor = SpringAccessorUtils.getTeaAccessor();
-                    TeaPO teaPO = teaAccessor.getByTeaCode(tenantCode, teaCode);
-                    TeaDTO teaDTO = TeaMgtConvertor.convertToTeaDTO(teaPO, true);
-                    return teaDTO;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        // 获取茶品编码列表
+        Map<String, List<String>> teaCodeListMap = Maps.newHashMap();
+        for (SeriesDTO seriesDTO : seriesDTOList) {
+            teaCodeListMap.putIfAbsent(seriesDTO.getSeriesCode(), Lists.newArrayList());
+            for (SeriesTeaRelDTO seriesTeaRelDTO : seriesDTO.getSeriesTeaRelList()) {
+                teaCodeListMap.get(seriesDTO.getSeriesCode()).add(seriesTeaRelDTO.getTeaCode());
+            }
+        }
+        if (CollectionUtils.isEmpty(teaCodeListMap)) {
+            log.error("BizUtils|getTeaList|teaCodeListMapEmpty|stopWorker|" + tenantCode + "|" + menuCode);
+            return null;
+        }
+
+        // 获取茶品列表
+        Map<String, List<TeaDTO>> teaListMap = Maps.newHashMap();
+        for (Map.Entry<String, List<String>> entry : teaCodeListMap.entrySet()) {
+            String seriesCode = entry.getKey();
+            teaListMap.putIfAbsent(seriesCode, Lists.newArrayList());
+
+            List<String> teaCodeList = entry.getValue();
+            if (CollectionUtils.isEmpty(teaCodeList)) {
+                continue;
+            }
+            for (String teaCode : teaCodeList) {
+                TeaAccessor teaAccessor = SpringAccessorUtils.getTeaAccessor();
+                TeaPO teaPO = teaAccessor.getByTeaCode(tenantCode, teaCode);
+                TeaDTO teaDTO = TeaMgtConvertor.convertToTeaDTO(teaPO, true);
+                teaListMap.get(seriesCode).add(teaDTO);
+            }
+        }
 
         // 拼接需要输出的内容
         JSONObject jsonMenu = (JSONObject) JSON.toJSON(menuDTO);
@@ -105,7 +116,7 @@ public class BizUtils {
             JSONObject seriesJSON = (JSONObject) JSON.toJSON(seriesDTO);
             seriesJSON.remove("seriesTeaRelList");
             seriesJSON.put("teaList", new JSONArray());
-            for (TeaDTO teaDTO : teaList) {
+            for (TeaDTO teaDTO : teaListMap.get(seriesDTO.getSeriesCode())) {
                 JSONObject jsonTea = (JSONObject) JSON.toJSON(teaDTO);
                 seriesJSON.getJSONArray("teaList").add(jsonTea);
             }
