@@ -6,7 +6,7 @@ import com.langtuo.teamachine.api.request.drink.TeaPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.drink.TeaMgtService;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
-import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import com.langtuo.teamachine.web.constant.WebConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -99,7 +99,7 @@ public class TeaController {
     public TeaMachineResult<Void> uploadExcel(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_UPLOAD_FILE_IS_EMPTY));
         }
 
         // 获取文件的字节
@@ -120,6 +120,6 @@ public class TeaController {
                 }
             }
         }
-        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_PARSE_UPLOAD_FILE_ERROR));
+        return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_PARSE_UPLOAD_FILE_ERROR));
     }
 }

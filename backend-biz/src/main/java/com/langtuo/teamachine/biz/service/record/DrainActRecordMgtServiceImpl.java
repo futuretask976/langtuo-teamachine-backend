@@ -10,7 +10,7 @@ import com.langtuo.teamachine.dao.po.record.DrainActRecordPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
-import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
@@ -34,7 +34,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
             return TeaMachineResult.success(convertToDrainActRecordDTO(po, true));
         } catch (Exception e) {
             log.error("drainActRecordMgtService|get|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -68,14 +68,14 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
             }
         } catch (Exception e) {
             log.error("drainActRecordMgtService|search|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
     @Override
     public TeaMachineResult<Void> delete(String tenantCode, String idempotentMark) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
@@ -83,7 +83,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("drainActRecordMgtService|delete|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 }

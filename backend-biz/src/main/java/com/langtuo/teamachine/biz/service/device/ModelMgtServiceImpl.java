@@ -17,7 +17,7 @@ import com.langtuo.teamachine.dao.po.device.ModelPO;
 import com.langtuo.teamachine.dao.po.device.ModelPipelinePO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
-import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -53,7 +53,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("modelMgtService|list|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -70,14 +70,14 @@ public class ModelMgtServiceImpl implements ModelMgtService {
                     dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("modelMgtService|search|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
     @Override
     public TeaMachineResult<ModelDTO> getByModelCode(String modelCode) {
         if (StringUtils.isBlank(modelCode)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
@@ -86,14 +86,14 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             return TeaMachineResult.success(modelDTO);
         } catch (Exception e) {
             log.error("modelMgtService|get|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
     @Override
     public TeaMachineResult<Void> put(ModelPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         ModelPO modelPO = ModelMgtConvertor.convertToModelDTO(request);
@@ -119,13 +119,13 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         try {
             ModelPO exist = modelAccessor.getByModelCode(po.getModelCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = modelAccessor.insert(po);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("modelMgtService|putNewModel|error|" + inserted);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted = modelPipelineAccessor.deleteByModelCode(po.getModelCode());
@@ -133,13 +133,13 @@ public class ModelMgtServiceImpl implements ModelMgtService {
                 int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
                 if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
                     log.error("modelMgtService|putNewPipeline|error|" + inserted);
-                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                    return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("modelMgtService|putNew|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 
@@ -147,13 +147,13 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         try {
             ModelPO exist = modelAccessor.getByModelCode(po.getModelCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
             }
 
             int updated = modelAccessor.update(po);
             if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("modelMgtService|putUpdateModel|error|" + updated);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
             int deleted = modelPipelineAccessor.deleteByModelCode(po.getModelCode());
@@ -161,32 +161,32 @@ public class ModelMgtServiceImpl implements ModelMgtService {
                 int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
                 if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
                     log.error("modelMgtService|putUpdatePipeline|error|" + inserted4Pipeline);
-                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                    return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("modelMgtService|putUpdate|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
 
     @Override
     public TeaMachineResult<Void> deleteByModelCode(String modelCode) {
         if (StringUtils.isEmpty(modelCode)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
             int countDeployByModelCode = deployAccessor.countByModelCode(modelCode);
             if (CommonConsts.DB_COUNT_RESULT_ZERO != countDeployByModelCode) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
 
             int countMachineByModelCode = machineAccessor.countByModelCode(modelCode);
             if (CommonConsts.DB_COUNT_RESULT_ZERO != countMachineByModelCode) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
 
@@ -195,7 +195,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("modelMgtService|delete|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 }

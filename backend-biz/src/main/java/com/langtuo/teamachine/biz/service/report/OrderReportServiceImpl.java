@@ -22,7 +22,7 @@ import com.langtuo.teamachine.dao.po.report.OrderToppingReportPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
-import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -49,7 +49,7 @@ public class OrderReportServiceImpl implements OrderReportService {
     @Override
     public TeaMachineResult<Void> calc(String tenantCode, String orderCreatedDay) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(orderCreatedDay)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         int deleted4Order = orderReportAccessor.delete(tenantCode, orderCreatedDay);
@@ -111,7 +111,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                     pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orderReportService|searchAmtReport|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -144,7 +144,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                     pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orderReportService|searchTeaReport|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -177,7 +177,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                     pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orderReportService|searchSpecItemReport|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -210,7 +210,7 @@ public class OrderReportServiceImpl implements OrderReportService {
                     pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orderReportService|searchToppingReport|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 

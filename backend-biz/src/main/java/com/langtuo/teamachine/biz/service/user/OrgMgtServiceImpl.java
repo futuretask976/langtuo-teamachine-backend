@@ -14,7 +14,7 @@ import com.langtuo.teamachine.dao.po.user.AdminPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
-import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -46,7 +46,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             teaMachineResult = TeaMachineResult.success(convertToOrgDTO(orgNode));
         } catch (Exception e) {
             log.error("orgMgtService|getTop|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
@@ -59,7 +59,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             teaMachineResult = TeaMachineResult.success(convertToOrgDTO(orgNodeList));
         } catch (Exception e) {
             log.error("orgMgtService|listByParent|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
@@ -73,7 +73,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("orgMgtService|list|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -89,7 +89,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("orgMgtService|search|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -102,7 +102,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             teaMachineResult = TeaMachineResult.success(orgDTO);
         } catch (Exception e) {
             log.error("orgMgtService|get|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
     }
@@ -110,7 +110,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     @Override
     public TeaMachineResult<Void> put(OrgPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         OrgNode orgNode = convertToOrgNode(request);
@@ -126,18 +126,18 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         try {
             OrgNode exist = orgAccessor.getByOrgName(po.getTenantCode(), po.getOrgName());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = orgAccessor.insert(po);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("orgMgtService|putNew|error|" + inserted);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("orgMgtService|putNew|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
     }
@@ -146,39 +146,39 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         try {
             OrgNode exist = orgAccessor.getByOrgName(po.getTenantCode(), po.getOrgName());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = orgAccessor.update(po);
             if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("orgMgtService|putUpdate|error|" + updated);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("orgMgtService|putUpdate|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
 
     @Override
     public TeaMachineResult<Void> deleteByOrgName(String tenantCode, String orgName) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
             int count4Admin = adminAccessor.countByOrgName(tenantCode, orgName);
             if (count4Admin > CommonConsts.DB_COUNT_RESULT_ZERO) {
                 log.error("orgMgtService|delete|errorByAdmin|" + count4Admin);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
 
             int count4ShopGroup = shopGroupAccessor.countByOrgName(tenantCode, orgName);
             if (count4ShopGroup > CommonConsts.DB_COUNT_RESULT_ZERO) {
                 log.error("orgMgtService|delete|errorByShopGroup|" + count4ShopGroup);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
 
@@ -186,7 +186,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("orgMgtService|delete|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 }

@@ -7,6 +7,7 @@ import com.langtuo.teamachine.api.service.user.PermitActMgtService;
 import com.langtuo.teamachine.dao.accessor.user.PermitActAccessor;
 import com.langtuo.teamachine.dao.po.user.PermitActGroupPO;
 import com.langtuo.teamachine.dao.po.user.PermitActPO;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -50,7 +51,7 @@ public class PermitActMgtServiceImpl implements PermitActMgtService {
 
         PermitActGroupDTO dto = new PermitActGroupDTO();
         dto.setPermitActGroupCode(permitActGroupPO.getPermitActGroupCode());
-        dto.setPermitActGroupName(permitActGroupPO.getPermitActGroupName());
+        dto.setPermitActGroupName(LocaleUtils.getLang(permitActGroupPO.getPermitActGroupCode()));
         return dto;
     }
 
@@ -61,7 +62,7 @@ public class PermitActMgtServiceImpl implements PermitActMgtService {
 
         PermitActDTO dto = new PermitActDTO();
         dto.setPermitActCode(po.getPermitActCode());
-        dto.setPermitActName(po.getPermitActName());
+        dto.setPermitActName(LocaleUtils.getLang(po.getPermitActCode()));
         dto.setPermitActGroupCode(po.getPermitActGroupCode());
         return dto;
     }
@@ -72,13 +73,7 @@ public class PermitActMgtServiceImpl implements PermitActMgtService {
         }
 
         List<PermitActDTO> list = poList.stream()
-                .map(po -> {
-                    PermitActDTO dto = new PermitActDTO();
-                    dto.setPermitActCode(po.getPermitActCode());
-                    dto.setPermitActName(po.getPermitActName());
-                    dto.setPermitActGroupCode(po.getPermitActGroupCode());
-                    return dto;
-                })
+                .map(po -> convert(po))
                 .collect(Collectors.toList());
         return list;
     }

@@ -14,7 +14,7 @@ import com.langtuo.teamachine.dao.po.drink.SpecItemPO;
 import com.langtuo.teamachine.dao.po.drink.SpecPO;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
-import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +48,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("specMgtService|list|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -66,7 +66,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("specMgtService|search|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -78,14 +78,14 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("specMgtService|getByCode|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
     @Override
     public TeaMachineResult<Void> put(SpecPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         SpecPO po = convertToSpecDTO(request);
@@ -101,13 +101,13 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         try {
             SpecPO exist = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = specAccessor.insert(po);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("specMgtService|putNewSpec|error|" + inserted);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
 
             int deleted = specItemAccessor.deleteBySpecCode(po.getTenantCode(), po.getSpecCode());
@@ -115,13 +115,13 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                 int inserted4Item = specItemAccessor.insert(specItemPO);
                 if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Item) {
                     log.error("specMgtService|putNewSpecItem|error|" + inserted4Item);
-                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                    return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("specMgtService|putNew|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 
@@ -129,7 +129,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         try {
             SpecPO existSpecPO = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
             if (existSpecPO == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
             List<SpecItemPO> existSpecItemPOList = specItemAccessor.listBySpecCode(po.getTenantCode(), po.getSpecCode());
             if (!CollectionUtils.isEmpty(existSpecItemPOList)) {
@@ -140,7 +140,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                             .map(SpecItemPO::getSpecItemCode)
                             .collect(Collectors.toList()));
                     if (count > CommonConsts.DB_COUNT_RESULT_ZERO) {
-                        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                        return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
                                 ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
                     }
                 }
@@ -149,7 +149,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             int updated = specAccessor.update(po);
             if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("specMgtService|putUpdateSpec|error|" + updated);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
             int deleted = specItemAccessor.deleteBySpecCode(po.getTenantCode(), po.getSpecCode());
@@ -157,13 +157,13 @@ public class SpecMgtServiceImpl implements SpecMgtService {
                 int inserted4Item = specItemAccessor.insert(specItemPO);
                 if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Item) {
                     log.error("specMgtService|putUpdateSpecItem|error|" + inserted4Item);
-                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                    return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("specMgtService|putUpdate|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
 
@@ -188,13 +188,13 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     @Override
     public TeaMachineResult<Void> deleteBySpecCode(String tenantCode, String specCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
             int countBySpecCode = specItemRuleAccessor.countBySpecCode(tenantCode, specCode);
             if (countBySpecCode != CommonConsts.DB_SELECT_ZERO_ROW) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
             int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
@@ -202,7 +202,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("specMgtService|delete|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 }

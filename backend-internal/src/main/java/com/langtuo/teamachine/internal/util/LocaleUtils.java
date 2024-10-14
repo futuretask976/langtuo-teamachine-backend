@@ -12,7 +12,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import java.util.Locale;
 
 @Slf4j
-public class MessageUtils {
+public class LocaleUtils {
     public static ErrorMsgDTO getErrorMsgDTO(ErrorCodeEnum errorCodeEnum) {
         MessageSource messageSource = getMessageSource();
         ErrorMsgDTO errorMsgDTO = new ErrorMsgDTO();
@@ -20,6 +20,13 @@ public class MessageUtils {
         errorMsgDTO.setErrorMsg(messageSource.getMessage(errorCodeEnum.getErrorCode(), null,
                 LocaleContextHolder.getLocale()));
         return errorMsgDTO;
+    }
+
+    public static String getLang(String key) {
+        MessageSource messageSource = getMessageSource();
+        String lang = messageSource.getMessage(key, null,
+                LocaleContextHolder.getLocale());
+        return lang;
     }
 
     private static MessageSource getMessageSource() {

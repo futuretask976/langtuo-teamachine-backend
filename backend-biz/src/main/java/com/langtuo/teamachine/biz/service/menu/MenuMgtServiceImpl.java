@@ -22,7 +22,7 @@ import com.langtuo.teamachine.dao.util.DaoUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.DateUtils;
-import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +62,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("menuMgtService|list|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -93,7 +93,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                     pageNum, pageSize));
         } catch (Exception e) {
             log.error("menuMgtService|search|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
@@ -105,14 +105,14 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
             log.error("menuMgtService|getByCode|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
     @Override
     public TeaMachineResult<Void> put(MenuPutRequest request) {
         if (request == null || !request.isValid()) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         MenuPO po = convertMenuPO(request);
@@ -128,13 +128,13 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         try {
             MenuPO exist = menuAccessor.getByMenuCode(po.getTenantCode(), po.getMenuCode());
             if (exist != null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
             }
 
             int inserted = menuAccessor.insert(po);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
                 log.error("menuMgtService|putNewMenu|error|" + inserted);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
             int deleted4SeriesRel = menuSeriesRelAccessor.deleteByMenuCode(po.getTenantCode(), po.getMenuCode());
@@ -142,7 +142,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 int inserted4SeriesRel = menuSeriesRelAccessor.insert(seriesRelPO);
                 if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4SeriesRel) {
                     log.error("menuMgtService|putNewSeriesRel|error|" + inserted4SeriesRel);
-                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                    return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
 
@@ -151,7 +151,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|putUpdate|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
 
@@ -159,13 +159,13 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         try {
             MenuPO exist = menuAccessor.getByMenuCode(po.getTenantCode(), po.getMenuCode());
             if (exist == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             int updated = menuAccessor.update(po);
             if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
                 log.error("menuMgtService|putUpdateMenu|error|" + updated);
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
 
             int deleted4SeriesRel = menuSeriesRelAccessor.deleteByMenuCode(po.getTenantCode(), po.getMenuCode());
@@ -173,7 +173,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 int inserted4SeriesRel = menuSeriesRelAccessor.insert(seriesRelPO);
                 if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4SeriesRel) {
                     log.error("menuMgtService|putUpdateSeriesRel|error|" + inserted4SeriesRel);
-                    return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+                    return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
                 }
             }
 
@@ -182,14 +182,14 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|putUpdate|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
 
     @Override
     public TeaMachineResult<Void> deleteByMenuCode(String tenantCode, String menuCode) {
         if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
@@ -204,21 +204,21 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|delete|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 
     @Override
     public TeaMachineResult<Void> putDispatch(MenuDispatchPutRequest request) {
         if (request == null) {
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
         List<MenuDispatchPO> poList = convertToMenuDispatchPO(request);
 
         try {
             MenuPO menuPO = menuAccessor.getByMenuCode(request.getTenantCode(), request.getMenuCode());
             if (menuPO == null) {
-                return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
             }
 
             List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(menuPO.getTenantCode());
@@ -236,7 +236,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.success();
         } catch (Exception e) {
             log.error("menuMgtService|putDispatch|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 
@@ -257,7 +257,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("menuMgtService|getDispatchByMenuCode|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 

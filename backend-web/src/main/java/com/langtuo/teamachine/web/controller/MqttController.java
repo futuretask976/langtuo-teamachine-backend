@@ -7,7 +7,7 @@ import com.langtuo.teamachine.api.service.record.OrderActRecordMgtService;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
 import com.langtuo.teamachine.internal.util.DateUtils;
-import com.langtuo.teamachine.internal.util.MessageUtils;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import com.langtuo.teamachine.mqtt.consume.worker.record.CleanActRecordWorker;
 import com.langtuo.teamachine.mqtt.consume.worker.record.OrderActRecordWorker;
 import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
@@ -51,7 +51,7 @@ public class MqttController {
             log.error("test error: " + e.getMessage(), e);
         }
         log.info("/mqtt/test exiting");
-        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
+        return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
     }
 
     /**
@@ -123,7 +123,7 @@ public class MqttController {
         } catch (Exception e) {
             log.error("test error: " + e.getMessage(), e);
         }
-        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
+        return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
     }
 
     /**
@@ -141,7 +141,7 @@ public class MqttController {
         } catch (Exception e) {
             log.error("test error: " + e.getMessage(), e);
         }
-        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
+        return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
     }
 
     /**
@@ -160,6 +160,6 @@ public class MqttController {
         } else {
             LocaleContextHolder.setLocale(Locale.ENGLISH);
         }
-        return TeaMachineResult.error(MessageUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
+        return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
     }
 }
