@@ -18,6 +18,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -38,6 +40,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     private ShopGroupAccessor shopGroupAccessor;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<OrgDTO> getTop(String tenantCode) {
         TeaMachineResult<OrgDTO> teaMachineResult;
         try {
@@ -52,6 +55,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<OrgDTO>> listByParentOrgName(String tenantCode, String orgName) {
         TeaMachineResult<List<OrgDTO>> teaMachineResult;
         try {
@@ -65,6 +69,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<OrgDTO>> list(String tenantCode) {
         try {
             AdminPO adminPO = DaoUtils.getAdminPOByLoginSession(tenantCode);
@@ -78,6 +83,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<OrgDTO>> search(String tenantCode, String orgName,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -94,6 +100,7 @@ public class OrgMgtServiceImpl implements OrgMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<OrgDTO> getByOrgName(String tenantCode, String orgName) {
         TeaMachineResult<OrgDTO> teaMachineResult;
         try {
@@ -114,54 +121,50 @@ public class OrgMgtServiceImpl implements OrgMgtService {
         }
 
         OrgNode orgNode = convertToOrgNode(request);
-        if (request.isPutNew()) {
-            return putNew(orgNode);
-        } else {
-            return putUpdate(orgNode);
+        try {
+            if (request.isPutNew()) {
+                return putNew(orgNode);
+            } else {
+                return putUpdate(orgNode);
+            }
+        } catch (Exception e) {
+            log.error("orgMgtService|put|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     private TeaMachineResult<Void> putNew(OrgNode po) {
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            OrgNode exist = orgAccessor.getByOrgName(po.getTenantCode(), po.getOrgName());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
-            }
-
-            int inserted = orgAccessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("orgMgtService|putNew|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("orgMgtService|putNew|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        OrgNode exist = orgAccessor.getByOrgName(po.getTenantCode(), po.getOrgName());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
         }
-        return teaMachineResult;
+
+        int inserted = orgAccessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("orgMgtService|putNew|error|" + inserted);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+        return TeaMachineResult.success();
     }
 
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     private TeaMachineResult<Void> putUpdate(OrgNode po) {
-        try {
-            OrgNode exist = orgAccessor.getByOrgName(po.getTenantCode(), po.getOrgName());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
-            }
+        OrgNode exist = orgAccessor.getByOrgName(po.getTenantCode(), po.getOrgName());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+        }
 
-            int updated = orgAccessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("orgMgtService|putUpdate|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("orgMgtService|putUpdate|fatal|" + e.getMessage(), e);
+        int updated = orgAccessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("orgMgtService|putUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
+        return TeaMachineResult.success();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public TeaMachineResult<Void> deleteByOrgName(String tenantCode, String orgName) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));

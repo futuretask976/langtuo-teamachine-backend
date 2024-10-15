@@ -62,7 +62,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     }
 
     @Override
-    c
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<ShopGroupDTO>> list(String tenantCode) {
         try {
             List<String> orgNameList = DaoUtils.getOrgNameListByLoginSession(tenantCode);

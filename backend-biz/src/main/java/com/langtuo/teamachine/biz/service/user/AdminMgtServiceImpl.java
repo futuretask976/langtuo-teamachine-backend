@@ -16,6 +16,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,12 +34,14 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     private RoleAccessor roleAccessor;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<AdminDTO> getByLoginName(String tenantCode, String loginName) {
         AdminPO adminPO = adminAccessor.getByLoginName(tenantCode, loginName);
         return TeaMachineResult.success(convertToAdminDTO(adminPO));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<AdminDTO>> search(String tenantCode, String loginName, String roleCode,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -57,6 +61,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<AdminDTO>> list(String tenantCode) {
         try {
             List<AdminPO> list = adminAccessor.list(tenantCode);
@@ -74,14 +79,20 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         }
 
         AdminPO po = convertToAdminPO(request);
-        if (request.isPutNew()) {
-            return putNew(po);
-        } else {
-            return putUpdate(po);
+        try {
+            if (request.isPutNew()) {
+                return doPutNew(po);
+            } else {
+                return doPutUpdate(po);
+            }
+        } catch (Exception e) {
+            log.error("adminMgtService|put|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public TeaMachineResult<Void> deleteByLoginName(String tenantCode, String loginName) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(loginName)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
@@ -99,6 +110,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<Integer> countByRoleCode(String tenantCode, String roleCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(roleCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
@@ -115,50 +127,41 @@ public class AdminMgtServiceImpl implements AdminMgtService {
         return teaMachineResult;
     }
 
-    private TeaMachineResult<Void> putNew(AdminPO po) {
-        TeaMachineResult<Void> teaMachineResult;
-        try {
-            AdminPO exist = adminAccessor.getByLoginName(po.getTenantCode(), po.getLoginName());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
-            }
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(AdminPO po) {
+        AdminPO exist = adminAccessor.getByLoginName(po.getTenantCode(), po.getLoginName());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+        }
 
-            int inserted = adminAccessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("adminMgtService|putNew|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("adminMgtService|putNew|fatal|" + e.getMessage(), e);
+        int inserted = adminAccessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("adminMgtService|putNew|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
+        return TeaMachineResult.success();
     }
 
-    private TeaMachineResult<Void> putUpdate(AdminPO po) {
-        try {
-            AdminPO exist = adminAccessor.getByLoginName(po.getTenantCode(), po.getLoginName());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
-            }
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(AdminPO po) {
+        AdminPO exist = adminAccessor.getByLoginName(po.getTenantCode(), po.getLoginName());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+        }
 
-            if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(exist.getRoleCode())) {
-                AdminPO loginAdminPO = DaoUtils.getAdminPOByLoginSession(po.getTenantCode());
-                if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(loginAdminPO.getRoleCode())) {
-                    return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
-                            ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN));
-                }
+        if (CommonConsts.ROLE_CODE_TENANT_SUPER.equals(exist.getRoleCode())) {
+            AdminPO loginAdminPO = DaoUtils.getAdminPOByLoginSession(po.getTenantCode());
+            if (!CommonConsts.ROLE_CODE_SYS_SUPER.equals(loginAdminPO.getRoleCode())) {
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
+                        ErrorCodeEnum.BIZ_ERR_CANNOT_MODIFY_TENANT_SUPER_ADMIN));
             }
+        }
 
-            int updated = adminAccessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("adminMgtService|putUpdate|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("adminMgtService|putUpdate|fatal|" + e.getMessage(), e);
+        int updated = adminAccessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("adminMgtService|putUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
+        return TeaMachineResult.success();
     }
 }
