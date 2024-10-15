@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,6 +30,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
     private DrainActRecordAccessor drainActRecordAccessor;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<DrainActRecordDTO> get(String tenantCode, String idempotentMark) {
         try {
             DrainActRecordPO po = drainActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
@@ -39,6 +42,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<DrainActRecordDTO>> search(String tenantCode, String shopGroupCode,
             String shopCode, int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -73,6 +77,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public TeaMachineResult<Void> delete(String tenantCode, String idempotentMark) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
