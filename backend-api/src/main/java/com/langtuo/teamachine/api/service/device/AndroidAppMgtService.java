@@ -7,7 +7,15 @@ import com.langtuo.teamachine.api.request.device.AndroidAppDispatchPutRequest;
 import com.langtuo.teamachine.api.request.device.AndroidAppPutRequest;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 
+import java.util.List;
+
 public interface AndroidAppMgtService {
+    /**
+     *
+     * @return
+     */
+    TeaMachineResult<List<AndroidAppDTO>> listByLimit(int limit);
+
     /**
      *
      * @param version

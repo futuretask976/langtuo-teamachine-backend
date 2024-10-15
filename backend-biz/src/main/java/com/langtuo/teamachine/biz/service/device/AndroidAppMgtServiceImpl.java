@@ -44,6 +44,19 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
     @Override
     @Transactional(readOnly = true)
+    public TeaMachineResult<List<AndroidAppDTO>> listByLimit(int limit) {
+        try {
+            List<AndroidAppPO> list = androidAppAccessor.listByLimit(limit);
+            List<AndroidAppDTO> dtoList = convertToAndroidAppDTO(list);
+            return TeaMachineResult.success(dtoList);
+        } catch (Exception e) {
+            log.error("androidAppMgtService|listByLimit|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<AndroidAppDTO> getByVersion(String version) {
         if (StringUtils.isBlank(version)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));

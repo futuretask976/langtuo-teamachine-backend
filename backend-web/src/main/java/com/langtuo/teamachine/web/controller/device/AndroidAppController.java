@@ -10,6 +10,7 @@ import com.langtuo.teamachine.api.service.device.AndroidAppMgtService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Jiaqing
@@ -19,6 +20,12 @@ import javax.annotation.Resource;
 public class AndroidAppController {
     @Resource
     private AndroidAppMgtService service;
+
+    @GetMapping(value = "/list")
+    public TeaMachineResult<List<AndroidAppDTO>> list(@RequestParam("limit") int limit) {
+        TeaMachineResult<List<AndroidAppDTO>> rtn = service.listByLimit(limit);
+        return rtn;
+    }
 
     @GetMapping(value = "/get")
     public TeaMachineResult<AndroidAppDTO> get(@RequestParam("version") String version) {

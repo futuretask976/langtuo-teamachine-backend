@@ -15,6 +15,15 @@
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
+    <select id="listByLimit" resultMap="androidAppPOMap">
+        SELECT
+            *
+        FROM
+            android_app_version
+        ORDER BY gmt_created DESC
+        LIMIT #{limit}
+    </select>
+
     <select id="selectOne" resultMap="androidAppPOMap">
         SELECT
             *

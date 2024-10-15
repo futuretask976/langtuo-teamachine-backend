@@ -14,6 +14,12 @@ import java.util.List;
 public interface AndroidAppMapper {
     /**
      *
+     * @return
+     */
+    List<AndroidAppPO> listByLimit(@Param("limit") int limit);
+
+    /**
+     *
      * @param version
      * @return
      */

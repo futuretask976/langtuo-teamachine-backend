@@ -18,6 +18,16 @@ public class AndroidAppAccessor {
 
     /**
      *
+     * @param limit
+     * @return
+     */
+    public List<AndroidAppPO> listByLimit(int limit) {
+        List<AndroidAppPO> poList = mapper.listByLimit(limit);
+        return poList;
+    }
+
+    /**
+     *
      * @param version
      * @return
      */

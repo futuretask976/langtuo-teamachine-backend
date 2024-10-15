@@ -105,7 +105,8 @@ public class SecurityChainConfig {
                 .antMatchers(WebConsts.ANT_PATTERN_MACHINE_PATH).hasAnyRole(
                         PermitActEnum.MACHINE_MGT.getPermitActCode())
                 .antMatchers(WebConsts.ANT_PATTERN_ANDROID_PATH).hasAnyRole(
-                        WebConsts.SPECIAL_PERMIT_ACT_CODE_ANDROID_APP_MGT)
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_ANDROID_APP_MGT,
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
                 // 用户
                 .antMatchers(WebConsts.ANT_PATTERN_ROLE_LIST_PATH).hasAnyRole(
                         PermitActEnum.ROLE_MGT.getPermitActCode(),
