@@ -23,6 +23,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -53,6 +55,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<DrainRuleDTO> getByDrainRuleCode(String tenantCode, String drainRuleCode) {
         try {
             DrainRulePO po = drainRuleAccessor.getByDrainRuleCode(tenantCode, drainRuleCode);
@@ -65,6 +68,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<DrainRuleDTO>> list(String tenantCode) {
         try {
             List<DrainRulePO> poList = drainRuleAccessor.list(tenantCode);
@@ -77,6 +81,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<DrainRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
         try {
             ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
@@ -104,6 +109,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<DrainRuleDTO>> search(String tenantCode, String openRuleCode,
             String openRuleName, int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -128,63 +134,14 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
         DrainRulePO drainRulePO = convertToDrainRulePO(request);
         List<DrainRuleToppingPO> drainRuleToppingPOList = convertToDrainRuleIncludePO(request);
-        if (request.isPutNew()) {
-            return putNew(drainRulePO, drainRuleToppingPOList);
-        } else {
-            return putUpdate(drainRulePO, drainRuleToppingPOList);
-        }
-    }
-
-    private TeaMachineResult<Void> putNew(DrainRulePO po, List<DrainRuleToppingPO> toppingPOList) {
         try {
-            DrainRulePO exist = drainRuleAccessor.getByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+            if (request.isPutNew()) {
+                return doPutNew(drainRulePO, drainRuleToppingPOList);
+            } else {
+                return doPutUpdate(drainRulePO, drainRuleToppingPOList);
             }
-
-            int inserted = drainRuleAccessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("drainRuleMgtService|putNewDrainRule|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-
-            int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
-            for (DrainRuleToppingPO toppingPO : toppingPOList) {
-                int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
-                    log.error("drainRuleMgtService|putNewTopping|error|" + inserted4Topping);
-                }
-            }
-            return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("drainRuleMgtService|putNew|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-        }
-    }
-
-    private TeaMachineResult<Void> putUpdate(DrainRulePO po, List<DrainRuleToppingPO> toppingPOList) {
-        try {
-            DrainRulePO exist = drainRuleAccessor.getByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
-            }
-
-            int updated = drainRuleAccessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("drainRuleMgtService|putUpdateDrainRule|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-
-            int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
-            for (DrainRuleToppingPO toppingPO : toppingPOList) {
-                int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
-                    log.error("drainRuleMgtService|putUpdateTopping|error|" + inserted4Topping);
-                }
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("drainRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("drainRuleMgtService|put|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -195,12 +152,8 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = drainRuleAccessor.deleteByDrainRuleCode(tenantCode, drainRuleCode);
-            int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(tenantCode, drainRuleCode);
-            int deleted4Dispatch = drainRuleDispatchAccessor.deleteAllByDrainRuleCode(tenantCode, drainRuleCode);
-            return TeaMachineResult.success();
+            return doDeleteByDrainRuleCode(tenantCode, drainRuleCode);
         } catch (Exception e) {
             log.error("drainRuleMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
@@ -215,18 +168,13 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
         List<DrainRuleDispatchPO> poList = DrainRuleMgtConvertor.convertToDrainRuleDTO(request);
         try {
-            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(request.getTenantCode());
-            int deleted = drainRuleDispatchAccessor.deleteByDrainRuleCode(request.getTenantCode(),
-                    request.getDrainRuleCode(), shopGroupCodeList);
-            for (DrainRuleDispatchPO po : poList) {
-                drainRuleDispatchAccessor.insert(po);
-            }
+            TeaMachineResult<Void> result = doPutDispatch(request.getTenantCode(), request.getDrainRuleCode(), poList);
 
             // 异步发送消息准备配置信息分发
             JSONObject jsonPayload = getAsyncDispatchMsg(request.getTenantCode(), request.getDrainRuleCode());
             asyncDispatcher.dispatch(jsonPayload);
 
-            return TeaMachineResult.success();
+            return result;
         } catch (Exception e) {
             log.error("drainRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
@@ -234,6 +182,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<DrainRuleDispatchDTO> getDispatchByDrainRuleCode(String tenantCode, String drainRuleCode) {
         try {
             DrainRuleDispatchDTO dto = new DrainRuleDispatchDTO();
@@ -244,15 +193,80 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
                     shopGroupCodeList);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
-                        .map(po -> po.getShopGroupCode())
+                        .map(DrainRuleDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));
             }
-
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("drainRuleMgtService|getDispatchByDrainRuleCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public TeaMachineResult<Void> doPutDispatch(String tenantCode, String drainRuleCode,
+                                                List<DrainRuleDispatchPO> poList) {
+        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
+        int deleted = drainRuleDispatchAccessor.deleteByDrainRuleCode(tenantCode,
+                drainRuleCode, shopGroupCodeList);
+        for (DrainRuleDispatchPO po : poList) {
+            drainRuleDispatchAccessor.insert(po);
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(DrainRulePO po, List<DrainRuleToppingPO> toppingPOList) {
+        DrainRulePO exist = drainRuleAccessor.getByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+        }
+
+        int inserted = drainRuleAccessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("drainRuleMgtService|putNewDrainRule|error|" + inserted);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+
+        int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+        for (DrainRuleToppingPO toppingPO : toppingPOList) {
+            int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
+                log.error("drainRuleMgtService|putNewTopping|error|" + inserted4Topping);
+            }
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(DrainRulePO po, List<DrainRuleToppingPO> toppingPOList) {
+        DrainRulePO exist = drainRuleAccessor.getByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+        }
+
+        int updated = drainRuleAccessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("drainRuleMgtService|putUpdateDrainRule|error|" + updated);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+
+        int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(po.getTenantCode(), po.getDrainRuleCode());
+        for (DrainRuleToppingPO toppingPO : toppingPOList) {
+            int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
+                log.error("drainRuleMgtService|putUpdateTopping|error|" + inserted4Topping);
+            }
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public TeaMachineResult<Void> doDeleteByDrainRuleCode(String tenantCode, String drainRuleCode) {
+        int deleted = drainRuleAccessor.deleteByDrainRuleCode(tenantCode, drainRuleCode);
+        int deleted4Topping = drainRuleToppingAccessor.deleteByDrainRuleCode(tenantCode, drainRuleCode);
+        int deleted4Dispatch = drainRuleDispatchAccessor.deleteAllByDrainRuleCode(tenantCode, drainRuleCode);
+        return TeaMachineResult.success();
     }
 
     private JSONObject getAsyncDispatchMsg(String tenantCode, String cleanRuleCode) {
