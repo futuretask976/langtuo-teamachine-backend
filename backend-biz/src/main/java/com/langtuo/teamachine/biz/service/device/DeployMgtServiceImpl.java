@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -52,11 +54,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
-            PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
-                    shopCode, state, pageNum, pageSize);
-            List<DeployDTO> dtoList = convertToDeployPO(pageInfo.getList());
-            return TeaMachineResult.success(new PageDTO<>(
-                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            return doSearch(tenantCode, deployCode, machineCode, shopCode, state, pageNum, pageSize);
         } catch (Exception e) {
             log.error("deployMgtService|search|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -70,8 +68,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         }
 
         try {
-            DeployDTO dto = convertToDeployPO(deployAccessor.getByDeployCode(tenantCode, deployCode));
-            return TeaMachineResult.success(dto);
+            return doGetByDeployCode(tenantCode, deployCode);
         } catch (Exception e) {
             log.error("deployMgtService|getByCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -85,8 +82,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         }
 
         try {
-            DeployDTO dto = convertToDeployPO(deployAccessor.getByMachineCode(tenantCode, machineCode));
-            return TeaMachineResult.success(dto);
+            return doGetByMachineCode(tenantCode, machineCode);
         } catch (Exception e) {
             log.error("deployMgtService|getByMachineCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -101,9 +97,20 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
         DeployPO po = convertToDeployPO(request);
         if (request.isPutNew()) {
-            return putNew(po);
+            try {
+                return doPutNew(po);
+            } catch (Exception e) {
+                log.error("deployMgtService|putNew|fatal|" + e.getMessage(), e);
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+
         } else {
-            return putUpdate(po);
+            try {
+                return doPutUpdate(po);
+            } catch (Exception e) {
+                log.error("deployMgtService|putUpdate|fatal|" + e.getMessage(), e);
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
         }
     }
 
@@ -159,44 +166,59 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         }
     }
 
-    private TeaMachineResult<Void> putNew(DeployPO po) {
-        try {
-            DeployPO exist = deployAccessor.getByDeployCode(po.getTenantCode(), po.getDeployCode());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
-            }
+    @Transactional(readOnly = true)
+    private TeaMachineResult<PageDTO<DeployDTO>> doSearch(String tenantCode, String deployCode, String machineCode,
+                                                          String shopCode, Integer state, int pageNum, int pageSize) {
+        PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
+                shopCode, state, pageNum, pageSize);
 
-            int inserted = deployAccessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("deployMgtService|putNew|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("deployMgtService|putNew|fatal|" + e.getMessage(), e);
+        List<DeployDTO> dtoList = convertToDeployPO(pageInfo.getList());
+        return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
+    }
+
+    @Transactional(readOnly = true)
+    private TeaMachineResult<DeployDTO> doGetByDeployCode(String tenantCode, String deployCode) {
+        DeployDTO dto = convertToDeployPO(deployAccessor.getByDeployCode(tenantCode, deployCode));
+        return TeaMachineResult.success(dto);
+    }
+
+    @Transactional(readOnly = true)
+    private TeaMachineResult<DeployDTO> doGetByMachineCode(String tenantCode, String machineCode) {
+        DeployDTO dto = convertToDeployPO(deployAccessor.getByMachineCode(tenantCode, machineCode));
+        return TeaMachineResult.success(dto);
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(DeployPO po) {
+        DeployPO exist = deployAccessor.getByDeployCode(po.getTenantCode(), po.getDeployCode());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+        }
+
+        int inserted = deployAccessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("deployMgtService|doPutNew|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
+        return TeaMachineResult.success();
     }
 
-    private TeaMachineResult<Void> putUpdate(DeployPO po) {
-        try {
-            DeployPO exist = deployAccessor.getByDeployCode(po.getTenantCode(), po.getDeployCode());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
-            }
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(DeployPO po) {
+        DeployPO exist = deployAccessor.getByDeployCode(po.getTenantCode(), po.getDeployCode());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+        }
 
-            int updated = deployAccessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("deployMgtService|putUpdate|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("deployMgtService|putUpdate|fatal|" + e.getMessage(), e);
+        int updated = deployAccessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("deployMgtService|doPutUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
+        return TeaMachineResult.success();
     }
 
+    @Override
     public TeaMachineResult<XSSFWorkbook> exportByExcel(String tenantCode) {
         XSSFWorkbook xssfWorkbook = excelHandlerFactory.getExcelHandler(tenantCode)
                 .getDeployHandler()

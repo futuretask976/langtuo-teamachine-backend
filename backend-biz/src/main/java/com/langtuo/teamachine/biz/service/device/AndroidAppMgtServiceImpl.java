@@ -78,16 +78,16 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         AndroidAppPO po = convertToAndroidAppPO(request);
         if (request.isPutNew()) {
             try {
-                return doNew(po);
+                return doPutNew(po);
             } catch (Exception e) {
-                log.error("androidAppMgtService|put|fatal|" + e.getMessage(), e);
+                log.error("androidAppMgtService|putNew|fatal|" + e.getMessage(), e);
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
         } else {
             try {
-                return doUpdate(po);
+                return doPutUpdate(po);
             } catch (Exception e) {
-                log.error("androidAppMgtService|put|fatal|" + e.getMessage(), e);
+                log.error("androidAppMgtService|putUpdate|fatal|" + e.getMessage(), e);
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
         }
@@ -194,7 +194,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    private TeaMachineResult<Void> doNew(AndroidAppPO po) {
+    private TeaMachineResult<Void> doPutNew(AndroidAppPO po) {
         AndroidAppPO exist = androidAppAccessor.getByVersion(po.getVersion());
         if (exist != null) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
@@ -202,14 +202,14 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
         int inserted = androidAppAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("androidAppMgtService|doNew|error|" + inserted);
+            log.error("androidAppMgtService|doPutNew|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return TeaMachineResult.success();
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    private TeaMachineResult<Void> doUpdate(AndroidAppPO po) {
+    private TeaMachineResult<Void> doPutUpdate(AndroidAppPO po) {
         AndroidAppPO exist = androidAppAccessor.getByVersion(po.getVersion());
         if (exist == null) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
@@ -217,7 +217,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
         int updated = androidAppAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("androidAppMgtService|doUpdate|error|" + updated);
+            log.error("androidAppMgtService|doPutUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
         return TeaMachineResult.success();
