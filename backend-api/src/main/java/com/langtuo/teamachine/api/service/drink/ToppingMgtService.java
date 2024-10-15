@@ -43,12 +43,4 @@ public interface ToppingMgtService {
      * @return
      */
     TeaMachineResult<Void> deleteByToppingCode(String tenantCode, String toppingCode);
-
-    /**
-     *
-     * @param tenantCode
-     * @param toppingTypeCode
-     * @return
-     */
-    TeaMachineResult<Integer> countByToppingTypeCode(String tenantCode, String toppingTypeCode);
 }
