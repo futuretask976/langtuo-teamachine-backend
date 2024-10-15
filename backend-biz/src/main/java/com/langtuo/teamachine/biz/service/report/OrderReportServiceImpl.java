@@ -26,6 +26,7 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -46,6 +47,12 @@ public class OrderReportServiceImpl implements OrderReportService {
     @Resource
     private OrderToppingReportAccessor orderToppingReportAccessor;
 
+    /**
+     * 该方法尽量不要添加事务，避免订单记录插入失败
+     * @param tenantCode
+     * @param orderCreatedDay
+     * @return
+     */
     @Override
     public TeaMachineResult<Void> calc(String tenantCode, String orderCreatedDay) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(orderCreatedDay)) {
@@ -91,8 +98,9 @@ public class OrderReportServiceImpl implements OrderReportService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<OrderReportByDayDTO>> searchOrderReport(String tenantCode, String orderCreatedDay,
-                                                                            int pageNum, int pageSize) {
+            int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
@@ -116,8 +124,9 @@ public class OrderReportServiceImpl implements OrderReportService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<OrderTeaReportByDayDTO>> searchTeaReport(String tenantCode, String orderCreatedDay,
-                                                                             String shopGroupCode, String shopCode, int pageNum, int pageSize) {
+            String shopGroupCode, String shopCode, int pageNum, int pageSize) {
         List orderCreatedDayList = null;
         if (!StringUtils.isBlank(orderCreatedDay)) {
             orderCreatedDayList = Lists.newArrayList(orderCreatedDay);
@@ -149,8 +158,9 @@ public class OrderReportServiceImpl implements OrderReportService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<OrderSpecItemReportByDayDTO>> searchSpecItemReport(String tenantCode,
-                                                                                       String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
+            String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
         List orderCreatedDayList = null;
         if (!StringUtils.isBlank(orderCreatedDay)) {
             orderCreatedDayList = Lists.newArrayList(orderCreatedDay);
@@ -182,8 +192,9 @@ public class OrderReportServiceImpl implements OrderReportService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<OrderToppingReportByDayDTO>> searchToppingReport(String tenantCode,
-                                                                                     String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
+            String orderCreatedDay, String shopGroupCode, String shopCode, int pageNum, int pageSize) {
         List orderCreatedDayList = null;
         if (!StringUtils.isBlank(orderCreatedDay)) {
             orderCreatedDayList = Lists.newArrayList(orderCreatedDay);

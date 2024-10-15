@@ -27,6 +27,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -57,6 +59,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<CleanRuleDTO> getByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         try {
             CleanRulePO po = cleanRuleAccessor.getByCleanRuleCode(tenantCode, cleanRuleCode);
@@ -69,6 +72,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<CleanRuleDTO>> list(String tenantCode) {
         try {
             List<CleanRulePO> poList = cleanRuleAccessor.selectList(tenantCode);
@@ -81,6 +85,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<CleanRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
         try {
             ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
@@ -108,6 +113,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<CleanRuleDTO>> search(String tenantCode, String cleanRuleCode, String cleanRuleName,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -134,83 +140,14 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         CleanRulePO cleanRulePO = convertToCleanRulePO(request);
         List<CleanRuleStepPO> cleanRuleStepPOList = convertToCleanRuleStepPO(request);
         List<CleanRuleExceptPO> cleanRuleExceptPOList = convertToCleanRuleExceptPO(request);
-        if (request.isPutNew()) {
-            return putNew(cleanRulePO, cleanRuleStepPOList, cleanRuleExceptPOList);
-        } else {
-            return putUpdate(cleanRulePO, cleanRuleStepPOList, cleanRuleExceptPOList);
-        }
-    }
-
-    private TeaMachineResult<Void> putNew(CleanRulePO po, List<CleanRuleStepPO> stepPOList,
-            List<CleanRuleExceptPO> exceptPOList) {
         try {
-            CleanRulePO exist = cleanRuleAccessor.getByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+            if (request.isPutNew()) {
+                return doPutNew(cleanRulePO, cleanRuleStepPOList, cleanRuleExceptPOList);
+            } else {
+                return doPutUpdate(cleanRulePO, cleanRuleStepPOList, cleanRuleExceptPOList);
             }
-
-            int inserted = cleanRuleAccessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("cleanRuleMgtService|putNewCleanRule|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-
-            int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
-            for (CleanRuleStepPO stepPO : stepPOList) {
-                int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Step) {
-                    log.error("cleanRuleMgtService|putNewStep|error|" + inserted4Step);
-                }
-            }
-
-            int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(po.getTenantCode(),
-                    po.getCleanRuleCode());
-            for (CleanRuleExceptPO exceptPO : exceptPOList) {
-                int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                    log.error("cleanRuleMgtService|putNewExcept|error|" + inserted4Except);
-                }
-            }
-            return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("cleanRuleMgtService|putNew|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-        }
-    }
-
-    private TeaMachineResult<Void> putUpdate(CleanRulePO po, List<CleanRuleStepPO> stepPOList,
-            List<CleanRuleExceptPO> exceptPOList) {
-        try {
-            CleanRulePO exist = cleanRuleAccessor.getByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
-            }
-
-            int updated = cleanRuleAccessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("cleanRuleMgtService|putUpdateCleanRule|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-            }
-
-            int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
-            for (CleanRuleStepPO stepPO : stepPOList) {
-                int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Step) {
-                    log.error("cleanRuleMgtService|putUpdateStep|error|" + inserted4Step);
-                }
-            }
-
-            int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(po.getTenantCode(),
-                    po.getCleanRuleCode());
-            for (CleanRuleExceptPO exceptPO : exceptPOList) {
-                int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Except) {
-                    log.error("cleanRuleMgtService|putUpdateExcept|error|" + inserted4Except);
-                }
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("cleanRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("cleanRuleMgtService|put|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -222,11 +159,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         }
 
         try {
-            int deleted = cleanRuleAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
-            int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
-            int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
-            int deleted4Dispatch = cleanRuleDispatchAccessor.deleteAllByCleanRuleCode(tenantCode, cleanRuleCode);
-            return TeaMachineResult.success();
+            return doDeleteByCleanRuleCode(tenantCode, cleanRuleCode);
         } catch (Exception e) {
             log.error("cleanRuleMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
@@ -241,18 +174,13 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
         List<CleanRuleDispatchPO> poList = convertToCleanRuleStepDTO(request);
         try {
-            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(request.getTenantCode());
-            int deleted = cleanRuleDispatchAccessor.deleteByCleanRuleCode(request.getTenantCode(),
-                    request.getCleanRuleCode(), shopGroupCodeList);
-            for (CleanRuleDispatchPO po : poList) {
-                cleanRuleDispatchAccessor.insert(po);
-            }
+            TeaMachineResult<Void> result = doPutDispatch(request.getTenantCode(), request.getCleanRuleCode(), poList);
 
             // 异步发送消息准备配置信息分发
             JSONObject jsonPayload = getAsyncDispatchMsg(request.getTenantCode(), request.getCleanRuleCode());
             asyncDispatcher.dispatch(jsonPayload);
 
-            return TeaMachineResult.success();
+            return result;
         } catch (Exception e) {
             log.error("cleanRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
@@ -260,6 +188,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<CleanRuleDispatchDTO> getDispatchByCleanRuleCode(String tenantCode, String cleanRuleCode) {
         try {
             CleanRuleDispatchDTO dto = new CleanRuleDispatchDTO();
@@ -270,7 +199,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     shopGroupCodeList);
             if (!CollectionUtils.isEmpty(poList)) {
                 dto.setShopGroupCodeList(poList.stream()
-                        .map(po -> po.getShopGroupCode())
+                        .map(CleanRuleDispatchPO::getShopGroupCode)
                         .collect(Collectors.toList()));
             }
             return TeaMachineResult.success(dto);
@@ -278,6 +207,92 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             log.error("cleanRuleMgtService|getDispatchByCleanRuleCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(CleanRulePO po, List<CleanRuleStepPO> stepPOList,
+            List<CleanRuleExceptPO> exceptPOList) {
+        CleanRulePO exist = cleanRuleAccessor.getByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+        }
+
+        int inserted = cleanRuleAccessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("cleanRuleMgtService|doPutNew|error|" + inserted);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+
+        int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
+        for (CleanRuleStepPO stepPO : stepPOList) {
+            int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Step) {
+                log.error("cleanRuleMgtService|doPutNew|error|" + inserted4Step);
+            }
+        }
+
+        int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(po.getTenantCode(),
+                po.getCleanRuleCode());
+        for (CleanRuleExceptPO exceptPO : exceptPOList) {
+            int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+                log.error("cleanRuleMgtService|doPutNew|error|" + inserted4Except);
+            }
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(CleanRulePO po, List<CleanRuleStepPO> stepPOList,
+            List<CleanRuleExceptPO> exceptPOList) {
+        CleanRulePO exist = cleanRuleAccessor.getByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+        }
+
+        int updated = cleanRuleAccessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("cleanRuleMgtService|doPutUpdate|error|" + updated);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
+
+        int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(po.getTenantCode(), po.getCleanRuleCode());
+        for (CleanRuleStepPO stepPO : stepPOList) {
+            int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Step) {
+                log.error("cleanRuleMgtService|putUpdateStep|error|" + inserted4Step);
+            }
+        }
+
+        int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(po.getTenantCode(),
+                po.getCleanRuleCode());
+        for (CleanRuleExceptPO exceptPO : exceptPOList) {
+            int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Except) {
+                log.error("cleanRuleMgtService|doPutUpdate|error|" + inserted4Except);
+            }
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doDeleteByCleanRuleCode(String tenantCode, String cleanRuleCode) {
+        int deleted = cleanRuleAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
+        int deleted4Step = cleanRuleStepAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
+        int deleted4Except = cleanRuleExceptAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode);
+        int deleted4Dispatch = cleanRuleDispatchAccessor.deleteAllByCleanRuleCode(tenantCode, cleanRuleCode);
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutDispatch(String tenantCode, String cleanRuleCode,
+            List<CleanRuleDispatchPO> poList) {
+        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
+        int deleted = cleanRuleDispatchAccessor.deleteByCleanRuleCode(tenantCode, cleanRuleCode, shopGroupCodeList);
+        for (CleanRuleDispatchPO po : poList) {
+            cleanRuleDispatchAccessor.insert(po);
+        }
+        return TeaMachineResult.success();
     }
 
     private JSONObject getAsyncDispatchMsg(String tenantCode, String cleanRuleCode) {
