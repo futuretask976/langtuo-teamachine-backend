@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -94,14 +95,34 @@ public class SpecMgtServiceImpl implements SpecMgtService {
 
         SpecPO po = convertToSpecDTO(request);
         List<SpecItemPO> specItemPOList = convertToSpecItemPO(request);
-        if (request.isPutNew()) {
-            return putNew(po, specItemPOList);
-        } else {
-            return putUpdate(po, specItemPOList);
+        try {
+            if (request.isPutNew()) {
+                return doPutNew(po, specItemPOList);
+            } else {
+                return doPutUpdate(po, specItemPOList);
+            }
+        } catch (Exception e) {
+            log.error("specMgtService|put|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 
-    private TeaMachineResult<Void> putNew(SpecPO po, List<SpecItemPO> specItemPOList) {
+    @Override
+    public TeaMachineResult<Void> deleteBySpecCode(String tenantCode, String specCode) {
+        if (StringUtils.isEmpty(tenantCode)) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+
+        try {
+            return doDeleteBySpecCode(tenantCode, specCode);
+        } catch (Exception e) {
+            log.error("specMgtService|delete|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(SpecPO po, List<SpecItemPO> specItemPOList) {
         try {
             SpecPO exist = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
             if (exist != null) {
@@ -129,7 +150,8 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         }
     }
 
-    private TeaMachineResult<Void> putUpdate(SpecPO po, List<SpecItemPO> specItemPOList) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(SpecPO po, List<SpecItemPO> specItemPOList) {
         try {
             SpecPO existSpecPO = specAccessor.getBySpecCode(po.getTenantCode(), po.getSpecCode());
             if (existSpecPO == null) {
@@ -171,6 +193,18 @@ public class SpecMgtServiceImpl implements SpecMgtService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doDeleteBySpecCode(String tenantCode, String specCode) {
+        int countBySpecCode = specItemRuleAccessor.countBySpecCode(tenantCode, specCode);
+        if (countBySpecCode != CommonConsts.DB_SELECT_ZERO_ROW) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
+                    ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
+        }
+        int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
+        int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
+        return TeaMachineResult.success();
+    }
+
     private List<SpecItemPO> filterDeletedSpecItemList(List<SpecItemPO> existSpecItemPOList,
             List<SpecItemPO> newSpecItemPOList) {
         List<SpecItemPO> deleted = Lists.newArrayList();
@@ -187,26 +221,5 @@ public class SpecMgtServiceImpl implements SpecMgtService {
             }
         }
         return deleted;
-    }
-
-    @Override
-    public TeaMachineResult<Void> deleteBySpecCode(String tenantCode, String specCode) {
-        if (StringUtils.isEmpty(tenantCode)) {
-            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
-        }
-
-        try {
-            int countBySpecCode = specItemRuleAccessor.countBySpecCode(tenantCode, specCode);
-            if (countBySpecCode != CommonConsts.DB_SELECT_ZERO_ROW) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
-                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
-            }
-            int deleted4Spec = specAccessor.deleteBySpecCode(tenantCode, specCode);
-            int deleted4SpecSub = specItemAccessor.deleteBySpecCode(tenantCode, specCode);
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("specMgtService|delete|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-        }
     }
 }

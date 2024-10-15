@@ -16,6 +16,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,6 +34,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     private TeaAccessor teaAccessor;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<TeaTypeDTO>> list(String tenantCode) {
         try {
             List<TeaTypePO> list = accessor.list(tenantCode);
@@ -44,6 +47,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<TeaTypeDTO>> search(String tenantName, String toppingTypeCode,
             String toppingTypeName, int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -62,6 +66,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<TeaTypeDTO> getByTeaTypeCode(String tenantCode, String toppingTypeCode) {
         try {
             TeaTypePO toppingTypePO = accessor.getByTeaTypeCode(tenantCode, toppingTypeCode);
@@ -80,48 +85,46 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         }
 
         TeaTypePO teaTypePO = TeaTypeMgtConvertor.convertToTeaTypePO(request);
-        if (request.isPutNew()) {
-            return putNew(teaTypePO);
-        } else {
-            return putUpdate(teaTypePO);
-        }
-    }
-
-    private TeaMachineResult<Void> putNew(TeaTypePO po) {
-        try {TeaTypePO exist = accessor.getByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+        try {
+            if (request.isPutNew()) {
+                return doPutNew(teaTypePO);
+            } else {
+                return doPutUpdate(teaTypePO);
             }
-
-            int inserted = accessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("teaTypeMgtService|putNew|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-            }
-            return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("teaTypeMgtService|putNew|fatal|" + e.getMessage(), e);
+            log.error("teaTypeMgtService|put|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
 
-    private TeaMachineResult<Void> putUpdate(TeaTypePO po) {
-        try {
-            TeaTypePO exist = accessor.getByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
-            }
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(TeaTypePO po) {
+        TeaTypePO exist = accessor.getByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+        }
 
-            int updated = accessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("teaTypeMgtService|putUpdate|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("teaTypeMgtService|putUpdate|fatal|" + e.getMessage(), e);
+        int inserted = accessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("teaTypeMgtService|putNew|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(TeaTypePO po) {
+        TeaTypePO exist = accessor.getByTeaTypeCode(po.getTenantCode(), po.getTeaTypeCode());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+        }
+
+        int updated = accessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("teaTypeMgtService|putUpdate|error|" + updated);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
+        return TeaMachineResult.success();
     }
 
     @Override
@@ -131,17 +134,21 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         }
 
         try {
-            int countByTeaTypeCode = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
-            if (countByTeaTypeCode == CommonConsts.DB_SELECT_ZERO_ROW) {
-                int deleted = accessor.deleteByTeaTypeCode(tenantCode, teaTypeCode);
-                return TeaMachineResult.success();
-            } else {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
-                        ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
-            }
+            return doDeleteByTeaTypeCode(tenantCode, teaTypeCode);
         } catch (Exception e) {
             log.error("teaTypeMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doDeleteByTeaTypeCode(String tenantCode, String teaTypeCode) {
+        int countByTeaTypeCode = teaAccessor.countByTeaTypeCode(tenantCode, teaTypeCode);
+        if (CommonConsts.DB_SELECT_ZERO_ROW != countByTeaTypeCode) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
+                    ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
+        }
+        int deleted = accessor.deleteByTeaTypeCode(tenantCode, teaTypeCode);
+        return TeaMachineResult.success();
     }
 }
