@@ -185,8 +185,8 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     private TeaMachineResult<Void> doPutDispatch(String tenantCode, String version,
-                                                 List<AndroidAppDispatchPO> poList) {
-        int deleted = androidAppDispatchAccessor.deleteByVersion(tenantCode, version=);
+            List<AndroidAppDispatchPO> poList) {
+        int deleted = androidAppDispatchAccessor.deleteByVersion(tenantCode, version);
         for (AndroidAppDispatchPO po : poList) {
             androidAppDispatchAccessor.insert(po);
         }
