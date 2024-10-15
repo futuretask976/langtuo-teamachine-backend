@@ -114,22 +114,21 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         }
         List<AndroidAppDispatchPO> poList = convertToAndroidAppDispatchPO(request);
 
-        TeaMachineResult<Void> teaMachineResult;
         try {
-            teaMachineResult = doPutDispatch(request.getTenantCode(), request.getVersion(), poList);
+            TeaMachineResult<Void> result = doPutDispatch(request.getTenantCode(), request.getVersion(), poList);
+
+            // 异步发送消息准备配置信息分发
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_ANDROID_APP_DISPATCHED);
+            jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
+            jsonPayload.put(CommonConsts.JSON_KEY_VERSION, request.getVersion());
+            asyncDispatcher.dispatch(jsonPayload);
+
+            return result;
         } catch (Exception e) {
             log.error("androidAppMgtService|putDispatch|fatal|" + e.getMessage(), e);
-            teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
-
-        // 异步发送消息准备配置信息分发
-        JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_ANDROID_APP_DISPATCHED);
-        jsonPayload.put(CommonConsts.JSON_KEY_TENANT_CODE, request.getTenantCode());
-        jsonPayload.put(CommonConsts.JSON_KEY_VERSION, request.getVersion());
-        asyncDispatcher.dispatch(jsonPayload);
-
-        return teaMachineResult;
     }
 
     @Override

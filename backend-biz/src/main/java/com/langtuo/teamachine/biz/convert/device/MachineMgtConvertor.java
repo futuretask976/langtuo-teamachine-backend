@@ -22,10 +22,9 @@ public class MachineMgtConvertor {
             return null;
         }
 
-        List<MachineDTO> list = poList.stream()
-                .map(po -> convert(po))
+        return poList.stream()
+                .map(MachineMgtConvertor::convert)
                 .collect(Collectors.toList());
-        return list;
     }
 
     public static MachineDTO convert(MachinePO po) {
