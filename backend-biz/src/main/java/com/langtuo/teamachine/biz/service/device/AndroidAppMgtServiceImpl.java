@@ -20,6 +20,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -47,8 +49,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         }
 
         try {
-            AndroidAppPO po = androidAppAccessor.getByVersion(version);
-            return TeaMachineResult.success(convertToAndroidAppDTO(po));
+            return doGetByVersion(version);
         } catch (Exception e) {
             log.error("androidAppMgtService|get|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -61,10 +62,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
-            PageInfo<AndroidAppPO> pageInfo = androidAppAccessor.search(version, pageNum, pageSize);
-            List<AndroidAppDTO> dtoList = convertToAndroidAppDTO(pageInfo.getList());
-            return TeaMachineResult.success(new PageDTO<>(
-                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            return doSearch(version, pageNum, pageSize);
         } catch (Exception e) {
             log.error("androidAppMgtService|search|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -79,9 +77,19 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
         AndroidAppPO po = convertToAndroidAppPO(request);
         if (request.isPutNew()) {
-            return putNew(po);
+            try {
+                return doNew(po);
+            } catch (Exception e) {
+                log.error("androidAppMgtService|put|fatal|" + e.getMessage(), e);
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
         } else {
-            return putUpdate(po);
+            try {
+                return doUpdate(po);
+            } catch (Exception e) {
+                log.error("androidAppMgtService|put|fatal|" + e.getMessage(), e);
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+            }
         }
     }
 
@@ -92,9 +100,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         }
 
         try {
-            int deleted4App = androidAppAccessor.deleteByVersion(version);
-            int deleted4Dispatch = androidAppDispatchAccessor.deleteByVersion(tenantCode, version);
-            return TeaMachineResult.success();
+            return doDelete(tenantCode, version);
         } catch (Exception e) {
             log.error("androidAppMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
@@ -110,12 +116,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
         TeaMachineResult<Void> teaMachineResult;
         try {
-            int deleted = androidAppDispatchAccessor.deleteByVersion(request.getTenantCode(),
-                    request.getVersion());
-            for (AndroidAppDispatchPO po : poList) {
-                androidAppDispatchAccessor.insert(po);
-            }
-            teaMachineResult = TeaMachineResult.success();
+            teaMachineResult = doPutDispatch(request.getTenantCode(), request.getVersion(), poList);
         } catch (Exception e) {
             log.error("androidAppMgtService|putDispatch|fatal|" + e.getMessage(), e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
@@ -138,59 +139,87 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         }
 
         try {
-            AndroidAppDispatchDTO dto = new AndroidAppDispatchDTO();
-            dto.setVersion(version);
-
-            List<AndroidAppDispatchPO> poList = androidAppDispatchAccessor.listByVersion(tenantCode,
-                    version);
-            if (!CollectionUtils.isEmpty(poList)) {
-                dto.setShopGroupCodeList(poList.stream()
-                        .map(po -> po.getShopGroupCode())
-                        .collect(Collectors.toList()));
-            }
-
-            return TeaMachineResult.success(dto);
+            return doGetDispatchByVersion(tenantCode, version);
         } catch (Exception e) {
             log.error("androidAppMgtService|getDispatchByVersion|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
 
-    private TeaMachineResult<Void> putNew(AndroidAppPO po) {
-        try {
-            AndroidAppPO exist = androidAppAccessor.getByVersion(po.getVersion());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
-            }
+    @Transactional(readOnly = true)
+    private TeaMachineResult<AndroidAppDispatchDTO> doGetDispatchByVersion(String tenantCode, String version) {
+        AndroidAppDispatchDTO dto = new AndroidAppDispatchDTO();
+        dto.setVersion(version);
 
-            int inserted = androidAppAccessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("androidAppMgtService|putNew|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("androidAppMgtService|putNew|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        List<AndroidAppDispatchPO> poList = androidAppDispatchAccessor.listByVersion(tenantCode,
+                version);
+        if (!CollectionUtils.isEmpty(poList)) {
+            dto.setShopGroupCodeList(poList.stream()
+                    .map(po -> po.getShopGroupCode())
+                    .collect(Collectors.toList()));
         }
+
+        return TeaMachineResult.success(dto);
     }
 
-    private TeaMachineResult<Void> putUpdate(AndroidAppPO po) {
-        try {
-            AndroidAppPO exist = androidAppAccessor.getByVersion(po.getVersion());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
-            }
+    @Transactional(readOnly = true)
+    private TeaMachineResult<AndroidAppDTO> doGetByVersion(String version) {
+        AndroidAppPO po = androidAppAccessor.getByVersion(version);
+        return TeaMachineResult.success(convertToAndroidAppDTO(po));
+    }
 
-            int updated = androidAppAccessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("androidAppMgtService|putUpdate|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("androidAppMgtService|putUpdate|fatal|" + e.getMessage(), e);
+    @Transactional(readOnly = true)
+    private TeaMachineResult<PageDTO<AndroidAppDTO>> doSearch(String version, int pageNum, int pageSize) {
+        PageInfo<AndroidAppPO> pageInfo = androidAppAccessor.search(version, pageNum, pageSize);
+        List<AndroidAppDTO> dtoList = convertToAndroidAppDTO(pageInfo.getList());
+        return TeaMachineResult.success(new PageDTO<>(
+                dtoList, pageInfo.getTotal(), pageNum, pageSize));
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doDelete(String tenantCode, String version) {
+        int deleted4App = androidAppAccessor.deleteByVersion(version);
+        int deleted4Dispatch = androidAppDispatchAccessor.deleteByVersion(tenantCode, version);
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutDispatch(String tenantCode, String version,
+                                                 List<AndroidAppDispatchPO> poList) {
+        int deleted = androidAppDispatchAccessor.deleteByVersion(tenantCode, version=);
+        for (AndroidAppDispatchPO po : poList) {
+            androidAppDispatchAccessor.insert(po);
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doNew(AndroidAppPO po) {
+        AndroidAppPO exist = androidAppAccessor.getByVersion(po.getVersion());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+        }
+
+        int inserted = androidAppAccessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("androidAppMgtService|doNew|error|" + inserted);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doUpdate(AndroidAppPO po) {
+        AndroidAppPO exist = androidAppAccessor.getByVersion(po.getVersion());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+        }
+
+        int updated = androidAppAccessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("androidAppMgtService|doUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
+        return TeaMachineResult.success();
     }
 }
