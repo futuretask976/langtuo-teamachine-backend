@@ -5,6 +5,7 @@ import com.langtuo.teamachine.dao.po.shop.ShopPO;
 import com.langtuo.teamachine.dao.po.user.TenantPO;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -21,13 +22,13 @@ public class DefaultDeployParser implements DeployParser {
         // 创建一个新的工作簿
         XSSFWorkbook workbook = new XSSFWorkbook();
         // 创建一个工作表
-        Sheet sheet = workbook.createSheet(CommonConsts.SHEET_NAME_4_DEPLOY_EXPORT);
+        Sheet sheet = workbook.createSheet(LocaleUtils.getLang(CommonConsts.SHEET_NAME_4_DEPLOY_EXPORT));
         // 创建标题行（0基索引）
         Row row = sheet.createRow(CommonConsts.ROW_NUM_4_TITLE);
         // 创建单元格并设置值
         for (int i = 0; i < CommonConsts.TITLE_LIST_4_DEPLOY_EXPORT.size(); i++) {
             Cell cell = row.createCell(i);
-            cell.setCellValue(CommonConsts.TITLE_LIST_4_DEPLOY_EXPORT.get(i));
+            cell.setCellValue(LocaleUtils.getLang(CommonConsts.TITLE_LIST_4_DEPLOY_EXPORT.get(i)));
         }
 
         List<DeployPO> deployPOList = SpringAccessorUtils.getDeployAccessor().list(tenantCode);

@@ -94,7 +94,7 @@ public class CommonConsts {
     /**
      * 茶品导出 - sheet名称
      */
-    public static final String SHEET_NAME_4_TEA_EXPORT = "茶品信息导出";
+    public static final String SHEET_NAME_4_TEA_EXPORT = "menuExportSheetName";
     /**
      * sheet索引
      */
@@ -110,27 +110,27 @@ public class CommonConsts {
     /**
      * 茶品导出 - 列标题
      */
-    public static final String TITLE_TEA_CODE = "茶品编码";
+    public static final String TITLE_TEA_CODE = "menuExportTitleTeaCode";
     public static final int TITLE_TEA_CODE_INDEX = 0;
-    public static final String TITLE_TEA_NAME = "茶品名称";
+    public static final String TITLE_TEA_NAME = "menuExportTitleTeaName";
     public static final int TITLE_TEA_NAME_INDEX = 1;
-    public static final String TITLE_OUTER_TEA_CODE = "外部茶品编码";
+    public static final String TITLE_OUTER_TEA_CODE = "menuExportTitleOuterTeaCode";
     public static final int TITLE_OUTER_TEA_CODE_INDEX = 2;
-    public static final String TITLE_STATE = "状态";
+    public static final String TITLE_STATE = "menuExportTitleState";
     public static final int TITLE_STATE_INDEX = 3;
-    public static final String TITLE_TEA_TYPE_CODE = "茶品类型编码";
+    public static final String TITLE_TEA_TYPE_CODE = "menuExportTitleTeaTypeCode";
     public static final int TITLE_TEA_TYPE_CODE_INDEX = 4;
-    public static final String TITLE_IMG_LINK = "图片链接";
+    public static final String TITLE_IMG_LINK = "menuExportTitleImgLink";
     public static final int TITLE_IMG_LINK_INDEX = 5;
-    public static final String TITLE_TEA_UNIT_NAME = "规格单位名称";
+    public static final String TITLE_TEA_UNIT_NAME = "menuExportTitleTeaUnitName";
     public static final int TITLE_TEA_UNIT_NAME_INDEX = 6;
-    public static final String TITLE_STEP_INDEX = "步骤序号";
+    public static final String TITLE_STEP_INDEX = "menuExportTitleStepIndex";
     public static final int TITLE_STEP_INDEX_INDEX = 7;
     public static final String TITLE_TOPPING_CODE = "物料编码";
     public static final int TITLE_TOPPING_CODE_INDEX = 8;
-    public static final String TITLE_TOPPING_NAME = "物料名称";
+    public static final String TITLE_TOPPING_NAME = "menuExportTitleToppingCode";
     public static final int TITLE_TOPPING_NAME_INDEX = 9;
-    public static final String TITLE_ACTUAL_AMOUNT = "实际用量";
+    public static final String TITLE_ACTUAL_AMOUNT = "menuExportTitleActualAmount";
     public static final int TITLE_ACTUAL_AMOUNT_INDEX = 10;
     /**
      * 茶品导出 - 标题行
@@ -167,21 +167,21 @@ public class CommonConsts {
     /**
      * 部署导出 - sheet名称
      */
-    public static final String SHEET_NAME_4_DEPLOY_EXPORT = "部署信息导出";
+    public static final String SHEET_NAME_4_DEPLOY_EXPORT = "deployExportSheetName";
     /**
      * 部署导出 - 标题行
      */
     public static List<String> TITLE_LIST_4_DEPLOY_EXPORT = Lists.newArrayList(
-            "创建时间",
-            "修改时间",
-            "商户编码",
-            "商户名称",
-            "部署编码",
-            "机器编码",
-            "型号编码",
-            "店铺编码",
-            "店铺名称",
-            "状态");
+            "deployExportTitleGmtCreated",
+            "deployExportTitleGmtModified",
+            "deployExportTitleTenantCode",
+            "deployExportTitleTenantName",
+            "deployExportTitleDeployCode",
+            "deployExportTitleMachineCode",
+            "deployExportTitleModelCode",
+            "deployExportTitleShopCode",
+            "deployExportTitleShopName",
+            "deployExportTitleState");
     /**
      * 部署导出 - 起始行num
      */
