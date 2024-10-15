@@ -205,7 +205,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public TeaMachineResult<Void> doPutDispatch(String tenantCode, String drainRuleCode,
-                                                List<DrainRuleDispatchPO> poList) {
+            List<DrainRuleDispatchPO> poList) {
         List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
         int deleted = drainRuleDispatchAccessor.deleteByDrainRuleCode(tenantCode,
                 drainRuleCode, shopGroupCodeList);

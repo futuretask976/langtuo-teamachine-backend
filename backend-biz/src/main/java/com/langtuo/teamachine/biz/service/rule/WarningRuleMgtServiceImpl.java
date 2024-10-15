@@ -23,6 +23,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -47,6 +49,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<WarningRuleDTO> getByWarningRuleCode(String tenantCode, String warningRuleCode) {
         try {
             WarningRulePO po = warningRuleAccessor.getByWarningRuleCode(tenantCode, warningRuleCode);
@@ -59,6 +62,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<WarningRuleDTO>> list(String tenantCode) {
         TeaMachineResult<List<WarningRuleDTO>> teaMachineResult;
         try {
@@ -72,6 +76,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<WarningRuleDTO>> listByShopCode(String tenantCode, String shopCode) {
         TeaMachineResult<List<WarningRuleDTO>> teaMachineResult;
         try {
@@ -100,6 +105,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<WarningRuleDTO>> search(String tenantCode, String warningRuleCode,
             String warningRuleName, int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -124,54 +130,20 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
         }
 
         WarningRulePO po = convertToWarningRuleDTO(request);
-        if (request.isPutNew()) {
-            return putNew(po);
-        } else {
-            return putUpdate(po);
-        }
-    }
-
-    private TeaMachineResult<Void> putNew(WarningRulePO po) {
         try {
-            WarningRulePO exist = warningRuleAccessor.getByWarningRuleCode(po.getTenantCode(),
-                    po.getWarningRuleCode());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+            if (request.isPutNew()) {
+                return doPutNew(po);
+            } else {
+                return doPutUpdate(po);
             }
-
-            int inserted = warningRuleAccessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("warningRuleMgtService|putNewWarningRule|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-            return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("warningRuleMgtService|putNew|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-        }
-    }
-
-    private TeaMachineResult<Void> putUpdate(WarningRulePO po) {
-        try {
-            WarningRulePO exist = warningRuleAccessor.getByWarningRuleCode(po.getTenantCode(),
-                    po.getWarningRuleCode());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
-            }
-
-            int updated = warningRuleAccessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("warningRuleMgtService|putUpdateWarningRule|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("warningRuleMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("warningRuleMgtService|put|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public TeaMachineResult<Void> deleteByWarningRuleCode(String tenantCode, String warningRuleCode) {
         if (StringUtils.isEmpty(tenantCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
@@ -194,18 +166,14 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
         List<WarningRuleDispatchPO> poList = convertToWarningRuleDTO(request);
         try {
-            List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(request.getTenantCode());
-            int deleted = warningRuleDispatchAccessor.deleteByWarningRuleCode(request.getTenantCode(),
-                    request.getWarningRuleCode(), shopGroupCodeList);
-            for (WarningRuleDispatchPO po : poList) {
-                warningRuleDispatchAccessor.insert(po);
-            }
+            TeaMachineResult<Void> result = doPutDispatch(request.getTenantCode(), request.getWarningRuleCode(),
+                    poList);
 
             // 异步发送消息准备配置信息分发
             JSONObject jsonPayload = getAsyncDispatchMsg(request.getTenantCode(), request.getWarningRuleCode());
             asyncDispatcher.dispatch(jsonPayload);
 
-            return TeaMachineResult.success();
+            return result;
         } catch (Exception e) {
             log.error("warningRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
@@ -213,7 +181,9 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
     }
 
     @Override
-    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByWarningRuleCode(String tenantCode, String warningRuleCode) {
+    @Transactional(readOnly = true)
+    public TeaMachineResult<WarningRuleDispatchDTO> getDispatchByWarningRuleCode(String tenantCode,
+            String warningRuleCode) {
         try {
             WarningRuleDispatchDTO dto = new WarningRuleDispatchDTO();
             dto.setWarningRuleCode(warningRuleCode);
@@ -232,6 +202,50 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             log.error("warningRuleMgtService|getDispatchByWarningRuleCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(WarningRulePO po) {
+        WarningRulePO exist = warningRuleAccessor.getByWarningRuleCode(po.getTenantCode(),
+                po.getWarningRuleCode());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+        }
+
+        int inserted = warningRuleAccessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("warningRuleMgtService|doPutNew|error|" + inserted);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(WarningRulePO po) {
+        WarningRulePO exist = warningRuleAccessor.getByWarningRuleCode(po.getTenantCode(),
+                po.getWarningRuleCode());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+        }
+
+        int updated = warningRuleAccessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("warningRuleMgtService|doPutUpdate|error|" + updated);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public TeaMachineResult<Void> doPutDispatch(String tenantCode, String warningRuleCode,
+                                                List<WarningRuleDispatchPO> poList) {
+        List<String> shopGroupCodeList = DaoUtils.getShopGroupCodeListByLoginSession(tenantCode);
+        int deleted = warningRuleDispatchAccessor.deleteByWarningRuleCode(tenantCode,
+                warningRuleCode, shopGroupCodeList);
+        for (WarningRuleDispatchPO po : poList) {
+            warningRuleDispatchAccessor.insert(po);
+        }
+        return TeaMachineResult.success();
     }
 
     private JSONObject getAsyncDispatchMsg(String tenantCode, String warningCode) {
