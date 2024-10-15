@@ -7,14 +7,21 @@ import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.dao.accessor.record.OrderActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.OrderSpecItemActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.OrderToppingActRecordAccessor;
+import com.langtuo.teamachine.dao.accessor.record.SupplyActRecordAccessor;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
+import com.langtuo.teamachine.dao.po.record.SupplyActRecordPO;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
+import com.langtuo.teamachine.mqtt.util.SpringTemplateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +32,18 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderActRecordWorker implements Runnable {
     /**
-     *
+     * 转换后的请求列表
      */
     private List<OrderActRecordPutRequest> requestList = Lists.newArrayList();
 
+    /**
+     * 事务管理器
+     */
+    private TransactionTemplate transactionTemplate;
+
     public OrderActRecordWorker(OrderActRecordPutRequest request) {
         requestList.add(request);
+        transactionTemplate = SpringTemplateUtils.getTransactionTemplate();
     }
 
     public OrderActRecordWorker(JSONObject jsonPayload) {
@@ -39,6 +52,7 @@ public class OrderActRecordWorker implements Runnable {
             OrderActRecordPutRequest request = TypeUtils.castToJavaBean(jsonObject, OrderActRecordPutRequest.class);
             requestList.add(request);
         });
+        transactionTemplate = SpringTemplateUtils.getTransactionTemplate();
     }
 
     @Override
@@ -62,32 +76,39 @@ public class OrderActRecordWorker implements Runnable {
         OrderActRecordPO po = convertToOrderActRecordPO(request);
         List<OrderSpecItemActRecordPO> orderSpecItemActRecordPOList = convertToSpecItemActRecordPO(request);
         List<OrderToppingActRecordPO> orderToppingActRecordPOList = convertToOrderToppingActRecordPO(request);
-        try {
-            OrderActRecordAccessor orderActRecordAccessor = SpringAccessorUtils.getOrderActRecordAccessor();
-            OrderActRecordPO exist = orderActRecordAccessor.getByIdempotentMark(po.getTenantCode(),
-                    po.getShopGroupCode(), po.getIdempotentMark());
-            if (exist == null) {
-                int inserted = orderActRecordAccessor.insert(po);
-            }
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            @Override
+            public Void doInTransaction(TransactionStatus status) {
+                try {
+                    OrderActRecordAccessor orderActRecordAccessor = SpringAccessorUtils.getOrderActRecordAccessor();
+                    OrderActRecordPO exist = orderActRecordAccessor.getByIdempotentMark(po.getTenantCode(),
+                            po.getShopGroupCode(), po.getIdempotentMark());
+                    if (exist == null) {
+                        int inserted = orderActRecordAccessor.insert(po);
+                    }
 
-            OrderSpecItemActRecordAccessor orderSpecItemActRecordAccessor =
-                    SpringAccessorUtils.getOrderSpecItemActRecordAccessor();
-            int deleted4SpecItemActRec = orderSpecItemActRecordAccessor.delete(po.getTenantCode(),
-                    po.getShopGroupCode(), po.getIdempotentMark());
-            for (OrderSpecItemActRecordPO orderSpecItemActRecordPO : orderSpecItemActRecordPOList) {
-                int inserted4SpecItemActRec = orderSpecItemActRecordAccessor.insert(orderSpecItemActRecordPO);
-            }
+                    OrderSpecItemActRecordAccessor orderSpecItemActRecordAccessor =
+                            SpringAccessorUtils.getOrderSpecItemActRecordAccessor();
+                    int deleted4SpecItemActRec = orderSpecItemActRecordAccessor.delete(po.getTenantCode(),
+                            po.getShopGroupCode(), po.getIdempotentMark());
+                    for (OrderSpecItemActRecordPO orderSpecItemActRecordPO : orderSpecItemActRecordPOList) {
+                        int inserted4SpecItemActRec = orderSpecItemActRecordAccessor.insert(orderSpecItemActRecordPO);
+                    }
 
-            OrderToppingActRecordAccessor orderToppingActRecordAccessor =
-                    SpringAccessorUtils.getOrderToppingActRecordAccessor();
-            int deleted4ToppingActRec = orderToppingActRecordAccessor.delete(po.getTenantCode(),
-                    po.getShopGroupCode(), po.getIdempotentMark());
-            for (OrderToppingActRecordPO orderToppingActRecordPO : orderToppingActRecordPOList) {
-                int inserted4ToppingActRec = orderToppingActRecordAccessor.insert(orderToppingActRecordPO);
+                    OrderToppingActRecordAccessor orderToppingActRecordAccessor =
+                            SpringAccessorUtils.getOrderToppingActRecordAccessor();
+                    int deleted4ToppingActRec = orderToppingActRecordAccessor.delete(po.getTenantCode(),
+                            po.getShopGroupCode(), po.getIdempotentMark());
+                    for (OrderToppingActRecordPO orderToppingActRecordPO : orderToppingActRecordPOList) {
+                        int inserted4ToppingActRec = orderToppingActRecordAccessor.insert(orderToppingActRecordPO);
+                    }
+                } catch (Exception e) {
+                    log.error("orderActRecordWorker|put|fatal|" + e.getMessage(), e);
+                    status.setRollbackOnly();
+                }
+                return null;
             }
-        } catch (Exception e) {
-            log.error("orderActRecordWorker|put|fatal|" + e.getMessage(), e);
-        }
+        });
     }
 
     public static OrderActRecordPO convertToOrderActRecordPO(OrderActRecordPutRequest request) {

@@ -4,14 +4,20 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.dao.accessor.record.CleanActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
+import com.langtuo.teamachine.dao.po.record.CleanActRecordPO;
 import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.request.record.InvalidActRecordPutRequest;
+import com.langtuo.teamachine.mqtt.util.SpringTemplateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 
@@ -21,9 +27,14 @@ import java.util.List;
 @Slf4j
 public class InvalidActRecordWorker implements Runnable {
     /**
-     *
+     * 转换后的请求列表
      */
     private List<InvalidActRecordPutRequest> requestList = Lists.newArrayList();
+
+    /**
+     * 事务管理器
+     */
+    private TransactionTemplate transactionTemplate;
 
     public InvalidActRecordWorker(JSONObject jsonPayload) {
         JSONArray jsonList = jsonPayload.getJSONArray(MqttConsts.RECEIVE_KEY_LIST);
@@ -31,6 +42,7 @@ public class InvalidActRecordWorker implements Runnable {
             InvalidActRecordPutRequest request = TypeUtils.castToJavaBean(jsonObject, InvalidActRecordPutRequest.class);
             requestList.add(request);
         });
+        transactionTemplate = SpringTemplateUtils.getTransactionTemplate();
     }
 
     @Override
@@ -52,18 +64,25 @@ public class InvalidActRecordWorker implements Runnable {
         }
 
         InvalidActRecordPO po = convert(request);
-        try {
-            InvalidActRecordAccessor invalidActRecordAccessor = SpringAccessorUtils.getInvalidActRecordAccessor();
-            InvalidActRecordPO exist = invalidActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
-            if (exist == null) {
-                int inserted = invalidActRecordAccessor.insert(po);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                    log.error("invalidActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            @Override
+            public Void doInTransaction(TransactionStatus status) {
+                try {
+                    InvalidActRecordAccessor invalidActRecordAccessor = SpringAccessorUtils.getInvalidActRecordAccessor();
+                    InvalidActRecordPO exist = invalidActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
+                    if (exist == null) {
+                        int inserted = invalidActRecordAccessor.insert(po);
+                        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+                            log.error("invalidActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+                        }
+                    }
+                } catch (Exception e) {
+                    log.error("invalidActRecordWorker|put|fatal|" + e.getMessage(), e);
+                    status.setRollbackOnly();
                 }
+                return null;
             }
-        } catch (Exception e) {
-            log.error("invalidActRecordWorker|put|fatal|" + e.getMessage(), e);
-        }
+        });
     }
 
     private InvalidActRecordPO convert(InvalidActRecordPutRequest request) {

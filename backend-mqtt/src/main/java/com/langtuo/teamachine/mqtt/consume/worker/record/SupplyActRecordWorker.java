@@ -4,14 +4,20 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
+import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.SupplyActRecordAccessor;
+import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
 import com.langtuo.teamachine.dao.po.record.SupplyActRecordPO;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.request.record.SupplyActRecordPutRequest;
+import com.langtuo.teamachine.mqtt.util.SpringTemplateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 
@@ -21,9 +27,14 @@ import java.util.List;
 @Slf4j
 public class SupplyActRecordWorker implements Runnable {
     /**
-     *
+     * 转换后的请求列表
      */
     private List<SupplyActRecordPutRequest> requestList = Lists.newArrayList();
+
+    /**
+     * 事务管理器
+     */
+    private TransactionTemplate transactionTemplate;
 
     public SupplyActRecordWorker(JSONObject jsonPayload) {
         JSONArray jsonList = jsonPayload.getJSONArray(MqttConsts.RECEIVE_KEY_LIST);
@@ -31,6 +42,7 @@ public class SupplyActRecordWorker implements Runnable {
             SupplyActRecordPutRequest request = TypeUtils.castToJavaBean(jsonObject, SupplyActRecordPutRequest.class);
             requestList.add(request);
         });
+        transactionTemplate = SpringTemplateUtils.getTransactionTemplate();
     }
 
     public void run() {
@@ -51,18 +63,25 @@ public class SupplyActRecordWorker implements Runnable {
         }
 
         SupplyActRecordPO po = convert(request);
-        try {
-            SupplyActRecordAccessor supplyActRecordAccessor = SpringAccessorUtils.getSupplyActRecordAccessor();
-            SupplyActRecordPO exist = supplyActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
-            if (exist == null) {
-                int inserted = supplyActRecordAccessor.insert(po);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                    log.error("supplyActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            @Override
+            public Void doInTransaction(TransactionStatus status) {
+                try {
+                    SupplyActRecordAccessor supplyActRecordAccessor = SpringAccessorUtils.getSupplyActRecordAccessor();
+                    SupplyActRecordPO exist = supplyActRecordAccessor.getByIdempotentMark(po.getTenantCode(), po.getIdempotentMark());
+                    if (exist == null) {
+                        int inserted = supplyActRecordAccessor.insert(po);
+                        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+                            log.error("supplyActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+                        }
+                    }
+                } catch (Exception e) {
+                    log.error("supplyActRecordWorker|put|fatal|" + e.getMessage(), e);
+                    status.setRollbackOnly();
                 }
+                return null;
             }
-        } catch (Exception e) {
-            log.error("supplyActRecordWorker|put|fatal|" + e.getMessage(), e);
-        }
+        });
     }
 
     private SupplyActRecordPO convert(SupplyActRecordPutRequest request) {
