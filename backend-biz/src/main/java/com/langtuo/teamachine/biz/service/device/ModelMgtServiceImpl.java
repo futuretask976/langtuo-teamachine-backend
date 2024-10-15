@@ -21,6 +21,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -48,9 +50,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     @Override
     public TeaMachineResult<List<ModelDTO>> list() {
         try {
-            List<ModelPO> list = modelAccessor.list();
-            List<ModelDTO> dtoList = convertToModelDTO(list);
-            return TeaMachineResult.success(dtoList);
+            return doList();
         } catch (Exception e) {
             log.error("modelMgtService|list|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -64,10 +64,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
-            PageInfo<ModelPO> pageInfo = modelAccessor.search(modelCode, pageNum, pageSize);
-            List<ModelDTO> dtoList = convertToModelDTO(pageInfo.getList());
-            return TeaMachineResult.success(new PageDTO<>(
-                    dtoList, pageInfo.getTotal(), pageNum, pageSize));
+            return doSearch(modelCode, pageNum, pageSize);
         } catch (Exception e) {
             log.error("modelMgtService|search|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -81,9 +78,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         }
 
         try {
-            ModelPO modelPO = modelAccessor.getByModelCode(modelCode);
-            ModelDTO modelDTO = ModelMgtConvertor.convertToModelDTO(modelPO);
-            return TeaMachineResult.success(modelDTO);
+            return doGetByModelCode(modelCode);
         } catch (Exception e) {
             log.error("modelMgtService|get|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -99,75 +94,24 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         ModelPO modelPO = ModelMgtConvertor.convertToModelDTO(request);
         List<ModelPipelinePO> modelPipelinePOList = ModelMgtConvertor.convertToModelDTO(modelPO.getModelCode(), request.getPipelineList());
 
-        TeaMachineResult<Void> teaMachineResult;
-        if (request.isPutNew()) {
-            teaMachineResult = putNew(modelPO, modelPipelinePOList);
-        } else {
-            teaMachineResult = putUpdate(modelPO, modelPipelinePOList);
-        }
-
-        // 异步发送消息准备配置信息分发
-        JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_MODEL_UPDATED);
-        jsonPayload.put(CommonConsts.JSON_KEY_MODEL_CODE, request.getModelCode());
-        asyncDispatcher.dispatch(jsonPayload);
-
-        return teaMachineResult;
-    }
-
-    private TeaMachineResult<Void> putNew(ModelPO po, List<ModelPipelinePO> modelPipelinePOList) {
         try {
-            ModelPO exist = modelAccessor.getByModelCode(po.getModelCode());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+            TeaMachineResult<Void> teaMachineResult;
+            if (request.isPutNew()) {
+                teaMachineResult = doPutNew(modelPO, modelPipelinePOList);
+            } else {
+                teaMachineResult = doPutUpdate(modelPO, modelPipelinePOList);
             }
 
-            int inserted = modelAccessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("modelMgtService|putNewModel|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
+            // 异步发送消息准备配置信息分发
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_MODEL_UPDATED);
+            jsonPayload.put(CommonConsts.JSON_KEY_MODEL_CODE, request.getModelCode());
+            asyncDispatcher.dispatch(jsonPayload);
 
-            int deleted = modelPipelineAccessor.deleteByModelCode(po.getModelCode());
-            for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
-                int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
-                    log.error("modelMgtService|putNewPipeline|error|" + inserted);
-                    return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-                }
-            }
-            return TeaMachineResult.success();
+            return teaMachineResult;
         } catch (Exception e) {
-            log.error("modelMgtService|putNew|fatal|" + e.getMessage(), e);
+            log.error("modelMgtService|put|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-        }
-    }
-
-    private TeaMachineResult<Void> putUpdate(ModelPO po, List<ModelPipelinePO> modelPipelinePOList) {
-        try {
-            ModelPO exist = modelAccessor.getByModelCode(po.getModelCode());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
-            }
-
-            int updated = modelAccessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("modelMgtService|putUpdateModel|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
-            }
-
-            int deleted = modelPipelineAccessor.deleteByModelCode(po.getModelCode());
-            for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
-                int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
-                if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
-                    log.error("modelMgtService|putUpdatePipeline|error|" + inserted4Pipeline);
-                    return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-                }
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("modelMgtService|putUpdate|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
 
@@ -197,5 +141,75 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             log.error("modelMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(ModelPO po, List<ModelPipelinePO> modelPipelinePOList) {
+        ModelPO exist = modelAccessor.getByModelCode(po.getModelCode());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+        }
+
+        int inserted = modelAccessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("modelMgtService|putNewModel|error|" + inserted);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+
+        int deleted = modelPipelineAccessor.deleteByModelCode(po.getModelCode());
+        for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
+            int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
+                log.error("modelMgtService|putNewPipeline|error|" + inserted);
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(ModelPO po, List<ModelPipelinePO> modelPipelinePOList) {
+        ModelPO exist = modelAccessor.getByModelCode(po.getModelCode());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
+        }
+
+        int updated = modelAccessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("modelMgtService|putUpdateModel|error|" + updated);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+        }
+
+        int deleted = modelPipelineAccessor.deleteByModelCode(po.getModelCode());
+        for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
+            int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
+            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
+                log.error("modelMgtService|putUpdatePipeline|error|" + inserted4Pipeline);
+                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+            }
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(readOnly = true)
+    private TeaMachineResult<List<ModelDTO>> doList() {
+        List<ModelPO> list = modelAccessor.list();
+        List<ModelDTO> dtoList = convertToModelDTO(list);
+        return TeaMachineResult.success(dtoList);
+    }
+
+    @Transactional(readOnly = true)
+    private TeaMachineResult<PageDTO<ModelDTO>> doSearch(String modelCode, int pageNum, int pageSize) {
+        PageInfo<ModelPO> pageInfo = modelAccessor.search(modelCode, pageNum, pageSize);
+        List<ModelDTO> dtoList = convertToModelDTO(pageInfo.getList());
+        return TeaMachineResult.success(new PageDTO<>(
+                dtoList, pageInfo.getTotal(), pageNum, pageSize));
+    }
+
+    @Transactional(readOnly = true)
+    private TeaMachineResult<ModelDTO> doGetByModelCode(String modelCode) {
+        ModelPO modelPO = modelAccessor.getByModelCode(modelCode);
+        ModelDTO modelDTO = ModelMgtConvertor.convertToModelDTO(modelPO);
+        return TeaMachineResult.success(modelDTO);
     }
 }

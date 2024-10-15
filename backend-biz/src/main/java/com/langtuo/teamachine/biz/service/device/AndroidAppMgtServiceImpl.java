@@ -76,20 +76,15 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         }
 
         AndroidAppPO po = convertToAndroidAppPO(request);
-        if (request.isPutNew()) {
-            try {
+        try {
+            if (request.isPutNew()) {
                 return doPutNew(po);
-            } catch (Exception e) {
-                log.error("androidAppMgtService|putNew|fatal|" + e.getMessage(), e);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-        } else {
-            try {
+            } else {
                 return doPutUpdate(po);
-            } catch (Exception e) {
-                log.error("androidAppMgtService|putUpdate|fatal|" + e.getMessage(), e);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
+        } catch (Exception e) {
+            log.error("androidAppMgtService|put|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
 
