@@ -54,13 +54,16 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<MachineDTO> getByMachineCode(String tenantCode, String machineCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
-            return doGetByMachineCode(tenantCode, machineCode);
+            MachinePO machinePO = machineAccessor.getByMachineCode(tenantCode, machineCode);
+            MachineDTO adminRoleDTO = convert(machinePO);
+            return TeaMachineResult.success(adminRoleDTO);
         } catch (Exception e) {
             log.error("machineMgtService|getByMachineCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -68,13 +71,21 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<MachineDTO>> search(String tenantCode, String machineCode, String screenCode,
             String elecBoardCode, String shopCode, int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
-            return doSearch(tenantCode, machineCode, screenCode, elecBoardCode, shopCode, pageNum, pageSize);
+            PageInfo<MachinePO> pageInfo = machineAccessor.search(tenantCode, machineCode, screenCode, elecBoardCode,
+                    shopCode, pageNum, pageSize);
+            List<MachineDTO> dtoList = pageInfo.getList().stream()
+                    .map(po -> convert(po))
+                    .collect(Collectors.toList());
+
+            return TeaMachineResult.success(new PageDTO<MachineDTO>(dtoList, pageInfo.getTotal(),
+                    pageNum, pageSize));
         } catch (Exception e) {
             log.error("machineMgtService|search|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -82,13 +93,17 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<MachineDTO>> list(String tenantCode) {
         if (StringUtils.isBlank(tenantCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
-            return doList(tenantCode);
+            List<MachinePO> list = machineAccessor.list(tenantCode);
+            List<MachineDTO> dtoList = convert(list);
+
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("machineMgtService|list|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -96,13 +111,17 @@ public class MachineMgtServiceImpl implements MachineMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<MachineDTO>> listByShopCode(String tenantCode, String shopCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
-            return doListByShopCode(tenantCode, shopCode);
+            List<MachinePO> list = machineAccessor.listByShopCode(tenantCode, shopCode);
+            List<MachineDTO> dtoList = convert(list);
+
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("machineMgtService|listByShopCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -161,22 +180,6 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         }
     }
 
-    @Transactional(readOnly = true)
-    private TeaMachineResult<List<MachineDTO>> doListByShopCode(String tenantCode, String shopCode) {
-        List<MachinePO> list = machineAccessor.listByShopCode(tenantCode, shopCode);
-        List<MachineDTO> dtoList = convert(list);
-
-        return TeaMachineResult.success(dtoList);
-    }
-
-    @Transactional(readOnly = true)
-    private TeaMachineResult<List<MachineDTO>> doList(String tenantCode) {
-        List<MachinePO> list = machineAccessor.list(tenantCode);
-        List<MachineDTO> dtoList = convert(list);
-
-        return TeaMachineResult.success(dtoList);
-    }
-
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     private TeaMachineResult<MachineDTO> doActivate(MachineActivatePutRequest request) {
         // 激活时，设备端是不知道 tenantCode 的，只能通过 deployCode 查找和更新
@@ -233,18 +236,5 @@ public class MachineMgtServiceImpl implements MachineMgtService {
         MachinePO machinePO = machineAccessor.getByMachineCode(tenantCode, machineCode);
         MachineDTO adminRoleDTO = convert(machinePO);
         return TeaMachineResult.success(adminRoleDTO);
-    }
-
-    @Transactional(readOnly = true)
-    public TeaMachineResult<PageDTO<MachineDTO>> doSearch(String tenantCode, String machineCode, String screenCode,
-                                                          String elecBoardCode, String shopCode, int pageNum, int pageSize) {
-        PageInfo<MachinePO> pageInfo = machineAccessor.search(tenantCode, machineCode, screenCode, elecBoardCode,
-                shopCode, pageNum, pageSize);
-        List<MachineDTO> dtoList = pageInfo.getList().stream()
-                .map(po -> convert(po))
-                .collect(Collectors.toList());
-
-        return TeaMachineResult.success(new PageDTO<MachineDTO>(dtoList, pageInfo.getTotal(),
-                pageNum, pageSize));
     }
 }

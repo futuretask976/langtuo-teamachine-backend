@@ -43,13 +43,15 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<AndroidAppDTO> getByVersion(String version) {
         if (StringUtils.isBlank(version)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
-            return doGetByVersion(version);
+            AndroidAppPO po = androidAppAccessor.getByVersion(version);
+            return TeaMachineResult.success(convertToAndroidAppDTO(po));
         } catch (Exception e) {
             log.error("androidAppMgtService|get|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -57,12 +59,15 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<AndroidAppDTO>> search(String version, int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
-            return doSearch(version, pageNum, pageSize);
+            PageInfo<AndroidAppPO> pageInfo = androidAppAccessor.search(version, pageNum, pageSize);
+            List<AndroidAppDTO> dtoList = convertToAndroidAppDTO(pageInfo.getList());
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("androidAppMgtService|search|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -154,20 +159,6 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         }
 
         return TeaMachineResult.success(dto);
-    }
-
-    @Transactional(readOnly = true)
-    private TeaMachineResult<AndroidAppDTO> doGetByVersion(String version) {
-        AndroidAppPO po = androidAppAccessor.getByVersion(version);
-        return TeaMachineResult.success(convertToAndroidAppDTO(po));
-    }
-
-    @Transactional(readOnly = true)
-    private TeaMachineResult<PageDTO<AndroidAppDTO>> doSearch(String version, int pageNum, int pageSize) {
-        PageInfo<AndroidAppPO> pageInfo = androidAppAccessor.search(version, pageNum, pageSize);
-        List<AndroidAppDTO> dtoList = convertToAndroidAppDTO(pageInfo.getList());
-        return TeaMachineResult.success(new PageDTO<>(
-                dtoList, pageInfo.getTotal(), pageNum, pageSize));
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)

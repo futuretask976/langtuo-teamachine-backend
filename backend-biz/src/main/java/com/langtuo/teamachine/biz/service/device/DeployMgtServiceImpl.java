@@ -45,6 +45,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     private ExcelHandlerFactory excelHandlerFactory;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<DeployDTO>> search(String tenantCode, String deployCode, String machineCode,
             String shopCode, Integer state, int pageNum, int pageSize) {
         if (StringUtils.isBlank(tenantCode)) {
@@ -54,7 +55,11 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
-            return doSearch(tenantCode, deployCode, machineCode, shopCode, state, pageNum, pageSize);
+            PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
+                    shopCode, state, pageNum, pageSize);
+
+            List<DeployDTO> dtoList = convertToDeployPO(pageInfo.getList());
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("deployMgtService|search|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -62,13 +67,15 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<DeployDTO> getByDeployCode(String tenantCode, String deployCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(deployCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
-            return doGetByDeployCode(tenantCode, deployCode);
+            DeployDTO dto = convertToDeployPO(deployAccessor.getByDeployCode(tenantCode, deployCode));
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("deployMgtService|getByCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -76,13 +83,15 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<DeployDTO> getByMachineCode(String tenantCode, String machineCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
-            return doGetByMachineCode(tenantCode, machineCode);
+            DeployDTO dto = convertToDeployPO(deployAccessor.getByMachineCode(tenantCode, machineCode));
+            return TeaMachineResult.success(dto);
         } catch (Exception e) {
             log.error("deployMgtService|getByMachineCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -163,28 +172,6 @@ public class DeployMgtServiceImpl implements DeployMgtService {
     private TeaMachineResult<Void> doDeleteByDeployCode(String tenantCode, String deployCode) {
         int deleted = deployAccessor.deleteByDeployCode(tenantCode, deployCode);
         return TeaMachineResult.success();
-    }
-
-    @Transactional(readOnly = true)
-    private TeaMachineResult<PageDTO<DeployDTO>> doSearch(String tenantCode, String deployCode, String machineCode,
-                                                          String shopCode, Integer state, int pageNum, int pageSize) {
-        PageInfo<DeployPO> pageInfo = deployAccessor.search(tenantCode, deployCode, machineCode,
-                shopCode, state, pageNum, pageSize);
-
-        List<DeployDTO> dtoList = convertToDeployPO(pageInfo.getList());
-        return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
-    }
-
-    @Transactional(readOnly = true)
-    private TeaMachineResult<DeployDTO> doGetByDeployCode(String tenantCode, String deployCode) {
-        DeployDTO dto = convertToDeployPO(deployAccessor.getByDeployCode(tenantCode, deployCode));
-        return TeaMachineResult.success(dto);
-    }
-
-    @Transactional(readOnly = true)
-    private TeaMachineResult<DeployDTO> doGetByMachineCode(String tenantCode, String machineCode) {
-        DeployDTO dto = convertToDeployPO(deployAccessor.getByMachineCode(tenantCode, machineCode));
-        return TeaMachineResult.success(dto);
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)

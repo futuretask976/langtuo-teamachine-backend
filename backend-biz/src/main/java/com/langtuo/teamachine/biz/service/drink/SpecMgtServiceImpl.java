@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -41,6 +42,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     private SpecItemRuleAccessor specItemRuleAccessor;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<SpecDTO>> list(String tenantCode) {
         try {
             List<SpecPO> list = specAccessor.list(tenantCode);
@@ -53,6 +55,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<SpecDTO>> search(String tenantName, String specCode, String specName,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -71,6 +74,7 @@ public class SpecMgtServiceImpl implements SpecMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<SpecDTO> getBySpecCode(String tenantCode, String specCode) {
         try {
             SpecPO po = specAccessor.getBySpecCode(tenantCode, specCode);

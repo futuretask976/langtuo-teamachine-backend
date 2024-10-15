@@ -48,9 +48,12 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     private AsyncDispatcher asyncDispatcher;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<ModelDTO>> list() {
         try {
-            return doList();
+            List<ModelPO> list = modelAccessor.list();
+            List<ModelDTO> dtoList = convertToModelDTO(list);
+            return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("modelMgtService|list|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -58,13 +61,16 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<ModelDTO>> search(String modelCode,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
         pageSize = pageSize < CommonConsts.MIN_PAGE_SIZE ? CommonConsts.MIN_PAGE_SIZE : pageSize;
 
         try {
-            return doSearch(modelCode, pageNum, pageSize);
+            PageInfo<ModelPO> pageInfo = modelAccessor.search(modelCode, pageNum, pageSize);
+            List<ModelDTO> dtoList = convertToModelDTO(pageInfo.getList());
+            return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
             log.error("modelMgtService|search|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -72,13 +78,16 @@ public class ModelMgtServiceImpl implements ModelMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<ModelDTO> getByModelCode(String modelCode) {
         if (StringUtils.isBlank(modelCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
         }
 
         try {
-            return doGetByModelCode(modelCode);
+            ModelPO modelPO = modelAccessor.getByModelCode(modelCode);
+            ModelDTO modelDTO = ModelMgtConvertor.convertToModelDTO(modelPO);
+            return TeaMachineResult.success(modelDTO);
         } catch (Exception e) {
             log.error("modelMgtService|get|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
@@ -189,27 +198,5 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             }
         }
         return TeaMachineResult.success();
-    }
-
-    @Transactional(readOnly = true)
-    private TeaMachineResult<List<ModelDTO>> doList() {
-        List<ModelPO> list = modelAccessor.list();
-        List<ModelDTO> dtoList = convertToModelDTO(list);
-        return TeaMachineResult.success(dtoList);
-    }
-
-    @Transactional(readOnly = true)
-    private TeaMachineResult<PageDTO<ModelDTO>> doSearch(String modelCode, int pageNum, int pageSize) {
-        PageInfo<ModelPO> pageInfo = modelAccessor.search(modelCode, pageNum, pageSize);
-        List<ModelDTO> dtoList = convertToModelDTO(pageInfo.getList());
-        return TeaMachineResult.success(new PageDTO<>(
-                dtoList, pageInfo.getTotal(), pageNum, pageSize));
-    }
-
-    @Transactional(readOnly = true)
-    private TeaMachineResult<ModelDTO> doGetByModelCode(String modelCode) {
-        ModelPO modelPO = modelAccessor.getByModelCode(modelCode);
-        ModelDTO modelDTO = ModelMgtConvertor.convertToModelDTO(modelPO);
-        return TeaMachineResult.success(modelDTO);
     }
 }
