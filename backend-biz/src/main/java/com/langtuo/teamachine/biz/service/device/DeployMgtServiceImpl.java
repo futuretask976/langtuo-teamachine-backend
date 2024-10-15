@@ -121,8 +121,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         }
 
         try {
-            int deleted = deployAccessor.deleteByDeployCode(tenantCode, deployCode);
-            return TeaMachineResult.success();
+            return doDeleteByDeployCode(tenantCode, deployCode);
         } catch (Exception e) {
             log.error("deployMgtService|delete|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
@@ -164,6 +163,12 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             log.error("deployMgtService|generateMachineCode|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doDeleteByDeployCode(String tenantCode, String deployCode) {
+        int deleted = deployAccessor.deleteByDeployCode(tenantCode, deployCode);
+        return TeaMachineResult.success();
     }
 
     @Transactional(readOnly = true)
