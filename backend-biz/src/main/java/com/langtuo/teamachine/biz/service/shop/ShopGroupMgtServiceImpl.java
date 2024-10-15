@@ -16,6 +16,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,6 +34,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     private ShopAccessor shopAccessor;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<ShopGroupDTO> getByShopGroupCode(String tenantCode, String shopGroupCode) {
         ShopGroupPO shopGroupPO = shopGroupAccessor.getByShopGroupCode(tenantCode, shopGroupCode);
         ShopGroupDTO shopGroupDTO = convert(shopGroupPO);
@@ -39,6 +42,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<ShopGroupDTO>> search(String tenantCode, String shopGroupName,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -58,6 +62,7 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
     }
 
     @Override
+    c
     public TeaMachineResult<List<ShopGroupDTO>> list(String tenantCode) {
         try {
             List<String> orgNameList = DaoUtils.getOrgNameListByLoginSession(tenantCode);
@@ -76,14 +81,21 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         }
 
         ShopGroupPO shopGroupPO = convert(request);
-        if (request.isPutNew()) {
-            return putNew(shopGroupPO);
-        } else {
-            return putUpdate(shopGroupPO);
+        try {
+            if (request.isPutNew()) {
+                return doPutNew(shopGroupPO);
+            } else {
+                return doPutUpdate(shopGroupPO);
+            }
+        } catch (Exception e) {
+            log.error("shopGroupMgtService|put|fatal|" + e.getMessage(), e);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
+
     }
 
-    private TeaMachineResult<Void> putNew(ShopGroupPO po) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(ShopGroupPO po) {
         try {
             ShopGroupPO exist = shopGroupAccessor.getByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
             if (exist != null) {
@@ -102,7 +114,8 @@ public class ShopGroupMgtServiceImpl implements ShopGroupMgtService {
         }
     }
 
-    private TeaMachineResult<Void> putUpdate(ShopGroupPO po) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(ShopGroupPO po) {
         try {
             ShopGroupPO exist = shopGroupAccessor.getByShopGroupCode(po.getTenantCode(), po.getShopGroupCode());
             if (exist == null) {

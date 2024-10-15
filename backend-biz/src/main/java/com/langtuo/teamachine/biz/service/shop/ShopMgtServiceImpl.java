@@ -20,6 +20,8 @@ import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -42,6 +44,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     private ShopGroupAccessor shopGroupAccessor;
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<ShopDTO> getByShopCode(String tenantCode, String shopCode) {
         ShopPO shopPO = shopAccessor.getByShopCode(tenantCode, shopCode);
         ShopDTO shopDTO = convertToShopPO(shopPO);
@@ -49,6 +52,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<PageDTO<ShopDTO>> search(String tenantCode, String shopName, String shopGroupCode,
             int pageNum, int pageSize) {
         pageNum = pageNum < CommonConsts.MIN_PAGE_NUM ? CommonConsts.MIN_PAGE_NUM : pageNum;
@@ -80,6 +84,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeaMachineResult<List<ShopDTO>> listByShopGroupCode(String tenantCode, String shopGroupCode) {
         if (StringUtils.isBlank(tenantCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
@@ -113,52 +118,50 @@ public class ShopMgtServiceImpl implements ShopMgtService {
         }
 
         ShopPO shopPO = convertToShopPO(request);
-        if (request.isPutNew()) {
-            return putNew(shopPO);
-        } else {
-            return putUpdate(shopPO);
-        }
-    }
-
-    private TeaMachineResult<Void> putNew(ShopPO po) {
         try {
-            ShopPO exist = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
-            if (exist != null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
+            if (request.isPutNew()) {
+                return doPutNew(shopPO);
+            } else {
+                return doPutUpdate(shopPO);
             }
-
-            int inserted = shopAccessor.insert(po);
-            if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("shopMgtService|putNew|error|" + inserted);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-            return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("shopMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("shopMgtService|put|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
 
-    private TeaMachineResult<Void> putUpdate(ShopPO po) {
-        try {
-            ShopPO exist = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
-            if (exist == null) {
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
-            }
-
-            int updated = shopAccessor.update(po);
-            if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("shopMgtService|putUpdate|error|" + updated);
-                return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
-            }
-            return TeaMachineResult.success();
-        } catch (Exception e) {
-            log.error("shopMgtService|putUpdate|fatal|" + e.getMessage(), e);
-            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutNew(ShopPO po) {
+        ShopPO exist = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
+        if (exist != null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_CODE_DUPLICATED));
         }
+
+        int inserted = shopAccessor.insert(po);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
+            log.error("shopMgtService|putNew|error|" + inserted);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+        return TeaMachineResult.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutUpdate(ShopPO po) {
+        ShopPO exist = shopAccessor.getByShopCode(po.getTenantCode(), po.getShopCode());
+        if (exist == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_OBJECT_NOT_FOUND));
+        }
+
+        int updated = shopAccessor.update(po);
+        if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
+            log.error("shopMgtService|putUpdate|error|" + updated);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+        return TeaMachineResult.success();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public TeaMachineResult<Void> deleteByShopCode(String tenantCode, String shopGroupCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
@@ -174,6 +177,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public TeaMachineResult<Integer> countByShopGroupCode(String tenantCode, String shopGroupCode) {
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode)) {
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
