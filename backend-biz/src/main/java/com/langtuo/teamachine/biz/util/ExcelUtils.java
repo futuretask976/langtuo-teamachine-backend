@@ -20,12 +20,4 @@ public class ExcelUtils {
         }
         return row;
     }
-
-    public static Cell createCellIfAbsent(Row row, int cellNum) {
-        Cell cell = row.getCell(cellNum);
-        if (cell == null) {
-            cell = row.createCell(cellNum);
-        }
-        return cell;
-    }
 }

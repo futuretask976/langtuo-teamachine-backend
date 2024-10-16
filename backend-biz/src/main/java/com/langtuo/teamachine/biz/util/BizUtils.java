@@ -57,7 +57,7 @@ public class BizUtils {
         MenuPO menuPO = menuAccessor.getByMenuCode(tenantCode, menuCode);
         MenuDTO menuDTO = MenuMgtConvertor.convertToMenuDTO(menuPO);
         if (menuDTO == null || CollectionUtils.isEmpty(menuDTO.getMenuSeriesRelList())) {
-            log.error("BizUtils|getMenu|menuNullOrSeriesRelListNull|stopWorker|" + tenantCode + "|" + menuCode);
+            log.error("bizUtils|getMenu|menuNullOrSeriesRelListNull|stopWorker|" + tenantCode + "|" + menuCode);
             return null;
         }
 
@@ -73,7 +73,7 @@ public class BizUtils {
             seriesDTOList.add(seriesDTO);
         }
         if (CollectionUtils.isEmpty(seriesDTOList)) {
-            log.error("BizUtils|getSeriesList|seriesDTOListEmpty|stopWorker|" + tenantCode + "|" + menuCode);
+            log.error("bizUtils|getSeriesList|seriesDTOListEmpty|stopWorker|" + tenantCode + "|" + menuCode);
             return null;
         }
 
@@ -86,7 +86,7 @@ public class BizUtils {
             }
         }
         if (CollectionUtils.isEmpty(teaCodeListMap)) {
-            log.error("BizUtils|getTeaList|teaCodeListMapEmpty|stopWorker|" + tenantCode + "|" + menuCode);
+            log.error("bizUtils|getTeaList|teaCodeListMapEmpty|stopWorker|" + tenantCode + "|" + menuCode);
             return null;
         }
 

@@ -20,22 +20,4 @@ public class SpringServiceUtils {
         MqttProducer service = appContext.getBean(MqttProducer.class);
         return service;
     }
-
-    public static MenuMgtService getMenuMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        MenuMgtService service = appContext.getBean(MenuMgtService.class);
-        return service;
-    }
-
-    public static SeriesMgtService getSeriesMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        SeriesMgtService service = appContext.getBean(SeriesMgtService.class);
-        return service;
-    }
-
-    public static TeaMgtService getTeaMgtService() {
-        ApplicationContext appContext = SpringUtil.getApplicationContext();
-        TeaMgtService service = appContext.getBean(TeaMgtService.class);
-        return service;
-    }
 }
