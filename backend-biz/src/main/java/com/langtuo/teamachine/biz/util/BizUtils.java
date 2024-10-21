@@ -155,9 +155,24 @@ public class BizUtils {
             }
         }
 
+        File parentFolder = outputFile.getParentFile();
+        if (!parentFolder.exists()) {
+            try {
+                boolean created = parentFolder.createNewFile();
+                if (!created) {
+                    log.error("bizUtils|createFolder|error|" + parentFolder.getAbsolutePath());
+                    return false;
+                }
+            } catch (IOException e) {
+                log.error("bizUtils|createFolder|fatal|" + e.getMessage(), e);
+                return false;
+            }
+        }
+
         try {
             boolean created = outputFile.createNewFile();
             if (!created) {
+                log.error("bizUtils|createNewFile|error|" + outputFile.getAbsolutePath());
                 return false;
             }
         } catch (IOException e) {
