@@ -164,7 +164,7 @@ public class BizUtils {
                     return false;
                 }
             } catch (IOException e) {
-                log.error("bizUtils|createFolder|fatal|" + e.getMessage(), e);
+                log.error("bizUtils|createFolder|fatal|" + parentFolder.getAbsolutePath() + "|" + e.getMessage(), e);
                 return false;
             }
         }
@@ -176,7 +176,7 @@ public class BizUtils {
                 return false;
             }
         } catch (IOException e) {
-            log.error("bizUtils|createNewFile|fatal|" + e.getMessage(), e);
+            log.error("bizUtils|createNewFile|fatal|" + outputFile.getAbsolutePath() + "|" + e.getMessage(), e);
             return false;
         }
 
@@ -187,13 +187,13 @@ public class BizUtils {
             writer.flush();
             return true;
         } catch (IOException e) {
-            log.error("bizUtils|writeFile|fatal|" + e.getMessage(), e);
+            log.error("bizUtils|writeFile|fatal|" + outputFile.getAbsolutePath() + "|" + e.getMessage(), e);
         } finally {
             if (writer != null) {
                 try {
                     writer.close();
                 } catch (IOException e) {
-                    log.error("bizUtils|closeWriter|fatal|" + e.getMessage(), e);
+                    log.error("bizUtils|closeWriter|fatal|" + outputFile.getAbsolutePath() + "|" + e.getMessage(), e);
                 }
             }
         }
