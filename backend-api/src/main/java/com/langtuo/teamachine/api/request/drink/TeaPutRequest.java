@@ -75,6 +75,11 @@ public class TeaPutRequest {
      */
     private boolean putNew;
 
+    /**
+     * 是否导入
+     */
+    private boolean putImport;
+
     public void addTeaUnit(TeaUnitPutRequest request) {
         if (request == null) {
             return;

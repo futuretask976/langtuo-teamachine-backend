@@ -112,7 +112,10 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         List<ToppingAdjustRulePO> toppingAdjustRulePOList = convertToToppingAdjustRulePO(request);
 
         try {
-            if (request.isPutNew()) {
+            if (request.isPutImport()) {
+                return doPutImport(teaPO, toppingBaseRulePOList, specItemRulePOList, teaUnitPOList,
+                        toppingAdjustRulePOList);
+            } else if (request.isPutNew()) {
                 return doPutNew(teaPO, toppingBaseRulePOList, specItemRulePOList, teaUnitPOList,
                         toppingAdjustRulePOList);
             } else {
@@ -123,6 +126,26 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             log.error("teaMgtService|put|fatal|" + e.getMessage(), e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    private TeaMachineResult<Void> doPutImport(TeaPO teaPO, List<ToppingBaseRulePO> toppingBaseRulePOList,
+            List<SpecItemRulePO> specItemRulePOList, List<TeaUnitPO> teaUnitPOList,
+            List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
+        int deleted4Tea = teaAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
+        if (CommonConsts.DB_DELETED_ONE_ROW != deleted4Tea) {
+            log.error("teaMgtService|doPutImport|deleteTeaError|" + deleted4Tea);
+        }
+
+        int inserted4Tea = teaAccessor.insert(teaPO);
+        if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Tea) {
+            log.error("teaMgtService|doPutImport|insertTeaError|" + inserted4Tea);
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
+        }
+
+        update4Tea(teaPO, toppingBaseRulePOList, specItemRulePOList, teaUnitPOList, toppingAdjustRulePOList);
+
+        return TeaMachineResult.success();
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)

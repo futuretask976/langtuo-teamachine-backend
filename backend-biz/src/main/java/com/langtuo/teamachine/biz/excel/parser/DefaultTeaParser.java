@@ -132,7 +132,7 @@ public class DefaultTeaParser implements TeaParser {
             if (cell4TeaCode != null) {
                 // 表示来到了新的 tea,开始新的茶品部分
                 lastTeaPutRequest = new TeaPutRequest();
-                lastTeaPutRequest.setPutNew(true);
+                lastTeaPutRequest.setPutNew(false);
                 lastTeaPutRequest.setTenantCode(tenantCode);
                 teaPutRequestList.add(lastTeaPutRequest);
 
