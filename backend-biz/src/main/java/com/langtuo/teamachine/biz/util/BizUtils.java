@@ -158,12 +158,14 @@ public class BizUtils {
         File parentFolder = outputFile.getParentFile();
         if (!parentFolder.exists()) {
             try {
-                boolean created = parentFolder.createNewFile();
+                boolean created = parentFolder.mkdirs();
                 if (!created) {
                     log.error("bizUtils|createFolder|error|" + parentFolder.getAbsolutePath());
                     return false;
+                } else {
+                    log.error("bizUtils|createFolder|succ|" + parentFolder.getAbsolutePath());
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.error("bizUtils|createFolder|fatal|" + parentFolder.getAbsolutePath() + "|" + e.getMessage(), e);
                 return false;
             }
