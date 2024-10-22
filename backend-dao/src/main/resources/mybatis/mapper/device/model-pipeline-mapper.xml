@@ -14,6 +14,8 @@
         <result property="enableWarm" column="enable_warm"/>
         <result property="enableFreeze" column="enable_freeze"/>
         <result property="capacity" column="capacity"/>
+        <result property="syrupPipeline" column="syrup_pipeline"/>
+        <result property="sensorThreshold" column="sensor_threshold"/>
     </resultMap>
 
     <select id="selectOne" resultMap="machineModelPipelinePOMap">
@@ -40,6 +42,8 @@
             , enable_warm
             , enable_freeze
             , capacity
+            , syrup_pipeline
+            , sensor_threshold
         ) VALUES (
             now()
             , now()
@@ -48,6 +52,8 @@
             , #{enableWarm}
             , #{enableFreeze}
             , #{capacity}
+            , #{syrupPipeline}
+            , #{sensorThreshold}
         )
     </insert>
 
@@ -63,6 +69,12 @@
             </if>
             <if test="capacity != null">
                 , capacity = #{capacity}
+            </if>
+            <if test="syrupPipeline != null">
+                , syrup_pipeline = #{syrupPipeline}
+            </if>
+            <if test="sensorThreshold != null">
+                , sensor_threshold = #{sensorThreshold}
             </if>
         WHERE model_code = #{modelCode}
             AND pipeline_num = #{pipelineNum}

@@ -35,12 +35,12 @@ public class ToppingPutRequest {
     /**
      * 有效周期
      */
-    private int validHourPeriod;
+    private int validPeriodHour;
 
     /**
      * 清洗周期
      */
-    private int cleanHourPeriod;
+    private int cleanPeriodHour;
 
     /**
      * 转换系数
@@ -53,14 +53,39 @@ public class ToppingPutRequest {
     private int flowSpeed;
 
     /**
-     * 阈值类型，0：绝对值，1：百分比
+     * 有效期预警阈值
      */
-    private int thresholdMode;
+    private int validPeriodWarningThresholdMin;
 
     /**
-     * 阈值
+     * 清洗期预警阈值
      */
-    private int threshold;
+    private int cleanPeriodWarningThresholdMin;
+
+    /**
+     * 废料预警阈值
+     */
+    private int invalidWarningThresholdG;
+
+    /**
+     * 溢出允许模式，0：固定值，1：百分比
+     */
+    private int overMode;
+
+    /**
+     * 溢出数值
+     */
+    private int overAmount;
+
+    /**
+     * 不及允许模式，0：固定值，1：百分比
+     */
+    private int underMode;
+
+    /**
+     * 不及数值
+     */
+    private int underAmount;
 
     /**
      * 租户编码

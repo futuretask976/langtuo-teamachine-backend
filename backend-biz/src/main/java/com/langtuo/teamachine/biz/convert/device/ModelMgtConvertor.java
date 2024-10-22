@@ -56,6 +56,8 @@ public class ModelMgtConvertor {
             dto.setEnableFreeze(po.getEnableFreeze());
             dto.setEnableWarm(po.getEnableWarm());
             dto.setCapacity(po.getCapacity());
+            dto.setSyrupPipeline(po.getSyrupPipeline());
+            dto.setSensorThreshold(po.getSensorThreshold());
             resultList.add(dto);
         }
         return resultList;
@@ -84,6 +86,8 @@ public class ModelMgtConvertor {
             po.setEnableFreeze(request.getEnableFreeze());
             po.setEnableWarm(request.getEnableWarm());
             po.setCapacity(request.getCapacity());
+            po.setSyrupPipeline(request.getSyrupPipeline());
+            po.setSensorThreshold(request.getSensorThreshold());
             return po;
         }).collect(Collectors.toList());
         return resultList;

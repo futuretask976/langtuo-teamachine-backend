@@ -45,4 +45,14 @@ public class ModelPipelinePO {
      * 容量
      */
     private int capacity;
+
+    /**
+     * 是否是糖浆桶，0：不是，1：是
+     */
+    private int syrupPipeline;
+
+    /**
+     * 传感器阈值
+     */
+    private int sensorThreshold;
 }

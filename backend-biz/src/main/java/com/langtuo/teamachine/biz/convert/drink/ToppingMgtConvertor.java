@@ -32,14 +32,21 @@ public class ToppingMgtConvertor {
         dto.setToppingCode(po.getToppingCode());
         dto.setToppingName(po.getToppingName());
         dto.setState(po.getState());
-        dto.setValidHourPeriod(po.getValidHourPeriod());
-        dto.setCleanHourPeriod(po.getCleanHourPeriod());
+        dto.setValidPeriodHour(po.getValidPeriodHour());
+        dto.setCleanPeriodHour(po.getCleanPeriodHour());
         dto.setMeasureUnit(po.getMeasureUnit());
         dto.setConvertCoefficient(po.getConvertCoefficient());
         dto.setFlowSpeed(po.getFlowSpeed());
         dto.setComment(po.getComment());
-        dto.setThresholdMode(po.getThresholdMode());
-        dto.setThreshold(po.getThreshold());
+
+        dto.setValidPeriodWarningThresholdMin(po.getValidPeriodWarningThresholdMin());
+        dto.setCleanPeriodWarningThresholdMin(po.getCleanPeriodWarningThresholdMin());
+        dto.setInvalidWarningThresholdG(po.getInvalidWarningThresholdG());
+        dto.setOverAmount(po.getOverAmount());
+        dto.setOverMode(po.getOverMode());
+        dto.setUnderAmount(po.getUnderAmount());
+        dto.setUnderMode(po.getUnderMode());
+
         po.setExtraInfo(po.getExtraInfo());
         return dto;
     }
@@ -54,16 +61,23 @@ public class ToppingMgtConvertor {
         po.setToppingName(request.getToppingName());
         po.setToppingCode(request.getToppingCode());
         po.setState(request.getState());
-        po.setValidHourPeriod(request.getValidHourPeriod());
-        po.setCleanHourPeriod(request.getCleanHourPeriod());
+        po.setValidPeriodHour(request.getValidPeriodHour());
+        po.setCleanPeriodHour(request.getCleanPeriodHour());
         po.setMeasureUnit(request.getMeasureUnit());
         po.setConvertCoefficient(request.getConvertCoefficient());
         po.setFlowSpeed(request.getFlowSpeed());
         po.setTenantCode(request.getTenantCode());
         po.setComment(request.getComment());
         po.setExtraInfo(request.getExtraInfo());
-        po.setThresholdMode(request.getThresholdMode());
-        po.setThreshold(request.getThreshold());
+
+        po.setValidPeriodWarningThresholdMin(request.getValidPeriodWarningThresholdMin());
+        po.setCleanPeriodWarningThresholdMin(request.getCleanPeriodWarningThresholdMin());
+        po.setInvalidWarningThresholdG(request.getInvalidWarningThresholdG());
+        po.setOverAmount(request.getOverAmount());
+        po.setOverMode(request.getOverMode());
+        po.setUnderAmount(request.getUnderAmount());
+        po.setUnderMode(request.getUnderMode());
+
         return po;
     }
 }

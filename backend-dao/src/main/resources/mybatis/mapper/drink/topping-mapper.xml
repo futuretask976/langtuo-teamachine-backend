@@ -14,13 +14,20 @@
         <result property="toppingTypeCode" column="topping_type_code"/>
         <result property="measureUnit" column="measure_unit"/>
         <result property="state" column="state"/>
-        <result property="validHourPeriod" column="valid_hour_period"/>
-        <result property="cleanHourPeriod" column="clean_hour_period"/>
+        <result property="validPeriodHour" column="valid_period_hour"/>
+        <result property="cleanPeriodHour" column="clean_period_hour"/>
         <result property="convertCoefficient" column="convert_coefficient"/>
         <result property="flowSpeed" column="flow_speed"/>
-        <result property="thresholdMode" column="threshold_mode"/>
-        <result property="threshold" column="threshold"/>
         <result property="tenantCode" column="tenant_code"/>
+
+        <result property="validPeriodWarningThresholdMin" column="valid_period_warning_threshold_min"/>
+        <result property="cleanPeriodWarningThresholdMin" column="clean_period_warning_threshold_min"/>
+        <result property="invalidWarningThresholdG" column="invalid_warning_threshold_g"/>
+        <result property="overAmount" column="over_amount"/>
+        <result property="overMode" column="over_mode"/>
+        <result property="underAmount" column="under_amount"/>
+        <result property="underMode" column="under_mode"/>
+
         <result property="comment" column="comment"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
@@ -62,23 +69,28 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.drink.ToppingPO">
-        INSERT INTO `topping` (
-            `gmt_created`
-            , `gmt_modified`
-            , `topping_code`
-            , `topping_name`
-            , `topping_type_code`
-            , `measure_unit`
-            , `state`
-            , `valid_hour_period`
-            , `clean_hour_period`
-            , `convert_coefficient`
-            , `flow_speed`
-            , threshold_mode
-            , threshold
-            , `tenant_code`
-            , `comment`
-            , `extra_info`
+        INSERT INTO topping (
+            gmt_created
+            , gmt_modified
+            , topping_code
+            , topping_name
+            , topping_type_code
+            , measure_unit
+            , state
+            , valid_period_hour
+            , clean_period_hour
+            , convert_coefficient
+            , flow_speed
+            , tenant_code
+            , comment
+            , extra_info
+            , valid_period_warning_threshold_min
+            , clean_period_warning_threshold_min
+            , invalid_warning_threshold_g
+            , over_amount
+            , over_mode
+            , under_amount
+            , under_mode
         ) VALUES (
             now()
             , now()
@@ -87,15 +99,20 @@
             , #{toppingTypeCode}
             , #{measureUnit}
             , #{state}
-            , #{validHourPeriod}
-            , #{cleanHourPeriod}
+            , #{validPeriodHour}
+            , #{cleanPeriodHour}
             , #{convertCoefficient}
             , #{flowSpeed}
-            , #{thresholdMode}
-            , #{threshold}
             , #{tenantCode}
             , #{comment}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            , #{validPeriodWarningThresholdMin}
+            , #{cleanPeriodWarningThresholdMin}
+            , #{invalidWarningThresholdG}
+            , #{overAmount}
+            , #{overMode}
+            , #{underAmount}
+            , #{underMode}
         )
     </insert>
 
@@ -115,11 +132,11 @@
             <if test="state != null">
                 , state = #{state}
             </if>
-            <if test="validHourPeriod != null">
-                , valid_hour_period = #{validHourPeriod}
+            <if test="validPeriodHour != null">
+                , valid_period_hour = #{validPeriodHour}
             </if>
-            <if test="cleanHourPeriod != null">
-                , clean_hour_period = #{cleanHourPeriod}
+            <if test="cleanPeriodHour != null">
+                , clean_period_hour = #{cleanPeriodHour}
             </if>
             <if test="convertCoefficient != null">
                 , convert_coefficient = #{convertCoefficient}
@@ -127,17 +144,32 @@
             <if test="flowSpeed != null">
                 , flow_speed = #{flowSpeed}
             </if>
-            <if test="thresholdMode != null">
-                , threshold_mode = #{thresholdMode}
-            </if>
-            <if test="threshold != null">
-                , threshold = #{threshold}
-            </if>
             <if test="comment != null">
                 , comment = #{comment}
             </if>
             <if test="extraInfo != null">
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
+            </if>
+            <if test="validPeriodWarningThresholdMin != null">
+                , valid_period_warning_threshold_min = #{validPeriodWarningThresholdMin}
+            </if>
+            <if test="validPeriodWarningThresholdMin != null">
+                , clean_period_warning_threshold_min = #{cleanPeriodWarningThresholdMin}
+            </if>
+            <if test="validPeriodWarningThresholdMin != null">
+                , invalid_warning_threshold_g = #{invalidWarningThresholdG}
+            </if>
+            <if test="overMode != null">
+                , over_mode = #{overMode}
+            </if>
+            <if test="overAmount != null">
+                , over_amount = #{overAmount}
+            </if>
+            <if test="underMode != null">
+                , under_mode = #{underMode}
+            </if>
+            <if test="underAmount != null">
+                , under_amount = #{underAmount}
             </if>
         WHERE 1 = 1
             and tenant_code = #{tenantCode}

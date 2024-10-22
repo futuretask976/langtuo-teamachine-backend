@@ -141,17 +141,19 @@ public class ToppingAccessor {
     }
 
     private ToppingPO getCache(String tenantCode, String toppingCode) {
-        String key = getCacheKey(tenantCode, toppingCode);
-        Object cached = redisManager4Accessor.getValue(key);
-        ToppingPO po = (ToppingPO) cached;
-        return po;
+        return null;
+        //String key = getCacheKey(tenantCode, toppingCode);
+        //Object cached = redisManager4Accessor.getValue(key);
+        //ToppingPO po = (ToppingPO) cached;
+        //return po;
     }
 
     private List<ToppingPO> getCacheList(String tenantCode) {
-        String key = getCacheListKey(tenantCode);
-        Object cached = redisManager4Accessor.getValue(key);
-        List<ToppingPO> poList = (List<ToppingPO>) cached;
-        return poList;
+        return null;
+        //String key = getCacheListKey(tenantCode);
+        //Object cached = redisManager4Accessor.getValue(key);
+        //List<ToppingPO> poList = (List<ToppingPO>) cached;
+        //return poList;
     }
 
     private void setCacheList(String tenantCode, List<ToppingPO> poList) {
