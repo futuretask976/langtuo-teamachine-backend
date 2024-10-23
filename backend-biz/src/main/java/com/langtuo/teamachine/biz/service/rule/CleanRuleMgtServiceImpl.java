@@ -77,6 +77,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         try {
             List<CleanRulePO> poList = cleanRuleAccessor.selectList(tenantCode);
             List<CleanRuleDTO> dtoList = convertToCleanRuleDTO(poList);
+            dtoList.sort((o1, o2) -> o1.getGmtModified().equals(o2.getGmtModified()) ?
+                    0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("cleanRuleMgtService|list|fatal|" + e.getMessage(), e);
@@ -105,6 +107,8 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             List<CleanRulePO> cleanRulePOList = cleanRuleAccessor.selectListByCleanRuleCode(tenantCode,
                     cleanRuleCodeList);
             List<CleanRuleDTO> cleanRuleDTOList = convertToCleanRuleDTO(cleanRulePOList);
+            cleanRuleDTOList.sort((o1, o2) -> o1.getGmtModified().equals(o2.getGmtModified()) ?
+                    0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
             log.error("cleanRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);

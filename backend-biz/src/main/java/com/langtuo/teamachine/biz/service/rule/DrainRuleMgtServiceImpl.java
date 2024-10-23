@@ -101,6 +101,8 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             List<DrainRulePO> cleanRulePOList = drainRuleAccessor.listByDrainRuleCode(tenantCode,
                     drainRuleCodeList);
             List<DrainRuleDTO> drainRuleDTOList = convertToDrainRuleDTO(cleanRulePOList);
+            drainRuleDTOList.sort((o1, o2) -> o1.getGmtModified().equals(o2.getGmtModified()) ?
+                    0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(drainRuleDTOList);
         } catch (Exception e) {
             log.error("drainRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);

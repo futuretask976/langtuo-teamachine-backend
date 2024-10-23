@@ -44,10 +44,10 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
     @Transactional(readOnly = true)
     public TeaMachineResult<List<AccuracyTplDTO>> list(String tenantCode) {
         try {
-            List<AccuracyTplPO> list = accuracyTplAccessor.list(tenantCode);
-            List<AccuracyTplDTO> dtoList = list.stream()
-                    .map(po -> convertToAccuracyTplPO(po))
-                    .collect(Collectors.toList());
+            List<AccuracyTplPO> poList = accuracyTplAccessor.list(tenantCode);
+            List<AccuracyTplDTO> dtoList = convertToAccuracyTplPO(poList);
+            dtoList.sort((o1, o2) -> o1.getGmtModified().equals(o2.getGmtModified()) ?
+                    0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("accuracyTplMgtService|list|fatal|" + e.getMessage(), e);

@@ -48,6 +48,8 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         try {
             List<AndroidAppPO> list = androidAppAccessor.listByLimit(limit);
             List<AndroidAppDTO> dtoList = convertToAndroidAppDTO(list);
+            dtoList.sort((o1, o2) -> o1.getGmtModified().equals(o2.getGmtModified()) ?
+                    0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
             log.error("androidAppMgtService|listByLimit|fatal|" + e.getMessage(), e);

@@ -13,6 +13,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AccuracyTplMgtConvertor {
+    public static List<AccuracyTplDTO> convertToAccuracyTplPO(List<AccuracyTplPO> poList) {
+        if (CollectionUtils.isEmpty(poList)) {
+            return null;
+        }
+
+        return poList.stream()
+                .map(po -> convertToAccuracyTplPO(po))
+                .collect(Collectors.toList());
+    }
+
     public static AccuracyTplDTO convertToAccuracyTplPO(AccuracyTplPO po) {
         if (po == null) {
             return null;

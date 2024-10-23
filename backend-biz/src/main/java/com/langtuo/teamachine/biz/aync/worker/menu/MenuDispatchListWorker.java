@@ -106,6 +106,8 @@ public class MenuDispatchListWorker implements Runnable {
             log.error("menuDispatchListWorker|getMenu|empty|stopWorker");
             return null;
         }
+        menuPOList.sort((o1, o2) -> o1.getGmtModified().equals(o2.getGmtModified()) ?
+                0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
 
         JSONArray arr = new JSONArray();
         for (MenuPO menuPO : menuPOList) {

@@ -97,6 +97,8 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRulePO> warningRulePOList = warningRuleAccessor.listByWarningRuleCode(tenantCode,
                     warningRuleCodeList);
             List<WarningRuleDTO> drainRuleDTOList = convertToWarningRuleDTO(warningRulePOList);
+            drainRuleDTOList.sort((o1, o2) -> o1.getGmtModified().equals(o2.getGmtModified()) ?
+                    0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(drainRuleDTOList);
         } catch (Exception e) {
             log.error("warningRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);
