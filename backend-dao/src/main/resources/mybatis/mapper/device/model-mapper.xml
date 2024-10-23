@@ -11,6 +11,7 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="modelCode" column="model_code"/>
         <result property="enableFlowAll" column="enable_flow_all"/>
+        <result property="pipeCleanSimultMaxCnt" column="pipe_clean_simult_max_cnt"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
 
@@ -33,17 +34,19 @@
     </select>
 
     <insert id="insert" parameterType="com.langtuo.teamachine.dao.po.device.ModelPO">
-        INSERT INTO `model` (
-            `gmt_created`
-            , `gmt_modified`
-            , `model_code`
-            , `enable_flow_all`
-            , `extra_info`
+        INSERT INTO model (
+            gmt_created
+            , gmt_modified
+            , model_code
+            , enable_flow_all
+            , pipe_clean_simult_max_cnt
+            , extra_info
         ) VALUES (
             now()
             , now()
             , #{modelCode}
             , #{enableFlowAll}
+            , #{pipeCleanSimultMaxCnt}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
     </insert>
@@ -54,6 +57,9 @@
             gmt_modified = now()
             <if test="enableFlowAll != null">
                 , enable_flow_all = #{enableFlowAll}
+            </if>
+            <if test="pipeCleanSimultMaxCnt != null">
+                , pipe_clean_simult_max_cnt = #{pipeCleanSimultMaxCnt}
             </if>
             <if test="extraInfo != null">
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}

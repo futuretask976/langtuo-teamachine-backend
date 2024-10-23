@@ -36,4 +36,9 @@ public class ModelPO {
      * 是否支持同时出料，0：不支持，1：支持
      */
     private int enableFlowAll;
+
+    /**
+     * 管道同时清洗的最大数量
+     */
+    private int pipeCleanSimultMaxCnt;
 }

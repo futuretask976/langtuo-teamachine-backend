@@ -36,6 +36,7 @@ public class ModelMgtConvertor {
         dto.setGmtModified(po.getGmtModified());
         dto.setModelCode(po.getModelCode());
         dto.setEnableFlowAll(po.getEnableFlowAll());
+        dto.setPipeCleanSimultMaxCnt(po.getPipeCleanSimultMaxCnt());
 
         ModelPipelineAccessor modelPipelineAccessor = SpringAccessorUtils.getModelPipelineAccessor();
         List<ModelPipelinePO> modelPipelinePOList = modelPipelineAccessor.listByModelCode(po.getModelCode());
@@ -71,6 +72,7 @@ public class ModelMgtConvertor {
         ModelPO po = new ModelPO();
         po.setModelCode(request.getModelCode());
         po.setEnableFlowAll(request.getEnableFlowAll());
+        po.setPipeCleanSimultMaxCnt(request.getPipeCleanSimultMaxCnt());
         return po;
     }
 

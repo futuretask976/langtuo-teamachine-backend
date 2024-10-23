@@ -35,6 +35,11 @@ public class ModelDTO implements Serializable {
     private int enableFlowAll;
 
     /**
+     * 管道同时清洗的最大数量
+     */
+    private int pipeCleanSimultMaxCnt;
+
+    /**
      * 管道列表
      */
     private List<ModelPipelineDTO> pipelineList;

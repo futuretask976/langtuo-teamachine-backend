@@ -20,6 +20,11 @@ public class ModelPutRequest {
     private int enableFlowAll;
 
     /**
+     * 管道同时清洗的最大数量
+     */
+    private int pipeCleanSimultMaxCnt;
+
+    /**
      * 同MachineModelDTO
      */
     private List<ModelPipelinePutRequest> pipelineList;
