@@ -14,7 +14,7 @@ import java.util.List;
  * @author Jiaqing
  */
 @RestController
-@RequestMapping("/shopset/shop/group")
+@RequestMapping("/shopset/group")
 public class ShopGroupController {
     @Resource
     private ShopGroupMgtService service;

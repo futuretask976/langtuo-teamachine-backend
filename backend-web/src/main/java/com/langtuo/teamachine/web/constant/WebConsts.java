@@ -76,13 +76,13 @@ public class WebConsts {
     public static final String ANT_PATTERN_ORG_LIST_PATH = "/userset/org/list/**";
     public static final String ANT_PATTERN_TENANT_PATH = "/userset/tenant/**";
     public static final String ANT_PATTERN_ORG_PATH = "/userset/org/**";
-    public static final String ANT_PATTERN_PERMITACT_PATH = "/userset/permitact/**";
+    // public static final String ANT_PATTERN_PERMITACT_PATH = "/userset/permitact/**";
     public static final String ANT_PATTERN_ROLE_PATH = "/userset/role/**";
     public static final String ANT_PATTERN_ADMIN_PATH = "/userset/admin/**";
     // 店铺
     public static final String ANT_PATTERN_SHOP_GROUP_LIST_PATH = "/shopset/group/list/**";
     public static final String ANT_PATTERN_SHOP_GROUP_PATH = "/shopset/group/**";
-    public static final String ANT_PATTERN_SHOP_PATH = "/shopset/**";
+    public static final String ANT_PATTERN_SHOP_PATH = "/shopset/shop/**";
     // 饮品生产
     public static final String ANT_PATTERN_TOPPING_TYPE_LIST_PATH = "/drinkset/topping/type/list/**";
     public static final String ANT_PATTERN_TEA_TYPE_LIST_PATH = "/drinkset/tea/type/list/**";

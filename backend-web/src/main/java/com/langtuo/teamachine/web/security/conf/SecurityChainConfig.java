@@ -124,8 +124,8 @@ public class SecurityChainConfig {
                         WebConsts.SPECIAL_PERMIT_ACT_CODE_TENANT_MGT)
                 .antMatchers(WebConsts.ANT_PATTERN_ORG_PATH).hasAnyRole(
                         PermitActEnum.ORG_MGT.getPermitActCode())
-                .antMatchers(WebConsts.ANT_PATTERN_PERMITACT_PATH).hasAnyRole(
-                        PermitActEnum.PERMIT_ACT_MGT.getPermitActCode())
+                //.antMatchers(WebConsts.ANT_PATTERN_PERMITACT_PATH).hasAnyRole(
+                //        PermitActEnum.PERMIT_ACT_MGT.getPermitActCode())
                 .antMatchers(WebConsts.ANT_PATTERN_ROLE_PATH).hasAnyRole(
                         PermitActEnum.ROLE_MGT.getPermitActCode())
                 .antMatchers(WebConsts.ANT_PATTERN_ADMIN_PATH).hasAnyRole(
