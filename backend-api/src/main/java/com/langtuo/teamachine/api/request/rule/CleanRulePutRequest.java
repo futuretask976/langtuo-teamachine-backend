@@ -79,7 +79,7 @@ public class CleanRulePutRequest {
 
     private boolean isValidExceptToppingCodeList() {
         if (CollectionUtils.isEmpty(exceptToppingCodeList)) {
-            return false;
+            return true;
         }
         for (String m : exceptToppingCodeList) {
             if (!RegexUtils.isValidCode(m, true)) {
