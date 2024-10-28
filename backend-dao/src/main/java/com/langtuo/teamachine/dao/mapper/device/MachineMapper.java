@@ -18,7 +18,7 @@ public interface MachineMapper {
      * @param machineCode
      * @return
      */
-    MachinePO selectOne(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode, @Param("machineName") String machineName);
+    MachinePO selectOne(@Param("tenantCode") String tenantCode, @Param("machineCode") String machineCode);
 
     /**
      *

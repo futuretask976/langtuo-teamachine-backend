@@ -29,9 +29,6 @@
             <if test="machineCode != null">
                 AND machine_code = #{machineCode}
             </if>
-            <if test="machineName != null">
-                AND machine_name = #{machineName}
-            </if>
     </select>
 
     <select id="selectList" resultMap="machinePOMap">

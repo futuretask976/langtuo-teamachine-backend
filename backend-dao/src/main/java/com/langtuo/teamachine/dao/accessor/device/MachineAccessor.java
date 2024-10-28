@@ -28,7 +28,7 @@ public class MachineAccessor {
             return cached;
         }
 
-        MachinePO po = mapper.selectOne(tenantCode, machineCode, null);
+        MachinePO po = mapper.selectOne(tenantCode, machineCode);
 
         // 设置缓存
         setCache(tenantCode, machineCode, po);
@@ -102,7 +102,7 @@ public class MachineAccessor {
     }
 
     public int update(MachinePO po) {
-        MachinePO exist = mapper.selectOne(po.getTenantCode(), po.getMachineCode(), po.getMachineName());
+        MachinePO exist = mapper.selectOne(po.getTenantCode(), po.getMachineCode());
         if (exist == null) {
             return CommonConsts.DB_UPDATED_ZERO_ROW;
         }
