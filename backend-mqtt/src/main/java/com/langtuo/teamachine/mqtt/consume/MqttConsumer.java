@@ -3,9 +3,11 @@ package com.langtuo.teamachine.mqtt.consume;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.mqtt.server.ServerConsumer;
 import com.alibaba.mqtt.server.callback.MessageListener;
+import com.alibaba.mqtt.server.callback.StatusListener;
 import com.alibaba.mqtt.server.config.ChannelConfig;
 import com.alibaba.mqtt.server.config.ConsumerConfig;
 import com.alibaba.mqtt.server.model.MessageProperties;
+import com.alibaba.mqtt.server.model.StatusNotice;
 import com.google.common.collect.Maps;
 import com.langtuo.teamachine.mqtt.threadpool.ConsumeExeService;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
@@ -87,6 +89,12 @@ public class MqttConsumer implements InitializingBean {
                 dispatch(strPayload);
             }
         });
+        serverConsumer.subscribeStatus(MqttConsts.GROUP_ID, new StatusListener() {
+            @Override
+            public void process(StatusNotice statusNotice) {
+                notice(JSONObject.toJSONString(statusNotice));
+            }
+        });
     }
 
     private void initWorkerMap() {
@@ -97,6 +105,13 @@ public class MqttConsumer implements InitializingBean {
         workerMap.put(MqttConsts.BIZ_CODE_DRAIN_ACT_RECORD, jsonPayload -> new DrainActRecordWorker(jsonPayload));
         workerMap.put(MqttConsts.BIZ_CODE_CLEAN_ACT_RECORD, jsonPayload -> new CleanActRecordWorker(jsonPayload));
         workerMap.put(MqttConsts.BIZ_CODE_ORDER_ACT_RECORD, jsonPayload -> new OrderActRecordWorker(jsonPayload));
+    }
+
+    public void notice(String payload) {
+        if (StringUtils.isBlank(payload)) {
+            return;
+        }
+        log.info("$$$$$ mqttConsumer|notice|entering|" + payload);
     }
 
     public void dispatch(String payload) {
