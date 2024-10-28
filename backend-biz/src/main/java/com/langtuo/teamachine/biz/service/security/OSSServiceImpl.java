@@ -21,6 +21,6 @@ public class OSSServiceImpl implements OSSService {
         dto.setSecurityToken(po.getSecurityToken());
         dto.setRequestId(po.getRequestId());
         dto.setExpiration(po.getExpiration());
-        return TeaMachineResult.success(po);
+        return TeaMachineResult.success(dto);
     }
 }

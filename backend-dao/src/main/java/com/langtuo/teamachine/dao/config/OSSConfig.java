@@ -19,12 +19,12 @@ public class OSSConfig {
     /**
      *
      */
-    public static final String ACCESS_KEY_ID = "LTAI5t6hg6snjTBEddAP8tz8";
+    public static final String ACCESS_KEY_ID = "LTAI5tNqF1bav1mtzdUSGwkQ";
 
     /**
      *
      */
-    public static final String ACCESS_KEY_SECRET = "MammwnIOPrHe9AAO4CnaUJwmIG96Kc";
+    public static final String ACCESS_KEY_SECRET = "njNRe0aL6MNrWXI4TUYYWRolx1uYOq";
 
     /**
      *
