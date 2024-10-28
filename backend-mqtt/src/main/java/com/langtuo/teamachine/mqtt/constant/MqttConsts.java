@@ -19,12 +19,12 @@ public class MqttConsts {
      *      export MQTT_SK_ENV=<access_key_secret>
      * 需要将<access_key_id>替换为已准备好的AccessKey ID，<access_key_secret>替换为AccessKey Secret。
      */
-    public static final String ACCESS_KEY = "LTAI5t6hg6snjTBEddAP8tz8"; // System.getenv("MQTT_AK_ENV");
+    public static final String ACCESS_KEY = "LTAI5tNqF1bav1mtzdUSGwkQ2"; // System.getenv("MQTT_AK_ENV");
 
     /**
      * 账号 secretKey，从账号系统控制台获取，仅在Signature鉴权模式下需要设置
      */
-    public static final String ACCESS_KEY_SECRET = "MammwnIOPrHe9AAO4CnaUJwmIG96Kc"; // System.getenv("MQTT_SK_ENV");
+    public static final String ACCESS_KEY_SECRET = "njNRe0aL6MNrWXI4TUYYWRolx1uYOq"; // System.getenv("MQTT_SK_ENV");
 
     /**
      * 超时时长
