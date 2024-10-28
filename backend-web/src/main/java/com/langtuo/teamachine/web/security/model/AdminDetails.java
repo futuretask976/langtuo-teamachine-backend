@@ -75,7 +75,15 @@ public class AdminDetails implements UserDetails {
     }
 
     /**
-     * 
+     * 获取权限点列表
+     * @return
+     */
+    public List<String> getPermitActCodeList() {
+        return roleDTO.getPermitActCodeList();
+    }
+
+    /**
+     * 获取商户编码
      * @return
      */
     public String getTenantCode() {

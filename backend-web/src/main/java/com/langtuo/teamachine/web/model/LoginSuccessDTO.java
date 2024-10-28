@@ -2,6 +2,8 @@ package com.langtuo.teamachine.web.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author Jiaqing
  */
@@ -16,4 +18,9 @@ public class LoginSuccessDTO {
      * 登录名称
      */
     private String loginName;
+
+    /**
+     * 关联的权限点列表
+     */
+    private List<String> permitActCodeList;
 }

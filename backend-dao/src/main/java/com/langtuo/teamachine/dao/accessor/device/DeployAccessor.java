@@ -165,14 +165,14 @@ public class DeployAccessor {
     }
 
     public long getNextSeqVal4MachineCode() {
-        if (machineCodeSeqCurVal < machineCodeSeqStartVal + SEQ_SCOPE) {
-            return machineCodeSeqCurVal++;
+        if (machineCodeSeqCurVal != 0 && ++machineCodeSeqCurVal < machineCodeSeqStartVal + SEQ_SCOPE) {
+            return machineCodeSeqCurVal;
         }
 
         long seq = machineCodeSeqMapper.getNextSeqValue();
         machineCodeSeqCurVal = seq;
         machineCodeSeqStartVal = seq;
-        return machineCodeSeqCurVal++;
+        return machineCodeSeqCurVal;
     }
 
     private Integer getCacheCountByModelCode(String modelCode) {

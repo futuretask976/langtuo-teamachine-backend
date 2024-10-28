@@ -3,6 +3,7 @@ package com.langtuo.teamachine.web.security.component;
 import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.web.constant.WebConsts;
+import com.langtuo.teamachine.web.security.model.AdminDetails;
 import com.langtuo.teamachine.web.util.JwtTokenUtils;
 import com.langtuo.teamachine.web.model.LoginSuccessDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,11 @@ public class TeaMachineAuthSuccessHandler implements AuthenticationSuccessHandle
         LoginSuccessDTO dto = new LoginSuccessDTO();
         dto.setJwtToken(tokenHead + jwtTokenUtils.generateToken(authUser));
         dto.setLoginName(authUser.getUsername());
+        if (authUser instanceof AdminDetails) {
+            AdminDetails authAdmin = (AdminDetails) authUser;
+            dto.setPermitActCodeList(authAdmin.getPermitActCodeList());
+        }
+
         TeaMachineResult<LoginSuccessDTO> result = TeaMachineResult.success(dto);
         response.getWriter().println(JSONObject.toJSONString(result));
         response.getWriter().flush();
