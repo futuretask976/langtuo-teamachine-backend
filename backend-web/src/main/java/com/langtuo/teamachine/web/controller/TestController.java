@@ -31,17 +31,17 @@ import java.util.Locale;
  * @author Jiaqing
  */
 @RestController
-@RequestMapping("/mqtt")
+@RequestMapping("/test")
 @Slf4j
-public class MqttController {
+public class TestController {
     @Resource
     private OrderActRecordMgtService orderActRecordMgtService;
 
     /**
-     * url: http://localhost:8080/teamachinebackend/mqtt/test
+     * url: http://localhost:8080/teamachinebackend/test/onlytest
      * @return
      */
-    @GetMapping(value = "/test")
+    @GetMapping(value = "/onlytest")
     public TeaMachineResult<Void> test(Model model) {
         log.info("/mqtt/test entering: " + (model == null ? null : model.toString()));
         try {
@@ -55,11 +55,11 @@ public class MqttController {
     }
 
     /**
-     * url: http://localhost:8080/teamachinebackend/mqtt/testorderact
+     * url: http://localhost:8080/teamachinebackend/test/orderact
      * @param model
      * @return
      */
-    @GetMapping(value = "/testorderact")
+    @GetMapping(value = "/orderact")
     public TeaMachineResult<Void> testOrderAct(Model model) {
         log.info("/mqtt/testorderact entering: " + (model == null ? null : model.toString()));
         try {
@@ -127,11 +127,11 @@ public class MqttController {
     }
 
     /**
-     * url: http://localhost:8080/teamachinebackend/mqtt/testcleanact
+     * url: http://localhost:8080/teamachinebackend/test/cleanact
      * @param model
      * @return
      */
-    @GetMapping(value = "/testcleanact")
+    @GetMapping(value = "/cleanact")
     public TeaMachineResult<Void> testCleanAct(Model model) {
         log.info("/mqtt/testcleanact entering: " + (model == null ? null : model.toString()));
         String c = "{\"bizCode\":\"cleanActRecord\",\"list\":[{\"cleanContent\":1,\"cleanEndTime\":1728367883993,\"cleanRuleCode\":\"CLEAN_02\",\"cleanStartTime\":1728367883994,\"cleanType\":1,\"closeRuleCode\":\"CLEAN_02\",\"flushIntervalMin\":40,\"flushSec\":30,\"idempotentMark\":\"20241008021123_20240904000004_cleanAct_2\",\"machineCode\":\"20240904000004\",\"openRuleCode\":\"CLEAN_02\",\"pipelineNum\":1,\"shopCode\":\"shop_333\",\"shopGroupCode\":\"shopGroup_07\",\"soakMin\":20,\"tenantCode\":\"tenant_001\",\"toppingCode\":\"topping_333\",\"valid\":true,\"washSec\":10}]}";
@@ -145,7 +145,7 @@ public class MqttController {
     }
 
     /**
-     * url: http://localhost:8080/teamachinebackend/mqtt/putlocale?locale=1
+     * url: http://localhost:8080/teamachinebackend/test/putlocale?locale=1
      * @param locale
      * @return
      */

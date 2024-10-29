@@ -26,6 +26,8 @@ public class MqttConsts {
      */
     public static final String ACCESS_KEY_SECRET = "njNRe0aL6MNrWXI4TUYYWRolx1uYOq"; // System.getenv("MQTT_SK_ENV");
 
+    public static final String MANAGER_ENDPOINT = "onsmqtt.cn-beijing.aliyuncs.com";
+
     /**
      * 超时时长
      */

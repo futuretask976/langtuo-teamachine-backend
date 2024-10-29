@@ -96,6 +96,9 @@ public class SecurityChainConfig {
                 .antMatchers(WebConsts.ANT_PATTERN_OSS_PATH).hasAnyRole(
                         PermitActEnum.TEA_MGT.getPermitActCode(),
                         WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
+                .antMatchers(WebConsts.ANT_PATTERN_MQTT_PATH).hasAnyRole(
+                        PermitActEnum.TEA_MGT.getPermitActCode(),
+                        WebConsts.SPECIAL_PERMIT_ACT_CODE_MACHINE)
                 // 设备
                 .antMatchers(WebConsts.ANT_PATTERN_MODEL_PATH).hasAnyRole(
                         PermitActEnum.MODEL_MGT.getPermitActCode(),

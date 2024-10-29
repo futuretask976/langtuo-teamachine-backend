@@ -3,7 +3,7 @@ package com.langtuo.teamachine.dao.po.security;
 import lombok.Data;
 
 @Data
-public class OSSTokenPO {
+public class OssToken {
     /**
      *
      */

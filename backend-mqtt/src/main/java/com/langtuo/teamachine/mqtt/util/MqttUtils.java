@@ -1,9 +1,18 @@
 package com.langtuo.teamachine.mqtt.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.mqtt.server.config.ChannelConfig;
+import com.aliyun.onsmqtt20200420.Client;
+import com.aliyun.onsmqtt20200420.models.ApplyTokenRequest;
+import com.aliyun.onsmqtt20200420.models.ApplyTokenResponse;
+import com.aliyun.tea.TeaException;
+import com.aliyun.teaopenapi.models.Config;
+import com.aliyun.teautil.models.RuntimeOptions;
 import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.mqtt.model.MqttToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -15,6 +24,61 @@ import java.security.*;
  */
 @Slf4j
 public class MqttUtils {
+    private static final String ACTIONS = "R,W";
+    private static final String RESOURCES_PREFIX = "teamachine/#,";
+    private static final String RESOURCES_POSTFIX = "-teamachine/#";
+
+    /**
+     * <b>description</b> :
+     * <p>使用AK&amp;SK初始化账号Client</p>
+     * @return Client
+     *
+     * @throws Exception
+     */
+    private static Client createClient() throws Exception {
+        // 工程代码泄露可能会导致 AccessKey 泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考。
+        // 建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378657.html。
+        Config config = new Config()
+                // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID。
+                .setAccessKeyId(MqttConsts.ACCESS_KEY)
+                // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_SECRET。
+                .setAccessKeySecret(MqttConsts.ACCESS_KEY_SECRET);
+        // Endpoint 请参考 https://api.aliyun.com/product/OnsMqtt
+        config.endpoint = MqttConsts.MANAGER_ENDPOINT;
+        return new Client(config);
+    }
+
+    public static MqttToken getMqttToken(String tenantCode) {
+        if (StringUtils.isBlank(tenantCode)) {
+            return null;
+        }
+        StringBuffer resources = new StringBuffer();
+        resources.append(RESOURCES_PREFIX).append(tenantCode).append(RESOURCES_POSTFIX);
+
+        try {
+            Client client = createClient();
+            ApplyTokenRequest applyTokenRequest = new ApplyTokenRequest()
+                    .setActions(ACTIONS)
+                    .setExpireTime(System.currentTimeMillis() + 1000 * 60 * 60 * 72)
+                    .setInstanceId(MqttConsts.INSTANCE_ID)
+                    .setResources(resources.toString());
+            RuntimeOptions runtime = new RuntimeOptions();
+
+            ApplyTokenResponse resp = client.applyTokenWithOptions(applyTokenRequest, runtime);
+            log.info("mqttManager|getMqttToken|succ|" + JSON.toJSONString(resp));
+            MqttToken mqttToken = new MqttToken();
+            mqttToken.setAccessKey(MqttConsts.ACCESS_KEY);
+            mqttToken.setAccessToken(resp.getBody().getToken());
+            return mqttToken;
+        } catch (TeaException error) {
+            log.error("mqttManager|getMqttToken|fatal|" + error.getMessage() + "|" + error.getData().get("Recommend"));
+        } catch (Exception _error) {
+            TeaException error = new TeaException(_error.getMessage(), _error);
+            log.error("mqttManager|getMqttToken|fatal|" + error.getMessage() + "|" + error.getData().get("Recommend"));
+        }
+        return null;
+    }
+
     /**
      * @param text 要签名的文本
      * @param secretKey 阿里云MQ secretKey

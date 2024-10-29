@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.langtuo.teamachine.biz.util.BizUtils;
 import com.langtuo.teamachine.biz.util.SpringServiceUtils;
 import com.langtuo.teamachine.dao.accessor.menu.MenuDispatchCacheAccessor;
-import com.langtuo.teamachine.dao.config.OSSConfig;
+import com.langtuo.teamachine.dao.config.OssConfig;
 import com.langtuo.teamachine.dao.po.menu.MenuDispatchCachePO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.util.DaoUtils;
@@ -122,7 +122,7 @@ public class MenuDispatchListWorker implements Runnable {
         jsonMsg.put(CommonConsts.JSON_KEY_BIZ_CODE, CommonConsts.BIZ_CODE_DISPATCH_MENU_LIST);
         jsonMsg.put(CommonConsts.JSON_KEY_MD5_AS_HEX, po.getMd5());
         jsonMsg.put(CommonConsts.JSON_KEY_OSS_PATH,
-                OSSConfig.OSS_MENU_PATH + OSSConfig.OSS_PATH_SEPARATOR + po.getFileName());
+                OssConfig.OSS_MENU_PATH + OssConfig.OSS_PATH_SEPARATOR + po.getFileName());
         return jsonMsg;
     }
 

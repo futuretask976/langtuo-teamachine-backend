@@ -1,19 +1,19 @@
 package com.langtuo.teamachine.biz.service.security;
 
-import com.langtuo.teamachine.api.model.security.OSSTokenDTO;
+import com.langtuo.teamachine.api.model.security.OssTokenDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
-import com.langtuo.teamachine.api.service.security.OSSService;
-import com.langtuo.teamachine.dao.oss.OSSUtils;
-import com.langtuo.teamachine.dao.po.security.OSSTokenPO;
+import com.langtuo.teamachine.api.service.security.OssService;
+import com.langtuo.teamachine.dao.oss.OssUtils;
+import com.langtuo.teamachine.dao.po.security.OssToken;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OSSServiceImpl implements OSSService {
+public class OssServiceImpl implements OssService {
     @Override
-    public TeaMachineResult<OSSTokenDTO> getOSSToken() {
-        OSSTokenPO po = OSSUtils.getSTS();
+    public TeaMachineResult<OssTokenDTO> getOssToken() {
+        OssToken po = OssUtils.getSTS();
 
-        OSSTokenDTO dto = new OSSTokenDTO();
+        OssTokenDTO dto = new OssTokenDTO();
         dto.setRegion(po.getRegion());
         dto.setBucketName(po.getBucketName());
         dto.setAccessKeyId(po.getAccessKeyId());

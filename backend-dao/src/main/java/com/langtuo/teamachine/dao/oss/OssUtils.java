@@ -14,8 +14,8 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import com.langtuo.teamachine.dao.config.OSSConfig;
-import com.langtuo.teamachine.dao.po.security.OSSTokenPO;
+import com.langtuo.teamachine.dao.config.OssConfig;
+import com.langtuo.teamachine.dao.po.security.OssToken;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,24 +23,24 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Date;
 
-public class OSSUtils {
-    public static OSSTokenPO getSTS() {
+public class OssUtils {
+    public static OssToken getSTS() {
         // STS服务接入点，例如sts.cn-hangzhou.aliyuncs.com。您可以通过公网或者VPC接入STS服务。
-        String endpoint = OSSConfig.STS_ENDPOINT;
+        String endpoint = OssConfig.STS_ENDPOINT;
         // 从环境变量中获取步骤1生成的RAM用户的访问密钥（AccessKey ID和AccessKey Secret）。
-        String accessKeyId = OSSConfig.ACCESS_KEY_ID;
-        String accessKeySecret = OSSConfig.ACCESS_KEY_SECRET;
+        String accessKeyId = OssConfig.ACCESS_KEY_ID;
+        String accessKeySecret = OssConfig.ACCESS_KEY_SECRET;
         // 从环境变量中获取步骤3生成的RAM角色的RamRoleArn。
-        String roleArn = OSSConfig.STS_ROLE_ARN;
+        String roleArn = OssConfig.STS_ROLE_ARN;
         // 自定义角色会话名称，用来区分不同的令牌，例如可填写为SessionTest。
-        String roleSessionName = OSSConfig.STS_SESSION_NAME;
+        String roleSessionName = OssConfig.STS_SESSION_NAME;
         // 临时访问凭证将获得角色拥有的所有权限。
         String policy = null;
         // 临时访问凭证的有效时间，单位为秒。最小值为900，最大值以当前角色设定的最大会话时间为准。当前角色最大会话时间取值范围为3600秒~43200秒，默认值为3600秒。
         // 在上传大文件或者其他较耗时的使用场景中，建议合理设置临时访问凭证的有效时间，确保在完成目标任务前无需反复调用STS服务以获取临时访问凭证。
-        Long durationSeconds = OSSConfig.STS_DURATION_SECONDS;
+        Long durationSeconds = OssConfig.STS_DURATION_SECONDS;
 
-        OSSTokenPO stsPO = null;
+        OssToken stsPO = null;
         try {
             // 发起STS请求所在的地域。建议保留默认值，默认值为空字符串（""）。
             String regionId = "";
@@ -64,9 +64,9 @@ public class OSSUtils {
             final AssumeRoleResponse response = client.getAcsResponse(request);
             AssumeRoleResponse.Credentials credentials = response.getCredentials();
 
-            stsPO = new OSSTokenPO();
-            stsPO.setRegion(OSSConfig.REGION);
-            stsPO.setBucketName(OSSConfig.BUCKET_NAME);
+            stsPO = new OssToken();
+            stsPO.setRegion(OssConfig.REGION);
+            stsPO.setBucketName(OssConfig.BUCKET_NAME);
             stsPO.setExpiration(credentials.getExpiration());
             stsPO.setAccessKeyId(credentials.getAccessKeyId());
             stsPO.setAccessKeySecret(credentials.getAccessKeySecret());
@@ -95,17 +95,17 @@ public class OSSUtils {
 //        String finalFileName = System.currentTimeMillis() + "" + new SecureRandom().nextInt(0x0400)
 //                + suffixName;
         // OSS中的文件夹名
-        String objectName = ossPath + OSSConfig.OSS_PATH_SEPARATOR +  fileName; // finalFileName;
+        String objectName = ossPath + OssConfig.OSS_PATH_SEPARATOR +  fileName; // finalFileName;
 
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.ACCESS_KEY_ID, OSSConfig.ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT, credentialsProvider);
+                OssConfig.ACCESS_KEY_ID, OssConfig.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OssConfig.ENDPOINT, credentialsProvider);
         // 创建file输入流
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(file);
-            PutObjectResult result = ossClient.putObject(OSSConfig.BUCKET_NAME, objectName,
+            PutObjectResult result = ossClient.putObject(OssConfig.BUCKET_NAME, objectName,
                     fileInputStream);
             System.out.println(result);
         } finally {
@@ -126,12 +126,12 @@ public class OSSUtils {
     public static String genAccessObjectURL(String objectName) throws OSSException, ClientException {
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OSSConfig.ACCESS_KEY_ID, OSSConfig.ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OSSConfig.ENDPOINT, credentialsProvider);
+                OssConfig.ACCESS_KEY_ID, OssConfig.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(OssConfig.ENDPOINT, credentialsProvider);
 
         try {
-            Date expiration = new Date(System.currentTimeMillis() + OSSConfig.ACCESS_EXPIRATION_TIME);
-            URL result = ossClient.generatePresignedUrl(OSSConfig.BUCKET_NAME, objectName, expiration);
+            Date expiration = new Date(System.currentTimeMillis() + OssConfig.ACCESS_EXPIRATION_TIME);
+            URL result = ossClient.generatePresignedUrl(OssConfig.BUCKET_NAME, objectName, expiration);
             return result.toString();
         } finally {
             if (ossClient != null) {
@@ -141,7 +141,7 @@ public class OSSUtils {
     }
 
     public static void main(String args[]) {
-        OSSTokenPO po = OSSUtils.getSTS();
+        OssToken po = OssUtils.getSTS();
         System.out.println(po);
     }
 }

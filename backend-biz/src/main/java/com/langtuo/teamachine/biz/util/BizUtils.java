@@ -15,8 +15,8 @@ import com.langtuo.teamachine.biz.convert.menu.SeriesMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.drink.TeaAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesAccessor;
-import com.langtuo.teamachine.dao.config.OSSConfig;
-import com.langtuo.teamachine.dao.oss.OSSUtils;
+import com.langtuo.teamachine.dao.config.OssConfig;
+import com.langtuo.teamachine.dao.oss.OssUtils;
 import com.langtuo.teamachine.dao.po.drink.TeaPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.po.menu.SeriesPO;
@@ -32,9 +32,7 @@ import java.io.*;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class BizUtils {
@@ -205,7 +203,7 @@ public class BizUtils {
     public static String uploadOSS(File file) {
         String ossPath = null;
         try {
-            ossPath = OSSUtils.uploadFile(file, OSSConfig.OSS_MENU_PATH);
+            ossPath = OssUtils.uploadFile(file, OssConfig.OSS_MENU_PATH);
         } catch (FileNotFoundException e) {
             log.error("bizUtils|uploadFileToOSS|fatal|" + e.getMessage());
         }

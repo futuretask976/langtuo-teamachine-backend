@@ -1,6 +1,6 @@
 package com.langtuo.teamachine.dao.config;
 
-public class OSSConfig {
+public class OssConfig {
     /**
      *
      */
