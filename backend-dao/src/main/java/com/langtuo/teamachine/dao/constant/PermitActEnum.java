@@ -23,7 +23,7 @@ public enum PermitActEnum {
     SPEC_MGT("specMgt", "规格管理", "drinkSet"),
     TEA_TYPE_MGT("teaTypeMgt", "茶品类型管理", "drinkSet"),
     TEA_MGT("teaMgt", "茶品管理", "drinkSet"),
-    ACCURACY_MGT("accuracyMgt", "物料精度模板管理", "drinkSet"),
+    ACCURACY_TPL_MGT("accuracyTplMgt", "物料精度模板管理", "drinkSet"),
 
     // 菜单
     SERIES_MGT("seriesMgt", "系列管理", "menuSet"),
