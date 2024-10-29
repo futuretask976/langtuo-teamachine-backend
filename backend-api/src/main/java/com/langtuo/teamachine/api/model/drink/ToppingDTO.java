@@ -79,19 +79,19 @@ public class ToppingDTO implements Serializable {
     private int flowSpeed;
 
     /**
-     * 有效期预警阈值
+     * 废料预警阈值
      */
-    private int validPeriodWarningThresholdMin;
+    private int invalidWarningThresholdMin;
 
     /**
      * 清洗期预警阈值
      */
-    private int cleanPeriodWarningThresholdMin;
+    private int cleanWarningThresholdMin;
 
     /**
-     * 废料预警阈值
+     * 补料预警阈值
      */
-    private int invalidWarningThresholdG;
+    private int supplyWarningThresholdG;
 
     /**
      * 溢出允许模式，0：固定值，1：百分比

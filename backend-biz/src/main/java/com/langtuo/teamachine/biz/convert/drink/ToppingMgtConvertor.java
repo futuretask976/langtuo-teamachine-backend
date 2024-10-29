@@ -39,9 +39,9 @@ public class ToppingMgtConvertor {
         dto.setFlowSpeed(po.getFlowSpeed());
         dto.setComment(po.getComment());
 
-        dto.setValidPeriodWarningThresholdMin(po.getValidPeriodWarningThresholdMin());
-        dto.setCleanPeriodWarningThresholdMin(po.getCleanPeriodWarningThresholdMin());
-        dto.setInvalidWarningThresholdG(po.getInvalidWarningThresholdG());
+        dto.setInvalidWarningThresholdMin(po.getInvalidWarningThresholdMin());
+        dto.setCleanWarningThresholdMin(po.getCleanWarningThresholdMin());
+        dto.setSupplyWarningThresholdG(po.getSupplyWarningThresholdG());
         dto.setOverAmount(po.getOverAmount());
         dto.setOverMode(po.getOverMode());
         dto.setUnderAmount(po.getUnderAmount());
@@ -70,9 +70,9 @@ public class ToppingMgtConvertor {
         po.setComment(request.getComment());
         po.setExtraInfo(request.getExtraInfo());
 
-        po.setValidPeriodWarningThresholdMin(request.getValidPeriodWarningThresholdMin());
-        po.setCleanPeriodWarningThresholdMin(request.getCleanPeriodWarningThresholdMin());
-        po.setInvalidWarningThresholdG(request.getInvalidWarningThresholdG());
+        po.setInvalidWarningThresholdMin(request.getInvalidWarningThresholdMin());
+        po.setCleanWarningThresholdMin(request.getCleanWarningThresholdMin());
+        po.setSupplyWarningThresholdG(request.getSupplyWarningThresholdG());
         po.setOverAmount(request.getOverAmount());
         po.setOverMode(request.getOverMode());
         po.setUnderAmount(request.getUnderAmount());
