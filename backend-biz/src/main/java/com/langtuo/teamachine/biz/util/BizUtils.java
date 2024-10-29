@@ -15,12 +15,12 @@ import com.langtuo.teamachine.biz.convert.menu.SeriesMgtConvertor;
 import com.langtuo.teamachine.dao.accessor.drink.TeaAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.MenuAccessor;
 import com.langtuo.teamachine.dao.accessor.menu.SeriesAccessor;
-import com.langtuo.teamachine.dao.config.OssConfig;
 import com.langtuo.teamachine.dao.oss.OssUtils;
 import com.langtuo.teamachine.dao.po.drink.TeaPO;
 import com.langtuo.teamachine.dao.po.menu.MenuPO;
 import com.langtuo.teamachine.dao.po.menu.SeriesPO;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
+import com.langtuo.teamachine.internal.constant.AliyunConsts;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
@@ -203,7 +203,7 @@ public class BizUtils {
     public static String uploadOSS(File file) {
         String ossPath = null;
         try {
-            ossPath = OssUtils.uploadFile(file, OssConfig.OSS_MENU_PATH);
+            ossPath = OssUtils.uploadFile(file, AliyunConsts.OSS_MENU_PATH);
         } catch (FileNotFoundException e) {
             log.error("bizUtils|uploadFileToOSS|fatal|" + e.getMessage());
         }

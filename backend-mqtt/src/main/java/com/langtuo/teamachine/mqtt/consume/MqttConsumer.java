@@ -9,8 +9,8 @@ import com.alibaba.mqtt.server.config.ConsumerConfig;
 import com.alibaba.mqtt.server.model.MessageProperties;
 import com.alibaba.mqtt.server.model.StatusNotice;
 import com.google.common.collect.Maps;
+import com.langtuo.teamachine.internal.constant.AliyunConsts;
 import com.langtuo.teamachine.mqtt.threadpool.ConsumeExeService;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.consume.worker.record.*;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -82,14 +82,14 @@ public class MqttConsumer implements InitializingBean {
         ChannelConfig channelConfig = MqttUtils.getChannelConfig();
         serverConsumer = new ServerConsumer(channelConfig, new ConsumerConfig());
         serverConsumer.start();
-        serverConsumer.subscribeTopic(MqttConsts.CONSOLE_PARENT_TOPIC, new MessageListener() {
+        serverConsumer.subscribeTopic(AliyunConsts.MQTT_CONSOLE_PARENT_TOPIC, new MessageListener() {
             @Override
             public void process(String msgId, MessageProperties messageProperties, byte[] payload) {
                 String strPayload = new String(payload);
                 dispatch(strPayload);
             }
         });
-        serverConsumer.subscribeStatus(MqttConsts.GROUP_ID, new StatusListener() {
+        serverConsumer.subscribeStatus(AliyunConsts.MQTT_GROUP_ID, new StatusListener() {
             @Override
             public void process(StatusNotice statusNotice) {
                 notice(JSONObject.toJSONString(statusNotice));
@@ -100,11 +100,11 @@ public class MqttConsumer implements InitializingBean {
     private void initWorkerMap() {
         workerMap = Maps.newHashMap();
         // record 相关
-        workerMap.put(MqttConsts.BIZ_CODE_INVALID_ACT_RECORD, jsonPayload -> new InvalidActRecordWorker(jsonPayload));
-        workerMap.put(MqttConsts.BIZ_CODE_SUPPLY_ACT_RECORD, jsonPayload -> new SupplyActRecordWorker(jsonPayload));
-        workerMap.put(MqttConsts.BIZ_CODE_DRAIN_ACT_RECORD, jsonPayload -> new DrainActRecordWorker(jsonPayload));
-        workerMap.put(MqttConsts.BIZ_CODE_CLEAN_ACT_RECORD, jsonPayload -> new CleanActRecordWorker(jsonPayload));
-        workerMap.put(MqttConsts.BIZ_CODE_ORDER_ACT_RECORD, jsonPayload -> new OrderActRecordWorker(jsonPayload));
+        workerMap.put(AliyunConsts.MQTT_BIZ_CODE_INVALID_ACT_RECORD, jsonPayload -> new InvalidActRecordWorker(jsonPayload));
+        workerMap.put(AliyunConsts.MQTT_BIZ_CODE_SUPPLY_ACT_RECORD, jsonPayload -> new SupplyActRecordWorker(jsonPayload));
+        workerMap.put(AliyunConsts.MQTT_BIZ_CODE_DRAIN_ACT_RECORD, jsonPayload -> new DrainActRecordWorker(jsonPayload));
+        workerMap.put(AliyunConsts.MQTT_BIZ_CODE_CLEAN_ACT_RECORD, jsonPayload -> new CleanActRecordWorker(jsonPayload));
+        workerMap.put(AliyunConsts.MQTT_BIZ_CODE_ORDER_ACT_RECORD, jsonPayload -> new OrderActRecordWorker(jsonPayload));
     }
 
     public void notice(String payload) {
@@ -121,7 +121,7 @@ public class MqttConsumer implements InitializingBean {
         log.info("$$$$$ mqttConsumer|dispatch|entering|" + payload);
 
         JSONObject jsonPayload = JSONObject.parseObject(payload);
-        String bizCode = jsonPayload.getString(MqttConsts.RECEIVE_KEY_BIZ_CODE);
+        String bizCode = jsonPayload.getString(AliyunConsts.MQTT_RECEIVE_KEY_BIZ_CODE);
         Function<JSONObject, Runnable> function = workerMap.get(bizCode);
         if (function == null) {
             log.error("mqttConsumer|dispatch|noMatch|" + bizCode);

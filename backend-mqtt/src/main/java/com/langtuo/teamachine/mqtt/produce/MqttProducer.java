@@ -4,7 +4,7 @@ import com.alibaba.mqtt.server.ServerProducer;
 import com.alibaba.mqtt.server.callback.SendCallback;
 import com.alibaba.mqtt.server.config.ChannelConfig;
 import com.alibaba.mqtt.server.config.ProducerConfig;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.internal.constant.AliyunConsts;
 import com.langtuo.teamachine.mqtt.util.MqttUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -70,7 +70,7 @@ public class MqttProducer implements InitializingBean {
     }
 
     public void sendP2PMsgByTenant(String tenantCode, String machineCode, String payload) {
-        String topic = tenantCode + MqttConsts.TENANT_PARENT_P2P_TOPIC_POSTFIX + machineCode;
+        String topic = tenantCode + AliyunConsts.MQTT_TENANT_PARENT_P2P_TOPIC_POSTFIX + machineCode;
         try {
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new SendCallback() {
                 @Override
@@ -89,7 +89,7 @@ public class MqttProducer implements InitializingBean {
     }
 
     public void sendBroadcastMsgByTenant(String tenantCode, String payload) {
-        String topic = tenantCode + MqttConsts.TENANT_PARENT_TOPIC_POSTFIX + MqttConsts.TOPIC_SEPERATOR + "broadcast";
+        String topic = tenantCode + AliyunConsts.MQTT_TENANT_PARENT_TOPIC_POSTFIX + AliyunConsts.MQTT_TOPIC_SEPERATOR + "broadcast";
         try {
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new SendCallback() {
                 @Override

@@ -17,8 +17,8 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import com.langtuo.teamachine.dao.config.OssConfig;
 import com.langtuo.teamachine.dao.po.security.OssToken;
+import com.langtuo.teamachine.internal.constant.AliyunConsts;
 
 import java.io.*;
 import java.net.URL;
@@ -37,11 +37,11 @@ public class OSSTestor {
 
         // 创建OSSClient实例
         OssToken stsPO = OssUtils.getSTS();
-        OSS ossClient = new OSSClientBuilder().build(OssConfig.ENDPOINT,
+        OSS ossClient = new OSSClientBuilder().build(AliyunConsts.OSS_ENDPOINT,
                 stsPO.getAccessKeyId(), stsPO.getAccessKeySecret(), stsPO.getSecurityToken());
 
         try {
-            Date expiration = new Date(System.currentTimeMillis() + OssConfig.ACCESS_EXPIRATION_TIME);
+            Date expiration = new Date(System.currentTimeMillis() + AliyunConsts.OSS_ACCESS_EXPIRATION_TIME);
             URL result = ossClient.generatePresignedUrl(bucketName, objectName, expiration);
             System.out.println(result);
         } catch (OSSException oe) {
@@ -72,10 +72,10 @@ public class OSSTestor {
 
         // 创建OSSClient实例
         OssToken stsPO = OssUtils.getSTS();
-        OSS ossClient = new OSSClientBuilder().build(OssConfig.ENDPOINT,
+        OSS ossClient = new OSSClientBuilder().build(AliyunConsts.OSS_ENDPOINT,
                 stsPO.getAccessKeyId(), stsPO.getAccessKeySecret(), stsPO.getSecurityToken());
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest(OssConfig.BUCKET_NAME, objectName,
+        PutObjectRequest putObjectRequest = new PutObjectRequest(AliyunConsts.OSS_BUCKET_NAME, objectName,
                 new File("backend-dao/src/main/resources/naicha_01.jpg"));
         try {
             PutObjectResult result = ossClient.putObject(putObjectRequest);
@@ -155,12 +155,12 @@ public class OSSTestor {
     public static void createBucket() {
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OssConfig.ACCESS_KEY_ID, OssConfig.ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OssConfig.ENDPOINT, credentialsProvider);
+                AliyunConsts.RAM_ACCESS_KEY, AliyunConsts.RAM_ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(AliyunConsts.OSS_ENDPOINT, credentialsProvider);
 
         try {
             // 创建存储空间
-            Bucket bucket = ossClient.createBucket(OssConfig.BUCKET_NAME);
+            Bucket bucket = ossClient.createBucket(AliyunConsts.OSS_BUCKET_NAME);
             System.out.println("bucket created=" + bucket);
         } catch (OSSException oe) {
             System.out.println("Caught an OSSException, which means your request made it to OSS, "
@@ -191,11 +191,11 @@ public class OSSTestor {
         // 创建OSSClient实例
         OssToken OssToken = OssUtils.getSTS();
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OssConfig.ACCESS_KEY_ID, OssConfig.ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OssConfig.ENDPOINT, credentialsProvider);
+                AliyunConsts.RAM_ACCESS_KEY, AliyunConsts.RAM_ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(AliyunConsts.OSS_ENDPOINT, credentialsProvider);
 
         try {
-            PutObjectResult result = ossClient.putObject(OssConfig.BUCKET_NAME, objectName,
+            PutObjectResult result = ossClient.putObject(AliyunConsts.OSS_BUCKET_NAME, objectName,
                     new ByteArrayInputStream(readImgFile()));
             System.out.println(result);
         } catch (OSSException oe) {
@@ -249,11 +249,11 @@ public class OSSTestor {
 
         // 创建OSSClient实例
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OssConfig.ACCESS_KEY_ID, OssConfig.ACCESS_KEY_SECRET);
-        OSS ossClient = new OSSClientBuilder().build(OssConfig.ENDPOINT, credentialsProvider);
+                AliyunConsts.RAM_ACCESS_KEY, AliyunConsts.RAM_ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(AliyunConsts.OSS_ENDPOINT, credentialsProvider);
 
         try {
-            Date expiration = new Date(System.currentTimeMillis() + OssConfig.ACCESS_EXPIRATION_TIME);
+            Date expiration = new Date(System.currentTimeMillis() + AliyunConsts.OSS_ACCESS_EXPIRATION_TIME);
             URL result = ossClient.generatePresignedUrl(bucketName, objectName, expiration);
             System.out.println(result);
         } catch (OSSException oe) {
@@ -280,7 +280,7 @@ public class OSSTestor {
         String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
         // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(
-                OssConfig.ACCESS_KEY_ID, OssConfig.ACCESS_KEY_SECRET);
+                AliyunConsts.RAM_ACCESS_KEY, AliyunConsts.RAM_ACCESS_KEY_SECRET);
         // 填写Bucket名称，例如examplebucket。
         String bucketName = "miya-bucket2";
         // 填写Object完整路径，例如exampledir/exampleobject.txt。Object完整路径中不能包含Bucket名称。

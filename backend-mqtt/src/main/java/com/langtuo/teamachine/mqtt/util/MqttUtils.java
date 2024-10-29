@@ -8,7 +8,7 @@ import com.aliyun.onsmqtt20200420.models.ApplyTokenResponse;
 import com.aliyun.tea.TeaException;
 import com.aliyun.teaopenapi.models.Config;
 import com.aliyun.teautil.models.RuntimeOptions;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.internal.constant.AliyunConsts;
 import com.langtuo.teamachine.mqtt.model.MqttToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -40,11 +40,11 @@ public class MqttUtils {
         // 建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378657.html。
         Config config = new Config()
                 // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID。
-                .setAccessKeyId(MqttConsts.ACCESS_KEY)
+                .setAccessKeyId(AliyunConsts.RAM_ACCESS_KEY)
                 // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_SECRET。
-                .setAccessKeySecret(MqttConsts.ACCESS_KEY_SECRET);
+                .setAccessKeySecret(AliyunConsts.RAM_ACCESS_KEY_SECRET);
         // Endpoint 请参考 https://api.aliyun.com/product/OnsMqtt
-        config.endpoint = MqttConsts.MANAGER_ENDPOINT;
+        config.endpoint = AliyunConsts.MQTT_MANAGER_ENDPOINT;
         return new Client(config);
     }
 
@@ -60,14 +60,14 @@ public class MqttUtils {
             ApplyTokenRequest applyTokenRequest = new ApplyTokenRequest()
                     .setActions(ACTIONS)
                     .setExpireTime(System.currentTimeMillis() + 1000 * 60 * 60 * 72)
-                    .setInstanceId(MqttConsts.INSTANCE_ID)
+                    .setInstanceId(AliyunConsts.MQTT_INSTANCE_ID)
                     .setResources(resources.toString());
             RuntimeOptions runtime = new RuntimeOptions();
 
             ApplyTokenResponse resp = client.applyTokenWithOptions(applyTokenRequest, runtime);
             log.info("mqttManager|getMqttToken|succ|" + JSON.toJSONString(resp));
             MqttToken mqttToken = new MqttToken();
-            mqttToken.setAccessKey(MqttConsts.ACCESS_KEY);
+            mqttToken.setAccessKey(AliyunConsts.RAM_ACCESS_KEY);
             mqttToken.setAccessToken(resp.getBody().getToken());
             return mqttToken;
         } catch (TeaException error) {
@@ -99,19 +99,19 @@ public class MqttUtils {
     public static ChannelConfig getChannelConfig() {
         // 此处参数内容为示意。接入点地址，购买实例，且配置完成后即可获取，接入点地址必须填写分配的域名，
         // 不得使用 IP 地址直接连接，否则可能会导致客户端异常
-        String domain = MqttConsts.ENDPOINT;
+        String domain = AliyunConsts.MQTT_ENDPOINT;
 
         // 使用的协议和端口必须匹配，为5672
         int port = 5672;
 
         // 此处参数内容为示意。MQTT 实例 ID，购买后控制台获取
-        String instanceId = MqttConsts.INSTANCE_ID;
+        String instanceId = AliyunConsts.MQTT_INSTANCE_ID;
 
         // 此处参数内容为示意。账号 accesskey，从账号系统控制台获取
-        String accessKey = MqttConsts.ACCESS_KEY; // "accessKey";
+        String accessKey = AliyunConsts.RAM_ACCESS_KEY; // "accessKey";
 
         // 此处参数内容为示意。账号 secretKey，从账号系统控制台获取，仅在Signature鉴权模式下需要设置
-        String secretKey = MqttConsts.ACCESS_KEY_SECRET; // "secretKey";
+        String secretKey = AliyunConsts.RAM_ACCESS_KEY_SECRET; // "secretKey";
 
         ChannelConfig channelConfig = new ChannelConfig();
         channelConfig.setDomain(domain);

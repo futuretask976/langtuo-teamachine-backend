@@ -7,8 +7,8 @@ import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.dao.accessor.record.CleanActRecordAccessor;
 import com.langtuo.teamachine.dao.po.record.CleanActRecordPO;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
+import com.langtuo.teamachine.internal.constant.AliyunConsts;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.request.record.CleanActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.util.SpringTemplateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class CleanActRecordWorker implements Runnable {
     private TransactionTemplate transactionTemplate;
 
     public CleanActRecordWorker(JSONObject jsonPayload) {
-        JSONArray jsonList = jsonPayload.getJSONArray(MqttConsts.RECEIVE_KEY_LIST);
+        JSONArray jsonList = jsonPayload.getJSONArray(AliyunConsts.MQTT_RECEIVE_KEY_LIST);
         jsonList.forEach(jsonObject -> {
             CleanActRecordPutRequest request = TypeUtils.castToJavaBean(jsonObject, CleanActRecordPutRequest.class);
             requestList.add(request);

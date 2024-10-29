@@ -7,14 +7,11 @@ import com.langtuo.teamachine.api.utils.CollectionUtils;
 import com.langtuo.teamachine.dao.accessor.record.OrderActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.OrderSpecItemActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.OrderToppingActRecordAccessor;
-import com.langtuo.teamachine.dao.accessor.record.SupplyActRecordAccessor;
 import com.langtuo.teamachine.dao.po.record.OrderActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderSpecItemActRecordPO;
 import com.langtuo.teamachine.dao.po.record.OrderToppingActRecordPO;
-import com.langtuo.teamachine.dao.po.record.SupplyActRecordPO;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
-import com.langtuo.teamachine.internal.constant.CommonConsts;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
+import com.langtuo.teamachine.internal.constant.AliyunConsts;
 import com.langtuo.teamachine.mqtt.request.record.OrderActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.util.SpringTemplateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +44,7 @@ public class OrderActRecordWorker implements Runnable {
     }
 
     public OrderActRecordWorker(JSONObject jsonPayload) {
-        JSONArray jsonList = jsonPayload.getJSONArray(MqttConsts.RECEIVE_KEY_LIST);
+        JSONArray jsonList = jsonPayload.getJSONArray(AliyunConsts.MQTT_RECEIVE_KEY_LIST);
         jsonList.forEach(jsonObject -> {
             OrderActRecordPutRequest request = TypeUtils.castToJavaBean(jsonObject, OrderActRecordPutRequest.class);
             requestList.add(request);

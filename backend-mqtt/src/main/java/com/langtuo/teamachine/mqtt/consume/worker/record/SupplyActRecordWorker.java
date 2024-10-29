@@ -4,13 +4,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.langtuo.teamachine.api.utils.CollectionUtils;
-import com.langtuo.teamachine.dao.accessor.record.InvalidActRecordAccessor;
 import com.langtuo.teamachine.dao.accessor.record.SupplyActRecordAccessor;
-import com.langtuo.teamachine.dao.po.record.InvalidActRecordPO;
 import com.langtuo.teamachine.dao.po.record.SupplyActRecordPO;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
+import com.langtuo.teamachine.internal.constant.AliyunConsts;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
-import com.langtuo.teamachine.mqtt.constant.MqttConsts;
 import com.langtuo.teamachine.mqtt.request.record.SupplyActRecordPutRequest;
 import com.langtuo.teamachine.mqtt.util.SpringTemplateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +35,7 @@ public class SupplyActRecordWorker implements Runnable {
     private TransactionTemplate transactionTemplate;
 
     public SupplyActRecordWorker(JSONObject jsonPayload) {
-        JSONArray jsonList = jsonPayload.getJSONArray(MqttConsts.RECEIVE_KEY_LIST);
+        JSONArray jsonList = jsonPayload.getJSONArray(AliyunConsts.MQTT_RECEIVE_KEY_LIST);
         jsonList.forEach(jsonObject -> {
             SupplyActRecordPutRequest request = TypeUtils.castToJavaBean(jsonObject, SupplyActRecordPutRequest.class);
             requestList.add(request);
