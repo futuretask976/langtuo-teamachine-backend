@@ -20,10 +20,21 @@ public class OssController {
      * url: http://localhost:8080/teamachinebackend/securityset/oss/token/get?tenantCode=tenant_001&machineCode=111
      * @return
      */
-    @GetMapping(value = "/token/get")
-    public TeaMachineResult<OssTokenDTO> getOssToken(@RequestParam("tenantCode") String tenantCode,
+    @GetMapping(value = "/token/getbymachinecode")
+    public TeaMachineResult<OssTokenDTO> getOssTokenByMachineCode(@RequestParam("tenantCode") String tenantCode,
             @RequestParam("machineCode") String machineCode) {
-        TeaMachineResult<OssTokenDTO> rtn = ossService.getOssToken(tenantCode, machineCode);
+        TeaMachineResult<OssTokenDTO> rtn = ossService.getOssTokenByMachineCode(tenantCode, machineCode);
+        return rtn;
+    }
+
+    /**
+     * url: http://localhost:8080/teamachinebackend/securityset/oss/token/get?tenantCode=tenant_001&loginName=111
+     * @return
+     */
+    @GetMapping(value = "/token/getbyloginname")
+    public TeaMachineResult<OssTokenDTO> getOssTokenByLoginName(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("loginName") String loginName) {
+        TeaMachineResult<OssTokenDTO> rtn = ossService.getOssTokenByLoginName(tenantCode, loginName);
         return rtn;
     }
 }
