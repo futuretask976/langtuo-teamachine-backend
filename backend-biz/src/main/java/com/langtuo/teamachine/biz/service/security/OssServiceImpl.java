@@ -3,16 +3,35 @@ package com.langtuo.teamachine.biz.service.security;
 import com.langtuo.teamachine.api.model.security.OssTokenDTO;
 import com.langtuo.teamachine.api.result.TeaMachineResult;
 import com.langtuo.teamachine.api.service.security.OssService;
+import com.langtuo.teamachine.dao.accessor.device.MachineAccessor;
 import com.langtuo.teamachine.dao.oss.OssUtils;
+import com.langtuo.teamachine.dao.po.device.MachinePO;
 import com.langtuo.teamachine.dao.po.security.OssToken;
+import com.langtuo.teamachine.internal.constant.CommonConsts;
+import com.langtuo.teamachine.internal.constant.ErrorCodeEnum;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class OssServiceImpl implements OssService {
-    @Override
-    public TeaMachineResult<OssTokenDTO> getOssToken() {
-        OssToken po = OssUtils.getSTS();
+    @Resource
+    private MachineAccessor machineAccessor;
 
+    @Override
+    public TeaMachineResult<OssTokenDTO> getOssToken(String tenantCode, String machineCode) {
+        MachinePO machinePO = machineAccessor.getByMachineCode(tenantCode, machineCode);
+        if (machinePO == null) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
+                    ErrorCodeEnum.BIZ_ERR_ILLEGAL_ARGUMENT));
+        }
+        if (CommonConsts.STATE_DISABLED == machinePO.getState()) {
+            return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(
+                    ErrorCodeEnum.BIZ_ERR_DISABLED_MACHINE_APPLY_TOKEN));
+        }
+
+        OssToken po = OssUtils.getSTS();
         OssTokenDTO dto = new OssTokenDTO();
         dto.setRegion(po.getRegion());
         dto.setBucketName(po.getBucketName());

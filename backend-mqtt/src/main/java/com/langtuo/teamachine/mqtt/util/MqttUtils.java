@@ -18,6 +18,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
 import java.security.*;
+import java.util.Date;
 
 /**
  * @author jiaqing
@@ -55,11 +56,12 @@ public class MqttUtils {
         StringBuffer resources = new StringBuffer();
         resources.append(RESOURCES_PREFIX).append(tenantCode).append(RESOURCES_POSTFIX);
 
+        long expiration = System.currentTimeMillis() + 1000 * 60 * 60 * 72;
         try {
             Client client = createClient();
             ApplyTokenRequest applyTokenRequest = new ApplyTokenRequest()
                     .setActions(ACTIONS)
-                    .setExpireTime(System.currentTimeMillis() + 1000 * 60 * 60 * 72)
+                    .setExpireTime(expiration)
                     .setInstanceId(AliyunConsts.MQTT_INSTANCE_ID)
                     .setResources(resources.toString());
             RuntimeOptions runtime = new RuntimeOptions();
@@ -69,6 +71,7 @@ public class MqttUtils {
             MqttToken mqttToken = new MqttToken();
             mqttToken.setAccessKey(AliyunConsts.RAM_ACCESS_KEY);
             mqttToken.setAccessToken(resp.getBody().getToken());
+            mqttToken.setExpiration(new Date(expiration));
             return mqttToken;
         } catch (TeaException error) {
             log.error("mqttManager|getMqttToken|fatal|" + error.getMessage() + "|" + error.getData().get("Recommend"));

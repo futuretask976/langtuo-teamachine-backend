@@ -8,5 +8,5 @@ public interface MqttService {
      *
      * @return
      */
-    TeaMachineResult<MqttTokenDTO> getMqttToken(String tenantCode);
+    TeaMachineResult<MqttTokenDTO> getMqttToken(String tenantCode, String machineCode);
 }

@@ -8,5 +8,5 @@ public interface OssService {
      *
      * @return
      */
-    TeaMachineResult<OssTokenDTO> getOssToken();
+    TeaMachineResult<OssTokenDTO> getOssToken(String tenantCode, String machineCode);
 }

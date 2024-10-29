@@ -19,12 +19,13 @@ public class MqttController {
     private MqttService mqttService;
 
     /**
-     * url: http://localhost:8080/teamachinebackend/securityset/mqtt/token/get
+     * url: http://localhost:8080/teamachinebackend/securityset/mqtt/token/get?tenantCode=tenant_001&machineCode=111
      * @return
      */
     @GetMapping(value = "/token/get")
-    public TeaMachineResult<MqttTokenDTO> getMqttToken(@RequestParam("tenantCode") String tenantCode) {
-        TeaMachineResult<MqttTokenDTO> rtn = mqttService.getMqttToken(tenantCode);
+    public TeaMachineResult<MqttTokenDTO> getMqttToken(@RequestParam("tenantCode") String tenantCode,
+            @RequestParam("machineCode") String machineCode) {
+        TeaMachineResult<MqttTokenDTO> rtn = mqttService.getMqttToken(tenantCode, machineCode);
         return rtn;
     }
 }
