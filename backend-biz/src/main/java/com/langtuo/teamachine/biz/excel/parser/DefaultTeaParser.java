@@ -12,6 +12,7 @@ import com.langtuo.teamachine.biz.util.ExcelUtils;
 import com.langtuo.teamachine.dao.po.drink.*;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -26,6 +27,10 @@ import java.util.stream.Collectors;
 
 import static com.langtuo.teamachine.biz.convert.drink.TeaMgtConvertor.convertToSpecItemRulePutRequest;
 
+/**
+ * @author Jiaqing
+ */
+@Slf4j
 public class DefaultTeaParser implements TeaParser {
     @Override
     public XSSFWorkbook export(String tenantCode) {
@@ -122,6 +127,8 @@ public class DefaultTeaParser implements TeaParser {
         TeaPutRequest lastTeaPutRequest = null;
         TeaUnitPutRequest lastTeaUnitPutRequest = null;
         int rowIndex4Tea = CommonConsts.ROW_START_NUM_4_DATA;
+
+        long start4Parse = System.currentTimeMillis();
         while (true) {
             Row row = sheet.getRow(rowIndex4Tea);
             if (row == null) {
@@ -198,12 +205,18 @@ public class DefaultTeaParser implements TeaParser {
 
             rowIndex4Tea++;
         }
+        long end4Parse = System.currentTimeMillis();
+        log.info("defaultTeaParser|parseExcel|succ|" + (end4Parse - start4Parse));
+
+        long start4Construct = System.currentTimeMillis();
         for (TeaPutRequest teaPutRequest : teaPutRequestList) {
             // 需要构造 actStepList
             List<TeaUnitPutRequest> teaUnitList = teaPutRequest.getTeaUnitList();
             teaPutRequest.setToppingBaseRuleList(getToppingBaseRulePutRequest(teaUnitList));
             teaPutRequest.setSpecRuleList(getSpecRulePutRequestList(teaPutRequest.getTenantCode(), teaUnitList));
         }
+        long end4Construct = System.currentTimeMillis();
+        log.info("defaultTeaParser|constructRequest|succ|" + (end4Construct - start4Construct));
         return teaPutRequestList;
     }
 

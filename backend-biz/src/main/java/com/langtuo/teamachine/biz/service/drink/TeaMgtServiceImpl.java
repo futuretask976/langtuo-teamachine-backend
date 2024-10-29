@@ -279,10 +279,13 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 .upload(tenantCode, workbook);
 
         for (TeaPutRequest teaPutRequest : teaPutRequestList) {
+            long start4InsertSingle = System.currentTimeMillis();
             TeaMachineResult<Void> result = this.put(teaPutRequest);
             if (!result.isSuccess()) {
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
+            long end4InsertSingle = System.currentTimeMillis();
+            log.info("teaMgtServiceImpl|insertSingle|succ|" + (end4InsertSingle - start4InsertSingle));
         }
         return TeaMachineResult.success();
     }

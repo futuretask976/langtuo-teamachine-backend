@@ -38,3 +38,8 @@ out/
 
 # Maven
 target/
+
+# Test
+dispatch/
+logs/
+test/
