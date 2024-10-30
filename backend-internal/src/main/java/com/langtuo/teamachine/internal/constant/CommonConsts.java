@@ -114,31 +114,28 @@ public class CommonConsts {
     public static final int TITLE_TEA_CODE_INDEX = 0;
     public static final String TITLE_TEA_NAME = "menuExportTitleTeaName";
     public static final int TITLE_TEA_NAME_INDEX = 1;
-    public static final String TITLE_OUTER_TEA_CODE = "menuExportTitleOuterTeaCode";
-    public static final int TITLE_OUTER_TEA_CODE_INDEX = 2;
     public static final String TITLE_STATE = "menuExportTitleState";
-    public static final int TITLE_STATE_INDEX = 3;
+    public static final int TITLE_STATE_INDEX = 2;
     public static final String TITLE_TEA_TYPE_CODE = "menuExportTitleTeaTypeCode";
-    public static final int TITLE_TEA_TYPE_CODE_INDEX = 4;
+    public static final int TITLE_TEA_TYPE_CODE_INDEX = 3;
     public static final String TITLE_IMG_LINK = "menuExportTitleImgLink";
-    public static final int TITLE_IMG_LINK_INDEX = 5;
+    public static final int TITLE_IMG_LINK_INDEX = 4;
     public static final String TITLE_TEA_UNIT_NAME = "menuExportTitleTeaUnitName";
-    public static final int TITLE_TEA_UNIT_NAME_INDEX = 6;
+    public static final int TITLE_TEA_UNIT_NAME_INDEX = 5;
     public static final String TITLE_STEP_INDEX = "menuExportTitleStepIndex";
-    public static final int TITLE_STEP_INDEX_INDEX = 7;
-    public static final String TITLE_TOPPING_CODE = "物料编码";
-    public static final int TITLE_TOPPING_CODE_INDEX = 8;
-    public static final String TITLE_TOPPING_NAME = "menuExportTitleToppingCode";
-    public static final int TITLE_TOPPING_NAME_INDEX = 9;
+    public static final int TITLE_STEP_INDEX_INDEX = 6;
+    public static final String TITLE_TOPPING_CODE = "menuExportTitleToppingCode";
+    public static final int TITLE_TOPPING_CODE_INDEX = 7;
+    public static final String TITLE_TOPPING_NAME = "menuExportTitleToppingName";
+    public static final int TITLE_TOPPING_NAME_INDEX = 8;
     public static final String TITLE_ACTUAL_AMOUNT = "menuExportTitleActualAmount";
-    public static final int TITLE_ACTUAL_AMOUNT_INDEX = 10;
+    public static final int TITLE_ACTUAL_AMOUNT_INDEX = 9;
     /**
      * 茶品导出 - 标题行
      */
     public static List<String> TITLE_LIST_4_TEA_EXPORT = Lists.newArrayList(
             TITLE_TEA_CODE,
             TITLE_TEA_NAME,
-            TITLE_OUTER_TEA_CODE,
             TITLE_STATE,
             TITLE_TEA_TYPE_CODE,
             TITLE_IMG_LINK,
@@ -158,11 +155,11 @@ public class CommonConsts {
     /**
      * 茶品 - 规格部分起始列num
      */
-    public static final int COL_START_NUM_4_TEA_UNIT = 6;
+    public static final int COL_START_NUM_4_TEA_UNIT = 5;
     /**
      * 茶品 - 调整规则部分起始列num
      */
-    public static final int COL_START_NUM_4_ADJUST_RULE = 7;
+    public static final int COL_START_NUM_4_ADJUST_RULE = 6;
 
     /**
      * 部署导出 - sheet名称

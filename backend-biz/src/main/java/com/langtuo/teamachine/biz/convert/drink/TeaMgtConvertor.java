@@ -41,7 +41,6 @@ public class TeaMgtConvertor {
         dto.setTeaName(po.getTeaName());
         dto.setState(po.getState());
         dto.setTeaTypeCode(po.getTeaTypeCode());
-        dto.setOuterTeaCode(po.getOuterTeaCode());
         dto.setComment(po.getComment());
         dto.setExtraInfo(po.getExtraInfo());
         dto.setImgLink(po.getImgLink());
@@ -88,7 +87,6 @@ public class TeaMgtConvertor {
         TeaPO po = new TeaPO();
         po.setTeaCode(request.getTeaCode());
         po.setTeaName(request.getTeaName());
-        po.setOuterTeaCode(request.getOuterTeaCode());
         po.setState(request.getState());
         po.setTeaTypeCode(request.getTeaTypeCode());
         po.setComment(request.getComment());

@@ -11,7 +11,6 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="teaCode" column="tea_code"/>
         <result property="teaName" column="tea_name"/>
-        <result property="outerTeaCode" column="outer_tea_code"/>
         <result property="state" column="state"/>
         <result property="teaTypeCode" column="tea_type_code"/>
         <result property="imgLink" column="img_link"/>
@@ -62,7 +61,6 @@
             , gmt_modified
             , tea_code
             , tea_name
-            , outer_tea_code
             , state
             , tea_type_code
             , img_link
@@ -74,7 +72,6 @@
             , now()
             , #{teaCode}
             , #{teaName}
-            , #{outerTeaCode}
             , #{state}
             , #{teaTypeCode}
             , #{imgLink}
@@ -90,9 +87,6 @@
             gmt_modified = now()
             <if test="teaName != null">
                 , tea_name = #{teaName}
-            </if>
-            <if test="outerTeaCode != null">
-                , outer_tea_code = #{outerTeaCode}
             </if>
             <if test="state != null">
                 , state = #{state}

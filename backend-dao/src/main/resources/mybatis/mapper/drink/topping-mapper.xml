@@ -150,7 +150,7 @@
             <if test="cleanWarningThresholdMin != null">
                 , clean_warning_threshold_min = #{cleanWarningThresholdMin}
             </if>
-            <if test="supplyWarningThresholdG != null">
+            <if test="supplyWarningThreshold != null">
                 , supply_warning_threshold = #{supplyWarningThreshold}
             </if>
             <if test="overMode != null">

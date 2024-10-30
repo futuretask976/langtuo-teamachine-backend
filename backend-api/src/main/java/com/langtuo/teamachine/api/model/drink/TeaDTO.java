@@ -40,11 +40,6 @@ public class TeaDTO implements Serializable {
     private String teaName;
 
     /**
-     * 外部茶编码
-     */
-    private String outerTeaCode;
-
-    /**
      * 状态，0：禁用，1：启用
      */
     private int state;

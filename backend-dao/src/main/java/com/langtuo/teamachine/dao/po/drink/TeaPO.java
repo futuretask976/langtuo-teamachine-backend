@@ -48,11 +48,6 @@ public class TeaPO {
     private String teaName;
 
     /**
-     * 外部茶品编码
-     */
-    private String outerTeaCode;
-
-    /**
      * 状态，0：禁用，1：启用
      */
     private int state;

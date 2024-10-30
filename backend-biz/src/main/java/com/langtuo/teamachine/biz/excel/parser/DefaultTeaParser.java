@@ -12,6 +12,7 @@ import com.langtuo.teamachine.biz.util.ExcelUtils;
 import com.langtuo.teamachine.dao.po.drink.*;
 import com.langtuo.teamachine.dao.util.SpringAccessorUtils;
 import com.langtuo.teamachine.internal.constant.CommonConsts;
+import com.langtuo.teamachine.internal.util.LocaleUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -46,7 +47,7 @@ public class DefaultTeaParser implements TeaParser {
         // 创建单元格并设置值
         for (int i = 0; i < CommonConsts.TITLE_LIST_4_TEA_EXPORT.size(); i++) {
             Cell cell = row.createCell(i);
-            cell.setCellValue(CommonConsts.TITLE_LIST_4_TEA_EXPORT.get(i));
+            cell.setCellValue(LocaleUtils.getLang(CommonConsts.TITLE_LIST_4_TEA_EXPORT.get(i)));
         }
 
         int rowStartIndex4Tea = CommonConsts.ROW_START_NUM_4_TEA;
@@ -64,10 +65,6 @@ public class DefaultTeaParser implements TeaParser {
             Cell cell4TeaName = dataRow.createCell(columnNum++);
             cell4TeaName.setCellValue(teaInfoPart.getTeaName());
             addMergedRegion4RowRange(sheet, cell4TeaName, size4AdjustRuleList);
-            // 添加外部茶品编码
-            Cell cell4OuterTeaCode = dataRow.createCell(columnNum++);
-            cell4OuterTeaCode.setCellValue(teaInfoPart.getOuterTeaCode());
-            addMergedRegion4RowRange(sheet, cell4OuterTeaCode, size4AdjustRuleList);
             // 添加茶品状态
             Cell cell4State = dataRow.createCell(columnNum++);
             cell4State.setCellValue(teaInfoPart.getState() == CommonConsts.STATE_DISABLED
@@ -150,10 +147,6 @@ public class DefaultTeaParser implements TeaParser {
                 Cell cell4TeaName = row.getCell(CommonConsts.TITLE_TEA_NAME_INDEX);
                 String teaName = cell4TeaName.getStringCellValue();
                 lastTeaPutRequest.setTeaName(teaName);
-                // 设置外部茶品编码
-                Cell cell4OuterTeaName = row.getCell(CommonConsts.TITLE_OUTER_TEA_CODE_INDEX);
-                String outerTeaCode = cell4OuterTeaName.getStringCellValue();
-                lastTeaPutRequest.setOuterTeaCode(outerTeaCode);
                 // 设置状态
                 Cell cell4State = row.getCell(CommonConsts.TITLE_STATE_INDEX);
                 String state = cell4State.getStringCellValue();
@@ -388,7 +381,6 @@ public class DefaultTeaParser implements TeaParser {
         teaInfoPart.setTeaCode(teaPO.getTeaCode());
         teaInfoPart.setTeaName(teaPO.getTeaName());
         teaInfoPart.setTeaTypeCode(teaPO.getTeaTypeCode());
-        teaInfoPart.setOuterTeaCode(teaPO.getOuterTeaCode());
         teaInfoPart.setImgLink(teaPO.getImgLink());
         teaInfoPart.setState(teaPO.getState());
         return teaInfoPart;
