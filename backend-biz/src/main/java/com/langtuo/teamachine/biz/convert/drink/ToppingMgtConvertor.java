@@ -31,7 +31,6 @@ public class ToppingMgtConvertor {
         dto.setToppingTypeCode(po.getToppingTypeCode());
         dto.setToppingCode(po.getToppingCode());
         dto.setToppingName(po.getToppingName());
-        dto.setState(po.getState());
         dto.setValidPeriodHour(po.getValidPeriodHour());
         dto.setCleanPeriodHour(po.getCleanPeriodHour());
         dto.setMeasureUnit(po.getMeasureUnit());
@@ -41,7 +40,7 @@ public class ToppingMgtConvertor {
 
         dto.setInvalidWarningThresholdMin(po.getInvalidWarningThresholdMin());
         dto.setCleanWarningThresholdMin(po.getCleanWarningThresholdMin());
-        dto.setSupplyWarningThresholdG(po.getSupplyWarningThresholdG());
+        dto.setSupplyWarningThreshold(po.getSupplyWarningThreshold());
         dto.setOverAmount(po.getOverAmount());
         dto.setOverMode(po.getOverMode());
         dto.setUnderAmount(po.getUnderAmount());
@@ -60,7 +59,6 @@ public class ToppingMgtConvertor {
         po.setToppingTypeCode(request.getToppingTypeCode());
         po.setToppingName(request.getToppingName());
         po.setToppingCode(request.getToppingCode());
-        po.setState(request.getState());
         po.setValidPeriodHour(request.getValidPeriodHour());
         po.setCleanPeriodHour(request.getCleanPeriodHour());
         po.setMeasureUnit(request.getMeasureUnit());
@@ -72,7 +70,7 @@ public class ToppingMgtConvertor {
 
         po.setInvalidWarningThresholdMin(request.getInvalidWarningThresholdMin());
         po.setCleanWarningThresholdMin(request.getCleanWarningThresholdMin());
-        po.setSupplyWarningThresholdG(request.getSupplyWarningThresholdG());
+        po.setSupplyWarningThreshold(request.getSupplyWarningThreshold());
         po.setOverAmount(request.getOverAmount());
         po.setOverMode(request.getOverMode());
         po.setUnderAmount(request.getUnderAmount());

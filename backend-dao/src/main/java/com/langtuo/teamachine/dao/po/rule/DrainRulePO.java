@@ -44,11 +44,6 @@ public class DrainRulePO {
     private String drainRuleName;
 
     /**
-     * 是否默认规则，0：不是，1：是
-     */
-    private int defaultRule;
-
-    /**
      * 包括物料列表
      */
     private List<DrainRuleToppingPO> toppingRuleList;

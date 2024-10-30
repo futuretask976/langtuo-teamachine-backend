@@ -54,11 +54,6 @@ public class ToppingDTO implements Serializable {
     private int measureUnit;
 
     /**
-     * 状态，0：禁用，1：启用
-     */
-    private int state;
-
-    /**
      * 有效周期
      */
     private int validPeriodHour;
@@ -91,7 +86,7 @@ public class ToppingDTO implements Serializable {
     /**
      * 补料预警阈值
      */
-    private int supplyWarningThresholdG;
+    private int supplyWarningThreshold;
 
     /**
      * 溢出允许模式，0：固定值，1：百分比

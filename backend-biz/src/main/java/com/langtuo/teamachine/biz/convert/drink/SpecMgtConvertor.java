@@ -64,7 +64,6 @@ public class SpecMgtConvertor {
         dto.setSpecCode(po.getSpecCode());
         dto.setSpecItemCode(po.getSpecItemCode());
         dto.setSpecItemName(po.getSpecItemName());
-        dto.setOuterSpecItemCode(po.getOuterSpecItemCode());
         return dto;
     }
 
@@ -95,7 +94,6 @@ public class SpecMgtConvertor {
                     po.setSpecCode(specPutRequest.getSpecCode());
                     po.setSpecItemCode(item.getSpecItemCode());
                     po.setSpecItemName(item.getSpecItemName());
-                    po.setOuterSpecItemCode(item.getOuterSpecItemCode());
                     return po;
                 }).collect(Collectors.toList());
         return specItemPOList;

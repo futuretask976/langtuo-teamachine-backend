@@ -40,19 +40,9 @@ public class DrainRuleDTO implements Serializable {
     private String drainRuleName;
 
     /**
-     * 是否允许提醒，0：不允许，1：允许
-     */
-    private int defaultRule;
-
-    /**
      * 排除时间
      */
     private int flushTime;
-
-    /**
-     * 排出重量
-     */
-    private int flushWeight;
 
     /**
      * 包括物料列表

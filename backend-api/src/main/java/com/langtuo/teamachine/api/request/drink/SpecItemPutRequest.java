@@ -16,11 +16,6 @@ public class SpecItemPutRequest {
     private String specItemName;
 
     /**
-     * 外部规格项编码
-     */
-    private String outerSpecItemCode;
-
-    /**
      * 参数校验
      * @return
      */
@@ -29,9 +24,6 @@ public class SpecItemPutRequest {
             return false;
         }
         if (!RegexUtils.isValidName(specItemName, true)) {
-            return false;
-        }
-        if (!RegexUtils.isValidCode(outerSpecItemCode, true)) {
             return false;
         }
         return true;

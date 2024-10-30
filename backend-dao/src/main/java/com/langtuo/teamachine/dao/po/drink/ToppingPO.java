@@ -58,11 +58,6 @@ public class ToppingPO {
     private int measureUnit;
 
     /**
-     * 状态，0：禁用，1：启用
-     */
-    private int state;
-
-    /**
      * 有效周期（单位：小时）
      */
     private int validPeriodHour;
@@ -95,7 +90,7 @@ public class ToppingPO {
     /**
      * 补料预警阈值
      */
-    private int supplyWarningThresholdG;
+    private int supplyWarningThreshold;
 
     /**
      * 溢出允许模式，0：固定值，1：百分比

@@ -21,7 +21,6 @@
         <result property="pipelineNum" column="pipeline_num"/>
         <result property="drainType" column="drain_type"/>
         <result property="drainRuleCode" column="drain_rule_code"/>
-        <result property="flushWeight" column="flush_weight"/>
         <result property="flushSec" column="flush_sec"/>
     </resultMap>
 
@@ -74,7 +73,6 @@
             , pipeline_num
             , drain_type
             , drain_rule_code
-            , flush_weight
             , flush_sec
         ) VALUES (
             now()
@@ -91,7 +89,6 @@
             , #{pipelineNum}
             , #{drainType}
             , #{drainRuleCode}
-            , #{flushWeight}
             , #{flushSec}
         )
     </insert>

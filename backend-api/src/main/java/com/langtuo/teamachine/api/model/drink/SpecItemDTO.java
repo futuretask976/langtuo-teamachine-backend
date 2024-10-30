@@ -20,9 +20,4 @@ public class SpecItemDTO implements Serializable {
      * 规格项名称
      */
     private String specItemName;
-
-    /**
-     * 外部规格项编码
-     */
-    private String outerSpecItemCode;
 }

@@ -16,11 +16,6 @@ public class DrainRuleToppingPutRequest {
     private int flushSec;
 
     /**
-     * 排空重量
-     */
-    private int flushWeight;
-
-    /**
      *
      * @return
      */
@@ -29,9 +24,6 @@ public class DrainRuleToppingPutRequest {
             return false;
         }
         if (flushSec <= 0) {
-            return false;
-        }
-        if (flushWeight <= 0) {
             return false;
         }
         return true;

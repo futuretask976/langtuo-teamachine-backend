@@ -12,7 +12,6 @@
         <result property="specCode" column="spec_code"/>
         <result property="specItemCode" column="spec_item_code"/>
         <result property="specItemName" column="spec_item_name"/>
-        <result property="outerSpecItemCode" column="outer_spec_item_code"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
@@ -44,7 +43,6 @@
             , spec_code
             , spec_item_code
             , spec_item_name
-            , outer_spec_item_code
             , tenant_code
         ) VALUES (
             now()
@@ -52,7 +50,6 @@
             , #{specCode}
             , #{specItemCode}
             , #{specItemName}
-            , #{outerSpecItemCode}
             , #{tenantCode}
         )
     </insert>
@@ -66,9 +63,6 @@
         </if>
         <if test="specItemName != null">
             , spec_item_name = #{specItemName}
-        </if>
-        <if test="outerSpecItemCode != null">
-            , outer_spec_item_code = #{outerSpecItemCode}
         </if>
         WHERE 1 = 1
             AND tenant_code = #{tenantCode}

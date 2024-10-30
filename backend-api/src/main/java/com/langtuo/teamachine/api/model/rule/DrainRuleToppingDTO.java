@@ -30,9 +30,4 @@ public class DrainRuleToppingDTO implements Serializable {
      * 排空时间（单位：秒）
      */
     private int flushSec;
-
-    /**
-     * 排空重量
-     */
-    private int flushWeight;
 }

@@ -12,7 +12,6 @@
         <result property="drainRuleCode" column="drain_rule_code"/>
         <result property="toppingCode" column="topping_code"/>
         <result property="flushSec" column="flush_sec"/>
-        <result property="flushWeight" column="flush_weight"/>
         <result property="tenantCode" column="tenant_code"/>
     </resultMap>
 
@@ -30,7 +29,6 @@
             , drain_rule_code
             , topping_code
             , flush_sec
-            , flush_weight
             , tenant_code
         ) VALUES (
             now()
@@ -38,7 +36,6 @@
             , #{drainRuleCode}
             , #{toppingCode}
             , #{flushSec}
-            , #{flushWeight}
             , #{tenantCode}
         )
     </insert>

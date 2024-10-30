@@ -35,7 +35,6 @@ public class DrainActRecordTestor {
         request.setDrainType(1);
         request.setDrainRuleCode("123");
         request.setFlushSec(30);
-        request.setFlushWeight(40);
         // mapper.insert(convert(request));
 
         JSONArray jsonArray = new JSONArray();
@@ -85,7 +84,6 @@ public class DrainActRecordTestor {
         po.setDrainType(request.getDrainType());
         po.setDrainRuleCode(request.getDrainRuleCode());
         po.setFlushSec(request.getFlushSec());
-        po.setFlushWeight(request.getFlushWeight());
         return po;
     }
 }

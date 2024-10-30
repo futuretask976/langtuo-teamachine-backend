@@ -45,7 +45,6 @@ public class DrainActRecordMgtConvertor {
         dto.setDrainType(po.getDrainType());
         dto.setDrainRuleCode(po.getDrainRuleCode());
         dto.setFlushSec(po.getFlushSec());
-        dto.setFlushWeight(po.getFlushWeight());
 
         if (fillDetail) {
             ToppingAccessor toppingAccessor = SpringAccessorUtils.getToppingAccessor();

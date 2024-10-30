@@ -102,7 +102,6 @@ public class DrainActRecordWorker implements Runnable {
         po.setDrainType(request.getDrainType());
         po.setDrainRuleCode(request.getDrainRuleCode());
         po.setFlushSec(request.getFlushSec());
-        po.setFlushWeight(request.getFlushWeight());
         return po;
     }
 }

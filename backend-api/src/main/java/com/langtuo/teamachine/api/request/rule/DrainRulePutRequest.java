@@ -30,11 +30,6 @@ public class DrainRulePutRequest {
     private String drainRuleName;
 
     /**
-     * 是否允许提醒，0：不允许，1：允许
-     */
-    private int defaultRule;
-
-    /**
      * 包括物料列表
      */
     private List<DrainRuleToppingPutRequest> toppingRuleList;

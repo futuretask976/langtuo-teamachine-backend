@@ -77,11 +77,6 @@ public class DrainActRecordPutRequest {
     private int flushSec;
 
     /**
-     * 排空重量
-     */
-    private int flushWeight;
-
-    /**
      *
      * @return
      */

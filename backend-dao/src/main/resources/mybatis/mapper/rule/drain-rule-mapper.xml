@@ -11,7 +11,6 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="drainRuleCode" column="drain_rule_code"/>
         <result property="drainRuleName" column="drain_rule_name"/>
-        <result property="defaultRule" column="default_rule"/>
         <result property="tenantCode" column="tenant_code"/>
         <result property="extraInfo" column="extra_info" typeHandler="com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler" jdbcType="VARCHAR" />
     </resultMap>
@@ -55,7 +54,6 @@
             , gmt_modified
             , drain_rule_code
             , drain_rule_name
-            , default_rule
             , tenant_code
             , extra_info
         ) VALUES (
@@ -63,7 +61,6 @@
             , now()
             , #{drainRuleCode}
             , #{drainRuleName}
-            , #{defaultRule}
             , #{tenantCode}
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
         )
@@ -75,9 +72,6 @@
             gmt_modified = now()
             <if test="drainRuleName != null">
                 , drain_rule_name = #{drainRuleName}
-            </if>
-            <if test="defaultRule != null">
-                , default_rule = #{defaultRule}
             </if>
             <if test="extraInfo != null">
                 , extra_info = #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}

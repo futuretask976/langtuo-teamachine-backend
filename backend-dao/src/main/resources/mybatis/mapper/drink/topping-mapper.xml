@@ -13,7 +13,6 @@
         <result property="toppingName" column="topping_name"/>
         <result property="toppingTypeCode" column="topping_type_code"/>
         <result property="measureUnit" column="measure_unit"/>
-        <result property="state" column="state"/>
         <result property="validPeriodHour" column="valid_period_hour"/>
         <result property="cleanPeriodHour" column="clean_period_hour"/>
         <result property="convertCoefficient" column="convert_coefficient"/>
@@ -22,7 +21,7 @@
 
         <result property="invalidWarningThresholdMin" column="invalid_warning_threshold_min"/>
         <result property="cleanWarningThresholdMin" column="clean_warning_threshold_min"/>
-        <result property="supplyWarningThresholdG" column="supply_warning_threshold_g"/>
+        <result property="supplyWarningThreshold" column="supply_warning_threshold"/>
         <result property="overAmount" column="over_amount"/>
         <result property="overMode" column="over_mode"/>
         <result property="underAmount" column="under_amount"/>
@@ -76,7 +75,6 @@
             , topping_name
             , topping_type_code
             , measure_unit
-            , state
             , valid_period_hour
             , clean_period_hour
             , convert_coefficient
@@ -86,7 +84,7 @@
             , extra_info
             , invalid_warning_threshold_min
             , clean_warning_threshold_min
-            , supply_warning_threshold_g
+            , supply_warning_threshold
             , over_amount
             , over_mode
             , under_amount
@@ -98,7 +96,6 @@
             , #{toppingName}
             , #{toppingTypeCode}
             , #{measureUnit}
-            , #{state}
             , #{validPeriodHour}
             , #{cleanPeriodHour}
             , #{convertCoefficient}
@@ -108,7 +105,7 @@
             , #{extraInfo, jdbcType=VARCHAR, typeHandler=com.langtuo.teamachine.dao.typehandler.MapStringTypeHandler}
             , #{invalidWarningThresholdMin}
             , #{cleanWarningThresholdMin}
-            , #{supplyWarningThresholdG}
+            , #{supplyWarningThreshold}
             , #{overAmount}
             , #{overMode}
             , #{underAmount}
@@ -128,9 +125,6 @@
             </if>
             <if test="measureUnit != null">
                 , measure_unit = #{measureUnit}
-            </if>
-            <if test="state != null">
-                , state = #{state}
             </if>
             <if test="validPeriodHour != null">
                 , valid_period_hour = #{validPeriodHour}
@@ -157,7 +151,7 @@
                 , clean_warning_threshold_min = #{cleanWarningThresholdMin}
             </if>
             <if test="supplyWarningThresholdG != null">
-                , supply_warning_threshold_g = #{supplyWarningThresholdG}
+                , supply_warning_threshold = #{supplyWarningThreshold}
             </if>
             <if test="overMode != null">
                 , over_mode = #{overMode}

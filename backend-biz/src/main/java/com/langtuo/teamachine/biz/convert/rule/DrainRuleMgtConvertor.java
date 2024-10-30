@@ -39,7 +39,6 @@ public class DrainRuleMgtConvertor {
         dto.setExtraInfo(po.getExtraInfo());
         dto.setDrainRuleCode(po.getDrainRuleCode());
         dto.setDrainRuleName(po.getDrainRuleName());
-        dto.setDefaultRule(po.getDefaultRule());
 
         DrainRuleToppingAccessor drainRuleToppingAccessor = SpringAccessorUtils.getDrainRuleToppingAccessor();
         List<DrainRuleToppingPO> poList = drainRuleToppingAccessor.listByDrainRuleCode(
@@ -62,7 +61,6 @@ public class DrainRuleMgtConvertor {
                     dto.setDrainRuleCode(po.getDrainRuleCode());
                     dto.setToppingCode(po.getToppingCode());
                     dto.setFlushSec(po.getFlushSec());
-                    dto.setFlushWeight(po.getFlushWeight());
 
                     ToppingAccessor toppingAccessor = SpringAccessorUtils.getToppingAccessor();
                     ToppingPO toppingPO = toppingAccessor.getByToppingCode(
@@ -86,7 +84,6 @@ public class DrainRuleMgtConvertor {
         po.setExtraInfo(request.getExtraInfo());
         po.setDrainRuleCode(request.getDrainRuleCode());
         po.setDrainRuleName(request.getDrainRuleName());
-        po.setDefaultRule(request.getDefaultRule());
         return po;
     }
 
@@ -103,7 +100,6 @@ public class DrainRuleMgtConvertor {
                     po.setDrainRuleCode(request.getDrainRuleCode());
                     po.setToppingCode(openRuleToppingPutRequest.getToppingCode());
                     po.setFlushSec(openRuleToppingPutRequest.getFlushSec());
-                    po.setFlushWeight(openRuleToppingPutRequest.getFlushWeight());
                     return po;
                 }).collect(Collectors.toList());
         return list;
