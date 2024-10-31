@@ -136,7 +136,6 @@ public class MqttConsumer implements InitializingBean {
             ConsumeExeService.getExeService().submit(function.apply(jsonPayload));
         } catch (Exception e) {
             log.error("mqttConsumer|dispatch|fatal|" + e.getMessage() + "|" + payload);
-            return;
         }
     }
 }
