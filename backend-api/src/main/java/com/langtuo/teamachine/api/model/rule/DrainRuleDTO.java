@@ -40,11 +40,6 @@ public class DrainRuleDTO implements Serializable {
     private String drainRuleName;
 
     /**
-     * 排除时间
-     */
-    private int flushTime;
-
-    /**
      * 包括物料列表
      */
     private List<DrainRuleToppingDTO> toppingRuleList;

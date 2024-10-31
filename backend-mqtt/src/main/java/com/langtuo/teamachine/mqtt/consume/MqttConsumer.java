@@ -116,15 +116,21 @@ public class MqttConsumer implements InitializingBean {
 
     public void dispatch(String payload) {
         if (StringUtils.isBlank(payload)) {
+            log.error("mqttConsumer|dispatch|payloadEmpty|" + payload);
             return;
         }
         log.info("$$$$$ mqttConsumer|dispatch|entering|" + payload);
 
         JSONObject jsonPayload = JSONObject.parseObject(payload);
         String bizCode = jsonPayload.getString(AliyunConsts.MQTT_RECEIVE_KEY_BIZ_CODE);
+        if (StringUtils.isBlank(bizCode)) {
+            log.error("mqttConsumer|dispatch|bizCodeEmpty|" + bizCode);
+            return;
+        }
         Function<JSONObject, Runnable> function = workerMap.get(bizCode);
         if (function == null) {
             log.error("mqttConsumer|dispatch|noMatch|" + bizCode);
+            return;
         }
         ConsumeExeService.getExeService().submit(function.apply(jsonPayload));
     }
