@@ -36,7 +36,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
             DrainActRecordPO po = drainActRecordAccessor.getByIdempotentMark(tenantCode, idempotentMark);
             return TeaMachineResult.success(convertToDrainActRecordDTO(po, true));
         } catch (Exception e) {
-            log.error("drainActRecordMgtService|get|fatal|" + e.getMessage(), e);
+            log.error("|drainActRecordMgtService|get|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -71,7 +71,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
                         pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
-            log.error("drainActRecordMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|drainActRecordMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -87,7 +87,7 @@ public class DrainActRecordMgtServiceImpl implements DrainActRecordMgtService {
             int deleted = drainActRecordAccessor.delete(tenantCode, idempotentMark);
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("drainActRecordMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|drainActRecordMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }

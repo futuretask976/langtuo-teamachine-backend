@@ -62,7 +62,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             TeaDTO dto = convertToTeaDTO(po, true);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("teaMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|teaMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -75,7 +75,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             List<TeaDTO> teaDTOList = convertToTeaDTO(teaPOList, false);
             return TeaMachineResult.success(teaDTOList);
         } catch (Exception e) {
-            log.error("teaMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|teaMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -94,7 +94,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("teaMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|teaMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -123,7 +123,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                         toppingAdjustRulePOList);
             }
         } catch (Exception e) {
-            log.error("teaMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|teaMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -134,12 +134,12 @@ public class TeaMgtServiceImpl implements TeaMgtService {
             List<ToppingAdjustRulePO> toppingAdjustRulePOList) {
         int deleted4Tea = teaAccessor.deleteByTeaCode(teaPO.getTenantCode(), teaPO.getTeaCode());
         if (CommonConsts.DB_DELETED_ONE_ROW != deleted4Tea) {
-            log.error("teaMgtService|doPutImport|deleteTeaError|" + deleted4Tea);
+            log.error("|teaMgtService|doPutImport|deleteTeaError|" + deleted4Tea);
         }
 
         int inserted4Tea = teaAccessor.insert(teaPO);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Tea) {
-            log.error("teaMgtService|doPutImport|insertTeaError|" + inserted4Tea);
+            log.error("|teaMgtService|doPutImport|insertTeaError|" + inserted4Tea);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -159,7 +159,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
         int inserted4Tea = teaAccessor.insert(teaPO);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Tea) {
-            log.error("teaMgtService|putNewTea|error|" + inserted4Tea);
+            log.error("|teaMgtService|putNewTea|error|" + inserted4Tea);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -179,7 +179,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
 
         int updated4Tea = teaAccessor.update(teaPO);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated4Tea) {
-            log.error("teaMgtService|putUpdateTea|error|" + JSONObject.toJSONString(teaPO));
+            log.error("|teaMgtService|putUpdateTea|error|" + JSONObject.toJSONString(teaPO));
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -195,7 +195,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         for (ToppingBaseRulePO toppingBaseRulePO : toppingBaseRulePOList) {
             int inserted4ToppingBaseRule = toppingBaseRuleAccessor.insert(toppingBaseRulePO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4ToppingBaseRule) {
-                log.error("teaMgtService|updateToppingBaseRule|error|" +
+                log.error("|teaMgtService|updateToppingBaseRule|error|" +
                         JSONObject.toJSONString(toppingBaseRulePO));
             }
         }
@@ -204,7 +204,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         for (SpecItemRulePO specItemRulePO : specItemRulePOList) {
             int inserted4TeaSpecItem = specItemRuleAccessor.insert(specItemRulePO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4TeaSpecItem) {
-                log.error("teaMgtService|updateTeaSpecItem|error|" + JSONObject.toJSONString(specItemRulePO));
+                log.error("|teaMgtService|updateTeaSpecItem|error|" + JSONObject.toJSONString(specItemRulePO));
             }
         }
 
@@ -212,7 +212,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         for (TeaUnitPO teaUnitPO : teaUnitPOList) {
             int inserted4TeaUnit = teaUnitAccessor.insert(teaUnitPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4TeaUnit) {
-                log.error("teaMgtService|updateTeaUnit|error|" + JSONObject.toJSONString(teaUnitPO));
+                log.error("|teaMgtService|updateTeaUnit|error|" + JSONObject.toJSONString(teaUnitPO));
             }
         }
 
@@ -220,7 +220,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         for (ToppingAdjustRulePO toppingAdjustRulePO : toppingAdjustRulePOList) {
             int inserted4ToppingAdjustRule = toppingAdjustRuleAccessor.insert(toppingAdjustRulePO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4ToppingAdjustRule) {
-                log.error("teaMgtService|updateToppingAdjustRule|error|" +
+                log.error("|teaMgtService|updateToppingAdjustRule|error|" +
                         JSONObject.toJSONString(toppingAdjustRulePO));
             }
         }
@@ -237,7 +237,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
         try {
             return doDeleteByTeaCode(tenantCode, teaCode);
         } catch (Exception e) {
-            log.error("teaMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|teaMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -285,7 +285,7 @@ public class TeaMgtServiceImpl implements TeaMgtService {
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
             long end4InsertSingle = System.currentTimeMillis();
-            log.info("teaMgtServiceImpl|insertSingle|succ|" + (end4InsertSingle - start4InsertSingle));
+            log.info("|teaMgtServiceImpl|insertSingle|succ|" + (end4InsertSingle - start4InsertSingle) + "|");
         }
         return TeaMachineResult.success();
     }

@@ -45,7 +45,7 @@ public class SupplyActRecordWorker implements Runnable {
 
     public void run() {
         if (CollectionUtils.isEmpty(requestList)) {
-            log.error("supplyActRecordWorker|run|illegalArgument|requestListEmpty");
+            log.error("|supplyActRecordWorker|run|illegalArgument|requestListEmpty|");
         }
 
         for (SupplyActRecordPutRequest request : requestList) {
@@ -55,7 +55,7 @@ public class SupplyActRecordWorker implements Runnable {
 
     public void put(SupplyActRecordPutRequest request) {
         if (request == null || !request.isValid()) {
-            log.error("supplyActRecordWorker|put|illegalArgument|"
+            log.error("|supplyActRecordWorker|put|illegalArgument|"
                     + request == null ? null : JSONObject.toJSONString(request));
             return;
         }
@@ -70,11 +70,11 @@ public class SupplyActRecordWorker implements Runnable {
                     if (exist == null) {
                         int inserted = supplyActRecordAccessor.insert(po);
                         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                            log.error("supplyActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+                            log.error("|supplyActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po) + "|");
                         }
                     }
                 } catch (Exception e) {
-                    log.error("supplyActRecordWorker|put|fatal|" + e.getMessage(), e);
+                    log.error("|supplyActRecordWorker|put|fatal|" + e.getMessage() + "|", e);
                     status.setRollbackOnly();
                 }
                 return null;

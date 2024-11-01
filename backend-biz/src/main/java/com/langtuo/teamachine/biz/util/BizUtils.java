@@ -55,7 +55,7 @@ public class BizUtils {
         MenuPO menuPO = menuAccessor.getByMenuCode(tenantCode, menuCode);
         MenuDTO menuDTO = MenuMgtConvertor.convertToMenuDTO(menuPO);
         if (menuDTO == null || CollectionUtils.isEmpty(menuDTO.getMenuSeriesRelList())) {
-            log.error("bizUtils|getMenu|menuNullOrSeriesRelListNull|stopWorker|" + tenantCode + "|" + menuCode);
+            log.error("|bizUtils|getMenu|menuNullOrSeriesRelListNull|stopWorker|" + tenantCode + "|" + menuCode);
             return null;
         }
 
@@ -71,7 +71,7 @@ public class BizUtils {
             seriesDTOList.add(seriesDTO);
         }
         if (CollectionUtils.isEmpty(seriesDTOList)) {
-            log.error("bizUtils|getSeriesList|seriesDTOListEmpty|stopWorker|" + tenantCode + "|" + menuCode);
+            log.error("|bizUtils|getSeriesList|seriesDTOListEmpty|stopWorker|" + tenantCode + "|" + menuCode);
             return null;
         }
 
@@ -84,7 +84,7 @@ public class BizUtils {
             }
         }
         if (CollectionUtils.isEmpty(teaCodeListMap)) {
-            log.error("bizUtils|getTeaList|teaCodeListMapEmpty|stopWorker|" + tenantCode + "|" + menuCode);
+            log.error("|bizUtils|getTeaList|teaCodeListMapEmpty|stopWorker|" + tenantCode + "|" + menuCode);
             return null;
         }
 
@@ -158,13 +158,13 @@ public class BizUtils {
             try {
                 boolean created = parentFolder.mkdirs();
                 if (!created) {
-                    log.error("bizUtils|createFolder|error|" + parentFolder.getAbsolutePath());
+                    log.error("|bizUtils|createFolder|error|" + parentFolder.getAbsolutePath() + "|");
                     return false;
                 } else {
-                    log.error("bizUtils|createFolder|succ|" + parentFolder.getAbsolutePath());
+                    log.error("|bizUtils|createFolder|succ|" + parentFolder.getAbsolutePath() + "|");
                 }
             } catch (Exception e) {
-                log.error("bizUtils|createFolder|fatal|" + parentFolder.getAbsolutePath() + "|" + e.getMessage(), e);
+                log.error("|bizUtils|createFolder|fatal|" + parentFolder.getAbsolutePath() + "|" + e.getMessage() + "|", e);
                 return false;
             }
         }
@@ -172,11 +172,11 @@ public class BizUtils {
         try {
             boolean created = outputFile.createNewFile();
             if (!created) {
-                log.error("bizUtils|createNewFile|error|" + outputFile.getAbsolutePath());
+                log.error("|bizUtils|createNewFile|error|" + outputFile.getAbsolutePath() + "|");
                 return false;
             }
         } catch (IOException e) {
-            log.error("bizUtils|createNewFile|fatal|" + outputFile.getAbsolutePath() + "|" + e.getMessage(), e);
+            log.error("|bizUtils|createNewFile|fatal|" + outputFile.getAbsolutePath() + "|" + e.getMessage() + "|", e);
             return false;
         }
 
@@ -187,13 +187,13 @@ public class BizUtils {
             writer.flush();
             return true;
         } catch (IOException e) {
-            log.error("bizUtils|writeFile|fatal|" + outputFile.getAbsolutePath() + "|" + e.getMessage(), e);
+            log.error("|bizUtils|writeFile|fatal|" + outputFile.getAbsolutePath() + "|" + e.getMessage() + "|", e);
         } finally {
             if (writer != null) {
                 try {
                     writer.close();
                 } catch (IOException e) {
-                    log.error("bizUtils|closeWriter|fatal|" + outputFile.getAbsolutePath() + "|" + e.getMessage(), e);
+                    log.error("|bizUtils|closeWriter|fatal|" + outputFile.getAbsolutePath() + "|" + e.getMessage() + "|", e);
                 }
             }
         }
@@ -205,7 +205,7 @@ public class BizUtils {
         try {
             ossPath = OssUtils.uploadFile(file, AliyunConsts.OSS_MENU_PATH);
         } catch (FileNotFoundException e) {
-            log.error("bizUtils|uploadFileToOSS|fatal|" + e.getMessage());
+            log.error("|bizUtils|uploadFileToOSS|fatal|" + e.getMessage() + "|");
         }
         return ossPath;
     }
@@ -217,13 +217,13 @@ public class BizUtils {
             fileInputStream = new FileInputStream(file);
             md5AsHex = DigestUtils.md5DigestAsHex(fileInputStream);
         } catch (IOException e) {
-            log.error("bizUtils|calcMD5Hex|fatal|" + e.getMessage());
+            log.error("|bizUtils|calcMD5Hex|fatal|" + e.getMessage() + "|");
         } finally {
             if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    log.error("bizUtils|closeFileInputStream|fatal|" + e.getMessage());
+                    log.error("|bizUtils|closeFileInputStream|fatal|" + e.getMessage() + "|");
                 }
             }
         }

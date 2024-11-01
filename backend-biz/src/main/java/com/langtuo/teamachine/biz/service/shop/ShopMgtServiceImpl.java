@@ -78,7 +78,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             return TeaMachineResult.success(new PageDTO<>(
                     convertToShopPO(pageInfo.getList()), pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("shopMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|shopMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -106,7 +106,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             List<ShopPO> list = shopAccessor.listByShopGroupCodeList(tenantCode, shopGroupCodeListParam);
             return TeaMachineResult.success(convertToShopPO(list));
         } catch (Exception e) {
-            log.error("shopMgtService|listByShopGroupCode|fatal|" + e.getMessage(), e);
+            log.error("|shopMgtService|listByShopGroupCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -125,7 +125,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
                 return doPutUpdate(shopPO);
             }
         } catch (Exception e) {
-            log.error("shopMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|shopMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -139,7 +139,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
         int inserted = shopAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("shopMgtService|putNew|error|" + inserted);
+            log.error("|shopMgtService|putNew|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return TeaMachineResult.success();
@@ -154,7 +154,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
 
         int updated = shopAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("shopMgtService|putUpdate|error|" + updated);
+            log.error("|shopMgtService|putUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return TeaMachineResult.success();
@@ -171,7 +171,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             int deleted = shopAccessor.delete(tenantCode, shopGroupCode);
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("shopMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|shopMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -187,7 +187,7 @@ public class ShopMgtServiceImpl implements ShopMgtService {
             int cnt = shopAccessor.countByShopGroupCode(tenantCode, shopGroupCode);
             return TeaMachineResult.success(cnt);
         } catch (Exception e) {
-            log.error("shopMgtService|countByShopGroupCode|fatal|" + e.getMessage(), e);
+            log.error("|shopMgtService|countByShopGroupCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }

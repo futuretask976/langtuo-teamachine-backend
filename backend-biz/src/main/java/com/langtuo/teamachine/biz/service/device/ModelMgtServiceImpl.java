@@ -55,7 +55,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             List<ModelDTO> dtoList = convertToModelDTO(list);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("modelMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|modelMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -72,7 +72,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             List<ModelDTO> dtoList = convertToModelDTO(pageInfo.getList());
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("modelMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|modelMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -89,7 +89,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             ModelDTO modelDTO = ModelMgtConvertor.convertToModelDTO(modelPO);
             return TeaMachineResult.success(modelDTO);
         } catch (Exception e) {
-            log.error("modelMgtService|get|fatal|" + e.getMessage(), e);
+            log.error("|modelMgtService|get|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -119,7 +119,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
             return teaMachineResult;
         } catch (Exception e) {
-            log.error("modelMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|modelMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -147,7 +147,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
             int deleted4Pipeline = modelPipelineAccessor.deleteByModelCode(modelCode);
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("modelMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|modelMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -161,7 +161,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         int inserted = modelAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("modelMgtService|putNewModel|error|" + inserted);
+            log.error("|modelMgtService|putNewModel|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -169,7 +169,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
             int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
-                log.error("modelMgtService|putNewPipeline|error|" + inserted);
+                log.error("|modelMgtService|putNewPipeline|error|" + inserted);
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
         }
@@ -185,7 +185,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
 
         int updated = modelAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("modelMgtService|putUpdateModel|error|" + updated);
+            log.error("|modelMgtService|putUpdateModel|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
 
@@ -193,7 +193,7 @@ public class ModelMgtServiceImpl implements ModelMgtService {
         for (ModelPipelinePO modelPipelinePO : modelPipelinePOList) {
             int inserted4Pipeline = modelPipelineAccessor.insert(modelPipelinePO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Pipeline) {
-                log.error("modelMgtService|putUpdatePipeline|error|" + inserted4Pipeline);
+                log.error("|modelMgtService|putUpdatePipeline|error|" + inserted4Pipeline);
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
         }

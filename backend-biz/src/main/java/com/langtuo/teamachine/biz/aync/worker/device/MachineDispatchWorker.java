@@ -32,7 +32,7 @@ public class MachineDispatchWorker implements Runnable {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.machineCode = jsonPayload.getString(CommonConsts.JSON_KEY_MACHINE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(machineCode)) {
-            log.error("machineDispatchWorker|init|illegalArgument|" + tenantCode + "|" + machineCode);
+            log.error("|machineDispatchWorker|init|illegalArgument|" + tenantCode + "|" + machineCode);
             throw new IllegalArgumentException("tenantCode or machineCode is blank");
         }
     }
@@ -41,7 +41,7 @@ public class MachineDispatchWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.error("machineDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
+            log.error("|machineDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
             return;
         }
 
@@ -58,7 +58,7 @@ public class MachineDispatchWorker implements Runnable {
         MachinePO po = machineAccessor.getByMachineCode(tenantCode, machineCode);
         MachineDTO dto = MachineMgtConvertor.convert(po);
         if (dto == null) {
-            log.error("machineDispatchWorker|getMachine|error|stopWorker|" + dto);
+            log.error("|machineDispatchWorker|getMachine|error|stopWorker|" + dto);
             return null;
         }
 

@@ -61,7 +61,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             List<DeployDTO> dtoList = convertToDeployPO(pageInfo.getList());
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("deployMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|deployMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -77,7 +77,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             DeployDTO dto = convertToDeployPO(deployAccessor.getByDeployCode(tenantCode, deployCode));
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("deployMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|deployMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -93,7 +93,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             DeployDTO dto = convertToDeployPO(deployAccessor.getByMachineCode(tenantCode, machineCode));
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("deployMgtService|getByMachineCode|fatal|" + e.getMessage(), e);
+            log.error("|deployMgtService|getByMachineCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -112,7 +112,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
                 return doPutUpdate(po);
             }
         } catch (Exception e) {
-            log.error("deployMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|deployMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -126,7 +126,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
         try {
             return doDeleteByDeployCode(tenantCode, deployCode);
         } catch (Exception e) {
-            log.error("deployMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|deployMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -137,7 +137,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
             String deployCode = BizUtils.genRandomStr(6);
             return TeaMachineResult.success(deployCode);
         } catch (Exception e) {
-            log.error("deployMgtService|generateDeployCode|fatal|" + e.getMessage(), e);
+            log.error("|deployMgtService|generateDeployCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -163,7 +163,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
             return TeaMachineResult.success(machineCode);
         } catch (Exception e) {
-            log.error("deployMgtService|generateMachineCode|fatal|" + e.getMessage(), e);
+            log.error("|deployMgtService|generateMachineCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -183,7 +183,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
         int inserted = deployAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("deployMgtService|doPutNew|error|" + inserted);
+            log.error("|deployMgtService|doPutNew|error|" + inserted + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return TeaMachineResult.success();
@@ -198,7 +198,7 @@ public class DeployMgtServiceImpl implements DeployMgtService {
 
         int updated = deployAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("deployMgtService|doPutUpdate|error|" + updated);
+            log.error("|deployMgtService|doPutUpdate|error|" + updated + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
         return TeaMachineResult.success();

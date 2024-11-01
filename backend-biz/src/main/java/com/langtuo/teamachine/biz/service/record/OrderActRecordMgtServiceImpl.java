@@ -36,7 +36,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             OrderActRecordDTO dto = convertToOrderActRecordDTO(po, true);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("orderActRecordMgtService|get|fatal|" + e.getMessage(), e);
+            log.error("|orderActRecordMgtService|get|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -64,7 +64,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
                         false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
-            log.error("orderActRecordMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|orderActRecordMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -80,7 +80,7 @@ public class OrderActRecordMgtServiceImpl implements OrderActRecordMgtService {
             int deleted = orderActRecordAccessor.delete(tenantCode, shopGroupCode, warningRuleCode);
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("orderActRecordMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|orderActRecordMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }

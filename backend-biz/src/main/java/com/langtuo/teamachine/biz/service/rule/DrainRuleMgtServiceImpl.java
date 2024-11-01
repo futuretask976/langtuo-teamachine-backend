@@ -62,7 +62,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             DrainRuleDTO dto = DrainRuleMgtConvertor.convertToDrainRuleDTO(po);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("drainRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|drainRuleMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -75,7 +75,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             List<DrainRuleDTO> dtoList = convertToDrainRuleDTO(poList);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("drainRuleMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|drainRuleMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -105,7 +105,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
                     0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(drainRuleDTOList);
         } catch (Exception e) {
-            log.error("drainRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);
+            log.error("|drainRuleMgtService|listByShopCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -123,7 +123,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             List<DrainRuleDTO> dtoList = convertToDrainRuleDTO(pageInfo.getList());
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("drainRuleMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|drainRuleMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -143,7 +143,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
                 return doPutUpdate(drainRulePO, drainRuleToppingPOList);
             }
         } catch (Exception e) {
-            log.error("drainRuleMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|drainRuleMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -157,7 +157,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         try {
             return doDeleteByDrainRuleCode(tenantCode, drainRuleCode);
         } catch (Exception e) {
-            log.error("drainRuleMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|drainRuleMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -178,7 +178,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
             return result;
         } catch (Exception e) {
-            log.error("drainRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
+            log.error("|drainRuleMgtService|putDispatch|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -200,7 +200,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
             }
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("drainRuleMgtService|getDispatchByDrainRuleCode|fatal|" + e.getMessage(), e);
+            log.error("|drainRuleMgtService|getDispatchByDrainRuleCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -226,7 +226,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
         int inserted = drainRuleAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("drainRuleMgtService|putNewDrainRule|error|" + inserted);
+            log.error("|drainRuleMgtService|putNewDrainRule|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -234,7 +234,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         for (DrainRuleToppingPO toppingPO : toppingPOList) {
             int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
-                log.error("drainRuleMgtService|putNewTopping|error|" + inserted4Topping);
+                log.error("|drainRuleMgtService|putNewTopping|error|" + inserted4Topping);
             }
         }
         return TeaMachineResult.success();
@@ -249,7 +249,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
 
         int updated = drainRuleAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("drainRuleMgtService|putUpdateDrainRule|error|" + updated);
+            log.error("|drainRuleMgtService|putUpdateDrainRule|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -257,7 +257,7 @@ public class DrainRuleMgtServiceImpl implements DrainRuleMgtService {
         for (DrainRuleToppingPO toppingPO : toppingPOList) {
             int inserted4Topping = drainRuleToppingAccessor.insert(toppingPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
-                log.error("drainRuleMgtService|putUpdateTopping|error|" + inserted4Topping);
+                log.error("|drainRuleMgtService|putUpdateTopping|error|" + inserted4Topping);
             }
         }
         return TeaMachineResult.success();

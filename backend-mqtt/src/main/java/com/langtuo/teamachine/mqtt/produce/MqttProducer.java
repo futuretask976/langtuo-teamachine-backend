@@ -75,16 +75,16 @@ public class MqttProducer implements InitializingBean {
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new SendCallback() {
                 @Override
                 public void onSuccess(String s) {
-                    log.info("$$$$$ mqttProducer|sendP2PMsg|onSuccess|" + topic + "|" + payload);
+                    log.info("|mqttProducer|sendP2PMsg|onSuccess|" + topic + "|" + payload + "|");
                 }
 
                 @Override
                 public void onFail() {
-                    log.info("$$$$$ mqttProducer|sendP2PMsg|onFail|" + topic + "|" + payload);
+                    log.info("|mqttProducer|sendP2PMsg|onFail|" + topic + "|" + payload + "|");
                 }
             });
         } catch (Throwable e) {
-            log.error("mqttProducer|sendP2PMsgByTenant|fatal|" + e.getMessage(), e);
+            log.error("|mqttProducer|sendP2PMsgByTenant|fatal|" + e.getMessage() + "|", e);
         }
     }
 
@@ -94,16 +94,16 @@ public class MqttProducer implements InitializingBean {
             serverProducer.sendMessage(topic, payload.getBytes(StandardCharsets.UTF_8), new SendCallback() {
                 @Override
                 public void onSuccess(String s) {
-                    log.info("$$$$$ mqttProducer|sendBroadcastMsg|onSuccess|" + topic + "|" + payload);
+                    log.info("|mqttProducer|sendBroadcastMsg|onSuccess|" + topic + "|" + payload + "|");
                 }
 
                 @Override
                 public void onFail() {
-                    log.info("$$$$$ mqttProducer|sendBroadcastMsg|onFail|" + topic + "|" + payload);
+                    log.info("|mqttProducer|sendBroadcastMsg|onFail|" + topic + "|" + payload + "|");
                 }
             });
         } catch (Throwable e) {
-            log.error("mqttProducer|sendBroadcastMsgByTenant|fatal|" + e.getMessage(), e);
+            log.error("|mqttProducer|sendBroadcastMsgByTenant|fatal|" + e.getMessage() + "|", e);
         }
     }
 }

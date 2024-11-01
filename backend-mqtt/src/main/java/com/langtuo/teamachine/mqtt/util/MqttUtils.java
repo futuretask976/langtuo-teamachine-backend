@@ -67,17 +67,17 @@ public class MqttUtils {
             RuntimeOptions runtime = new RuntimeOptions();
 
             ApplyTokenResponse resp = client.applyTokenWithOptions(applyTokenRequest, runtime);
-            log.info("mqttManager|getMqttToken|succ|" + JSON.toJSONString(resp));
+            log.info("|mqttManager|getMqttToken|succ|" + JSON.toJSONString(resp) + "|");
             MqttToken mqttToken = new MqttToken();
             mqttToken.setAccessKey(AliyunConsts.RAM_ACCESS_KEY);
             mqttToken.setAccessToken(resp.getBody().getToken());
             mqttToken.setExpiration(new Date(expiration));
             return mqttToken;
         } catch (TeaException error) {
-            log.error("mqttManager|getMqttToken|fatal|" + error.getMessage() + "|" + error.getData().get("Recommend"));
+            log.error("|mqttManager|getMqttToken|fatal|" + error.getMessage() + "|" + error.getData().get("Recommend") + "|");
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
-            log.error("mqttManager|getMqttToken|fatal|" + error.getMessage() + "|" + error.getData().get("Recommend"));
+            log.error("|mqttManager|getMqttToken|fatal|" + error.getMessage() + "|" + error.getData().get("Recommend") + "|");
         }
         return null;
     }

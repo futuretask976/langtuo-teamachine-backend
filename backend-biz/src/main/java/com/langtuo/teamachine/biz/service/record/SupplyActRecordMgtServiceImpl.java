@@ -37,7 +37,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
             SupplyActRecordDTO dto = convertToSupplyActRecordDTO(po, true);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("supplyActRecordMgtService|get|fatal|" + e.getMessage(), e);
+            log.error("|supplyActRecordMgtService|get|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -71,7 +71,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
                         convertToSupplyActRecordDTO(pageInfo.getList(), false), pageInfo.getTotal(), pageNum, pageSize));
             }
         } catch (Exception e) {
-            log.error("supplyActRecordMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|supplyActRecordMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -87,7 +87,7 @@ public class SupplyActRecordMgtServiceImpl implements SupplyActRecordMgtService 
             int deleted = supplyActRecordAccessor.delete(tenantCode, warningRuleCode);
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("supplyActRecordMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|supplyActRecordMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }

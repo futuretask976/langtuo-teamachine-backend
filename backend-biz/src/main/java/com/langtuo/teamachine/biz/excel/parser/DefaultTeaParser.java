@@ -199,7 +199,7 @@ public class DefaultTeaParser implements TeaParser {
             rowIndex4Tea++;
         }
         long end4Parse = System.currentTimeMillis();
-        log.info("defaultTeaParser|parseExcel|succ|" + (end4Parse - start4Parse));
+        log.info("|defaultTeaParser|parseExcel|succ|" + (end4Parse - start4Parse) + "|");
 
         long start4Construct = System.currentTimeMillis();
         for (TeaPutRequest teaPutRequest : teaPutRequestList) {
@@ -209,7 +209,7 @@ public class DefaultTeaParser implements TeaParser {
             teaPutRequest.setSpecRuleList(getSpecRulePutRequestList(teaPutRequest.getTenantCode(), teaUnitList));
         }
         long end4Construct = System.currentTimeMillis();
-        log.info("defaultTeaParser|constructRequest|succ|" + (end4Construct - start4Construct));
+        log.info("|defaultTeaParser|constructRequest|succ|" + (end4Construct - start4Construct) + "|");
         return teaPutRequestList;
     }
 

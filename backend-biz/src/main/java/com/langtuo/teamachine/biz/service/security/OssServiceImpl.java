@@ -50,7 +50,7 @@ public class OssServiceImpl implements OssService {
 
     @Override
     public TeaMachineResult<OssTokenDTO> getOssTokenByLoginName(String tenantCode, String loginName) {
-        log.info("ossServiceImpl|getOssTokenByLoginName|entering|" + tenantCode + "|" + loginName);
+        log.info("|ossServiceImpl|getOssTokenByLoginName|entering|" + tenantCode + "|" + loginName + "|");
 
         OssToken po = OssUtils.getSTS();
         OssTokenDTO dto = new OssTokenDTO();

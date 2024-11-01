@@ -25,7 +25,7 @@ public class ModelDispatchWorker implements Runnable {
     public ModelDispatchWorker(JSONObject jsonPayload) {
         this.modelCode = jsonPayload.getString(CommonConsts.JSON_KEY_MODEL_CODE);
         if (StringUtils.isBlank(modelCode)) {
-            log.error("modelDispatchWorker|init|illegalArgument|" + modelCode);
+            log.error("|modelDispatchWorker|init|illegalArgument|" + modelCode);
             throw new IllegalArgumentException("modelCode is blank");
         }
     }
@@ -34,7 +34,7 @@ public class ModelDispatchWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.error("modelDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
+            log.error("|modelDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
             return;
         }
 
@@ -45,9 +45,9 @@ public class ModelDispatchWorker implements Runnable {
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
         List<String> tenantCodeList = DaoUtils.getTenantCodeList();
         for (String tenantCode : tenantCodeList) {
-            log.info("$$$$$ modelDispatchWorker|beforeCallSendBroadcast|" + tenantCode + "|" + jsonMsg.toJSONString());
+            log.info("|modelDispatchWorker|beforeCallSendBroadcast|" + tenantCode + "|" + jsonMsg.toJSONString() + "|");
             mqttProducer.sendBroadcastMsgByTenant(tenantCode, jsonMsg.toJSONString());
-            log.info("$$$$$ modelDispatchWorker|afterCallSendBroadcast|" + tenantCode + "|" + jsonMsg.toJSONString());
+            log.info("|modelDispatchWorker|afterCallSendBroadcast|" + tenantCode + "|" + jsonMsg.toJSONString() + "|");
         }
     }
 
@@ -56,7 +56,7 @@ public class ModelDispatchWorker implements Runnable {
         ModelPO po = modelAccessor.getByModelCode(modelCode);
         ModelDTO dto = ModelMgtConvertor.convertToModelDTO(po);
         if (dto == null) {
-            log.error("machineDispatchWorker|getModel|error|stopWorker|" + dto);
+            log.error("|machineDispatchWorker|getModel|error|stopWorker|" + dto + "|");
             return null;
         }
 

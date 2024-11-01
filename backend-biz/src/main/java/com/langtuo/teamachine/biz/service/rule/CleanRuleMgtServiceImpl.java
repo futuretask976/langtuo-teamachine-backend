@@ -66,7 +66,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             CleanRuleDTO dto = convertToCleanRuleStepDTO(po);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("cleanRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|cleanRuleMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -81,7 +81,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("cleanRuleMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|cleanRuleMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -111,7 +111,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                     0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(cleanRuleDTOList);
         } catch (Exception e) {
-            log.error("cleanRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);
+            log.error("|cleanRuleMgtService|listByShopCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -130,7 +130,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("cleanRuleMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|cleanRuleMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -151,7 +151,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
                 return doPutUpdate(cleanRulePO, cleanRuleStepPOList, cleanRuleExceptPOList);
             }
         } catch (Exception e) {
-            log.error("cleanRuleMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|cleanRuleMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -165,7 +165,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         try {
             return doDeleteByCleanRuleCode(tenantCode, cleanRuleCode);
         } catch (Exception e) {
-            log.error("cleanRuleMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|cleanRuleMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -186,7 +186,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
             return result;
         } catch (Exception e) {
-            log.error("cleanRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
+            log.error("|cleanRuleMgtService|putDispatch|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -208,7 +208,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
             }
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("cleanRuleMgtService|getDispatchByCleanRuleCode|fatal|" + e.getMessage(), e);
+            log.error("|cleanRuleMgtService|getDispatchByCleanRuleCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -223,7 +223,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
         int inserted = cleanRuleAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("cleanRuleMgtService|doPutNew|error|" + inserted);
+            log.error("|cleanRuleMgtService|doPutNew|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -231,7 +231,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         for (CleanRuleStepPO stepPO : stepPOList) {
             int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Step) {
-                log.error("cleanRuleMgtService|doPutNew|error|" + inserted4Step);
+                log.error("|cleanRuleMgtService|doPutNew|error|" + inserted4Step);
             }
         }
 
@@ -240,7 +240,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         for (CleanRuleExceptPO exceptPO : exceptPOList) {
             int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("cleanRuleMgtService|doPutNew|error|" + inserted4Except);
+                log.error("|cleanRuleMgtService|doPutNew|error|" + inserted4Except);
             }
         }
         return TeaMachineResult.success();
@@ -256,7 +256,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
 
         int updated = cleanRuleAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("cleanRuleMgtService|doPutUpdate|error|" + updated);
+            log.error("|cleanRuleMgtService|doPutUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
 
@@ -264,7 +264,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         for (CleanRuleStepPO stepPO : stepPOList) {
             int inserted4Step = cleanRuleStepAccessor.insert(stepPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Step) {
-                log.error("cleanRuleMgtService|putUpdateStep|error|" + inserted4Step);
+                log.error("|cleanRuleMgtService|putUpdateStep|error|" + inserted4Step);
             }
         }
 
@@ -273,7 +273,7 @@ public class CleanRuleMgtServiceImpl implements CleanRuleMgtService {
         for (CleanRuleExceptPO exceptPO : exceptPOList) {
             int inserted4Except = cleanRuleExceptAccessor.insert(exceptPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Except) {
-                log.error("cleanRuleMgtService|doPutUpdate|error|" + inserted4Except);
+                log.error("|cleanRuleMgtService|doPutUpdate|error|" + inserted4Except);
             }
         }
         return TeaMachineResult.success();

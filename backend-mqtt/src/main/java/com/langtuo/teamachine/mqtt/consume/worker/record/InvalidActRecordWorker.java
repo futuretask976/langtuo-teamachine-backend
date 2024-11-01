@@ -46,7 +46,7 @@ public class InvalidActRecordWorker implements Runnable {
     @Override
     public void run() {
         if (CollectionUtils.isEmpty(requestList)) {
-            log.error("invalidActRecordWorker|run|illegalArgument|requestListEmpty");
+            log.error("|invalidActRecordWorker|run|illegalArgument|requestListEmpty|");
         }
 
         for (InvalidActRecordPutRequest request : requestList) {
@@ -56,7 +56,7 @@ public class InvalidActRecordWorker implements Runnable {
 
     public void put(InvalidActRecordPutRequest request) {
         if (request == null || !request.isValid()) {
-            log.error("invalidActRecordWorker|put|illegalArgument|"
+            log.error("|invalidActRecordWorker|put|illegalArgument|"
                     + request == null ? null : JSONObject.toJSONString(request));
             return;
         }
@@ -71,11 +71,11 @@ public class InvalidActRecordWorker implements Runnable {
                     if (exist == null) {
                         int inserted = invalidActRecordAccessor.insert(po);
                         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                            log.error("invalidActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+                            log.error("|invalidActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po) + "|");
                         }
                     }
                 } catch (Exception e) {
-                    log.error("invalidActRecordWorker|put|fatal|" + e.getMessage(), e);
+                    log.error("|invalidActRecordWorker|put|fatal|" + e.getMessage() + "|", e);
                     status.setRollbackOnly();
                 }
                 return null;

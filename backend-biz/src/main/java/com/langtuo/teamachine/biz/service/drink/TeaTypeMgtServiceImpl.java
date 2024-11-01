@@ -41,7 +41,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             List<TeaTypeDTO> dtoList = TeaTypeMgtConvertor.convertToTeaTypePO(list);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("teaTypeMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|teaTypeMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -60,7 +60,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("teaTypeMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|teaTypeMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -73,7 +73,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
             TeaTypeDTO tenantDTO = convertToTeaTypePO(toppingTypePO);
             return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
-            log.error("teaTypeMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|teaTypeMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -92,7 +92,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
                 return doPutUpdate(teaTypePO);
             }
         } catch (Exception e) {
-            log.error("teaTypeMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|teaTypeMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -106,7 +106,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
         int inserted = accessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("teaTypeMgtService|putNew|error|" + inserted);
+            log.error("|teaTypeMgtService|putNew|error|" + inserted + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
         return TeaMachineResult.success();
@@ -121,7 +121,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
 
         int updated = accessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("teaTypeMgtService|putUpdate|error|" + updated);
+            log.error("|teaTypeMgtService|putUpdate|error|" + updated + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
         return TeaMachineResult.success();
@@ -136,7 +136,7 @@ public class TeaTypeMgtServiceImpl implements TeaTypeMgtService {
         try {
             return doDeleteByTeaTypeCode(tenantCode, teaTypeCode);
         } catch (Exception e) {
-            log.error("teaTypeMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|teaTypeMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }

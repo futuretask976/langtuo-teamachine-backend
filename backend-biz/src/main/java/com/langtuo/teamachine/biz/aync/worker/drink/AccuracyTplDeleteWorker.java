@@ -27,7 +27,7 @@ public class AccuracyTplDeleteWorker implements Runnable {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.templateCode = jsonPayload.getString(CommonConsts.JSON_KEY_TEMPLATE_CODE);
         if (StringUtils.isBlank(tenantCode)) {
-            log.error("accuracyTplDispatchWorker|init|illegalArgument|" + tenantCode + "|" + templateCode);
+            log.error("|accuracyTplDispatchWorker|init|illegalArgument|" + tenantCode + "|" + templateCode);
             throw new IllegalArgumentException("tenantCode or templateCode is blank");
         }
     }
@@ -36,7 +36,7 @@ public class AccuracyTplDeleteWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.error("AccuracyTplDeleteWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
+            log.error("|accuracyTplDeleteWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
             return;
         }
 

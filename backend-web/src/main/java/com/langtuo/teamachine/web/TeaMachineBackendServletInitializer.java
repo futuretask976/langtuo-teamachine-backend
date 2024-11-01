@@ -13,7 +13,7 @@ public class TeaMachineBackendServletInitializer extends SpringBootServletInitia
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            log.info("springApplicationBuilder|configure|shutdown|entering");
+            log.info("||springApplicationBuilder|configure|shutdown|entering|");
         }));
         return builder.sources(TeaMachineBackendApplication.class);
     }

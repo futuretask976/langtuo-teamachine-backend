@@ -42,7 +42,7 @@ public class WarningRuleDispatchWorker implements Runnable {
         this.loginName = jsonPayload.getString(CommonConsts.JSON_KEY_LOGIN_NAME);
         this.warningRuleCode = jsonPayload.getString(CommonConsts.JSON_KEY_WARNING_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(warningRuleCode)) {
-            log.error("drainRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + warningRuleCode);
+            log.error("|drainRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + warningRuleCode + "|");
             throw new IllegalArgumentException("tenantCode or warningRuleCode is blank");
         }
     }
@@ -58,7 +58,7 @@ public class WarningRuleDispatchWorker implements Runnable {
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
         if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.error("warningRuleDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList);
+            log.error("|warningRuleDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList + "|");
             return;
         }
 
@@ -73,7 +73,7 @@ public class WarningRuleDispatchWorker implements Runnable {
         WarningRulePO po = warningRuleAccessor.getByWarningRuleCode(tenantCode, warningRuleCode);
         WarningRuleDTO dto = WarningRuleMgtConvertor.convertToWarningRuleDTO(po);
         if (dto == null) {
-            log.error("warningRuleDispatchWorker|getRule|error|stopWorker|" + dto);
+            log.error("|warningRuleDispatchWorker|getRule|error|stopWorker|" + dto + "|");
             return null;
         }
 
@@ -87,7 +87,7 @@ public class WarningRuleDispatchWorker implements Runnable {
         List<WarningRuleDispatchPO> warningRuleDispatchPOList = warningRuleDispatchAccessor.listByWarningRuleCode(
                 tenantCode, warningRuleCode, shopGroupCodeList);
         if (CollectionUtils.isEmpty(warningRuleDispatchPOList)) {
-            log.error("warningRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + warningRuleDispatchPOList);
+            log.error("|warningRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + warningRuleDispatchPOList + "|");
             return null;
         }
 

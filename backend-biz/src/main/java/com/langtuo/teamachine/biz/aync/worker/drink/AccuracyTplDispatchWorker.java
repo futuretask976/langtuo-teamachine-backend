@@ -31,7 +31,7 @@ public class AccuracyTplDispatchWorker implements Runnable {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.templateCode = jsonPayload.getString(CommonConsts.JSON_KEY_TEMPLATE_CODE);
         if (StringUtils.isBlank(tenantCode)) {
-            log.error("accuracyTplDispatchWorker|init|illegalArgument|" + tenantCode + "|" + templateCode);
+            log.error("|accuracyTplDispatchWorker|init|illegalArgument|" + tenantCode + "|" + templateCode);
             throw new IllegalArgumentException("tenantCode or templateCode is blank");
         }
     }
@@ -40,7 +40,7 @@ public class AccuracyTplDispatchWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.error("accuracyTplDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
+            log.error("|accuracyTplDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
             return;
         }
 
@@ -57,7 +57,7 @@ public class AccuracyTplDispatchWorker implements Runnable {
         AccuracyTplPO po = accuracyTplAccessor.getByTplCode(tenantCode, templateCode);
         AccuracyTplDTO dto = AccuracyTplMgtConvertor.convertToAccuracyTplPO(po);
         if (dto == null) {
-            log.error("accuracyTplDispatchWorker|getTpl|error|stopWorker|" + dto);
+            log.error("|accuracyTplDispatchWorker|getTpl|error|stopWorker|" + dto);
             return null;
         }
 

@@ -82,7 +82,7 @@ public class TeaController {
             xssfWorkbook.write(outputStream);
             xssfWorkbook.close();
         } catch (IOException e) {
-            log.error("write output stream error: " + e.getMessage(), e);
+            log.error("|teaController|exportExcel|fatal|" + e.getMessage() + "|", e);
         }
 
         HttpHeaders headers = new HttpHeaders();
@@ -110,13 +110,13 @@ public class TeaController {
             TeaMachineResult<Void> uploadResult = service.importByExcel(tenantCode, workbook);
             return uploadResult;
         } catch (IOException e) {
-            log.error("parse upload file error: " + e.getMessage(), e);
+            log.error("|teaController|uploadExcel|fatal|" + e.getMessage() + "|", e);
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    log.error("parse upload file error: " + e.getMessage(), e);
+                    log.error("|teaController|uploadExcel|fatal|" + e.getMessage() + "|", e);
                 }
             }
         }

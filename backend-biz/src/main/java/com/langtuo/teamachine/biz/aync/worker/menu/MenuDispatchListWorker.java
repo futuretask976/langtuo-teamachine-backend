@@ -41,7 +41,7 @@ public class MenuDispatchListWorker implements Runnable {
         this.shopGroupCode = jsonPayload.getString(CommonConsts.JSON_KEY_SHOP_GROUP_CODE);
         this.machineCode = jsonPayload.getString(CommonConsts.JSON_KEY_MACHINE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(shopGroupCode) || StringUtils.isBlank(machineCode)) {
-            log.error("menuDispatchListWorker|init|illegalArgument|" + tenantCode + "|" + shopGroupCode + "|" + machineCode);
+            log.error("|menuDispatchListWorker|init|illegalArgument|" + tenantCode + "|" + shopGroupCode + "|" + machineCode + "|");
             throw new IllegalArgumentException("tenantCode or shopGroupCode or machineCode is blank");
         }
     }
@@ -60,41 +60,41 @@ public class MenuDispatchListWorker implements Runnable {
             }
 
             if (tmpFile.exists()) {
-                log.error("menuDispatchListWorker|tmpFileCheck|exist|stopWorker|" + tmpFile.getAbsolutePath());
+                log.error("|menuDispatchListWorker|tmpFileCheck|exist|stopWorker|" + tmpFile.getAbsolutePath() + "|");
                 return;
             }
 
             JSONArray dispatchCont = getDispatchCont();
             if (dispatchCont == null) {
-                log.error("menuDispatchListWorker|getDispatchCont|error|stopWorker|" + dispatchCont);
+                log.error("|menuDispatchListWorker|getDispatchCont|error|stopWorker|" + dispatchCont + "|");
                 return;
             }
 
             boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), tmpFile);
             if (!wrote) {
-                log.error("menuDispatchListWorker|writeStrToFile|failed|stopWorker");
+                log.error("|menuDispatchListWorker|writeStrToFile|failed|stopWorker|");
                 return;
             }
             String ossPath = BizUtils.uploadOSS(tmpFile);
             if (StringUtils.isBlank(ossPath)) {
-                log.error("menuDispatchListWorker|uploadOSS|failed|stopWorker");
+                log.error("|menuDispatchListWorker|uploadOSS|failed|stopWorker|");
                 return;
             }
             String md5AsHex = BizUtils.calcMD5Hex(tmpFile);
             if (StringUtils.isBlank(md5AsHex)) {
-                log.error("menuDispatchListWorker|calcMD5Hex|failed|stopWorker");
+                log.error("|menuDispatchListWorker|calcMD5Hex|failed|stopWorker|");
                 return;
             }
 
             MenuDispatchCachePO newOssPO = getNewCachePO(fileName, md5AsHex);
             int inserted = menuDispatchCacheAccessor.insert(newOssPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("menuDispatchWorker|insertOssInfo|error|" + inserted);
+                log.error("|menuDispatchWorker|insertOssInfo|error|" + inserted + "|");
             }
 
             sendToMachine(getSendMsg(newOssPO));
         } catch (Exception e) {
-            log.error("menuDispatchListWorker|run|fatal|" + e.getMessage(), e);
+            log.error("|menuDispatchListWorker|run|fatal|" + e.getMessage() + "|", e);
         } finally {
             tmpFile.delete();
         }
@@ -103,7 +103,7 @@ public class MenuDispatchListWorker implements Runnable {
     private JSONArray getDispatchCont() {
         List<MenuPO> menuPOList = DaoUtils.getMenuPOListByShopGroupCode(tenantCode, shopGroupCode);
         if (CollectionUtils.isEmpty(menuPOList)) {
-            log.error("menuDispatchListWorker|getMenu|empty|stopWorker");
+            log.error("|menuDispatchListWorker|getMenu|empty|stopWorker|");
             return null;
         }
         menuPOList.sort((o1, o2) -> o1.getGmtModified().equals(o2.getGmtModified()) ?

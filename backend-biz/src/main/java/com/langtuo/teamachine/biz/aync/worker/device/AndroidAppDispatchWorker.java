@@ -35,7 +35,7 @@ public class AndroidAppDispatchWorker implements Runnable {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         this.version = jsonPayload.getString(CommonConsts.JSON_KEY_VERSION);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(version)) {
-            log.error("androidAppDispatchWorker|init|illegalArgument|" + tenantCode + "|" + version);
+            log.error("|androidAppDispatchWorker|init|illegalArgument|" + tenantCode + "|" + version + "|");
             throw new IllegalArgumentException("tenantCode or version is blank");
         }
     }
@@ -44,7 +44,7 @@ public class AndroidAppDispatchWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.error("androidAppDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
+            log.error("|androidAppDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont + "|");
             return;
         }
 
@@ -55,7 +55,7 @@ public class AndroidAppDispatchWorker implements Runnable {
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
         if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.error("androidAppDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList);
+            log.error("|androidAppDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList + "|");
         }
 
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();
@@ -69,7 +69,7 @@ public class AndroidAppDispatchWorker implements Runnable {
         List<AndroidAppDispatchPO> androidAppDispatchPOList = androidAppDispatchAccessor.listByVersion(
                 tenantCode, version);
         if (CollectionUtils.isEmpty(androidAppDispatchPOList)) {
-            log.error("androidAppDispatchWorker|getDispatch|error|stopWorker|" + androidAppDispatchPOList);
+            log.error("|androidAppDispatchWorker|getDispatch|error|stopWorker|" + androidAppDispatchPOList + "|");
             return null;
         }
 
@@ -86,7 +86,7 @@ public class AndroidAppDispatchWorker implements Runnable {
         AndroidAppPO po = androidAppAccessor.getByVersion(version);
         AndroidAppDTO dto = AndroidAppMgtConvertor.convertToAndroidAppDTO(po);
         if (dto == null) {
-            log.error("androidAppDispatchWorker|getAndroidApp|error|stopWorker|" + dto);
+            log.error("|androidAppDispatchWorker|getAndroidApp|error|stopWorker|" + dto + "|");
             return null;
         }
 

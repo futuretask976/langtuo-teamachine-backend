@@ -42,7 +42,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
             List<ToppingDTO> dtoList = ToppingMgtConvertor.convertToToppingDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("toppingMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|toppingMgtService|list|fatal|" + e.getMessage() + "|", e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -62,7 +62,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("toppingMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|toppingMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -75,7 +75,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
             ToppingDTO tenantDTO = ToppingMgtConvertor.convertToToppingDTO(toppingTypePO);
             return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
-            log.error("toppingMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|toppingMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -94,7 +94,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
                 return doPutUpdate(toppingTypePO);
             }
         } catch (Exception e) {
-            log.error("toppingMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|toppingMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -109,12 +109,12 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
             int inserted = toppingAccessor.insert(po);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("toppingMgtService|putNew|error|" + inserted);
+                log.error("|toppingMgtService|putNew|error|" + inserted + "|");
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("toppingMgtService|putNew|fatal|" + e.getMessage(), e);
+            log.error("|toppingMgtService|putNew|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -129,12 +129,12 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
 
             int updated = toppingAccessor.update(po);
             if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("toppingMgtService|putUpdate|error|" + updated);
+                log.error("|toppingMgtService|putUpdate|error|" + updated + "|");
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("toppingMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("|toppingMgtService|putUpdate|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -155,7 +155,7 @@ public class ToppingMgtServiceImpl implements ToppingMgtService {
                         ErrorCodeEnum.BIZ_ERR_CANNOT_DELETE_USING_OBJECT));
             }
         } catch (Exception e) {
-            log.error("toppingMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|toppingMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }

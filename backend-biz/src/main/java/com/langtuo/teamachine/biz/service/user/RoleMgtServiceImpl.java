@@ -65,7 +65,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             return TeaMachineResult.success(new PageDTO<>(convertToRoleDTO(pageInfo.getList()), pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("roleMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|roleMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -89,7 +89,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             List<RoleDTO> dtoList = convertToRoleDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("roleMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|roleMgtService|list|fatal|" + e.getMessage() + "|", e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -110,7 +110,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
                 return doPutUpdate(rolePO, roleActRelPOList);
             }
         } catch (Exception e) {
-            log.error("roleMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|roleMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -124,7 +124,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         int inserted = roleAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("roleMgtService|putNewRole|error|" + inserted);
+            log.error("|roleMgtService|putNewRole|error|" + inserted + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -132,7 +132,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         for (RoleActRelPO actRelPO : actRelPOList) {
             int inserted4actRel = roleActRelAccessor.insert(actRelPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("roleMgtService|putNewActRel|error|" + inserted4actRel);
+                log.error("|roleMgtService|putNewActRel|error|" + inserted4actRel + "|");
             }
         }
         return TeaMachineResult.success();
@@ -154,7 +154,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
 
         int updated = roleAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("roleMgtService|putUpdateRole|error|" + updated);
+            log.error("|roleMgtService|putUpdateRole|error|" + updated + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -162,7 +162,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
         for (RoleActRelPO actRelPO : actRelPOList) {
             int inserted4actRel = roleActRelAccessor.insert(actRelPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4actRel) {
-                log.error("roleMgtService|putUpdateActRel|error|" + inserted4actRel);
+                log.error("|roleMgtService|putUpdateActRel|error|" + inserted4actRel + "|");
             }
         }
         return TeaMachineResult.success();
@@ -196,7 +196,7 @@ public class RoleMgtServiceImpl implements RoleMgtService {
             int deleted4Rel = roleActRelAccessor.deleteByRoleCode(tenantCode, roleCode);
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("roleMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|roleMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }

@@ -56,7 +56,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             WarningRuleDTO dto = convertToWarningRuleDTO(po);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("warningRuleMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|warningRuleMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -70,7 +70,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(poList);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("warningRuleMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|warningRuleMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -101,7 +101,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
                     0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(drainRuleDTOList);
         } catch (Exception e) {
-            log.error("warningRuleMgtService|listByShopCode|fatal|" + e.getMessage(), e);
+            log.error("|warningRuleMgtService|listByShopCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -120,7 +120,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             List<WarningRuleDTO> dtoList = convertToWarningRuleDTO(pageInfo.getList());
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("warningRuleMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|warningRuleMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -139,7 +139,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
                 return doPutUpdate(po);
             }
         } catch (Exception e) {
-            log.error("warningRuleMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|warningRuleMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -155,7 +155,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
             int deleted = warningRuleAccessor.deleteByWarningRuleCode(tenantCode, warningRuleCode);
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("warningRuleMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|warningRuleMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -177,7 +177,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
             return result;
         } catch (Exception e) {
-            log.error("warningRuleMgtService|putDispatch|fatal|" + e.getMessage(), e);
+            log.error("|warningRuleMgtService|putDispatch|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -201,7 +201,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("warningRuleMgtService|getDispatchByWarningRuleCode|fatal|" + e.getMessage(), e);
+            log.error("|warningRuleMgtService|getDispatchByWarningRuleCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -216,7 +216,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
         int inserted = warningRuleAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("warningRuleMgtService|doPutNew|error|" + inserted);
+            log.error("|warningRuleMgtService|doPutNew|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return TeaMachineResult.success();
@@ -232,7 +232,7 @@ public class WarningRuleMgtServiceImpl implements WarningRuleMgtService {
 
         int updated = warningRuleAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("warningRuleMgtService|doPutUpdate|error|" + updated);
+            log.error("|warningRuleMgtService|doPutUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
         return TeaMachineResult.success();

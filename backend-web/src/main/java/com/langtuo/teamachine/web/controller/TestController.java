@@ -43,14 +43,14 @@ public class TestController {
      */
     @GetMapping(value = "/onlytest")
     public TeaMachineResult<Void> test(Model model) {
-        log.info("/mqtt/test entering: " + (model == null ? null : model.toString()));
+        log.info("|testController|test|entering|" + (model == null ? null : model.toString()) + "|");
         try {
             // mqttService.sendMsgByTopic("tenant_001", "testMq4Iot", "here is testMq4Iot test: " + System.currentTimeMillis());
             // mqttService.sendMsgByP2P("tenant_001", MQTTConfig.CLIENT_ID, "here is p2p test: " + System.currentTimeMillis());
         } catch (Exception e) {
-            log.error("test error: " + e.getMessage(), e);
+            log.error("|testController|test|fatal|" + e.getMessage() + "|", e);
         }
-        log.info("/mqtt/test exiting");
+        log.info("|testController|test|exiting|");
         return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
     }
 
@@ -61,9 +61,9 @@ public class TestController {
      */
     @GetMapping(value = "/orderact")
     public TeaMachineResult<Void> testOrderAct(Model model) {
-        log.info("/mqtt/testorderact entering: " + (model == null ? null : model.toString()));
+        log.info("|testController|testOrderAct|entering|" + (model == null ? null : model.toString()) + "|");
         try {
-            log.info("mqttController|loop|begin");
+            log.info("|mqttController|loop|begin|");
             for (int i = 0; i < 5; i++) {
                 OrderActRecordPutRequest request = new OrderActRecordPutRequest();
                 request.setTenantCode("tenant_001");
@@ -119,9 +119,9 @@ public class TestController {
 
                 Thread.sleep(100);
             }
-            log.info("mqttController|loop|end");
+            log.info("|testController|loop|end|");
         } catch (Exception e) {
-            log.error("test error: " + e.getMessage(), e);
+            log.error("|testController|testOrderAct|fatal|" + e.getMessage() + "|", e);
         }
         return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
     }
@@ -133,13 +133,13 @@ public class TestController {
      */
     @GetMapping(value = "/cleanact")
     public TeaMachineResult<Void> testCleanAct(Model model) {
-        log.info("/mqtt/testcleanact entering: " + (model == null ? null : model.toString()));
+        log.info("|testController|testCleanAct|entering|" + (model == null ? null : model.toString()) + "|");
         String c = "{\"bizCode\":\"cleanActRecord\",\"list\":[{\"cleanContent\":1,\"cleanEndTime\":1728367883993,\"cleanRuleCode\":\"CLEAN_02\",\"cleanStartTime\":1728367883994,\"cleanType\":1,\"closeRuleCode\":\"CLEAN_02\",\"flushIntervalMin\":40,\"flushSec\":30,\"idempotentMark\":\"20241008021123_20240904000004_cleanAct_2\",\"machineCode\":\"20240904000004\",\"openRuleCode\":\"CLEAN_02\",\"pipelineNum\":1,\"shopCode\":\"shop_333\",\"shopGroupCode\":\"shopGroup_07\",\"soakMin\":20,\"tenantCode\":\"tenant_001\",\"toppingCode\":\"topping_333\",\"valid\":true,\"washSec\":10}]}";
         try {
             CleanActRecordWorker cleanActRecordWorker = new CleanActRecordWorker(JSONObject.parseObject(c));
             cleanActRecordWorker.run();
         } catch (Exception e) {
-            log.error("test error: " + e.getMessage(), e);
+            log.error("|testController|testCleanAct|fatal|" + e.getMessage() + "|", e);
         }
         return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.TEST_ERR_ONLY_TEST));
     }
@@ -150,9 +150,8 @@ public class TestController {
      * @return
      */
     @GetMapping(value = "/putlocale")
-    public TeaMachineResult<Void> putLocale(
-            @RequestParam(name = "tenantCode", required = false) String locale) {
-        log.info("/mqtt/putLocale entering: " + (locale == null ? null : locale.toString()));
+    public TeaMachineResult<Void> putLocale(@RequestParam(name = "tenantCode", required = false) String locale) {
+        log.info("|testController|putLocale|entering|" + locale + "|");
         if (StringUtils.isBlank(locale)) {
             LocaleContextHolder.setLocale(Locale.SIMPLIFIED_CHINESE);
         } else if (locale.equals("2")) {

@@ -38,10 +38,10 @@ public class ConsumeExeService {
     }
 
     public static void destroy() {
-        log.info("$$$$$ consumeExeService|onDestroy|entering");
+        log.info("|consumeExeService|onDestroy|entering|");
         if (executorService != null) {
             try {
-                log.info("$$$$$ consumeExeService|onDestroy|beginning");
+                log.info("|consumeExeService|onDestroy|beginning|");
                 // 启动关闭流程
                 executorService.shutdown();
                 if (!executorService.awaitTermination(AWAIT_TERMINATION_TIMEOUT, TimeUnit.SECONDS)) {
@@ -49,11 +49,11 @@ public class ConsumeExeService {
                     executorService.shutdownNow();
                 }
             } catch (InterruptedException e) {
-                log.error("consumeExeService|awaitTermination|fatal|" + e.getMessage(), e);
+                log.error("|consumeExeService|awaitTermination|fatal|" + e.getMessage() + "|", e);
                 // 重新中断线程
                 Thread.currentThread().interrupt();
             }
         }
-        log.info("$$$$$ consumeExeService|onDestroy|exiting");
+        log.info("|consumeExeService|onDestroy|exiting|");
     }
 }

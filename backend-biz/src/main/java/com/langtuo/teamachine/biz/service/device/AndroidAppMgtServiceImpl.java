@@ -52,7 +52,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
                     0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("androidAppMgtService|listByLimit|fatal|" + e.getMessage(), e);
+            log.error("|androidAppMgtService|listByLimit|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -68,7 +68,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
             AndroidAppPO po = androidAppAccessor.getByVersion(version);
             return TeaMachineResult.success(convertToAndroidAppDTO(po));
         } catch (Exception e) {
-            log.error("androidAppMgtService|get|fatal|" + e.getMessage(), e);
+            log.error("|androidAppMgtService|get|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -84,7 +84,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
             List<AndroidAppDTO> dtoList = convertToAndroidAppDTO(pageInfo.getList());
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("androidAppMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|androidAppMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -103,7 +103,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
                 return doPutUpdate(po);
             }
         } catch (Exception e) {
-            log.error("androidAppMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|androidAppMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -117,7 +117,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         try {
             return doDelete(tenantCode, version);
         } catch (Exception e) {
-            log.error("androidAppMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|androidAppMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -141,7 +141,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
             return result;
         } catch (Exception e) {
-            log.error("androidAppMgtService|putDispatch|fatal|" + e.getMessage(), e);
+            log.error("|androidAppMgtService|putDispatch|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -155,7 +155,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
         try {
             return doGetDispatchByVersion(tenantCode, version);
         } catch (Exception e) {
-            log.error("androidAppMgtService|getDispatchByVersion|fatal|" + e.getMessage(), e);
+            log.error("|androidAppMgtService|getDispatchByVersion|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -202,7 +202,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
         int inserted = androidAppAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("androidAppMgtService|doPutNew|error|" + inserted);
+            log.error("|androidAppMgtService|doPutNew|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return TeaMachineResult.success();
@@ -217,7 +217,7 @@ public class AndroidAppMgtServiceImpl implements AndroidAppMgtService {
 
         int updated = androidAppAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("androidAppMgtService|doPutUpdate|error|" + updated);
+            log.error("|androidAppMgtService|doPutUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
         return TeaMachineResult.success();

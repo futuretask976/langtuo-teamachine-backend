@@ -64,7 +64,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             List<MenuDTO> dtoList = convertToMenuDTO(list);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("menuMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|menuMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -97,7 +97,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("menuMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|menuMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -110,7 +110,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             MenuDTO seriesDTO = convertToMenuDTO(toppingTypePO);
             return TeaMachineResult.success(seriesDTO);
         } catch (Exception e) {
-            log.error("menuMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|menuMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -130,7 +130,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
                 return doPutUpdate(po, seriesRelPOList);
             }
         } catch (Exception e) {
-            log.error("menuMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|menuMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -144,7 +144,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         try {
             return doDeleteByMenuCode(tenantCode, menuCode);
         } catch (Exception e) {
-            log.error("menuMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|menuMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -160,7 +160,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
             TeaMachineResult<Void> result = doPutDispatch(request.getTenantCode(), request.getMenuCode(), poList);
             return result;
         } catch (Exception e) {
-            log.error("menuMgtService|putDispatch|fatal|" + e.getMessage(), e);
+            log.error("|menuMgtService|putDispatch|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -182,7 +182,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("menuMgtService|getDispatchByMenuCode|fatal|" + e.getMessage(), e);
+            log.error("|menuMgtService|getDispatchByMenuCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -196,7 +196,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         int inserted = menuAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("menuMgtService|putNewMenu|error|" + inserted);
+            log.error("|menuMgtService|putNewMenu|error|" + inserted + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
 
@@ -204,7 +204,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         for (MenuSeriesRelPO seriesRelPO : seriesRelPOlist) {
             int inserted4SeriesRel = menuSeriesRelAccessor.insert(seriesRelPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4SeriesRel) {
-                log.error("menuMgtService|putNewSeriesRel|error|" + inserted4SeriesRel);
+                log.error("|menuMgtService|putNewSeriesRel|error|" + inserted4SeriesRel + "|");
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
         }
@@ -223,7 +223,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
 
         int updated = menuAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("menuMgtService|putUpdateMenu|error|" + updated);
+            log.error("|menuMgtService|putUpdateMenu|error|" + updated + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
 
@@ -231,7 +231,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         for (MenuSeriesRelPO seriesRelPO : seriesRelPOlist) {
             int inserted4SeriesRel = menuSeriesRelAccessor.insert(seriesRelPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4SeriesRel) {
-                log.error("menuMgtService|putUpdateSeriesRel|error|" + inserted4SeriesRel);
+                log.error("|menuMgtService|putUpdateSeriesRel|error|" + inserted4SeriesRel + "|");
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
         }
@@ -287,7 +287,7 @@ public class MenuMgtServiceImpl implements MenuMgtService {
         int deleted = menuDispatchCacheAccessor.deleteByFileNameList(tenantCode, CommonConsts.MENU_DISPATCH_LIST_TRUE,
                 fileNameList);
         if (deleted == CommonConsts.DB_DELETED_ZERO_ROW) {
-            log.error("menuMgtService|deleteMenuDispatchCache|error|" + deleted + "|" + tenantCode);
+            log.error("|menuMgtService|deleteMenuDispatchCache|error|" + deleted + "|" + tenantCode + "|");
         }
     }
 

@@ -54,7 +54,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(convertToAdminDTO(pageInfo.getList()),
                     pageInfo.getTotal(), pageNum, pageSize));
         } catch (Exception e) {
-            log.error("adminMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|adminMgtService|search|fatal|" + e.getMessage() + "|", e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -67,7 +67,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             List<AdminPO> list = adminAccessor.list(tenantCode);
             return TeaMachineResult.success(convertToAdminDTO(list));
         } catch (Exception e) {
-            log.error("adminMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|adminMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -86,7 +86,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
                 return doPutUpdate(po);
             }
         } catch (Exception e) {
-            log.error("adminMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|adminMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -103,7 +103,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             int deleted = adminAccessor.deleteByLoginName(tenantCode, loginName);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("adminMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|adminMgtService|delete|fatal|" + e.getMessage() + "|", e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
@@ -121,7 +121,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
             int cnt = adminAccessor.countByRoleCode(tenantCode, roleCode);
             teaMachineResult = TeaMachineResult.success(cnt);
         } catch (Exception e) {
-            log.error("adminMgtService|countByRoleCode|fatal|" + e.getMessage(), e);
+            log.error("|adminMgtService|countByRoleCode|fatal|" + e.getMessage() + "|", e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;
@@ -136,7 +136,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
         int inserted = adminAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("adminMgtService|putNew|error|" + inserted);
+            log.error("|adminMgtService|putNew|error|" + inserted + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return TeaMachineResult.success();
@@ -159,7 +159,7 @@ public class AdminMgtServiceImpl implements AdminMgtService {
 
         int updated = adminAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("adminMgtService|putUpdate|error|" + updated);
+            log.error("|adminMgtService|putUpdate|error|" + updated + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
         return TeaMachineResult.success();

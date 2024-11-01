@@ -35,10 +35,10 @@ public class AsyncExeService {
     }
 
     public static void destroy() {
-        log.info("$$$$$ asyncExeService|onDestroy|entering");
+        log.info("|asyncExeService|onDestroy|entering|");
         if (executorService != null) {
             try {
-                log.info("$$$$$ asyncExeService|onDestroy|beginning");
+                log.info("|asyncExeService|onDestroy|beginning|");
                 // 启动关闭流程
                 executorService.shutdown();
                 if (!executorService.awaitTermination(AWAIT_TERMINATION_TIMEOUT, TimeUnit.SECONDS)) {
@@ -46,11 +46,11 @@ public class AsyncExeService {
                     executorService.shutdownNow();
                 }
             } catch (InterruptedException e) {
-                log.error("asyncExeService|awaitTermination|fatal|" + e.getMessage(), e);
+                log.error("|asyncExeService|awaitTermination|fatal|" + e.getMessage() + "|", e);
                 // 重新中断线程
                 Thread.currentThread().interrupt();
             }
         }
-        log.info("$$$$$ asyncExeService|onDestroy|exiting");
+        log.info("|asyncExeService|onDestroy|exiting|");
     }
 }

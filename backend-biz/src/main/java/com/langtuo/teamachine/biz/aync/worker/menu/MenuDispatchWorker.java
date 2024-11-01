@@ -55,7 +55,7 @@ public class MenuDispatchWorker implements Runnable {
         this.menuGmtModifiedYMDHMS = jsonPayload.getString(CommonConsts.JSON_KEY_MENU_GMTMODIFIED_YMDHMS);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(menuCode)
                 || StringUtils.isBlank(menuGmtModifiedYMDHMS)) {
-            log.error("menuDispatchWorker|init|illegalArgument|" + tenantCode + "|" + menuCode);
+            log.error("|menuDispatchWorker|init|illegalArgument|" + tenantCode + "|" + menuCode + "|");
             throw new IllegalArgumentException("tenantCode or menuCode is blank");
         }
     }
@@ -74,7 +74,7 @@ public class MenuDispatchWorker implements Runnable {
             }
 
             if (tmpFile.exists()) {
-                log.error("menuDispatchWorker|tmpFileCheck|exist|stopWorker|" + tmpFile.getAbsolutePath());
+                log.error("|menuDispatchWorker|tmpFileCheck|exist|stopWorker|" + tmpFile.getAbsolutePath() + "|");
                 return;
             }
 
@@ -85,29 +85,29 @@ public class MenuDispatchWorker implements Runnable {
 
             boolean wrote = BizUtils.writeStrToFile(dispatchCont.toJSONString(), tmpFile);
             if (!wrote) {
-                log.error("menuDispatchWorker|writeStrToFile|failed|stopWorker|" + tmpFile.getAbsolutePath());
+                log.error("|menuDispatchWorker|writeStrToFile|failed|stopWorker|" + tmpFile.getAbsolutePath() + "|");
                 return;
             }
             String md5AsHex = calcMD5Hex(tmpFile);
             if (StringUtils.isBlank(md5AsHex)) {
-                log.error("menuDispatchWorker|calcMD5Hex|failed|stopWorker");
+                log.error("|menuDispatchWorker|calcMD5Hex|failed|stopWorker|");
                 return;
             }
             String ossPath = uploadOSS(tmpFile);
             if (StringUtils.isBlank(ossPath)) {
-                log.error("menuDispatchWorker|uploadOSS|failed|stopWorker");
+                log.error("|menuDispatchWorker|uploadOSS|failed|stopWorker|");
                 return;
             }
 
             MenuDispatchCachePO newCachePO = getNewHistoryPO(fileName, md5AsHex);
             int inserted = menuDispatchCacheAccessor.insert(newCachePO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("menuDispatchWorker|insertOssInfo|error|" + JSONObject.toJSONString(newCachePO));
+                log.error("|menuDispatchWorker|insertOssInfo|error|" + JSONObject.toJSONString(newCachePO) + "|");
             }
 
             sendToMachine(getSendMsg(newCachePO));
         } catch (Exception e) {
-            log.error("menuDispatchWorker|run|fatal|" + e.getMessage(), e);
+            log.error("|menuDispatchWorker|run|fatal|" + e.getMessage() + "|", e);
         } finally {
             tmpFile.delete();
         }
@@ -119,7 +119,7 @@ public class MenuDispatchWorker implements Runnable {
         List<MenuDispatchPO> menuDispatchPOList = menuDispatchAccessor.listByMenuCode(
                 tenantCode, menuCode, shopGroupCodeList);
         if (CollectionUtils.isEmpty(menuDispatchPOList)) {
-            log.error("menuDispatchWorker|getDispatch|null|stopWorker");
+            log.error("|menuDispatchWorker|getDispatch|null|stopWorker");
             return null;
         }
 
@@ -136,7 +136,7 @@ public class MenuDispatchWorker implements Runnable {
         try {
             ossPath = OssUtils.uploadFile(file, AliyunConsts.OSS_MENU_PATH);
         } catch (FileNotFoundException e) {
-            log.error("menuDispatchWorker|uploadFileToOSS|fatal|" + e.getMessage());
+            log.error("|menuDispatchWorker|uploadFileToOSS|fatal|" + e.getMessage());
         }
         return ossPath;
     }
@@ -148,13 +148,13 @@ public class MenuDispatchWorker implements Runnable {
             fileInputStream = new FileInputStream(file);
             md5AsHex = DigestUtils.md5DigestAsHex(fileInputStream);
         } catch (IOException e) {
-            log.error("menuDispatchWorker|calcMD5Hex|fatal|" + e.getMessage());
+            log.error("|menuDispatchWorker|calcMD5Hex|fatal|" + e.getMessage());
         } finally {
             if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    log.error("menuDispatchWorker|closeFileInputStream|fatal|" + e.getMessage());
+                    log.error("|menuDispatchWorker|closeFileInputStream|fatal|" + e.getMessage());
                 }
             }
         }
@@ -174,7 +174,7 @@ public class MenuDispatchWorker implements Runnable {
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
         if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.error("menuDispatchWorker|getMachineCodeList|empty|stopWorker");
+            log.error("|menuDispatchWorker|getMachineCodeList|empty|stopWorker");
         }
 
         MqttProducer mqttProducer = SpringServiceUtils.getMqttProducer();

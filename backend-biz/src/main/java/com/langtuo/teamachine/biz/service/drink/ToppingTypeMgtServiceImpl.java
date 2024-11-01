@@ -45,7 +45,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("toppingTypeMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|toppingTypeMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -67,7 +67,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("toppingTypeMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|toppingTypeMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -80,7 +80,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
             ToppingTypeDTO tenantDTO = ToppingTypeMgtConvertor.convertToToppingTypeDTO(toppingTypePO);
             return TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
-            log.error("toppingTypeMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|toppingTypeMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -99,7 +99,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
                 return doPutUpdate(toppingTypePO);
             }
         } catch (Exception e) {
-            log.error("toppingTypeMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|toppingTypeMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -114,7 +114,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
         int inserted = toppingTypeAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("toppingTypeMgtService|putNew|error|" + inserted);
+            log.error("|toppingTypeMgtService|putNew|error|" + inserted);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
         return TeaMachineResult.success();
@@ -129,7 +129,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
 
         int updated = toppingTypeAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("toppingTypeMgtService|putUpdate|error|" + updated);
+            log.error("|toppingTypeMgtService|putUpdate|error|" + updated);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
         return TeaMachineResult.success();
@@ -144,7 +144,7 @@ public class ToppingTypeMgtServiceImpl implements ToppingTypeMgtService {
         try {
             return doDeleteByToppingTypeCode(tenantCode, toppingTypeCode);
         } catch (Exception e) {
-            log.error("toppingTypeMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|toppingTypeMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }

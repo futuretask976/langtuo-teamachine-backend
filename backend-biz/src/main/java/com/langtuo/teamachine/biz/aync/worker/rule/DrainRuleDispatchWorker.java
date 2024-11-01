@@ -42,7 +42,7 @@ public class DrainRuleDispatchWorker implements Runnable {
         this.loginName = jsonPayload.getString(CommonConsts.JSON_KEY_LOGIN_NAME);
         this.drainRuleCode = jsonPayload.getString(CommonConsts.JSON_KEY_DRAIN_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(drainRuleCode)) {
-            log.error("drainRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + drainRuleCode);
+            log.error("|drainRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + drainRuleCode);
             throw new IllegalArgumentException("tenantCode or drainRuleCode is blank");
         }
     }
@@ -51,7 +51,7 @@ public class DrainRuleDispatchWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.error("drainRuleDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
+            log.error("|drainRuleDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
             return;
         }
 
@@ -62,7 +62,7 @@ public class DrainRuleDispatchWorker implements Runnable {
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
         if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.error("drainRuleDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList);
+            log.error("|drainRuleDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList);
             return;
         }
 
@@ -77,7 +77,7 @@ public class DrainRuleDispatchWorker implements Runnable {
         DrainRulePO po = drainRuleAccessor.getByDrainRuleCode(tenantCode, drainRuleCode);
         DrainRuleDTO dto = DrainRuleMgtConvertor.convertToDrainRuleDTO(po);
         if (dto == null) {
-            log.error("drainRuleDispatchWorker|getRule|error|stopWorker|" + dto);
+            log.error("|drainRuleDispatchWorker|getRule|error|stopWorker|" + dto);
             return null;
         }
 
@@ -91,7 +91,7 @@ public class DrainRuleDispatchWorker implements Runnable {
         List<DrainRuleDispatchPO> drainRuleDispatchPOList = drainRuleDispatchAccessor.listByDrainRuleCode(
                 tenantCode, drainRuleCode, shopGroupCodeList);
         if (CollectionUtils.isEmpty(drainRuleDispatchPOList)) {
-            log.error("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + drainRuleDispatchPOList);
+            log.error("|cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + drainRuleDispatchPOList);
             return null;
         }
 

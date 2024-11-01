@@ -42,7 +42,7 @@ public class CleanRuleDispatchWorker implements Runnable {
         this.loginName = jsonPayload.getString(CommonConsts.JSON_KEY_LOGIN_NAME);
         this.cleanRuleCode = jsonPayload.getString(CommonConsts.JSON_KEY_CLEAN_RULE_CODE);
         if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(cleanRuleCode)) {
-            log.error("cleanRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + cleanRuleCode);
+            log.error("|cleanRuleDispatchWorker|init|illegalArgument|" + tenantCode + "|" + cleanRuleCode);
             throw new IllegalArgumentException("tenantCode or cleanRuleCode is blank");
         }
     }
@@ -51,7 +51,7 @@ public class CleanRuleDispatchWorker implements Runnable {
     public void run() {
         JSONObject jsonDispatchCont = getDispatchCont();
         if (jsonDispatchCont == null) {
-            log.error("cleanRuleDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
+            log.error("|cleanRuleDispatchWorker|getDispatchCont|error|stopWorker|" + jsonDispatchCont);
             return;
         }
 
@@ -62,7 +62,7 @@ public class CleanRuleDispatchWorker implements Runnable {
         // 准备发送
         List<String> machineCodeList = getMachineCodeList();
         if (CollectionUtils.isEmpty(machineCodeList)) {
-            log.error("cleanRuleDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList);
+            log.error("|cleanRuleDispatchWorker|getMachineCodeList|empty|stopWorker|" + machineCodeList);
             return;
         }
 
@@ -77,7 +77,7 @@ public class CleanRuleDispatchWorker implements Runnable {
         CleanRulePO po = cleanRuleAccessor.getByCleanRuleCode(tenantCode, cleanRuleCode);
         CleanRuleDTO dto = CleanRuleMgtConvertor.convertToCleanRuleStepDTO(po);
         if (dto == null) {
-            log.error("cleanRuleDispatchWorker|getRule|error|stopWorker|" + dto);
+            log.error("|cleanRuleDispatchWorker|getRule|error|stopWorker|" + dto);
             return null;
         }
 
@@ -91,7 +91,7 @@ public class CleanRuleDispatchWorker implements Runnable {
         List<CleanRuleDispatchPO> cleanRuleDispatchPOList = cleanRuleDispatchAccessor.listByCleanRuleCode(
                 tenantCode, cleanRuleCode, shopGroupCodeList);
         if (CollectionUtils.isEmpty(cleanRuleDispatchPOList)) {
-            log.error("cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + cleanRuleDispatchPOList);
+            log.error("|cleanRuleDispatchWorker|getDispatchPOList|error|stopWorker|" + cleanRuleDispatchPOList);
             return null;
         }
 

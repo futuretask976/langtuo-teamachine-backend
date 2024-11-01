@@ -55,7 +55,7 @@ public class OrderActRecordWorker implements Runnable {
     @Override
     public void run() {
         if (CollectionUtils.isEmpty(requestList)) {
-            log.error("orderActRecordWorker|run|illegalArgument|requestListEmpty");
+            log.error("|orderActRecordWorker|run|illegalArgument|requestListEmpty|");
         }
 
         for (OrderActRecordPutRequest request : requestList) {
@@ -65,7 +65,7 @@ public class OrderActRecordWorker implements Runnable {
 
     public void put(OrderActRecordPutRequest request) {
         if (request == null || !request.isValid()) {
-            log.error("orderActRecordWorker|put|illegalArgument|"
+            log.error("|orderActRecordWorker|put|illegalArgument|"
                     + request == null ? null : JSONObject.toJSONString(request));
             return;
         }
@@ -100,7 +100,7 @@ public class OrderActRecordWorker implements Runnable {
                         int inserted4ToppingActRec = orderToppingActRecordAccessor.insert(orderToppingActRecordPO);
                     }
                 } catch (Exception e) {
-                    log.error("orderActRecordWorker|put|fatal|" + e.getMessage(), e);
+                    log.error("|orderActRecordWorker|put|fatal|" + e.getMessage() + "|", e);
                     status.setRollbackOnly();
                 }
                 return null;

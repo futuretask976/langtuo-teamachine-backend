@@ -85,7 +85,7 @@ public class DeployController {
             xssfWorkbook.write(outputStream);
             xssfWorkbook.close();
         } catch (IOException e) {
-            log.error("write output stream error: " + e.getMessage(), e);
+            log.error("|deployController|exportExcel|fatal|" + e.getMessage() + "|", e);
         }
 
         HttpHeaders headers = new HttpHeaders();

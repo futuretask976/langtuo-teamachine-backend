@@ -40,7 +40,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             List<TenantDTO> dtoList = TenantMgtConvertor.convertToTenantDTO(list);
             teaMachineResult = TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("tenantMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|tenantMgtService|list|fatal|" + e.getMessage() + "|", e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -59,7 +59,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             teaMachineResult = TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("tenantMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|tenantMgtService|search|fatal|" + e.getMessage() + "|", e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -73,7 +73,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             TenantDTO tenantDTO = convertToTenantDTO(tenantPO);
             teaMachineResult = TeaMachineResult.success(tenantDTO);
         } catch (Exception e) {
-            log.error("tenantMgtService|get|fatal|" + e.getMessage(), e);
+            log.error("|tenantMgtService|get|fatal|" + e.getMessage() + "|", e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
         return teaMachineResult;
@@ -111,12 +111,12 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
             int inserted = tenantAccessor.insert(po);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                log.error("tenantMgtService|putNew|error|" + inserted);
+                log.error("|tenantMgtService|putNew|error|" + inserted);
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("tenantMgtService|putNew|fatal|" + e.getMessage(), e);
+            log.error("|tenantMgtService|putNew|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -130,12 +130,12 @@ public class TenantMgtServiceImpl implements TenantMgtService {
 
             int updated = tenantAccessor.update(po);
             if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-                log.error("tenantMgtService|putUpdate|error|" + updated);
+                log.error("|tenantMgtService|putUpdate|error|" + updated);
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
             }
             return TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("tenantMgtService|putUpdate|fatal|" + e.getMessage(), e);
+            log.error("|tenantMgtService|putUpdate|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -151,7 +151,7 @@ public class TenantMgtServiceImpl implements TenantMgtService {
             int deleted = tenantAccessor.deleteByTenantCode(tenantCode);
             teaMachineResult = TeaMachineResult.success();
         } catch (Exception e) {
-            log.error("tenantMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|tenantMgtService|delete|fatal|" + e.getMessage() + "|", e);
             teaMachineResult = TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
         return teaMachineResult;

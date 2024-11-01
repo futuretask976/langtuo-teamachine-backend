@@ -50,7 +50,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
                     0 : o1.getGmtModified().before(o2.getGmtModified()) ? 1 : -1);
             return TeaMachineResult.success(dtoList);
         } catch (Exception e) {
-            log.error("accuracyTplMgtService|list|fatal|" + e.getMessage(), e);
+            log.error("|accuracyTplMgtService|list|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -71,7 +71,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             return TeaMachineResult.success(new PageDTO<>(dtoList, pageInfo.getTotal(),
                     pageNum, pageSize));
         } catch (Exception e) {
-            log.error("accuracyTplMgtService|search|fatal|" + e.getMessage(), e);
+            log.error("|accuracyTplMgtService|search|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -84,7 +84,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
             AccuracyTplDTO dto = convertToAccuracyTplPO(po);
             return TeaMachineResult.success(dto);
         } catch (Exception e) {
-            log.error("accuracyTplMgtService|getByCode|fatal|" + e.getMessage(), e);
+            log.error("|accuracyTplMgtService|getByCode|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_SELECT_FAIL));
         }
     }
@@ -115,7 +115,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
             return teaMachineResult;
         } catch (Exception e) {
-            log.error("accuracyTplMgtService|put|fatal|" + e.getMessage(), e);
+            log.error("|accuracyTplMgtService|put|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
     }
@@ -138,7 +138,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
             return result;
         } catch (Exception e) {
-            log.error("accuracyTplMgtService|delete|fatal|" + e.getMessage(), e);
+            log.error("|accuracyTplMgtService|delete|fatal|" + e.getMessage() + "|", e);
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
     }
@@ -152,7 +152,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
         int inserted = accuracyTplAccessor.insert(po);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-            log.error("accuracyTplMgtService|putNewAccuracyTpl|error|" + inserted);
+            log.error("|accuracyTplMgtService|putNewAccuracyTpl|error|" + inserted + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
         }
 
@@ -160,7 +160,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         for (AccuracyTplToppingPO toppingPO : toppingPOList) {
             int inserted4Topping = accuracyTplToppingAccessor.insert(toppingPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
-                log.error("accuracyTplMgtService|putNewAccuracyTplTopping|error|" + inserted);
+                log.error("|accuracyTplMgtService|putNewAccuracyTplTopping|error|" + inserted + "|");
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
         }
@@ -176,7 +176,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
 
         int updated = accuracyTplAccessor.update(po);
         if (CommonConsts.DB_UPDATED_ONE_ROW != updated) {
-            log.error("accuracyTplMgtService|putUpdateAccuracyTpl|error|" + updated);
+            log.error("|accuracyTplMgtService|putUpdateAccuracyTpl|error|" + updated + "|");
             return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_UPDATE_FAIL));
         }
 
@@ -184,7 +184,7 @@ public class AccuracyTplMgtServiceImpl implements AccuracyTplMgtService {
         for (AccuracyTplToppingPO toppingPO : toppingPOList) {
             int inserted4Topping = accuracyTplToppingAccessor.insert(toppingPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Topping) {
-                log.error("accuracyTplMgtService|putUpdateAccuracyTplTopping|error|" + inserted4Topping);
+                log.error("|accuracyTplMgtService|putUpdateAccuracyTplTopping|error|" + inserted4Topping + "|");
                 return TeaMachineResult.error(LocaleUtils.getErrorMsgDTO(ErrorCodeEnum.DB_ERR_INSERT_FAIL));
             }
         }

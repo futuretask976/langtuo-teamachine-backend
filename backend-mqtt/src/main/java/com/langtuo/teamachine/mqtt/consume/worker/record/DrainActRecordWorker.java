@@ -46,7 +46,7 @@ public class DrainActRecordWorker implements Runnable {
     @Override
     public void run() {
         if (CollectionUtils.isEmpty(requestList)) {
-            log.error("drainActRecordWorker|run|illegalArgument|requestListEmpty");
+            log.error("|drainActRecordWorker|run|illegalArgument|requestListEmpty|");
         }
 
         for (DrainActRecordPutRequest request : requestList) {
@@ -56,7 +56,7 @@ public class DrainActRecordWorker implements Runnable {
 
     public void put(DrainActRecordPutRequest request) {
         if (request == null || !request.isValid()) {
-            log.error("drainActRecordWorker|put|illegalArgument|"
+            log.error("|drainActRecordWorker|put|illegalArgument|"
                     + request == null ? null : JSONObject.toJSONString(request));
             return;
         }
@@ -71,11 +71,11 @@ public class DrainActRecordWorker implements Runnable {
                     if (exist == null) {
                         int inserted = drainActRecordAccessor.insert(po);
                         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                            log.error("drainActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+                            log.error("|drainActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po) + "|");
                         }
                     }
                 } catch (Exception e) {
-                    log.error("drainActRecordWorker|put|fatal|" + e.getMessage(), e);
+                    log.error("|drainActRecordWorker|put|fatal|" + e.getMessage() + "|", e);
                     status.setRollbackOnly();
                 }
                 return null;

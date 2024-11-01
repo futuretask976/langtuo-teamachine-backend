@@ -27,7 +27,7 @@ public class TenantPostWorker implements Runnable {
     public TenantPostWorker(JSONObject jsonPayload) {
         this.tenantCode = jsonPayload.getString(CommonConsts.JSON_KEY_TENANT_CODE);
         if (StringUtils.isBlank(tenantCode)) {
-            log.error("tenantPostWorker|init|illegalArgument|" + tenantCode);
+            log.error("|tenantPostWorker|init|illegalArgument|" + tenantCode);
             throw new IllegalArgumentException("tenantCode is blank");
         }
     }
@@ -43,13 +43,13 @@ public class TenantPostWorker implements Runnable {
         RoleAccessor roleAccessor = SpringAccessorUtils.getRoleAccessor();
         int inserted4Role = roleAccessor.insert(rolePO);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Role) {
-            log.error("tenantPostWorker|insertRole|error|" + inserted4Role);
+            log.error("|tenantPostWorker|insertRole|error|" + inserted4Role);
         }
 
         PermitActAccessor permitActAccessor = SpringAccessorUtils.getPermitActAccessor();
         List<PermitActPO> permitActPOList = permitActAccessor.selectPermitActList();
         if (CollectionUtils.isEmpty(permitActPOList)) {
-            log.error("tenantPostWorker|getPermitActPOList|error|" + permitActPOList);
+            log.error("|tenantPostWorker|getPermitActPOList|error|" + permitActPOList);
             return;
         }
 
@@ -61,7 +61,7 @@ public class TenantPostWorker implements Runnable {
             actRelPO.setPermitActCode(permitActPO.getPermitActCode());
             int inserted4ActRel = roleActRelAccessor.insert(actRelPO);
             if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Role) {
-                log.error("tenantPostWorker|insert4ActRel|error|" + inserted4ActRel);
+                log.error("|tenantPostWorker|insert4ActRel|error|" + inserted4ActRel);
             }
         }
 
@@ -72,7 +72,7 @@ public class TenantPostWorker implements Runnable {
         OrgAccessor orgAccessor = SpringAccessorUtils.getOrgAccessor();
         int inserted4Org = orgAccessor.insert(orgNode);
         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted4Org) {
-            log.error("tenantPostWorker|insert4Org|error|" + inserted4Org);
+            log.error("|tenantPostWorker|insert4Org|error|" + inserted4Org);
         }
     }
 }

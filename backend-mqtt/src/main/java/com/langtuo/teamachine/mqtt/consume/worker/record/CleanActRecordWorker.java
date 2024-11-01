@@ -46,7 +46,7 @@ public class CleanActRecordWorker implements Runnable {
     @Override
     public void run() {
         if (CollectionUtils.isEmpty(requestList)) {
-            log.error("cleanActRecordWorker|run|illegalArgument|requestListEmpty");
+            log.error("|cleanActRecordWorker|run|illegalArgument|requestListEmpty|");
         }
 
         for (CleanActRecordPutRequest request : requestList) {
@@ -55,7 +55,7 @@ public class CleanActRecordWorker implements Runnable {
     }
 
     private void put(CleanActRecordPutRequest request) {if (request == null || !request.isValid()) {
-            log.error("cleanActRecordWorker|put|illegalArgument|"
+            log.error("|cleanActRecordWorker|put|illegalArgument|"
                     + request == null ? null : JSONObject.toJSONString(request));
             return;
         }
@@ -71,11 +71,11 @@ public class CleanActRecordWorker implements Runnable {
                     if (exist == null) {
                         int inserted = cleanActRecordAccessor.insert(po);
                         if (CommonConsts.DB_INSERTED_ONE_ROW != inserted) {
-                            log.error("cleanActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po));
+                            log.error("|cleanActRecordWorker|put|error|" + inserted + "|" + JSONObject.toJSONString(po) + "|");
                         }
                     }
                 } catch (Exception e) {
-                    log.error("cleanActRecordWorker|put|fatal|" + e.getMessage(), e);
+                    log.error("|cleanActRecordWorker|put|fatal|" + e.getMessage() + "|", e);
                     status.setRollbackOnly();
                 }
                 return null;
